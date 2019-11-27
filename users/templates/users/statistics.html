@@ -1,0 +1,79 @@
+{% extends "users/base.html" %}
+{% block body %}
+<div class="jumbotron col-md-12">
+    <h1 class="display-3">Statistics </h1>
+    
+    <hr class="my-2">
+    <p>More info</p>
+
+</div>
+
+<div class="row" style="margin-left: 50px;">
+    <div class="card border-success mb-3" style="max-width: 12rem;/* padding-top: 30px; */height: 15rem; margin-left: 10px;">
+        <div class="card-body text-success">
+          <h5 class="card-title">Users Blocked </h5>
+          <p class="card-text" style="font-size: 6rem;margin-top: 53px; color: rgb(5, 82, 145);">{{staff_blocked}}</p>
+        </div>
+        <div class="card-footer bg-transparent border-success">Footer</div>
+      </div>
+    
+      <div class="card border-success mb-3" style="max-width: 12rem;/* padding-top: 30px; */height: 15rem; margin-left: 10px;">
+        <div class="card-body text-success">
+          <h5 class="card-title">Orders Fulfilled </h5>
+          <p class="card-text" style="font-size: 6rem;margin-top: 53px; color: rgb(5, 82, 145);"></p>
+        </div>
+        <div class="card-footer bg-transparent border-success">Footer</div>
+      </div>  
+  
+      <div class="card border-success mb-3" style="max-width: 12rem;/* padding-top: 30px; */height: 15rem; margin-left: 10px;">
+        <div class="card-body text-success">
+          <h5 class="card-title">Orders Outstanding </h5>
+          <p class="card-text" style="font-size: 6rem;margin-top: 53px; color: rgb(5, 82, 145);"></p>
+        </div>
+        <div class="card-footer bg-transparent border-success">Footer</div>
+      </div>  
+    <div class="card border-success mb-3" style="max-width: 12rem;/* padding-top: 30px; */height: 15rem; margin-left: 10px;">
+        <div class="card-body text-success">
+          <h5 class="card-title">Offers - Today</h5>
+          <p class="card-text" style="font-size: 6rem;margin-top: 53px;">{{ offers }}</p>
+        </div>
+        <div class="card-footer bg-transparent border-success">Footer</div>
+      </div>
+  
+      <div class="card border-success mb-3" style="max-width: 12rem;/* padding-top: 30px; */height: 15rem; margin-left: 10px;">
+        <div class="card-body text-success">
+          <h5 class="card-title">Bulk Requests</h5>
+          <p class="card-text" style="font-size: 6rem;margin-top: 53px; color: rgb(247, 64, 18);">{{bulk_requests}}</p>
+        </div>
+        <div class="card-footer bg-transparent border-success">Footer</div>
+      </div>
+  
+      <div class="card border-success mb-3" style="max-width: 12rem;/* padding-top: 30px; */height: 15rem; margin-left: 10px;">
+        <div class="card-body text-success">
+          <h5 class="card-title">Staff Blocked</h5>
+          <p class="card-text" style="font-size: 6rem;margin-top: 53px; color: rgb(5, 145, 28);"></p>
+        </div>
+        <div class="card-footer bg-transparent border-success">Footer</div>
+      </div>
+  
+      
+  </div>  
+
+  <div class="ct-chart ct-perfect-fourth"></div>
+
+<script>
+    var data = {
+        series: [5, 3, 4]
+        };
+
+        var sum = function(a, b) { return a + b };
+
+        new Chartist.Pie('.ct-chart', data, {
+        labelInterpolationFnc: function(value) {
+            return Math.round(value / data.series.reduce(sum) * 100) + '%';
+        }
+        });
+</script>  
+
+
+{% endblock %}

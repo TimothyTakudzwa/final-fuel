@@ -1,0 +1,142 @@
+{% extends "users/base.html" %}
+{% block body %}
+
+<div >
+    <h1 class="display-3">Buyer Admin Dashboard</h1>
+    <hr class="my-2">
+    
+   
+</div>
+
+<div class="col-md-12">
+    <div class="card" style="background-color:white">
+        <div class="card-header card-header-primary">
+        <h4 class="card-title ">Buyer Profiles</h4>
+        </div>
+    <div class="card-body">
+        <div class="container-fluid">
+            {% if buyers %}
+            <table id="example" class="table table-striped table-bordered" style="width:100%">
+                <thead style="color:white; background:lightslategray">
+                    <th style="color:white;">
+                        Name
+                       </th>
+                       <th style="color:white;">
+                         Phone Number
+                       </th>
+                       <th style="color:white;">
+                          Stage 
+                         </th>
+                         <th style="color:white;">
+                           Position 
+                          </th>
+                          <th style="color:white;">
+                           Decision
+                        </th>
+                   <tbody>
+                       {% for buyer in buyers %}
+                       <tr>
+                           <td>{{buyer.name}}</td>
+                           <td>{{buyer.phone_number}}</td>
+                           <td>{{buyer.stage}}</td>
+                           <td>{{buyer.position}}</td>
+                           <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#detail_{{buyer.id}}">View Details</button>
+                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#edit_{{buyer.id}}">Edit</button>
+                                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#delete_{{buyer.id}}">Delete</button>  
+                                 <a href="{% url 'users:buyer_user_create' buyer.id %}" class="btn btn-info btn-sm">More Details</a>
+                                
+                            </div>
+                        </td>
+                    </tr>
+                    <div class="modal fade" id="detail_{{buyer.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">{{buyer.name}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Name: {{buyer.name}}</p>
+                                <p>Phone: {{buyer.phone_number}}</p>
+                                <p>Stage: {{buyer.stage}}</p>
+                                <p>Position: {{buyer.position}}</p>
+                                
+                                
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+
+                    <div class="modal fade" id="edit_{{buyer.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Edit {{buyer.name}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                                    {% load crispy_forms_tags %}
+                                    <form action="{% url 'users:buyer_user_create' buyer.id %}" method="POST">
+                                    {{ edit_form|crispy}}
+                                    {% csrf_token %}
+                                    <button class="btn btn-primary" type="submit">Save Changes</button>
+                                    </form>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+
+                    <div class="modal fade" id="delete_{{buyer.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Delete {{buyer.name}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                                    {% load crispy_forms_tags %}
+                                    <form action="{% url 'users:buyers_delete' buyer.id %}" method="POST">
+                                    {{ delete_form }}
+                                    {% csrf_token %}
+                                    <p>Are You Sure You Want To Delete {{ buyer.name|title }}</p>
+                                        <div class="btn-group">
+                                            <button class="btn btn-danger" type="submit">Yes</button>
+                                            <button class="btn btn-warning" data-dismiss="modal">No</button>
+                                        </div>
+                                    </form>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div> 
+
+                    {% endfor %}    
+                </tbody>
+                </table>
+            {% else %}
+            <p>Nothing To SHow</p>    
+            {% endif %}
+        </div>
+    </div>
+    </div>
+    
+</div>
+{% endblock %}

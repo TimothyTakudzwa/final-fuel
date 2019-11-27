@@ -1,0 +1,35 @@
+{% extends "buyer/auth_layout.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+
+        <div class="col-md-5 mt-4 mx-auto">
+            <div class="card card-profile">
+            <div class="card-avatar">
+                <a href="#pablo">
+                <img class="img" src="{% static 'finder/assets/img/faces/marc.jpg' %}" />
+                </a>
+            </div>
+            <div class="card-body p-5">
+                <form method="POST">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        <h4 class="card-title">Login</h4>
+                        {{ form|crispy }}
+                    </fieldset>
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-round" type="submit">Sign In</button>
+                    </div>
+                </form>
+                <p class="card-description">
+                    <div class="border-top pt-3">
+                        <small class="text-muted">
+                            Dont have an Account? <a class="ml-2" href="{% url 'buyer-register'%}">Sign Up</a>
+                        </small>
+                    </div>
+                </p>
+            </div>
+        </div>
+{% endblock content %}
+    
