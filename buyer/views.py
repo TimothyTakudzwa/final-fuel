@@ -136,9 +136,7 @@ def fuel_request(request):
             payment_method = form.cleaned_data['payment_method']
             delivery_method = form.cleaned_data['delivery_method']
             fuel_type = form.cleaned_data['fuel_type']
-            
-            
-            
+        
             fuel_request = FuelRequest()
             fuel_request.name = request.user       
             fuel_request.amount = amount
@@ -147,16 +145,33 @@ def fuel_request(request):
             fuel_request.delivery_method = delivery_method
             fuel_request.save()
             
+            
             messages.success(request, f'kindly not your request has been made ')
     else:
         form = FuelRequestForm
     
-<<<<<<< HEAD
-    return render(request, 'buyer/fuel_request.html', {'form': form})
-=======
     return render(request, 'buyer/fuel_request.html', {'form': form})
 
 def dashboard(request):
+    if request.method == 'POST':
+        form = FuelRequestForm(request.POST)
+        if form.is_valid():
+            amount = form.cleaned_data['amount']
+            payment_method = form.cleaned_data['payment_method']
+            delivery_method = form.cleaned_data['delivery_method']
+            fuel_type = form.cleaned_data['fuel_type']
+        
+            fuel_request = FuelRequest()
+            fuel_request.name = request.user       
+            fuel_request.amount = amount
+            fuel_request.fuel_type = fuel_type
+            fuel_request.payment_method = payment_method
+            fuel_request.delivery_method = delivery_method
+            fuel_request.save()
+
+            
+            messages.success(request, f'kindly not your request has been made ')
+    else:
+        form = FuelRequestForm
     
     return render(request, 'buyer/dashboard.html')
->>>>>>> c8b61fd92a5ae2f4f9cfbd53eebab50d22d4d0ec
