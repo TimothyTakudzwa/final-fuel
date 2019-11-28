@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import BuyerRegisterForm, BuyerUpdateForm, ProfileUpdateForm, FuelRequestForm
 #from supplier.forms import FuelRequestForm
+from .constants import sample_data
 from buyer.models import User, Company
 import requests
 import secrets
@@ -152,5 +153,5 @@ def fuel_request(request):
     return render(request, 'buyer/fuel_request.html', {'form': form})
 
 def dashboard(request):
-    
-    return render(request, 'buyer/dashboard.html')
+
+    return render(request, 'buyer/dashboard.html', {'sample_data':sample_data})

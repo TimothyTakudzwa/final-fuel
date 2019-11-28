@@ -34,57 +34,55 @@
                               </th>
                     </tr></thead>
                     <tbody>
+                        
+                        {% for data in sample_data %}
                       <tr>
                         <td>
-                          1
+                          {{data.company_id}}
                         </td>
                         <td>
-                          Total Zimbabwe
+                                {{data.company_name}}
                         </td>
                         <td>
-                          Petrol
+                                {{data.fuel_type}}
                         </td>
                         <td class="text-danger">
-                          $2.85
+                                {{data.price}}
                         </td>
                         <td class="text-primary">
-                          2000L
+                                {{data.quantity}}
                         </td>
                         <td class="text-primary">
-                                November 5 2019 13:00
+                                {{data.updated_on}}
                               </td>
                         <td class="text-primary">
                                 
-                            <button class="btn btn-facebook btn-sm"> <i class="material-icons">ev_station</i>Deal </button>
+                            <button class="btn btn-facebook btn-sm"  data-toggle="modal" data-target="#make_deal{{data.company_id}}"> <i class="material-icons">ev_station</i>Deal </button>
                         </td>
                       </tr>
-                      <tr>
-                            <td>
-                              2
-                            </td>
-                            <td>
-                              Total Zimbabwe
-                            </td>
-                            <td>
-                              Petrol
-                            </td>
-                            <td class="text-danger">
-                              $2.85
-                            </td>
-                            <td class="text-primary">
-                              2000L
-                            </td>
-                            <td class="text-primary">
-                                    November 5 2019 13:00
-                                  </td>
-                            <td class="text-primary">
-                                    
-                                <button class="btn btn-facebook btn-sm"> <i class="material-icons">ev_station</i>Deal </button>
-                            </td>
-                          </tr>
+                      <div class="modal fade" id="make_deal{{data.company_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-notice">
+                              <div class="modal-content">
+                                <div class="modal-header text-center">
+                                  <h5 class="modal-title"   id="myModalLabel">Make a deal</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <i class="material-icons">close</i>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                        Nathan ndiwe urikufanirwa kuisa masinh apa
+                                </div>
+                                <div class="modal-footer justify-content-center">
+                                  <button type="button" class="btn btn-info btn-round" data-dismiss="modal">Im done</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                      {% endfor %}
+                      
                     </tbody>
                   </table>
-                  <div class="col-sm-12"><button class="btn btn-round btn-primary"  data-toggle="modal" data-target="#noticeModal" style="margin-left: 40%;"> <i class="material-icons">local_gas_station</i>Look for Fuel</button></div>
+                  <div class="col-sm-12"><button class="btn btn-round btn-primary"  data-toggle="modal" data-target="#create_request" style="margin-left: 40%;"> <i class="material-icons">local_gas_station</i>Look for Fuel</button></div>
                  
                 </div>
               </div>
@@ -94,7 +92,7 @@
 </div>
 
   <!-- notice modal -->
-  <div class="modal fade" id="noticeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal fade" id="create_request" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-notice">
           <div class="modal-content">
             <div class="modal-header text-center">
@@ -106,8 +104,9 @@
             <div class="modal-body">
                     Nathan, Give me data
             </div>
-            <div class="modal-footer justify-content-center">
-              <button type="button" class="btn btn-info btn-round" data-dismiss="modal">Sounds good!</button>
+            <div class="modal-footer justify-content-center col-sm-12">
+              <button type="button" class="btn btn-info" data-dismiss="modal">Im waiting for an offer</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">The System is giving me smn</button>
             </div>
           </div>
         </div>
