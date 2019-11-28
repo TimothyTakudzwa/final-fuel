@@ -51,6 +51,8 @@ class FuelRequest(models.Model):
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
+    is_direct_deal = models.BooleanField(default=False)
+    last_deal = models.IntegerField(default=0)
 
     class Meta:
         ordering = ['date', 'time', 'name']
