@@ -8,11 +8,15 @@ from django.contrib import messages
 import secrets
 
 from datetime import date
-
+from buyer.forms import BuyerUpdateForm
+from buyer.models import Company
 from .forms import PasswordChange, RegistrationForm, RegistrationProfileForm, \
     RegistrationEmailForm, UserUpdateForm, ProfilePictureUpdateForm, ProfileUpdateForm, FuelRequestForm
 from .models import Profile, FuelUpdate, FuelRequest, Transaction, Profile, TokenAuthentication
 from notification.models import Notification
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # today's date
 today = date.today()
@@ -88,7 +92,7 @@ def verification(request, token, user_id):
                     user.company = selected_company
                     user.is_active = True
                     user.save()
-                    
+                    return redirect('buyer-login')
             else:
                 form = BuyerUpdateForm
                 messages.success(request, f'Email verification successs, Fill in the deatails to complete registration')
