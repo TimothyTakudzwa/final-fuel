@@ -14,3 +14,29 @@ subject = 'User Registration'
 
 PAYING_CHOICES = (('USD', 'USD'),('TRANSFER','TRANSFER'),('BOND CASH','BOND CASH'),('USD & TRANSFER','USD & TRANSFER'),('TRANSFER & BOND CASH','TRANSFER & BOND CASH'),('USD & BOND CASH','USD & BOND CASH'),('USD, TRANSFER & BOND CASH','USD, TRANSFER & BOND CASH'))
 
+sample_data = [
+    {
+        'company_id' : 1,
+        'company_name': 'Intelli Africa Solutions',
+        'fuel_type' : 'Petrol',
+        'price' : '$1.25', 
+        'quantity' : '$1.25', 
+        'updated_on' : '$1.25', 
+    },
+      {
+        'company_id' : 1,
+        'company_name': 'Intelli Africa Solutions',
+        'fuel_type' : 'Petrol',
+        'price' : '$1.25', 
+        'quantity' : '$1.25', 
+        'updated_on' : '$1.25', 
+    },
+      {
+        'company_id' : 1,
+        'company_name': 'Intelli Africa Solutions',
+        'fuel_type' : 'Petrol',
+        'price' : '$1.25', 
+        'quantity' : '$1.25', 
+        'updated_on' : '$1.25', 
+    },
+]
