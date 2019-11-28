@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['b60c1816.ngrok.io', '127.0.0.1']
 INSTALLED_APPS = [
     'buyer.apps.BuyerConfig',
     'supplier.apps.SupplierConfig',
+    'finder.apps.FinderConfig',
     'notification.apps.NotificationConfig',
     'whatsapp.apps.WhatsappConfig',
     'users.apps.UsersConfig',

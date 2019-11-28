@@ -151,4 +151,5 @@ def fuel_request(request):
     
     return render(request, 'buyer/fuel_request.html', {'form': form})
 
-            
+def dashboard(request):
+    return render(request, 'finder/dashboard.html')
