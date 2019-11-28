@@ -31,7 +31,7 @@ def login_success(request):
     """
     user_type  = request.user.user_type
     print(user_type)
-    if user_type == "buyer":
+    if user_type == "BUYER":
         return redirect("buyer-profile")
     else:
         return redirect("users:suppliers_list")
@@ -52,7 +52,7 @@ def token_is_send(request, user):
         messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
         return False              
     messages.success(request, ('Your profile was successfully updated!'))
-    return redirect('users:supplier_user_create', sid=user.id)
+    return render(request, 'buyer/send_email.html')
 
 # Create your views here.
 def register(request):
@@ -76,10 +76,10 @@ def register(request):
                     send_message(user.phone_number, "You have been registered succesfully")
                     user.stage = 'requesting'
                     user.save()               
-                return redirect('users:supplier_user_create', sid=user.id)
+                return render(request, 'buyer/send_email.html')
             else:
                 messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
-                return redirect('users:supplier_user_create', sid=user.id)
+                return render(request, 'buyer/send_email.html')
         
         else:
             msg = "Error in Information Submitted"
@@ -118,7 +118,7 @@ def profile(request):
         
     else:
         u_form = BuyerUpdateForm(instance=request.user)
-        p_form = ProfileUpdateForm(instance=request.user.Profile)
+        p_form = ProfileUpdateForm(instance=request.user)
 
     context = {
 
@@ -137,8 +137,10 @@ def fuel_request(request):
             delivery_method = form.cleaned_data['delivery_method']
             fuel_type = form.cleaned_data['fuel_type']
             
-            name = User.objects.get(user=request.user)
-            fuel_request.name_id = name.id
+            
+            
+            fuel_request = FuelRequest()
+            fuel_request.name = request.user       
             fuel_request.amount = amount
             fuel_request.fuel_type = fuel_type
             fuel_request.payment_method = payment_method
@@ -150,5 +152,3 @@ def fuel_request(request):
         form = FuelRequestForm
     
     return render(request, 'buyer/fuel_request.html', {'form': form})
-
-            
