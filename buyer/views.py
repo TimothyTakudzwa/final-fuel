@@ -151,4 +151,12 @@ def fuel_request(request):
     else:
         form = FuelRequestForm
     
+<<<<<<< HEAD
     return render(request, 'buyer/fuel_request.html', {'form': form})
+=======
+    return render(request, 'buyer/fuel_request.html', {'form': form})
+
+def dashboard(request):
+    
+    return render(request, 'buyer/dashboard.html')
+>>>>>>> c8b61fd92a5ae2f4f9cfbd53eebab50d22d4d0ec

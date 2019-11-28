@@ -64,10 +64,10 @@ def suppliers_list(request):
     if request.method == 'POST':
         form1 = SupplierContactForm( request.POST)
         print('--------------------tapinda---------------')
-        user_count = User.objects.filter(company_id='ZUVA').count()
+        # user_count = User.objects.filter(company_id='ZUVA').count()
         
-        if user_count > 10:
-            raise Http404("Your organisation has reached the maximum number of users, delete some ")
+        # if user_count > 10:
+        #     raise Http404("Your organisation has reached the maximum number of users, delete some ")
 
         if form1.is_valid():
             print('--------------------tapinda---------------')
@@ -109,12 +109,15 @@ def suppliers_list(request):
             print("above is the token")
             '''
     else:
-        form1 = SupplierContactForm()         
-        companies = Company.objects.all()
-        print(companies)
-        form1.fields['company'].choices = [(company.id, company.name) for company in companies]  
-    
-    return render(request, 'users/suppliers_list.html')
+        form1 = SupplierContactForm()  
+        service_stations = ServiceStation.objects.filter(company = request.user.company).all()     
+        # companies = Company.objects.all()
+        print(service_stations)
+        form1.fields['company'].choices = [(service_station.id, service_station.name) for service_station in service_stations] 
+        print("-----------Got here--------") 
+        return render(request, 'users/suppliers_list.html', {'form1': form1})
+
+    return render(request, 'users/suppliers_list.html',{'form1': form1})
 
 def suppliers_delete(request, sid):
     supplier = User.objects.filter(id=sid).first()
