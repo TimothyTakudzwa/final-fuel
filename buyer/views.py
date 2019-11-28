@@ -161,7 +161,7 @@ def dashboard(request):
             payment_method = form.cleaned_data['payment_method']
             delivery_method = form.cleaned_data['delivery_method']
             fuel_type = form.cleaned_data['fuel_type']
-        
+            print(f"===================={request.POST.get('company_id')}--------------------  ")
             fuel_request = FuelRequest()
             fuel_request.name = request.user       
             fuel_request.amount = amount
@@ -175,4 +175,4 @@ def dashboard(request):
     else:
         form = FuelRequestForm
     
-    return render(request, 'buyer/dashboard.html')
+    return render(request, 'buyer/dashboard.html',{'form':form, 'sample_data':sample_data})
