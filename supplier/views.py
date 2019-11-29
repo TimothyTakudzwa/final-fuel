@@ -9,10 +9,10 @@ import secrets
 
 from datetime import date
 from buyer.forms import BuyerUpdateForm
-from buyer.models import Company
-from .forms import PasswordChange, RegistrationForm, RegistrationProfileForm, \
-    RegistrationEmailForm, UserUpdateForm, ProfilePictureUpdateForm, ProfileUpdateForm, FuelRequestForm
-from .models import Profile, FuelUpdate, FuelRequest, Transaction, Profile, TokenAuthentication
+from company.models import Company, FuelUpdate
+from .forms import PasswordChange, RegistrationForm, \
+    RegistrationEmailForm, UserUpdateForm,  FuelRequestForm
+from .models import  FuelRequest, Transaction, TokenAuthentication
 from notification.models import Notification
 from django.contrib.auth import get_user_model
 
