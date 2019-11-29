@@ -229,31 +229,6 @@ def fuel_update(request):
             status = request.POST.get('status')
             price = request.POST.get('price')
             supplier_id = request.user.id
-<<<<<<< HEAD
-            FuelUpdate.objects.create(supplier_id=supplier_id, deliver=False, fuel_type=fuel_type,
-                                      closing_time=closing_time, max_amount=max_amount, min_amount=min_amount,
-                                      payment_method=payment_method)
-            messages.success(request, 'Quantity uploaded successfully')
-            return redirect('fuel-request')
-        else:
-            fuel_update = FuelUpdate.objects.get(fuel_type=request.POST.get('fuel_type'), date=today)
-            fuel_update.max_amount = request.POST.get('max_amount')
-            fuel_update.min_amount = request.POST.get('min_amount')
-    return render(request, 'supplier/accounts/ratings.html', context=context)
-=======
-            FuelUpdate.objects.create(supplier_id=supplier_id, status=status, fuel_type=fuel_type, price=price, available_quantity=available_quantity, payment_method=payment_method)
-
-            fuel_allocated = FuelAllocation.objects.get(date=today, fuel_type=transaction.request.fuel_type, assigned_staff=request.user)
-            fuel_allocated.current_available_quantity = fuel_allocated.current_available_quantity - request.POST.get('available_quantity')
-            fuel_allocated.save()
-
-            messages.success(request, 'Quantity uploaded successfully')
-
-    return redirect('stock')
->>>>>>> bf29f5d59a39b5b430a9d8ddafc2a732837c1340
-
-
-def offer(request, id):
     if request.method == "POST":
         price = request.POST.get('price')
         quantity = request.POST.get('quantity')
@@ -263,12 +238,7 @@ def offer(request, id):
 
         messages.success(request, 'Offer uploaded successfully')
         action = f"{request.user}  made an offer of {quantity} @ {price}"
-
-<<<<<<< HEAD
-        AuditTrail.objects.create(user=request.user, action=action, reference='offer')
-=======
         # AuditTrail.objects.create(user = request.user, action = action, reference = 'offer' )
->>>>>>> bf29f5d59a39b5b430a9d8ddafc2a732837c1340
         return redirect('fuel-request')
     else:
         messages.warning(request, 'Oops something went wrong while posting your offer')
