@@ -9,6 +9,7 @@ from supplier.forms import UserUpdateForm
 from .forms import ProfileUdateForm
 from supplier.forms import *
 from supplier.models import *
+from company.models import FuelUpdate
 from buyer.models import User
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
@@ -16,7 +17,11 @@ user = get_user_model()
 
 
 def fuel_updates(request):
-    updates = FuelUpdate.objects.all()
+    print(f"--------------------------{request.user.subsidiary_id}----------------------")
+
+    updates = FuelUpdate.objects.filter(sub_type='service_station').filter(relationship_id=request.user.subsidiary_id).first()
+    subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+    print(f"--------------------------{updates}----------------------")
     if request.method == 'POST':
         if FuelUpdate.objects.filter(fuel_type=request.POST['fuel_type']).exists():
             fuel_update = FuelUpdate.objects.get(fuel_type=request.POST['fuel_type'])
@@ -27,7 +32,7 @@ def fuel_updates(request):
             fuel_update.status = request.POST['status']
             fuel_update.save()
             messages.success(request, 'updated quantity successfully')
-            return redirect('serviceStation:serviceStation')
+            return redirect('serviceStation:home')
         else:
             available_quantity = request.POST.get('available_quantity')
             price = request.POST.get('price')
@@ -38,9 +43,9 @@ def fuel_updates(request):
             supplier = request.user
             FuelUpdate.objects.create(supplier=supplier, payment_method=payment_method, fuel_type=fuel_type, available_quantity=available_quantity, price=price, status=status)
             messages.success(request, 'Quantity uploaded successfully')
-            return redirect('serviceStation:serviceStation')
+            return redirect('serviceStation:home')
 
-    return render(request, 'serviceStation/fuel_updates.html', {'updates': updates})
+    return render(request, 'serviceStation/fuel_updates.html', {'updates': updates, 'subsidiary': subsidiary_name.name})
 
 
 def allocated_fuel(request):

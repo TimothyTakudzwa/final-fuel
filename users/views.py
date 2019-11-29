@@ -16,13 +16,11 @@ from django.contrib import messages
 from buyer.models import *
 from supplier.models import *
 from users.models import *
+from company.models import Company
 from django.contrib.auth import authenticate
 from .forms import AllocationForm
-<<<<<<< HEAD
 from django.contrib.auth import get_user_model
 user = get_user_model()
-=======
->>>>>>> 71070ebdf71209339e4e5d94d2fd07256b3a9c39
 
 
 def index(request):
@@ -114,26 +112,6 @@ def stations(request):
     return render(request, 'users/service_stations.html', {'stations': stations})
 
 def report_generator(request):
-<<<<<<< HEAD
-    if request.method == "POST":
-        start_date = datetime.strptime(request.form['end_date'], '%Y-%m-%d')
-        end_date = datetime.strptime(request.form['start_date'], '%Y-%m-%d')
-        if request.form['report_type'] == 'Transactions':
-            trans = Transaction.objects.filter(date__range=[start_date, end_date])
-            requests = None; allocations = None
-        if request.form['report_type'] == 'Fuel Requests':
-            requests = FuelRequest.objects.filter(date_range=[start_date, end_date])
-            trans = None; allocations = None
-        if request.form['report_type'] == 'Allocations':
-            allocations = FuelAllocation.objects.filter(date_range=[start_date, end_date])
-    form = ReportForm()
-    allocations = requests = trans = None
-
-    return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form })
-
-def depots(request):
-    depots = Depot.objects.all()
-=======
    
     if request.method == "POST":
         
@@ -163,12 +141,7 @@ def depots(request):
     return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form } )
 
 def depots(request):
-    #user = authenticate(username='', password='')
-    #admin_ = User.objects.filter(company_id='Marshy').first()
-    # print(admin_.company)
-    stations = Depot.objects.all()
-
->>>>>>> 71070ebdf71209339e4e5d94d2fd07256b3a9c39
+    stations = Subsidiaries.objects.filter(company.id == request.user.company.id).first()
     return render(request, 'users/depots.html', {'depots': depots})         
 
 
@@ -183,7 +156,7 @@ def suppliers_list(request):
     suppliers = User.objects.all()   
     form1 = SupplierContactForm()         
     companies = Company.objects.all()
-    form1.fields['service_tation'].choices = [((company.id, company.name)) for company in companies] 
+    form1.fields['service_station'].choices = [((company.id, company.name)) for company in companies] 
 
     if request.method == 'POST':
         form1 = SupplierContactForm( request.POST)
@@ -216,8 +189,6 @@ def suppliers_list(request):
         try:
             msg = EmailMultiAlternatives(subject, message, sender, [f'{email}'])
             msg.send()
-<<<<<<< HEAD
-=======
 
             except BadHeaderError:
                 messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
@@ -230,28 +201,10 @@ def suppliers_list(request):
             '''
     else:
         form1 = SupplierContactForm()  
-        service_stations = Subsidiaries.objects.filter(company = request.user.company).all()     
-        # companies = Company.objects.all()
-        print(service_stations)
-        form1.fields['company'].choices = [(service_station.id, service_station.name) for service_station in service_stations] 
-        print("-----------Got here--------") 
+        service_stations = Subsidiaries.objects.filter(company = request.user.company).all() 
+        form1.fields['service_station'].choices = [(service_station.id, service_station.name) for service_station in service_stations] 
         return render(request, 'users/suppliers_list.html', {'form1': form1})
->>>>>>> 71070ebdf71209339e4e5d94d2fd07256b3a9c39
 
-            messages.success(request, f"{username} Registered Successfully")
-            return redirect('users:buyers_list')
-
-        except BadHeaderError:
-            messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
-            return redirect('users:buyers_list')
-        #contact.save()
-        messages.success(request, ('Your profile was successfully updated!'))
-        return redirect('users:suppliers')
-        print(token)
-        print("above is the token")
-        '''
-    
-    return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1})
 
 def suppliers_delete(request, sid):
     supplier = User.objects.filter(id=sid).first()
