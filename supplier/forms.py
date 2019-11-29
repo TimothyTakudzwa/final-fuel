@@ -6,7 +6,11 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 from .models import Profile, FuelUpdate, FuelRequest, Offer
+from buyer.constants import *
 
+User = get_user_model()
+FUEL_CHOICES=[('PETROL', 'PETROL'), ('DIESEL', 'DIESEL'),]
+STATUS_CHOICES = (('OPEN','open'),('CLOSED','Closed'),('OFFLOADING','Offloading'))
 
 class PasswordChange(PasswordChangeForm):
     class Meta:
@@ -59,8 +63,8 @@ class ProfilePictureUpdateForm(forms.ModelForm):
 
 class FuelRequestForm(forms.ModelForm):
     OPTIONS= [
-    ('SELF COLLECTION', 'self collection'),
-    ('DELIVERY', 'delivery'),
+    ('SELF COLLECTION', 'SELF COLLECTION'),
+    ('DELIVERY', 'DELIVERY'),
     ]
 
     delivery_method = forms.CharField(label='Delivery Method', widget=forms.Select(choices=OPTIONS))
@@ -72,15 +76,28 @@ class FuelRequestForm(forms.ModelForm):
 
 class FuelUpdateForm(forms.ModelForm):
     OPTIONS= [
-    ('PETROL', 'petrol'),
-    ('DIESEL', 'diesel'),
+    ('PETROL', 'Petrol'),
+    ('DIESEL', 'Diesel'),
+    ('BLEND', 'Blend'),
     ]
 
     fuel_type = forms.CharField(label='Fuel Type', widget=forms.Select(choices=OPTIONS))
+    payment_method = forms.CharField(label='Payment Method', widget=forms.Select(choices=PAYING_CHOICES))
 
     class Meta:
         model = FuelUpdate
-        fields = ['max_amount', 'min_amount', 'deliver','fuel_type', 'payment_method']
+        fields = ['fuel_type', 'available_quantity', 'price', 'payment_method', 'status', 'queue_size']
+
+
+class StockLevelForm(forms.ModelForm):
+
+    fuel_type = forms.CharField(label='Fuel Type', widget=forms.Select(choices=FUEL_CHOICES))
+    status = forms.CharField(label='Status', widget=forms.Select(choices=STATUS_CHOICES))
+    payment_method = forms.CharField(label='Payment Method', widget=forms.Select(choices=PAYING_CHOICES))
+
+    class Meta:
+        model = FuelUpdate
+        fields = ['fuel_type', 'available_quantity', 'price','payment_method','status']
 
 
 
@@ -97,7 +114,7 @@ class EditOfferForm(forms.ModelForm):
 
 def fuelupdate(request):
     return {
-        'fuel_update_form': FuelUpdateForm()
+        'fuel_update_form': StockLevelForm()
     }
 
 

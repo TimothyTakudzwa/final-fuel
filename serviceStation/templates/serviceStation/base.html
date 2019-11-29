@@ -7,8 +7,6 @@
  
  <head>
    <meta charset="utf-8" />
-   <!--     ChartistJS CDNS     -->
-   <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
    <link rel="apple-touch-icon" sizes="76x76" href="{% static 'finder/assets/img/apple-icon.png' %}">
    <link rel="icon" type="image/png" href="{% static 'finder/assets/img/favicon.png' %}">
    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -37,93 +35,33 @@
      -->
        <div class="logo">
          <a href="http://www.creative-tim.com" class="simple-text logo-normal">
-           <strong>Fuel Finder</strong>
+           <strong>{{request.user.company.name}}</strong>
          </a>
        </div>
        <div class="sidebar-wrapper">
          <ul class="nav">
-           <li class="nav-item {% if request.path == '/users/' %} active {% endif %}  ">
-             <a class="nav-link" href="{% url 'users:home' %}">
-               <i class="material-icons">dashboard</i>
-               <p>Dashboard</p>
-             </a>
-           </li>
-            
-           <li class="nav-item {% if request.path == '/users/suppliers/' %} active {% endif %}">
-             <a class="nav-link" href="{% url 'users:suppliers_list' %}">
-               <i class="material-icons">people</i>
-               <p>Service Station Staff</p>
-             </a>
-           </li> 
            
-           <li class="nav-item {% if request.path == '/users/depot_staff/' %} active {% endif %}">
-            <a class="nav-link" href="{% url 'users:depot_staff' %}">
-              <i class="material-icons">people</i>
-              <p>Depot Staff</p>
+           <li class="nav-item {% if request.path == '/serviceStation/serviceStation/' %} active {% endif %}">
+            <a class="nav-link" href="{% url 'serviceStation:serviceStation' %}">
+              <i class="material-icons">swap_vertical_circle</i>
+              <p>Fuel Updates</p>
             </a>
-          </li>
-          
-          <li class="nav-item {% if request.path == '/users/depots/' %} active {% endif %}">
-              
-            <a class="nav-link " href="{% url 'users:depots' %}">
-              <i class="material-icons">local_gas_station</i>
-              <p>Depots</p>
-            </a>
-          </li>
-
-          
-          <li class="nav-item {% if request.path == '/users/allocate/' %} active {% endif %}">
-              
-            <a class="nav-link " href="{% url 'users:allocate' %}">
-              <i class="material-icons">confirmation_number</i>
-              <p>Fuel Allocations</p>
-            </a>
-          </li>
-
-           <li class="nav-item {% if request.path == '/users/audit_trail/' %} active {% endif %}">
-            <a class="nav-link" href="{% url 'users:audit_trail' %}">
-              <i class="material-icons">account_balance</i>
-              <p>Audit Trail</p>
+          </li>  
+         
+          <li class="nav-item {% if request.path == '/serviceStation/allocated_fuel/' %} active {% endif %}">
+            <a class="nav-link" href="{% url 'serviceStation:allocated_fuel' %}">
+              <i class="material-icons">swap_vertical_circle</i>
+              <p> Allocated Stock</p>
             </a>
           </li>  
 
-          <li class="nav-item {% if request.path == '/users/stations/' %} active {% endif %}">
-              
-            <a class="nav-link " href="{% url 'users:stations' %}">
-              <i class="material-icons">local_gas_station</i>
-              <p>Service Stations</p>
+          <li class="nav-item {% if request.path == '/serviceStation/myaccount/' %} active {% endif %}">
+            <a class="nav-link" href="{% url 'serviceStation:myaccount' %}">
+              <i class="material-icons">person</i>
+              <p>User Profile</p>
             </a>
           </li>
-
-          <li class="nav-item {% if request.path == '/users/statistics/' %} active {% endif %}">
-            <a class="nav-link" href="{% url 'users:statistics' %}">
-              <i class="material-icons">show_chart</i>
-              <p>Statistics</p>
-            </a>
-          </li>
-
-          <li class="nav-item">
-              <a class="nav-link" href=" {% url 'users:report_generator' %}">
-                <i class="material-icons">calendar_today</i>
-                <p>Report Generator</p>
-              </a>
-            </li>
-            <li class="nav-item {% if request.path == '/users/myaccount/' %} active {% endif %}">
-              <a class="nav-link" href="{% url 'users:myaccount' %}">
-                <i class="material-icons">person</i>
-                <p>User Profile</p>
-              </a>
-            </li>
-           
-           <li class="nav-item">
-             <a class="nav-link" href="#">
-               <i class="material-icons">close</i>
-               <p>Logout</p>
-             </a>
-           </li>
-
-           
-          
+             
          </ul>
        </div>
      </div>
@@ -200,8 +138,6 @@
    </div>
   
    <!--   Core JS Files   -->
-   <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
-
    <script src="{% static 'finder/assets/js/core/jquery.min.js' %}"></script>
    <script src="{% static 'finder/assets/js/core/popper.min.js' %}"></script>
    <script src="{% static 'finder/assets/js/core/bootstrap-material-design.min.js' %}"></script>
@@ -248,11 +184,6 @@
    <script src="{% static 'finder/assets/demo/demo.js' %}"></script>
    <script>
      
-     
-    $(document).ready(function() {
-      $('#example').DataTable({"order": [[ 0, "desc" ]]});
-    } );
-  
      $(document).ready(function() {
        $().ready(function() {
          $sidebar = $('.sidebar');
@@ -430,7 +361,11 @@
  
      });
    </script>
-   
+   <script>
+      $(document).ready(function() {
+        $('#example').DataTable({"order": [[ 0, "desc" ]]});
+      } );
+    </script>
  </body>
  
  </html>

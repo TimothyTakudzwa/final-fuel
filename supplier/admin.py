@@ -11,9 +11,12 @@ admin.site.index_title = 'FuelFinder Admin'
 
 admin.site.register(Profile)
 admin.site.register(FuelUpdate)
-# admin.site.register(FuelRequest)
+admin.site.register(FuelRequest)
 admin.site.register(Transaction)
 admin.site.register(TokenAuthentication)
 admin.site.register(SupplierRating)
 admin.site.register(Offer)
+admin.site.register(FuelAllocation)
 # admin.site.register(Depot)
+
+
