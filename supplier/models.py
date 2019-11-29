@@ -35,7 +35,7 @@ class FuelAllocation(models.Model):
     allocated_quantity = models.CharField(max_length=255)
     current_available_quantity = models.CharField(max_length=255)
 
-
+'''
 class FuelUpdate(models.Model):
     supplier = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='supplier_name')
     available_quantity = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -55,7 +55,7 @@ class FuelUpdate(models.Model):
 
     def __str__(self):
         return f'{str(self.supplier)} - {str(self.available_quantity)}l'
-
+'''
 class Offer(models.Model):
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)

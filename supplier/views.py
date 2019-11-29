@@ -12,9 +12,9 @@ from datetime import date, time
 from buyer.forms import BuyerUpdateForm
 from buyer.models import Company
 from users.models import AuditTrail
-from .forms import PasswordChange, RegistrationForm, RegistrationProfileForm, \
-    RegistrationEmailForm, UserUpdateForm, ProfilePictureUpdateForm, ProfileUpdateForm, FuelRequestForm
-from .models import Profile, FuelUpdate, FuelRequest, Transaction, Profile, TokenAuthentication, Offer
+from .forms import PasswordChange, RegistrationForm, \
+    RegistrationEmailForm, UserUpdateForm, FuelRequestForm
+from .models import FuelUpdate, FuelRequest, Transaction, TokenAuthentication, Offer
 from datetime import date
 from buyer.forms import BuyerUpdateForm
 from company.models import Company, FuelUpdate
@@ -245,6 +245,23 @@ def fuel_update(request):
     return render(request, 'supplier/accounts/fuel_request.html')
 
 
+def offer(request, id):
+    if request.method == "POST":
+        price = request.POST.get('price')
+        quantity = request.POST.get('quantity')
+        fuel_request = FuelRequest.objects.get(id=id)
+
+        Offer.objects.create(price=price, quantity=quantity, supplier=request.user, request=fuel_request)
+        
+        messages.success(request, 'Offer uploaded successfully')
+        action = f"{request.user}  made an offer of {quantity} @ {price}"
+
+        # AuditTrail.objects.create(user = request.user, action = action, reference = 'offer' )
+        return redirect('fuel-request')
+    else:
+        messages.warning(request, 'Oops something went wrong while posting your offer')
+    return render(request, 'supplier/accounts/fuel_request.html')
+
 @login_required
 def edit_offer(request, id):
     offer = Offer.objects.get(id=id)
@@ -267,7 +284,7 @@ def transaction(request):
 @login_required
 def stock(request):
     context = {
-        'stocks' : FuelUpdate.objects.filter(supplier_id=request.user, date=today)
+        'stocks' : FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id)
     }
     return render(request, 'supplier/accounts/stock.html', context=context)
 
