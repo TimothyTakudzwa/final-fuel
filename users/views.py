@@ -1,3 +1,5 @@
+import random
+
 from django.shortcuts import render, get_object_or_404, redirect
 
 from django.shortcuts import Http404
@@ -15,17 +17,63 @@ from buyer.models import *
 from supplier.models import *
 from users.models import *
 from django.contrib.auth import authenticate
+from .forms import AllocationForm
+
 
 def index(request):
     return render(request, 'users/index.html')
 
 
+def allocate(request):
+    allocates = FuelAllocation.objects.all()
+    form2 = AllocationForm()
+    service_stations = ServiceStation.objects.all()
+    users = User.objects.all()
+    form2.fields['service_station'].choices = [((service_station.id, service_station.name)) for service_station in service_stations]
+    form2.fields['staff'].choices = [((user.id, user.username)) for user in users]
+    if request.method == 'POST':
+        form2 = AllocationForm(request.POST)
+        # if form2.is_valid():
+        f_service_station = request.POST.get('service_station')
+        service_station = ServiceStation.objects.get(id=f_service_station)
+        f_staff = request.POST.get('staff')
+        staff = User.objects.get(id=f_staff)
+        fuel_type =  request.POST.get('fuel_type')
+        quantity =  request.POST.get('quantity')
+        # staff = request.cleaned_data['staff']
+        print(service_station, staff, fuel_type, quantity)
+        FuelAllocation.objects.create(service_station=service_station,fuel_type=fuel_type,allocated_quantity=quantity,assigned_staff=staff,current_available_quantity=quantity)
+
+  
+
+    return render(request, 'users/allocate.html', {'allocates': allocates, 'form2': form2 })
+
 def statistics(request):
+
     staff_blocked = SupplierContact.objects.count()
     offers = Offer.objects.count()
     bulk_requests = FuelRequest.objects.filter(delivery_method="Bulk").count()
     staff_blocked = len(User.objects.all())
-    return render(request, 'users/statistics.html', {'staff_blocked':staff_blocked, 'offers': offers, 'bulk_requests': bulk_requests})
+    clients = []
+    companies = Company.objects.filter(company_type='Corporate')
+    value = [round(random.uniform(5000.5,10000.5),2) for i in range(len(companies))]
+    num_trans = [random.randint(2,12) for i in range(len(companies))]
+    counter = 0
+
+    for company in companies:
+        company.total_value = value[counter]
+        company.num_transactions = num_trans[counter]
+        counter += 1
+
+    clients = [company for company in  companies]    
+
+    try:
+        trans = Transaction.objects.all().count()/Transaction.objects.all().count()/100
+    except:
+        trans = 0    
+    trans = str(trans) + " %"
+    return render(request, 'users/statistics.html', {'staff_blocked':staff_blocked, 'offers': offers,
+     'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients})
 
 
 def supplier_user_edit(request, cid):
@@ -48,7 +96,44 @@ def stations(request):
     # print(admin_.company)
     stations = Subsidiaries.objects.all()
 
-    return render(request, 'users/service_stations.html', {'stations': stations})    
+    return render(request, 'users/service_stations.html', {'stations': stations})
+
+def report_generator(request):
+   
+    if request.method == "POST":
+        
+        form = ReportForm(request.POST or None)
+        if form.is_valid():
+            end_date = form.cleaned_data.get('end_date')
+            start_date = form.cleaned_data.get('start_date')
+            
+            # start_date = datetime.strptime(str(start_date), '%Y-%m-%d')
+            # end_date = datetime.strptime(str(end_date), '%Y-%m-%d')
+            if form.cleaned_data.get('report_type') == 'Transactions':
+                trans = Transaction.objects.filter(date__range=[start_date, end_date])
+                requests = None; allocations = None
+            if form.cleaned_data.get('report_type') == 'Fuel Requests':
+                requests = FuelRequest.objects.filter(date__range=[start_date, end_date])
+                trans = None; allocations = None
+            if form.cleaned_data.get('report_type') == 'Allocations':
+                allocations = FuelAllocation.objects.filter(date__range=[start_date, end_date])
+            return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form } )
+        else:
+            messages.success(request, f"Suo")       
+
+        allocations = requests = trans = None
+    form = ReportForm()
+    allocations = requests = trans = None
+
+    return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form } )
+
+def depots(request):
+    #user = authenticate(username='', password='')
+    #admin_ = User.objects.filter(company_id='Marshy').first()
+    # print(admin_.company)
+    stations = Depot.objects.all()
+
+    return render(request, 'users/depots.html', {'depots': depots})         
 
 
 def audit_trail(request):
@@ -59,45 +144,42 @@ def audit_trail(request):
         
 
 def suppliers_list(request):
-    suppliers = User.objects.all()    
-    print(request.user.company.id)
+    suppliers = User.objects.all()   
+    form1 = SupplierContactForm()         
+    companies = Company.objects.all()
+    form1.fields['service_tation'].choices = [((company.id, company.name)) for company in companies] 
+
     if request.method == 'POST':
         form1 = SupplierContactForm( request.POST)
-        print('--------------------tapinda---------------')
-        # user_count = User.objects.filter(company_id='ZUVA').count()
         
-        # if user_count > 10:
-        #     raise Http404("Your organisation has reached the maximum number of users, delete some ")
+        print('--------------------tapinda---------------')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('paasword')
+        phone_number = request.POST.get('phone_number')
+        supplier_role = 'Staff'
+        f_service_station = request.POST.get('service_station')
+        company = Company.objects.get(id=f_service_station)
+        
+        print(type(User))
+        User.objects.create(username=username, first_name=first_name, last_name=last_name, user_type = 'SUPPLIER', company=company, email=email ,password=password, phone_number=phone_number,supplier_role=supplier_role)
+        messages.success(request, f"{username} Registered Successfully")
+        '''
+        token = secrets.token_hex(12)
+        user = User.objects.get(username=username)
+        TokenAuthentication.objects.create(token=token, user=user)
+        domain = request.get_host()
+        url = f'{domain}/verification/{token}/{user.id}' 
 
-        if form1.is_valid():
-            print('--------------------tapinda---------------')
-            username = form1.cleaned_data['username']
-            email = form1.cleaned_data['email']
-            password = form1.cleaned_data['password']
-            phone_number = form1.cleaned_data['phone_number']
-            company = form1.cleaned_data['company']
-            supplier_role = 'Staff'
-
-            print(type(User))
-            User.objects.create(username=username, user_type = 'SUPPLIER', email=email,password=password,company_id=company,phone_number=phone_number,supplier_role=supplier_role)
-            messages.success(request, f"{username} Registered Successfully")
-            '''
-            token = secrets.token_hex(12)
-            user = User.objects.get(username=username)
-            TokenAuthentication.objects.create(token=token, user=user)
-            domain = request.get_host()
-            url = f'{domain}/verification/{token}/{user.id}' 
-
-            sender = f'Fuel Finder Accounts<tests@marlvinzw.me>'
-            subject = 'User Registration'
-            message = f"Dear {username} , please complete signup here : \n {url} \n. Your password is {password}"
-            
-            try:
-                msg = EmailMultiAlternatives(subject, message, sender, [f'{email}'])
-                msg.send()
-
-                messages.success(request, f"{username} Registered Successfully")
-                return redirect('users:buyers_list')
+        sender = f'Fuel Finder Accounts<tests@marlvinzw.me>'
+        subject = 'User Registration'
+        message = f"Dear {username} , please complete signup here : \n {url} \n. Your password is {password}"
+        
+        try:
+            msg = EmailMultiAlternatives(subject, message, sender, [f'{email}'])
+            msg.send()
 
             except BadHeaderError:
                 messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")

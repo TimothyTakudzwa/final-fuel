@@ -22,6 +22,13 @@ def validate_user_email(value):
         raise ValidationError('%(value)s is already registered',
             params={'value': value},)
 
+
+class ReportForm(forms.Form):
+    CHOICES = (('Transactions', 'Transactions'),('Fuel Requests', 'Fuel Requests'), ('Allocations', 'Allocations'))
+    report_type = forms.ChoiceField(choices=CHOICES)
+    start_date = forms.DateField(widget=forms.SelectDateWidget())
+    end_date = forms.DateField(widget=forms.SelectDateWidget())
+
 class SupplierStaffEditForm(forms.ModelForm):
     class Meta:
         model = SupplierContact
@@ -49,11 +56,20 @@ class BuyerContactForm(forms.Form):
         if password != password2:
             raise forms.ValidationError("The passwords do not match!")
 
-
+FUEL_CHOICES=[('Petrol', 'PETROL'), ('Diesel', 'DIESEL'),]
+class AllocationForm(forms.Form):
+    service_station = forms.ChoiceField()
+    fuel_type = forms.ChoiceField(choices=FUEL_CHOICES)
+    quantity = forms.CharField(label='Quantity', required=True)
+    staff = forms.ChoiceField()
 class SupplierContactForm(forms.Form):
-    company = forms.ChoiceField()
+    first_name = forms.CharField(label='First Name', required=True,
+                                 max_length=30)  
+    last_name = forms.CharField(label='Last Name', required=True,
+                                 max_length=30)                         
     username = forms.CharField(label='Username', required=True,
                                  max_length=30)
+    service_tation = forms.ChoiceField()
     email = forms.EmailField(required=True, max_length=100,
                             validators=[validate_user_email])
     phone_number = forms.CharField(label='Cellphone number', required=True,
