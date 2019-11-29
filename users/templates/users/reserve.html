@@ -1,669 +1,205 @@
 {% extends "users/base.html" %}
 {% block body %}
+
 <div style="margin-left: 30px;">
-        <h1 class="display-3">Audit Trail</h1>
-        <hr class="my-2">
+    <h1 class="display-3">Supplier Admin </h1>
+    <hr class="my-2">
+    
+      
+
+</div>
+
+
+<div class="col-md-12">
+    <div class="card" style="background-color:white">
         
-          
-    
-    </div>
+        <div class="card-header card-header-primary">
+        <h4 class="card-title ">{{suppliers.company}}Staff</h4>
+        </div>
+    <div class="card-body">
+        <div class="container-fluid">
+            {% if suppliers %}
 
-
-
-    <div class="col-md-12">
-        <div class="card" style="background-color:white">
-            
-            <div class="card-header card-header-primary">
-            <h4 class="card-title ">{{service_stations}} Service Stations</h4>
-            </div>
-        <div class="card-body">
-            <div class="container-fluid">
-                {% if service_stations %}
-    
-                <table id="example" class="table table-striped table-bordered" style="width:100%">
-                    <thead style="color:white; background:lightslategray">
+            <table id="example" class="table table-striped table-bordered" style="width:100%">
+                <thead style="color:white; background:lightslategray">
+                    <th style="color:white;">
+                        Name
+                       </th>
                        
-                        <th style="color:white;">
-                          Service Station
-                        </th>
-                        <th style="color:white;">
-                            Fuel Type
+                       <th style="color:white;">
+                          Phone Number 
+                         </th>
+                         <th style="color:white;">
+                           Email 
                           </th>
                           <th style="color:white;">
-                            Price 
+                          Action
                         </th>
-                        <th style="color:white;">
-                         Bulk Orders
-                        </th>
-                        <th style="color:white;">
-                          Offers
-                        </th>
-                        <th style="color:white;">
-                          Transactions 
-                        </th>
-                        <th style="color:white;">
-                            Full Details 
-                          </th>
-                    <tbody>
-                        {% for service_station in service_stations %}
-                        <tr>
+                   <tbody>
+                       {% for supplier in suppliers %}
+                       <tr>
+                           <td>{{supplier.username}}</td>
+                           
+                           <td>{{supplier.phone_number}}</td>
+                           <td>{{supplier.email}}</td>
+                           <td style="width: 33%;">
+                               <div class="btn-group">
+                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#{{supplier.id}}">View Details</button>  
+                                    <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#edit_{{supplier.id}}">Edit</button>
+                                    <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#delete_{{supplier.id}}">Delete</button>
+                                    <!--<a href="{% url 'users:supplier_user_create' supplier.id %}" class="btn btn-info btn-sm">More Details</a>-->
+
+                               </div>
+                            </td>
                             
-                            <td>{{service_station.name}}</td>
-                            <td>{{service_station.name}}</td>
-                            <td>{{service_station.name}}</td>
-                            <td>{{service_station.name}}</td>
-                            <td>{{service_station.name}}</td>
-                            <td>{{service_station.name}}</td>
-                            <td><button class="btn-sm btn-info" data-target="#detail_modal" data-toggle="modal"
-                                    style="color: #fff;background-color: #9b43a9;border-color: #692e72;padding: 10px;border-radius: 0.4rem;">
-                                     Details</button></td>
-                            </tr>
-                            <div class="modal fade" id="detail_modal" role="dialog">
-                              <div class="modal-dialog">
-                                  
-                                    <!-- Modal content-->
-                                    <div class="modal-content">
-                                      <div class="modal-header" style= "background:#402d57e0">
-                                        <h4 class="modal-title" style= "color:rgb(44, 240, 207)" >Service Station X</h4>
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                      </div>
-                                      <div class="modal-body" style= "background:#402d57e0">
-                                        <form method="POST" action="">
-                                         
-                                        </form>
-                                      </div>
+                       
+                        <div class="modal fade" id="{{supplier.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">{{supplier.username}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                     </div>
-                                  </div>
-                          </div>  
-                        {% endfor %}    
-                    </tbody>
-                    </table>
-                {% else %}
-                <p>Nothing To SHow</p>    
-                {% endif %}
-            </div>
-        </div>
-        </div>
-        
-    </div>
+                                    <div class="modal-body">
+                                        <p>Company Name: {{supplier.company}}</p>
+                                        <p>Username: {{supplier.username}}</p>
+                                        <p>Phone Number: {{supplier.phone_number}}</p>
+                                        <p>Email: {{supplier.email}}</p>
+                                       
+                                        
+                                        
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            
+                        <!-- Supplier Edit Modal -->
+                        <div class="modal fade" id="edit_{{supplier.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                            
+                                    <h5 class="modal-title" id="exampleModalLabel">Edit {{supplier.company}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+                                            <form action="{% url 'users:supplier_user_edit' supplier.id %}" method="POST">
+                                                    {% csrf_token %}
 
-    
-{% endblock %}
+                                                   <!-- <div class="form-group row">
+                                                        
+                                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Company</label>
+                                                    <div class="col-sm-10">
+                                                        <input name="company" type="telephone" class="form-control" id="inputEmail3"  value="{{ supplier.company}}">
+                                                    </div>
+                                                    </div>
+                                                    -->
+                                                    <div class="form-group row">
+                                                        
+                                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Phone</label>
+                                                    <div class="col-sm-10">
+                                                        <input name="phone_number" type="telephone" class="form-control" id="inputEmail3"  value="{{ supplier.phone_number}}">
+                                                    </div>
+                                                    </div>
+                                                    
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.core.mail import BadHeaderError, EmailMultiAlternatives
-from django.contrib import messages
-import secrets
-
-from datetime import date
-
-from .forms import PasswordChange, RegistrationForm, RegistrationProfileForm, \
-    RegistrationEmailForm, UserUpdateForm, ProfilePictureUpdateForm, ProfileUpdateForm, FuelRequestForm
-from .models import SupplierProfile, Province, FuelUpdate, FuelRequest, Transaction, BuyerProfile, TokenAuthentication
-
-# today's date
-today = date.today()
-
-
-def register(request):
-    context = {
-        'title': 'Fuel Finder | Register',
-        'email': RegistrationEmailForm(),
-        'registration': RegistrationForm()
-    }
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        username = request.POST.get('username')
-        pass1 = request.POST.get('password1')
-        pass2 = request.POST.get('password2')
-
-        if pass1 == pass2:
-            User.objects.create_user(username=username, email=email, password=pass1)
-
-            user = User.objects.get(username=username)
-            user.is_active = False
-            user.save()
-
-            token = secrets.token_hex(12)
-            TokenAuthentication.objects.create(token=token, user = user)
-            domain = request.get_host()
-            url = f'{domain}/verification/{token}/{user.id}'
-
-            sender = f'Fuel Finder Accounts<tests@marlvinzw.me>'
-            subject = 'User Registration'
-            message = f"Dear {username} , complete signup here : \n {url} \n. Your password is {pass1}"
-
-            try:
-                msg = EmailMultiAlternatives(subject, message, sender, [f'{email}'])
-                msg.send()
-
-                messages.success(request, f"{username} Registered Successfully")
-                return redirect('dashboard')
-
-            except BadHeaderError:
-                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
-                return redirect('register')
-        else:
-            messages.warning(request, "Passwords don't match")
-            return redirect('register')
-    return render(request, 'supplier/accounts/register.html', context=context)
-
-
-def verification(request, token, user_id):
-    context = {
-        'title': 'Fuel Finder | Verification',
-    }
-    check = User.objects.filter(id=user_id)
-    print("here l am ")
-    
-    if check.exists():
-        user = User.objects.get(id=user_id)
-        print(user)
-
-        token_check = TokenAuthentication.objects.filter(user=user, token=token)
-        result = bool([token_check])
-        print(result)
-        if result == True:
-            print("tapindawo")
-            user.is_active = True
-            user.save()
-            messages.success(request, f'Welcome {user.username}, your account is now verified')
-
-        else:
-            messages.warning(request, 'Wrong verification token')
-            return redirect('login')
-    else:
-        messages.warning(request, 'Wrong verification id')
-        return redirect('login')
-    return render(request, 'supplier/accounts/verification.html', context=context)
-
-
-def sign_in(request):
-    context = {
-        'title': 'Fuel Finder | Login',
-    }
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        authenticated = authenticate(username=username, password=password)
-        if authenticated:
-            client = User.objects.get(username=username)
-            login(request, client)
-
-            messages.success(request, 'Welcome {client.username}')
-            return redirect('dashboard')
-        else:
-            messages.warning(request, 'Incorrect username or password')
-            return redirect('login')
-
-    return render(request, 'supplier/accounts/login.html', context=context)
-
-
-@login_required()
-def change_password(request):
-    context = {
-        'title': 'Fuel Finder | Change Password',
-        'password_change': PasswordChange(user=request.user)
-    }
-    if request.method == 'POST':
-        old = request.POST.get('old_password')
-        new1 = request.POST.get('new_password1')
-        new2 = request.POST.get('new_password2')
-
-        if authenticate(request, username=request.user.username, password=old):
-            if new1 != new2:
-                messages.warning(request, "Passwords Don't Match")
-                return redirect('change-password')
-            else:
-                user = request.user
-                user.set_password(new1)
-                user.save()
-                update_session_auth_hash(request, user)
-
-                messages.success(request, 'Password Successfully Changed')
-                return redirect('dashboard')
-        else:
-            messages.warning(request, 'Wrong Old Password, Please Try Again')
-            return redirect('change-password')
-    return render(request, 'supplier/accounts/change_password.html', context=context)
-
-
-@login_required()
-def account(request):
-    context = {
-        'title': 'Fuel Finder | Account',
-        'user': UserUpdateForm(instance=request.user)
-
-    }
-    if request.method == 'POST':
-        userform = UserUpdateForm(request.POST, instance=request.user)
-        if userform.is_valid():
-            userform.save()
-            messages.success(request, f'Profile successfully updated')
-            return redirect('account')
-        else:
-            messages.warning(request, f'Something went wrong while saving your changes')
-            return redirect('account')
-    return render(request, 'supplier/accounts/account.html', context=context)
-
-
-#@login_required()
-def fuel_request(request):
-    context = {
-        'title': 'Fuel Finder | Fuel Request',
-        'requests': FuelRequest.objects.filter(date=today)
-    }
-    if request.method == 'POST':
-        submitted_id = request.POST.get('request_id')
-        if FuelRequest.objects.filter(id=submitted_id).exists():
-            request_id = FuelRequest.objects.get(id=submitted_id)
-            buyer_id = BuyerProfile.objects.get(id='')
-            Transaction.objects.create(request_id=request_id,
-                                       buyer_id=buyer_id)
-            messages.success(request, f'You have accepted a request for {request_id.amount} litres from {buyer_id.name}')
-            return redirect('fuel-request')
-    return render(request, 'supplier/accounts/fuel_request.html', context=context)
-
-
-@login_required()
-def rate_supplier(request):
-    context = {
-        'title': 'Fuel Finder | Rate Supplier',
-    }
-    return render(request, 'supplier/accounts/ratings.html', context=context)
-
-
-
-
-
-
- {% load static %}
- <!DOCTYPE html>
- <html lang="en">
- 
- <head>
-   <meta charset="utf-8" />
-   <link rel="apple-touch-icon" sizes="76x76" href="{% static 'finder/assets/img/apple-icon.png' %}">
-   <link rel="icon" type="image/png" href="{% static 'finder/assets/img/favicon.png' %}">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-   <title>
-     Fuel Finder 
-   </title>
-   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
-   <!--     Fonts and icons     -->
-   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
-   <!-- CSS Files -->
-   <link href="{% static 'finder/assets/css/material-dashboard.css' %}" rel="stylesheet" />
-   <!-- CSS Just for demo purpose, don't include it in your project -->
-   <link href="{% static 'finder/assets/demo/demo.css' %}" rel="stylesheet" />
- </head>
- 
- <body class="">
-   <div class="wrapper ">
-     <div class="sidebar" data-color="purple" data-background-color="white" data-image="{% static 'finder/assets/img/sidebar-1.jpg' %}">
-       <!--
-         Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
- 
-         Tip 2: you can also add an image using data-image tag
-     -->
-       <div class="logo">
-         <a href="http://www.creative-tim.com" class="simple-text logo-normal">
-           <strong>Fuel Finder</strong>
-         </a>
-       </div>
-       <div class="sidebar-wrapper">
-         <ul class="nav">
-           <li class="nav-item active  ">
-             <a class="nav-link" href="./finder/dashboard.html">
-               <i class="material-icons">dashboard</i>
-               <p>Dashboard</p>
-             </a>
-           </li>
-           
-           <li class="nav-item ">
-             <a class="nav-link" href="./orgss">
-               <i class="material-icons">swap_vertical_circle</i>
-               <p>Organisations</p>
-             </a>
-           </li>  
-           
-           <li class="nav-item ">
-             <a class="nav-link" href="./add_org.html">
-               <i class="material-icons">swap_vertical_circle</i>
-               <p>Create Organisation</p>
-             </a>
-           </li>
- 
-           <li class="nav-item">
-             <a class="nav-link" href="./users">
-               <i class="material-icons">people</i>
-               <p>Users</p>
-             </a>
-           </li>  
- 
-           <li class="nav-item ">
-             <a class="nav-link" href="./add_user.html">
-               <i class="material-icons">person</i>
-               <p>Create User</p>
-             </a>
-           </li>
-           
-           <li class="nav-item ">
-             <a class="nav-link" href="./update_user.html">
-               <i class="material-icons">person</i>
-               <p>Update User</p>
-             </a>
-           </li>
-             
- 
-           <li class="nav-item">
-             <a class="nav-link" href="#">
-               <i class="material-icons">close</i>
-               <p>Logout</p>
-             </a>
-           </li>
+                                                    <div class="form-group row">
+                                                        <label for="inputState" class="col-sm-2 col-form-label">Role</label>
+                                                        <div class="col-sm-10" style="margin-left: 5px;"></div>
+                                                            <select name="user_type" id="inputState" class="form-control" style="margin-left: 15px;">
+                                                                <option>Staff</option>
+                                                                <option>Admin</option>
+                                                            </select>
+                                                        </div>    
+                                                        <div class="col-md-12 text-center">     
+                                                            <button type="submit" class="btn btn-primary ">Submit</button>
+                                                        </div>
+                                                  </form> 
+                                            </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            
+                        <!-- Supplier Delete Modal -->
+                        <div class="modal fade" id="delete_{{supplier.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Delete {{supplier.username}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+                                            {% load crispy_forms_tags %}
+                                            <form action="{% url 'users:suppliers_delete' supplier.id %}" method="POST">
+                                            {{ delete_form }}
+                                            {% csrf_token %}
+                                            <p>Are You Sure You Want To Delete {{ supplier.username|title }}</p>
+                                                <div class="btn-group">
+                                                    <button class="btn btn-danger" type="submit">Yes</button>
+                                                    <button class="btn btn-warning" data-dismiss="modal">No</button>
+                                                </div>
+                                            </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>      
+                    </tr>
+                   
+                    {% endfor %}   
+                    <div id = "container" align = "center">
           
-         </ul>
-       </div>
-     </div>
-     <div class="main-panel">
-       <!-- Navbar -->
-       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
-         <div class="container-fluid">
-           <div class="navbar-wrapper">
-             <a class="navbar-brand" href="#pablo"></a>
-           </div>
-           <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-             <span class="sr-only">Toggle navigation</span>
-             <span class="navbar-toggler-icon icon-bar"></span>
-             <span class="navbar-toggler-icon icon-bar"></span>
-             <span class="navbar-toggler-icon icon-bar"></span>
-           </button>
-           <div class="collapse navbar-collapse justify-content-end">
-             <form class="navbar-form">
-               <div class="input-group no-border">
-                 <input type="text" value="" class="form-control" placeholder="Search...">
-                 <button type="submit" class="btn btn-white btn-round btn-just-icon">
-                   <i class="material-icons">search</i>
-                   <div class="ripple-container"></div>
-                 </button>
-               </div>
-             </form>
-             <ul class="navbar-nav">
-               
-               <li class="nav-item dropdown">
-                 <a class="nav-link" href="#pablo" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                   <i class="material-icons">person</i>
-                   <p class="d-lg-none d-md-block">
-                     Account
-                   </p>
-                 </a>
-                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-                   <a class="dropdown-item" href="#">Profile</a>
-                   <a class="dropdown-item" href="#">Settings</a>
-                   <div class="dropdown-divider"></div>
-                   <a class="dropdown-item" href="#">Log out</a>
-                 </div>
-               </li>
-             </ul>
-           </div>
-         </div>
-       </nav>
-       <!-- End Navbar -->
- 
-       <div class="">
-         <div class="container-fluid">
-           <!-- your content here -->
-           
-           {% block body %} {% endblock %}
-         </div>
-       </div>
- 
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_user">Add User </button>
+                    
+                        </div> 
+                    <div class="modal fade" id="new_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Add User </h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">  
+                        
+                                    {% load crispy_forms_tags %}
+                                    <form action="{% url 'users:suppliers_list' %}" method="POST">
+                                    {{ form1|crispy }}
+                                    {% csrf_token %}
+                                    <button class="btn btn-primary" type="submit">Add User Profile</button>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                  
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                </tbody>
+                </table>
+            {% else %}
+            <p>Nothing To SHow</p>    
+            {% endif %}
+        </div>
+    </div>
+    </div>
     
-     </div>
-   </div>
-  
-   <!--   Core JS Files   -->
-   <script src="{% static 'finder/assets/js/core/jquery.min.js' %}"></script>
-   <script src="{% static 'finder/assets/js/core/popper.min.js' %}"></script>
-   <script src="{% static 'finder/assets/js/core/bootstrap-material-design.min.js' %}"></script>
-   <script src="{% static 'finder/assets/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
-   <!-- Plugin for the momentJs  -->
-   <script src="{% static 'finder/assets/js/plugins/moment.min.js' %}"></script>
-   <!--  Plugin for Sweet Alert -->
-   <script src="{% static 'finder/assets/js/plugins/sweetalert2.js' %}"></script>
-   <!-- Forms Validations Plugin -->
-   <script src="{% static 'finder/assets/js/plugins/jquery.validate.min.js' %}"></script>
-   <!-- Plugin for the Wizard, full documentation here: https://github.com/VinceG/twitter-bootstrap-wizard -->
-   <script src="{% static 'finder/assets/js/plugins/jquery.bootstrap-wizard.js' %}"></script>
-   <!--	Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
-   <script src="{% static 'finder/assets/js/plugins/bootstrap-selectpicker.js' %}"></script>
-   <!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
-   <script src="{% static 'finder/assets/js/plugins/bootstrap-datetimepicker.min.js' %}"></script>
-   <!--  DataTables.net Plugin, full documentation here: https://datatables.net/  -->
-   <script src="{% static 'finder/assets/js/plugins/jquery.dataTables.min.js' %}"></script>
-   <!--	Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
-   <script src="{% static 'finder/assets/js/plugins/bootstrap-tagsinput.js' %}"></script>
-   <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
-   <script src="{% static 'finder/assets/js/plugins/jasny-bootstrap.min.js' %}"></script>
-   <!--  Full Calendar Plugin, full documentation here: https://github.com/fullcalendar/fullcalendar    -->
-   <script src="{% static 'finder/assets/js/plugins/fullcalendar.min.js' %}"></script>
-   <!-- Vector Map plugin, full documentation here: http://jvectormap.com/documentation/ -->
-   <script src="{% static 'finder/assets/js/plugins/jquery-jvectormap.js' %}"></script>
-   <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
-   <script src="{% static 'finder/assets/js/plugins/nouislider.min.js' %}"></script>
-   <!-- Include a polyfill for ES6 Promises (optional) for IE11, UC Browser and Android browser support SweetAlert -->
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
-   <!-- Library for adding dinamically elements -->
-   <script src="{% static 'finder/assets/js/plugins/arrive.min.js' %}"></script>
-   <!--  Google Maps Plugin    -->
-   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
-   <!-- Chartist JS -->
-   <script src="{% static 'finder/assets/js/plugins/chartist.min.js' %}"></script>
-   <!--  Notifications Plugin    -->
-   <script src="{% static 'finder/assets/js/plugins/bootstrap-notify.js' %}"></script>
-   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-   <script src="{% static 'finder/assets/js/material-dashboard.js' %}" type="text/javascript"></script>
-   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
-   <script src="{% static 'finder/assets/demo/demo.js' %}"></script>
-   <script>
-     $(document).ready(function() {
-       $().ready(function() {
-         $sidebar = $('.sidebar');
- 
-         $sidebar_img_container = $sidebar.find('.sidebar-background');
- 
-         $full_page = $('.full-page');
- 
-         $sidebar_responsive = $('body > .navbar-collapse');
- 
-         window_width = $(window).width();
- 
-         fixed_plugin_open = $('.sidebar .sidebar-wrapper .nav li.active a p').html();
- 
-         if (window_width > 767 && fixed_plugin_open == 'Dashboard') {
-           if ($('.fixed-plugin .dropdown').hasClass('show-dropdown')) {
-             $('.fixed-plugin .dropdown').addClass('open');
-           }
- 
-         }
- 
-         $('.fixed-plugin a').click(function(event) {
-           // Alex if we click on switch, stop propagation of the event, so the dropdown will not be hide, otherwise we set the  section active
-           if ($(this).hasClass('switch-trigger')) {
-             if (event.stopPropagation) {
-               event.stopPropagation();
-             } else if (window.event) {
-               window.event.cancelBubble = true;
-             }
-           }
-         });
- 
-         $('.fixed-plugin .active-color span').click(function() {
-           $full_page_background = $('.full-page-background');
- 
-           $(this).siblings().removeClass('active');
-           $(this).addClass('active');
- 
-           var new_color = $(this).data('color');
- 
-           if ($sidebar.length != 0) {
-             $sidebar.attr('data-color', new_color);
-           }
- 
-           if ($full_page.length != 0) {
-             $full_page.attr('filter-color', new_color);
-           }
- 
-           if ($sidebar_responsive.length != 0) {
-             $sidebar_responsive.attr('data-color', new_color);
-           }
-         });
- 
-         $('.fixed-plugin .background-color .badge').click(function() {
-           $(this).siblings().removeClass('active');
-           $(this).addClass('active');
- 
-           var new_color = $(this).data('background-color');
- 
-           if ($sidebar.length != 0) {
-             $sidebar.attr('data-background-color', new_color);
-           }
-         });
- 
-         $('.fixed-plugin .img-holder').click(function() {
-           $full_page_background = $('.full-page-background');
- 
-           $(this).parent('li').siblings().removeClass('active');
-           $(this).parent('li').addClass('active');
- 
- 
-           var new_image = $(this).find("img").attr('src');
- 
-           if ($sidebar_img_container.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
-             $sidebar_img_container.fadeOut('fast', function() {
-               $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
-               $sidebar_img_container.fadeIn('fast');
-             });
-           }
- 
-           if ($full_page_background.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
-             var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
- 
-             $full_page_background.fadeOut('fast', function() {
-               $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
-               $full_page_background.fadeIn('fast');
-             });
-           }
- 
-           if ($('.switch-sidebar-image input:checked').length == 0) {
-             var new_image = $('.fixed-plugin li.active .img-holder').find("img").attr('src');
-             var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
- 
-             $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
-             $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
-           }
- 
-           if ($sidebar_responsive.length != 0) {
-             $sidebar_responsive.css('background-image', 'url("' + new_image + '")');
-           }
-         });
- 
-         $('.switch-sidebar-image input').change(function() {
-           $full_page_background = $('.full-page-background');
- 
-           $input = $(this);
- 
-           if ($input.is(':checked')) {
-             if ($sidebar_img_container.length != 0) {
-               $sidebar_img_container.fadeIn('fast');
-               $sidebar.attr('data-image', '#');
-             }
- 
-             if ($full_page_background.length != 0) {
-               $full_page_background.fadeIn('fast');
-               $full_page.attr('data-image', '#');
-             }
- 
-             background_image = true;
-           } else {
-             if ($sidebar_img_container.length != 0) {
-               $sidebar.removeAttr('data-image');
-               $sidebar_img_container.fadeOut('fast');
-             }
- 
-             if ($full_page_background.length != 0) {
-               $full_page.removeAttr('data-image', '#');
-               $full_page_background.fadeOut('fast');
-             }
- 
-             background_image = false;
-           }
-         });
- 
-         $('.switch-sidebar-mini input').change(function() {
-           $body = $('body');
- 
-           $input = $(this);
- 
-           if (md.misc.sidebar_mini_active == true) {
-             $('body').removeClass('sidebar-mini');
-             md.misc.sidebar_mini_active = false;
- 
-             $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
- 
-           } else {
- 
-             $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar('destroy');
- 
-             setTimeout(function() {
-               $('body').addClass('sidebar-mini');
- 
-               md.misc.sidebar_mini_active = true;
-             }, 300);
-           }
- 
-           // we simulate the window Resize so the charts will get updated in realtime.
-           var simulateWindowResize = setInterval(function() {
-             window.dispatchEvent(new Event('resize'));
-           }, 180);
- 
-           // we stop the simulation of Window Resize after the animations are completed
-           setTimeout(function() {
-             clearInterval(simulateWindowResize);
-           }, 1000);
- 
-         });
-       });
-     });
-   </script>
-   <script>
-     $(document).ready(function() {
-       // Javascript method's body can be found in assets/js/demos.js
-       md.initDashboardPageCharts();
- 
-     });
-   </script>
- </body>
- 
- </html>
- 
+</div>
+{% endblock %}

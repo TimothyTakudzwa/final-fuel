@@ -1,0 +1,102 @@
+{% extends "serviceStation/base.html" %}
+{% block body %}
+
+<div style="margin-left: 30px;">
+    <h1 class="display-3"> Allocated Stock  </h1>
+    <hr class="my-2">
+    
+      
+
+</div>
+
+
+<div class="col-md-12">
+    <div class="card" style="background-color:white">
+        
+        <div class="card-header card-header-primary">
+        <h4 class="card-title "></h4>
+        </div>
+    <div class="card-body">
+        <div class="container-fluid">
+            {% if allocates %}
+
+            <table id="example" class="table table-striped table-bordered" style="width:100%">
+                <thead style="color:white; background:lightslategray">
+                    <th style="color:white;">
+                        Date
+                       </th>
+                       <th style="color:white;">
+                        Fuel Type
+                         </th>
+                       <th style="color:white;">
+                        Allocated Quantity
+                         </th>
+                         
+                           <th style="color:white;">
+                            Available Quantity 
+                           </th>
+                        
+                          <th style="color:white;">
+                          Action
+                        </th>
+                   <tbody>
+                       {% for allocate in allocates %}
+                       <tr>
+                           <td>{{allocate.date}}</td>
+                           <td>{{allocate.fuel_type}}</td>
+                           <td>{{allocate.allocated_quantity}}</td>
+                           <td>{{allocate.current_available_quantity}}</td>
+                           
+                           <td>
+                               <div class="btn-group">
+                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#{{allocate.id}}">Update</button>  
+                                    
+
+                               </div>
+                            </td>
+                            
+           
+                    </tr>
+                               <!--update fuel-->
+<div class="modal fade" id="{{allocate.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Update Quantity</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">  
+
+          {% load crispy_forms_tags %}
+          <form action="{% url 'serviceStation:allocated_fuel' %}" method="POST">
+              {% csrf_token %}
+              {{fuel_update_form|crispy}}
+          <button class="btn btn-primary" type="submit">Update</button>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+                    {% endfor %}   
+                </tbody>
+                </table>
+
+            {% else %}
+            <p>Nothing To SHow</p>    
+            {% endif %}
+
+
+
+                  
+        </div>
+    </div>
+    </div>
+    
+</div>
+{% endblock %}

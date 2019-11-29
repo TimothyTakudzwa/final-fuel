@@ -18,6 +18,11 @@ from supplier.models import *
 from users.models import *
 from django.contrib.auth import authenticate
 from .forms import AllocationForm
+<<<<<<< HEAD
+from django.contrib.auth import get_user_model
+user = get_user_model()
+=======
+>>>>>>> 71070ebdf71209339e4e5d94d2fd07256b3a9c39
 
 
 def index(request):
@@ -88,7 +93,17 @@ def supplier_user_edit(request, cid):
         messages.success(request, 'Your Changes Have Been Saved')
     return render(request, 'users/suppliers_list.html')
 
-
+def myaccount(request):
+    staff = user.objects.get(id=request.user.id)
+    print(staff.username)
+    if request.method == 'POST':
+        staff.email = request.POST['email']
+        staff.phone_number = request.POST['phone_number']
+        staff.company_position = request.POST['company_position']
+        staff.save()
+        messages.success(request, 'Your Changes Have Been Saved')
+       
+    return render(request, 'users/profile.html')
 
 def stations(request):
     #user = authenticate(username='', password='')
@@ -99,6 +114,26 @@ def stations(request):
     return render(request, 'users/service_stations.html', {'stations': stations})
 
 def report_generator(request):
+<<<<<<< HEAD
+    if request.method == "POST":
+        start_date = datetime.strptime(request.form['end_date'], '%Y-%m-%d')
+        end_date = datetime.strptime(request.form['start_date'], '%Y-%m-%d')
+        if request.form['report_type'] == 'Transactions':
+            trans = Transaction.objects.filter(date__range=[start_date, end_date])
+            requests = None; allocations = None
+        if request.form['report_type'] == 'Fuel Requests':
+            requests = FuelRequest.objects.filter(date_range=[start_date, end_date])
+            trans = None; allocations = None
+        if request.form['report_type'] == 'Allocations':
+            allocations = FuelAllocation.objects.filter(date_range=[start_date, end_date])
+    form = ReportForm()
+    allocations = requests = trans = None
+
+    return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form })
+
+def depots(request):
+    depots = Depot.objects.all()
+=======
    
     if request.method == "POST":
         
@@ -133,6 +168,7 @@ def depots(request):
     # print(admin_.company)
     stations = Depot.objects.all()
 
+>>>>>>> 71070ebdf71209339e4e5d94d2fd07256b3a9c39
     return render(request, 'users/depots.html', {'depots': depots})         
 
 
@@ -180,6 +216,8 @@ def suppliers_list(request):
         try:
             msg = EmailMultiAlternatives(subject, message, sender, [f'{email}'])
             msg.send()
+<<<<<<< HEAD
+=======
 
             except BadHeaderError:
                 messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
@@ -198,8 +236,22 @@ def suppliers_list(request):
         form1.fields['company'].choices = [(service_station.id, service_station.name) for service_station in service_stations] 
         print("-----------Got here--------") 
         return render(request, 'users/suppliers_list.html', {'form1': form1})
+>>>>>>> 71070ebdf71209339e4e5d94d2fd07256b3a9c39
 
-    return render(request, 'users/suppliers_list.html',{'form1': form1})
+            messages.success(request, f"{username} Registered Successfully")
+            return redirect('users:buyers_list')
+
+        except BadHeaderError:
+            messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+            return redirect('users:buyers_list')
+        #contact.save()
+        messages.success(request, ('Your profile was successfully updated!'))
+        return redirect('users:suppliers')
+        print(token)
+        print("above is the token")
+        '''
+    
+    return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1})
 
 def suppliers_delete(request, sid):
     supplier = User.objects.filter(id=sid).first()
@@ -343,6 +395,62 @@ def delete_user(request,id):
     form = ActionForm()    
 
     return render(request, 'user/supplier_delete.html', {'form': form, 'supplier': supplier})
+
+
+
+
+def depot_staff(request):
+    suppliers = User.objects.all()   
+    form1 = SupplierContactForm()         
+    companies = Company.objects.all()
+    form1.fields['service_tation'].choices = [((company.id, company.name)) for company in companies] 
+
+    if request.method == 'POST':
+        form1 = SupplierContactForm( request.POST)
+        
+        print('--------------------tapinda---------------')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('paasword')
+        phone_number = request.POST.get('phone_number')
+        supplier_role = 'Staff'
+        f_service_station = request.POST.get('service_station')
+        company = Company.objects.get(id=f_service_station)
+        
+        print(type(User))
+        User.objects.create(username=username, first_name=first_name, last_name=last_name, user_type = 'SUPPLIER', company=company, email=email ,password=password, phone_number=phone_number,supplier_role=supplier_role)
+        messages.success(request, f"{username} Registered Successfully")
+        '''
+        token = secrets.token_hex(12)
+        user = User.objects.get(username=username)
+        TokenAuthentication.objects.create(token=token, user=user)
+        domain = request.get_host()
+        url = f'{domain}/verification/{token}/{user.id}' 
+
+        sender = f'Fuel Finder Accounts<tests@marlvinzw.me>'
+        subject = 'User Registration'
+        message = f"Dear {username} , please complete signup here : \n {url} \n. Your password is {password}"
+        
+        try:
+            msg = EmailMultiAlternatives(subject, message, sender, [f'{email}'])
+            msg.send()
+
+            messages.success(request, f"{username} Registered Successfully")
+            return redirect('users:buyers_list')
+
+        except BadHeaderError:
+            messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+            return redirect('users:buyers_list')
+        #contact.save()
+        messages.success(request, ('Your profile was successfully updated!'))
+        return redirect('users:suppliers')
+        print(token)
+        print("above is the token")
+        '''
+    
+    return render(request, 'users/depot_staff.html', {'suppliers': suppliers, 'form1': form1})
 
 
 
