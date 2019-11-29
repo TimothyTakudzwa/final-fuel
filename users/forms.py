@@ -29,10 +29,7 @@ class ReportForm(forms.Form):
     start_date = forms.DateField(widget=forms.SelectDateWidget())
     end_date = forms.DateField(widget=forms.SelectDateWidget())
 
-class SupplierStaffEditForm(forms.ModelForm):
-    class Meta:
-        model = SupplierContact
-        fields = ['telephone', 'cellphone', 'active']
+
 class BuyerContactForm(forms.Form):
     first_name = forms.CharField(label='First Name(s)', required=True,
                                 max_length=30)
