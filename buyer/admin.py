@@ -13,4 +13,4 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Company)
 admin.site.register(FuelRequest)
 admin.site.register(Subsidiaries)
-#admin.site.register(Depot)
+#admin.site.register(Depot)``
