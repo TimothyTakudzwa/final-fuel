@@ -24,7 +24,6 @@ class User(AbstractUser):
     position = models.IntegerField(default=0)
     user_type = models.CharField(max_length=20, default='', choices=TYPE_CHOICES)
     image = models.ImageField(default='default.png', upload_to='buyer_profile_pics')
-    # supplier_role = models.CharField(max_length=70)
     activated_for_whatsapp = models.BooleanField(default=False)
 
     def __str__(self):
@@ -44,7 +43,6 @@ class User(AbstractUser):
 class FuelRequest(models.Model):
     name = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     amount = models.IntegerField(default=0)
-    split = models.BooleanField(default=False)
     fuel_type = models.CharField(max_length=20)
     payment_method = models.CharField(max_length=200)
     delivery_method = models.CharField(max_length=200)
