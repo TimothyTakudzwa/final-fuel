@@ -7,11 +7,14 @@ from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.contrib import messages
 import secrets
 
-from datetime import date
+from datetime import date, time
 
+from buyer.forms import BuyerUpdateForm
+from buyer.models import Company
+from users.models import AuditTrail
 from .forms import PasswordChange, RegistrationForm, RegistrationProfileForm, \
     RegistrationEmailForm, UserUpdateForm, ProfilePictureUpdateForm, ProfileUpdateForm, FuelRequestForm
-from .models import Profile, FuelUpdate, FuelRequest, Transaction, Profile, TokenAuthentication
+from .models import Profile, FuelUpdate, FuelRequest, Transaction, Profile, TokenAuthentication, Offer
 from notification.models import Notification
 
 # today's date
@@ -76,7 +79,7 @@ def verification(request, token, user_id):
         token_check = TokenAuthentication.objects.filter(user=user, token=token)
         result = bool([token_check])
         print(result)
-        if result == True:
+        if result:
             if request.method == 'POST':
                 user = User.objects.get(id=user_id)
                 form = BuyerUpdateForm(request.POST, request.FILES, instance=user)
@@ -88,7 +91,7 @@ def verification(request, token, user_id):
                     user.company = selected_company
                     user.is_active = True
                     user.save()
-                    
+
             else:
                 form = BuyerUpdateForm
                 messages.success(request, f'Email verification successs, Fill in the deatails to complete registration')
@@ -114,7 +117,7 @@ def sign_in(request):
         if authenticated:
             client = User.objects.get(username=username)
             login(request, client)
-            
+
             messages.success(request, 'Welcome {client.username}')
             return redirect('dashboard')
         else:
@@ -198,8 +201,12 @@ def rate_supplier(request):
     }
     return render(request, 'supplier/accounts/ratings.html', context=context)
 
+
 @login_required
 def fuel_update(request):
+    context = {
+
+    }
     if request.method == 'POST':
         if FuelUpdate.objects.filter(date=today, fuel_type=request.POST.get('fuel_type')).exists():
             closing_time = time.strftime("%H:%M:%S")
@@ -209,16 +216,15 @@ def fuel_update(request):
             payment_method = request.POST.get('payment_method')
             fuel_type = request.POST.get('fuel_type')
             supplier_id = request.user.id
-            FuelUpdate.objects.create(supplier_id=supplier_id, deliver=False, fuel_type=fuel_type, closing_time=closing_time, max_amount=max_amount, min_amount=min_amount, payment_method=payment_method)
+            FuelUpdate.objects.create(supplier_id=supplier_id, deliver=False, fuel_type=fuel_type,
+                                      closing_time=closing_time, max_amount=max_amount, min_amount=min_amount,
+                                      payment_method=payment_method)
             messages.success(request, 'Quantity uploaded successfully')
             return redirect('fuel-request')
         else:
             fuel_update = FuelUpdate.objects.get(fuel_type=request.POST.get('fuel_type'), date=today)
             fuel_update.max_amount = request.POST.get('max_amount')
             fuel_update.min_amount = request.POST.get('min_amount')
-            fuel_update
-
-
     return render(request, 'supplier/accounts/ratings.html', context=context)
 
 
@@ -229,11 +235,11 @@ def offer(request, id):
         fuel_request = FuelRequest.objects.get(id=id)
 
         Offer.objects.create(price=price, quantity=quantity, supplier=request.user, request=fuel_request)
-        
+
         messages.success(request, 'Offer uploaded successfully')
         action = f"{request.user}  made an offer of {quantity} @ {price}"
 
-        AuditTrail.objects.create(user = request.user, action = action, reference = 'offer' )
+        AuditTrail.objects.create(user=request.user, action=action, reference='offer')
         return redirect('fuel-request')
     else:
         messages.warning(request, 'Oops something went wrong while posting your offer')
@@ -250,6 +256,7 @@ def edit_offer(request, id):
         messages.success(request, 'Offer successfully updated')
         return redirect('fuel-request')
     return render(request, 'supplier/accounts/fuel-request.html')
+
 
 @login_required()
 def notifications(request):

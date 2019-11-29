@@ -11,6 +11,7 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('buyer/', include('buyer.urls')),
+    path('login-api/', include('api.urls')),
     path('admin/', admin.site.urls), 
 
     path('logout/', auth_views.LogoutView.as_view(template_name='supplier/accounts/logout.html'), name='logout'),
@@ -20,7 +21,7 @@ urlpatterns = [
     path('password-change/', supplier_views.change_password, name='change-password'),
     path('account/', supplier_views.account, name='account'),
     path('fuel-request/', supplier_views.fuel_request, name='fuel-request'),
-    path('rate-supplier', supplier_views.rate_supplier, name='rate-supplier'),
+    path('rate-supplier/', supplier_views.rate_supplier, name='rate-supplier'),
 
     path('index', whatsapp_views.index, name='index'),
     # path('home/', finder_views.base, name='finder-home'),
