@@ -202,24 +202,25 @@ def rate_supplier(request):
 def fuel_update(request):
     if request.method == 'POST':
         if FuelUpdate.objects.filter(date=today, fuel_type=request.POST.get('fuel_type')).exists():
-            closing_time = time.strftime("%H:%M:%S")
-            max_amount = request.POST.get('max_amount')
-            min_amount = request.POST.get('min_amount')
-            deliver = request.POST.get('deliver')
+            fuel_update = FuelUpdate.objects.get(date=today, fuel_type=request.POST.get('fuel_type'))
+            fuel_update.available_quantity = request.POST.get('available_quantity')
+            fuel_update.price = request.POST.get('price')
+            fuel_update.payment_method = request.POST.get('payment_method')
+            fuel_update.status = request.POST.get('status')
+            fuel_update.save()
+            messages.success(request, 'Quantity uploaded successfully')
+        else:
+            available_quantity = request.POST.get('available_quantity')
             payment_method = request.POST.get('payment_method')
             fuel_type = request.POST.get('fuel_type')
+            status = request.POST.get('status')
+            price = request.POST.get('price')
             supplier_id = request.user.id
-            FuelUpdate.objects.create(supplier_id=supplier_id, deliver=False, fuel_type=fuel_type, closing_time=closing_time, max_amount=max_amount, min_amount=min_amount, payment_method=payment_method)
+            FuelUpdate.objects.create(supplier_id=supplier_id, status=status, fuel_type=fuel_type, price=price, available_quantity=available_quantity, payment_method=payment_method)
+
             messages.success(request, 'Quantity uploaded successfully')
-            return redirect('fuel-request')
-        else:
-            fuel_update = FuelUpdate.objects.get(fuel_type=request.POST.get('fuel_type'), date=today)
-            fuel_update.max_amount = request.POST.get('max_amount')
-            fuel_update.min_amount = request.POST.get('min_amount')
-            fuel_update
 
-
-    return render(request, 'supplier/accounts/ratings.html', context=context)
+    return redirect('stock')
 
 
 def offer(request, id):
@@ -251,18 +252,16 @@ def edit_offer(request, id):
         return redirect('fuel-request')
     return render(request, 'supplier/accounts/fuel-request.html')
 
-@login_required()
-def notifications(request):
+@login_required
+def transaction(request):
+    context= { 
+       'transactions' : Transaction.objects.filter(supplier=request.user, complete=False).all()
+        }
+    return render(request, 'supplier/accounts/transactions.html',context=context)
+
+@login_required
+def stock(request):
     context = {
-        'title': 'Fuel Finder | Notification',
-        'notifications': Notification.objects.filter(user=request.user),
-        'notifications_count': Notification.objects.filter(user=request.user, is_read=False).count(),
+        'stocks' : FuelUpdate.objects.filter(supplier_id=request.user, date=today)
     }
-    msgs = Notification.objects.filter(user=request.user, is_read=False)
-    if msgs.exists():
-        nots = Notification.objects.filter(user=request.user, is_read=False)
-        for i in nots:
-            user_not = Notification.objects.get(user=request.user, id=i.id)
-            user_not.is_read = True
-            user_not.save()
-    return render(request, 'supplier/accounts/notifications.html', context=context)
+    return render(request, 'supplier/accounts/stock.html', context=context)
