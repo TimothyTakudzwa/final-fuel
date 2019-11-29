@@ -1,7 +1,7 @@
 from django import forms 
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile, FuelRequest
+from .models import  FuelRequest
 from .constants import *
 from django.contrib.auth import get_user_model
 
@@ -38,12 +38,6 @@ class BuyerUpdateForm(UserCreationForm):
     class Meta:
         model = User   
         fields = ['image', 'company_id','user_type', 'company_position','password1', 'password2']
-
-class ProfileUpdateForm(forms.ModelForm):
-
-    class Meta:
-        model = Profile
-        fields = ['image']
 
 class FuelRequestForm(forms.ModelForm):
 

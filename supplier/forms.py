@@ -1,11 +1,13 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
-from .models import Profile, FuelUpdate, FuelRequest
+from .models import  FuelRequest
+from company.models import Company
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
-from .models import Profile, FuelUpdate, FuelRequest, Offer
+from .models import  FuelRequest, Offer
+from company.models import Company, FuelUpdate
 
 
 class PasswordChange(PasswordChangeForm):
@@ -27,10 +29,10 @@ class RegistrationForm(UserCreationForm):
         fields = ['username', 'password1', 'password2']
 
 
-class RegistrationProfileForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['phone']
+# class RegistrationProfileForm(forms.ModelForm):
+#     class Meta:
+#         model = Profile
+#         fields = ['phone']
 
 
 class RegistrationEmailForm(forms.Form):
@@ -45,16 +47,16 @@ class UserUpdateForm(forms.ModelForm):
         fields = ['first_name', 'last_name', 'email', 'username']
 
 
-class ProfileUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['phone']
+# class ProfileUpdateForm(forms.ModelForm):
+#     class Meta:
+#         model = Profile
+#         fields = ['phone']
 
 
-class ProfilePictureUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['picture']
+# class ProfilePictureUpdateForm(forms.ModelForm):
+#     class Meta:
+#         model = Profile
+#         fields = ['picture']
 
 
 class FuelRequestForm(forms.ModelForm):
@@ -67,7 +69,7 @@ class FuelRequestForm(forms.ModelForm):
     
     class Meta:
         model = FuelRequest
-        fields = ['amount', 'split', 'payment_method', 'delivery_method', 'fuel_type']
+        fields = ['amount',  'payment_method', 'delivery_method', 'fuel_type']
         
 
 class FuelUpdateForm(forms.ModelForm):
@@ -80,7 +82,7 @@ class FuelUpdateForm(forms.ModelForm):
 
     class Meta:
         model = FuelUpdate
-        fields = ['max_amount', 'min_amount', 'deliver','fuel_type', 'payment_method']
+        fields = [ 'deliver']
 
 
 
