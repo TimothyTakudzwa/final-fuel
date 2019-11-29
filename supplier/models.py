@@ -10,6 +10,7 @@ class Subsidiaries(models.Model):
     name = models.CharField(max_length=200, default='')
     address = models.CharField(max_length=200, help_text='Harare, Livingstone Street')    
     has_fuel = models.BooleanField(default=False)    
+    is_depot = models.BooleanField(default=False)    
     opening_time = models.CharField(max_length=100, default='08:00')
     closing_time = models.CharField(max_length=100, default='22:00')
     fuel_capacity = models.ForeignKey(FuelUpdate, on_delete=models.DO_NOTHING, null=True)
