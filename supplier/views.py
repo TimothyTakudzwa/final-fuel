@@ -7,11 +7,12 @@ from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.contrib import messages
 import secrets
 
-from datetime import date, datetime
-
-from .forms import PasswordChange, RegistrationForm, RegistrationProfileForm, \
-    RegistrationEmailForm, UserUpdateForm, ProfilePictureUpdateForm, ProfileUpdateForm, FuelRequestForm
-from .models import Profile, FuelUpdate, FuelRequest, Transaction, Profile, TokenAuthentication, Offer, FuelAllocation
+from datetime import date
+from buyer.forms import BuyerUpdateForm
+from company.models import Company, FuelUpdate
+from .forms import PasswordChange, RegistrationForm, \
+    RegistrationEmailForm, UserUpdateForm,  FuelRequestForm
+from .models import  FuelRequest, Transaction, TokenAuthentication
 from notification.models import Notification
 
 # today's date

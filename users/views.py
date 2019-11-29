@@ -106,7 +106,7 @@ def stations(request):
     #user = authenticate(username='', password='')
     #admin_ = User.objects.filter(company_id='Marshy').first()
     # print(admin_.company)
-    stations = ServiceStation.objects.all()
+    stations = Subsidiaries.objects.all()
 
     return render(request, 'users/service_stations.html', {'stations': stations})
 
