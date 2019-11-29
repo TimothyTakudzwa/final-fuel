@@ -18,6 +18,7 @@ class User(AbstractUser):
     user_type = models.CharField(max_length=20, default='', choices=TYPE_CHOICES)
     image = models.ImageField(default='default.png', upload_to='buyer_profile_pics')
     activated_for_whatsapp = models.BooleanField(default=False)
+    subsidiary_id = models.IntegerField(default=0)
 
     def __str__(self):
         return f' {self.id} - {self.username}'
