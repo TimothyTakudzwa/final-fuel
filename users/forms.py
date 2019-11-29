@@ -26,6 +26,7 @@ def validate_user_email(value):
 class ReportForm(forms.Form):
     CHOICES = (('Transactions', 'Transactions'),('Fuel Requests', 'Fuel Requests'), ('Allocations', 'Allocations'))
     report_choices = forms.ChoiceField(choices=CHOICES)
+    report_type = forms.ChoiceField(choices=CHOICES)
     start_date = forms.DateField(widget=forms.SelectDateWidget())
     end_date = forms.DateField(widget=forms.SelectDateWidget())
 

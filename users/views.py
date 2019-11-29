@@ -18,8 +18,11 @@ from supplier.models import *
 from users.models import *
 from django.contrib.auth import authenticate
 from .forms import AllocationForm
+<<<<<<< HEAD
 from django.contrib.auth import get_user_model
 user = get_user_model()
+=======
+>>>>>>> 71070ebdf71209339e4e5d94d2fd07256b3a9c39
 
 
 def index(request):
@@ -111,6 +114,7 @@ def stations(request):
     return render(request, 'users/service_stations.html', {'stations': stations})
 
 def report_generator(request):
+<<<<<<< HEAD
     if request.method == "POST":
         start_date = datetime.strptime(request.form['end_date'], '%Y-%m-%d')
         end_date = datetime.strptime(request.form['start_date'], '%Y-%m-%d')
@@ -129,6 +133,42 @@ def report_generator(request):
 
 def depots(request):
     depots = Depot.objects.all()
+=======
+   
+    if request.method == "POST":
+        
+        form = ReportForm(request.POST or None)
+        if form.is_valid():
+            end_date = form.cleaned_data.get('end_date')
+            start_date = form.cleaned_data.get('start_date')
+            
+            # start_date = datetime.strptime(str(start_date), '%Y-%m-%d')
+            # end_date = datetime.strptime(str(end_date), '%Y-%m-%d')
+            if form.cleaned_data.get('report_type') == 'Transactions':
+                trans = Transaction.objects.filter(date__range=[start_date, end_date])
+                requests = None; allocations = None
+            if form.cleaned_data.get('report_type') == 'Fuel Requests':
+                requests = FuelRequest.objects.filter(date__range=[start_date, end_date])
+                trans = None; allocations = None
+            if form.cleaned_data.get('report_type') == 'Allocations':
+                allocations = FuelAllocation.objects.filter(date__range=[start_date, end_date])
+            return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form } )
+        else:
+            messages.success(request, f"Suo")       
+
+        allocations = requests = trans = None
+    form = ReportForm()
+    allocations = requests = trans = None
+
+    return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form } )
+
+def depots(request):
+    #user = authenticate(username='', password='')
+    #admin_ = User.objects.filter(company_id='Marshy').first()
+    # print(admin_.company)
+    stations = Depot.objects.all()
+
+>>>>>>> 71070ebdf71209339e4e5d94d2fd07256b3a9c39
     return render(request, 'users/depots.html', {'depots': depots})         
 
 
@@ -176,6 +216,27 @@ def suppliers_list(request):
         try:
             msg = EmailMultiAlternatives(subject, message, sender, [f'{email}'])
             msg.send()
+<<<<<<< HEAD
+=======
+
+            except BadHeaderError:
+                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+                return redirect('users:buyers_list')
+            #contact.save()
+            messages.success(request, ('Your profile was successfully updated!'))
+            return redirect('users:suppliers')
+            print(token)
+            print("above is the token")
+            '''
+    else:
+        form1 = SupplierContactForm()  
+        service_stations = Subsidiaries.objects.filter(company = request.user.company).all()     
+        # companies = Company.objects.all()
+        print(service_stations)
+        form1.fields['company'].choices = [(service_station.id, service_station.name) for service_station in service_stations] 
+        print("-----------Got here--------") 
+        return render(request, 'users/suppliers_list.html', {'form1': form1})
+>>>>>>> 71070ebdf71209339e4e5d94d2fd07256b3a9c39
 
             messages.success(request, f"{username} Registered Successfully")
             return redirect('users:buyers_list')
