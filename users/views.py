@@ -94,7 +94,7 @@ def stations(request):
     #user = authenticate(username='', password='')
     #admin_ = User.objects.filter(company_id='Marshy').first()
     # print(admin_.company)
-    stations = ServiceStation.objects.all()
+    stations = Subsidiaries.objects.all()
 
     return render(request, 'users/service_stations.html', {'stations': stations})
 
@@ -181,20 +181,25 @@ def suppliers_list(request):
             msg = EmailMultiAlternatives(subject, message, sender, [f'{email}'])
             msg.send()
 
-            messages.success(request, f"{username} Registered Successfully")
-            return redirect('users:buyers_list')
+            except BadHeaderError:
+                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+                return redirect('users:buyers_list')
+            #contact.save()
+            messages.success(request, ('Your profile was successfully updated!'))
+            return redirect('users:suppliers')
+            print(token)
+            print("above is the token")
+            '''
+    else:
+        form1 = SupplierContactForm()  
+        service_stations = Subsidiaries.objects.filter(company = request.user.company).all()     
+        # companies = Company.objects.all()
+        print(service_stations)
+        form1.fields['company'].choices = [(service_station.id, service_station.name) for service_station in service_stations] 
+        print("-----------Got here--------") 
+        return render(request, 'users/suppliers_list.html', {'form1': form1})
 
-        except BadHeaderError:
-            messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
-            return redirect('users:buyers_list')
-        #contact.save()
-        messages.success(request, ('Your profile was successfully updated!'))
-        return redirect('users:suppliers')
-        print(token)
-        print("above is the token")
-        '''
-    
-    return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1})
+    return render(request, 'users/suppliers_list.html',{'form1': form1})
 
 def suppliers_delete(request, sid):
     supplier = User.objects.filter(id=sid).first()

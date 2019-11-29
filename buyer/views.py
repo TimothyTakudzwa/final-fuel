@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import BuyerRegisterForm, BuyerUpdateForm, ProfileUpdateForm, FuelRequestForm
+from .forms import BuyerRegisterForm, BuyerUpdateForm, FuelRequestForm
 #from supplier.forms import FuelRequestForm
 from .constants import sample_data
-from buyer.models import User, Company
+from buyer.models import User
+from company.models import Company
 import requests
 import secrets
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
