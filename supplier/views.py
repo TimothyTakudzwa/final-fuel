@@ -7,6 +7,14 @@ from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.contrib import messages
 import secrets
 
+from datetime import date, time
+
+from buyer.forms import BuyerUpdateForm
+from buyer.models import Company
+from users.models import AuditTrail
+from .forms import PasswordChange, RegistrationForm, RegistrationProfileForm, \
+    RegistrationEmailForm, UserUpdateForm, ProfilePictureUpdateForm, ProfileUpdateForm, FuelRequestForm
+from .models import Profile, FuelUpdate, FuelRequest, Transaction, Profile, TokenAuthentication, Offer
 from datetime import date
 from buyer.forms import BuyerUpdateForm
 from company.models import Company, FuelUpdate
@@ -77,7 +85,7 @@ def verification(request, token, user_id):
         token_check = TokenAuthentication.objects.filter(user=user, token=token)
         result = bool([token_check])
         print(result)
-        if result == True:
+        if result:
             if request.method == 'POST':
                 user = User.objects.get(id=user_id)
                 form = BuyerUpdateForm(request.POST, request.FILES, instance=user)
@@ -89,7 +97,7 @@ def verification(request, token, user_id):
                     user.company = selected_company
                     user.is_active = True
                     user.save()
-                    
+
             else:
                 form = BuyerUpdateForm
                 messages.success(request, f'Email verification successs, Fill in the deatails to complete registration')
@@ -115,7 +123,7 @@ def sign_in(request):
         if authenticated:
             client = User.objects.get(username=username)
             login(request, client)
-            
+
             messages.success(request, 'Welcome {client.username}')
             return redirect('dashboard')
         else:
@@ -196,8 +204,12 @@ def rate_supplier(request):
     }
     return render(request, 'supplier/accounts/ratings.html', context=context)
 
+
 @login_required
 def fuel_update(request):
+    context = {
+
+    }
     if request.method == 'POST':
         if FuelUpdate.objects.filter(date=today, fuel_type=request.POST.get('fuel_type')).exists():
             fuel_update = FuelUpdate.objects.get(date=today, fuel_type=request.POST.get('fuel_type'))
@@ -217,28 +229,15 @@ def fuel_update(request):
             status = request.POST.get('status')
             price = request.POST.get('price')
             supplier_id = request.user.id
-            FuelUpdate.objects.create(supplier_id=supplier_id, status=status, fuel_type=fuel_type, price=price, available_quantity=available_quantity, payment_method=payment_method)
-
-            fuel_allocated = FuelAllocation.objects.get(date=today, fuel_type=transaction.request.fuel_type, assigned_staff=request.user)
-            fuel_allocated.current_available_quantity = fuel_allocated.current_available_quantity - request.POST.get('available_quantity')
-            fuel_allocated.save()
-
-            messages.success(request, 'Quantity uploaded successfully')
-
-    return redirect('stock')
-
-
-def offer(request, id):
     if request.method == "POST":
         price = request.POST.get('price')
         quantity = request.POST.get('quantity')
         fuel_request = FuelRequest.objects.get(id=id)
 
         Offer.objects.create(price=price, quantity=quantity, supplier=request.user, request=fuel_request)
-        
+
         messages.success(request, 'Offer uploaded successfully')
         action = f"{request.user}  made an offer of {quantity} @ {price}"
-
         # AuditTrail.objects.create(user = request.user, action = action, reference = 'offer' )
         return redirect('fuel-request')
     else:
@@ -297,6 +296,7 @@ def complete_transaction(request, id):
         messages.warning(request, f'You do not have any {transaction.request.fuel_type} available in stock')
     
     return redirect('transaction')
+
 
 
 @login_required()
