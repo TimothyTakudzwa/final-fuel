@@ -46,7 +46,7 @@ def stations(request):
     #user = authenticate(username='', password='')
     #admin_ = User.objects.filter(company_id='Marshy').first()
     # print(admin_.company)
-    stations = ServiceStation.objects.all()
+    stations = Subsidiaries.objects.all()
 
     return render(request, 'users/service_stations.html', {'stations': stations})    
 
@@ -110,7 +110,7 @@ def suppliers_list(request):
             '''
     else:
         form1 = SupplierContactForm()  
-        service_stations = ServiceStation.objects.filter(company = request.user.company).all()     
+        service_stations = Subsidiaries.objects.filter(company = request.user.company).all()     
         # companies = Company.objects.all()
         print(service_stations)
         form1.fields['company'].choices = [(service_station.id, service_station.name) for service_station in service_stations] 

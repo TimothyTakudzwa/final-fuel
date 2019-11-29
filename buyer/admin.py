@@ -1,6 +1,7 @@
 from django.contrib import admin
-from buyer.models import Profile, User, Company, FuelRequest
-from supplier.models import ServiceStation, Depot
+from buyer.models import User, FuelRequest
+from company.models import Company
+from supplier.models import Subsidiaries
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ('email', 'username','first_name', 'last_name', 'phone_number')
@@ -10,5 +11,5 @@ class UserAdmin(admin.ModelAdmin):
 admin.site.register(User, UserAdmin)
 admin.site.register(Company)
 admin.site.register(FuelRequest)
-admin.site.register(ServiceStation)
+admin.site.register(Subsidiaries)
 #admin.site.register(Depot)
