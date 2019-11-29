@@ -33,6 +33,8 @@ ALLOWED_HOSTS = ['b60c1816.ngrok.io', '127.0.0.1']
 
 INSTALLED_APPS = [
     'buyer.apps.BuyerConfig',
+    'company.apps.CompanyConfig',
+    'serviceStation.apps.ServicestationConfig',
     'supplier.apps.SupplierConfig',
     'finder.apps.FinderConfig',
     'notification.apps.NotificationConfig',

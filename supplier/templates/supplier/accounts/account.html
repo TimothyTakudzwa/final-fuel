@@ -1,0 +1,20 @@
+{% extends "supplier/dashboard.html" %}
+{% load static %}
+{% block title %}
+{{title}}
+{% endblock %}
+{% block body %}
+    <div class="col-md-12">
+        <div class="card mt-5" style="background-color:white">
+                <div class="card-header card-header-primary">
+                        <h4 class="card-title">My Profile</h4>
+                    </div>
+            {% load crispy_forms_tags %}
+            <form action="{% url 'supplier:account' %}" method="POST">
+                {% csrf_token %}
+                {{ user|crispy}}
+            <p align="center"><button class="btn btn-primary" type="submit">Update</button></p>
+            </form>
+        </div>
+    </div>
+{%endblock%}
