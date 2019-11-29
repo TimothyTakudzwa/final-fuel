@@ -46,12 +46,11 @@ class ProfileUpdateForm(forms.ModelForm):
         fields = ['image']
 
 class FuelRequestForm(forms.ModelForm):
-    OPTIONS= [
-    ('SELF COLLECTION', 'self collection'),
-    ('DELIVERY', 'delivery'),
-    ]
 
-    delivery_method = forms.CharField(label='Delivery Method', widget=forms.Select(choices=OPTIONS))
+    delivery_method = forms.CharField(label='Delivery Method', widget=forms.Select(choices=DELIVERY_OPTIONS))
+    fuel_type = forms.CharField(label='Fuel Type', widget=forms.Select(choices=FUEL_CHOICES))
+    amount = forms.IntegerField(label='litres')
+    payment_method = forms.CharField(label='Payment Method', widget=forms.Select(choices=PAYING_CHOICES))
     
     class Meta:
         model = FuelRequest

@@ -33,7 +33,7 @@ def login_success(request):
     user_type  = request.user.user_type
     print(user_type)
     if user_type == "BUYER":
-        return redirect("buyer-profile")
+        return redirect("buyer-dashboard")
     else:
         return redirect("users:suppliers_list")
 def token_is_send(request, user):
@@ -128,7 +128,7 @@ def profile(request):
     }
     return render(request, 'buyer/profile.html', context)
 
-#@login_required
+@login_required
 def fuel_request(request):
     if request.method == 'POST':
         form = FuelRequestForm(request.POST)
@@ -153,6 +153,7 @@ def fuel_request(request):
     
     return render(request, 'buyer/fuel_request.html', {'form': form})
 
+@login_required
 def dashboard(request):
     if request.method == 'POST':
         form = FuelRequestForm(request.POST)
@@ -168,9 +169,10 @@ def dashboard(request):
             fuel_request.fuel_type = fuel_type
             fuel_request.payment_method = payment_method
             fuel_request.delivery_method = delivery_method
+            fuel_request.is_direct_deal = True
+            fuel_request.last_deal = request.POST.get('company_id')
             fuel_request.save()
-
-            
+    
             messages.success(request, f'kindly not your request has been made ')
     else:
         form = FuelRequestForm
