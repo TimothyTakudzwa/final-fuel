@@ -35,6 +35,8 @@ def login_success(request):
     print(user_type)
     if user_type == "BUYER":
         return redirect("buyer-profile")
+    elif user_type == 'SS_SUPPLIER':
+        return redirect("serviceStation:home")
     else:
         return redirect("users:suppliers_list")
 def token_is_send(request, user):

@@ -16,8 +16,11 @@ from django.contrib import messages
 from buyer.models import *
 from supplier.models import *
 from users.models import *
+from company.models import Company
 from django.contrib.auth import authenticate
 from .forms import AllocationForm
+from django.contrib.auth import get_user_model
+user = get_user_model()
 
 
 def index(request):
@@ -88,7 +91,17 @@ def supplier_user_edit(request, cid):
         messages.success(request, 'Your Changes Have Been Saved')
     return render(request, 'users/suppliers_list.html')
 
-
+def myaccount(request):
+    staff = user.objects.get(id=request.user.id)
+    print(staff.username)
+    if request.method == 'POST':
+        staff.email = request.POST['email']
+        staff.phone_number = request.POST['phone_number']
+        staff.company_position = request.POST['company_position']
+        staff.save()
+        messages.success(request, 'Your Changes Have Been Saved')
+       
+    return render(request, 'users/profile.html')
 
 def stations(request):
     #user = authenticate(username='', password='')
@@ -128,11 +141,7 @@ def report_generator(request):
     return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form } )
 
 def depots(request):
-    #user = authenticate(username='', password='')
-    #admin_ = User.objects.filter(company_id='Marshy').first()
-    # print(admin_.company)
-    stations = Depot.objects.all()
-
+    stations = Subsidiaries.objects.filter(company.id == request.user.company.id).first()
     return render(request, 'users/depots.html', {'depots': depots})         
 
 
@@ -147,7 +156,7 @@ def suppliers_list(request):
     suppliers = User.objects.all()   
     form1 = SupplierContactForm()         
     companies = Company.objects.all()
-    form1.fields['service_tation'].choices = [((company.id, company.name)) for company in companies] 
+    form1.fields['service_station'].choices = [((company.id, company.name)) for company in companies] 
 
     if request.method == 'POST':
         form1 = SupplierContactForm( request.POST)
@@ -192,14 +201,10 @@ def suppliers_list(request):
             '''
     else:
         form1 = SupplierContactForm()  
-        service_stations = Subsidiaries.objects.filter(company = request.user.company).all()     
-        # companies = Company.objects.all()
-        print(service_stations)
-        form1.fields['company'].choices = [(service_station.id, service_station.name) for service_station in service_stations] 
-        print("-----------Got here--------") 
+        service_stations = Subsidiaries.objects.filter(company = request.user.company).all() 
+        form1.fields['service_station'].choices = [(service_station.id, service_station.name) for service_station in service_stations] 
         return render(request, 'users/suppliers_list.html', {'form1': form1})
 
-    return render(request, 'users/suppliers_list.html',{'form1': form1})
 
 def suppliers_delete(request, sid):
     supplier = User.objects.filter(id=sid).first()
@@ -343,6 +348,62 @@ def delete_user(request,id):
     form = ActionForm()    
 
     return render(request, 'user/supplier_delete.html', {'form': form, 'supplier': supplier})
+
+
+
+
+def depot_staff(request):
+    suppliers = User.objects.all()   
+    form1 = SupplierContactForm()         
+    companies = Company.objects.all()
+    form1.fields['service_tation'].choices = [((company.id, company.name)) for company in companies] 
+
+    if request.method == 'POST':
+        form1 = SupplierContactForm( request.POST)
+        
+        print('--------------------tapinda---------------')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('paasword')
+        phone_number = request.POST.get('phone_number')
+        supplier_role = 'Staff'
+        f_service_station = request.POST.get('service_station')
+        company = Company.objects.get(id=f_service_station)
+        
+        print(type(User))
+        User.objects.create(username=username, first_name=first_name, last_name=last_name, user_type = 'SUPPLIER', company=company, email=email ,password=password, phone_number=phone_number,supplier_role=supplier_role)
+        messages.success(request, f"{username} Registered Successfully")
+        '''
+        token = secrets.token_hex(12)
+        user = User.objects.get(username=username)
+        TokenAuthentication.objects.create(token=token, user=user)
+        domain = request.get_host()
+        url = f'{domain}/verification/{token}/{user.id}' 
+
+        sender = f'Fuel Finder Accounts<tests@marlvinzw.me>'
+        subject = 'User Registration'
+        message = f"Dear {username} , please complete signup here : \n {url} \n. Your password is {password}"
+        
+        try:
+            msg = EmailMultiAlternatives(subject, message, sender, [f'{email}'])
+            msg.send()
+
+            messages.success(request, f"{username} Registered Successfully")
+            return redirect('users:buyers_list')
+
+        except BadHeaderError:
+            messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+            return redirect('users:buyers_list')
+        #contact.save()
+        messages.success(request, ('Your profile was successfully updated!'))
+        return redirect('users:suppliers')
+        print(token)
+        print("above is the token")
+        '''
+    
+    return render(request, 'users/depot_staff.html', {'suppliers': suppliers, 'form1': form1})
 
 
 

@@ -40,20 +40,26 @@
       </div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="nav-item active  ">
-            <a class="nav-link" href="url ">
+          <li class="nav-item {% if request.path == '/fuel-request/' %} active {% endif %}  ">
+            <a class="nav-link" href="{%url 'fuel-request'%}">
               <i class="material-icons">dashboard</i>
               <p>Requests</p>
             </a>
           </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="./add_org.html">
+          <li class="nav-item {% if request.path == '/stock/' %} active {% endif %} ">
+              <a class="nav-link" href="{%url 'stock'%}">
+                <i class="material-icons">local_gas_station</i>
+                <p>Fuel Stocks</p>
+              </a>
+            </li>
+         <li class="nav-item {% if request.path == '/transaction/' %} active {% endif %}">
+            <a class="nav-link" href="{%url 'transaction'%}">
               <i class="material-icons">swap_vertical_circle</i>
               <p>Transactions</p>
             </a>
           </li>
 
-          <li class="nav-item ">
+          <li class="nav-item {% if request.path == '/account/' %} active {% endif %}" >
             <a class="nav-link" href="{%url 'account'%}">
               <i class="material-icons">person</i>
               <p>User Profile</p>
@@ -84,6 +90,24 @@
           </button>
           <div class="collapse navbar-collapse justify-content-end">
             <ul class="navbar-nav">
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="material-icons">notifications</i>
+                      <span class="notification">5</span>
+                      <p class="d-lg-none d-md-block">
+                        Some Actions
+                      </p>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                      <a class="dropdown-item" href="#">Mike John responded to your email</a>
+                      <a class="dropdown-item" href="#">You have 5 new tasks</a>
+                      <a class="dropdown-item" href="#">You're now friend with Andrew</a>
+                      <a class="dropdown-item" href="#">Another Notification</a>
+                      <a class="dropdown-item" href="#">Another One</a>
+                    </div>
+                  </li>
+                  
               <li class="nav-item dropdown">
                 <a class="nav-link" href="#pablo" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="material-icons">person</i>
@@ -125,9 +149,6 @@
 
                 </div>
                 <div class="container">
-                <p style="text-align:center">
-                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add_fuel">Upload Quantity</button> </p>
-
                 {% block body %}{% endblock %}
                 </div>
 
@@ -135,33 +156,6 @@
         </main>
 
    
-    </div>
-  </div>
-
-  <!--update fuel-->
-<div class="modal fade" id="add_fuel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Update today's capacity</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">  
-
-            {% load crispy_forms_tags %}
-            <form action="{% url 'supplier:fuel_update' %}" method="POST">
-                {% csrf_token %}
-                {{fuel_update_form|crispy}}
-            <button class="btn btn-primary" type="submit">Update</button>
-            </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          
-        </div>
-      </div>
     </div>
   </div>
  

@@ -25,14 +25,12 @@ def validate_user_email(value):
 
 class ReportForm(forms.Form):
     CHOICES = (('Transactions', 'Transactions'),('Fuel Requests', 'Fuel Requests'), ('Allocations', 'Allocations'))
+    report_choices = forms.ChoiceField(choices=CHOICES)
     report_type = forms.ChoiceField(choices=CHOICES)
     start_date = forms.DateField(widget=forms.SelectDateWidget())
     end_date = forms.DateField(widget=forms.SelectDateWidget())
 
-class SupplierStaffEditForm(forms.ModelForm):
-    class Meta:
-        model = SupplierContact
-        fields = ['telephone', 'cellphone', 'active']
+
 class BuyerContactForm(forms.Form):
     first_name = forms.CharField(label='First Name(s)', required=True,
                                 max_length=30)
@@ -69,7 +67,7 @@ class SupplierContactForm(forms.Form):
                                  max_length=30)                         
     username = forms.CharField(label='Username', required=True,
                                  max_length=30)
-    service_tation = forms.ChoiceField()
+    service_station = forms.ChoiceField()
     email = forms.EmailField(required=True, max_length=100,
                             validators=[validate_user_email])
     phone_number = forms.CharField(label='Cellphone number', required=True,

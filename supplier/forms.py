@@ -9,6 +9,10 @@ User = get_user_model()
 from .models import  FuelRequest, Offer
 from company.models import Company, FuelUpdate
 
+User = get_user_model()
+FUEL_CHOICES=[('PETROL', 'PETROL'), ('DIESEL', 'DIESEL'),]
+STATUS_CHOICES = (('OPEN','open'),('CLOSED','Closed'),('OFFLOADING','Offloading'))
+PAYING_CHOICES = (('USD', 'USD'),('TRANSFER','TRANSFER'),('BOND CASH','BOND CASH'),('USD & TRANSFER','USD & TRANSFER'),('TRANSFER & BOND CASH','TRANSFER & BOND CASH'),('USD & BOND CASH','USD & BOND CASH'),('USD, TRANSFER & BOND CASH','USD, TRANSFER & BOND CASH'))
 
 class PasswordChange(PasswordChangeForm):
     class Meta:
@@ -61,8 +65,8 @@ class UserUpdateForm(forms.ModelForm):
 
 class FuelRequestForm(forms.ModelForm):
     OPTIONS= [
-    ('SELF COLLECTION', 'self collection'),
-    ('DELIVERY', 'delivery'),
+    ('SELF COLLECTION', 'SELF COLLECTION'),
+    ('DELIVERY', 'DELIVERY'),
     ]
 
     delivery_method = forms.CharField(label='Delivery Method', widget=forms.Select(choices=OPTIONS))
@@ -74,11 +78,21 @@ class FuelRequestForm(forms.ModelForm):
 
 class FuelUpdateForm(forms.ModelForm):
     OPTIONS= [
-    ('PETROL', 'petrol'),
-    ('DIESEL', 'diesel'),
+    ('PETROL', 'Petrol'),
+    ('DIESEL', 'Diesel'),
+    ('BLEND', 'Blend'),
     ]
 
     fuel_type = forms.CharField(label='Fuel Type', widget=forms.Select(choices=OPTIONS))
+    payment_method = forms.CharField(label='Payment Method', widget=forms.Select(choices=PAYING_CHOICES))
+
+  
+
+class StockLevelForm(forms.ModelForm):
+
+    fuel_type = forms.CharField(label='Fuel Type', widget=forms.Select(choices=FUEL_CHOICES))
+    status = forms.CharField(label='Status', widget=forms.Select(choices=STATUS_CHOICES))
+    payment_method = forms.CharField(label='Payment Method', widget=forms.Select(choices=PAYING_CHOICES))
 
     class Meta:
         model = FuelUpdate
@@ -99,7 +113,7 @@ class EditOfferForm(forms.ModelForm):
 
 def fuelupdate(request):
     return {
-        'fuel_update_form': FuelUpdateForm()
+        'fuel_update_form': StockLevelForm()
     }
 
 

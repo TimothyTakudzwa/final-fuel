@@ -7,6 +7,14 @@ from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.contrib import messages
 import secrets
 
+from datetime import date, time
+
+from buyer.forms import BuyerUpdateForm
+from buyer.models import Company
+from users.models import AuditTrail
+from .forms import PasswordChange, RegistrationForm, RegistrationProfileForm, \
+    RegistrationEmailForm, UserUpdateForm, ProfilePictureUpdateForm, ProfileUpdateForm, FuelRequestForm
+from .models import Profile, FuelUpdate, FuelRequest, Transaction, Profile, TokenAuthentication, Offer
 from datetime import date
 from buyer.forms import BuyerUpdateForm
 from company.models import Company, FuelUpdate
@@ -14,9 +22,6 @@ from .forms import PasswordChange, RegistrationForm, \
     RegistrationEmailForm, UserUpdateForm,  FuelRequestForm
 from .models import  FuelRequest, Transaction, TokenAuthentication
 from notification.models import Notification
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
 
 # today's date
 today = date.today()
@@ -80,7 +85,7 @@ def verification(request, token, user_id):
         token_check = TokenAuthentication.objects.filter(user=user, token=token)
         result = bool([token_check])
         print(result)
-        if result == True:
+        if result:
             if request.method == 'POST':
                 user = User.objects.get(id=user_id)
                 form = BuyerUpdateForm(request.POST, request.FILES, instance=user)
@@ -92,7 +97,7 @@ def verification(request, token, user_id):
                     user.company = selected_company
                     user.is_active = True
                     user.save()
-                    return redirect('buyer-login')
+
             else:
                 form = BuyerUpdateForm
                 messages.success(request, f'Email verification successs, Fill in the deatails to complete registration')
@@ -118,7 +123,7 @@ def sign_in(request):
         if authenticated:
             client = User.objects.get(username=username)
             login(request, client)
-            
+
             messages.success(request, 'Welcome {client.username}')
             return redirect('dashboard')
         else:
@@ -178,21 +183,18 @@ def account(request):
 
 @login_required()
 def fuel_request(request):
-    context = {
-        'title': 'Fuel Finder | Fuel Request',
-        'requests': FuelRequest.objects.filter(date=today)
-    }
-    if request.method == 'POST':
-        submitted_id = request.POST.get('request_id')
-        if FuelRequest.objects.filter(id=submitted_id).exists():
-            request_id = FuelRequest.objects.get(id=submitted_id)
-            buyer_id = Profile.objects.get(id='')
-            Transaction.objects.create(request_id=request_id,
-                                       buyer_id=buyer_id)
-            messages.success(request,
-                             f'You have accepted a request for {request_id.amount} litres from {buyer_id.name}')
-            return redirect('fuel-request')
-    return render(request, 'supplier/accounts/fuel_request.html', context=context)
+    requests = FuelRequest.objects.filter(date=today)
+    for buyer_request in requests:
+        if Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).exists():
+            offer = Offer.objects.get(supplier_id=request.user, request_id=buyer_request)
+            buyer_request.my_offer = f'{offer.quantity}ltrs @ ${offer.price}'
+            buyer_request.offer_price = offer.price
+            buyer_request.offer_quantity = offer.quantity
+            buyer_request.offer_id = offer.id
+        else:
+            buyer_request.my_offer = 0
+            buyer_request.offer_id = 0
+    return render(request, 'supplier/accounts/fuel_request.html', {'requests':requests})
 
 
 @login_required()
@@ -202,28 +204,53 @@ def rate_supplier(request):
     }
     return render(request, 'supplier/accounts/ratings.html', context=context)
 
+
 @login_required
 def fuel_update(request):
+    context = {
+
+    }
     if request.method == 'POST':
         if FuelUpdate.objects.filter(date=today, fuel_type=request.POST.get('fuel_type')).exists():
-            closing_time = time.strftime("%H:%M:%S")
-            max_amount = request.POST.get('max_amount')
-            min_amount = request.POST.get('min_amount')
-            deliver = request.POST.get('deliver')
+            fuel_update = FuelUpdate.objects.get(date=today, fuel_type=request.POST.get('fuel_type'))
+            fuel_update.available_quantity = request.POST.get('available_quantity')
+            fuel_update.price = request.POST.get('price')
+            fuel_update.payment_method = request.POST.get('payment_method')
+            fuel_update.status = request.POST.get('status')
+            fuel_update.save()
+
+            fuel_allocated = FuelAllocation.objects.get(date=today, fuel_type=transaction.request.fuel_type, assigned_staff=request.user)
+            fuel_allocated.current_available_quantity = fuel_allocated.current_available_quantity - request.POST.get('available_quantity')
+            fuel_allocated.save()
+        else:
+            available_quantity = request.POST.get('available_quantity')
             payment_method = request.POST.get('payment_method')
             fuel_type = request.POST.get('fuel_type')
+            status = request.POST.get('status')
+            price = request.POST.get('price')
             supplier_id = request.user.id
-            FuelUpdate.objects.create(supplier_id=supplier_id, deliver=False, fuel_type=fuel_type, closing_time=closing_time, max_amount=max_amount, min_amount=min_amount, payment_method=payment_method)
+<<<<<<< HEAD
+            FuelUpdate.objects.create(supplier_id=supplier_id, deliver=False, fuel_type=fuel_type,
+                                      closing_time=closing_time, max_amount=max_amount, min_amount=min_amount,
+                                      payment_method=payment_method)
             messages.success(request, 'Quantity uploaded successfully')
             return redirect('fuel-request')
         else:
             fuel_update = FuelUpdate.objects.get(fuel_type=request.POST.get('fuel_type'), date=today)
             fuel_update.max_amount = request.POST.get('max_amount')
             fuel_update.min_amount = request.POST.get('min_amount')
-            fuel_update
-
-
     return render(request, 'supplier/accounts/ratings.html', context=context)
+=======
+            FuelUpdate.objects.create(supplier_id=supplier_id, status=status, fuel_type=fuel_type, price=price, available_quantity=available_quantity, payment_method=payment_method)
+
+            fuel_allocated = FuelAllocation.objects.get(date=today, fuel_type=transaction.request.fuel_type, assigned_staff=request.user)
+            fuel_allocated.current_available_quantity = fuel_allocated.current_available_quantity - request.POST.get('available_quantity')
+            fuel_allocated.save()
+
+            messages.success(request, 'Quantity uploaded successfully')
+
+    return redirect('stock')
+>>>>>>> bf29f5d59a39b5b430a9d8ddafc2a732837c1340
 
 
 def offer(request, id):
@@ -233,11 +260,15 @@ def offer(request, id):
         fuel_request = FuelRequest.objects.get(id=id)
 
         Offer.objects.create(price=price, quantity=quantity, supplier=request.user, request=fuel_request)
-        
+
         messages.success(request, 'Offer uploaded successfully')
         action = f"{request.user}  made an offer of {quantity} @ {price}"
 
-        AuditTrail.objects.create(user = request.user, action = action, reference = 'offer' )
+<<<<<<< HEAD
+        AuditTrail.objects.create(user=request.user, action=action, reference='offer')
+=======
+        # AuditTrail.objects.create(user = request.user, action = action, reference = 'offer' )
+>>>>>>> bf29f5d59a39b5b430a9d8ddafc2a732837c1340
         return redirect('fuel-request')
     else:
         messages.warning(request, 'Oops something went wrong while posting your offer')
@@ -253,7 +284,50 @@ def edit_offer(request, id):
         offer.save()
         messages.success(request, 'Offer successfully updated')
         return redirect('fuel-request')
-    return render(request, 'supplier/accounts/fuel-request.html')
+    return render(request, 'supplier/accounts/fuel_request.html')
+
+
+@login_required
+def transaction(request):
+    context= { 
+       'transactions' : Transaction.objects.filter(supplier=request.user, complete=False).all()
+        }
+    return render(request, 'supplier/accounts/transactions.html',context=context)
+
+@login_required
+def stock(request):
+    context = {
+        'stocks' : FuelUpdate.objects.filter(supplier_id=request.user, date=today)
+    }
+    return render(request, 'supplier/accounts/stock.html', context=context)
+
+
+@login_required
+def complete_transaction(request, id):
+    transaction = Transaction.objects.get(id=id)
+    if FuelUpdate.objects.filter(date=today, fuel_type=transaction.request.fuel_type).exists():
+        available_quantity = FuelUpdate.objects.get(date=today, fuel_type=transaction.request.fuel_type)
+        if available_quantity.available_quantity > transaction.offer.quantity:
+            transaction.complete == True
+            transaction.save()
+
+            available_quantity.available_quantity = available_quantity.available_quantity - transaction.offer.quantity
+            available_quantity.save()
+
+            fuel_allocated = FuelAllocation.objects.get(date=today, fuel_type=transaction.request.fuel_type, assigned_staff=request.user)
+            fuel_allocated.current_available_quantity = fuel_allocated.current_available_quantity - request.POST.get('available_quantity')
+            fuel_allocated.save()
+
+            messages.success(request, 'Transaction completed successfully!')
+        else:
+            messages.warning(request, f'Not enough {transaction.request.fuel_type} left in stock')
+        
+    else:
+        messages.warning(request, f'You do not have any {transaction.request.fuel_type} available in stock')
+    
+    return redirect('transaction')
+
+
 
 @login_required()
 def notifications(request):
