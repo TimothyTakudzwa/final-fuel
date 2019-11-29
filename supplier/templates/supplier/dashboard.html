@@ -40,12 +40,8 @@
       </div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="nav-item {% if request.path == '/fuel-request/' %} active {% endif %}  ">
             <a class="nav-link" href="{%url 'fuel-request'%}">
               <i class="material-icons">dashboard</i>
-              <p>Requests</p>
-            </a>
-          </li>
           <li class="nav-item {% if request.path == '/stock/' %} active {% endif %} ">
               <a class="nav-link" href="{%url 'stock'%}">
                 <i class="material-icons">local_gas_station</i>
@@ -54,16 +50,16 @@
             </li>
          <li class="nav-item {% if request.path == '/transaction/' %} active {% endif %}">
             <a class="nav-link" href="{%url 'transaction'%}">
+=======
+          <li class="nav-item ">
+            <a class="nav-link" href="./add_org.html">
+>>>>>>> b0f61fb3cb92063b29535b9012c3ebc7598f458c
               <i class="material-icons">swap_vertical_circle</i>
               <p>Transactions</p>
             </a>
           </li>
 
-          <li class="nav-item {% if request.path == '/account/' %} active {% endif %}" >
             <a class="nav-link" href="{%url 'account'%}">
-              <i class="material-icons">person</i>
-              <p>User Profile</p>
-            </a>
           </li>
           
           <li class="nav-item">
@@ -90,7 +86,6 @@
           </button>
           <div class="collapse navbar-collapse justify-content-end">
             <ul class="navbar-nav">
-
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <i class="material-icons">notifications</i>
@@ -109,8 +104,6 @@
                   </li>
                   
               <li class="nav-item dropdown">
-                <a class="nav-link" href="#pablo" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="material-icons">person</i>
                   <p class="d-lg-none d-md-block">
                     Account
                   </p>

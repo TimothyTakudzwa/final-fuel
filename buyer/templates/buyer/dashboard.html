@@ -1,0 +1,135 @@
+{% extends "finder/buyer_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block body%}
+
+<div class="card">
+    <div class="card-header card-header-primary">
+        <h4 class="card-title ">Fuel Updates</h4>
+        <p class="card-category"> Here is a list of all Suppliers Offering Bulk Fuel</p>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped" id="fuel_updates">
+                <thead class=" text-primary">
+                    <tr>
+                        <th>
+                            <h6>Company ID </h6>
+                        </th>
+                        <th>
+                            <h6>Company Name</h6>
+                        </th>
+                        <th>
+                            <h6> Fuel Type</h6>
+                        </th>
+                        <th>
+                            <h6> Price</h6>
+                        </th>
+                        <th>
+                            <h6>Quantity</h6>
+                        </th>
+                        <th>
+                            <h6>Updated on </h6>
+                        </th>
+                        <th>
+                            <h6>Action</h6>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for data in sample_data %}
+                    <tr>
+                        <td>
+                            {{data.company_id}}
+                        </td>
+                        <td>
+                            {{data.company_name}}
+                        </td>
+                        <td>
+                            {{data.fuel_type}}
+                        </td>
+                        <td class="text-danger">
+                            {{data.price}}
+                        </td>
+                        <td class="text-primary">
+                            {{data.quantity}}
+                        </td>
+                        <td class="text-primary">
+                            {{data.updated_on}}
+                        </td>
+                        <td class="text-primary">
+
+                            <button class="btn btn-facebook btn-sm" data-toggle="modal"
+                                data-target="#make_deal{{data.company_id}}"> <i
+                                    class="material-icons">ev_station</i>Deal </button>
+                        </td>
+                    </tr>
+                    <div class="modal fade" id="make_deal{{data.company_id}}" tabindex="-1" role="dialog"
+                        aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-notice">
+                            <div class="modal-content">
+                                <div class="modal-header text-center">
+                                    <h5 class="modal-title" id="myModalLabel">Make a deal</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <i class="material-icons">close</i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="modal-body">
+                                        <form method="POST">
+                                            {% csrf_token %}
+
+                                            {{ form|crispy }}
+                                            <input type="hidden" value="{{data.company_id}}" name="company_id" />
+                                    </div>
+                                    <div class="modal-footer justify-content-center">
+                                        <button type="submit" class="btn btn-info btn-round">Sounds good!</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+            <div class="col-sm-12"><button class="btn btn-round btn-primary" data-toggle="modal"
+                    data-target="#create_request" style="margin-left: 40%;"> <i
+                        class="material-icons">local_gas_station</i>Look for Fuel</button></div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+</div>
+
+<!-- notice modal -->
+<div class="modal fade" id="create_request" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-notice">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h5 class="modal-title" id="myModalLabel">Make a requests</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-info btn-round">Wait for Offer</button>
+                    <button type="submit" class="btn btn-primary btn-round">System Generated</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end notice modal -->
+
+
+{% endblock %}

@@ -1,4 +1,4 @@
-from buyer.models import Company
+from company.models import Company
 COMPANY_CHOICES = ''
 try:
     companies = Company.objects.all()
@@ -14,3 +14,29 @@ subject = 'User Registration'
 
 PAYING_CHOICES = (('USD', 'USD'),('TRANSFER','TRANSFER'),('BOND CASH','BOND CASH'),('USD & TRANSFER','USD & TRANSFER'),('TRANSFER & BOND CASH','TRANSFER & BOND CASH'),('USD & BOND CASH','USD & BOND CASH'),('USD, TRANSFER & BOND CASH','USD, TRANSFER & BOND CASH'))
 
+sample_data = [
+    {
+        'company_id' : 1,
+        'company_name': 'Total Zimbabwe',
+        'fuel_type' : 'Petrol',
+        'price' : '$0.75', 
+        'quantity' : '5000l', 
+        'updated_on' : 'September 13 2019', 
+    },
+      {
+        'company_id' : 2,
+        'company_name': 'Zuva Zimbabwe',
+        'fuel_type' : 'Diesel',
+        'price' : '$1.25', 
+        'quantity' : '200 000L', 
+        'updated_on' : 'June 5 2017', 
+    },
+      {
+        'company_id' : 3,
+        'company_name': 'Trek Zimbabwe',
+        'fuel_type' : 'Petrol',
+        'price' : '$1.12', 
+        'quantity' : '500L', 
+        'updated_on' : 'July 7 2019', 
+    },
+]
