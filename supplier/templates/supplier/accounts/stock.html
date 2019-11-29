@@ -1,77 +1,191 @@
 {% extends "supplier/dashboard.html" %}
 {% load static %}
-{% block title %}
-{{title}}
-{% endblock %}
 {% block body %}
-<p style="text-align:center">
-        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add_fuel">Update Stock</button> </p>
-<div class="row">
-    <div class="col-md-12">
-        <div class="card mt-5" style="background-color:white">
-            <div class="card-header card-header-primary">
-                <h4 class="card-title">Available stocks</h4>
-            </div>
-            <div class="card-body">
-                <div class="container-fluid">
-                    <table id="example" class="table table-striped table-bordered" style="width:100%">
-                        <thead style="background-color: lightslategray; color:white;">
-                            <tr>
-                                <th style="color: white;"></th>
-                                <th style="color: white;">Fuel Type</th>
-                                <th style="color: white;">Arrival Time</th>
-                                <th style="color: white;">Status</th>
-                                <th style="color: white;"> Quantity </th>
-                                <th style="color: white;">Price/l</th>
-                                <th style="color: white;">Payment Method</th>
 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for stock in stocks %}
-                            <tr>
-                                <td></td>
-                                <td>{{ stock.fuel_type }}</td>
-                                <td>{{ stock.arrival_time }}</td>
-                                <td>{{ stock.status }}</td>
-                                <td>{{ stock.available_quantity }}</td>
-                                <td>{{ stock.price }}</td>
-                                <td>{{ stock.payment_method }}</td>
-                            </tr>
-                            {%endfor%}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+
+
+<div class="col-md-12">
+  <div class="card" style="background-color:white">
+
+    <div class="card-header card-header-primary">
+      <h4 class="card-title ">Station Fuel Update</h4>
     </div>
-</div>
+    <div class="card-body">
+      <div class="container-fluid">
+        {% if updates %}
 
-  <!--update fuel-->
-  <div class="modal fade" id="add_fuel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Update today's capacity</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">  
-    
+      <!--
+        <div class="col-sm-12 row">
+          <div class="col-sm-6"><b>
+            <label class="bmd-label-floating" style="color:rgb(79, 77, 172); white-space: pre-wrap;"><h3><i>Fuel Station Name</i></h3></label>
+            </b></div>
+          <div class="col-sm-6">
+              <h3> <input name="name" type="text" value="{{subsidiary}}" class="form-control" style="color:rgba(19, 19, 230, 0.952)"></h3>
+            
+          </div>
+        </div>
+        <div class="col-sm-12 row">
+          <div class="col-sm-6"><b>
+              <label class="bmd-label-floating" style="color:rgb(48, 66, 128)"><h3><i>Petrol Quantity</i></h3></label>
+            </b></div>
+          <div class="col-sm-6">
+              <h3> <input name="name" type="text" value="{{updates.petrol_quantity}}" class="form-control" style="color:rgba(19, 19, 230, 0.952)"></h3>
+            
+          </div>
+        </div>
+        <div class="col-sm-12 row">
+          <div class="col-sm-6"><b>
+              <label class="bmd-label-floating" style="color:rgb(57, 65, 134)"><h3><i>Petrol Price</i></h3></label>
+            </b></div>
+          <div class="col-sm-6">
+              <h3> <input name="name" type="text" value="{{updates.petrol_price}}" class="form-control" style="color:rgba(19, 19, 230, 0.952)"></h3>
+           
+          </div>
+        </div>
+        <div class="col-sm-12 row">
+          <div class="col-sm-6"><b>
+              <label class="bmd-label-floating" style="color:rgb(55, 53, 141)"><h3><i>Diesel Quantity</i></h3></label>
+            </b></div>
+          <div class="col-sm-6">
+              <h3> <input name="name" type="text" value="{{updates.diesel_quantity}}" class="form-control" style="color:rgba(19, 19, 230, 0.952)"></h3>
+          
+          </div>
+        </div>
+        <div class="col-sm-12 row">
+          <div class="col-sm-6"><b>
+              <label class="bmd-label-floating" style="color:rgb(48, 46, 143)"><h3><i>Diesel Price</i></h3></label>
+            </b></div>
+          <div class="col-sm-6">
+              <h3> <input name="name" type="text" value="{{updates.diesel_price}}" class="form-control" style="color:rgba(19, 19, 230, 0.952)"></h3>
+          </div>
+        </div>
+      -->
+      <table id="example" class="table table-striped table-bordered" style="width:100%">
+          <tr>
+              <td height="50"> Fuel Station Name</td>
+              <td height="50"> {{subsidiary}}</td>
+            </tr>
+      <tr>
+          <td height="50">Petrol Quantity</td>
+          <td height="50">{{updates.petrol_quantity}}</td>
+        </tr>
+        <tr>
+            <td height="50">Petrol Price</td>
+            <td height="50">{{updates.petrol_price}}</td>
+          </tr>
+          <tr>
+              <td height="50">Diesel Quantity</td>
+              <td height="50">{{updates.diesel_quantity}}</td>
+            </tr>
+            <tr>
+                <td height="50">Diesel Price</td>
+                <td height="50">{{updates.diesel_price}}</td>
+              </tr>
+
+      </table>
+        {% else %}
+        <p>Nothing To SHow</p>
+        {% endif %}
+        <!--update fuel-->
+        <div class="modal fade" id="add_fuel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update today's capacity</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+
                 {% load crispy_forms_tags %}
-                <form action="{% url 'supplier:fuel_update' %}" method="POST">
-                    {% csrf_token %}
-                    {{fuel_update_form|crispy}}
-                <button class="btn btn-primary" type="submit">Update</button>
+                <form action="{% url 'serviceStation:home' %}" method="POST">
+                           {% csrf_token %}
+                           {{fuel_update_form|crispy}}
+
+                  <!--  <div class="col-sm-12 row">
+                        <div class="col-sm-6">
+                          Petrol Quantity
+                        </div>
+                        <div class="col-sm-6">
+                            <input value="{{updates.petrol_quantity}}" type="text" name="petrol_quantity" class="form-control"/>
+                          </div>
+                    </div>
+                    <div class="col-sm-12 row">
+                        <div class="col-sm-6">
+                          Petrol Quantity
+                        </div>
+                        <div class="col-sm-6">
+                            <input value="{{updates.petrol_quantity}}" type="text" name="petrol_quantity" class="form-control"/>
+                          </div>
+                    </div>
+                    <div class="col-sm-12 row">
+                        <div class="col-sm-6">
+                          Petrol Quantity
+                        </div>
+                        <div class="col-sm-6">
+                            <input value="{{updates.petrol_quantity}}" type="text" name="petrol_quantity" class="form-control"/>
+                          </div>
+                    </div>
+                    <div class="col-sm-12 row">
+                        <div class="col-sm-6">
+                          Petrol Quantity
+                        </div>
+                        <div class="col-sm-6">
+                            <input value="{{updates.petrol_quantity}}" type="text" name="petrol_quantity" class="form-control"/>
+                          </div>
+                    </div>
+
+                      -->
+                  
+                  
+                  
                 </form>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" type="submit">Update</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+              </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              
+          </div>
+        </div>
+
+
+        <!--update fuel-->
+        <div class="modal fade" id="add_fuel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update today's capacity</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+
+                {% load crispy_forms_tags %}
+                <form action="{% url 'serviceStation:home' %}" method="POST">
+                  {% csrf_token %}
+                  {{fuel_update_form|crispy}}
+                  <button class="btn btn-primary" type="submit">Update</button>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+              </div>
             </div>
           </div>
         </div>
       </div>
-    
-{%endblock%}
+      <button type="button" style="background-color:rgb(49, 60, 112);margin-left:auto;margin-right:auto;display:block;"
+        class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add_fuel">Update Stock</button> </p>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}
