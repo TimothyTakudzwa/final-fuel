@@ -14,7 +14,7 @@
     <div class="card" style="background-color:white">
         
         <div class="card-header card-header-primary">
-        <h4 class="card-title ">ZUVA Service Stations</h4>
+        <h4 class="card-title ">{{request.user.name}} Service Stations</h4>
         </div>
     <div class="card-body">
         <div class="container-fluid">
@@ -40,6 +40,9 @@
                            Reference 
                           </th>
                           <th style="color:white;">
+                            Reference ID
+                           </th>
+                          <th style="color:white;">
                           Action
                         </th>
                    <tbody>
@@ -51,7 +54,8 @@
                            <td>{{trail.service_station}}</td>
                            <td>{{trail.action}}</td>
                            <td>{{trail.reference}}</td>
-                           <td style="width: 33%;">
+                           <td>{{trail.reference_id}}</td>
+                           <td>
                                <div class="btn-group">
                                     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#{{trail.id}}">View Details</button>  
                                     

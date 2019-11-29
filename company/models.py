@@ -13,6 +13,7 @@ class FuelUpdate(models.Model):
     payment_methods = models.CharField(max_length=20)
     petrol_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     diesel_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    queue_length = models.CharField(max_length=255,choices=(('short', 'Short'), ('medium', 'Medium Long'), ('long', 'Long')))
     deliver = models.BooleanField(default=False)
     relationship_id = models.IntegerField()
 

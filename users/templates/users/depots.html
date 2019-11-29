@@ -24,21 +24,18 @@
                         <th style="color:white;">
                             Location
                         </th>
+                        
                         <th style="color:white;">
-                            Capacity 
+                            Action
                         </th>
-                        <th style="color:white;">
-                            Stock
-                        </th>
-                        <th></th>
+                        
                        <tbody>
                            {% for depot in depots %}
                            <tr>
                                <td>{{depot.company}}</td>
                                
                                <td>{{depot.address}}</td>
-                               <td>{{depot.capacity}}</td>
-                               <td>{{depot.stock}}</td>
+                               
                                <td style="width: 33%;">
                                    <div class="btn-group">
                                         <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#{{depot.id}}">View Details</button>  
@@ -62,8 +59,7 @@
                                         <div class="modal-body">
                                             <p>Company Name: {{depot.company}}</p>
                                             <p>Location: {{depot.address}}</p>
-                                            <p>Capacity: {{depot.capacity}}</p>
-                                            <p>Stock: {{depot.stock}}</p>
+                                            
                                            
                                             
                                             
@@ -76,7 +72,7 @@
                                 </div>
                                 
                             <!-- Supplier Edit Modal -->
-                            <div class="modal fade" id="edit_{{station.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="edit_{{depot.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -87,7 +83,7 @@
                                         </button>
                                         </div>
                                         <div class="modal-body">
-                                                <form action="{% url 'users:supplier_user_edit' station.id %}" method="POST">
+                                                <form action="" method="POST">
                                                         {% csrf_token %}
     
                                                         <div class="form-group row">
@@ -104,21 +100,7 @@
                                                             <input type="telephone" class="form-control" id="inputEmail3"  value="{{station.location}}">
                                                         </div>
                                                         </div>
-                                                        <div class="form-group row">
-                                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Capacity</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="telephone" class="form-control" id="inputEmail3"  value="{{station.capacity}}">
-                                                        </div>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                                <label for="inputEmail3" class="col-sm-2 col-form-label">Stock</label>
-                                                                <div class="col-sm-10">
-                                                                    <input type="telephone" class="form-control" id="inputEmail3"  value="{{station.stock}}">
-                                                                </div>
-                                                                </div>
-                                                        
-                                                        
-    
+                                                       
                                                        
                                                             <div class="col-md-12 text-center">     
                                                                 <button type="submit" class="btn btn-primary ">Submit</button>
@@ -134,7 +116,7 @@
                                 </div>
                                 
                             <!-- Supplier Delete Modal -->
-                            <div class="modal fade" id="delete_{{station.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="delete_{{depot.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -145,7 +127,7 @@
                                         </div>
                                         <div class="modal-body">
                                                 {% load crispy_forms_tags %}
-                                                <form action="{% url 'users:suppliers_delete' station.id %}" method="POST">
+                                                <form action="" method="POST">
                                                 {{ delete_form }}
                                                 {% csrf_token %}
                                                 <p>Are You Sure You Want To Delete {{ station.company }}</p>

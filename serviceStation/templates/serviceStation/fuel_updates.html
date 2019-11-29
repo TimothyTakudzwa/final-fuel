@@ -1,0 +1,158 @@
+{% extends "serviceStation/base.html" %}
+{% block body %}
+
+
+
+<div class="col-md-12">
+  <div class="card" style="background-color:white">
+
+    <div class="card-header card-header-primary">
+      <h4 class="card-title ">Station Fuel Update</h4>
+    </div>
+    <div class="card-body">
+      <div class="container-fluid">
+        {% if updates %}
+        <div class="col-sm-12 row">
+          <div class="col-sm-6"><b>
+              <h3>Fuel Station Name</h3>
+            </b></div>
+          <div class="col-sm-6">
+            <h3>{{subsidiary}}</h3>
+          </div>
+        </div>
+        <div class="col-sm-12 row">
+          <div class="col-sm-6"><b>
+              <h3>Petrol Quantity</h3>
+            </b></div>
+          <div class="col-sm-6">
+            <h3>{{updates.petrol_quantity}}</h3>
+          </div>
+        </div>
+        <div class="col-sm-12 row">
+          <div class="col-sm-6"><b>
+              <h3>Petrol Price</h3>
+            </b></div>
+          <div class="col-sm-6">
+            <h3>{{updates.petrol_price}}</h3>
+          </div>
+        </div>
+        <div class="col-sm-12 row">
+          <div class="col-sm-6"><b>
+              <h3>Diesel Quantity</h3>
+            </b></div>
+          <div class="col-sm-6">
+            <h3>{{updates.diesel_quantity}}</h3>
+          </div>
+        </div>
+        <div class="col-sm-12 row">
+          <div class="col-sm-6"><b>
+              <h3>Diesel Price</h3>
+            </b></div>
+          <div class="col-sm-6">
+            <h3>{{updates.diesel_price}}</h3>
+          </div>
+        </div>
+        {% else %}
+        <p>Nothing To SHow</p>
+        {% endif %}
+        <!--update fuel-->
+        <div class="modal fade" id="add_fuel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update today's capacity</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+
+                <!-- {% load crispy_forms_tags %} -->
+                <form action="{% url 'serviceStation:home' %}" method="POST">
+
+                    <div class="col-sm-12 row">
+                        <div class="col-sm-6">
+                          Petrol Quantity
+                        </div>
+                        <div class="col-sm-6">
+                            <input value="{{updates.petrol_quantity}}" type="text" name="petrol_quantity" class="form-control"/>
+                          </div>
+                    </div>
+                    <div class="col-sm-12 row">
+                        <div class="col-sm-6">
+                          Petrol Quantity
+                        </div>
+                        <div class="col-sm-6">
+                            <input value="{{updates.petrol_quantity}}" type="text" name="petrol_quantity" class="form-control"/>
+                          </div>
+                    </div>
+                    <div class="col-sm-12 row">
+                        <div class="col-sm-6">
+                          Petrol Quantity
+                        </div>
+                        <div class="col-sm-6">
+                            <input value="{{updates.petrol_quantity}}" type="text" name="petrol_quantity" class="form-control"/>
+                          </div>
+                    </div>
+                    <div class="col-sm-12 row">
+                        <div class="col-sm-6">
+                          Petrol Quantity
+                        </div>
+                        <div class="col-sm-6">
+                            <input value="{{updates.petrol_quantity}}" type="text" name="petrol_quantity" class="form-control"/>
+                          </div>
+                    </div>
+
+
+                  <!-- {% csrf_token %}
+                  {{fuel_update_form|crispy}} -->
+                  
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" type="submit">Update</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!--update fuel-->
+        <div class="modal fade" id="add_fuel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update today's capacity</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+
+                {% load crispy_forms_tags %}
+                <form action="{% url 'serviceStation:home' %}" method="POST">
+                  {% csrf_token %}
+                  {{fuel_update_form|crispy}}
+                  <button class="btn btn-primary" type="submit">Update</button>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="button" style="background-color:rgb(49, 60, 112);margin-left:auto;margin-right:auto;display:block;"
+        class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add_fuel">Upload New Fuel</button> </p>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}
