@@ -20,6 +20,18 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
     <!-- CSS Files -->
     <link href="{% static 'finder/assets/css/material-dashboard.css' %}" rel="stylesheet" />
+    <link href="{% static 'finder/assets/css/default.css' %}" rel="stylesheet" />
+    <link href="{% static 'finder/assets/css/default.date' %}" rel="stylesheet" />
+    <link href="{% static 'finder/assets/css/default.time.css' %}" rel="stylesheet" />
+    <link href="{% static 'finder/assets/css/material-dashboard.css' %}" rel="stylesheet" />
+    <link href="{% static 'finder/assets/css/datatables.css' %}" rel="stylesheet" />
+    <link href="{% static 'finder/assets/css/datatables.min.css' %}" rel="stylesheet" />
+
+
+
+
+   
+    <!--DataTables imports-->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.0/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css"
@@ -160,6 +172,111 @@
                                 {% endfor %}
         
                                 {% endif %}
+        {% if trans %}
+                    <script>
+                        $(document).ready(function () {
+                            $('#transactions tfoot th').each(function () {
+                                var title = $(this).text();
+                                $(this).html('<input type="text" placeholder="Search ' + title + '"style="width:100%"/>');
+                            });
+
+
+                            // DataTable
+                            var table = $('#transactions').DataTable({
+                                order: [[ 4, "desc" ]],
+                                dom: 'Bfrtip',
+                                buttons: [
+                                    'csv',
+                                    'excel',
+                                    'pdf',
+                                    'print'
+                                ]
+                            });
+
+                            // Apply the search
+                            table.columns().every(function () {
+                                var that = this;
+
+                                $('input', this.footer()).on('keyup change', function () {
+                                    if (that.search() !== this.value) {
+                                        that
+                                            .search(this.value)
+                                            .draw();
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+                    {%endif%} {% if allocations %}
+                    <script>
+                        $(document).ready(function () {
+                            $('#rates_example tfoot th').each(function () {
+                                var title = $(this).text();
+                                $(this).html('<input type="text" placeholder="Search ' + title + '"style="width:100%"/>');
+                            });
+
+                            // DataTable
+                            // DataTable
+                            var table = $('#transactions').DataTable({
+                                order: [[ 4, "desc" ]],
+                                dom: 'Bfrtip',
+                                buttons: [
+                                    'csv',
+                                    'excel',
+                                    'pdf',
+                                    'print'
+                                ]
+                            });
+
+                            // Apply the search
+                            table.columns().every(function () {
+                                var that = this;
+
+                                $('input', this.footer()).on('keyup change', function () {
+                                    if (that.search() !== this.value) {
+                                        that
+                                            .search(this.value)
+                                            .draw();
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+                    {%endif%} {% if requests %}
+                    <script class="init">
+                        $(document).ready(function () {
+                            $('#req_example tfoot th').each(function () {
+                                var title = $(this).text();
+                                $(this).html('<input type="text" placeholder="Search ' + title + '"style="width:100%"/>');
+                            });
+
+                            // DataTable
+                            var table = $('#req_example').DataTable({
+                                order: [[ 4, "desc" ]],
+                                dom: 'Bfrtip',
+                                buttons: [
+                                    'csv',
+                                    'excel',
+                                    'pdf',
+                                    'print'
+                                ]
+                            });
+
+                            // Apply the search
+                            table.columns().every(function () {
+                                var that = this;
+
+                                $('input', this.footer()).on('keyup change', function () {
+                                    if (that.search() !== this.value) {
+                                        that
+                                            .search(this.value)
+                                            .draw();
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+                    {%endif%}                        
         
         
         
@@ -168,113 +285,7 @@
         
         
                         </div>
-                        {% if trans %}
-                        <script>
-                            $(document).ready(function () {
-                                $('#tran_example tfoot th').each(function () {
-                                    var title = $(this).text();
-                                    $(this).html('<input type="text" placeholder="Search ' + title + '"style="width:100%"/>');
-                                });
-        
-        
-                                // DataTable
-                                var table = $('#tran_example').DataTable({
-                                    order: [[4, "desc"]],
-                                    dom: 'Bfrtip',
-                                    buttons: [
-                                        'csv',
-                                        'excel',
-                                        'pdf',
-                                        'print'
-                                    ]
-                                });
-        
-                                // Apply the search
-                                table.columns().every(function () {
-                                    var that = this;
-        
-                                    $('input', this.footer()).on('keyup change', function () {
-                                        if (that.search() !== this.value) {
-                                            that
-                                                .search(this.value)
-                                                .draw();
-                                        }
-                                    });
-                                });
-                            });
-                        </script>
-                        {%endif%}
-                        {% if allocations %}
-                        <script>
-                            $(document).ready(function () {
-                                $('#allocations_example tfoot th').each(function () {
-                                    var title = $(this).text();
-                                    $(this).html('<input type="text" placeholder="Search ' + title + '"style="width:100%"/>');
-                                });
-        
-                                // DataTable
-                                // DataTable
-                                var table = $('#allocations_example').DataTable({
-                                    order: [[4, "desc"]],
-                                    dom: 'Bfrtip',
-                                    buttons: [
-                                        'csv',
-                                        'excel',
-                                        'pdf',
-                                        'print'
-                                    ]
-                                });
-        
-                                // Apply the search
-                                table.columns().every(function () {
-                                    var that = this;
-        
-                                    $('input', this.footer()).on('keyup change', function () {
-                                        if (that.search() !== this.value) {
-                                            that
-                                                .search(this.value)
-                                                .draw();
-                                        }
-                                    });
-                                });
-                            });
-                        </script>
-                        {%endif%}
-                        {% if reqs %}
-                        <script class="init">
-                            $(document).ready(function () {
-                                $('#req_example tfoot th').each(function () {
-                                    var title = $(this).text();
-                                    $(this).html('<input type="text" placeholder="Search ' + title + '"style="width:100%"/>');
-                                });
-        
-                                // DataTable
-                                var table = $('#req_example').DataTable({
-                                    order: [[4, "desc"]],
-                                    dom: 'Bfrtip',
-                                    buttons: [
-                                        'csv',
-                                        'excel',
-                                        'pdf',
-                                        'print'
-                                    ]
-                                });
-        
-                                // Apply the search
-                                table.columns().every(function () {
-                                    var that = this;
-        
-                                    $('input', this.footer()).on('keyup change', function () {
-                                        if (that.search() !== this.value) {
-                                            that
-                                                .search(this.value)
-                                                .draw();
-                                        }
-                                    });
-                                });
-                            });
-                        </script>
-                        {%endif%}
+
         
                         <div class="jumbotron">
                             <h1 class="display-3">Report Generator</h1>
@@ -307,7 +318,7 @@
                                     <div class="container-fluid">
         
         
-                                        <table id="tran_example" class="table table-striped table-bordered" style="width:100%">
+                                        <table id="transactions" class="table table-striped table-bordered" style="width:100%">
                                             <thead style="color:white; background:lightslategray">
                                                 <th style="color:white;">
                                                     Date
@@ -345,6 +356,7 @@
                         </div>
                         {% endif %}
                         {% if requests %}
+                        
                         <div class="col-md-12" style="max-width: 75%;margin-left: 340px; margin-top:-740px;">
                             <div class="card" style="background-color:white">
         
@@ -353,6 +365,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="container-fluid">
+                                            <p class="lead"><button id="json" class="btn btn-primary">TO JSON</button> <button id="csv" class="btn btn-info">TO CSV</button>  <button id="pdf" class="btn btn-danger">TO PDF</button></p>
         
         
                                         <table id="req_example" class="table table-striped table-bordered" style="width:100%">
@@ -412,7 +425,7 @@
                                     <div class="container-fluid">
         
         
-                                        <table id="allocations_example" class="table table-striped table-bordered"
+                                        <table id="rates_example" class="table table-striped table-bordered"
                                             style="width:100%">
                                             <thead style="color:white; background:lightslategray">
                                                 <th style="color:white;">
@@ -562,6 +575,9 @@
     <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
 
     <script src="{% static 'finder/assets/js/core/jquery.min.js' %}"></script>
+    <script src="{% static 'finder/assets/js/core/tableHTMLExport.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.3.5/jspdf.plugin.autotable.min.js"></script>
     <script src="{% static 'finder/assets/js/core/popper.min.js' %}"></script>
     <script src="{% static 'finder/assets/js/core/bootstrap-material-design.min.js' %}"></script>
     <script src="{% static 'finder/assets/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
@@ -614,9 +630,7 @@
 
 
 
-        $(document).ready(function () {
-            $('#example').DataTable({ "order": [[0, "desc"]] });
-        });
+        
 
         $(document).ready(function () {
             $().ready(function () {
