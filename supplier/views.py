@@ -22,6 +22,9 @@ from .forms import PasswordChange, RegistrationForm, \
     RegistrationEmailForm, UserUpdateForm,  FuelRequestForm
 from .models import  FuelRequest, Transaction, TokenAuthentication
 from notification.models import Notification
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # today's date
 today = date.today()
@@ -97,7 +100,7 @@ def verification(request, token, user_id):
                     user.company = selected_company
                     user.is_active = True
                     user.save()
-
+                    return redirect('buyer-login')
             else:
                 form = BuyerUpdateForm
                 messages.success(request, f'Email verification successs, Fill in the deatails to complete registration')

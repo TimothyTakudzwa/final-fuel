@@ -16,6 +16,7 @@ class FuelUpdate(models.Model):
     queue_length = models.CharField(max_length=255,choices=(('short', 'Short'), ('medium', 'Medium Long'), ('long', 'Long')))
     deliver = models.BooleanField(default=False)
     relationship_id = models.IntegerField()
+    company_id = models.IntegerField()
 
     class Meta:
         ordering = ['last_updated']

@@ -6,7 +6,7 @@ from .forms import BuyerRegisterForm, BuyerUpdateForm, FuelRequestForm
 #from supplier.forms import FuelRequestForm
 from .constants import sample_data
 from buyer.models import User
-from company.models import Company
+from company.models import Company, FuelUpdate
 import requests
 import secrets
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
@@ -34,7 +34,7 @@ def login_success(request):
     user_type  = request.user.user_type
     print(user_type)
     if user_type == "BUYER":
-        return redirect("buyer-profile")
+        return redirect("buyer-dashboard")
     elif user_type == 'SS_SUPPLIER':
         return redirect("serviceStation:home")
     else:
@@ -133,6 +133,30 @@ def profile(request):
 
 #@login_required
 def fuel_request(request):
+    user_logged = request.user
+    fuel_requests = FuelRequest.objects.filter(name=user_logged, is_closed=False).all()
+    for fuel_request in fuel_requests:
+        if fuel_request.is_direct_deal:
+            print(fuel_request.last_deal)
+            search_company = FuelUpdate.objects.filter(id= fuel_request.last_deal).first()
+            print(search_company.company_id)
+            company = Company.objects.filter(id= search_company.company_id).first()
+            print(company)
+
+            fuel_request.request_company = company.name
+        else:
+            fuel_request.request_company = 'is not a direct deal'
+
+    #print(type(fuel_requests))
+    print(fuel_requests)
+
+    context = {
+        'fuel_requests' : fuel_requests
+        } 
+
+    return render(request, 'buyer/fuel_request.html', context=context)
+
+def fuel_finder(request):
     if request.method == 'POST':
         form = FuelRequestForm(request.POST)
         if form.is_valid():
@@ -140,21 +164,22 @@ def fuel_request(request):
             payment_method = form.cleaned_data['payment_method']
             delivery_method = form.cleaned_data['delivery_method']
             fuel_type = form.cleaned_data['fuel_type']
-        
+            print(f"===================={request.POST.get('company_id')}--------------------  ")
             fuel_request = FuelRequest()
             fuel_request.name = request.user       
             fuel_request.amount = amount
             fuel_request.fuel_type = fuel_type
             fuel_request.payment_method = payment_method
             fuel_request.delivery_method = delivery_method
+            fuel_request.wait = True
             fuel_request.save()
-            
+
             
             messages.success(request, f'kindly not your request has been made ')
     else:
         form = FuelRequestForm
-    
-    return render(request, 'buyer/fuel_request.html', {'form': form})
+    return render(request, 'buyer/dashboard.html',{'form':form, 'sample_data':sample_data})
+
 
 def dashboard(request):
     if request.method == 'POST':
@@ -171,6 +196,8 @@ def dashboard(request):
             fuel_request.fuel_type = fuel_type
             fuel_request.payment_method = payment_method
             fuel_request.delivery_method = delivery_method
+            fuel_request.is_direct_deal = True
+            fuel_request.last_deal = request.POST.get('company_id')
             fuel_request.save()
 
             
@@ -179,3 +206,4 @@ def dashboard(request):
         form = FuelRequestForm
     
     return render(request, 'buyer/dashboard.html',{'form':form, 'sample_data':sample_data})
+
