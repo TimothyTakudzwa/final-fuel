@@ -1,11 +1,14 @@
 from django.db import models
 from buyer.constants2 import COMPANY_CHOICES, INDUSTRY_CHOICES
 
+# from supplier.models import Subsidiaries
+
 
 # Create your models here.
 
 
 class FuelUpdate(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, null=True)
     sub_type = models.CharField(max_length=255, choices=(('company', 'Company'), ('service_station', 'Service Station'), ('depot', 'Depot')))
     diesel_quantity = models.IntegerField(default=0)
     petrol_quantity = models.IntegerField(default=0)
@@ -32,4 +35,8 @@ class Company(models.Model):
         return self.name
 
     def get_currenct_stock(self):
-        pass    
+        total_value = 0
+        for sub in Subsidiaries.objects.filter(company=self):
+            for update in FuelUpdate.objects.filter(relationship_id=sub.id):
+                total_value += update.petrol_quantity
+        return total_value        
