@@ -270,6 +270,14 @@ def transaction(request):
         }
     return render(request, 'supplier/accounts/transactions.html',context=context)
 
+@login_required
+def complete_transaction(request, id):
+    transaction = Transaction.objects.get(id=id)
+    transaction.complete == True
+    transaction.save()
+    messages.success(request, 'Transaction completed successfully')
+    return redirect('transaction')
+
 
 @login_required()
 def notifications(request):
