@@ -112,7 +112,6 @@ class EditOfferForm(forms.ModelForm):
 
 
 class StockForm(forms.Form):
-    sub_type = forms.CharField(label='Subsisdiary Type',widget=forms.Select(choices=(('service_station', 'Service Station'),('depot', 'Depot'),('company', 'Company'))))
     petrol_quantity = forms.CharField(label='Petrol Quantity')
     petrol_price = forms.CharField(label='Petrol Price')
     diesel_quantity = forms.CharField(label='Diesel Quantity')
