@@ -2,7 +2,7 @@ import random
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
-
+from django.db.models import Q
 from django.shortcuts import Http404
 from supplier.models import *
 from supplier.forms import *
@@ -31,23 +31,25 @@ def index(request):
 
 
 def allocate(request):
-    allocates = fex.objects.all()
+    allocates = fex.objects.filter(Q(sub_type='service_station') | Q(sub_type='depot')).all()
+    for allocate in allocates:
+        subsidiary = Subsidiaries.objects.filter(id=allocate.relationship_id).first()
+        allocate.subsidiary_name = subsidiary.name
     
     if request.method == 'POST':
-        if fex.objects.filter(id= int(request.POST['id'])).exists():
-            fuel_update = fex.objects.filter(id= int(request.POST['id'])).first()
-            fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['petrol_quantity'])
-            fuel_update.petrol_price = request.POST['petrol_price']
-            fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['diesel_quantity'])
-            fuel_update.diesel_price = request.POST['diesel_price']
-            fuel_update.payment_methods = request.POST['payment_methods']
-            fuel_update.queue_length = request.POST['queue_length']
-            fuel_update.save()
-            messages.success(request, 'updated quantities successfully')
-            return redirect('users:allocate')
-        else:
-            messages.success(request, 'Subsidiary does not exists')
-            return redirect('users:allocate')
+        fuel_update = fex.objects.filter(id= int(request.POST['id'])).first()
+        fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['petrol_quantity'])
+        fuel_update.petrol_price = request.POST['petrol_price']
+        fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['diesel_quantity'])
+        fuel_update.diesel_price = request.POST['diesel_price']
+        fuel_update.payment_methods = request.POST['payment_methods']
+        fuel_update.queue_length = request.POST['queue_length']
+        fuel_update.save()
+        messages.success(request, 'updated quantities successfully')
+        return redirect('users:allocate')
+        
+    
+    
     
     return render(request, 'users/allocate.html', {'allocates': allocates})
 
@@ -112,7 +114,20 @@ def stations(request):
         is_depot = request.POST['is_depot']
         opening_time = request.POST['opening_time']
         closing_time = request.POST['closing_time']
-        Subsidiaries.objects.create(company=request.user.company,name=name,address=address,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)
+        sub = Subsidiaries.objects.create(company=request.user.company,name=name,address=address,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)
+        diesel_quantity = 1
+        diesel_price = float(1)
+        petrol_quantity = 1
+        petrol_price = float(1)
+        queue_length = 'short'
+        payment_methods = 'cash'
+        sub_type = 'service_station' if is_depot else 'depot'
+        print(f"----------------Service Station {sub_type}")
+        relationship_id = sub.id
+        fuel_updated = fex.objects.create(sub_type=sub_type,relationship_id=relationship_id,payment_methods=payment_methods,diesel_quantity=diesel_quantity,diesel_price=diesel_price,petrol_quantity=petrol_quantity,petrol_price=petrol_price,queue_length=queue_length)
+        fuel_updated.save()
+        sub.fuel_capacity = fuel_updated
+        sub.save()
         messages.success(request, 'Subsidiary Created Successfully')
         return redirect('users:stations')
 
