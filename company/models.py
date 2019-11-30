@@ -30,3 +30,6 @@ class Company(models.Model):
     
     def __str__(self):
         return self.name
+
+    def get_currenct_stock(self):
+        pass    

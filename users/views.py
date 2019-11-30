@@ -1,6 +1,7 @@
 import random
 
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import get_user_model
 
 from django.shortcuts import Http404
 from supplier.models import *
@@ -51,13 +52,14 @@ def allocate(request):
     return render(request, 'users/allocate.html', {'allocates': allocates})
 
 def statistics(request):
-
-    staff_blocked = SupplierContact.objects.count()
-    offers = Offer.objects.count()
-    bulk_requests = FuelRequest.objects.filter(delivery_method="Bulk").count()
-    staff_blocked = len(User.objects.all())
+    company = request.user.company
+    staff_blocked = Subsidiaries.objects.filter(company=company).count() / 2
+    offers = Offer.objects.filter(supplier=request.user).count()
+    bulk_requests = FuelRequest.objects.filter(delivery_method="BULK").count()
+    normal_requests = FuelRequest.objects.filter(delivery_method="REGULAR").count()
+    staff_blocked = User.objects.filter(company=company).count()
     clients = []
-    companies = Company.objects.filter(company_type='Corporate')
+    companies = Company.objects.filter(company_type='BUYER')
     value = [round(random.uniform(5000.5,10000.5),2) for i in range(len(companies))]
     num_trans = [random.randint(2,12) for i in range(len(companies))]
     counter = 0
@@ -75,7 +77,7 @@ def statistics(request):
         trans = 0    
     trans = str(trans) + " %"
     return render(request, 'users/statistics.html', {'staff_blocked':staff_blocked, 'offers': offers,
-     'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients})
+     'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests})
 
 
 def supplier_user_edit(request, cid):
@@ -117,36 +119,24 @@ def stations(request):
     return render(request, 'users/service_stations.html', {'stations': stations})
 
 def report_generator(request):
-   
     if request.method == "POST":
-        
-        form = ReportForm(request.POST or None)
-        if form.is_valid():
-            end_date = form.cleaned_data.get('end_date')
-            start_date = form.cleaned_data.get('start_date')
-            
-            # start_date = datetime.strptime(str(start_date), '%Y-%m-%d')
-            # end_date = datetime.strptime(str(end_date), '%Y-%m-%d')
-            if form.cleaned_data.get('report_type') == 'Transactions':
-                trans = Transaction.objects.filter(date__range=[start_date, end_date])
-                requests = None; allocations = None
-            if form.cleaned_data.get('report_type') == 'Fuel Requests':
-                requests = FuelRequest.objects.filter(date__range=[start_date, end_date])
-                trans = None; allocations = None
-            if form.cleaned_data.get('report_type') == 'Allocations':
-                allocations = FuelAllocation.objects.filter(date__range=[start_date, end_date])
-            return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form } )
-        else:
-            messages.success(request, f"Suo")       
-
-        allocations = requests = trans = None
+        start_date = datetime.strptime(request.form['end_date'], '%Y-%m-%d')
+        end_date = datetime.strptime(request.form['start_date'], '%Y-%m-%d')
+        if request.form['report_type'] == 'Transactions':
+            trans = Transaction.objects.filter(date__range=[start_date, end_date])
+            requests = None; allocations = None
+        if request.form['report_type'] == 'Fuel Requests':
+            requests = FuelRequest.objects.filter(date_range=[start_date, end_date])
+            trans = None; allocations = None
+        if request.form['report_type'] == 'Allocations':
+            allocations = FuelAllocation.objects.filter(date_range=[start_date, end_date])
     form = ReportForm()
     allocations = requests = trans = None
 
-    return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form } )
+    return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form })
 
 def depots(request):
-    stations = Subsidiaries.objects.filter(company.id == request.user.company.id).first()
+    depots = Depot.objects.all()
     return render(request, 'users/depots.html', {'depots': depots})         
 
 
@@ -158,7 +148,8 @@ def audit_trail(request):
         
 
 def suppliers_list(request):
-    suppliers = User.objects.filter(company=request.user.company).all()  
+    suppliers = User.objects.filter(company=request.user.company)
+    suppliers = [sup for sup in suppliers if not sup == request.user]   
     form1 = SupplierContactForm()         
     companies = Company.objects.all()
     form1.fields['service_station'].choices = [((company.id, company.name)) for company in companies] 
@@ -195,21 +186,20 @@ def suppliers_list(request):
             msg = EmailMultiAlternatives(subject, message, sender, [f'{email}'])
             msg.send()
 
-            except BadHeaderError:
-                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
-                return redirect('users:buyers_list')
-            #contact.save()
-            messages.success(request, ('Your profile was successfully updated!'))
-            return redirect('users:suppliers')
-            print(token)
-            print("above is the token")
-            '''
-    else:
-        form1 = SupplierContactForm()  
-        service_stations = Subsidiaries.objects.filter(company = request.user.company).all() 
-        form1.fields['service_station'].choices = [(service_station.id, service_station.name) for service_station in service_stations] 
-        return render(request, 'users/suppliers_list.html', {'suppliers': suppliers,'form1': form1})
-    return render(request, 'users/suppliers_list.html', {'suppliers': suppliers,'form1': form1})
+            messages.success(request, f"{username} Registered Successfully")
+            return redirect('users:buyers_list')
+
+        except BadHeaderError:
+            messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+            return redirect('users:buyers_list')
+        #contact.save()
+        messages.success(request, ('Your profile was successfully updated!'))
+        return redirect('users:suppliers')
+        print(token)
+        print("above is the token")
+        '''
+    
+    return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1})
 
 def suppliers_delete(request, sid):
     supplier = User.objects.filter(id=sid).first()
