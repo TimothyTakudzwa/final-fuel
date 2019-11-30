@@ -21,7 +21,7 @@ from users.models import *
 from company.models import Company
 from django.contrib.auth import authenticate
 from .forms import AllocationForm
-from company.models import FuelUpdate as fex
+from company.models import FuelUpdate as F_Update
 from django.contrib.auth import get_user_model
 user = get_user_model()
 
@@ -31,25 +31,23 @@ def index(request):
 
 
 def allocate(request):
-    allocates = fex.objects.filter(Q(sub_type='service_station') | Q(sub_type='depot')).all()
-    for allocate in allocates:
-        subsidiary = Subsidiaries.objects.filter(id=allocate.relationship_id).first()
-        allocate.subsidiary_name = subsidiary.name
+    allocates = F_Update.objects.all()
     
     if request.method == 'POST':
-        fuel_update = fex.objects.filter(id= int(request.POST['id'])).first()
-        fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['petrol_quantity'])
-        fuel_update.petrol_price = request.POST['petrol_price']
-        fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['diesel_quantity'])
-        fuel_update.diesel_price = request.POST['diesel_price']
-        fuel_update.payment_methods = request.POST['payment_methods']
-        fuel_update.queue_length = request.POST['queue_length']
-        fuel_update.save()
-        messages.success(request, 'updated quantities successfully')
-        return redirect('users:allocate')
-        
-    
-    
+        if F_Update.objects.filter(id= int(request.POST['id'])).exists():
+            fuel_update = F_Update.objects.filter(id= int(request.POST['id'])).first()
+            fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['petrol_quantity'])
+            fuel_update.petrol_price = request.POST['petrol_price']
+            fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['diesel_quantity'])
+            fuel_update.diesel_price = request.POST['diesel_price']
+            fuel_update.payment_methods = request.POST['payment_methods']
+            fuel_update.queue_length = request.POST['queue_length']
+            fuel_update.save()
+            messages.success(request, 'updated quantities successfully')
+            return redirect('users:allocate')
+        else:
+            messages.success(request, 'Subsidiary does not exists')
+            return redirect('users:allocate')
     
     return render(request, 'users/allocate.html', {'allocates': allocates})
 
@@ -61,6 +59,12 @@ def statistics(request):
     normal_requests = FuelRequest.objects.filter(delivery_method="REGULAR").count()
     staff_blocked = User.objects.filter(company=company).count()
     clients = []
+    #update = F_Update.objects.filter(company_id=company.id).first()
+    diesel, petrol = 0
+    # if update:
+    #     diesel = update.diesel_quantity
+    #     petrol = update.petrol_quantity
+    
     companies = Company.objects.filter(company_type='BUYER')
     value = [round(random.uniform(5000.5,10000.5),2) for i in range(len(companies))]
     num_trans = [random.randint(2,12) for i in range(len(companies))]
@@ -79,7 +83,8 @@ def statistics(request):
         trans = 0    
     trans = str(trans) + " %"
     return render(request, 'users/statistics.html', {'staff_blocked':staff_blocked, 'offers': offers,
-     'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests})
+     'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
+     'diesel':diesel, 'petrol':petrol})
 
 
 def supplier_user_edit(request, cid):

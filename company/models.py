@@ -8,7 +8,7 @@ from buyer.constants2 import COMPANY_CHOICES, INDUSTRY_CHOICES
 
 
 class FuelUpdate(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, null=True)
+    company_id = models.IntegerField()
     sub_type = models.CharField(max_length=255, choices=(('company', 'Company'), ('service_station', 'Service Station'), ('depot', 'Depot')))
     diesel_quantity = models.IntegerField(default=0)
     petrol_quantity = models.IntegerField(default=0)
@@ -33,10 +33,4 @@ class Company(models.Model):
     
     def __str__(self):
         return self.name
-
-    def get_currenct_stock(self):
-        total_value = 0
-        for sub in Subsidiaries.objects.filter(company=self):
-            for update in FuelUpdate.objects.filter(relationship_id=sub.id):
-                total_value += update.petrol_quantity
-        return total_value        
+   
