@@ -2,7 +2,7 @@ import random
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
-
+from django.db.models import Q
 from django.shortcuts import Http404
 from supplier.models import *
 from supplier.forms import *
@@ -119,7 +119,20 @@ def stations(request):
         is_depot = request.POST['is_depot']
         opening_time = request.POST['opening_time']
         closing_time = request.POST['closing_time']
-        Subsidiaries.objects.create(company=request.user.company,name=name,address=address,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)
+        sub = Subsidiaries.objects.create(company=request.user.company,name=name,address=address,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)
+        diesel_quantity = 1
+        diesel_price = float(1)
+        petrol_quantity = 1
+        petrol_price = float(1)
+        queue_length = 'short'
+        payment_methods = 'cash'
+        sub_type = 'service_station' if is_depot else 'depot'
+        print(f"----------------Service Station {sub_type}")
+        relationship_id = sub.id
+        fuel_updated = fex.objects.create(sub_type=sub_type,relationship_id=relationship_id,payment_methods=payment_methods,diesel_quantity=diesel_quantity,diesel_price=diesel_price,petrol_quantity=petrol_quantity,petrol_price=petrol_price,queue_length=queue_length)
+        fuel_updated.save()
+        sub.fuel_capacity = fuel_updated
+        sub.save()
         messages.success(request, 'Subsidiary Created Successfully')
         return redirect('users:stations')
 
