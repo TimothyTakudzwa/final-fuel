@@ -138,6 +138,21 @@ class EditOfferForm(forms.ModelForm):
         fields = ['quantity', 'price']
 
 
+class StockForm(forms.Form):
+    petrol_quantity = forms.CharField(label='Petrol Quantity')
+    petrol_price = forms.CharField(label='Petrol Price')
+    diesel_quantity = forms.CharField(label='Diesel Quantity')
+    diesel_price = forms.CharField(label='Diesel Price')
+    payment_methods = forms.CharField(label='Payment Method',widget=forms.Select(choices=PAYING_CHOICES))
+
+
+def stock_form(request):
+    return {
+        'stock_form': StockForm()
+    }
+
+
+
 def fuelupdate(request):
     return {
         'fuel_update_form': StockLevelForm()
