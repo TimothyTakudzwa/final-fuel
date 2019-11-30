@@ -14,11 +14,13 @@ from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from datetime import datetime
 from django.contrib import messages
 from buyer.models import *
+from supplier.forms import *
 from supplier.models import *
 from users.models import *
 from company.models import Company
 from django.contrib.auth import authenticate
 from .forms import AllocationForm
+from company.models import FuelUpdate as fex
 from django.contrib.auth import get_user_model
 user = get_user_model()
 
@@ -28,28 +30,26 @@ def index(request):
 
 
 def allocate(request):
-    allocates = FuelAllocation.objects.all()
-    form2 = AllocationForm()
-    service_stations = ServiceStation.objects.all()
-    users = User.objects.all()
-    form2.fields['service_station'].choices = [((service_station.id, service_station.name)) for service_station in service_stations]
-    form2.fields['staff'].choices = [((user.id, user.username)) for user in users]
+    allocates = fex.objects.all()
+    
     if request.method == 'POST':
-        form2 = AllocationForm(request.POST)
-        # if form2.is_valid():
-        f_service_station = request.POST.get('service_station')
-        service_station = ServiceStation.objects.get(id=f_service_station)
-        f_staff = request.POST.get('staff')
-        staff = User.objects.get(id=f_staff)
-        fuel_type =  request.POST.get('fuel_type')
-        quantity =  request.POST.get('quantity')
-        # staff = request.cleaned_data['staff']
-        print(service_station, staff, fuel_type, quantity)
-        FuelAllocation.objects.create(service_station=service_station,fuel_type=fuel_type,allocated_quantity=quantity,assigned_staff=staff,current_available_quantity=quantity)
-
-  
-
-    return render(request, 'users/allocate.html', {'allocates': allocates, 'form2': form2 })
+        for alloc in allocates:
+            if fex.objects.filter(id= alloc.id).exists():
+                fuel_update = fex.objects.filter(id= alloc.id).first()
+                fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['petrol_quantity'])
+                fuel_update.petrol_price = request.POST['petrol_price']
+                fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['diesel_quantity'])
+                fuel_update.diesel_price = request.POST['diesel_price']
+                fuel_update.payment_methods = request.POST['payment_methods']
+                fuel_update.queue_length = request.POST['queue_length']
+                fuel_update.save()
+                messages.success(request, 'updated quantities successfully')
+                return redirect('users:allocate')
+            else:
+                messages.success(request, 'Subsidiary does not exists')
+                return redirect('users:allocate')
+    
+    return render(request, 'users/allocate.html', {'allocates': allocates})
 
 def statistics(request):
 
@@ -104,10 +104,16 @@ def myaccount(request):
     return render(request, 'users/profile.html')
 
 def stations(request):
-    #user = authenticate(username='', password='')
-    #admin_ = User.objects.filter(company_id='Marshy').first()
-    # print(admin_.company)
     stations = Subsidiaries.objects.all()
+    if request.method == 'POST':
+        name = request.POST['name']
+        address = request.POST['address']
+        is_depot = request.POST['is_depot']
+        opening_time = request.POST['opening_time']
+        closing_time = request.POST['closing_time']
+        Subsidiaries.objects.create(company=request.user.company,name=name,address=address,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)
+        messages.success(request, 'Subsidiary Created Successfully')
+        return redirect('users:stations')
 
     return render(request, 'users/service_stations.html', {'stations': stations})
 
@@ -146,14 +152,14 @@ def depots(request):
 
 
 def audit_trail(request):
-    trails = AuditTrail.objects.all()
+    trails = Audit_Trail.objects.all()
     print(trails)
     return render(request, 'users/audit_trail.html', {'trails': trails})    
 
         
 
 def suppliers_list(request):
-    suppliers = User.objects.all()   
+    suppliers = User.objects.filter(company=request.user.company).all()  
     form1 = SupplierContactForm()         
     companies = Company.objects.all()
     form1.fields['service_station'].choices = [((company.id, company.name)) for company in companies] 
@@ -203,8 +209,8 @@ def suppliers_list(request):
         form1 = SupplierContactForm()  
         service_stations = Subsidiaries.objects.filter(company = request.user.company).all() 
         form1.fields['service_station'].choices = [(service_station.id, service_station.name) for service_station in service_stations] 
-        return render(request, 'users/suppliers_list.html', {'form1': form1})
-
+        return render(request, 'users/suppliers_list.html', {'suppliers': suppliers,'form1': form1})
+    return render(request, 'users/suppliers_list.html', {'suppliers': suppliers,'form1': form1})
 
 def suppliers_delete(request, sid):
     supplier = User.objects.filter(id=sid).first()
@@ -353,10 +359,10 @@ def delete_user(request,id):
 
 
 def depot_staff(request):
-    suppliers = User.objects.all()   
+    suppliers = User.objects.filter(company=request.user.company)  
     form1 = SupplierContactForm()         
-    companies = Company.objects.all()
-    form1.fields['service_tation'].choices = [((company.id, company.name)) for company in companies] 
+    #companies = Company.objects.all()
+    #form1.fields['service_tation'].choices = [((company.id, company.name)) for company in companies] 
 
     if request.method == 'POST':
         form1 = SupplierContactForm( request.POST)

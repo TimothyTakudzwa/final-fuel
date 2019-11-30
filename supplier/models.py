@@ -19,7 +19,7 @@ class Subsidiaries(models.Model):
 
 
     def __str__(self):
-        return f"{self.company} : {self.has_fuel}"
+        return f"{self.company} "
 
     def get_capacity(self):
         return self.capacity

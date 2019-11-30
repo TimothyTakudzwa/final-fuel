@@ -86,19 +86,46 @@ class FuelUpdateForm(forms.ModelForm):
     fuel_type = forms.CharField(label='Fuel Type', widget=forms.Select(choices=OPTIONS))
     payment_method = forms.CharField(label='Payment Method', widget=forms.Select(choices=PAYING_CHOICES))
 
-  
-
-class StockLevelForm(forms.ModelForm):
-
-    fuel_type = forms.CharField(label='Fuel Type', widget=forms.Select(choices=FUEL_CHOICES))
-    status = forms.CharField(label='Status', widget=forms.Select(choices=STATUS_CHOICES))
-    payment_method = forms.CharField(label='Payment Method', widget=forms.Select(choices=PAYING_CHOICES))
-
-    class Meta:
-        model = FuelUpdate
-        fields = [ 'deliver']
 
 
+class QuantityLevelForm(forms.Form):
+    petrol_quantity = forms.CharField(label='Petrol Quantity')
+    petrol_price = forms.CharField(label='Petrol Price')
+    diesel_quantity = forms.CharField(label='Diesel Quantity')
+    diesel_price = forms.CharField(label='Diesel Price')
+    payment_methods = forms.CharField(label='Payment Method', widget=forms.Select(choices=PAYING_CHOICES))
+    queue_length = forms.CharField(label='Queue Length', widget=forms.Select(choices=(('short', 'Short'), ('medium', 'Medium Long'), ('long', 'Long'))))
+
+
+def fuelupdating(request):
+    return {
+        'update_form': QuantityLevelForm()
+    }
+
+class StockLevelForm(forms.Form):
+    sub_type = forms.CharField(label='Subsisdiary Type', widget=forms.Select(choices=(('service_station', 'Service Station'), ('depot', 'Depot'),('company', 'Company'))))
+    petrol_quantity = forms.CharField(label='Petrol Quantity')
+    petrol_price = forms.CharField(label='Petrol Price')
+    diesel_quantity = forms.CharField(label='Diesel Quantity')
+    diesel_price = forms.CharField(label='Diesel Price')
+    payment_methods = forms.CharField(label='Payment Method', widget=forms.Select(choices=PAYING_CHOICES))
+    queue_length = forms.CharField(label='Queue Length', widget=forms.Select(choices=(('short', 'Short'), ('medium', 'Medium Long'), ('long', 'Long'))))
+
+    #class Meta:
+       # model = FuelUpdate
+        #fields = [ 'petrol_quantity']
+
+class SubsidiaryForm(forms.Form):
+    name = forms.CharField(label='Subsisdiary Name')
+    address = forms.CharField(label='Subsisdiary Address')
+    is_depot = forms.CharField(label='Is Depot',  widget=forms.Select(choices=((True,True),(False,False))))
+    opening_time = forms.CharField(label='Opening Time')
+    closing_time = forms.CharField(label='Closing Time')
+    
+def create_sub(request):
+    return {
+        'sub_create_form': SubsidiaryForm()
+    }
 
 class OfferForm(forms.ModelForm):
     class Meta:

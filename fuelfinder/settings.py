@@ -75,6 +75,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'notification.context.notification_alert',
                 'supplier.forms.fuelupdate',
+                'supplier.forms.create_sub',
+                'supplier.forms.fuelupdating', 
                 'supplier.forms.makeoffer',
             ],
         },
