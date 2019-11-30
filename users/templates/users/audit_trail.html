@@ -14,7 +14,7 @@
     <div class="card" style="background-color:white">
         
         <div class="card-header card-header-primary">
-        <h4 class="card-title ">{{request.user.name}} Service Stations</h4>
+        <h4 class="card-title ">{{request.user.company}} Audit Trails</h4>
         </div>
     <div class="card-body">
         <div class="container-fluid">
@@ -29,9 +29,13 @@
                        <th style="color:white;">
                           User 
                          </th>
+
+                         <th style="color:white;">
+                                Company 
+                               </th>
                         
                            <th style="color:white;">
-                            Service Station 
+                            Service Stations & Depots 
                            </th>
                          <th style="color:white;">
                             Event 
@@ -51,6 +55,7 @@
                            <td>{{trail.date}}</td>
                            
                            <td>{{trail.user}}</td>
+                           <td>{{trail.company}}</td>
                            <td>{{trail.service_station}}</td>
                            <td>{{trail.action}}</td>
                            <td>{{trail.reference}}</td>
@@ -76,7 +81,7 @@
                                     <div class="modal-body">
                                         <p>Date: {{trail.date}}</p>
                                         <p>User: {{trail.user}}</p>
-                                        <p>Service Station: {{trail.service_station}}</p>
+                                        <p>Service Stations & Depots: {{trail.service_station}}</p>
                                         <p>Event: {{trail.action}}</p>
                                         <p>Refence : {{trail.reference}}</p>
                                        

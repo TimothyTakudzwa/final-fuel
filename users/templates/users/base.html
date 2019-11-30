@@ -56,13 +56,13 @@
              </a>
            </li> 
            
-           <li class="nav-item {% if request.path == '/users/depot_staff/' %} active {% endif %}">
-            <a class="nav-link" href="{% url 'users:depot_staff' %}">
+           <li class="nav-item {% if request.path == '/users/suppliers/' %}  {% endif %}">
+            <a class="nav-link" href="{% url 'users:suppliers_list' %}">
               <i class="material-icons">people</i>
               <p>Depot Staff</p>
             </a>
           </li>
-          
+          <!--
           <li class="nav-item {% if request.path == '/users/depots/' %} active {% endif %}">
               
             <a class="nav-link " href="{% url 'users:depots' %}">
@@ -70,7 +70,7 @@
               <p>Depots</p>
             </a>
           </li>
-
+           -->
           
           <li class="nav-item {% if request.path == '/users/allocate/' %} active {% endif %}">
               
@@ -91,7 +91,7 @@
               
             <a class="nav-link " href="{% url 'users:stations' %}">
               <i class="material-icons">local_gas_station</i>
-              <p>Service Stations</p>
+              <p>Subsidiaries</p>
             </a>
           </li>
 
@@ -106,12 +106,6 @@
               <a class="nav-link" href=" {% url 'users:report_generator' %}">
                 <i class="material-icons">calendar_today</i>
                 <p>Report Generator</p>
-              </a>
-            </li>
-            <li class="nav-item {% if request.path == '/users/myaccount/' %} active {% endif %}">
-              <a class="nav-link" href="{% url 'users:myaccount' %}">
-                <i class="material-icons">person</i>
-                <p>User Profile</p>
               </a>
             </li>
            
@@ -191,9 +185,10 @@
 
             </div>
 
-            {% block body %}{% endblock %}
+            
 
         </div>
+        {% block body %}{% endblock %}
     </main>
  
      </div>
@@ -214,13 +209,13 @@
    <script src="{% static 'finder/assets/js/plugins/jquery.validate.min.js' %}"></script>
    <!-- Plugin for the Wizard, full documentation here: https://github.com/VinceG/twitter-bootstrap-wizard -->
    <script src="{% static 'finder/assets/js/plugins/jquery.bootstrap-wizard.js' %}"></script>
-   <!--	Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
+   <!-- Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
    <script src="{% static 'finder/assets/js/plugins/bootstrap-selectpicker.js' %}"></script>
    <!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
    <script src="{% static 'finder/assets/js/plugins/bootstrap-datetimepicker.min.js' %}"></script>
    <!--  DataTables.net Plugin, full documentation here: https://datatables.net/  -->
    <script src="{% static 'finder/assets/js/plugins/jquery.dataTables.min.js' %}"></script>
-   <!--	Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
+   <!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
    <script src="{% static 'finder/assets/js/plugins/bootstrap-tagsinput.js' %}"></script>
    <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
    <script src="{% static 'finder/assets/js/plugins/jasny-bootstrap.min.js' %}"></script>
@@ -247,8 +242,8 @@
    <!-- Material Dashboard DEMO methods, don't include it in your project! -->
    <script src="{% static 'finder/assets/demo/demo.js' %}"></script>
    <script>
-     
-     
+
+
     $(document).ready(function() {
       $('#example').DataTable({"order": [[ 0, "desc" ]]});
     } );
@@ -430,6 +425,9 @@
  
      });
    </script>
+   
+
+
    
  </body>
  

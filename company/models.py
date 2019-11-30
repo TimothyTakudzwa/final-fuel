@@ -1,11 +1,14 @@
 from django.db import models
 from buyer.constants2 import COMPANY_CHOICES, INDUSTRY_CHOICES
 
+# from supplier.models import Subsidiaries
+
 
 # Create your models here.
 
 
 class FuelUpdate(models.Model):
+    company_id = models.IntegerField()
     sub_type = models.CharField(max_length=255, choices=(('company', 'Company'), ('service_station', 'Service Station'), ('depot', 'Depot')))
     diesel_quantity = models.IntegerField(default=0)
     petrol_quantity = models.IntegerField(default=0)
@@ -20,9 +23,6 @@ class FuelUpdate(models.Model):
     class Meta:
         ordering = ['last_updated']
 
-    def __str__(self):
-        return f'{str(self.sub_type)} - Diesel {str(self.diesel_quantity)}. Petrol Quantity {str(self.petrol_quantity)}'
-
 class Company(models.Model):
     name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
@@ -33,3 +33,4 @@ class Company(models.Model):
     
     def __str__(self):
         return self.name
+   

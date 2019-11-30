@@ -12,46 +12,84 @@
     <div class="card-body">
       <div class="container-fluid">
         {% if updates %}
+
+      <!--
         <div class="col-sm-12 row">
           <div class="col-sm-6"><b>
-              <h3>Fuel Station Name</h3>
+            <label class="bmd-label-floating" style="color:rgb(79, 77, 172); white-space: pre-wrap;"><h3><i>Fuel Station Name</i></h3></label>
             </b></div>
           <div class="col-sm-6">
-            <h3>{{subsidiary}}</h3>
+              <h3> <input name="name" type="text" value="{{subsidiary}}" class="form-control" style="color:rgba(19, 19, 230, 0.952)"></h3>
+            
           </div>
         </div>
         <div class="col-sm-12 row">
           <div class="col-sm-6"><b>
-              <h3>Petrol Quantity</h3>
+              <label class="bmd-label-floating" style="color:rgb(48, 66, 128)"><h3><i>Petrol Quantity</i></h3></label>
             </b></div>
           <div class="col-sm-6">
-            <h3>{{updates.petrol_quantity}}</h3>
+              <h3> <input name="name" type="text" value="{{updates.petrol_quantity}}" class="form-control" style="color:rgba(19, 19, 230, 0.952)"></h3>
+            
           </div>
         </div>
         <div class="col-sm-12 row">
           <div class="col-sm-6"><b>
-              <h3>Petrol Price</h3>
+              <label class="bmd-label-floating" style="color:rgb(57, 65, 134)"><h3><i>Petrol Price</i></h3></label>
             </b></div>
           <div class="col-sm-6">
-            <h3>{{updates.petrol_price}}</h3>
+              <h3> <input name="name" type="text" value="{{updates.petrol_price}}" class="form-control" style="color:rgba(19, 19, 230, 0.952)"></h3>
+           
           </div>
         </div>
         <div class="col-sm-12 row">
           <div class="col-sm-6"><b>
-              <h3>Diesel Quantity</h3>
+              <label class="bmd-label-floating" style="color:rgb(55, 53, 141)"><h3><i>Diesel Quantity</i></h3></label>
             </b></div>
           <div class="col-sm-6">
-            <h3>{{updates.diesel_quantity}}</h3>
+              <h3> <input name="name" type="text" value="{{updates.diesel_quantity}}" class="form-control" style="color:rgba(19, 19, 230, 0.952)"></h3>
+          
           </div>
         </div>
         <div class="col-sm-12 row">
           <div class="col-sm-6"><b>
-              <h3>Diesel Price</h3>
+              <label class="bmd-label-floating" style="color:rgb(48, 46, 143)"><h3><i>Diesel Price</i></h3></label>
             </b></div>
           <div class="col-sm-6">
-            <h3>{{updates.diesel_price}}</h3>
+              <h3> <input name="name" type="text" value="{{updates.diesel_price}}" class="form-control" style="color:rgba(19, 19, 230, 0.952)"></h3>
           </div>
         </div>
+      -->
+      <table id="example" class="table table-striped table-bordered" style="width:100%">
+          <tr>
+              <td height="50"> Fuel Station Name</td>
+              <td height="50"> {{subsidiary}}</td>
+            </tr>
+      <tr>
+          <td height="50">Petrol Quantity</td>
+          <td height="50">{{updates.petrol_quantity}}</td>
+        </tr>
+        <tr>
+            <td height="50">Petrol Price</td>
+            <td height="50">{{updates.petrol_price}}</td>
+          </tr>
+          <tr>
+              <td height="50">Diesel Quantity</td>
+              <td height="50">{{updates.diesel_quantity}}</td>
+            </tr>
+            <tr>
+                <td height="50">Diesel Price</td>
+                <td height="50">{{updates.diesel_price}}</td>
+              </tr>
+              <tr>
+                <td height="50">Payment Method</td>
+                <td height="50">{{updates.payment_methods}}</td>
+              </tr>
+              <tr>
+                <td height="50">Queue Size</td>
+                <td height="50">{{updates.queue_length}}</td>
+              </tr>
+
+      </table>
         {% else %}
         <p>Nothing To SHow</p>
         {% endif %}
@@ -68,10 +106,15 @@
               </div>
               <div class="modal-body">
 
-                <!-- {% load crispy_forms_tags %} -->
+                {% load crispy_forms_tags %}
                 <form action="{% url 'serviceStation:home' %}" method="POST">
+                           {% csrf_token %}
+                           {{fuel_update_form|crispy}}
+                <button class="btn btn-primary" type="submit">Update</button>  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 
-                    <div class="col-sm-12 row">
+                           
+
+                  <!--  <div class="col-sm-12 row">
                         <div class="col-sm-6">
                           Petrol Quantity
                         </div>
@@ -104,23 +147,19 @@
                           </div>
                     </div>
 
-
-                  <!-- {% csrf_token %}
-                  {{fuel_update_form|crispy}} -->
+                      -->
+                  
+                  
                   
                 </form>
               </div>
-              <div class="modal-footer">
-                <button class="btn btn-primary" type="submit">Update</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-              </div>
+              
             </div>
           </div>
         </div>
 
 
-        <!--update fuel-->
+        <!--
         <div class="modal fade" id="add_fuel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
           aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -146,10 +185,10 @@
               </div>
             </div>
           </div>
-        </div>
+        </div>-->
       </div>
       <button type="button" style="background-color:rgb(49, 60, 112);margin-left:auto;margin-right:auto;display:block;"
-        class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add_fuel">Upload New Fuel</button> </p>
+        class="btn btn-primary " data-toggle="modal" data-target="#add_fuel">Update Fuel Quantities</button> </p>
 
     </div>
   </div>
