@@ -67,7 +67,7 @@ class SupplierContactForm(forms.Form):
                                  max_length=30)                         
     username = forms.CharField(label='Username', required=True,
                                  max_length=30)
-    service_tation = forms.ChoiceField()
+    service_station = forms.ChoiceField()
     email = forms.EmailField(required=True, max_length=100,
                             validators=[validate_user_email])
     phone_number = forms.CharField(label='Cellphone number', required=True,

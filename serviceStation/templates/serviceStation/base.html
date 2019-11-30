@@ -41,20 +41,20 @@
        <div class="sidebar-wrapper">
          <ul class="nav">
            
-           <li class="nav-item {% if request.path == '/serviceStation/serviceStation/' %} active {% endif %}">
-            <a class="nav-link" href="{% url 'serviceStation:serviceStation' %}">
+           <li class="nav-item {% if request.path == '/serviceStation/' %} active {% endif %}">
+            <a class="nav-link" href="{% url 'serviceStation:home' %}">
               <i class="material-icons">swap_vertical_circle</i>
               <p>Fuel Updates</p>
             </a>
           </li>  
-         
+         <!--
           <li class="nav-item {% if request.path == '/serviceStation/allocated_fuel/' %} active {% endif %}">
             <a class="nav-link" href="{% url 'serviceStation:allocated_fuel' %}">
               <i class="material-icons">swap_vertical_circle</i>
               <p> Allocated Stock</p>
             </a>
           </li>  
-
+          -->
           <li class="nav-item {% if request.path == '/serviceStation/myaccount/' %} active {% endif %}">
             <a class="nav-link" href="{% url 'serviceStation:myaccount' %}">
               <i class="material-icons">person</i>
@@ -67,7 +67,7 @@
      </div>
      <div class="main-panel">
        <!-- Navbar -->
-       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
+       <nav class="navbar navbar-expand-lg navbar-absolute fixed-top ">
          <div class="container-fluid">
            <div class="navbar-wrapper">
              <a class="navbar-brand" href="#pablo"></a>

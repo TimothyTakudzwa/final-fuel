@@ -1,7 +1,7 @@
 {% extends "users/base.html" %}
 {% block body %}
 <div>
-    <h1 class="display-3" style="margin-left: 10px;">Service Stations Management</h1>
+    <h1 class="display-3" style="margin-left: 10px;">Subsidiary Management</h1>
     <hr class="my-2">
 </div>
 
@@ -9,7 +9,7 @@
         <div class="card" style="background-color:white">
             
             <div class="card-header card-header-primary">
-            <h4 class="card-title "> Service Stations </h4>
+            <h4 class="card-title ">{{request.user.company}} Subsidiaries </h4>
             </div>
         <div class="card-body">
             <div class="container-fluid">
@@ -20,11 +20,20 @@
                         <th style="color:white;">
                             Company
                         </th>
+
+                        <th style="color:white;">
+                                Subsidiary Type
+                            </th>
                            
                         <th style="color:white;">
                             Location
                         </th>
-                        
+                        <th style="color:white;">
+                                Opening Time
+                            </th>
+                            <th style="color:white;">
+                                    Closing Time
+                                </th>
                         <th style="color:white;">
                             Action
                         </th>
@@ -32,8 +41,14 @@
                            {% for station in stations %}
                            <tr>
                                <td>{{station.company}}</td>
-                               
+                               {% if station.is_depot == False %}
+                               <td>Service Station</td>
+                               {% else  %}
+                               <td>Depot</td>
+                               {% endif %}
                                <td>{{station.address}}</td>
+                               <td>{{station.opening_time}}</td>
+                               <td>{{station.closing_time}}</td>
                               
                                <td style="width: 33%;">
                                    <div class="btn-group">
@@ -58,6 +73,9 @@
                                         <div class="modal-body">
                                             <p>Company Name: {{station.company}}</p>
                                             <p>Location: {{station.address}}</p>
+                                            <p>Is Depot: {{station.is_depot}}</p>
+                                            <p>Opening Time: {{station.opening_time}}</p>
+                                            <p>Closing Time: {{station.closing_time}}</p>
                                             
                                            
                                             
@@ -94,25 +112,30 @@
                                                         </div>
                                                         <div class="form-group row">
                                                             
-                                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Location</label>
+                                                        <label for="address" class="col-sm-2 col-form-label">Location</label>
                                                         <div class="col-sm-10">
-                                                            <input type="telephone" class="form-control" id="inputEmail3"  value="{{station.location}}">
+                                                            <input type="text" name ="address" class="form-control" id="address"  value="{{station.address}}">
                                                         </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Capacity</label>
+                                                        <label for="is_depot" class="col-sm-2 col-form-label">Is Depot</label>
                                                         <div class="col-sm-10">
-                                                            <input type="telephone" class="form-control" id="inputEmail3"  value="{{station.capacity}}">
+                                                            <input type="text" name = "is_depot" class="form-control" id="is_depot"  value="{{station.is_depot}}">
                                                         </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                                <label for="inputEmail3" class="col-sm-2 col-form-label">Stock</label>
+                                                                <label for="opening_time" class="col-sm-2 col-form-label">Opening Time</label>
                                                                 <div class="col-sm-10">
-                                                                    <input type="telephone" class="form-control" id="inputEmail3"  value="{{station.stock}}">
+                                                                    <input type="text" name = "opening_time" class="form-control" id="opening_time"  value="{{station.opening_time}}">
                                                                 </div>
                                                                 </div>
                                                         
-                                                        
+                                                                <div class="form-group row">
+                                                                        <label for="closing_time" class="col-sm-2 col-form-label">Closing Time</label>
+                                                                        <div class="col-sm-10">
+                                                                            <input type="text" name = "closing_time" class="form-control" id="closing_time"  value="{{station.closing_time}}">
+                                                                        </div>
+                                                                        </div>
     
                                                        
                                                             <div class="col-md-12 text-center">     
@@ -161,32 +184,30 @@
                         {% endfor %}   
                         <div id = "container" align = "center">
               
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_user">Add Station </button>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_sub">Add Subsidiary </button>
                         
                             </div> 
-                        <div class="modal fade" id="new_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="new_sub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                   <div class="modal-content">
                                     <div class="modal-header">
-                                      <h5 class="modal-title" id="exampleModalLabel">Add User </h5>
+                                      <h5 class="modal-title" id="exampleModalLabel">Add Subsidiary </h5>
                                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                       </button>
                                     </div>
                                     <div class="modal-body">  
-                                    {% comment %}
-                                        {% load crispy_forms_tags %}
-                                        <form action="{% url 'users:suppliers_list' %}" method="POST">
-                                        {{ form|crispy }}
-                                        {% csrf_token %}
-                                        <button class="btn btn-primary" type="submit">Add User Profile</button>
+                                   
+                                         {% load crispy_forms_tags %}
+                                        <form action="{% url 'users:stations' %}" method="POST">
+                                            {% csrf_token %}
+                                            {{sub_create_form|crispy}}
+                                        
+                                        <button class="btn btn-primary" type="submit">Add</button> <button class="btn btn-primary" data-dismiss="modal">Close</button>
                                         </form>
-                                    {% endcomment %}    
-                                    </div>
-                                    <div class="modal-footer">
-                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                       
                                     </div>
+                                    
                                   </div>
                                 </div>
                               </div>

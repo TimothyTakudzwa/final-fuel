@@ -7,7 +7,7 @@ from . import views
 #from .views import user_profile
 
 urlpatterns = [
-    path('serviceStation/', views.fuel_updates, name="serviceStation"),
+    path('', views.fuel_updates, name="home"),
     path('myaccount/', views.myaccount, name='myaccount'),
     path('allocated_fuel/', views.allocated_fuel, name='allocated_fuel'),
     
