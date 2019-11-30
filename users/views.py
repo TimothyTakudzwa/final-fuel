@@ -169,28 +169,22 @@ def audit_trail(request):
 
 def suppliers_list(request):
     suppliers = User.objects.filter(company=request.user.company)
-    suppliers = [sup for sup in suppliers if not sup == request.user]   
+    #suppliers = [sup for sup in suppliers if not sup == request.user]   
     form1 = SupplierContactForm()         
-    companies = Company.objects.all()
-    form1.fields['service_station'].choices = [((company.id, company.name)) for company in companies] 
+    subsidiaries = Subsidiaries.objects.all()
+    form1.fields['service_station'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in subsidiaries] 
 
     if request.method == 'POST':
         form1 = SupplierContactForm( request.POST)
-        
-        print('--------------------tapinda---------------')
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         username = request.POST.get('username')
         email = request.POST.get('email')
-        password = request.POST.get('paasword')
+        password = request.POST.get('password')
         phone_number = request.POST.get('phone_number')
-        supplier_role = 'Staff'
-        f_service_station = request.POST.get('service_station')
-        company = Company.objects.get(id=f_service_station)
-        
-        print(type(User))
-        User.objects.create(username=username, first_name=first_name, last_name=last_name, user_type = 'SUPPLIER', company=company, email=email ,password=password, phone_number=phone_number,supplier_role=supplier_role)
-        messages.success(request, f"{username} Registered Successfully")
+        subsidiary_id = request.POST.get('service_station')
+        User.objects.create(subsidiary_id=subsidiary_id,username=username, first_name=first_name, last_name=last_name, user_type = 'SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
+        messages.success(request, f"{username} Registered Service Station Rep Successfully")
         '''
         token = secrets.token_hex(12)
         user = User.objects.get(username=username)
