@@ -33,21 +33,20 @@ def allocate(request):
     allocates = fex.objects.all()
     
     if request.method == 'POST':
-        for alloc in allocates:
-            if fex.objects.filter(id= alloc.id).exists():
-                fuel_update = fex.objects.filter(id= alloc.id).first()
-                fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['petrol_quantity'])
-                fuel_update.petrol_price = request.POST['petrol_price']
-                fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['diesel_quantity'])
-                fuel_update.diesel_price = request.POST['diesel_price']
-                fuel_update.payment_methods = request.POST['payment_methods']
-                fuel_update.queue_length = request.POST['queue_length']
-                fuel_update.save()
-                messages.success(request, 'updated quantities successfully')
-                return redirect('users:allocate')
-            else:
-                messages.success(request, 'Subsidiary does not exists')
-                return redirect('users:allocate')
+        if fex.objects.filter(id= int(request.POST['id'])).exists():
+            fuel_update = fex.objects.filter(id= int(request.POST['id'])).first()
+            fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['petrol_quantity'])
+            fuel_update.petrol_price = request.POST['petrol_price']
+            fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['diesel_quantity'])
+            fuel_update.diesel_price = request.POST['diesel_price']
+            fuel_update.payment_methods = request.POST['payment_methods']
+            fuel_update.queue_length = request.POST['queue_length']
+            fuel_update.save()
+            messages.success(request, 'updated quantities successfully')
+            return redirect('users:allocate')
+        else:
+            messages.success(request, 'Subsidiary does not exists')
+            return redirect('users:allocate')
     
     return render(request, 'users/allocate.html', {'allocates': allocates})
 
