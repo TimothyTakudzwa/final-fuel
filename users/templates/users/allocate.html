@@ -66,7 +66,7 @@
                            <td>{{allocate.petrol_price}}</td>
                            <td>{{allocate.payment_methods}}</td>
                            <td><button class="btn btn-success btn-sm" data-toggle="modal" data-target="#update">Allocate</button></td>
-                        </tr>
+                        
                       
                          <!--update fuel-->
         <div class="modal fade" id="update" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -80,11 +80,84 @@
               </button>
             </div>
             <div class="modal-body">
-
-              {% load crispy_forms_tags %}
               <form action="{% url 'users:allocate' %}" method="POST">
                          {% csrf_token %}
-                         {{update_form|crispy}}
+
+                         <div class="col-sm-12 row">
+                            <div class="col-sm-6"><b>
+                              <label class="bmd-label-floating" style="color:rgb(79, 77, 172); white-space: pre-wrap;"><h4><i>Allocation ID</i></h4></label>
+                              </b></div>
+                            <div class="col-sm-6">
+                                <input name="id" type="text" value="{{allocate.id}}" class="form-control" style="color:rgba(19, 19, 230, 0.952)">
+                              
+                            </div>
+                          </div>
+
+                        
+                            <div class="col-sm-12 row">
+                                <div class="col-sm-6"><b>
+                                  <label class="bmd-label-floating" style="color:rgb(79, 77, 172); white-space: pre-wrap;"><h4><i>Petrol Quantity</i></h4></label>
+                                  </b></div>
+                                <div class="col-sm-6">
+                                    <input name="petrol_quantity" type="text" value="{{allocate.petrol_quantity}}" class="form-control" style="color:rgba(19, 19, 230, 0.952)">
+                                  
+                                </div>
+                              </div>
+
+
+                                <div class="col-sm-12 row">
+                                    <div class="col-sm-6"><b>
+                                      <label class="bmd-label-floating" style="color:rgb(79, 77, 172); white-space: pre-wrap;"><h4><i>Petrol Price</i></h4></label>
+                                      </b></div>
+                                    <div class="col-sm-6">
+                                        <input name="petrol_price" type="text" value="{{allocate.petrol_price}}" class="form-control" style="color:rgba(19, 19, 230, 0.952)">
+                                      
+                                    </div>
+                                  </div>
+        
+
+                                    <div class="col-sm-12 row">
+                                        <div class="col-sm-6"><b>
+                                          <label class="bmd-label-floating" style="color:rgb(79, 77, 172); white-space: pre-wrap;"><h4><i>Diesel Quantity</i></h4></label>
+                                          </b></div>
+                                        <div class="col-sm-6">
+                                            <input name="diesel_quantity" type="text" value="{{allocate.diesel_quantity}}" class="form-control" style="color:rgba(19, 19, 230, 0.952)">
+                                          
+                                        </div>
+                                      </div>
+                             
+
+                                        <div class="col-sm-12 row">
+                                            <div class="col-sm-6"><b>
+                                              <label class="bmd-label-floating" style="color:rgb(79, 77, 172); white-space: pre-wrap;"><h4><i>Diesel Price</i></h4></label>
+                                              </b></div>
+                                            <div class="col-sm-6">
+                                                <input name="diesel_price" type="text" value="{{allocate.diesel_price}}" class="form-control" style="color:rgba(19, 19, 230, 0.952)">
+                                              
+                                            </div>
+                                          </div>
+
+
+
+                                            <div class="col-sm-12 row">
+                                                <div class="col-sm-6"><b>
+                                                  <label class="bmd-label-floating" style="color:rgb(79, 77, 172); white-space: pre-wrap;"><h4><i>Payment Methods</i></h4></label>
+                                                  </b></div>
+                                                <div class="col-sm-6">
+                                                    <input name="payment_methods" type="text" value="{{allocate.payment_methods}}" class="form-control" style="color:rgba(19, 19, 230, 0.952)">
+                                                  
+                                                </div>
+                                              </div>
+
+                                     <div class="col-sm-12 row">
+                                        <div class="col-sm-6"><b>
+                                          <label class="bmd-label-floating" style="color:rgb(79, 77, 172); white-space: pre-wrap;"><h4><i>Queue Length</i></h4></label>
+                                          </b></div>
+                                        <div class="col-sm-6">
+                                            <input name="queue_length" type="text" value="{{allocate.queue_length}}" class="form-control" style="color:rgba(19, 19, 230, 0.952)">
+                                          
+                                        </div>
+                                      </div>
               <button class="btn btn-primary" type="submit">Update</button>  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 
                          
@@ -132,7 +205,7 @@
           </div>
         </div>
       </div>
-
+    </tr>
                     {% endfor %}   
                 </tbody>
                 </table>
