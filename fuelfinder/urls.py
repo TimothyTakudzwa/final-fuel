@@ -42,7 +42,7 @@ urlpatterns = [
     path('users/', include(('users.urls','users'), namespace='users')),
     path('supplier/', include(('supplier.urls','supplier'), namespace='supplier')),
     path('serviceStation/', include(('serviceStation.urls','serviceStation'), namespace='serviceStation')),
-    path('stock/', supplier_views.stock, name='stock'),
+    path('fuel_update/', supplier_views.fuel_update, name='fuel_update'),
     path('transaction/', supplier_views.transaction, name='transaction'),
     
 ]

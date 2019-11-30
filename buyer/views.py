@@ -37,6 +37,8 @@ def login_success(request):
         return redirect("buyer-dashboard")
     elif user_type == 'SS_SUPPLIER':
         return redirect("serviceStation:home")
+    elif user_type == 'SUPPLIER':
+        return redirect("fuel-request")
     else:
         return redirect("users:suppliers_list")
 def token_is_send(request, user):

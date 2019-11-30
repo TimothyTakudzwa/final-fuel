@@ -80,6 +80,14 @@
                 <td height="50">Diesel Price</td>
                 <td height="50">{{updates.diesel_price}}</td>
               </tr>
+              <tr>
+                <td height="50">Payment Method</td>
+                <td height="50">{{updates.payment_methods}}</td>
+              </tr>
+              <tr>
+                <td height="50">Queue Size</td>
+                <td height="50">{{updates.queue_length}}</td>
+              </tr>
 
       </table>
         {% else %}
@@ -102,6 +110,9 @@
                 <form action="{% url 'serviceStation:home' %}" method="POST">
                            {% csrf_token %}
                            {{fuel_update_form|crispy}}
+                <button class="btn btn-primary" type="submit">Update</button>  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+
+                           
 
                   <!--  <div class="col-sm-12 row">
                         <div class="col-sm-6">
@@ -142,17 +153,13 @@
                   
                 </form>
               </div>
-              <div class="modal-footer">
-                <button class="btn btn-primary" type="submit">Update</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-              </div>
+              
             </div>
           </div>
         </div>
 
 
-        <!--update fuel-->
+        <!--
         <div class="modal fade" id="add_fuel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
           aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -178,10 +185,10 @@
               </div>
             </div>
           </div>
-        </div>
+        </div>-->
       </div>
       <button type="button" style="background-color:rgb(49, 60, 112);margin-left:auto;margin-right:auto;display:block;"
-        class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add_fuel">Upload New Fuel</button> </p>
+        class="btn btn-primary " data-toggle="modal" data-target="#add_fuel">Update Fuel Quantities</button> </p>
 
     </div>
   </div>

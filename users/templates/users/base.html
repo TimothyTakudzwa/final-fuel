@@ -62,7 +62,7 @@
               <p>Depot Staff</p>
             </a>
           </li>
-          
+          <!--
           <li class="nav-item {% if request.path == '/users/depots/' %} active {% endif %}">
               
             <a class="nav-link " href="{% url 'users:depots' %}">
@@ -70,7 +70,7 @@
               <p>Depots</p>
             </a>
           </li>
-
+           -->
           
           <li class="nav-item {% if request.path == '/users/allocate/' %} active {% endif %}">
               
@@ -91,7 +91,7 @@
               
             <a class="nav-link " href="{% url 'users:stations' %}">
               <i class="material-icons">local_gas_station</i>
-              <p>Service Stations</p>
+              <p>Subsidiaries</p>
             </a>
           </li>
 
@@ -244,12 +244,6 @@
    <script>
 
 
-    $(document).ready(function() {
-      $('#example').DataTable({"order": [[ 0, "desc" ]]});
-    } );
-
-     
-     
     $(document).ready(function() {
       $('#example').DataTable({"order": [[ 0, "desc" ]]});
     } );
