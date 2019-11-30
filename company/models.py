@@ -20,9 +20,6 @@ class FuelUpdate(models.Model):
     class Meta:
         ordering = ['last_updated']
 
-    def __str__(self):
-        return f'{str(self.sub_type)} - Diesel {str(self.diesel_quantity)}. Petrol Quantity {str(self.petrol_quantity)}'
-
 class Company(models.Model):
     name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
