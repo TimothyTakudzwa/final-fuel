@@ -15,12 +15,7 @@ from users.models import AuditTrail
 from .forms import PasswordChange, RegistrationForm, \
     RegistrationEmailForm, UserUpdateForm, FuelRequestForm
 from .models import FuelUpdate, FuelRequest, Transaction, TokenAuthentication, Offer
-from datetime import date
-from buyer.forms import BuyerUpdateForm
 from company.models import Company, FuelUpdate
-from .forms import PasswordChange, RegistrationForm, \
-    RegistrationEmailForm, UserUpdateForm,  FuelRequestForm
-from .models import  FuelRequest, Transaction, TokenAuthentication
 from notification.models import Notification
 
 # today's date
@@ -218,10 +213,6 @@ def fuel_update(request):
             fuel_update.payment_method = request.POST.get('payment_method')
             fuel_update.status = request.POST.get('status')
             fuel_update.save()
-
-            fuel_allocated = FuelAllocation.objects.get(date=today, fuel_type=transaction.request.fuel_type, assigned_staff=request.user)
-            fuel_allocated.current_available_quantity = fuel_allocated.current_available_quantity - request.POST.get('available_quantity')
-            fuel_allocated.save()
         else:
             available_quantity = request.POST.get('available_quantity')
             payment_method = request.POST.get('payment_method')
@@ -277,14 +268,15 @@ def edit_offer(request, id):
 @login_required
 def transaction(request):
     context= { 
-       'transactions' : Transaction.objects.filter(supplier=request.user, complete=False).all()
+       'transactions' : Transaction.objects.filter(supplier=request.user).all()
         }
     return render(request, 'supplier/accounts/transactions.html',context=context)
 
 @login_required
 def stock(request):
     context = {
-        'stocks' : FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id)
+        'stocks' : FuelUpdate.objects.filter(sub_type='depot', relationship_id=request.user.subsidiary_id).first()
+        'subsidiary' : Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     }
     return render(request, 'supplier/accounts/stock.html', context=context)
 
