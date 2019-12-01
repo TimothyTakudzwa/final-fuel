@@ -81,7 +81,8 @@ def statistics(request):
         company.num_transactions = num_trans[counter]
         counter += 1
 
-    clients = [company for company in  companies]    
+    clients = [company for company in  companies]
+    revenue = round(float(sum(value)))   
 
     try:
         trans = Transaction.objects.all().count()/Transaction.objects.all().count()/100
@@ -90,7 +91,7 @@ def statistics(request):
     trans = str(trans) + " %"
     return render(request, 'users/statistics.html', {'staff_blocked':staff_blocked, 'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
-     'diesel':diesel, 'petrol':petrol})
+     'diesel':diesel, 'petrol':petrol, 'revenue':revenue})
 
 
 def supplier_user_edit(request, cid):
