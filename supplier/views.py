@@ -236,19 +236,26 @@ def fuel_update(request):
 
 def offer(request, id):
     if request.method == "POST":
-        price = request.POST.get('price')
-        quantity = request.POST.get('quantity')
         fuel_request = FuelRequest.objects.get(id=id)
 
-        Offer.objects.create(price=price, quantity=quantity, supplier=request.user, request=fuel_request)
-        
-        messages.success(request, 'Offer uploaded successfully')
-        action = f"{request.user}  made an offer of {quantity} @ {price}"
+        offer = int(request.POST.get('quantity'))
+        amount = fuel_request.amount
 
-        # AuditTrail.objects.create(user = request.user, action = action, reference = 'offer' )
-        return redirect('fuel-request')
-    else:
-        messages.warning(request, 'Oops something went wrong while posting your offer')
+        if offer <= amount:
+            price = request.POST.get('price')
+            quantity = request.POST.get('quantity')
+            fuel_request = FuelRequest.objects.get(id=id)
+
+            Offer.objects.create(price=price, quantity=quantity, supplier=request.user, request=fuel_request)
+            
+            messages.success(request, 'Offer uploaded successfully')
+            action = f"{request.user}  made an offer of {quantity} @ {price}"
+
+            # AuditTrail.objects.create(user = request.user, action = action, reference = 'offer' )
+            return redirect('fuel-request')
+        else:
+            messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
+            return redirect('fuel-request')
     return render(request, 'supplier/accounts/fuel_request.html')
 
 @login_required
