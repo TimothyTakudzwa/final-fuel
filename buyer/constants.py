@@ -8,7 +8,11 @@ except:
     pass
         
 
-# COMPANY_CHOICES = (('ZB FINANCIAL HOLDINGS', 'ZB Financial Holdings'),('CBZ FINANCIAL HOLDINGS', 'CBZ Financial Holdings'),('DOVES HOLDINGS ZIMBABWE', 'Doves Holdings Zimbabwe'))
+
+DELIVERY_OPTIONS= (('SELF COLLECTION', 'SELF COLLECTION'),('DELIVERY', 'DELIVERY'))
+
+FUEL_CHOICES = (('PETROL BLEND', 'PETROL BLEND'),('DIESEL', 'DIESEL'))
+
 sender = f'Fuel Finder Accounts<tests@marlvinzw.me>'
 subject = 'User Registration'
 

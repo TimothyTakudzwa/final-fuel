@@ -58,7 +58,7 @@
                        {% for allocate in allocates %}
                        <tr>
                           <td>{{allocate.id}}</td>
-                          <td>{{request.user.company}}</td>
+                          <td>{{allocate.subsidiary_name}}</td>
                            <td>{{allocate.sub_type}}</td>
                            <td>{{allocate.diesel_quantity}}</td>
                            <td>{{allocate.diesel_price}}</td>
@@ -95,7 +95,7 @@
                                                         
                             <label for="petrol_quantity" class="col-sm-2 col-form-label">Petrol Quantity</label>
                             <div class="col-sm-10">
-                                <input name="petrol_quantity" type="text" class="form-control"  id="petrol_quantity"  value="{{ allocate.petrol_quantity}}">
+                                <input name="petrol_quantity" type="text" class="form-control"  id="petrol_quantity"  value="">
                             </div>
                             </div>
                             
@@ -112,7 +112,7 @@
                                                                 
                                     <label for="diesel_quantity" class="col-sm-2 col-form-label">Diesel Quantity</label>
                                     <div class="col-sm-10">
-                                        <input name="diesel_quantity" type="text" class="form-control" id="diesel_quantity"  value="{{ allocate.diesel_quantity}}">
+                                        <input name="diesel_quantity" type="text" class="form-control" id="diesel_quantity"  value="">
                                     </div>
                                     </div>
                                     

@@ -44,11 +44,13 @@ class FuelRequest(models.Model):
     time = models.TimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     is_direct_deal = models.BooleanField(default=False)
+    is_closed = models.BooleanField(default=False)
+    wait = models.BooleanField(default=False)
     last_deal = models.IntegerField(default=0)
 
     class Meta:
         ordering = ['date', 'time', 'name']
 
     def __str__(self):
-        return f'{str(self.name)} - {str(self.amount)}'
+        return f'{str(self.name)}'
 
