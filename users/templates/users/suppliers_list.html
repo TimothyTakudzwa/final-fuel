@@ -76,13 +76,13 @@
                             <td>{{supplier.first_name}}</td>
                             <td>{{supplier.last_name}}</td>
                            <td>{{supplier.username}}</td>
-                           <td>{{supplier.company.name}}</td>
+                           <td>{{supplier.subsidiary_name}}</td>
                            <td>{{supplier.phone_number}}</td>
                            <td>{{supplier.email}}</td>
                            <td style="width: 33%;">
                                <div class="btn-group">
                                     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#{{supplier.id}}">View Details</button>  
-                                    <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#edit_{{supplier.id}}">Edit</button>
+                                    <!--<button class="btn btn-success btn-sm" data-toggle="modal" data-target="#edit_{{supplier.id}}">Edit</button>-->
                                     <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#delete_{{supplier.id}}">Delete</button>
                                     <!--<a href="{% url 'users:supplier_user_create' supplier.id %}" class="btn btn-info btn-sm">More Details</a>-->
 

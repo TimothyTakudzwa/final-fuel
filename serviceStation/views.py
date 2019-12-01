@@ -24,34 +24,21 @@ def fuel_updates(request):
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     print(f"--------------------------{updates}----------------------")
     if request.method == 'POST':
-        if FuelUpdate.objects.filter(sub_type=request.POST['sub_type']).exists():
-            fuel_update = FuelUpdate.objects.get(sub_type=request.POST['sub_type'])
-            fuel_update.petrol_quantity = request.POST['petrol_quantity']
-            fuel_update.petrol_price = request.POST['petrol_price']
-            fuel_update.diesel_quantity = request.POST['diesel_quantity']
-            fuel_update.diesel_price = request.POST['diesel_price']
-            fuel_update.payment_methods = request.POST['payment_methods']
-            fuel_update.queue_length = request.POST['queue_length']
-            fuel_update.save()
-            messages.success(request, 'updated quantities successfully')
-            service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-            reference = 'fuel quantity updates'
-            reference_id = fuel_update.id
-            action = f"{request.user.username} has made an update of diesel quantity to {fuel_update.diesel_quantity} @ {fuel_update.diesel_price} and petrol quantity to {fuel_update.petrol_quantity} @ {fuel_update.petrol_price}"
-            Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
-            return redirect('serviceStation:home')
-        else:
-            sub_type = request.POST.get('sub_type')
-            petrol_quantity = request.POST.get('petrol_quantity')
-            petrol_price = request.POST.get('petrol_price')
-            diesel_quantity = request.POST.get('diesel_quantity')
-            diesel_price = request.POST.get('diesel_price')
-            payment_methods = request.POST.get('payment_methods')
-            queue_length = request.POST.get('queue_length')
-            relationship_id = request.user.subsidiary_id
-            FuelUpdate.objects.create(relationship_id=relationship_id, sub_type=sub_type,payment_methods=payment_methods,queue_length=queue_length, petrol_quantity=petrol_quantity, petrol_price=petrol_price, diesel_quantity=diesel_quantity, diesel_price=diesel_price)
-            messages.success(request, 'Quantities uploaded successfully')
-            return redirect('serviceStation:home')
+        #fuel_update = FuelUpdate.objects.filter(sub_type=request.POST['sub_type']).first()
+        updates.petrol_quantity = request.POST['petrol_quantity']
+        updates.petrol_price = request.POST['petrol_price']
+        updates.diesel_quantity = request.POST['diesel_quantity']
+        updates.diesel_price = request.POST['diesel_price']
+        updates.payment_methods = request.POST['payment_methods']
+        updates.queue_length = request.POST['queue_length']
+        updates.save()
+        messages.success(request, 'updated quantities successfully')
+        service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+        reference = 'fuel quantity updates'
+        reference_id = updates.id
+        action = f"{request.user.username} has made an update of diesel quantity to {updates.diesel_quantity} @ {updates.diesel_price} and petrol quantity to {updates.petrol_quantity} @ {updates.petrol_price}"
+        Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
+        return redirect('serviceStation:home')
 
     return render(request, 'serviceStation/fuel_updates.html', {'updates': updates, 'subsidiary': subsidiary_name.name})
 

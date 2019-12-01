@@ -8,7 +8,6 @@ from buyer.constants2 import COMPANY_CHOICES, INDUSTRY_CHOICES
 
 
 class FuelUpdate(models.Model):
-    company_id = models.IntegerField()
     sub_type = models.CharField(max_length=255, choices=(('company', 'Company'), ('service_station', 'Service Station'), ('depot', 'Depot')))
     diesel_quantity = models.IntegerField(default=0)
     petrol_quantity = models.IntegerField(default=0)

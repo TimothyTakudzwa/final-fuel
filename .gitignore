@@ -104,6 +104,9 @@ djangovenv.bak/
 # Rope project settings
 .ropeproject
 
+# Report Docs
+media/
+
 # mkdocs documentation
 /site
 
