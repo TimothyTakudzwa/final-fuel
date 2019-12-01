@@ -11,7 +11,7 @@ urlpatterns = [
     path('profile', views.profile, name='buyer-profile'),
     path('', views.dashboard, name='buyer-dashboard'),
     path('fuel', views.fuel_request, name='fuel-request'),
-    path('offers', views.offers, name='fuel-offers'),
+    path('offers/<int:id>', views.offers, name='fuel-offers'),
     path('login_success/', views.login_success, name='login_success'),
 ]
 

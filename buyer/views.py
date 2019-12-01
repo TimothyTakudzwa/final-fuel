@@ -158,6 +158,12 @@ def fuel_request(request):
 
     #print(type(fuel_requests))
     print(fuel_requests)
+    for fuel_request in fuel_requests:
+        offer = Offer.objects.filter(request=fuel_request).first()
+        if offer is not None:
+            fuel_request.has_offers = True
+        else:
+            fuel_request.has_offers = False
 
     context = {
         'fuel_requests' : fuel_requests
@@ -230,11 +236,20 @@ def dashboard(request):
     else:
         form = FuelRequestForm
     
-    return render(request, 'buyer/dashboard.html',{'form':form, 'sample_data':sample_data})
+    updates = FuelUpdate.objects.filter(sub_type="depot")
+    for update in updates:
+        company = Company.objects.filter(id=update.company_id).first()
+        if company is not None:
+            update.company = company.name
+
+    print(updates)
+    return render(request, 'buyer/dashboard.html',{'form':form, 'updates': updates})
 
 
 
-def offers(request):
-    offers = Offers.objects.filter
-    return render(request, 'buyer/offer.html')
+def offers(request, id):
+    request = FuelRequest.objects.filter(id=id).first()
+    offers = Offer.objects.filter(request=request).all()
+    print(offers)
+    return render(request, 'buyer/offer.html', {'offers': offers } )
 
