@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.contrib import messages
 import secrets
-
+from users.models import Audit_Trail
 from datetime import date, time
 
 from buyer.forms import BuyerUpdateForm
@@ -220,6 +220,11 @@ def fuel_update(request):
             fuel_update.payment_methods = request.POST['payment_methods']
             fuel_update.save()
             messages.success(request, 'updated quantities successfully')
+            service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+            reference = 'fuel quantity updates'
+            reference_id = fuel_update.id
+            action = f"{request.user.username} has made an update of diesel quantity to {fuel_update.diesel_quantity} @ {fuel_update.diesel_price} and petrol quantity to {fuel_update.petrol_quantity} @ {fuel_update.petrol_price}"
+            Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
             return redirect('fuel_update')
         else:
             sub_type = 'depot'
@@ -246,9 +251,12 @@ def offer(request, id):
         Offer.objects.create(price=price, quantity=quantity, supplier=request.user, request=fuel_request)
         
         messages.success(request, 'Offer uploaded successfully')
-        action = f"{request.user}  made an offer of {quantity} @ {price}"
-
-        # AuditTrail.objects.create(user = request.user, action = action, reference = 'offer' )
+        service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+        reference = 'offers'
+        reference_id = fuel_request.id
+        action = f"{request.user.username}  made an offer of {quantity}L of {fuel_request.fuel_type} @ {price} to a request by {fuel_request.name.username} of {fuel_request.amount}L"
+        Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
+        
         return redirect('fuel-request')
     else:
         messages.warning(request, 'Oops something went wrong while posting your offer')
