@@ -31,7 +31,10 @@ def index(request):
 
 
 def allocate(request):
-    allocates = F_Update.objects.all()
+    allocates = F_Update.objects.filter(company_id=request.user.company.id).all()
+    for allocate in allocates:
+        subsidiary = Subsidiaries.objects.filter(id=allocate.relationship_id).first()
+        allocate.subsidiary_name = subsidiary.name
     
     if request.method == 'POST':
         if F_Update.objects.filter(id= int(request.POST['id'])).exists():
@@ -120,16 +123,15 @@ def stations(request):
         opening_time = request.POST['opening_time']
         closing_time = request.POST['closing_time']
         sub = Subsidiaries.objects.create(company=request.user.company,name=name,address=address,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)
-        diesel_quantity = 1
-        diesel_price = float(1)
-        petrol_quantity = 1
-        petrol_price = float(1)
-        queue_length = 'short'
-        payment_methods = 'cash'
+        #diesel_quantity = ""
+        #diesel_price = float(1)
+        #petrol_quantity = ""
+        #petrol_price = float(1)
+        #queue_length = 'short'
+        #payment_methods = 'cash'
         sub_type = 'service_station' if is_depot else 'depot'
-        print(f"----------------Service Station {sub_type}")
         relationship_id = sub.id
-        fuel_updated = fex.objects.create(sub_type=sub_type,relationship_id=relationship_id,payment_methods=payment_methods,diesel_quantity=diesel_quantity,diesel_price=diesel_price,petrol_quantity=petrol_quantity,petrol_price=petrol_price,queue_length=queue_length)
+        fuel_updated = F_Update.objects.create(sub_type=sub_type,relationship_id=relationship_id,company_id = request.user.company.id)
         fuel_updated.save()
         sub.fuel_capacity = fuel_updated
         sub.save()
@@ -161,17 +163,20 @@ def depots(request):
 
 
 def audit_trail(request):
-    trails = Audit_Trail.objects.all()
+    trails = Audit_Trail.objects.filter(company=request.user.company).all()
     print(trails)
     return render(request, 'users/audit_trail.html', {'trails': trails})    
 
         
 
 def suppliers_list(request):
-    suppliers = User.objects.filter(company=request.user.company)
+    suppliers = User.objects.filter(company=request.user.company).filter(user_type='SS_SUPPLIER').all()
+    for supplier in suppliers:
+        subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
+        supplier.subsidiary_name = subsidiary.name
     #suppliers = [sup for sup in suppliers if not sup == request.user]   
     form1 = SupplierContactForm()         
-    subsidiaries = Subsidiaries.objects.all()
+    subsidiaries = Subsidiaries.objects.filter(is_depot=False).all()
     form1.fields['service_station'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in subsidiaries] 
 
     if request.method == 'POST':
@@ -183,8 +188,8 @@ def suppliers_list(request):
         password = request.POST.get('password')
         phone_number = request.POST.get('phone_number')
         subsidiary_id = request.POST.get('service_station')
-        User.objects.create(subsidiary_id=subsidiary_id,username=username, first_name=first_name, last_name=last_name, user_type = 'SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
-        messages.success(request, f"{username} Registered Service Station Rep Successfully")
+        User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username, first_name=first_name, last_name=last_name, user_type = 'SS_SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
+        messages.success(request, f"{username} Registered as Service Station Rep Successfully")
         '''
         token = secrets.token_hex(12)
         user = User.objects.get(username=username)
@@ -362,28 +367,26 @@ def delete_user(request,id):
 
 
 def depot_staff(request):
-    suppliers = User.objects.filter(company=request.user.company)  
+    suppliers = User.objects.filter(company=request.user.company).filter(user_type='SUPPLIER').all()
+    for supplier in suppliers:
+        subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
+        supplier.subsidiary_name = subsidiary.name
+    #suppliers = [sup for sup in suppliers if not sup == request.user]   
     form1 = SupplierContactForm()         
-    #companies = Company.objects.all()
-    #form1.fields['service_tation'].choices = [((company.id, company.name)) for company in companies] 
+    subsidiaries = Subsidiaries.objects.filter(is_depot=True).all()
+    form1.fields['service_station'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in subsidiaries] 
 
     if request.method == 'POST':
         form1 = SupplierContactForm( request.POST)
-        
-        print('--------------------tapinda---------------')
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         username = request.POST.get('username')
         email = request.POST.get('email')
-        password = request.POST.get('paasword')
+        password = request.POST.get('password')
         phone_number = request.POST.get('phone_number')
-        supplier_role = 'Staff'
-        f_service_station = request.POST.get('service_station')
-        company = Company.objects.get(id=f_service_station)
-        
-        print(type(User))
-        User.objects.create(username=username, first_name=first_name, last_name=last_name, user_type = 'SUPPLIER', company=company, email=email ,password=password, phone_number=phone_number,supplier_role=supplier_role)
-        messages.success(request, f"{username} Registered Successfully")
+        subsidiary_id = request.POST.get('service_station')
+        User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username, first_name=first_name, last_name=last_name, user_type = 'SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
+        messages.success(request, f"{username} Registered as Depot Rep Successfully")
         '''
         token = secrets.token_hex(12)
         user = User.objects.get(username=username)
