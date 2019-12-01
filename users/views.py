@@ -81,7 +81,8 @@ def statistics(request):
         company.num_transactions = num_trans[counter]
         counter += 1
 
-    clients = [company for company in  companies]    
+    clients = [company for company in  companies]
+    revenue = round(float(sum(value)))   
 
     try:
         trans = Transaction.objects.all().count()/Transaction.objects.all().count()/100
@@ -90,7 +91,7 @@ def statistics(request):
     trans = str(trans) + " %"
     return render(request, 'users/statistics.html', {'staff_blocked':staff_blocked, 'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
-     'diesel':diesel, 'petrol':petrol})
+     'diesel':diesel, 'petrol':petrol, 'revenue':revenue})
 
 
 def supplier_user_edit(request, cid):
@@ -129,7 +130,11 @@ def stations(request):
     
         sub_type = 'service_station' if is_depot else 'depot'
         relationship_id = sub.id
+<<<<<<< HEAD
+        fuel_updated = F_Update.objects.create(sub_type=sub_type,relationship_id=relationship_id,payment_methods=payment_methods,diesel_quantity=diesel_quantity,diesel_price=diesel_price,petrol_quantity=petrol_quantity,petrol_price=petrol_price,queue_length=queue_length)
+=======
         fuel_updated = F_Update.objects.create(sub_type=sub_type,relationship_id=relationship_id,company_id = request.user.company.id)
+>>>>>>> 3697adbf41ecf61d8ded83b2343d9179bd7a316e
         fuel_updated.save()
         sub.fuel_capacity = fuel_updated
         sub.save()

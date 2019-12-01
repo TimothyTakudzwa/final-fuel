@@ -244,22 +244,26 @@ def fuel_update(request):
 
 def offer(request, id):
     if request.method == "POST":
-        price = request.POST.get('price')
-        quantity = request.POST.get('quantity')
         fuel_request = FuelRequest.objects.get(id=id)
 
-        Offer.objects.create(price=price, quantity=quantity, supplier=request.user, request=fuel_request)
-        
-        messages.success(request, 'Offer uploaded successfully')
-        service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-        reference = 'offers'
-        reference_id = fuel_request.id
-        action = f"{request.user.username}  made an offer of {quantity}L of {fuel_request.fuel_type} @ {price} to a request by {fuel_request.name.username} of {fuel_request.amount}L"
-        Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
-        
-        return redirect('fuel-request')
-    else:
-        messages.warning(request, 'Oops something went wrong while posting your offer')
+        offer = int(request.POST.get('quantity'))
+        amount = fuel_request.amount
+
+        if offer <= amount:
+            price = request.POST.get('price')
+            quantity = request.POST.get('quantity')
+            fuel_request = FuelRequest.objects.get(id=id)
+
+            Offer.objects.create(price=price, quantity=quantity, supplier=request.user, request=fuel_request)
+            
+            messages.success(request, 'Offer uploaded successfully')
+            action = f"{request.user}  made an offer of {quantity} @ {price}"
+
+            # AuditTrail.objects.create(user = request.user, action = action, reference = 'offer' )
+            return redirect('fuel-request')
+        else:
+            messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
+            return redirect('fuel-request')
     return render(request, 'supplier/accounts/fuel_request.html')
 
 @login_required

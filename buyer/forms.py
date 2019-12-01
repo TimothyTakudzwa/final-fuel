@@ -1,6 +1,6 @@
 from django import forms 
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm,  PasswordChangeForm
 from .models import  FuelRequest
 from .constants import *
 from django.contrib.auth import get_user_model
@@ -29,6 +29,11 @@ class SupplierUserForm(forms.Form):
     phone_number = forms.CharField()
     supplier_role = forms.CharField()
 
+class PasswordChange(PasswordChangeForm):
+    class Meta:
+    
+        model = User
+        fields = ['old_password', 'new_password1', 'new_password2']
 
     
 class BuyerUpdateForm(UserCreationForm):
