@@ -1,5 +1,8 @@
 import random
 
+from fpdf import FPDF
+from pandas import DataFrame
+import pandas as pd
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.db.models import Q
@@ -60,7 +63,7 @@ def statistics(request):
     staff_blocked = User.objects.filter(company=company).count()
     clients = []
     #update = F_Update.objects.filter(company_id=company.id).first()
-    diesel, petrol = 0
+    diesel = 0; petrol = 0
     # if update:
     #     diesel = update.diesel_quantity
     #     petrol = update.petrol_quantity
@@ -139,21 +142,87 @@ def stations(request):
     return render(request, 'users/service_stations.html', {'stations': stations})
 
 def report_generator(request):
-    if request.method == "POST":
-        start_date = datetime.strptime(request.form['end_date'], '%Y-%m-%d')
-        end_date = datetime.strptime(request.form['start_date'], '%Y-%m-%d')
-        if request.form['report_type'] == 'Transactions':
-            trans = Transaction.objects.filter(date__range=[start_date, end_date])
-            requests = None; allocations = None
-        if request.form['report_type'] == 'Fuel Requests':
-            requests = FuelRequest.objects.filter(date_range=[start_date, end_date])
-            trans = None; allocations = None
-        if request.form['report_type'] == 'Allocations':
-            allocations = FuelAllocation.objects.filter(date_range=[start_date, end_date])
     form = ReportForm()
     allocations = requests = trans = None
+    if request.method == "POST":
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
+        start_date = start_date.date()
+        report_type = request.POST.get('report_type')
+        end_date = datetime.strptime(end_date, '%Y-%m-%d')
+        end_date = end_date.date()
+        print(f'_______________{report_type}_____________________')
+        # print(f'_______________{type(start_date)}_____________________')
+        # print(f'_______________{end_date}_____________________')
+        if request.POST.get('report_type') == 'Transactions':
+            trans = Transaction.objects.filter(date__range=[start_date, end_date])
+            print(trans)
+            requests = None; allocations = None
+        if request.POST.get('report_type') == 'Requests':
+            requests = FuelRequest.objects.filter(date__range=[start_date, end_date])
+            print(f'__________________{requests}__________________________________')
+            trans = None; allocations = None
+        if request.POST.get('report_type') == 'Allocations':
+            allocations = FuelRequest.objects.filter(date__range=[start_date, end_date])
+        start = start_date
+        end = end_date 
+        return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form,
+        'start': start, 'end': end })
 
-    return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form })
+    show = False
+
+    return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form, 'show':show })
+
+def export_pdf(request):
+    result = ''
+    if request.method == "POST":
+        print(request.POST.get('type_model'))
+        if request.POST.get('type_model') == "transaction":
+            print('------------------Im In Here---------------------------')
+            start = request.POST.get('start')
+            end = request.POST.get('end')
+            start = datetime.strptime(start, '%b. %d, %Y').date()
+            end = datetime.strptime(end, '%b. %d, %Y').date()
+            
+            data = Transaction.objects.filter(date__range=[start, end])
+
+            
+            for i in data:
+                result += f'Date : {i.date}\n Time : {i.time}\n Buyer : {i.buyer}\n Completed : {i.complete}\n'
+            pdf = FPDF(orientation='P', format='A5')
+            pdf.add_page()
+            epw = pdf.w - 2*pdf.l_margin
+            col_width = epw/4
+
+            pdf.set_font('Times', '', 10)
+            # pdf.image('project/static/project/img/receipt.png', x=40)
+            pdf.multi_cell(w=100, h=10, txt=result)
+            pdf.output(f'media/reports/transactions/Report - {datetime.now().strftime("%Y-%M-%d")}.pdf', 'F')
+        if request.POST.get('type_model') == "reqs":
+            print('-------------------------Im in FuelRequests----------------------')
+            start = request.POST.get('start')
+            end = request.POST.get('end')
+            start = datetime.strptime(start, '%b. %d, %Y').date()
+            end = datetime.strptime(end, '%b. %d, %Y').date()
+            
+            data = FuelRequest.objects.filter(date__range=[start, end])
+
+            
+            for i in data:
+                result += f'Name : {i.name}\n Amount : {i.amount}\n Fuel Type : {i.fuel_type}\n Payment Method : {i.payment_method}\n'
+            pdf = FPDF(orientation='P', format='A5')
+            pdf.add_page()
+            epw = pdf.w - 2*pdf.l_margin
+            col_width = epw/4
+
+            pdf.set_font('Times', '', 10)
+            # pdf.image('project/static/project/img/receipt.png', x=40)
+            pdf.multi_cell(w=100, h=10, txt=result)
+            pdf.output(f'media/reports/requests/Report - {datetime.now().strftime("%Y-%M-%d")}.pdf', 'F')
+
+
+        return redirect('users:report_generator')     
 
 def depots(request):
     depots = Depot.objects.all()
