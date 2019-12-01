@@ -10,7 +10,7 @@ from .forms import ProfileUdateForm
 from supplier.forms import *
 from supplier.models import *
 from company.models import FuelUpdate
-from buyer~.models import User
+from buyer.models import User
 from users.models import Audit_Trail
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model

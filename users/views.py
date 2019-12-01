@@ -129,7 +129,7 @@ def stations(request):
         sub_type = 'service_station' if is_depot else 'depot'
         print(f"----------------Service Station {sub_type}")
         relationship_id = sub.id
-        fuel_updated = fex.objects.create(sub_type=sub_type,relationship_id=relationship_id,payment_methods=payment_methods,diesel_quantity=diesel_quantity,diesel_price=diesel_price,petrol_quantity=petrol_quantity,petrol_price=petrol_price,queue_length=queue_length)
+        fuel_updated = F_Update.objects.create(sub_type=sub_type,relationship_id=relationship_id,payment_methods=payment_methods,diesel_quantity=diesel_quantity,diesel_price=diesel_price,petrol_quantity=petrol_quantity,petrol_price=petrol_price,queue_length=queue_length)
         fuel_updated.save()
         sub.fuel_capacity = fuel_updated
         sub.save()
