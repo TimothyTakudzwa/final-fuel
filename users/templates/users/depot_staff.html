@@ -17,6 +17,34 @@
         <h4 class="card-title ">{{request.user.company.name}} Depots Staff</h4>
         </div>
     <div class="card-body">
+            <div id = "container" align = "center">
+          
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_user">Add User </button>
+            
+                </div> 
+            <div class="modal fade" id="new_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Add User </h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">  
+                
+                            {% load crispy_forms_tags %}
+                            <form action="{% url 'users:depot_staff' %}" method="POST">
+                            {{ form1|crispy }}
+                            {% csrf_token %}
+                            <button class="btn btn-primary" type="submit">Add User Profile</button>  <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                               
+                            </form>
+                        </div>
+                       
+                      </div>
+                    </div>
+                  </div>
         <div class="container-fluid">
             {% if suppliers %}
 
@@ -32,7 +60,7 @@
                         Userrname
                        </th>
                        <th style="color:white;">
-                        Service Station
+                        Depot
                        </th>
                        <th style="color:white;">
                           Phone Number 
@@ -49,13 +77,13 @@
                             <td>{{supplier.first_name}}</td>
                             <td>{{supplier.last_name}}</td>
                            <td>{{supplier.username}}</td>
-                           <td>{{supplier.company.name}}</td>
+                           <td>{{supplier.subsidiary_name}}</td>
                            <td>{{supplier.phone_number}}</td>
                            <td>{{supplier.email}}</td>
                            <td style="width: 33%;">
                                <div class="btn-group">
                                     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#{{supplier.id}}">View Details</button>  
-                                    <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#edit_{{supplier.id}}">Edit</button>
+                                    <!--<button class="btn btn-success btn-sm" data-toggle="modal" data-target="#edit_{{supplier.id}}">Edit</button>-->
                                     <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#delete_{{supplier.id}}">Delete</button>
                                     <!--<a href="{% url 'users:supplier_user_create' supplier.id %}" class="btn btn-info btn-sm">More Details</a>-->
 
@@ -174,34 +202,7 @@
                     </tr>
                    
                     {% endfor %}   
-                    <div id = "container" align = "center">
-          
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_user">Add User </button>
-                    
-                        </div> 
-                    <div class="modal fade" id="new_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="exampleModalLabel">Add User </h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
-                                </div>
-                                <div class="modal-body">  
-                        
-                                    {% load crispy_forms_tags %}
-                                    <form action="{% url 'users:suppliers_list' %}" method="POST">
-                                    {{ form1|crispy }}
-                                    {% csrf_token %}
-                                    <button class="btn btn-primary" type="submit">Add User Profile</button>  <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
-                                       
-                                    </form>
-                                </div>
-                               
-                              </div>
-                            </div>
-                          </div>
+                
                 </tbody>
                 </table>
             {% else %}

@@ -1,6 +1,6 @@
 from django import forms 
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm,  PasswordChangeForm
 from .models import  FuelRequest
 from .constants import *
 from django.contrib.auth import get_user_model
@@ -29,6 +29,11 @@ class SupplierUserForm(forms.Form):
     phone_number = forms.CharField()
     supplier_role = forms.CharField()
 
+class PasswordChange(PasswordChangeForm):
+    class Meta:
+    
+        model = User
+        fields = ['old_password', 'new_password1', 'new_password2']
 
     
 class BuyerUpdateForm(UserCreationForm):
@@ -40,12 +45,11 @@ class BuyerUpdateForm(UserCreationForm):
         fields = ['image', 'company_id','user_type', 'company_position','password1', 'password2']
 
 class FuelRequestForm(forms.ModelForm):
-    OPTIONS= [
-    ('SELF COLLECTION', 'self collection'),
-    ('DELIVERY', 'delivery'),
-    ]
 
-    delivery_method = forms.CharField(label='Delivery Method', widget=forms.Select(choices=OPTIONS))
+    delivery_method = forms.CharField(label='Delivery Method', widget=forms.Select(choices=DELIVERY_OPTIONS))
+    fuel_type = forms.CharField(label='Fuel Type', widget=forms.Select(choices=FUEL_CHOICES))
+    amount = forms.IntegerField(label='litres')
+    payment_method = forms.CharField(label='Payment Method', widget=forms.Select(choices=PAYING_CHOICES))
     
     class Meta:
         model = FuelRequest

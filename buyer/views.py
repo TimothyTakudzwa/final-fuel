@@ -2,17 +2,19 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import BuyerRegisterForm, BuyerUpdateForm, FuelRequestForm
+from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
+from .forms import BuyerRegisterForm, BuyerUpdateForm, FuelRequestForm, PasswordChangeForm
 #from supplier.forms import FuelRequestForm
 from .constants import sample_data
 from buyer.models import User
-from company.models import Company
+from company.models import Company, FuelUpdate
 import requests
 import secrets
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from datetime import datetime
 #from .constants import sender, subject
 from .models import FuelRequest
+from supplier.models import Offer
 from django.contrib.auth import get_user_model
 
 user = get_user_model()
@@ -34,7 +36,7 @@ def login_success(request):
     user_type  = request.user.user_type
     print(user_type)
     if user_type == "BUYER":
-        return redirect("buyer-profile")
+        return redirect("buyer-dashboard")
     elif user_type == 'SS_SUPPLIER':
         return redirect("serviceStation:home")
     elif user_type == 'SUPPLIER':
@@ -112,53 +114,58 @@ def send_message(phone_number, message):
 @login_required
 def profile(request):
     if request.method == 'POST':
-        u_form = BuyerUpdateForm(request.POST, instance=request.user)
-        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.Profile)
+        old = request.POST.get('old_password')
+        new1 = request.POST.get('new_password1')
+        new2 = request.POST.get('new_password2')
 
-        if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
-            p_form.save()
+        if authenticate(request, username=request.user.username, password=old):
+            if new1 != new2:
+                messages.warning(request, "Passwords Don't Match")
+                return redirect('buyer-profile')
+            else:
+                user = request.user
+                user.set_password(new1)
+                user.save()
+                update_session_auth_hash(request, user)
 
-            messages.success(request, f'Your account has been updated')
+                messages.success(request, 'Password Successfully Changed')
+                return redirect('buyer-profile')
+        else:
+            messages.warning(request, 'Wrong Old Password, Please Try Again')
             return redirect('buyer-profile')
-        
-    else:
-        u_form = BuyerUpdateForm(instance=request.user)
-        p_form = ProfileUpdateForm(instance=request.user)
 
     context = {
-
-        'u_form': u_form,
-        'p_form': p_form
+        'form': PasswordChangeForm(user=request.user),
+        'user_logged': request.user,
     }
     return render(request, 'buyer/profile.html', context)
 
 #@login_required
 def fuel_request(request):
-    if request.method == 'POST':
-        form = FuelRequestForm(request.POST)
-        if form.is_valid():
-            amount = form.cleaned_data['amount']
-            payment_method = form.cleaned_data['payment_method']
-            delivery_method = form.cleaned_data['delivery_method']
-            fuel_type = form.cleaned_data['fuel_type']
-        
-            fuel_request = FuelRequest()
-            fuel_request.name = request.user       
-            fuel_request.amount = amount
-            fuel_request.fuel_type = fuel_type
-            fuel_request.payment_method = payment_method
-            fuel_request.delivery_method = delivery_method
-            fuel_request.save()
-            
-            
-            messages.success(request, f'kindly not your request has been made ')
-    else:
-        form = FuelRequestForm
-    
-    return render(request, 'buyer/fuel_request.html', {'form': form})
+    user_logged = request.user
+    fuel_requests = FuelRequest.objects.filter(name=user_logged, is_closed=False).all()
+    for fuel_request in fuel_requests:
+        if fuel_request.is_direct_deal:
+            print(fuel_request.last_deal)
+            search_company = FuelUpdate.objects.filter(id= fuel_request.last_deal).first()
+            print(search_company.company_id)
+            company = Company.objects.filter(id= search_company.company_id).first()
+            print(company)
 
-def dashboard(request):
+            fuel_request.request_company = company.name
+        else:
+            fuel_request.request_company = 'is not a direct deal'
+
+    #print(type(fuel_requests))
+    print(fuel_requests)
+
+    context = {
+        'fuel_requests' : fuel_requests
+        } 
+
+    return render(request, 'buyer/fuel_request.html', context=context)
+
+def fuel_finder(request):
     if request.method == 'POST':
         form = FuelRequestForm(request.POST)
         if form.is_valid():
@@ -173,11 +180,61 @@ def dashboard(request):
             fuel_request.fuel_type = fuel_type
             fuel_request.payment_method = payment_method
             fuel_request.delivery_method = delivery_method
+            fuel_request.wait = True
             fuel_request.save()
 
             
             messages.success(request, f'kindly not your request has been made ')
     else:
         form = FuelRequestForm
+    return render(request, 'buyer/dashboard.html',{'form':form, 'sample_data':sample_data})
+
+
+def dashboard(request):
+    if request.method == 'POST':
+        form = FuelRequestForm(request.POST)
+        if 'MakeDeal' in request.POST:
+            if form.is_valid():
+                amount = form.cleaned_data['amount']
+                payment_method = form.cleaned_data['payment_method']
+                delivery_method = form.cleaned_data['delivery_method']
+                fuel_type = form.cleaned_data['fuel_type']
+                print(f"===================={request.POST.get('company_id')}--------------------  ")
+                fuel_request = FuelRequest()
+                fuel_request.name = request.user       
+                fuel_request.amount = amount
+                fuel_request.fuel_type = fuel_type
+                fuel_request.payment_method = payment_method
+                fuel_request.delivery_method = delivery_method
+                fuel_request.is_direct_deal = True
+                fuel_request.last_deal = request.POST.get('company_id')
+                fuel_request.save()
+            messages.success(request, f'kindly not your request has been made ')
+
+        if 'WaitForOffer' in request.POST:
+            if form.is_valid():
+                amount = form.cleaned_data['amount']
+                payment_method = form.cleaned_data['payment_method']
+                delivery_method = form.cleaned_data['delivery_method']
+                fuel_type = form.cleaned_data['fuel_type']
+                fuel_request = FuelRequest()
+                fuel_request.name = request.user       
+                fuel_request.amount = amount
+                fuel_request.fuel_type = fuel_type
+                fuel_request.payment_method = payment_method
+                fuel_request.delivery_method = delivery_method
+                fuel_request.wait = True
+                fuel_request.save()
+            messages.success(request, f'kindly not your request has been made wait for an offer')
+
+    else:
+        form = FuelRequestForm
     
     return render(request, 'buyer/dashboard.html',{'form':form, 'sample_data':sample_data})
+
+
+
+def offers(request):
+    offers = Offers.objects.filter
+    return render(request, 'buyer/offer.html')
+

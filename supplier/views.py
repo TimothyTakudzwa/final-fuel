@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.contrib import messages
 import secrets
-
+from users.models import Audit_Trail
 from datetime import date, time
 
 from buyer.forms import BuyerUpdateForm
@@ -17,6 +17,9 @@ from .forms import PasswordChange, RegistrationForm, \
 from .models import FuelRequest, Transaction, TokenAuthentication, Offer, Subsidiaries
 from company.models import Company, FuelUpdate
 from notification.models import Notification
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # today's date
 today = date.today()
@@ -92,7 +95,7 @@ def verification(request, token, user_id):
                     user.company = selected_company
                     user.is_active = True
                     user.save()
-
+                    return redirect('buyer-login')
             else:
                 form = BuyerUpdateForm
                 messages.success(request, f'Email verification successs, Fill in the deatails to complete registration')
@@ -217,6 +220,11 @@ def fuel_update(request):
             fuel_update.payment_methods = request.POST['payment_methods']
             fuel_update.save()
             messages.success(request, 'updated quantities successfully')
+            service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+            reference = 'fuel quantity updates'
+            reference_id = fuel_update.id
+            action = f"{request.user.username} has made an update of diesel quantity to {fuel_update.diesel_quantity} @ {fuel_update.diesel_price} and petrol quantity to {fuel_update.petrol_quantity} @ {fuel_update.petrol_price}"
+            Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
             return redirect('fuel_update')
         else:
             sub_type = 'depot'

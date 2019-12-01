@@ -1,6 +1,8 @@
 from django.db import models
 from buyer.constants2 import COMPANY_CHOICES, INDUSTRY_CHOICES
 
+# from supplier.models import Subsidiaries
+
 
 # Create your models here.
 
@@ -16,6 +18,7 @@ class FuelUpdate(models.Model):
     queue_length = models.CharField(max_length=255,choices=(('short', 'Short'), ('medium', 'Medium Long'), ('long', 'Long')))
     deliver = models.BooleanField(default=False)
     relationship_id = models.IntegerField()
+    company_id = models.IntegerField()
 
     class Meta:
         ordering = ['last_updated']
@@ -30,3 +33,4 @@ class Company(models.Model):
     
     def __str__(self):
         return self.name
+   

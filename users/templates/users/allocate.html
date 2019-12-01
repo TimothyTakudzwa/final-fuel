@@ -58,18 +58,18 @@
                        {% for allocate in allocates %}
                        <tr>
                           <td>{{allocate.id}}</td>
-                          <td>{{request.user.company}}</td>
+                          <td>{{allocate.subsidiary_name}}</td>
                            <td>{{allocate.sub_type}}</td>
                            <td>{{allocate.diesel_quantity}}</td>
                            <td>{{allocate.diesel_price}}</td>
                            <td>{{allocate.petrol_quantity}}</td>
                            <td>{{allocate.petrol_price}}</td>
                            <td>{{allocate.payment_methods}}</td>
-                           <td><button class="btn btn-success btn-sm" data-toggle="modal" data-target="#update">Allocate</button></td>
+                           <td><button class="btn btn-success btn-sm" data-toggle="modal" data-target="#update{{allocate.id}}">Allocate More Fuel</button></td>
                         </tr>
                       
                          <!--update fuel-->
-        <div class="modal fade" id="update" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <div class="modal fade" id="update{{allocate.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -81,10 +81,63 @@
             </div>
             <div class="modal-body">
 
-              {% load crispy_forms_tags %}
+              <!--{% load crispy_forms_tags %}-->
               <form action="{% url 'users:allocate' %}" method="POST">
                          {% csrf_token %}
-                         {{update_form|crispy}}
+                         <div class="form-group row">
+                                                        
+                            <label for="id" class="col-sm-2 col-form-label">Allocation ID</label>
+                            <div class="col-sm-10">
+                                <input name="id" type="text" class="form-control"  id="id"  value="{{ allocate.id}}">
+                            </div>
+                            </div>
+                         <div class="form-group row">
+                                                        
+                            <label for="petrol_quantity" class="col-sm-2 col-form-label">Petrol Quantity</label>
+                            <div class="col-sm-10">
+                                <input name="petrol_quantity" type="text" class="form-control"  id="petrol_quantity"  value="">
+                            </div>
+                            </div>
+                            
+                            <div class="form-group row">
+                                                                
+                                <label for="petrol_price" class="col-sm-2 col-form-label">Petrol Price</label>
+                                <div class="col-sm-10">
+                                    <input name="petrol_price" type="text" class="form-control"  id="petrol_price"  value="{{ allocate.petrol_price}}">
+                                </div>
+                                </div>
+        
+        
+                                <div class="form-group row">
+                                                                
+                                    <label for="diesel_quantity" class="col-sm-2 col-form-label">Diesel Quantity</label>
+                                    <div class="col-sm-10">
+                                        <input name="diesel_quantity" type="text" class="form-control" id="diesel_quantity"  value="">
+                                    </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                                                
+                                        <label for="diesel_price" class="col-sm-2 col-form-label">Diesel Price</label>
+                                        <div class="col-sm-10">
+                                            <input name="diesel_price" type="text" class="form-control" id="diesel_price"  value="{{ allocate.diesel_price}}">
+                                        </div>
+                                        </div>
+        
+                                        <div class="form-group row">
+                                                                
+                                            <label for="payment_methods" class="col-sm-2 col-form-label">Payment Methods</label>
+                                            <div class="col-sm-10">
+                                                <input name="payment_methods" type="text" class="form-control" id="payment_methods"  value="{{allocate.payment_methods}}">
+                                            </div>
+                                            </div>
+                                     <div class="form-group row">
+                                                                
+                                                <label for="queue_length" class="col-sm-2 col-form-label">Queue Length</label>
+                                                <div class="col-sm-10">
+                                                    <input name="queue_length" type="text" class="form-control" id="queue_length"  value="{{ allocate.queue_length}}">
+                                         </div>
+                                     </div>
               <button class="btn btn-primary" type="submit">Update</button>  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 
                          

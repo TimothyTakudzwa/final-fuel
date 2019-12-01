@@ -183,7 +183,10 @@
    <!-- Material Dashboard DEMO methods, don't include it in your project! -->
    <script src="{% static 'finder/assets/demo/demo.js' %}"></script>
    <script>
-     
+     $(document).ready(function() {
+      $('#example').DataTable({"order": [[ 0, "desc" ]]});
+    } );
+    
      $(document).ready(function() {
        $().ready(function() {
          $sidebar = $('.sidebar');
@@ -361,11 +364,7 @@
  
      });
    </script>
-   <script>
-      $(document).ready(function() {
-        $('#example').DataTable({"order": [[ 0, "desc" ]]});
-      } );
-    </script>
+  
  </body>
  
  </html>
