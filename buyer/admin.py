@@ -13,7 +13,7 @@ class UserAdmin(admin.ModelAdmin):
 class FuelRequestAdmin(admin.ModelAdmin):
 
 
-    list_display = ('__str__', 'amount', 'fuel_type', 'payment_method' ,'delivery_method', 'date',  'is_direct_deal')
+    list_display = ('__str__', 'amount', 'fuel_type', 'payment_method' ,'delivery_method', 'date',  'is_direct_deal', 'wait')
 
 # Register your models here.
 #admin.site.register(Profile)
