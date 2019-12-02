@@ -1,4 +1,5 @@
 import random
+import locale
 
 from fpdf import FPDF
 from pandas import DataFrame
@@ -95,8 +96,11 @@ def statistics(request):
         counter += 1
 
     clients = [company for company in  companies]
+    locale.setlocale( locale.LC_ALL, 'en_US.UTF-8' )
+
     revenue = round(float(sum(value)))
-    revenue = str(revenue) + '.00'   
+    revenue = '${:,.2f}'.format(revenue)
+    #revenue = str(revenue) + '.00'   
 
     try:
         trans = Transaction.objects.all().count()/Transaction.objects.all().count()/100
@@ -250,6 +254,7 @@ def export_csv(request):
             end = datetime.strptime(end, '%b. %d, %Y').date()
             
             data = Transaction.objects.filter(date__range=[start, end]).values()
+            print(data)
             fields = ['Date', 'Time', 'Amount', 'Complete']
             df = DataFrame(data,columns=fields)
             #df['Date'] = f'{dt[2]}/{dt[1]}/{dt[0]}'
