@@ -14,19 +14,20 @@
                 <thead class=" text-primary">
                     <tr>
                         <th>
-                            <h6>Company ID </h6>
-                        </th>
-                        <th>
                             <h6>Company Name</h6>
                         </th>
+
                         <th>
-                            <h6> Fuel Type</h6>
+                            <h6> Petrol Price</h6>
                         </th>
                         <th>
-                            <h6> Price</h6>
+                            <h6> Diesel Price</h6>
                         </th>
                         <th>
-                            <h6>Quantity</h6>
+                            <h6>Petrol Quantity</h6>
+                        </th>
+                        <th>
+                            <h6>Diesel Quantity</h6>
                         </th>
                         <th>
                             <h6>Updated on </h6>
@@ -38,34 +39,34 @@
                 </thead>
                 <tbody>
 
-                    {% for data in sample_data %}
+                    {% for data in updates %}
                     <tr>
                         <td>
-                            {{data.company_id}}
-                        </td>
-                        <td>
-                            {{data.company_name}}
-                        </td>
-                        <td>
-                            {{data.fuel_type}}
+                            {{data.company}}
                         </td>
                         <td class="text-danger">
-                            {{data.price}}
+                            {{data.petrol_price}}
                         </td>
                         <td class="text-primary">
-                            {{data.quantity}}
+                            {{data.diesel_price}}
                         </td>
                         <td class="text-primary">
-                            {{data.updated_on}}
+                            {{data.petrol_quantity}}
+                        </td>
+                        <td class="text-primary">
+                            {{data.diesel_quantity}}
+                        </td>
+                        <td class="text-primary">
+                            {{data.date}} -- {{data.time}}
                         </td>
                         <td class="text-primary">
 
                             <button class="btn btn-facebook btn-sm" data-toggle="modal"
-                                data-target="#make_deal{{data.company_id}}"> <i
+                                data-target="#make_deal{{data.id}}"> <i
                                     class="material-icons">ev_station</i>Deal </button>
                         </td>
                     </tr>
-                    <div class="modal fade" id="make_deal{{data.company_id}}" tabindex="-1" role="dialog"
+                    <div class="modal fade" id="make_deal{{data.id}}" tabindex="-1" role="dialog"
                         aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-notice">
                             <div class="modal-content">
@@ -81,10 +82,10 @@
                                             {% csrf_token %}
 
                                             {{ form|crispy }}
-                                            <input type="hidden" value="{{data.company_id}}" name="company_id" />
+                                            <input type="hidden" value="{{data.id}}" name="company_id" />
                                     </div>
                                     <div class="modal-footer justify-content-center">
-                                        <button type="submit" class="btn btn-info btn-round">Submit Request</button>
+                                        <button type="submit" name="MakeDeal" class="btn btn-info btn-round">Submit Request</button>
                                         </form>
                                     </div>
                                 </div>
@@ -119,13 +120,18 @@
                 </button>
             </div>
             <div class="modal-body">
+             <form method="POST">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <!--<input type="hidden" value="{{data.company_id}}" name="company_id" /> -->
+                </div>
+            
+                <div class="modal-footer justify-content-center">
+                        <button type="submit" name="WaitForOffer" class="btn btn-info btn-round">Wait for Offer</button>
+                        <button type="submit" class="btn btn-primary btn-round">System Generated</button>
 
-            </div>
-            <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-info btn-round">Wait for Offer</button>
-                    <button type="submit" class="btn btn-primary btn-round">System Generated</button>
-
-            </div>
+                </div>
+             </form>
         </div>
     </div>
 </div>

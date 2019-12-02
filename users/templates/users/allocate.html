@@ -81,10 +81,11 @@
             </div>
             <div class="modal-body">
 
-              <!--{% load crispy_forms_tags %}-->
-              <form action="{% url 'users:allocate' %}" method="POST">
+              {% load crispy_forms_tags %}
+              <form action="{% url 'users:allocation_update' allocate.id %}" method="POST">
                          {% csrf_token %}
-                         <div class="form-group row">
+                         {{ update_form|crispy }}
+                         <!--<div class="form-group row">
                                                         
                             <label for="id" class="col-sm-2 col-form-label">Allocation ID</label>
                             <div class="col-sm-10">
@@ -137,7 +138,7 @@
                                                 <div class="col-sm-10">
                                                     <input name="queue_length" type="text" class="form-control" id="queue_length"  value="{{ allocate.queue_length}}">
                                          </div>
-                                     </div>
+                                     </div>-->
               <button class="btn btn-primary" type="submit">Update</button>  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 
                          

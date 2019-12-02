@@ -1,3 +1,124 @@
+{% extends "finder/buyer_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block body%}
+
+<div class="card">
+    <div class="card-header card-header-primary">
+        <h4 class="card-title "> My Fuel Requests </h4>
+        <p class="card-category"> Here is a list of all requests you made</p>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped" id="fuel_updates">
+                <thead class=" text-primary">
+                    <tr>
+                        <th>
+                            <h6>Request ID </h6>
+                        </th>
+                        <th>
+                            <h6>Company Name</h6>
+                        </th>
+                        <th>
+                            <h6>Deliver Method</h6>
+                        </th>
+                        <th>
+                            <h6> Payment Method</h6>
+                        </th>
+                        <th>
+                            <h6> Fuel Type</h6>
+                        </th>
+                  
+                        <th>
+                            <h6>Quantity </h6>
+                        </th>
+                        <th>
+                            <h6>Requested On </h6>
+                        </th>
+                        <th>
+                            <h6>Action</h6>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for fuel_request in fuel_requests %}
+                    <tr>
+                        <td>
+                            {{fuel_request.id}}
+                        </td>
+                        <td>
+                            {{fuel_request.request_company}}
+                        </td>
+                        <td>
+                            {{fuel_request.delivery_method}}
+                        </td>
+                        <td>
+                            {{fuel_request.payment_method}}
+                        </td>
+                        <td class="">
+                            {{fuel_request.fuel_type}}
+                        </td>
+                        <td class="">
+                            {{fuel_request.amount}} Litres
+                        </td>
+                        <td class="">
+                             {{fuel_request.date}} -- {{fuel_request.time}}
+                        </td>
+                        <td class="text-primary">
+                            {% if fuel_request.has_offers == True%}
+                            <a class="btn btn-facebook btn-sm" href="{% url 'fuel-offers' fuel_request.id %}" >
+                                <i class="material-icons">ev_station</i>View Offers 
+                            </a>
+
+                            {% else %}
+                                No Offers yet
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+
+</div>
+
+<!-- notice modal -->
+<div class="modal fade" id="create_request" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-notice">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h5 class="modal-title" id="myModalLabel">Make a requests</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="modal-body">
+             <form method="POST">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <!--<input type="hidden" value="{{data.company_id}}" name="company_id" /> -->
+                </div>
+            
+                <div class="modal-footer justify-content-center">
+                        <button type="submit" name="WaitForOffer" class="btn btn-info btn-round">Wait for Offer</button>
+                        <button type="submit" class="btn btn-primary btn-round">System Generated</button>
+
+                </div>
+             </form>
+        </div>
+    </div>
+</div>
+<!-- end notice modal -->
+
+
+{% endblock %}
+
 {% for fuel_request in fuel_requests %}
     <tr>
         <td class="name truncate"><a href="#">{{fuel_request.name.username}}</a></td> 
