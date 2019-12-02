@@ -33,7 +33,7 @@ class Company(models.Model):
     industry = models.CharField(max_length=255, choices=INDUSTRY_CHOICES)
     is_verified = models.BooleanField(default=False)
     company_type = models.CharField(max_length=255, choices=COMPANY_CHOICES)
-    fuel_capacity = models.ForeignKey(FuelUpdate, on_delete=models.DO_NOTHING, null=True)
+    fuel_capacity = models.ForeignKey(FuelUpdate, on_delete=models.DO_NOTHING,blank=True, null=True)
     
     def __str__(self):
         return self.name
