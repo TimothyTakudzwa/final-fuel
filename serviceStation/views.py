@@ -36,7 +36,7 @@ def fuel_updates(request):
         service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         reference = 'fuel quantity updates'
         reference_id = updates.id
-        action = f"{request.user.username} has made an update of diesel quantity to {updates.diesel_quantity} @ {updates.diesel_price} and petrol quantity to {updates.petrol_quantity} @ {updates.petrol_price}"
+        action = f"{request.user.username} has made an update of diesel quantity to {updates.diesel_quantity}L @ {updates.diesel_price} and petrol quantity to {updates.petrol_quantity}L @ {updates.petrol_price}"
         Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
         return redirect('serviceStation:home')
 

@@ -1,34 +1,50 @@
-from supplier.models import Profile, SupplierRating, FuelReques, Offer
+from supplier.models import  SupplierRating, Offer
 from company.models import FuelUpdate
 from buyer.models import FuelRequest
-from django.contrib.auth.models import User
+from supplier.models import Subsidiaries
+import operator
+from buyer.constants import recommender_response
+from buyer.models import User
 
-def recommend(fuel_type, quantity, user_id, price):
+def recommend(fuel_request):
     status = False
-    supplies = FuelUpdate.objects.filter(max_amount__lte=quantity, min_amount__gte=quantity, fuel_type__icontains=fuel_type).order_by('-price')       
+    if fuel_request.fuel_type == "Petrol":
+        supplies = FuelUpdate.objects.filter(petrol_quantity__gte=fuel_request.amount, sub_type='depot').order_by('-petrol_price').all()      
+    else:
+        supplies = FuelUpdate.objects.filter(diesel_quantity__gte=fuel_request.amount, sub_type='depot').order_by('-diesel_price').all()    
+    
     if supplies.count() == 0:
         return status
     else:
         scoreboard = {}
-        print(f"Supplies : {scoreboard}") 
         for supplier in supplies: 
-            scoreboard[supplier.id] = round(supplier.price * 0.6, 2)       
-        for key,value in scoreboard:
-            supplier_profile = Profile.objects.get(id=key)
-            ratings = SupplierRating.objects.filter(supplier=supplier_profile)  
+            if fuel_request.fuel_type == 'Petrol':
+                scoreboard[str(supplier.relationship_id)] = round(float(supplier.petrol_price) * 0.6, 2) 
+            else:                
+                scoreboard[str(supplier.relationship_id)] = round(float(supplier.diesel_price) * 0.6, 2)
+        for key in scoreboard:
+            supplier_profile = Subsidiaries.objects.get(id=key)
+            ratings = SupplierRating.objects.filter(id =1).first()
             total_rating = 0          
-            for rating in ratings:
-                total_rating += rating.rating  
-            scoreboard[key] = value + (total_rating * 0.4)
+            if ratings is None:
+                for rating in ratings:
+                    total_rating += rating.rating  
+                scoreboard[key] = scoreboard[key] + (total_rating * 0.4)
             total_rating = 0
-        print(f"Scoreboard : {scoreboard}")
-        max_rate_provider = max(scoreboard.items(), key=operator.itemgetter(1))[0]
-        print(f"Max Rate Provider : {max_rate_provider}")
-        
-        selected_supply = FuelUpdate.objects.get(id=max_rate_provider)
-        supplier_user = selected_supply.supplier.company.company_name
-        request_user = FuelRequest.objects.get(id=user_id)
-        offer = Offer.objects.create(quantity=quantity, supplier=supplier_user, request=request_user, price=price)
-        return offer.id
+        max_rate_provider = min(scoreboard.items(), key=operator.itemgetter(1))[0]
+        user = User.objects.filter(subsidiary_id=max_rate_provider).first()
+        price_object = FuelUpdate.objects.filter(relationship_id=max_rate_provider, sub_type='depot').first()
+        selected_supply = Subsidiaries.objects.get(id=max_rate_provider)
+        if fuel_request.fuel_type == 'Petrol':
+            offer = Offer.objects.create(quantity=fuel_request.amount, supplier=user, request=fuel_request, price=price_object.petrol_price)
+            response_message = recommender_response.format(selected_supply.company.name, selected_supply.name, fuel_request.fuel_type, fuel_request.amount, price_object.petrol_price)
+
+        else:
+            offer = Offer.objects.create(quantity=fuel_request.amount, supplier=user, request=fuel_request, price=price_object.diesel_price)
+        response_message = recommender_response.format(selected_supply.company.name, selected_supply.name, fuel_request.fuel_type, fuel_request.amount, price_object.diesel_price)
+
+        offer.save()
+       
+        return offer.id, response_message
 
 

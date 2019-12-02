@@ -223,7 +223,7 @@ def fuel_update(request):
             service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
             reference = 'fuel quantity updates'
             reference_id = fuel_update.id
-            action = f"{request.user.username} has made an update of diesel quantity to {fuel_update.diesel_quantity} @ {fuel_update.diesel_price} and petrol quantity to {fuel_update.petrol_quantity} @ {fuel_update.petrol_price}"
+            action = f"{request.user.username} has made an update of diesel quantity to {fuel_update.diesel_quantity}L @ {fuel_update.diesel_price} and petrol quantity to {fuel_update.petrol_quantity}L @ {fuel_update.petrol_price}"
             Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
             return redirect('fuel_update')
         else:
@@ -257,9 +257,11 @@ def offer(request, id):
             Offer.objects.create(price=price, quantity=quantity, supplier=request.user, request=fuel_request)
             
             messages.success(request, 'Offer uploaded successfully')
-            action = f"{request.user}  made an offer of {quantity} @ {price}"
-
-            # AuditTrail.objects.create(user = request.user, action = action, reference = 'offer' )
+            action = f"{request.user}  made an offer of {quantity}L @ {price} to a request made by {fuel_request.name.username}"
+            service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+            reference = 'offers'
+            reference_id = fuel_request.id
+            Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
             return redirect('fuel-request')
         else:
             messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
@@ -270,11 +272,17 @@ def offer(request, id):
 def edit_offer(request, id):
     offer = Offer.objects.get(id=id)
     if request.method == 'POST':
-        offer.price = request.POST.get('price')
-        offer.quantity = request.POST.get('quantity')
-        offer.save()
-        messages.success(request, 'Offer successfully updated')
-        return redirect('fuel-request')
+        new_offer = int(request.POST.get('quantity'))
+        request_quantity = offer.request.amount
+        if new_offer <= request_quantity:
+            offer.price = request.POST.get('price')
+            offer.quantity = request.POST.get('quantity')
+            offer.save()
+            messages.success(request, 'Offer successfully updated')
+            return redirect('fuel-request')
+        else:
+            messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
+            return redirect('fuel-request')
     return render(request, 'supplier/accounts/fuel_request.html')
 
 
