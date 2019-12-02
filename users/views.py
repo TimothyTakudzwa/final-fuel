@@ -37,9 +37,12 @@ def index(request):
 
 def allocate(request):
     allocates = F_Update.objects.filter(company_id=request.user.company.id).all()
-    for allocate in allocates:
-        subsidiary = Subsidiaries.objects.filter(id=allocate.relationship_id).first()
-        allocate.subsidiary_name = subsidiary.name
+    if allocates is not None: 
+        for allocate in allocates:
+            subsidiary = Subsidiaries.objects.filter(id=allocate.relationship_id).first()
+            allocate.subsidiary_name = subsidiary.name
+    else:
+        allocates = None
     
     
     return render(request, 'users/allocate.html', {'allocates': allocates})
@@ -324,6 +327,7 @@ def suppliers_list(request):
         subsidiary_id = request.POST.get('service_station')
         User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username, first_name=first_name, last_name=last_name, user_type = 'SS_SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
         messages.success(request, f"{username.capitalize()} succesfully registered as service station rep")
+        return redirect('users:suppliers_list')
         
     return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1})
 
@@ -408,21 +412,22 @@ def depot_staff(request):
         subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
         supplier.subsidiary_name = subsidiary.name
     #suppliers = [sup for sup in suppliers if not sup == request.user]   
-    form1 = SupplierContactForm()         
+    form1 = DepotContactForm()         
     subsidiaries = Subsidiaries.objects.filter(is_depot=True).all()
-    form1.fields['service_station'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in subsidiaries] 
+    form1.fields['depot'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in subsidiaries] 
 
     if request.method == 'POST':
-        form1 = SupplierContactForm( request.POST)
+        form1 = DepotContactForm( request.POST)
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
         phone_number = request.POST.get('phone_number')
-        subsidiary_id = request.POST.get('service_station')
+        subsidiary_id = request.POST.get('depot')
         User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username, first_name=first_name, last_name=last_name, user_type = 'SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
         messages.success(request, f"{username} Registered as Depot Rep Successfully")
+        return redirect('users:depot_staff')
        
     return render(request, 'users/depot_staff.html', {'suppliers': suppliers, 'form1': form1})
 
