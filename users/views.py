@@ -135,12 +135,13 @@ def stations(request):
         is_depot = request.POST['is_depot']
         opening_time = request.POST['opening_time']
         closing_time = request.POST['closing_time']
-        sub = Subsidiaries.objects.create(company=request.user.company,name=name,address=address,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)
-    
-        sub_type = 'service_station' if is_depot else 'depot'
-        relationship_id = sub.id
-        #fuel_updated = F_Update.objects.create(sub_type=sub_type,relationship_id=relationship_id,payment_methods=payment_methods,diesel_quantity=diesel_quantity,diesel_price=diesel_price,petrol_quantity=petrol_quantity,petrol_price=petrol_price,queue_length=queue_length)
-        fuel_updated = F_Update.objects.create(sub_type=sub_type,relationship_id=relationship_id,company_id = request.user.company.id)
+        cash = request.POST['cash']
+        usd = request.POST['usd']
+        swipe = request.POST['swipe']
+        ecocash = request.POST['ecocash']
+        sub = Subsidiaries.objects.create(company=request.user.company,name=name,address=address,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)    
+        sub_type = 'depot' if is_depot else 'service_station'
+        fuel_updated = F_Update.objects.create(sub_type=sub_type,relationship_id=sub.id,company_id = request.user.company.id, cash=cash, usd=usd, swipe=swipe, ecocash=ecocash)
         fuel_updated.save()
         sub.fuel_capacity = fuel_updated
         sub.save()
@@ -246,9 +247,12 @@ def audit_trail(request):
 
 def suppliers_list(request):
     suppliers = User.objects.filter(company=request.user.company).filter(user_type='SS_SUPPLIER').all()
-    for supplier in suppliers:
-        subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
-        supplier.subsidiary_name = subsidiary.name
+    if suppliers is not None:
+        for supplier in suppliers:
+            subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
+            supplier.subsidiary_name = subsidiary.name
+    else:
+        suppliers = None
 
     form1 = SupplierContactForm()         
     subsidiaries = Subsidiaries.objects.filter(is_depot=False).all()
@@ -264,7 +268,7 @@ def suppliers_list(request):
         phone_number = request.POST.get('phone_number')
         subsidiary_id = request.POST.get('service_station')
         User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username, first_name=first_name, last_name=last_name, user_type = 'SS_SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
-        messages.success(request, f"{username} Registered as Service Station Rep Successfully")
+        messages.success(request, f"{username.capitalize()} succesfully registered as service station rep")
         
     return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1})
 
@@ -366,11 +370,6 @@ def depot_staff(request):
         messages.success(request, f"{username} Registered as Depot Rep Successfully")
        
     return render(request, 'users/depot_staff.html', {'suppliers': suppliers, 'form1': form1})
-
-
-
-
-
 
 
 

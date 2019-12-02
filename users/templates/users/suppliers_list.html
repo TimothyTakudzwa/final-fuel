@@ -1,13 +1,7 @@
 {% extends "users/base.html" %}
 {% block body %}
 
-<div style="margin-left: 30px;">
-    <h1 class="display-3">Supplier Admin </h1>
-    <hr class="my-2">
-    
-      
 
-</div>
 
 <div class="container" style="margin: 0;display: block; text-align:center;">
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_user">Add User </button>
@@ -47,22 +41,20 @@
             
             {% if suppliers %}
 
-            <table id="example" class="table table-striped table-bordered" style="width:100%">
+            <table id="example" class="table table-striped" style="width:100%">
                 <thead style="color:white; background:lightslategray">
                     <th style="color:white;">
-                        First Name
+                        Full Name
+                       </th>
+                       
+                       <th style="color:white;">
+                        Username
                        </th>
                        <th style="color:white;">
-                        Surname
+                        Station
                        </th>
                        <th style="color:white;">
-                        Userrname
-                       </th>
-                       <th style="color:white;">
-                        Service Station
-                       </th>
-                       <th style="color:white;">
-                          Phone Number 
+                          Phone  
                          </th>
                          <th style="color:white;">
                            Email 
@@ -73,17 +65,16 @@
                    <tbody>
                        {% for supplier in suppliers %}
                        <tr>
-                            <td>{{supplier.first_name}}</td>
-                            <td>{{supplier.last_name}}</td>
+                            <td>{{supplier.first_name}} {{supplier.last_name}}</td>
+                            
                            <td>{{supplier.username}}</td>
                            <td>{{supplier.subsidiary_name}}</td>
                            <td>{{supplier.phone_number}}</td>
                            <td>{{supplier.email}}</td>
                            <td style="width: 33%;">
                                <div class="btn-group">
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#{{supplier.id}}">View Details</button>  
-                                    <!--<button class="btn btn-success btn-sm" data-toggle="modal" data-target="#edit_{{supplier.id}}">Edit</button>-->
-                                    <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#delete_{{supplier.id}}">Delete</button>
+                                      <!--<button class="btn btn-success btn-sm" data-toggle="modal" data-target="#edit_{{supplier.id}}">Edit</button>-->
+                                    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete_{{supplier.id}}">Delete</button>
                                     <!--<a href="{% url 'users:supplier_user_create' supplier.id %}" class="btn btn-info btn-sm">More Details</a>-->
 
                                </div>
@@ -228,7 +219,7 @@
                 </tbody>
                 </table>
             {% else %}
-            <p>Nothing To SHow</p>    
+            <p>Nothing To Show</p>    
             {% endif %}
         </div>
     </div>

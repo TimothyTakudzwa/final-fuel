@@ -40,7 +40,9 @@ def login_success(request):
     elif user_type == 'SS_SUPPLIER':
         return redirect("serviceStation:home")
     elif user_type == 'SUPPLIER':
-        return redirect("fuel-request")
+        return redirect("fuel-request")    
+    elif user_type == 'S_ADMIN':
+        return redirect("users:allocate")
     else:
         return redirect("users:suppliers_list")
 def token_is_send(request, user):
