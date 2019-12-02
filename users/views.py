@@ -95,7 +95,8 @@ def statistics(request):
         counter += 1
 
     clients = [company for company in  companies]
-    revenue = round(float(sum(value)))   
+    revenue = round(float(sum(value)))
+    revenue = str(revenue) + '.00'   
 
     try:
         trans = Transaction.objects.all().count()/Transaction.objects.all().count()/100
