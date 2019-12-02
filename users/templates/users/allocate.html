@@ -42,7 +42,7 @@
                         <th style="color:white;">
                           P.Methods
                               </th>
-                         <th style="color:white;">
+                         <th style="color:white;width:40px">
                              Action
                              </th>
                              
@@ -57,16 +57,64 @@
                            <td>{{allocate.petrol_quantity}}</td>
                            <td>{{allocate.petrol_price}}</td>
                            <td><b>{%if allocate.cash%}Cash {% else%} {%endif%} {%if allocate.usd%}USD {% else%} {%endif%} {%if allocate.ecocash%}Ecocash {% else%} {%endif%} {%if allocate.swipe%}Swipe {% else%} {%endif%}  </b> </td>
-                           <td><button class="btn btn-success btn-sm" data-toggle="modal" data-target="#update{{allocate.id}}">Allocate More Fuel</button></td>
+                           <td>
+                             <div class = "btn-group">
+                             <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#petrol{{allocate.id}}">Allocate Petrol</button>
+                             <button class="btn btn-warning btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#diesel{{allocate.id}}">Allocate Diesel</button>
+                            <button class="btn btn-success btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#edit_{{allocate.id}}">Edit Prices</button>
+                          </div>
+                          </td>
                         </tr>
+
+
+                                       <!-- Supplier Edit Modal -->
+                                       <div class="modal fade" id="edit_{{allocate.id}}" tabindex="-1" role="dialog"
+                                       aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                       <div class="modal-dialog" role="document">
+                                           <div class="modal-content">
+                                               <div class="modal-header">
+       
+                                                   <h5 class="modal-title" id="exampleModalLabel">Edit Prices</h5>
+                                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                       <span aria-hidden="true">&times;</span>
+                                                   </button>
+                                               </div>
+                                               <div class="modal-body">
+                                                   <form action="{% url 'users:edit_fuel_prices' allocate.id %}"
+                                                       method="POST">
+                                                       {% csrf_token %}
+                                                       
+       
+                                                       <div class="form-group">
+                                                           <lable>Petrol Price</lable>
+                                                           <input type="text" name="petrol_price" class="form-control" value="{{allocate.petrol_price}}" />
+                                                       </div>
+                                                       
+                                                       <div class="form-group">
+                                                           <lable>Diesel Price</lable>
+                                                           <input type="text"  name="diesel_price"  value="{{allocate.diesel_price}}" class="form-control" />
+                                                       </div>
+       
+                                                 
+                                               </div>
+                                               <div class="modal-footer">
+                                                       <div >
+                                                           <button class="btn btn-success" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
+                                                           </div>
+                                                       </form>
+                                                   </form>
+                                               </div>
+                                           </div>
+                                       </div>
+                                   </div>
                       
                          <!--update fuel-->
-        <div class="modal fade" id="update{{allocate.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <div class="modal fade" id="petrol{{allocate.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Update Quantities</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Update Petrol Quantity</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -85,6 +133,35 @@
           </div>
         </div>
       </div>
+
+      <div class="modal fade" id="diesel{{allocate.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Update Diesel Quantity</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            {% load crispy_forms_tags %}
+            <form action="{% url 'users:allocate_diesel' allocate.id %}" method="POST">
+                       {% csrf_token %}
+                       {{ updating_form|crispy }}
+                 <button class="btn btn-primary" type="submit">Update</button>  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                
+          </form>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+
+
+      
 
                     {% endfor %}   
                 </tbody>

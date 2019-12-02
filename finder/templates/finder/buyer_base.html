@@ -40,15 +40,15 @@
       </div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="nav-item active  ">
-            <a class="nav-link" href="./finder/dashboard.html">
+          <li class="nav-item {% if request.path == '/buyer/' %} active {% endif %}  ">
+            <a class="nav-link" href="{%url 'buyer-dashboard'%}"> 
               <i class="material-icons">dashboard</i>
               <p>Dashboard</p>
             </a>
           </li>
           
-          <li class="nav-item ">
-            <a class="nav-link" href="./orgss">
+          <li class="nav-item {% if request.path == '/buyer/fuel' %} active {% endif %}  ">
+            <a class="nav-link" href="{%url 'buyer-fuel-request'%}">
               <i class="material-icons">swap_vertical_circle</i>
               <p>Requests</p>
             </a>
@@ -61,15 +61,15 @@
             </a>
           </li>
 
-          <li class="nav-item ">
-            <a class="nav-link" href="./add_user.html">
+          <li class="nav-item {% if request.path == '/buyer/profile' %} active {% endif %}  ">
+            <a class="nav-link" href="{%url 'buyer-profile'%}">
               <i class="material-icons">person</i>
               <p>User Profile</p>
             </a>
           </li>
           
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{%url 'buyer-logout'%}">
               <i class="material-icons">close</i>
               <p>Logout</p>
             </a>

@@ -21,7 +21,7 @@ class User(AbstractUser):
     subsidiary_id = models.IntegerField(default=0)
 
     def __str__(self):
-        return f' {self.id} - {self.username}'
+        return f'{self.username}'
     
     def save(self, *args, **kwargs):
         super(User, self).save(*args, **kwargs)

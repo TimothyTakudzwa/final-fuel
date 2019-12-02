@@ -167,15 +167,6 @@ def account(request):
         'user': UserUpdateForm(instance=request.user)
 
     }
-    if request.method == 'POST':
-        userform = UserUpdateForm(request.POST, instance=request.user)
-        if userform.is_valid():
-            userform.save()
-            messages.success(request, f'Profile successfully updated')
-            return redirect('account')
-        else:
-            messages.warning(request, f'Something went wrong while saving your changes')
-            return redirect('account')
     return render(request, 'supplier/accounts/account.html', context=context)
 
 
@@ -217,7 +208,10 @@ def fuel_update(request):
             fuel_update.petrol_price = request.POST['petrol_price']
             fuel_update.diesel_quantity = request.POST['diesel_quantity']
             fuel_update.diesel_price = request.POST['diesel_price']
-            fuel_update.payment_methods = request.POST['payment_methods']
+            fuel_update.cash = request.POST['cash']
+            fuel_update.ecocash = request.POST['ecocash']
+            fuel_update.swipe = request.POST['swipe']
+            fuel_update.usd = request.POST['usd']
             fuel_update.save()
             messages.success(request, 'updated quantities successfully')
             service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
@@ -232,7 +226,10 @@ def fuel_update(request):
             petrol_price = request.POST.get('petrol_price')
             diesel_quantity = request.POST.get('diesel_quantity')
             diesel_price = request.POST.get('diesel_price')
-            payment_methods = request.POST.get('payment_methods')
+            fuel_update.cash = request.POST['cash']
+            fuel_update.ecocash = request.POST['ecocash']
+            fuel_update.swipe = request.POST['swipe']
+            fuel_update.usd = request.POST['usd']
             relationship_id = request.user.subsidiary_id
             FuelUpdate.objects.create(relationship_id=relationship_id, sub_type=sub_type,payment_methods=payment_methods, petrol_quantity=petrol_quantity, petrol_price=petrol_price, diesel_quantity=diesel_quantity, diesel_price=diesel_price)
             messages.success(request, 'Quantities uploaded successfully')
