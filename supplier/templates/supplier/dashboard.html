@@ -33,11 +33,11 @@
 
         Tip 2: you can also add an image using data-image tag
     -->
-      <div class="logo">
-        <a href="#" class="simple-text logo-normal">
-          <strong>{{user.first_name}} {{user.last_name}}</strong>
-        </a>
-      </div>
+    <div class="logo">
+      <a href="{%url 'account'%}" class="simple-text logo-normal">
+        <strong>FUEL FINDER</strong>
+      </a>
+    </div>
       <div class="sidebar-wrapper">
         <ul class="nav">
           <li class="nav-item {% if request.path == '/fuel-request/' %} active {% endif %}  ">
@@ -58,7 +58,6 @@
               <p>Transactions</p>
             </a>
           </li>
-
           <li class="nav-item {% if request.path == '/account/' %} active {% endif %}" >
             <a class="nav-link" href="{%url 'account'%}">
               <i class="material-icons">person</i>
