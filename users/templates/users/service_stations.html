@@ -151,58 +151,37 @@
                                             <form action="{% url 'users:supplier_user_edit' station.id %}"
                                                 method="POST">
                                                 {% csrf_token %}
-
                                                 <div class="form-group">
-
-                                                    <label for="inputEmail3"
-                                                        class="col-form-label">Name</label>
-                                                   
-                                                        <input type="telephone" class="form-control" id="inputEmail3"
-                                                            value="{{station.company}}">
-                                                   
+                                                    <lable>Name</lable>
+                                                    <input type="text" name="username" class="form-control" value="{{station.company}}" />
                                                 </div>
+                                               
                                                 <div class="form-group">
-
-                                                    <label for="address"
-                                                        class="col-form-label">Location</label>
-                                                    
-                                                        <input type="text" name="address" class="form-control"
-                                                            id="address" value="{{station.address}}">
-                                                  
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="is_depot" class=" col-form-label">Is
-                                                        Depot</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" name="is_depot" class="form-control"
-                                                            id="is_depot" value="{{station.is_depot}}">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="opening_time" class=" col-form-label">Opening
-                                                        Time</label>
-                                                    
-                                                        <input type="text" name="opening_time" class="form-control"
-                                                            id="opening_time" value="{{station.opening_time}}">
-                                                    
+                                                    <lable>Location</lable>
+                                                    <input type="text" name="address" class="form-control" value="{{station.address}}" />
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="closing_time" class="col-form-label">Closing
-                                                        Time</label>
-                                                    
-                                                        <input type="text" name="closing_time" class="form-control"
-                                                            id="closing_time" value="{{station.closing_time}}">
-                                                    
+                                                    <lable>Is Depot</lable>
+                                                    <input type="text" name="is_depot" class="form-control" value="{{station.is_depot}}" />
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <lable>Opening Time</lable>
+                                                    <input type="time"  name="opening_time"  value="{{station.opening_time}}" class="form-control" />
                                                 </div>
 
+                                                <div class="form-group">
+                                                    <lable>Closing Time</lable>
+                                                    <input type="time" name="closing_time" value="{{station.closing_time}}" class="form-control" />
+                                                </div>
 
                                                
                                           
                                         </div>
                                         <div class="modal-footer">
-                                                <div class="col-md-12 text-center">
-                                                        <button type="submit" class="btn btn-primary ">Submit</button>
+                                                <div >
+                                                    <button class="btn btn-success" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
                                                     </div>
                                                 </form>
                                             </form>
