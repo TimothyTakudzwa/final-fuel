@@ -270,11 +270,17 @@ def offer(request, id):
 def edit_offer(request, id):
     offer = Offer.objects.get(id=id)
     if request.method == 'POST':
-        offer.price = request.POST.get('price')
-        offer.quantity = request.POST.get('quantity')
-        offer.save()
-        messages.success(request, 'Offer successfully updated')
-        return redirect('fuel-request')
+        new_offer = int(request.POST.get('quantity'))
+        request_quantity = offer.request.amount
+        if new_offer <= request_quantity:
+            offer.price = request.POST.get('price')
+            offer.quantity = request.POST.get('quantity')
+            offer.save()
+            messages.success(request, 'Offer successfully updated')
+            return redirect('fuel-request')
+        else:
+            messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
+            return redirect('fuel-request')
     return render(request, 'supplier/accounts/fuel_request.html')
 
 
