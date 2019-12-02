@@ -1,6 +1,6 @@
 from django.db import models
 from PIL import Image
-from buyer.models import User, FuelRequest
+from buyer.models import FuelRequest, User
 from company.models import Company, FuelUpdate
 from buyer.constants import *
 

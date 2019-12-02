@@ -70,7 +70,7 @@
             <i class="fa fa-bell"></i>
           </div>
           <p class="card-category">New Requests</p>
-          <h3 class="card-title">0</h3>
+          <h3 class="card-title">{{new_orders}}</h3>
         </div>
         <div class="card-footer">
           <div class="stats">
@@ -128,7 +128,9 @@
     <div class="card border-success mb-3" style="max-width: 12rem;/* padding-top: 30px; */height: 15rem;margin-left: 10px;background-color:#81bcc3;text-align: center;color: gray;">
       <div class="card-body text-success">
         <h5 class="card-title">Average Rating</h5>
-        <p class="card-text" style="font-size: 3rem;margin-top: 53px;color: white;">0.0</p>
+        <p class="card-text" style="font-size: 3rem;margin-top: 53px;color: white;">0.0 <span class="material-icons">
+          stars
+        </span></p>
       </div>
       <div class="card-footer bg-transparent border-success"></div>
     </div>
@@ -161,6 +163,9 @@
                            <th style="color:white;">
                              No Of Transactions
                             </th>
+                            <th style="color:white;">
+                              
+                             </th>
                             <!--
                             <th style="color:white;">
                             
@@ -175,32 +180,28 @@
                              <td>{{client.industry}}</td>
                              <td>{{client.total_value}}</td>
                              <td>{{client.num_transactions}}</td>
-                             <!--
-                             <td style="width: 33%;">
+                             
+                             <td style="width: 13%;">
                                  <div class="btn-group">
-                                      <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#client.id">View Details</button>  
+                                      <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#{{client.id}}">View History</button>  
                                       
   
                                  </div>
                               </td>
-                            -->  
+                             
                               
                          
                           <div class="modal fade" id="{{client.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                   <div class="modal-dialog" role="document">
                                   <div class="modal-content">
                                       <div class="modal-header">
-                                      <h5 class="modal-title" id="exampleModalLabel">{{service_station.name}}</h5>
+                                      <h5 class="modal-title" id="exampleModalLabel">{{client.name}}'s Transactions</h5>
                                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                           <span aria-hidden="true">&times;</span>
                                       </button>
                                       </div>
                                       <div class="modal-body">
-                                          <p>Date: {{trail.date}}</p>
-                                          <p>User: {{trail.user}}</p>
-                                          <p>Service Station: {{trail.service_station}}</p>
-                                          <p>Event: {{trail.action}}</p>
-                                          <p>Refence : {{trail.reference}}</p>
+                                          <p>No Data Available At The Moment</p>
                                          
                                           
                                           
