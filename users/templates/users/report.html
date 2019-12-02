@@ -2,12 +2,12 @@
 {% block title %}{% endblock %}
 {% block body %}
 <div class="jumbotron jumbotron-fluid">
-    <div class="container">
+    <div class="container" style="text-align: left;margin-left: 0;">
         <h1 class="display-3">Report Generator</h1>
         <hr class="my-2">
 
     </div>
-    <p class="lead" style="padding-left: 150px;padding-top: 30px;">
+    <p class="lead" style="padding-left: 15px;padding-top: 30px;">
         <a class="btn btn-primary btn-lg" data-toggle="modal" data-target="#report_modal"
             role="button" style="color: white;">Generate Report</a>
 
@@ -64,7 +64,7 @@
 
 {% if trans or requests or allocations %}
 <div
-    style="padding: 25px;background-color:rgb(14, 80, 100);border: #fafbfb 2px solid;border-radius: 10px;">
+    style="/* padding: 25px; */background-color:rgb(14, 80, 100);border: #fafbfb 2px solid;border-radius: 10px;padding-left: 15px;padding-top: 30px;padding-bottom: 30px;margin-left: 15px;margin-top: -89px;">
     <h1 style="color: #fafafa;font-size: medium;">Show Results From {{start}} To {{end}} </h1>
 </div>
 {% endif %}
@@ -125,7 +125,7 @@
                         Buyer
                        </th>
                        <th style="color:white;">
-                        Complete
+                        Status
                        </th>
                        
                          
