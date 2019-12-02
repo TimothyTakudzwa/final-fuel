@@ -257,9 +257,11 @@ def offer(request, id):
             Offer.objects.create(price=price, quantity=quantity, supplier=request.user, request=fuel_request)
             
             messages.success(request, 'Offer uploaded successfully')
-            action = f"{request.user}  made an offer of {quantity}L @ {price}"
-
-            # AuditTrail.objects.create(user = request.user, action = action, reference = 'offer' )
+            action = f"{request.user}  made an offer of {quantity}L @ {price} to a request made by {fuel_request.name.username}"
+            service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+            reference = 'offers'
+            reference_id = fuel_request.id
+            Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
             return redirect('fuel-request')
         else:
             messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
