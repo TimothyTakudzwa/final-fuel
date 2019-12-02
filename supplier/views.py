@@ -223,7 +223,7 @@ def fuel_update(request):
             service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
             reference = 'fuel quantity updates'
             reference_id = fuel_update.id
-            action = f"{request.user.username} has made an update of diesel quantity to {fuel_update.diesel_quantity} @ {fuel_update.diesel_price} and petrol quantity to {fuel_update.petrol_quantity} @ {fuel_update.petrol_price}"
+            action = f"{request.user.username} has made an update of diesel quantity to {fuel_update.diesel_quantity}L @ {fuel_update.diesel_price} and petrol quantity to {fuel_update.petrol_quantity}L @ {fuel_update.petrol_price}"
             Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
             return redirect('fuel_update')
         else:
@@ -257,7 +257,7 @@ def offer(request, id):
             Offer.objects.create(price=price, quantity=quantity, supplier=request.user, request=fuel_request)
             
             messages.success(request, 'Offer uploaded successfully')
-            action = f"{request.user}  made an offer of {quantity} @ {price}"
+            action = f"{request.user}  made an offer of {quantity}L @ {price}"
 
             # AuditTrail.objects.create(user = request.user, action = action, reference = 'offer' )
             return redirect('fuel-request')
