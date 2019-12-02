@@ -1,20 +1,95 @@
 {% extends "supplier/dashboard.html" %}
-{% load static %}
-{% block title %}
-{{title}}
-{% endblock %}
-{% block body %}
-    <div class="col-md-12">
-        <div class="card mt-5" style="background-color:white">
-                <div class="card-header card-header-primary">
-                        <h4 class="card-title">My Profile</h4>
-                    </div>
-            {% load crispy_forms_tags %}
-            <form action="{% url 'supplier:account' %}" method="POST">
-                {% csrf_token %}
-                {{ user|crispy}}
-            <p align="center"><button class="btn btn-primary" type="submit">Update</button></p>
-            </form>
-        </div>
+{% load crispy_forms_tags %} 
+
+{% block body%}
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">Edit Profile</h4>
+        <p class="card-category">Complete your profile</p>
+      </div>
+      <div class="card-body">
+        <form>
+          <div class="row">
+            <div class="col-md-5">
+              <div class="form-group">
+                <label class="bmd-label-floating">Company</label>
+                <input type="text" class="form-control" value="{{request.user.company.name}}" disabled > 
+                
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="bmd-label-floating">Username</label>
+                <input type="text" class="form-control" value="{{request.user.username}}" disabled>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="bmd-label-floating">Email address</label>
+                <input type="email" class="form-control" value="{{request.user.email}}" disabled>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="bmd-label-floating">Fist Name</label>
+                <input type="text" class="form-control" value="{{request.user.first_name}}" disabled>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="bmd-label-floating">Last Name</label>
+                <input type="text" class="form-control" value="{{request.user.last_name}}" disabled>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="bmd-label-floating">Adress</label> 
+                <input type="text" class="form-control" value="{{request.user.company.address}}" disabled >
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <form method="post">
+          {% csrf_token %}
+          <br>
+          <h4 class="card-title">Change your Password</h4>
+          <br>
+          
+          <div class="row">
+            <div class="col-md-9">
+              {{form|crispy}}
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary pull-right">Update Profile</button>
+          <div class="clearfix"></div>
+        </form>
+      </div>
     </div>
-{%endblock%}
+  </div>
+  <div class="col-md-4">
+    <div class="card card-profile">
+      <div class="card-avatar">
+        <a href="#pablo">
+          <img class="img" src="{{ user.image.url }}" />
+        </a>
+      </div>
+      <div class="card-body">
+        <h6 class="card-category text-gray">{{user_logged.company_position}}</h6>
+        <h4 class="card-title">{{request.user.first_name}} {{request.user.last_name}}</h4>
+        <p class="card-description">
+          Don't be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
+        </p>
+        <!--<a href="#" class="btn btn-primary btn-round">Follow</a>-->
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

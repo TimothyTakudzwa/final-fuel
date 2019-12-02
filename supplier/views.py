@@ -167,15 +167,6 @@ def account(request):
         'user': UserUpdateForm(instance=request.user)
 
     }
-    if request.method == 'POST':
-        userform = UserUpdateForm(request.POST, instance=request.user)
-        if userform.is_valid():
-            userform.save()
-            messages.success(request, f'Profile successfully updated')
-            return redirect('account')
-        else:
-            messages.warning(request, f'Something went wrong while saving your changes')
-            return redirect('account')
     return render(request, 'supplier/accounts/account.html', context=context)
 
 
