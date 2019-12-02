@@ -259,12 +259,23 @@ def export_csv(request):
             name = 'Transactions'
 
             csv_name = f'{name}-{year}-{month}-{day}-ACC'
-            df.to_excel(f'media/reports/transactions/csv/{csv_name}.xlsx', index=None, header=True)
+            
+            if request.POST.get('format') == 'excel':
+                df.to_excel(f'media/reports/transactions/csv/{csv_name}.xlsx', index=None, header=True)
 
-            with open(f'media/reports/transactions/csv/{csv_name}.xlsx', 'rb') as csv_name:
-                response = HttpResponse(csv_name.read())
-                response['Content-Disposition'] = f'attachment;filename={name}-{day}/{month}/{year}.xlsx'
-                return response
+                with open(f'media/reports/transactions/csv/{csv_name}.xlsx', 'rb') as csv_name:
+                    response = HttpResponse(csv_name.read())
+                    response['Content-Disposition'] = f'attachment;filename={name}-{day}/{month}/{year}.xlsx'
+                    return response
+
+            if request.POST.get('format') == 'csv':
+                df.to_csv(f'media/reports/transactions/csv/{csv_name}.csv', index=None, header=True)
+
+                with open(f'media/reports/transactions/csv/{csv_name}.csv', 'rb') as csv_name:
+                    response = HttpResponse(csv_name.read())
+                    response['Content-Disposition'] = f'attachment;filename={name}-{day}/{month}/{year}.csv'
+                    return response        
+                    
             
 
 

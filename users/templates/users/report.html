@@ -94,11 +94,23 @@
                     <input type="hidden" value="transaction" name="type_model">
                     <input type="hidden"value="{{start}}" name="start">
                     <input type="hidden" value="{{end}}" name="end"> 
+                    <input type="hidden" value="csv" name="format">
 
                     <button type="submit" class="btn btn-default" style="margin-left: 10px;">
                         CSV
                     </button>
-                </form>    
+                </form> 
+                <form method="POST" action="{% url 'users:export_csv' %}">
+                        {% csrf_token %}
+                        <input type="hidden" value="transaction" name="type_model">
+                        <input type="hidden"value="{{start}}" name="start">
+                        <input type="hidden" value="{{end}}" name="end"> 
+                        <input type="hidden" value="excel" name="format"> 
+    
+                        <button type="submit" class="btn btn-danger" style="margin-left: 10px;">
+                        Excel
+                        </button>
+                    </form>    
             </div>         
 
             <table id="example" class="table table-striped table-bordered" style="width:100%">
