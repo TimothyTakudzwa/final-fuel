@@ -3,6 +3,7 @@ import random
 from fpdf import FPDF
 from pandas import DataFrame
 import pandas as pd
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.db.models import Q
@@ -15,7 +16,7 @@ from .forms import *
 from .models import AuditTrail
 import secrets
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from django.contrib import messages
 from buyer.models import *
 from supplier.forms import *
@@ -64,6 +65,9 @@ def statistics(request):
     bulk_requests = FuelRequest.objects.filter(delivery_method="BULK").count()
     normal_requests = FuelRequest.objects.filter(delivery_method="REGULAR").count()
     staff_blocked = User.objects.filter(company=company).count()
+    yesterday = date.today() - timedelta(days=1)
+    #new_orders = FuelRequest.objects.filter(date__gt=yesterday)
+    new_orders = 0
     clients = []
     #update = F_Update.objects.filter(company_id=company.id).first()
     diesel = 0; petrol = 0
@@ -91,7 +95,7 @@ def statistics(request):
     trans = str(trans) + " %"
     return render(request, 'users/statistics.html', {'staff_blocked':staff_blocked, 'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
-     'diesel':diesel, 'petrol':petrol, 'revenue':revenue})
+     'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders})
 
 
 def supplier_user_edit(request, cid):
@@ -130,11 +134,7 @@ def stations(request):
     
         sub_type = 'service_station' if is_depot else 'depot'
         relationship_id = sub.id
-<<<<<<< HEAD
-        fuel_updated = F_Update.objects.create(sub_type=sub_type,relationship_id=relationship_id,payment_methods=payment_methods,diesel_quantity=diesel_quantity,diesel_price=diesel_price,petrol_quantity=petrol_quantity,petrol_price=petrol_price,queue_length=queue_length)
-=======
         fuel_updated = F_Update.objects.create(sub_type=sub_type,relationship_id=relationship_id,company_id = request.user.company.id)
->>>>>>> 3697adbf41ecf61d8ded83b2343d9179bd7a316e
         fuel_updated.save()
         sub.fuel_capacity = fuel_updated
         sub.save()
@@ -224,7 +224,41 @@ def export_pdf(request):
             pdf.output(f'media/reports/requests/Report - {datetime.now().strftime("%Y-%M-%d")}.pdf', 'F')
 
 
-        return redirect('users:report_generator')     
+        return redirect('users:report_generator')
+
+def export_csv(request):
+    result = ''
+    if request.method == "POST":
+        print(request.POST.get('type_model'))
+        if request.POST.get('type_model') == "transaction":
+            print('------------------Im In Here---------------------------')
+            start = request.POST.get('start')
+            end = request.POST.get('end')
+            start = datetime.strptime(start, '%b. %d, %Y').date()
+            end = datetime.strptime(end, '%b. %d, %Y').date()
+            
+            data = Transaction.objects.filter(date__range=[start, end]).values()
+            fields = ['Date', 'Time', 'Amount', 'Complete']
+            df = DataFrame(data,columns=fields)
+            #df['Date'] = f'{dt[2]}/{dt[1]}/{dt[0]}'
+
+            day = str(datetime.now().day)
+            month = str(datetime.now().month)
+            year = str(datetime.now().year)
+
+            name = 'Transactions'
+
+            csv_name = f'{name}-{year}-{month}-{day}-ACC'
+            df.to_excel(f'media/reports/transactions/csv/{csv_name}.xlsx', index=None, header=True)
+
+            with open(f'media/reports/transactions/csv/{csv_name}.xlsx', 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={name}-{day}/{month}/{year}.xlsx'
+                return response
+            
+
+
+
 
 def depots(request):
     depots = Depot.objects.all()
