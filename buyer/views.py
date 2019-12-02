@@ -250,8 +250,8 @@ def dashboard(request):
 
 
 def offers(request, id):
-    request = FuelRequest.objects.filter(id=id).first()
-    offers = Offer.objects.filter(request=request).all()
+    selected_request = FuelRequest.objects.filter(id=id).first()
+    offers = Offer.objects.filter(request=selected_request).all()
     print(offers)
     return render(request, 'buyer/offer.html', {'offers': offers } )
 
