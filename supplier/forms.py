@@ -93,7 +93,10 @@ class QuantityLevelForm(forms.Form):
     petrol_price = forms.CharField(label='Petrol Price')
     diesel_quantity = forms.CharField(label='Diesel Quantity')
     diesel_price = forms.CharField(label='Diesel Price')
-    payment_methods = forms.CharField(label='Payment Method', widget=forms.Select(choices=PAYING_CHOICES))
+    cash = forms.CharField(label='Accepts Cash',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
+    usd = forms.CharField(label='Accepts USD ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
+    swipe = forms.CharField(label='Accepts Swipe ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
+    ecocash = forms.CharField(label='Accepts Ecocash ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
     queue_length = forms.CharField(label='Queue Length', widget=forms.Select(choices=(('short', 'Short'), ('medium', 'Medium Long'), ('long', 'Long'))))
 
 
@@ -118,10 +121,13 @@ class StockLevelForm(forms.Form):
 class SubsidiaryForm(forms.Form):
     name = forms.CharField(label='Subsisdiary Name')
     address = forms.CharField(label='Subsisdiary Address')
-    is_depot = forms.CharField(label='Is Depot',  widget=forms.Select(choices=((True,True),(False,False))))
-    opening_time = forms.CharField(label='Opening Time')
-    closing_time = forms.CharField(label='Closing Time')
+    is_depot = forms.CharField(label='Is Depot',  widget=forms.Select(choices=((True,True),(False,False))))   
+    cash = forms.CharField(label='Accepts Cash',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
+    usd = forms.CharField(label='Accepts USD ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
+    swipe = forms.CharField(label='Accepts Swipe ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
+    ecocash = forms.CharField(label='Accepts Ecocash ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
     
+
 def create_sub(request):
     return {
         'sub_create_form': SubsidiaryForm()
