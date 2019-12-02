@@ -88,21 +88,34 @@ class FuelUpdateForm(forms.ModelForm):
 
 
 
-class QuantityLevelForm(forms.Form):
+class QuantityLevel1Form(forms.Form):
     petrol_quantity = forms.CharField(label='Petrol Quantity')
-    petrol_price = forms.CharField(label='Petrol Price')
-    diesel_quantity = forms.CharField(label='Diesel Quantity')
-    diesel_price = forms.CharField(label='Diesel Price')
+    #diesel_quantity = forms.CharField(label='Diesel Quantity')
     cash = forms.CharField(label='Accepts Cash',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
     usd = forms.CharField(label='Accepts USD ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
     swipe = forms.CharField(label='Accepts Swipe ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
     ecocash = forms.CharField(label='Accepts Ecocash ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
-    queue_length = forms.CharField(label='Queue Length', widget=forms.Select(choices=(('short', 'Short'), ('medium', 'Medium Long'), ('long', 'Long'))))
+    
 
 
-def fuelupdating(request):
+def fuelupdating1(request):
     return {
-        'update_form': QuantityLevelForm()
+        'update_form': QuantityLevel1Form()
+    }
+
+class QuantityLevel2Form(forms.Form):
+    #petrol_quantity = forms.CharField(label='Petrol Quantity')
+    diesel_quantity = forms.CharField(label='Diesel Quantity')
+    cash = forms.CharField(label='Accepts Cash',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
+    usd = forms.CharField(label='Accepts USD ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
+    swipe = forms.CharField(label='Accepts Swipe ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
+    ecocash = forms.CharField(label='Accepts Ecocash ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
+    
+
+
+def fuelupdating2(request):
+    return {
+        'updating_form': QuantityLevel2Form()
     }
 
 class StockLevelForm(forms.Form):

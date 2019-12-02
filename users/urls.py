@@ -25,6 +25,15 @@ urlpatterns = [
     path('buyer_user_delete/<int:sid>', views.buyers_delete, name="buyers_delete"),
     path('supplier_user_delete/<int:cid>/<int:sid>', views.supplier_user_delete, name="supplier_user_delete"),
     path('supplier_user_edit/<int:cid>', views.supplier_user_edit, name="supplier_user_edit"),
+    path('edit_subsidiary/<int:id>', views.edit_subsidiary, name="edit_subsidiary"),
+    path('delete_subsidiary/<int:id>', views.delete_subsidiary, name="delete_subsidiary"),
+    path('edit_fuel_prices/<int:id>', views.edit_fuel_prices, name="edit_fuel_prices"),
+    path('allocate_diesel/<int:id>', views.allocate_diesel, name="allocate_diesel"),
+    
+    
+
+    
+    
 
 
 

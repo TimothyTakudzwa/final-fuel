@@ -148,12 +148,12 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="{% url 'users:supplier_user_edit' station.id %}"
+                                            <form action="{% url 'users:edit_subsidiary' station.id %}"
                                                 method="POST">
                                                 {% csrf_token %}
                                                 <div class="form-group">
                                                     <lable>Name</lable>
-                                                    <input type="text" name="username" class="form-control" value="{{station.company}}" />
+                                                    <input type="text" name="name" class="form-control" value="{{station.name}}" />
                                                 </div>
                                                
                                                 <div class="form-group">
@@ -196,7 +196,7 @@
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Delete {{station.company}}
+                                            <h5 class="modal-title" id="exampleModalLabel">Delete {{station.name}}
                                             </h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
@@ -204,20 +204,22 @@
                                         </div>
                                         <div class="modal-body">
                                             {% load crispy_forms_tags %}
-                                            <form action="{% url 'users:suppliers_delete' station.id %}" method="POST">
+                                            <form action="{% url 'users:delete_subsidiary' station.id %}" method="POST">
                                                 {{ delete_form }}
                                                 {% csrf_token %}
-                                                <p><b>Are You Sure You Want To Delete {{ station.company }}</b></p>
+                                                <p><b>Are You Sure You Want To Delete {{ station.name }}</b></p>
+
+                                                <div class="modal-footer">
+                                                    <div >
+                                                            <button class="btn btn-secondary " data-dismiss="modal">No</button> <button class="btn btn-danger" type="submit">Yes</button>
+                                                            
+        
+                                                        </div>
+                                            </div>
                                                 
                                             </form>
                                         </div>
-                                        <div class="modal-footer">
-                                                <div class="btn-group col-sm-12">
-                                                        <button class="btn btn-secondary col" data-dismiss="modal">No</button>
-                                                        <button class="btn btn-danger col" type="submit">Yes</button>
-    
-                                                    </div>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
