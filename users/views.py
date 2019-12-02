@@ -254,6 +254,7 @@ def export_csv(request):
             end = datetime.strptime(end, '%b. %d, %Y').date()
             
             data = Transaction.objects.filter(date__range=[start, end]).values()
+            print(data)
             fields = ['Date', 'Time', 'Amount', 'Complete']
             df = DataFrame(data,columns=fields)
             #df['Date'] = f'{dt[2]}/{dt[1]}/{dt[0]}'
