@@ -7,7 +7,16 @@ try:
 except:
     pass
         
+recommender_response = ''' 
+Based on the Supplied details we have found the below fuel provider 
 
+Company Name: {0}
+Depot: {1}
+Fuel Type: {2}
+Quantity: {3}Litres
+Price: {4}
+
+'''
 
 DELIVERY_OPTIONS= (('SELF COLLECTION', 'SELF COLLECTION'),('DELIVERY', 'DELIVERY'))
 

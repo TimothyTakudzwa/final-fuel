@@ -60,7 +60,7 @@ class TokenAuthentication(models.Model):
 
 class SupplierRating(models.Model):
     rating = models.PositiveIntegerField(default=0)
-    supplier = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='supplier_rating')
+    supplier = models.ForeignKey(Company, on_delete=models.DO_NOTHING, related_name='supplier_rating')
 
     class Meta:
         ordering = ['supplier', 'rating']
