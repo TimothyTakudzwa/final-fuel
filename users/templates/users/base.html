@@ -29,7 +29,7 @@
  
  <body class="">
    <div class="wrapper ">
-     <div class="sidebar" data-color="purple" data-background-color="white" data-image="{% static 'finder/assets/img/sidebar-1.jpg' %}">
+     <div class="sidebar" data-color="purple" data-background-color="black" data-image="{% static 'finder/assets/img/sidebar-1.jpg' %}">
        <!--
          Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
  
@@ -41,14 +41,14 @@
          </a>
        </div>
        <div class="sidebar-wrapper">
-         <ul class="nav">
-           <li class="nav-item {% if request.path == '/users/' %} active {% endif %}  ">
-             <a class="nav-link" href="{% url 'users:home' %}">
-               <i class="material-icons">dashboard</i>
-               <p>Dashboard</p>
-             </a>
-           </li>
-            
+         <ul class="nav">          
+            <li class="nav-item {% if request.path == '/users/allocate/' %} active {% endif %}">
+              
+              <a class="nav-link " href="{% url 'users:allocate' %}">
+                <i class="material-icons">confirmation_number</i>
+                <p>Fuel Allocations</p>
+              </a>
+            </li>
            <li class="nav-item {% if request.path == '/users/suppliers/' %} active {% endif %}">
              <a class="nav-link" href="{% url 'users:suppliers_list' %}">
                <i class="material-icons">people</i>
@@ -63,13 +63,7 @@
             </a>
           </li>
       
-          <li class="nav-item {% if request.path == '/users/allocate/' %} active {% endif %}">
-              
-            <a class="nav-link " href="{% url 'users:allocate' %}">
-              <i class="material-icons">confirmation_number</i>
-              <p>Fuel Allocations</p>
-            </a>
-          </li>
+        
 
            <li class="nav-item {% if request.path == '/users/audit_trail/' %} active {% endif %}">
             <a class="nav-link" href="{% url 'users:audit_trail' %}">
@@ -112,9 +106,10 @@
          </ul>
        </div>
      </div>
-     <div class="main-panel">
+     <div class="main-panel" style="margin-top: 0;">
        <!-- Navbar -->
-       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
+       <nav class="navbar navbar-expand-lg  navbar-absolute fixed-top ">
+        <!-- 
          <div class="container-fluid">
            <div class="navbar-wrapper">
              <a class="navbar-brand" href="#pablo"></a>
@@ -125,7 +120,8 @@
              <span class="navbar-toggler-icon icon-bar"></span>
              <span class="navbar-toggler-icon icon-bar"></span>
            </button>
-           <div class="collapse navbar-collapse justify-content-end">
+           
+             <div class="collapse navbar-collapse justify-content-end">
              <form class="navbar-form">
                <div class="input-group no-border">
                  <input type="text" value="" class="form-control" placeholder="Search...">
@@ -152,12 +148,13 @@
                  </div>
                </li>
              </ul>
-           </div>
+           </div>--
          </div>
+        -->
        </nav>
        <!-- End Navbar -->
 
-       <main role="main" class="content">
+       <main role="main" class="content" style="margin-top: 0;padding: 0;">
         <div class="row">
 
             <div class="col-md-12">
