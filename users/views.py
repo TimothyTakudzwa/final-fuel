@@ -39,9 +39,13 @@ def allocate(request):
         subsidiary = Subsidiaries.objects.filter(id=allocate.relationship_id).first()
         allocate.subsidiary_name = subsidiary.name
     
+    
+    return render(request, 'users/allocate.html', {'allocates': allocates})
+
+def allocation_update(request,id):
     if request.method == 'POST':
-        if F_Update.objects.filter(id= int(request.POST['id'])).exists():
-            fuel_update = F_Update.objects.filter(id= int(request.POST['id'])).first()
+        if F_Update.objects.filter(id=id).exists():
+            fuel_update = F_Update.objects.filter(id=id).first()
             fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['petrol_quantity'])
             fuel_update.petrol_price = request.POST['petrol_price']
             fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['diesel_quantity'])
@@ -50,12 +54,17 @@ def allocate(request):
             fuel_update.queue_length = request.POST['queue_length']
             fuel_update.save()
             messages.success(request, 'updated quantities successfully')
+            service_station = Subsidiaries.objects.filter(id=fuel_update.relationship_id).first()
+            reference = 'fuel allocation'
+            reference_id = fuel_update.id
+            action = f"You have allocated diesel quantity of {int(request.POST['diesel_quantity'])}L @ {fuel_update.diesel_price} and petrol quantity of {int(request.POST['petrol_quantity'])}L @ {fuel_update.petrol_price} "
+            Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
             return redirect('users:allocate')
         else:
             messages.success(request, 'Subsidiary does not exists')
             return redirect('users:allocate')
-    
-    return render(request, 'users/allocate.html', {'allocates': allocates})
+    return render(request, 'users/allocate.html')
+
 
 def statistics(request):
     company = request.user.company
@@ -81,7 +90,8 @@ def statistics(request):
         company.num_transactions = num_trans[counter]
         counter += 1
 
-    clients = [company for company in  companies]    
+    clients = [company for company in  companies]
+    revenue = round(float(sum(value)))   
 
     try:
         trans = Transaction.objects.all().count()/Transaction.objects.all().count()/100
@@ -90,7 +100,7 @@ def statistics(request):
     trans = str(trans) + " %"
     return render(request, 'users/statistics.html', {'staff_blocked':staff_blocked, 'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
-     'diesel':diesel, 'petrol':petrol})
+     'diesel':diesel, 'petrol':petrol, 'revenue':revenue})
 
 
 def supplier_user_edit(request, cid):
@@ -129,11 +139,8 @@ def stations(request):
     
         sub_type = 'service_station' if is_depot else 'depot'
         relationship_id = sub.id
-<<<<<<< HEAD
-        fuel_updated = F_Update.objects.create(sub_type=sub_type,relationship_id=relationship_id,payment_methods=payment_methods,diesel_quantity=diesel_quantity,diesel_price=diesel_price,petrol_quantity=petrol_quantity,petrol_price=petrol_price,queue_length=queue_length)
-=======
+        #fuel_updated = F_Update.objects.create(sub_type=sub_type,relationship_id=relationship_id,payment_methods=payment_methods,diesel_quantity=diesel_quantity,diesel_price=diesel_price,petrol_quantity=petrol_quantity,petrol_price=petrol_price,queue_length=queue_length)
         fuel_updated = F_Update.objects.create(sub_type=sub_type,relationship_id=relationship_id,company_id = request.user.company.id)
->>>>>>> 3697adbf41ecf61d8ded83b2343d9179bd7a316e
         fuel_updated.save()
         sub.fuel_capacity = fuel_updated
         sub.save()
