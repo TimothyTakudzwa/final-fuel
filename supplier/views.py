@@ -25,112 +25,6 @@ User = get_user_model()
 today = date.today()
 
 
-def register(request):
-    context = {
-        'title': 'Fuel Finder | Register',
-        'email': RegistrationEmailForm(),
-        'registration': RegistrationForm()
-    }
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        username = request.POST.get('username')
-        pass1 = request.POST.get('password1')
-        pass2 = request.POST.get('password2')
-
-        if pass1 == pass2:
-            User.objects.create_user(username=username, email=email, password=pass1)
-
-            user = User.objects.get(username=username)
-            user.is_active = False
-            user.save()
-
-            token = secrets.token_hex(12)
-            TokenAuthentication.objects.create(token=token, user=user)
-            domain = request.get_host()
-            url = f'{domain}/verification/{token}/{user.id}'
-
-            sender = f'Fuel Finder Accounts<tests@marlvinzw.me>'
-            subject = 'User Registration'
-            message = f"Dear {username} , complete signup here : \n {url} \n. Your password is {pass1}"
-
-            try:
-                msg = EmailMultiAlternatives(subject, message, sender, [f'{email}'])
-                msg.send()
-
-                messages.success(request, f"{username} Registered Successfully")
-                return redirect('dashboard')
-
-            except BadHeaderError:
-                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
-                return redirect('register')
-        else:
-            messages.warning(request, "Passwords don't match")
-            return redirect('register')
-    return render(request, 'supplier/accounts/register.html', context=context)
-
-
-def verification(request, token, user_id):
-    context = {
-        'title': 'Fuel Finder | Verification',
-    }
-    check = User.objects.filter(id=user_id)
-    print("here l am ")
-
-    if check.exists():
-        user = User.objects.get(id=user_id)
-        print(user)
-
-        token_check = TokenAuthentication.objects.filter(user=user, token=token)
-        result = bool([token_check])
-        print(result)
-        if result:
-            if request.method == 'POST':
-                user = User.objects.get(id=user_id)
-                form = BuyerUpdateForm(request.POST, request.FILES, instance=user)
-                if form.is_valid():
-                    form.save()
-                    company_id = request.POST.get('company_id')
-                    print(f"---------Supplier {company_id} {type(company_id)}")
-                    selected_company = Company.objects.filter(id=company_id).first()
-                    user.company = selected_company
-                    user.is_active = True
-                    user.save()
-                    return redirect('buyer-login')
-            else:
-                form = BuyerUpdateForm
-                messages.success(request, f'Email verification successs, Fill in the deatails to complete registration')
-                return render(request, 'supplier/accounts/verification.html', {'form': form})
-        else:
-            messages.warning(request, 'Wrong verification token')
-            return redirect('login')
-    else:
-        messages.warning(request, 'Wrong verification id')
-        return redirect('login')
-    return render(request, 'supplier/accounts/verification.html', context=context)
-
-
-def sign_in(request):
-    context = {
-        'title': 'Fuel Finder | Login',
-    }
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        authenticated = authenticate(username=username, password=password)
-        if authenticated:
-            client = User.objects.get(username=username)
-            login(request, client)
-
-            messages.success(request, 'Welcome {client.username}')
-            return redirect('dashboard')
-        else:
-            messages.warning(request, 'Incorrect username or password')
-            return redirect('login')
-
-    return render(request, 'supplier/accounts/login.html', context=context)
-
-
 @login_required()
 def change_password(request):
     context = {
@@ -153,7 +47,7 @@ def change_password(request):
                 update_session_auth_hash(request, user)
 
                 messages.success(request, 'Password Successfully Changed')
-                return redirect('dashboard')
+                return redirect('account')
         else:
             messages.warning(request, 'Wrong Old Password, Please Try Again')
             return redirect('change-password')

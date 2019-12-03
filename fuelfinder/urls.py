@@ -15,9 +15,6 @@ urlpatterns = [
     path('admin/', admin.site.urls), 
 
     path('logout/', auth_views.LogoutView.as_view(template_name='supplier/accounts/logout.html'), name='logout'),
-    path('register/', supplier_views.register, name='register'),
-    path('verification/<token>/<user_id>', supplier_views.verification, name='verification'),
-    path('', supplier_views.sign_in, name='login'),
     path('password-change/', supplier_views.change_password, name='change-password'),
     path('account/', supplier_views.account, name='account'),
     path('fuel-request/', supplier_views.fuel_request, name='fuel-request'),
@@ -44,6 +41,7 @@ urlpatterns = [
     path('serviceStation/', include(('serviceStation.urls','serviceStation'), namespace='serviceStation')),
     path('fuel_update/', supplier_views.fuel_update, name='fuel_update'),
     path('transaction/', supplier_views.transaction, name='transaction'),
+    path('change_password/', supplier_views.change_password, name='change_password'),
     
 ]
 
