@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-
+from . import views as finder_views
 import supplier.views as supplier_views
 import whatsapp.views as whatsapp_views
 # import finder.views as finder_views
@@ -13,13 +13,12 @@ urlpatterns = [
     path('buyer/', include('buyer.urls')),
     path('login-api/', include('api.urls')),
     path('admin/', admin.site.urls), 
-
+    path('', finder_views.landing_page), 
     path('logout/', auth_views.LogoutView.as_view(template_name='supplier/accounts/logout.html'), name='logout'),
     path('password-change/', supplier_views.change_password, name='change-password'),
     path('account/', supplier_views.account, name='account'),
     path('fuel-request/', supplier_views.fuel_request, name='fuel-request'),
     path('rate-supplier/', supplier_views.rate_supplier, name='rate-supplier'),
-
     path('index', whatsapp_views.index, name='index'),
     # path('home/', finder_views.base, name='finder-home'),
 
