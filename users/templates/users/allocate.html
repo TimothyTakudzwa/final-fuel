@@ -167,15 +167,86 @@
                 </tbody>
                 </table>
 
+
             {% else %}
             <p>Nothing To Show</p>    
             {% endif %}
 
-
-
-                  
+            
+            
         </div>
     </div>
+    
+
+
+
+    
+        <div class="card" style="background-color:white">
+            
+            <div class="card-header card-header-primary">
+            <h4 class="card-title ">Fuel Allocations Audit Trail</h4>
+            </div>
+        <div class="card-body">
+                
+                
+            <div class="container-fluid">
+    {% if allocations %}
+
+            <table id="example" class="table table-striped" style="width:100%">
+                <thead style="color:white; background:lightslategray">
+                    
+                       <th style="color:white;">
+                        Date
+                         </th>
+                         <th style="color:white;">
+                            Subsidiary Name
+                             </th>
+                       <th style="color:white;">
+                        Sub Type
+                         </th>
+                       <th style="color:white;">
+                        Diesel
+                         </th>
+                       <th style="color:white;">
+                        Price
+                         </th>
+                         
+                        <th style="color:white;">
+                       Petrol
+                           </th>
+                        
+                        <th style="color:white;">
+                          Price
+                        </th>
+
+                        <th style="color:white;">
+                            Payment Methods
+                          </th>
+                        
+                         
+                   <tbody>
+                       {% for alloc in allocations %}
+                       <tr>
+                         
+                          <td>{{alloc.date}}</td>
+                          <td>{{alloc.subsidiary_name}}</td>
+                           <td>{{alloc.sub_type}}</td>
+                           <td>{{alloc.diesel_quantity}}</td>
+                           <td>{{alloc.diesel_price}}</td>
+                           <td>{{alloc.petrol_quantity}}</td>
+                           <td>{{alloc.petrol_price}}</td>
+                           <td><b>{%if alloc.cash%}Cash {% else%} {%endif%} {%if alloc.usd%}USD {% else%} {%endif%} {%if alloc.ecocash%}Ecocash {% else%} {%endif%} {%if alloc.swipe%}Swipe {% else%} {%endif%}  </b> </td>
+                        
+                        </tr>
+
+                    {% endfor %}   
+                </tbody>
+                </table>
+                {% endif %}
+                </div>
+                </div>
+                </div>
+              
     </div>
     
 </div>
