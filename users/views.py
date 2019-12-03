@@ -39,6 +39,19 @@ def index(request):
 @login_required()
 def allocate(request):
     allocates = F_Update.objects.filter(company_id=request.user.company.id).all()
+    allocations = FuelAllocation.objects.all()
+    if allocations is not None: 
+        for alloc in allocations:
+            subsidiary = Subsidiaries.objects.filter(id=alloc.assigned_staff_id).first()
+            if subsidiary is not None:
+                alloc.subsidiary_name = subsidiary.name
+            else:
+                allocations = allocations  
+        
+    else:
+        allocations = None
+
+
     if allocates is not None: 
         for allocate in allocates:
             subsidiary = Subsidiaries.objects.filter(id=allocate.relationship_id).first()
@@ -47,7 +60,7 @@ def allocate(request):
         allocates = None
     
     
-    return render(request, 'users/allocate.html', {'allocates': allocates})
+    return render(request, 'users/allocate.html', {'allocates': allocates, 'allocations':allocations})
 
 @login_required()
 def allocation_update(request,id):
@@ -60,7 +73,8 @@ def allocation_update(request,id):
             fuel_update.swipe = request.POST['swipe']
             fuel_update.ecocash = request.POST['ecocash']
             fuel_update.save()
-            #FuelAllocation.objects.create(petrol_quantity=request.POST['petrol_quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'])
+            assigned_staff = user.objects.filter(subsidiary_id =fuel_update.relationship_id).first()
+            FuelAllocation.objects.create(petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['petrol_quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=assigned_staff.subsidiary_id)
             messages.success(request, 'updated petrol quantity successfully')
             service_station = Subsidiaries.objects.filter(id=fuel_update.relationship_id).first()
             reference = 'fuel allocation'
@@ -508,6 +522,8 @@ def allocate_diesel(request, id):
             diesel_update = F_Update.objects.filter(id=id).first()
             diesel_update.diesel_quantity = diesel_update.diesel_quantity + int(request.POST['diesel_quantity'])
             diesel_update.save()
+            assigned_staff = user.objects.filter(subsidiary_id =diesel_update.relationship_id).first()
+            FuelAllocation.objects.create(diesel_price=diesel_update.diesel_price,diesel_quantity=request.POST['diesel_quantity'],sub_type=diesel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=assigned_staff.subsidiary_id)
             messages.success(request, 'Updated diesel quantity successfully')
             service_station = Subsidiaries.objects.filter(id=diesel_update.relationship_id).first()
             reference = 'fuel allocation'
