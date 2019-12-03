@@ -37,4 +37,9 @@ class Company(models.Model):
     
     def __str__(self):
         return self.name
+
+    @classmethod
+    def get_model_by_id(cls, id):
+        return cls.objects.filter(id=id).first()
+
    
