@@ -19,21 +19,53 @@ def send_message(phone_number, message):
     print(r)
     return r.status_code
 
-
-def bot_action(request, user, message):
+def individual_handler(request, user,message):
     if message.lower() == 'menu' and user.stage != 'registration':
         user.position = 1
         user.stage = 'requesting'
         user.save()
         return requests_handler(user, message)
+    pass
+
+def buyer_handler(request,user,message):
+    if message.lower() == 'menu' and user.stage != 'registration':
+        user.position = 1
+        user.stage = 'requesting'
+        user.save()
+        return requests_handler(user, message)
+    pass 
+
+def supplier_handler(request,user,message):
+    if message.lower() == 'menu' and user.stage != 'registration':
+        user.position = 1
+        user.stage = 'requesting'
+        user.save()
+        return requests_handler(user, message)
+    pass
+
+def service_station_handler(request,user,message):
+    if message.lower() == 'menu' and user.stage != 'registration':
+        user.position = 1
+        user.stage = 'requesting'
+        user.save()
+        return requests_handler(user, message)
+    pass
+
+
+def bot_action(request, user, message):   
     if user.stage == 'registration':
-        response_message = registration_handler(request, user, message)
-    elif user.stage == 'requesting':
-        response_message = requests_handler(user, message)
-    elif user.stage == 'transacting':
-        response_message = transacting_handler(user, message)
-    else:
-        response_message = ''
+        return registration_handler(request, user, message)
+    if user.user_type == 'INDIVIDUAL':
+        return individual_handler(request, user, message)
+        
+    elif user.user_type == 'S_ADMIN':
+        return "You are not allowed to use this platform"
+    elif user.user_type == 'BUYER':
+        return buyer_handler(request, user,message)
+    elif user.user_type == 'SUPPLIER':
+        return supplier_handler(requests_handler, user, message)
+    elif user.user_type == 'SS_SUPPLIER':
+        return service_station_handler(request, user,message)    
     return response_message
 
 
