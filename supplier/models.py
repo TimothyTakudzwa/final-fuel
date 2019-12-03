@@ -30,10 +30,16 @@ class Subsidiaries(models.Model):
 
 class FuelAllocation(models.Model):
     date = models.DateField(auto_now_add=True)
-    assigned_staff = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    fuel_type = models.CharField(max_length=300) 
-    allocated_quantity = models.CharField(max_length=255)
-    current_available_quantity = models.CharField(max_length=255)
+    diesel_quantity = models.IntegerField(default=0)
+    petrol_quantity = models.IntegerField(default=0)
+    sub_type = models.CharField(max_length=255)
+    cash = models.BooleanField(default=False)
+    ecocash = models.BooleanField(default=False)
+    swipe = models.BooleanField(default=False)
+    usd = models.BooleanField(default=False)
+    petrol_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    diesel_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    assigned_staff_id = models.IntegerField()
 
 
 
