@@ -9,6 +9,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.shortcuts import Http404
+from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
+from django.contrib.auth.decorators import login_required
 from supplier.models import *
 from supplier.forms import *
 from buyer.models import *
@@ -30,11 +32,11 @@ from company.models import FuelUpdate as F_Update
 from django.contrib.auth import get_user_model
 user = get_user_model()
 
-
+@login_required()
 def index(request):
     return render(request, 'users/index.html')
 
-
+@login_required()
 def allocate(request):
     allocates = F_Update.objects.filter(company_id=request.user.company.id).all()
     if allocates is not None: 
@@ -47,6 +49,7 @@ def allocate(request):
     
     return render(request, 'users/allocate.html', {'allocates': allocates})
 
+@login_required()
 def allocation_update(request,id):
     if request.method == 'POST':
         if F_Update.objects.filter(id=id).exists():
@@ -57,6 +60,7 @@ def allocation_update(request,id):
             fuel_update.swipe = request.POST['swipe']
             fuel_update.ecocash = request.POST['ecocash']
             fuel_update.save()
+            #FuelAllocation.objects.create(petrol_quantity=request.POST['petrol_quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'])
             messages.success(request, 'updated petrol quantity successfully')
             service_station = Subsidiaries.objects.filter(id=fuel_update.relationship_id).first()
             reference = 'fuel allocation'
@@ -69,7 +73,7 @@ def allocation_update(request,id):
             return redirect('users:allocate')
     return render(request, 'users/allocate.html')
 
-
+@login_required()
 def statistics(request):
     company = request.user.company
     staff_blocked = Subsidiaries.objects.filter(company=company).count() / 2
@@ -113,7 +117,7 @@ def statistics(request):
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
      'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders})
 
-
+@login_required()
 def supplier_user_edit(request, cid):
     supplier = User.objects.filter(id=cid).first()
 
@@ -126,6 +130,7 @@ def supplier_user_edit(request, cid):
         messages.success(request, 'Your Changes Have Been Saved')
     return render(request, 'users/suppliers_list.html')
 
+@login_required()
 def myaccount(request):
     staff = user.objects.get(id=request.user.id)
     print(staff.username)
@@ -138,6 +143,7 @@ def myaccount(request):
        
     return render(request, 'users/profile.html')
 
+@login_required()
 def stations(request):
     stations = Subsidiaries.objects.all()
     if request.method == 'POST':
@@ -161,6 +167,7 @@ def stations(request):
 
     return render(request, 'users/service_stations.html', {'stations': stations})
 
+@login_required()
 def report_generator(request):
     form = ReportForm()
     allocations = requests = trans = None
@@ -194,6 +201,7 @@ def report_generator(request):
 
     return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form, 'show':show })
 
+@login_required()
 def export_pdf(request):
     result = ''
     if request.method == "POST":
@@ -244,6 +252,7 @@ def export_pdf(request):
 
         return redirect('users:report_generator')
 
+@login_required()
 def export_csv(request):
     result = ''
     if request.method == "POST":
@@ -289,19 +298,19 @@ def export_csv(request):
 
 
 
-
+@login_required()
 def depots(request):
     depots = Depot.objects.all()
     return render(request, 'users/depots.html', {'depots': depots})         
 
-
+@login_required()
 def audit_trail(request):
     trails = Audit_Trail.objects.filter(company=request.user.company).all()
     print(trails)
     return render(request, 'users/audit_trail.html', {'trails': trails})    
 
         
-
+@login_required()
 def suppliers_list(request):
     suppliers = User.objects.filter(company=request.user.company).filter(user_type='SS_SUPPLIER').all()
     if suppliers is not None:
@@ -321,28 +330,49 @@ def suppliers_list(request):
         last_name = request.POST.get('last_name')
         username = request.POST.get('username')
         email = request.POST.get('email')
-        password = request.POST.get('password')
+        password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
         phone_number = request.POST.get('phone_number')
         subsidiary_id = request.POST.get('service_station')
         User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username, first_name=first_name, last_name=last_name, user_type = 'SS_SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
         messages.success(request, f"{username.capitalize()} succesfully registered as service station rep")
         return redirect('users:suppliers_list')
-        
+    '''
+    else:
+        messages.warning(request, f"The username has already been,please use another username to register")
+        return redirect('users:suppliers_list')
+    '''
     return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1})
 
+@login_required()
 def suppliers_delete(request, sid):
     supplier = User.objects.filter(id=sid).first()
     if request.method == 'POST':
         supplier.delete()    
+        messages.success(request, f"{supplier.username} deleted successfully")
+        return redirect('users:suppliers_list')
+    else:
+        messages.success(request, 'user does not exists')
+        return redirect('users:suppliers_list')    
 
-    return redirect('users:suppliers_list')
+@login_required()
+def delete_depot_staff(request, id):
+    supplier = User.objects.filter(id=id).first()
+    if request.method == 'POST':
+        supplier.delete()    
+        messages.success(request, f"{supplier.username} deleted successfully")
+        return redirect('users:depot_staff')
+    else:
+        messages.success(request, 'user does not exists')
+        return redirect('users:depot_staff')    
 
+@login_required()
 def buyers_list(request):
     buyers = Profile.objects.all()
     edit_form = ProfileEditForm()
     delete_form = ActionForm()
     return render(request, 'users/buyers_list.html', {'buyers': buyers, 'edit_form': edit_form, 'delete_form': delete_form})
 
+@login_required()
 def buyers_delete(request, sid):
     buyer = Profile.objects.filter(id=sid).first()
     if request.method == 'POST':
@@ -350,7 +380,7 @@ def buyers_delete(request, sid):
 
     return redirect('users:buyers_list')
 
-
+@login_required()
 def supplier_user_delete(request,cid,sid):
     contact = SupplierContact.objects.filter(id=cid).first()
     if request.method == 'POST':
@@ -358,39 +388,20 @@ def supplier_user_delete(request,cid,sid):
 
     return redirect('users:supplier_user_create', sid=sid)  
 
+@login_required()
 def supplier_user_create(request,sid):
     return render(request, 'users/suppliers_list.html')
 
+@login_required()
 def buyer_user_create(request, sid):
     return render (request, 'users/add_buyer.html') 
 
-
-def edit_supplier(request,id):
-    supplier = get_object_or_404(Profile, id=id)
-    if request.method == "POST":
-        form = UserForm(request.POST, request.FILES, instance=supplier)
-        if form.is_valid():
-            data = form.cleaned_data
-            supplier = form.save()
-            messages.success(request, 'Changes Successfully Updated')
-            return redirect('users.index')
-    else:
-        form = Profile(instance=supplier)
-    return render(request, 'users/supplier_edit.html', {'form': form, 'supplier': supplier})
-
+@login_required()
 def edit_buyer(request,id):
-    buyer = get_object_or_404(Profile, id=id)
-    if request.method == "POST":
-        form = UserForm(request.POST, request.FILES, instance=buyer)
-        if form.is_valid():
-            data = form.cleaned_data
-            buyer = form.save()
-            messages.success(request, 'Changes Successfully Updated')
-            return redirect('users.index')
-    else:
-        form = Profile(instance=supplier)
+    
     return render(request, 'users/buyer_edit.html', {'form': form, 'buyer': buyer})
 
+@login_required()
 def delete_user(request,id):
     supplier = get_object_or_404(Profile, id=id)
 
@@ -404,7 +415,7 @@ def delete_user(request,id):
 
     return render(request, 'user/supplier_delete.html', {'form': form, 'supplier': supplier})
 
-
+@login_required()
 def depot_staff(request):
     suppliers = User.objects.filter(company=request.user.company).filter(user_type='SUPPLIER').all()
     for supplier in suppliers:
@@ -421,16 +432,21 @@ def depot_staff(request):
         last_name = request.POST.get('last_name')
         username = request.POST.get('username')
         email = request.POST.get('email')
-        password = request.POST.get('password')
+        password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
         phone_number = request.POST.get('phone_number')
         subsidiary_id = request.POST.get('depot')
         User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username, first_name=first_name, last_name=last_name, user_type = 'SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
         messages.success(request, f"{username} Registered as Depot Rep Successfully")
         return redirect('users:depot_staff')
+    '''
+    else:
+        messages.warning(request, f"The username has already been,please use another username to register")
+        return redirect('users:depot_staff')
+    '''
        
     return render(request, 'users/depot_staff.html', {'suppliers': suppliers, 'form1': form1})
 
-
+@login_required()
 def edit_subsidiary(request, id):
     if request.method == 'POST':
         if Subsidiaries.objects.filter(id=id).exists():
@@ -451,6 +467,7 @@ def edit_subsidiary(request, id):
             messages.success(request, 'Subsidiary does not exists')
             return redirect('users:stations')
 
+@login_required()
 def delete_subsidiary(request, id):
     if request.method == 'POST':
         if Subsidiaries.objects.filter(id=id).exists():
@@ -463,6 +480,7 @@ def delete_subsidiary(request, id):
             messages.success(request, 'Subsidiary does not exists')
             return redirect('users:stations')    
 
+@login_required()
 def edit_fuel_prices(request, id):
     if request.method == 'POST':
         if F_Update.objects.filter(id=id).exists():
@@ -483,6 +501,7 @@ def edit_fuel_prices(request, id):
             return redirect('users:allocate')    
 
 
+@login_required()
 def allocate_diesel(request, id):
     if request.method == 'POST':
         if F_Update.objects.filter(id=id).exists():
@@ -500,6 +519,34 @@ def allocate_diesel(request, id):
         else:
             messages.success(request, 'Fuel object does not exists')
             return redirect('users:allocate')    
+
+@login_required()
+def edit_ss_rep(request, id):
+    if request.method == 'POST':
+        if user.objects.filter(id=id).exists():
+            user_update = user.objects.filter(id=id).first()
+            user_update.phone_number = request.POST['phone_number']
+            user_update.save()
+            messages.success(request, 'User profile updated successfully')
+            return redirect('users:suppliers_list')
+
+        else:
+            messages.success(request, 'user does not exists')
+            return redirect('users:suppliers_list')    
+
+@login_required()
+def edit_depot_rep(request, id):
+    if request.method == 'POST':
+        if user.objects.filter(id=id).exists():
+            user_update = user.objects.filter(id=id).first()
+            user_update.phone_number = request.POST['phone_number']
+            user_update.save()
+            messages.success(request, 'User profile updated successfully')
+            return redirect('users:depot_staff')
+
+        else:
+            messages.success(request, 'user does not exists')
+            return redirect('users:depot_staff')    
 
 
    

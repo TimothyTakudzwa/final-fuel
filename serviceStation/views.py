@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 import secrets
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
 from datetime import datetime
 from django.contrib import messages
 from buyer.models import User, Company
@@ -16,7 +18,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 user = get_user_model()
 
-
+@login_required()
 def fuel_updates(request):
     print(f"--------------------------{request.user.subsidiary_id}----------------------")
 
@@ -26,28 +28,44 @@ def fuel_updates(request):
     if request.method == 'POST':
         #fuel_update = FuelUpdate.objects.filter(sub_type=request.POST['sub_type']).first()
         updates.petrol_quantity = request.POST['petrol_quantity']
-        updates.petrol_price = request.POST['petrol_price']
-        updates.diesel_quantity = request.POST['diesel_quantity']
-        updates.diesel_price = request.POST['diesel_price']
-        updates.payment_methods = request.POST['payment_methods']
         updates.queue_length = request.POST['queue_length']
         updates.save()
-        messages.success(request, 'updated quantities successfully')
+        messages.success(request, 'Updated Petrol QuantitY Successfully')
         service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         reference = 'fuel quantity updates'
         reference_id = updates.id
-        action = f"{request.user.username} has made an update of diesel quantity to {updates.diesel_quantity}L @ {updates.diesel_price} and petrol quantity to {updates.petrol_quantity}L @ {updates.petrol_price}"
+        action = f"{request.user.username} has made an update of petrol quantity to {updates.petrol_quantity}L @ {updates.petrol_price}"
         Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
         return redirect('serviceStation:home')
 
     return render(request, 'serviceStation/fuel_updates.html', {'updates': updates, 'subsidiary': subsidiary_name.name})
 
+@login_required()
+def update_diesel(request, id):
+    if request.method == 'POST':
+        diesel_update = FuelUpdate.objects.filter(id=id).first()
+        diesel_update.diesel_quantity = request.POST['diesel_quantity']
+        diesel_update.queue_length = request.POST['queue_length']
+        diesel_update.save()
+        messages.success(request, 'Updated Diesel QuantitY Successfully')
+        service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+        reference = 'fuel quantity updates'
+        reference_id = diesel_update.id
+        action = f"{request.user.username} has made an update of diesel quantity to {diesel_update.diesel_quantity}L @ {diesel_update.diesel_price}"
+        Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
+        return redirect('serviceStation:home')
 
+    else:
+        messages.success(request, 'Fuel Object Does Not Exist')
+        return redirect('serviceStation:home')
+
+
+@login_required()
 def allocated_fuel(request):
     allocates = FuelAllocation.objects.filter(assigned_staff = request.user).all()
     return render(request, 'serviceStation/allocated_fuel.html', {'allocates': allocates})
 
-
+@login_required()
 def myaccount(request):
     staff = user.objects.get(id=request.user.id)
     print(staff.username)
@@ -60,18 +78,3 @@ def myaccount(request):
        
     return render(request, 'serviceStation/profile.html')
 
-'''
-def user_profile(request):
-    user = User.objects.filter(name=request.name)
-    if request.method == 'POST':
-        form = ProfileUdateForm(request.POST)
-        if form.is_valid():
-            form.save()
-        else:
-            form = ProfileUdateForm()
-
-    else:
-        form = ProfileUdateForm()
-    return render(request, 'serviceStation/userprofile.html', {'user': user})
-
-'''
