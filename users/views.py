@@ -258,7 +258,8 @@ def export_csv(request):
             data = Transaction.objects.filter(date__range=[start, end]).values()
             print(data)
             fields = ['Date', 'Time', 'Amount', 'Complete']
-            df = DataFrame(data,columns=fields)
+            #df = DataFrame(data,columns=fields)
+            df = pd.DataFrame(list(data.values('date','time','buyer','complete'))) 
             #df['Date'] = f'{dt[2]}/{dt[1]}/{dt[0]}'
 
             day = str(datetime.now().day)
