@@ -4,6 +4,7 @@ from buyer.models import User
 from .helper_functions import bot_action, send_message
 from django.views.decorators.csrf import csrf_exempt
 import json 
+import logging 
 
 @csrf_exempt 
 def index(request):    
@@ -12,7 +13,7 @@ def index(request):
     phone_number = data['messages'][0]['author'].split('@')[0]
     if phone_number == '263718055061':
         return HttpResponse('')
-    print('--------------------', message, phone_number)    
+    logging.debug('--------------------', message, phone_number)    
     check = User.objects.filter(phone_number = phone_number).exists()
     if check:
         user = User.objects.filter(phone_number=phone_number).first()
@@ -20,7 +21,7 @@ def index(request):
             try:
                 response_message = bot_action(request, user, message)   
             except Exception as e:
-                print(f"This is the error {e}")             
+                logging.debug(f"This is the error {e}")             
         else:
             response_message = "Your cannot use this, please create a buyer account and then add the phone number"
     else:
