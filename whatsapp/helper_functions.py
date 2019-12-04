@@ -66,7 +66,7 @@ def bot_action(request, user, message):
         return supplier_handler(requests_handler, user, message)
     elif user.user_type == 'SS_SUPPLIER':
         return service_station_handler(request, user,message)    
-    return response_message
+    
 
 
 def registration_handler(request, user, message):
