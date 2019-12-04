@@ -246,6 +246,33 @@
                 </div>
                 </div>
                 </div>
+
+
+
+<script>
+                $(document).ready( function() {
+                  $('#example').dataTable( {
+                    "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+                      if ( aData[2] == '75' )
+                      {
+                        $('td', nRow).css('background-color', '#f2dede' );
+                      }
+                      else if ( aData[2] < 500 )
+                      {
+                        $('td', nRow).css('background-color', '#dff0d8');
+                      }
+                      else if ( aData[2] < 1000)
+                      {
+                        $('td', nRow).css('background-color', '#fcf8e3');
+                      }
+                      else
+                      {
+                        $('td', nRow).css('background-color', '#d9edf7');
+                      }
+                    }
+                  } );
+                } );
+                </script>
               
     </div>
     
