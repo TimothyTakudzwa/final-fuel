@@ -27,7 +27,24 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['b60c1816.ngrok.io', '127.0.0.1', '159.65.66.59', 'fuelfinderzim.com']
 
-
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'application.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
 
 # Application definition
 
