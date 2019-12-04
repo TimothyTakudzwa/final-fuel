@@ -80,6 +80,7 @@
                                                    </button>
                                                </div>
                                                <div class="modal-body">
+                                                  {% load crispy_forms_tags %}
                                                    <form action="{% url 'users:edit_fuel_prices' allocate.id %}"
                                                        method="POST">
                                                        {% csrf_token %}
@@ -94,7 +95,23 @@
                                                            <lable>Diesel Price</lable>
                                                            <input type="text"  name="diesel_price"  value="{{allocate.diesel_price}}" class="form-control" />
                                                        </div>
-       
+
+                                               <div class="row">
+                                                  <div class="col-md-6">
+                                                    {{update_form.cash|as_crispy_field}}
+                                                  </div>
+                                                  <div class="col-md-6">
+                                                    {{update_form.usd|as_crispy_field}}
+                                                  </div>
+                                                </div>
+                                                <div class="row">
+                                                  <div class="col-md-6">
+                                                    {{update_form.swipe|as_crispy_field}}
+                                                  </div>
+                                                  <div class="col-md-6">
+                                                    {{update_form.ecocash|as_crispy_field}}
+                                                  </div>
+                                                  </div>
                                                  
                                                </div>
                                                <div class="modal-footer">
@@ -192,7 +209,7 @@
             <div class="container-fluid">
     {% if allocations %}
 
-            <table id="example" class="table table-striped" style="width:100%">
+            <table id="myexample" class="table table-striped" style="width:100%">
                 <thead style="color:white; background:lightslategray">
                     
                        <th style="color:white;">
@@ -253,7 +270,7 @@
                 $(document).ready( function() {
                   $('#example').dataTable( {
                     "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-                      if ( aData[2] == '75' )
+                      if ( aData[2] < 100 )
                       {
                         $('td', nRow).css('background-color', '#f2dede' );
                       }

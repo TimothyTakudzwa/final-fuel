@@ -565,6 +565,11 @@ def edit_depot_rep(request, id):
             messages.success(request, 'user does not exists')
             return redirect('users:depot_staff')    
 
+def company_profile(request):
+    compan = Company.objects.filter(id = request.user.company.id).first()
+    num_of_subsidiaries = Subsidiaries.objects.filter(company=request.user.company).count()
+    fuel_capacity = F_Update.objects.filter(sub_type='company').first()
+    return render(request, 'users/company_profile.html', {'compan': compan, 'num_of_subsidiaries': num_of_subsidiaries, 'fuel_capacity': fuel_capacity})
 
    
 
