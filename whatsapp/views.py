@@ -13,7 +13,7 @@ def index(request):
     phone_number = data['messages'][0]['author'].split('@')[0]
     if phone_number == '263718055061':
         return HttpResponse('')
-    logging.debug('--------------------', message, phone_number)    
+    logging.debug(f"-------------------- {message}, {phone_number}")    
     check = User.objects.filter(phone_number = phone_number).exists()
     if check:
         user = User.objects.filter(phone_number=phone_number).first()
