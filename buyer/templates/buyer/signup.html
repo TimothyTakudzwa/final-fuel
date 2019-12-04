@@ -1,0 +1,434 @@
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+<html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# product: http://ogp.me/ns/product#" itemscope
+    itemtype="http://schema.org/Offer">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up &#8211; Finder App &#8211; IAS</title>
+    <meta name='robots' content='noindex,follow' />
+    <link rel='dns-prefetch' href='http://fonts.googleapis.com/' />
+    <link rel='dns-prefetch' href='http://s.w.org/' />
+    <link rel="alternate" type="application/rss+xml" title="Oppi &raquo; Feed"
+        href="https://droitthemes.com/wp/oppi/feed/" />
+    <link rel="alternate" type="application/rss+xml" title="Oppi &raquo; Comments Feed"
+        href="https://droitthemes.com/wp/oppi/comments/feed/" />
+    <link rel="stylesheet" type="text/css"
+        href="https://timothytakudzwa.github.io/static/wp-content/cache/wpfc-minified/7il4ob0t/47amj.css" media="all" />
+    <link rel='stylesheet' id='oppi-fonts-css'
+        href='https://fonts.googleapis.com/css?family=Poppins%3A300%2C400%2C500%2C600%2C700&amp;subset' type='text/css'
+        media='all' />
+    <link rel="stylesheet" type="text/css"
+        href="https://timothytakudzwa.github.io/static/wp-content/cache/wpfc-minified/8ar9v2or/47ami.css" media="all" />
+    <link rel="stylesheet" type="text/css"
+        href="https://timothytakudzwa.github.io/static/wp-content/cache/wpfc-minified/f6diwe10/47ami.css"
+        media="only screen and (max-width: 768px)" />
+    <link rel="stylesheet" type="text/css"
+        href="https://timothytakudzwa.github.io/static/wp-content/cache/wpfc-minified/11blo6h4/47ami.css" media="all" />
+    <style id='woocommerce-inline-inline-css'>
+        .woocommerce form .form-row .required {
+            visibility: visible;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css"
+        href="https://timothytakudzwa.github.io/static/wp-content/cache/wpfc-minified/fsruzfcy/47ami.css" media="all" />
+    <style id='oppi-root-inline-css'>
+        blockquote:after {
+            background-image: url(https://timothytakudzwa.github.io/static/wp-content/themes/oppi/assets/img/blog/comma.png);
+        }
+
+        .oppi_header .header_nav .oppi_header_menu>ul li a,
+        .oppi_header.oppi_header_dark_color .header_nav .oppi_header_menu ul li.nav-item a.nav-link {
+            color: #4d446b !important;
+        }
+
+        .oppi_header .header_nav .oppi_header_menu>ul li.active a.nav-link,
+        .oppi_header .header_nav .oppi_header_menu ul li.nav-item a.nav-link:hover,
+        .oppi_header.fixedMenu .header_nav .oppi_header_menu ul li.nav-item a.nav-link.active,
+        .oppi_header.oppi_header_dark_color .header_nav .oppi_header_menu ul li.nav-item a.nav-link:hover {
+            color: #f23891 !important;
+        }
+
+        .oppi_header.fixedMenu .header_nav .oppi_header_menu>ul li a.nav-link,
+        .oppi_header.oppi_header_dark_color.fixedMenu .header_nav .oppi_header_menu ul li.nav-item a.nav-link {
+            color: #4d446b !important;
+        }
+
+        .oppi_header.fixedMenu .header_nav .oppi_header_menu ul li.active a.nav-link,
+        .oppi_header .header_nav .oppi_header_menu ul li.dropdown .dropdown-menu li.active a.nav-link,
+        .oppi_header .header_nav .oppi_header_menu ul li.dropdown .dropdown-menu li a.nav-link:hover,
+        .oppi_header.fixedMenu .header_nav .oppi_header_menu ul li.nav-item a.nav-link:hover {
+            color: #f23891 !important;
+        }
+
+        .oppi_header .header_nav .oppi_header_menu .oppi_try_for_free {
+            box-shadow: none !important;
+        }
+
+        @media (max-width: 991px) {
+            .oppi_header.oppi_header_menu_border .header_nav .oppi_header_menu .oppi_try_for_free {}
+        }
+
+        .oppi_header .header_nav .oppi_header_menu .oppi_try_for_free:hover {
+            box-shadow: 0px 20px 30px 0px rgba(172, 21, 170, 0.2) !important;
+        }
+
+        .oppi_header.fixedMenu .header_nav .oppi_header_menu .oppi_try_for_free {
+            box-shadow: none !important;
+        }
+
+        .oppi_header.fixedMenu .header_nav .oppi_header_menu .oppi_try_for_free:hover {}
+
+        .oppi_header .navbar .search_cart .search a.nav-link i,
+        .oppi_header .navbar .search_cart .shpping-cart i {
+            color: #f23891 !important;
+        }
+
+        .navbar .search_cart .shpping-cart .num {
+            background: #f23891 !important;
+        }
+
+        .oppi_header .navbar .search_cart .shpping-cart .num {
+            color: #ffffff !important;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css"
+        href="https://timothytakudzwa.github.io/static/wp-content/cache/wpfc-minified/d381fruh/47ami.css" media="all" />
+    <link rel='stylesheet' id='elementor-post-121-css'
+        href='https://timothytakudzwa.github.io/static/wp-content/uploads/elementor/css/post-121d989.css?ver=1573991716'
+        type='text/css' media='all' />
+    <link rel='https://api.w.org/' href='https://droitthemes.com/wp/oppi/wp-json/' />
+    <link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://droitthemes.com/wp/oppi/xmlrpc.php?rsd" />
+    <link rel="wlwmanifest" type="application/wlwmanifest+xml"
+        href="https://droitthemes.com/wp/oppi/wp-includes/wlwmanifest.xml" />
+    <meta name="generator" content="WordPress 5.2.4" />
+    <meta name="generator" content="WooCommerce 3.8.0" />
+    <link rel="canonical" href="index.html" />
+    <link rel='shortlink' href='https://droitthemes.com/wp/oppi/?p=121' />
+    <link rel="alternate" type="application/json+oembed"
+        href="https://droitthemes.com/wp/oppi/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fdroitthemes.com%2Fwp%2Foppi%2Fhome-education-app%2F" />
+    <link rel="alternate" type="text/xml+oembed"
+        href="https://droitthemes.com/wp/oppi/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fdroitthemes.com%2Fwp%2Foppi%2Fhome-education-app%2F&amp;format=xml" />
+    <noscript>
+        <style>
+            .woocommerce-product-gallery {
+                opacity: 1 !important;
+            }
+        </style>
+    </noscript>
+    <style>
+        .recentcomments a {
+            display: inline !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+    </style>
+    <link rel="icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png"
+        sizes="32x32" />
+    <link rel="icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png"
+        sizes="192x192" />
+    <link rel="apple-touch-icon-precomposed" href="wp-content\themes\oppi\assets\img\logo-color.png" />
+    <meta name="msapplication-TileImage"
+        content="https://droitthemes.com/wp/oppi/wp-content/uploads/2019/10/favicon.png" />
+</head>
+
+<body
+    class="page-template page-template-elementor_header_footer page page-id-210 wp-embed-responsive theme-oppi woocommerce-no-js tinvwl-theme-style not_logged_in elementor-default elementor-template-full-width elementor-page elementor-page-210">
+    <header id="oppi_main_header"
+        class="oppi_header oppi_header_transparent oppi_header_style_three oppi_header_dark_color">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-12">
+                    <nav id="main_nav" class="navbar navbar-expand-lg header_nav"> <a class="navbar-brand logo"
+                            href="..\fuel-finder-app\index.html"> <img
+                                src="https://timothytakudzwa.github.io/static/wp-content/themes/oppi/assets/img/logo-color.png"
+                                srcset="https://timothytakudzwa.github.io/static/wp-content/uploads\2019\10\LOGO-home-page.png"
+                                alt="Bulk Fuel Finder"> <img
+                                src="https://timothytakudzwa.github.io/static/wp-content/themes/oppi/assets/img/logo-color.png"
+                                srcset="https://timothytakudzwa.github.io/static/wp-content/uploads\2019\10\LOGO-home-page.png"
+                                alt="Bulk Fuel Finder"> </a> <button class="navbar-toggler oppi_hamburger" type="button"
+                            data-toggle="collapse" data-target="#oppi_header_menu" aria-expanded="false"> <span
+                                class="bar_icon"> <span class="bar bar_1"></span> <span class="bar bar_2"></span> <span
+                                    class="bar bar_3"></span> </span> </button>
+                        <div class="collapse navbar-collapse oppi_header_menu" id="oppi_header_menu">
+                            <ul id="menu-main-menu" class="navbar-nav ml-auto">
+                                <li itemscope="itemscope" id="menu-item-41"
+                                    class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home current-menu-ancestor current-menu-parent menu-item-has-children menu-item-41 dropdown nav-item">
+                                    <ul role="menu" class="dropdown-menu menu-depth-2nd">
+                                    </ul><a class="oppi_try_for_free oppi_btn_right"
+                                        href="..\fuel-finder-app\index.html">Return Home</a>
+                        </div>
+                        <div class="alter_nav mini_cart_exist">
+                            <ul class="navbar-nav search_cart">
+                                <li class="nav-item shpping-cart dropdown submenu"> </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div data-elementor-type="wp-page" data-elementor-id="210" class="elementor elementor-210"
+        data-elementor-settings="[]">
+        <div class="elementor-inner">
+            <div class="elementor-section-wrap">
+                <section
+                    class="elementor-element elementor-element-a0978f9 elementor-section-full_width elementor-section-height-default elementor-section-height-default elementor-section elementor-top-section"
+                    data-id="a0978f9" data-element_type="section">
+                    <div class="elementor-container elementor-column-gap-no">
+                        <div class="elementor-row">
+                            <div class="elementor-element elementor-element-3435392 elementor-column elementor-col-100 elementor-top-column"
+                                data-id="3435392" data-element_type="column">
+                                <div class="elementor-column-wrap elementor-element-populated">
+                                    <div class="elementor-widget-wrap">
+                                        <div class="elementor-element elementor-element-0034252 elementor-widget elementor-widget-oppi-signup"
+                                            data-id="0034252" data-element_type="widget"
+                                            data-widget_type="oppi-signup.default">
+                                            <div class="elementor-widget-container">
+                                                <section class="oppi_signup_wrap mt_99">
+                                                    <div class="right_img"><img
+                                                            src="https://timothytakudzwa.github.io/static/wp-content/plugins\oppi-core\widgets\images\call_to_action\education\sign_up2.png"
+                                                            alt="signUp_vector_1" class="img-fluid"></div>
+                                                    <div class="left_img"><img
+                                                            src="https://timothytakudzwa.github.io/static/wp-content/plugins\oppi-core\widgets\images\call_to_action\education\sign_up1.png"
+                                                            alt="signUp_vector_2" class="img-fluid"></div>
+                                                    <div class="container">
+                                                        <div class="row">
+                                                            <div class="col-md-12 col-sm-12 col-12">
+                                                                <div class="oppi_signup_body">
+                                                                    <div class="oppi_signup_inner">
+                                                                        <h3 class="sign_up_titlle text-center">Welcome
+                                                                        </h3>
+                                                                        {% if messages %}
+                                                                        {% for message in messages%}
+                                                                            <div class="alert-{{ message.tags }}">
+                                                                                {{ message }}
+                                                                            </div>
+                                                                        {% endfor %}
+                                                        
+                                                                    {% endif %}
+                                                                    <form method="POST">
+                                                                        {% csrf_token %}
+                                                                        <fieldset class="form-group">
+                                                                            <legend class="border-bottom mb-4"> Join Today </legend>
+                                                                            {{ form|crispy }}
+                                                                        </fieldset>
+                                                                       
+                                                                    
+                                                                            <div class="form-group sign_up_btn_group">
+                                                                                <button class="btn sign_up_btn"
+                                                                                    type="submit" name="submit">Sign
+                                                                                    Up</button></div></form>
+                                                                            <p
+                                                                                class="oppi_sign_note sign_up_para text-center">
+                                                                                By continuing, you agree to the <a
+                                                                                    href="#">Terms of Service.</a></p>
+                                                                            <p class="text-center have_an_account">
+                                                                                Already have an account? <a
+                                                                                    href="..\fuel-finder-app\signin.html">Sign
+                                                                                    in.</a></p>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <div data-elementor-type="wp-post" data-elementor-id="1303" class="elementor elementor-1303"
+        data-elementor-settings="[]">
+        <div class="elementor-inner">
+            <div class="elementor-section-wrap">
+                <section
+                    class="elementor-element elementor-element-ff58d47 elementor-section-full_width elementor-section-height-default elementor-section-height-default elementor-section elementor-top-section"
+                    data-id="ff58d47" data-element_type="section">
+                    <div class="elementor-container elementor-column-gap-no">
+                        <div class="elementor-row">
+                            <div class="elementor-element elementor-element-1a8afe7 elementor-column elementor-col-100 elementor-top-column"
+                                data-id="1a8afe7" data-element_type="column">
+                                <div class="elementor-column-wrap elementor-element-populated">
+                                    <div class="elementor-widget-wrap">
+                                        <div class="elementor-element elementor-element-1f1eedf elementor-widget elementor-widget-oppi_c2a"
+                                            data-id="1f1eedf" data-element_type="widget"
+                                            data-widget_type="oppi_c2a.default"> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <div data-elementor-type="wp-post" data-elementor-id="1333" class="elementor elementor-1333"
+        data-elementor-settings="[]">
+        <div class="elementor-inner">
+            <div class="elementor-section-wrap">
+                <section
+                    class="elementor-element elementor-element-43777b1 oppi_white_footer elementor-section-boxed elementor-section-height-default elementor-section-height-default elementor-section elementor-top-section"
+                    data-id="43777b1" data-element_type="section"
+                    data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+                    <div class="elementor-container elementor-column-gap-no">
+                        <div class="elementor-row">
+                            <div class="elementor-element elementor-element-6324b05 elementor-column elementor-col-100 elementor-top-column"
+                                data-id="6324b05" data-element_type="column">
+                                <div class="elementor-column-wrap elementor-element-populated">
+                                    <div class="elementor-widget-wrap">
+                                        <section
+                                            class="elementor-element elementor-element-9008d8d elementor-section-full_width elementor-section-height-default elementor-section-height-default elementor-section elementor-inner-section"
+                                            data-id="9008d8d" data-element_type="section">
+                                            <div class="elementor-container elementor-column-gap-default">
+                                                <div class="elementor-row">
+                                                    <div class="elementor-element elementor-element-aeaa13f elementor-column elementor-col-25 elementor-inner-column"
+                                                        data-id="aeaa13f" data-element_type="column">
+                                                        <div class="elementor-column-wrap elementor-element-populated">
+                                                            <div class="elementor-widget-wrap">
+                                                                <div class="elementor-element elementor-element-ed46340 elementor-widget elementor-widget-image"
+                                                                    data-id="ed46340" data-element_type="widget"
+                                                                    data-widget_type="image.default">
+                                                                    <div class="elementor-widget-container">
+                                                                        <div class="elementor-image"> <img width="96"
+                                                                                height="37"
+                                                                                src="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/logo-color-1.png"
+                                                                                class="attachment-full size-full"
+                                                                                alt="" /> </a></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="elementor-element elementor-element-1d9d00a elementor-column elementor-col-25 elementor-inner-column"
+                                                        data-id="1d9d00a" data-element_type="column">
+                                                        <div class="elementor-element elementor-element-849df7b elementor-column elementor-col-25 elementor-inner-column"
+                                                            data-id="849df7b" data-element_type="column">
+                                                            <div
+                                                                class="elementor-column-wrap elementor-element-populated">
+                                                                <div class="elementor-widget-wrap">
+                                                                    <div class="elementor-element elementor-element-9e61c86 elementor-widget elementor-widget-heading"
+                                                                        data-id="9e61c86" data-element_type="widget"
+                                                                        data-widget_type="heading.default"> </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </section>
+                                        <section
+                                            class="elementor-element elementor-element-acb6701 elementor-section-full_width elementor-section-content-middle elementor-section-height-default elementor-section-height-default elementor-section elementor-inner-section"
+                                            data-id="acb6701" data-element_type="section">
+                                            <div class="elementor-container elementor-column-gap-default">
+                                                <div class="elementor-row">
+                                                    <div class="elementor-element elementor-element-0445c7f elementor-column elementor-col-50 elementor-inner-column"
+                                                        data-id="0445c7f" data-element_type="column">
+                                                        <div class="elementor-column-wrap elementor-element-populated">
+                                                            <div class="elementor-widget-wrap">
+                                                                <div class="elementor-element elementor-element-c41487d elementor-widget elementor-widget-text-editor"
+                                                                    data-id="c41487d" data-element_type="widget"
+                                                                    data-widget_type="text-editor.default">
+                                                                    <div class="elementor-widget-container">
+                                                                        <div
+                                                                            class="elementor-text-editor elementor-clearfix">
+                                                                            <p>© Copyright 2019 Intelli Africa Solutions
+                                                                                Design by <a
+                                                                                    href="https://www.linkedin.com/in/waltersomerai/">Walter
+                                                                                    Somerai</a></p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="elementor-element elementor-element-2a74810 elementor-column elementor-col-50 elementor-inner-column"
+                                                        data-id="2a74810" data-element_type="column">
+                                                        <div class="elementor-column-wrap elementor-element-populated">
+                                                            <div class="elementor-widget-wrap">
+                                                                <div class="elementor-element elementor-element-8682c50 elementor-shape-circle elementor-widget elementor-widget-social-icons"
+                                                                    data-id="8682c50" data-element_type="widget"
+                                                                    data-widget_type="social-icons.default">
+                                                                    <div class="elementor-widget-container">
+                                                                        <div class="elementor-social-icons-wrapper"> <a
+                                                                                href="https://facebook.com/"
+                                                                                class="elementor-icon elementor-social-icon elementor-social-icon-facebook-f elementor-repeater-item-c5b5c66"
+                                                                                target="_blank"> <span
+                                                                                    class="elementor-screen-only">Facebook-f</span>
+                                                                                <i class="fab fa-facebook-f"></i> </a>
+                                                                            <a href="https://twitter.com/"
+                                                                                class="elementor-icon elementor-social-icon elementor-social-icon-twitter elementor-repeater-item-fd224ac"
+                                                                                target="_blank"> <span
+                                                                                    class="elementor-screen-only">Twitter</span>
+                                                                                <i class="fab fa-twitter"></i> </a> <a
+                                                                                href="https://vimeo.com/"
+                                                                                class="elementor-icon elementor-social-icon elementor-social-icon-vimeo-v elementor-repeater-item-fc78ead"
+                                                                                target="_blank"> <span
+                                                                                    class="elementor-screen-only">Vimeo-v</span>
+                                                                                <i class="fab fa-vimeo-v"></i> </a> <a
+                                                                                href="https://linkedin.com/"
+                                                                                class="elementor-icon elementor-social-icon elementor-social-icon-linkedin-in elementor-repeater-item-1f928fa"
+                                                                                target="_blank"> <span
+                                                                                    class="elementor-screen-only">Linkedin-in</span>
+                                                                                <i class="fab fa-linkedin-in"></i> </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <link rel='stylesheet' id='elementor-post-1333-css'
+        href='https://timothytakudzwa.github.io/static/wp-content/uploads/elementor/css/post-1333d989.css?ver=1573991716'
+        type='text/css' media='all' />
+    <link rel='stylesheet' id='google-fonts-1-css'
+        href='https://fonts.googleapis.com/css?family=Poppins%3A100%2C100italic%2C200%2C200italic%2C300%2C300italic%2C400%2C400italic%2C500%2C500italic%2C600%2C600italic%2C700%2C700italic%2C800%2C800italic%2C900%2C900italic&amp;ver=5.2.4'
+        type='text/css' media='all' />
+    <link rel="stylesheet" type="text/css"
+        href="https://timothytakudzwa.github.io/static/wp-content/cache/wpfc-minified/ckahtew/47ami.css" media="all" />
+    <script>var c = document.body.className;
+        c = c.replace(/woocommerce-no-js/, 'woocommerce-js');
+        document.body.className = c;</script>
+    <script>var wpcf7 = { "apiSettings": { "root": "https:\/\/droitthemes.com\/wp\/oppi\/wp-json\/contact-form-7\/v1", "namespace": "contact-form-7\/v1" } };</script>
+    <script>var wc_add_to_cart_params = { "ajax_url": "\/wp\/oppi\/wp-admin\/admin-ajax.php", "wc_ajax_url": "\/wp\/oppi\/?wc-ajax=%%endpoint%%", "i18n_view_cart": "View cart", "cart_url": "https:\/\/droitthemes.com\/wp\/oppi\/cart\/", "is_cart": "", "cart_redirect_after_add": "no" };</script>
+    <script>var woocommerce_params = { "ajax_url": "\/wp\/oppi\/wp-admin\/admin-ajax.php", "wc_ajax_url": "\/wp\/oppi\/?wc-ajax=%%endpoint%%" };</script>
+    <script>var wc_cart_fragments_params = { "ajax_url": "\/wp\/oppi\/wp-admin\/admin-ajax.php", "wc_ajax_url": "\/wp\/oppi\/?wc-ajax=%%endpoint%%", "cart_hash_key": "wc_cart_hash_47e964948be976a699113fd995e7ce96", "fragment_name": "wc_fragments_47e964948be976a699113fd995e7ce96", "request_timeout": "5000" };</script>
+    <script>var tinvwl_add_to_wishlist = { "text_create": "Create New", "text_already_in": "Product already in Wishlist", "simple_flow": "", "i18n_make_a_selection_text": "Please select some product options before adding this product to your wishlist.", "tinvwl_break_submit": "No items or actions are selected.", "tinvwl_clipboard": "Copied!", "allow_parent_variable": "", "wc_cart_fragments_refresh": "1" };</script>
+    <script>var elementorFrontendConfig = { "environmentMode": { "edit": false, "wpPreview": false }, "is_rtl": false, "breakpoints": { "xs": 0, "sm": 480, "md": 768, "lg": 1025, "xl": 1440, "xxl": 1600 }, "version": "2.7.5", "urls": { "assets": "https:\/\/droitthemes.com\/wp\/oppi\/wp-content\/plugins\/elementor\/assets\/" }, "settings": { "page": [], "general": { "elementor_global_image_lightbox": "yes", "elementor_enable_lightbox_in_editor": "yes" } }, "post": { "id": 1333, "title": "Footer White [ 4 Column with footer bottom ]", "excerpt": "" } };</script>
+    <script src='https://timothytakudzwa.github.io/static/wp-content/cache/wpfc-minified/ftuv4f8v/47amk.js'
+        type="text/javascript"></script>
+    <script type='text/javascript'
+        src='https://timothytakudzwa.github.io/static/wp-content/cache/wpfc-minified/l21uxz6f/47amj.js'></script>
+    <script src='https://timothytakudzwa.github.io/static/wp-content/cache/wpfc-minified/f593zwfk/47amj.js'
+        type="text/javascript"></script>
+    <script type='text/javascript'
+        src='https://timothytakudzwa.github.io/static/wp-content/cache/wpfc-minified/ma5qdwfw/47amj.js'></script>
+    <script src='https://timothytakudzwa.github.io/static/wp-content/cache/wpfc-minified/1s934tbs/47amj.js'
+        type="text/javascript"></script>
+    <script>jQuery('.footer-widget .f_widget').removeClass('pl_70');
+        jQuery('.oppi_contact_form_group form').addClass('oppi_contact_form');</script>
+    <script defer src='https://timothytakudzwa.github.io/static/wp-content/cache/wpfc-minified/ehuddlfd/47amk.js'
+        type="text/javascript"></script>
+</body>
+
+</html>

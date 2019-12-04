@@ -1,3 +1,40 @@
+individual_menu= '''
+Hie, Lets help you find Fuel
+
+Where are you?
+
+1. Harare 
+2. Bulawayo 
+3. Mutare
+4. Kariba 
+5. Gweru 
+6. Kwekwe 
+7. Victoria Falls
+
+'''
+
+
+buyer_menu='''
+Hello, What would you like to do today
+
+1. Make a Fuel Request
+2. Follow up on Fuel Request 
+3. View Fuel Updates
+
+'''
+
+
+
+supplier_menu = '''
+Hello, What would you like to do today
+
+1. View Fuel Requests 
+2. 
+
+'''
+zimbabwean_towns = ["Beitbridge","Bindura","Bulawayo","Chinhoyi","Chirundu","Gweru","Harare","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Mutare","Mutoko","Nyanga","Victoria Falls"]
+
+
 greetings_message = '''
 *Hie {0}, Welcome To Intelli Fuel Finder* 
 
