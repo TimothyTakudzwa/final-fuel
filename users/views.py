@@ -46,9 +46,12 @@ def allocate(request):
     allocations = FuelAllocation.objects.all()
     if allocations is not None: 
         for alloc in allocations:
+            
             subsidiary = Subsidiaries.objects.filter(id=alloc.assigned_staff_id).first()
             if subsidiary is not None:
                 alloc.subsidiary_name = subsidiary.name
+                #alloc.petrol_quantity= '{:,}'.format(alloc.petrol_quantity)
+                #alloc.diesel_quantity= '{:,}'.format(alloc.diesel_quantity)
             else:
                 allocations = allocations  
         
@@ -60,6 +63,8 @@ def allocate(request):
         for allocate in allocates:
             subsidiary = Subsidiaries.objects.filter(id=allocate.relationship_id).first()
             allocate.subsidiary_name = subsidiary.name
+            allocate.diesel_quantity= '{:,}'.format(allocate.diesel_quantity)
+            allocate.petrol_quantity= '{:,}'.format(allocate.petrol_quantity)
     else:
         allocates = None
     

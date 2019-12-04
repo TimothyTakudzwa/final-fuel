@@ -40,9 +40,9 @@
                           Price
                         </th>
                         <th style="color:white;">
-                          P.Methods
+                          Payment
                               </th>
-                         <th style="color:white;width:40px">
+                         <th style="color:white;width:40px;margin-right: 10px;">
                              Action
                              </th>
                              
@@ -56,7 +56,7 @@
                            <td>{{allocate.diesel_price}}</td>
                            <td>{{allocate.petrol_quantity}}</td>
                            <td>{{allocate.petrol_price}}</td>
-                           <td><b>{%if allocate.cash%}Cash {% else%} {%endif%} {%if allocate.usd%}USD {% else%} {%endif%} {%if allocate.ecocash%}Ecocash {% else%} {%endif%} {%if allocate.swipe%}Swipe {% else%} {%endif%}  </b> </td>
+                           <td>{%if allocate.cash%}Cash {% else%} {%endif%} {%if allocate.usd%}USD {% else%} {%endif%} {%if allocate.ecocash%}Ecocash {% else%} {%endif%} {%if allocate.swipe%}Swipe {% else%} {%endif%}</td>
                            <td>
                              <div class = "btn-group">
                              <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#petrol{{allocate.id}}">Allocate Petrol</button>
@@ -237,7 +237,7 @@
                         </th>
 
                         <th style="color:white;">
-                            Payment Methods
+                            Payment 
                           </th>
                         
                          
@@ -252,7 +252,7 @@
                            <td>{{alloc.diesel_price}}</td>
                            <td>{{alloc.petrol_quantity}}</td>
                            <td>{{alloc.petrol_price}}</td>
-                           <td><b>{%if alloc.cash%}Cash {% else%} {%endif%} {%if alloc.usd%}USD {% else%} {%endif%} {%if alloc.ecocash%}Ecocash {% else%} {%endif%} {%if alloc.swipe%}Swipe {% else%} {%endif%}  </b> </td>
+                           <td>{%if alloc.cash%}Cash {% else%} {%endif%} {%if alloc.usd%}USD {% else%} {%endif%} {%if alloc.ecocash%}Ecocash {% else%} {%endif%} {%if alloc.swipe%}Swipe {% else%} {%endif%}</td>
                         
                         </tr>
 
