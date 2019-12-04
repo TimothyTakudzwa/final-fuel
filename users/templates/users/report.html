@@ -168,7 +168,7 @@
         </div>
     <div class="card-body">
         <div class="container-fluid">
-            <form method="POST" action="{% url 'users:export_pdf' %}">
+            <form method="POST" action="{% url 'users:generate_pdf' %}">
                 {% csrf_token %}
                 <input type="hidden" value="reqs" name="type_model">
                 <input type="hidden"value="{{start}}" name="start">
