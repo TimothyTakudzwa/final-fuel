@@ -1,12 +1,16 @@
 import random
 import locale
+import tempfile
+
 
 from fpdf import FPDF
+# from weasyprint import HTML
 from pandas import DataFrame
 import pandas as pd
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
+from django.template.loader import render_to_string
 from django.db.models import Q
 from django.shortcuts import Http404
 from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
@@ -265,6 +269,38 @@ def export_pdf(request):
 
 
         return redirect('users:report_generator')
+
+# def generate_pdf(request):
+#     if request.method == "POST":
+#         print(request.POST.get('type_model'))
+#         if request.POST.get('type_model') == "transaction":
+#             print('------------------Im In Here---------------------------')
+#             start = request.POST.get('start')
+#             end = request.POST.get('end')
+#             start = datetime.strptime(start, '%b. %d, %Y').date()
+#             end = datetime.strptime(end, '%b. %d, %Y').date()
+            
+#             data = Transaction.objects.filter(date__range=[start, end])
+
+#             # Rendered
+#             html_string = render_to_string('users/report.html', {'people': people})
+#             html = HTML(string=html_string)
+#             result = html.write_pdf()
+
+#             response = HttpResponse(content_type='application/pdf;')
+#             response['Content-Disposition'] = 'inline; filename=list_people.pdf'
+#             response['Content-Transfer-Encoding'] = 'binary'
+
+#             with tempfile.NamedTemporaryFile(delete=True) as output:
+#                 output.write(result)
+#                 output.flush()
+#                 output = open(output.name, 'r')
+#                 response.write(output.read())
+
+#             return response    
+
+
+
 
 @login_required()
 def export_csv(request):

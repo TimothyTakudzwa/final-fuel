@@ -11,4 +11,9 @@ def get_aggregate_stock(company):
     for sub in get_all_subsidiaries(company):
         diesel += FuelUpdate.objects.filter(relationship_id=sub.id).first().diesel_quantity
         petrol += FuelUpdate.objects.filter(relationship_id=sub.id).first().petrol_quantity
-    return {'diesel': diesel, 'petrol': petrol}    
+    return {'diesel': diesel, 'petrol': petrol}
+
+
+def get_total_revenue(company):
+    revenue = 0
+    for transaction in Transaction.objects.filter()
