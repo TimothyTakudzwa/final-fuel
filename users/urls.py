@@ -16,6 +16,7 @@ urlpatterns = [
     path('depot_staff/', views.depot_staff, name="depot_staff"),
     path('export_pdf/', views.export_pdf, name="export_pdf"),
     # path('generate_pdf/', views.generate_pdf, name="generate_pdf"),
+    path('account_activate/', views.account_activate, name="account_activate"),
     path('export_csv/', views.export_csv, name="export_csv"),
     path('statistics/', views.statistics, name="statistics"),
     path('report_generator/', views.report_generator, name="report_generator"),
@@ -33,6 +34,14 @@ urlpatterns = [
     path('edit_ss_rep/<int:id>', views.edit_ss_rep, name="edit_ss_rep"),
     path('edit_depot_rep/<int:id>', views.edit_depot_rep, name="edit_depot_rep"),
     path('delete_depot_staff/<int:id>', views.delete_depot_staff, name="delete_depot_staff"),
+    path('company_profile/', views.company_profile, name="company_profile"),
+    path('company_petrol/<int:id>', views.company_petrol, name="company_petrol"),
+    path('company_diesel/<int:id>', views.company_diesel, name="company_diesel"),
+
+    
+    
+
+   
 
     
     

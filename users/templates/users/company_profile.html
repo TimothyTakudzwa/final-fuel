@@ -1,0 +1,132 @@
+{% extends "users/base.html" %}
+{% load static %}
+{% block title %}
+{{title}}
+{% endblock %}
+{% block body %}
+
+
+<div class="col-md-12">
+    <div class="card" style="background-color:rgb(241, 239, 243); background-image: url('finder/static/assets/img/sidebar-1.jpg')">
+        
+        <div class="card-header card-header-primary"> 
+        <h3 class="card-title ">{{request.user.company.name}} Profile</h3>
+        </div>
+        <div class="card-avatar" style="margin-top: 30px;display: block;text-align: center;">
+                <div class="img-rounded">
+                    <a href="#">
+                    <img class="img" src="/media/{{compan.logo}}" height="250px" width="250px" />
+                    
+                    </a>
+                </div>    
+              </div>
+    <div class="card-body">
+        <div class="container-fluid">
+            
+            {% load crispy_forms_tags %}
+            <form action="{% url 'users:company_profile'%}" method="POST">
+                {% csrf_token %}
+                <div class="form-group row">
+                    
+                        <div class="col-sm-6">
+                    <label for="name" class="-form-label">Name</label>
+                    
+                        <input name="name" type="text" class="form-control"  id="name"  value="{{compan.name}}">
+                    </div>
+                    
+                    
+                   
+                    <div class="col-sm-6">                              
+                        <label for="address" class="col-form-label">Location</label>
+                        
+                            <input name="address" type="text" class="form-control"  id="address"  value="{{ compan.address}}">
+                        </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                              
+                                <div class="col-sm-6">
+                            <label for="industry" class=" col-form-label">Industry</label>
+                            
+                                <input name="industry" type="text" class="form-control" id="industry"  value="{{ compan.industry}}">
+                            </div>
+                           
+                            
+                           
+                            <div class="col-sm-6">                     
+                                <label for="num_of_subs" class="col-form-label">Number of Subsidiaries</label>
+                                
+                                    <input name="num_of_subs" type="text" class="form-control" id="num_of_subs"  value="{{num_of_subsidiaries}}">
+                                </div>
+                                </div>
+
+                               
+
+                                <div class="form-group row">
+                              
+                                    <div class="col-sm-6">
+                                        <label for="iban_number" class=" col-form-label">Iban Number</label>
+                                    
+                                        <input name="iban_number" type="text" class="form-control" id="diesel"  value="{{compan.iban_number}}">
+                                    </div>
+                                    
+                                    
+                                    
+                                    <div class="col-sm-6">                     
+                                        <label for="licence_number" class="col-form-label">Licence Number</label>
+                                        
+                                        <input name="licence_number" type="text" class="form-control" id="petrol"  value="{{compan.license_number}}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                              
+                                    <div class="col-sm-6">
+                                        <label for="destination_bank" class=" col-form-label">Destination Bank</label>
+                                    
+                                        <input name="destination_bank" type="text" class="form-control" id="diesel"  value="{{compan.destination_bank}}">
+                                    </div>
+                                    
+                                    
+                                    
+                                    <div class="col-sm-6">                     
+                                        <label for="account_number" class="col-form-label">Account Number</label>
+                                        
+                                        <input name="account_number" type="text" class="form-control" id="petrol"  value="{{compan.account_number}}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                              
+                                        <div class="col-sm-6">
+                                            <label for="diesel" class=" col-form-label">Diesel Capacity</label>
+                                        
+                                            <input name="diesel" type="text" class="form-control" id="diesel"  value="{{fuel_capacity.diesel_quantity}}">
+                                        </div>
+                                       
+                                        
+                                       
+                                        <div class="col-sm-6">                     
+                                            <label for="petrol" class="col-form-label">Petrol Quantity</label>
+                                            
+                                            <input name="petrol" type="text" class="form-control" id="petrol"  value="{{fuel_capacity.petrol_quantity}}">
+                                        </div>
+                                    </div>
+                                        
+
+                            
+                        <div class="col-md-12 text-center">     
+                            <button type="submit" class="btn btn-primary ">Edit Profile</button>
+                        </div>
+            </form>
+
+
+                  
+        </div>
+    </div>
+    </div>
+    
+</div>
+
+{%endblock%}
