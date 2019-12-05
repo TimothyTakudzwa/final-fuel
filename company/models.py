@@ -37,10 +37,10 @@ class Company(models.Model):
     is_verified = models.BooleanField(default=False)
     company_type = models.CharField(max_length=255, choices=COMPANY_CHOICES)
     fuel_capacity = models.ForeignKey(FuelUpdate, on_delete=models.DO_NOTHING,blank=True, null=True)
-    iban_number = models.CharField(max_length=100)
-    license_number = models.CharField(max_length=100)
-    destination_bank = models.CharField(max_length=100)
-    account_number = models.CharField(max_length=100)
+    iban_number = models.CharField(max_length=100, default="0")
+    license_number = models.CharField(max_length=100, default="0")
+    destination_bank = models.CharField(max_length=100, default="0")
+    account_number = models.CharField(max_length=100, default="0")
     amount = models.FloatField(default=0.00)
     
     def __str__(self):

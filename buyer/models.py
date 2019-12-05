@@ -37,7 +37,7 @@ class User(AbstractUser):
 class FuelRequest(models.Model):
     name = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     amount = models.IntegerField(default=0)
-    fuel_type = models.CharField(max_length=20)
+    fuel_type = models.CharField(max_length=50)
     payment_method = models.CharField(max_length=200)
     delivery_method = models.CharField(max_length=200)
     date = models.DateField(auto_now_add=True)

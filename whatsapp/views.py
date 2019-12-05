@@ -17,11 +17,7 @@ def index(request):
     if check:
         user = User.objects.filter(phone_number=phone_number).first()
         if user.is_active:
-            try:
-                response_message = bot_action(request, user, message)   
-            except Exception as e:
-                print(f"This is the error {e}")  
-                response_message = 'Message'           
+            response_message = bot_action(request, user, message) 
         else:
             response_message = "Your cannot use this, please create a buyer account and then add the phone number"
     else:

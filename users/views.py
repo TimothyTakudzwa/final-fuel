@@ -209,7 +209,7 @@ def stations(request):
 
     return render(request, 'users/service_stations.html', {'stations': stations})
 
-@login_required()
+#@login_required()
 def report_generator(request):
     form = ReportForm()
     allocations = requests = trans = None

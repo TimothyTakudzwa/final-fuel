@@ -16,8 +16,8 @@ class Subsidiaries(models.Model):
     opening_time = models.CharField(max_length=100, default='08:00')
     closing_time = models.CharField(max_length=100, default='22:00')
     fuel_capacity = models.ForeignKey(FuelUpdate, on_delete=models.DO_NOTHING, null=True)
-    destination_bank = models.CharField(max_length=100)
-    account_number = models.CharField(max_length=100)
+    destination_bank = models.CharField(max_length=100, default="")
+    account_number = models.CharField(max_length=100, default="")
     amount = models.FloatField(default=0.00)
     logo = models.ImageField(default='default.png', upload_to='subsidiary_profile_logo')
 
