@@ -605,6 +605,9 @@ def edit_ss_rep(request, id):
     if request.method == 'POST':
         if user.objects.filter(id=id).exists():
             user_update = user.objects.filter(id=id).first()
+            user_update.first_name = request.POST['first_name']
+            user_update.last_name = request.POST['last_name']
+            user_update.email = request.POST['email']
             user_update.phone_number = request.POST['phone_number']
             user_update.save()
             messages.success(request, 'User profile updated successfully')
@@ -619,6 +622,9 @@ def edit_depot_rep(request, id):
     if request.method == 'POST':
         if user.objects.filter(id=id).exists():
             user_update = user.objects.filter(id=id).first()
+            user_update.first_name = request.POST['first_name']
+            user_update.last_name = request.POST['last_name']
+            user_update.email = request.POST['email']
             user_update.phone_number = request.POST['phone_number']
             user_update.save()
             messages.success(request, 'User profile updated successfully')
@@ -631,7 +637,28 @@ def edit_depot_rep(request, id):
 def company_profile(request):
     compan = Company.objects.filter(id = request.user.company.id).first()
     num_of_subsidiaries = Subsidiaries.objects.filter(company=request.user.company).count()
-    fuel_capacity = F_Update.objects.filter(sub_type='Company').first()
+    fuel_capacity = F_Update.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()
+
+    if request.method == 'POST':
+        if F_Update.objects.filter(id=fuel_capacity.id).exists():
+            fuel_update = F_Update.objects.filter(id=fuel_capacity.id).first()
+            fuel_update.petrol_quantity = request.POST['petrol']
+            fuel_update.diesel_quantity = request.POST['diesel']
+            fuel_update.save()
+            compan.name = request.POST['name']
+            compan.address = request.POST['address']
+            compan.industry = request.POST['industry']
+            compan.iban_number = request.POST['iban_number']
+            compan.licence_number = request.POST['licence_number']
+            compan.destination_bank = request.POST['destination_bank']
+            compan.account_number = request.POST['account_number']
+            compan.save()
+            messages.success(request, 'Company Profile updated successfully')
+            return redirect('users:company_profile')
+
+        else:
+            messages.success(request, 'Something went wrong')
+            return redirect('users:company_profile')    
     return render(request, 'users/company_profile.html', {'compan': compan, 'num_of_subsidiaries': num_of_subsidiaries, 'fuel_capacity': fuel_capacity})
 
 def company_petrol(request,id):

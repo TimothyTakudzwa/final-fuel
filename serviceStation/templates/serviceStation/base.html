@@ -60,13 +60,19 @@
             </a>
           </li>  
           -->
-          <li class="nav-item ">
-            <a class="nav-link" href="#">
-              <i class="material-icons">account_balance</i>
-              <p>Audit Trail</p>
-            </a>
-          </li>  
-
+          
+          <li class="nav-item {% if request.path == '/serviceStation/allocated_quantity/' %} active {% endif %}">
+              <a class="nav-link" href="{% url 'serviceStation:allocated_quantity' %}">
+                <i class="material-icons">account_balance</i>
+                <p>Audit Trail</p>
+              </a>
+            </li>  
+            <li class="nav-item ">
+                <a class="nav-link" href="{% url 'serviceStation:activate_whatsapp' %}">
+                  <i class="material-icons">forum</i>
+                  <p>Activate WhatsApp</p>
+                </a>
+              </li> 
           <li class="nav-item {% if request.path == '/serviceStation/myaccount/' %} active {% endif %}">
             <a class="nav-link" href="{% url 'serviceStation:myaccount' %}">
               <i class="material-icons">person</i>
