@@ -26,6 +26,10 @@ def individual_handler(request, user,message):
     pass
 
 def buyer_handler(request,user,message):
+    if message == 'menu':
+        full_name = user.first_name + " " + user.last_name
+        response_message = buyer_menu.format(full_name)
+        return response_message 
     if user.stage == 'menu':
         if message == "1":
             user.stage = 'make_fuel_request'
