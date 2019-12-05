@@ -12,7 +12,7 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('buyer/', include('buyer.urls')),
-    path('login-api/', include('api.urls')),
+    path('api/', include('api.urls')),
     path('register', buyer_views.register, name='buyer-register'),
     path('admin/', admin.site.urls), 
     path('', finder_views.landing_page, name='home'), 
