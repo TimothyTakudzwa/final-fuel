@@ -34,7 +34,7 @@ def buyer_handler(request,user,message):
         elif message == "2":
             user.stage = 'follow_up'
             user.save()
-            response_message = follow_up(user)
+            response_message = follow_up(user, message)
         elif message == "3":
             user.stage = 'fuel_update'
             user.save()
@@ -115,10 +115,33 @@ def requests_handler(user, message):
     return response_message
 
 
-def follow_up(user):
+def follow_up(user, message):
     if user.position == 1:
-        pass
-    pass
+        response_message = "1. Proceed \n2. Cancel"
+        user.position = 20
+        user.save()
+    elif user.position == 20:
+        requests = FuelRequest.objects.filter(name=user).filter(wait=True).all()
+        response_message = 'Which request do you want to follow? \n\n'
+        i = 1
+        for req in requests:
+            response_message = response_message + str(req.id) + ". " + req.fuel_type + str(req.amount) + '\n'
+            i += 1        
+        user.position = 21 
+        user.save()
+    elif user.position == 21:
+        req = FuelRequest.objects.filter(id = int(message)).first()
+        offers = Offer.objects.filter(request=req).all()
+        response_message = 'Which offer do you want to accept? \n\n'
+        i = 1
+        for offer in offers:
+            response_message = response_message + str(offer.id) + ". " + offer.quantity + "@" + str(offer.price) + '\n'
+            i += 1        
+        user.position = 22
+        user.save()
+
+    return response_message
+
 
 def view_fuel_updates(user):
     pass
