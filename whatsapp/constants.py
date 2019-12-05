@@ -19,9 +19,9 @@ Hie {0}, This number has been registered with the below details
 *Company Name*: {1}
 *Role*: {2}
 
-Please type *YES* to start using the application with the above details 
-Type *NO* to cancel
+However for you to be able to use this platform you need to log in to your portal and click on the option *Activate Whatsapp* 
 
+To use this platform as an individual buyer type *NO*
 '''
 
 buyer_menu='''
