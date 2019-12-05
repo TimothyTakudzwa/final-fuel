@@ -20,15 +20,20 @@ user = get_user_model()
 
 @login_required()
 def fuel_updates(request):
-    print(f"--------------------------{request.user.subsidiary_id}----------------------")
-
-    updates = FuelUpdate.objects.filter(sub_type='service_station').filter(relationship_id=request.user.subsidiary_id).first()
+    updates = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=request.user.subsidiary_id).first()
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     print(f"--------------------------{updates}----------------------")
     if request.method == 'POST':
         #fuel_update = FuelUpdate.objects.filter(sub_type=request.POST['sub_type']).first()
         updates.petrol_quantity = request.POST['petrol_quantity']
         updates.queue_length = request.POST['queue_length']
+        if int(updates.petrol_quantity) < 2000:
+            updates.status = 'Expecting Fuel'
+            updates.save()
+            messages.warning(request, 'Please stop selling and request for more fuel from you Company')
+            return redirect('serviceStation:home')
+
+        updates.status = 'Pumping'
         updates.save()
         messages.success(request, 'Updated Petrol QuantitY Successfully')
         service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
@@ -46,6 +51,13 @@ def update_diesel(request, id):
         diesel_update = FuelUpdate.objects.filter(id=id).first()
         diesel_update.diesel_quantity = request.POST['diesel_quantity']
         diesel_update.queue_length = request.POST['queue_length']
+        if int(diesel_update.diesel_quantity) < 2000:
+            diesel_update.status = 'Expecting Fuel'
+            diesel_update.save()
+            messages.warning(request, 'Please stop selling and request for more fuel from you Company')
+            return redirect('serviceStation:home')
+
+        diesel_update.status = 'Pumping'
         diesel_update.save()
         messages.success(request, 'Updated Diesel QuantitY Successfully')
         service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
@@ -77,4 +89,24 @@ def myaccount(request):
         messages.success(request, 'Your Changes Have Been Saved')
        
     return render(request, 'serviceStation/profile.html')
+
+
+#activated_for_whatsapp
+def activate_whatsapp(request):
+    usr = user.objects.filter(id=request.user.id).first()
+    if usr.activated_for_whatsapp == False:
+        usr.activated_for_whatsapp = True
+        usr.save()
+        messages.success(request, 'Your WhatsApp has been activated successfully')
+        return redirect('serviceStation:home')
+
+    else:
+        usr.activated_for_whatsapp = False
+        usr.save()
+        messages.warning(request, 'Your WhatsApp has been deactivated successfully')
+        return redirect('serviceStation:home')
+
+def allocated_quantity(request):
+    allocations = FuelAllocation.objects.filter(assigned_staff_id= request.user.subsidiary_id).all()
+    return render(request, 'serviceStation/allocated_quantity.html', {'allocations': allocations})
 
