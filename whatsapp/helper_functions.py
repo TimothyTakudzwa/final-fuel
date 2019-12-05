@@ -28,6 +28,7 @@ def individual_handler(request, user,message):
 def buyer_handler(request,user,message):
     if message == 'menu':
         user.stage = 'menu'
+        user.position = 1
         user.save()
         full_name = user.first_name + " " + user.last_name
         response_message = buyer_menu.format(full_name)
