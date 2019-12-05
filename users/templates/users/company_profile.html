@@ -24,7 +24,7 @@
         <div class="container-fluid">
             
             {% load crispy_forms_tags %}
-            <form action="{% url 'users:myaccount'%}" method="POST">
+            <form action="{% url 'users:company_profile'%}" method="POST">
                 {% csrf_token %}
                 <div class="form-group row">
                     

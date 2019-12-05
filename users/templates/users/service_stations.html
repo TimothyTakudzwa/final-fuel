@@ -32,14 +32,47 @@
                             <form action="{% url 'users:stations' %}" method="POST">
                                 {% csrf_token %}
 
-                                {{sub_create_form|crispy}}
                                 <div class="form-group">
+                                        <lable>Name</lable>
+                                        <input type="text" name="name" class="form-control" value=" " />
+                                    </div>
+                                   
+                                    <div class="form-group">
+                                        <lable>Location</lable>
+                                        <input type="text" name="address" class="form-control" value=" " />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <lable>Is Depot</lable>
+                                        <input type="text" name="is_depot" class="form-control" value="False" />
+                                    </div>
+                                    
+                                <div class="row">
+                                        <div class="col-md-6">
+                                          {{sub_create_form.cash|as_crispy_field}}
+                                        </div>
+                                        <div class="col-md-6">
+                                          {{sub_create_form.usd|as_crispy_field}}
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-md-6">
+                                          {{sub_create_form.swipe|as_crispy_field}}
+                                        </div>
+                                        <div class="col-md-6">
+                                          {{sub_create_form.ecocash|as_crispy_field}}
+                                        </div>
+                                        </div>
+
+                                 <div class="row">
+                                <div class="form-group col-md-6">
                                     <lable>Opening Time</lable>
                                     <input type="time" name="opening_time" class="form-control" />
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group col-md-6">
                                     <lable>Closing Time</lable>
                                     <input type="time" name="closing_time" class="form-control" />
+                                </div>
                                 </div>
 
 
