@@ -34,6 +34,11 @@ urlpatterns = [
     path('edit_depot_rep/<int:id>', views.edit_depot_rep, name="edit_depot_rep"),
     path('delete_depot_staff/<int:id>', views.delete_depot_staff, name="delete_depot_staff"),
     path('company_profile/', views.company_profile, name="company_profile"),
+    path('company_petrol/<int:id>', views.company_petrol, name="company_petrol"),
+    path('company_diesel/<int:id>', views.company_diesel, name="company_diesel"),
+
+    
+    
 
    
 

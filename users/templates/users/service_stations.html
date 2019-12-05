@@ -72,6 +72,12 @@
                             Location
                         </th>
                         <th style="color:white;">
+                                Bank
+                            </th>
+                            <th style="color:white;">
+                                 Account
+                                </th>
+                        <th style="color:white;">
                             Opens
                         </th>
                         <th style="color:white;">
@@ -90,6 +96,8 @@
                             <td>Depot</td>
                             {% endif %}
                             <td>{{station.address}}</td>
+                            <td>{{station.destination_bank}}</td>
+                            <td>{{station.account_number}}</td>
                             <td>{{station.opening_time}}</td>
                             <td>{{station.closing_time}}</td>
 
