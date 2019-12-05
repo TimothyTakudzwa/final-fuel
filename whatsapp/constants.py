@@ -39,7 +39,7 @@ supplier_menu = '''
 Hello, What would you like to do today
 
 1. View Fuel Requests 
-2. 
+2. View offers
 
 '''
 zimbabwean_towns = ["Beitbridge","Bindura","Bulawayo","Chinhoyi","Chirundu","Gweru","Harare","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Mutare","Mutoko","Nyanga","Victoria Falls"]
