@@ -36,6 +36,10 @@ from company.models import FuelUpdate as F_Update
 from django.contrib.auth import get_user_model
 user = get_user_model()
 
+
+def account_activate(request):
+    return render(request, 'users/account_activate.html')
+
 @login_required()
 def index(request):
     return render(request, 'users/index.html')
