@@ -20,7 +20,8 @@ def index(request):
             try:
                 response_message = bot_action(request, user, message)   
             except Exception as e:
-                print(f"This is the error {e}")             
+                print(f"This is the error {e}")  
+                response_message = 'Message'           
         else:
             response_message = "Your cannot use this, please create a buyer account and then add the phone number"
     else:

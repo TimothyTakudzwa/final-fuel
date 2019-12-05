@@ -34,7 +34,7 @@
          Tip 2: you can also add an image using data-image tag
      -->
        <div class="logo">
-         <a href="http://www.creative-tim.com" class="simple-text logo-normal">
+         <a href="#" class="simple-text logo-normal">
            <strong>{{request.user.company.name}}</strong>
          </a>
        </div>
@@ -55,6 +55,13 @@
             </a>
           </li>  
           -->
+          <li class="nav-item ">
+            <a class="nav-link" href="#">
+              <i class="material-icons">account_balance</i>
+              <p>Audit Trail</p>
+            </a>
+          </li>  
+
           <li class="nav-item {% if request.path == '/serviceStation/myaccount/' %} active {% endif %}">
             <a class="nav-link" href="{% url 'serviceStation:myaccount' %}">
               <i class="material-icons">person</i>
@@ -63,7 +70,7 @@
           </li>
 
           <li class="nav-item">
-              <a class="nav-link" href="{% url 'logout' %}?next=/">
+              <a class="nav-link" href="{% url 'logout' %}?next=/buyer:login">
                 <i class="material-icons">close</i>
                 <p>Logout</p>
               </a>
