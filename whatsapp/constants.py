@@ -13,9 +13,19 @@ Where are you?
 
 '''
 
+registred_as_a = '''
+Hie {0}, This number has been registered with the below details
+
+*Company Name*: {1}
+*Role*: {2}
+
+Please type *YES* to start using the application with the above details 
+Type *NO* to cancel
+
+'''
 
 buyer_menu='''
-Hello, What would you like to do today
+Hello {0}, What would you like to do today
 
 1. Make a Fuel Request
 2. Follow up on Fuel Request 

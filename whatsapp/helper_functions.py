@@ -28,12 +28,19 @@ def individual_handler(request, user,message):
     pass
 
 def buyer_handler(request,user,message):
-    if message.lower() == 'menu' and user.stage != 'registration':
-        user.position = 1
-        user.stage = 'requesting'
-        user.save()
-        return requests_handler(user, message)
-    pass 
+    if user.position == 0:
+        user.stage = 1        
+        full_name = user.first_name + " " + user.last_name
+        if user.activated_for_whatsapp: 
+            response_message = buyer_menu.format(full_name)           
+        else:
+            user.save()
+            
+            response_message = registred_as_a.format(full_name, user.company.name, "Buyer")
+    user.position =0
+    user.activated_for_whatsapp = False
+    user.save()
+    return response_message   
 
 def supplier_handler(request,user,message):
     if message.lower() == 'menu' and user.stage != 'registration':
@@ -53,7 +60,7 @@ def service_station_handler(request,user,message):
 
 
 def bot_action(request, user, message):   
-    if user.stage == 'registration':
+    if user.stage == 'registration' and user.position !=0:
         return registration_handler(request, user, message)
     if user.user_type == 'INDIVIDUAL':
         return individual_handler(request, user, message)
@@ -70,6 +77,7 @@ def bot_action(request, user, message):
 
 
 def registration_handler(request, user, message):
+    
     if user.position == 1:
         response_message = "First before we get started can i please have your *Full Name*"
         user.position = 2 
