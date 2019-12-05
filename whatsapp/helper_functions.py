@@ -88,9 +88,9 @@ def requests_handler(user, message):
         response_message = "*Please select delivery method*\n\n1. Pick Up\n2. Delivery"       
     elif user.position == 5: 
         if message == "1":
-            fuel_type = "SELF COLLECTION"
+            delivery_method = "SELF COLLECTION"
         elif message == "2":
-            fuel_type = "DELIVERY"
+            delivery_method = "DELIVERY"
         else:
             return "Incorrect Choice"        
         fuel_request = FuelRequest.objects.get(id=user.fuel_request)
