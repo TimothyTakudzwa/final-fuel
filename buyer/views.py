@@ -279,12 +279,15 @@ def dashboard(request):
     else:
         form = FuelRequestForm
     
-    updates = FuelUpdate.objects.filter(sub_type="depot")
+    updates = FuelUpdate.objects.filter(sub_type="Depot")
     for update in updates:
+        subsidiary = Subsidiaries.objects.filter(id = update.relationship_id).first()
         company = Company.objects.filter(id=update.company_id).first()
         if company is not None:
             update.company = company.name
-
+            update.depot = subsidiary.name
+            update.address = subsidiary.address 
+            print(subsidiary.name)
     print(updates)
     return render(request, 'buyer/dashboard.html',{'form':form, 'updates': updates})
 
