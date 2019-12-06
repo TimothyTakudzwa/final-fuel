@@ -13,7 +13,7 @@ class Notification(models.Model):
         return f'{str(self.user)} - {str(self.date)}'
 
     class Meta:
-        ordering = ['date', 'time', 'name']
+        ordering = ['date', 'time']
 
     def save(self, *args, **kwargs):
         super(Notification, self).save(*args, **kwargs)
