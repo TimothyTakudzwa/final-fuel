@@ -251,23 +251,24 @@ def view_requests_handler(user, message):
 
 def supplier_handler(request,user,message):
     response_message = ""
-    if message.lower() == 'menu' and user.stage != 'registration':
+    if message.lower() == 'menu':
         user.stage = 'menu'
         user.position = 1
         user.save()
         full_name = user.first_name + " " + user.last_name
         response_message = supplier_menu.format(full_name)
+        return response_message
     elif user.stage == 'menu':
         if message == "1":
             user.stage = 'view_requests'
             user.position = 0
             user.save()
             response_message = view_requests_handler(user, message)
-        elif message == "2":
-            user.stage = 'view_offers'
-            user.position = 0
-            user.save()
-            response_message = view_offers_handler(user, message)
+        # elif message == "2":
+        #     user.stage = 'view_offers'
+        #     user.position = 0
+        #     user.save()
+        #     response_message = view_offers_handler(user, message)
 
     return response_message
 
@@ -291,7 +292,7 @@ def bot_action(request, user, message):
     elif user.user_type == 'BUYER':
         return buyer_handler(request, user,message)
     elif user.user_type == 'SUPPLIER':
-        return supplier_handler(requests_handler, user, message)
+        return supplier_handler(request, user, message)
     elif user.user_type == 'SS_SUPPLIER':
         return service_station_handler(request, user,message)    
     
