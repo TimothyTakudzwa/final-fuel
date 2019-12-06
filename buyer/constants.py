@@ -20,7 +20,7 @@ Price: {4}
 
 DELIVERY_OPTIONS= (('BULK', 'BULK'),('REGULAR', 'REGULAR'))
 
-FUEL_CHOICES = (('PETROL BLEND', 'PETROL BLEND'),('DIESEL', 'DIESEL'))
+FUEL_CHOICES = (('Petrol', 'Petrol'),('DIESEL', 'Diesel'))
 
 sender = f'Fuel Finder Accounts<tests@marlvinzw.me>'
 subject = 'User Registration'

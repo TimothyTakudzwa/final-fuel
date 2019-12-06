@@ -403,7 +403,7 @@
     $('#choices').hide();
 
      $('#delivery_method').change(function () {
-        if ($('#delivery_method option:selected').text() == "DELIVERY"){
+        if ($('#delivery_method option:selected').text() == "Delivery"){
             $('#choices').show();
         }
          else { 
@@ -413,6 +413,18 @@
   });
 
   $('#pump_required').on('change', function(){
+  $(this).val(this.checked ? "True" : "False");
+  });
+  $('#swipe').on('change', function(){
+  $(this).val(this.checked ? "True" : "False");
+  });
+  $('#ecocash').on('change', function(){
+  $(this).val(this.checked ? "True" : "False");
+  });
+  $('#cash').on('change', function(){
+  $(this).val(this.checked ? "True" : "False");
+  });
+  $('#usd').on('change', function(){
   $(this).val(this.checked ? "True" : "False");
   });
 
