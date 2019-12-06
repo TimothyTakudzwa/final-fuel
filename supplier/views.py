@@ -104,8 +104,8 @@ def fuel_update(request):
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     print(f"--------------------------{updates}!!!!!!!!!!!!!!!!!!!!!!!!----------------------")
     if request.method == 'POST':
-        if FuelUpdate.objects.filter(sub_type='depot', relationship_id=request.user.subsidiary_id).exists():
-            fuel_update = FuelUpdate.objects.get(sub_type='depot', relationship_id=request.user.subsidiary_id)
+        if FuelUpdate.objects.filter(sub_type='Depot', relationship_id=request.user.subsidiary_id).exists():
+            fuel_update = FuelUpdate.objects.get(sub_type='Depot', relationship_id=request.user.subsidiary_id)
             fuel_update.petrol_quantity = request.POST['petrol_quantity']
             fuel_update.petrol_price = request.POST['petrol_price']
             fuel_update.diesel_quantity = request.POST['diesel_quantity']
@@ -123,7 +123,7 @@ def fuel_update(request):
             Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
             return redirect('fuel_update')
         else:
-            sub_type = 'depot'
+            sub_type = 'Depot'
             petrol_quantity = request.POST.get('petrol_quantity')
             petrol_price = request.POST.get('petrol_price')
             diesel_quantity = request.POST.get('diesel_quantity')
