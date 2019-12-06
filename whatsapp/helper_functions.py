@@ -168,7 +168,7 @@ def view_fuel_updates(user, message):
         response_message = 'Which fuel update do you want? \n\n'
         i = 1
         for update in updates:
-            response_message = response_message + str(update.id) + ". " + "Petrol" + update.petrol_quantity + "@" + str(update.petrol_price) + "and" + "Diesel" + update.diesel_quantity + "@" + str(update.diesel_price) + '\n'
+            response_message = response_message + str(update.id) + ". " + "Petrol" + str(update.petrol_quantity) + "@" + str(update.petrol_price) + "and" + "Diesel" + str(update.diesel_quantity) + "@" + str(update.diesel_price) + '\n'
             i += 1        
         user.position = 31 
         user.save()
