@@ -10,7 +10,7 @@
 <div class="container-fluid">
 <div class="row">
     <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats">
+      <div class="card card-stats" style="height: 180px;">
         <div class="card-header card-header-warning card-header-icon">
           <div class="card-icon">
             <i class="material-icons">local_gas_station</i>
@@ -32,29 +32,29 @@
       </div>
     </div>
     <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats">
+      <div class="card card-stats" style="height: 180px;">
         <div class="card-header card-header-success card-header-icon">
           <div class="card-icon">
             <i class="material-icons">store</i>
           </div>
           <p class="card-category">Revenue</p>
-          <h3 class="card-title"> {{revenue}}</h3>
+          <h3 class="card-title" style="font-size: 1em;"> {{revenue}}</h3>
         </div>
         <div class="card-footer">
           <div class="stats">
-            <i class="material-icons">date_range</i> Last 24 Hours
+            <i class="material-icons">attach_money</i> Overall
           </div>
         </div>
       </div>
     </div>
     <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats">
+      <div class="card card-stats" style="height: 180px;">
         <div class="card-header card-header-danger card-header-icon">
           <div class="card-icon">
             <i class="material-icons">info_outline</i>
           </div>
           <p class="card-category">Complaints/ Issues</p>
-          <h3 class="card-title">0</h3>
+          <h3 class="card-title" style="font-size: 1em;">0</h3>
         </div>
         <div class="card-footer">
           <div class="stats">
@@ -64,13 +64,13 @@
       </div>
     </div>
     <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats">
+      <div class="card card-stats" style="height: 180px;">
         <div class="card-header card-header-info card-header-icon">
           <div class="card-icon">
             <i class="fa fa-bell"></i>
           </div>
           <p class="card-category">New Requests</p>
-          <h3 class="card-title">{{new_orders}}</h3>
+          <h3 class="card-title" style="font-size: 1em;">{{new_orders}}</h3>
         </div>
         <div class="card-footer">
           <div class="stats">
@@ -84,51 +84,51 @@
 </div>
 
 <div class="row" style="margin-left: 50px;">
-  <div class="card border-success mb-3" style="max-width: 12rem;/* padding-top: 30px; */height: 15rem;margin-left: 10px;background-color:#92c9ff; text-align: center;color: gray;">
+  <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color:#92c9ff; text-align: center;color: gray;">
       <div class="card-body text-success">
-        <h5 class="card-title">Users  </h5>
-        <p class="card-text" style="font-size: 3rem;margin-top: 53px;color: white;">{{staff_blocked}}</p>
+        <h5 class="card-title" style="font-size: 1em;">Staff  </h5>
+        <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{staff_pop}}</p>
       </div>
       <div class="card-footer bg-transparent border-success"></div>
     </div>
   
-    <div class="card border-success mb-3" style="max-width: 12rem;/* padding-top: 30px; */height: 15rem;margin-left: 10px;background-color: #3eeaff;text-align: center;color: gray;">
+    <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color: #3eeaff;text-align: center;color: gray;">
       <div class="card-body text-success">
-        <h5 class="card-title">Orders Fulfilled </h5>
-        <p class="card-text" style="font-size: 3rem;margin-top: 53px;color: white;">{{trans}}</p>
+        <h5 class="card-title" style="font-size: 1em;">Orders Fulfilled </h5>
+        <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{trans}}</p>
       </div>
       <div class="card-footer bg-transparent border-success"></div>
     </div>  
 
      
-  <div class="card border-success mb-3" style="max-width: 12rem;/* padding-top: 30px; */height: 15rem;margin-left: 10px;background-color: #1fc1d5;text-align: center;color: gray;">
+  <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color: #1fc1d5;text-align: center;color: gray;">
       <div class="card-body text-success">
-        <h5 class="card-title">Offers - Today</h5>
-        <p class="card-text" style="font-size: 3rem;margin-top: 53px;color: white;">{{ offers }}</p>
+        <h5 class="card-title" style="font-size: 1em;">No. of Offers </h5>
+        <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{ offers }}</p>
       </div>
       <div class="card-footer bg-transparent border-success"></div>
     </div>
 
-    <div class="card border-success mb-3" style="max-width: 12rem;/* padding-top: 30px; */height: 15rem;margin-left: 10px;background-color: #57b7c3;text-align: center;color: gray;">
+    <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color: #57b7c3;text-align: center;color: gray;">
       <div class="card-body text-success">
-        <h5 class="card-title">Bulk Requests</h5>
-        <p class="card-text" style="font-size: 3rem;margin-top: 53px;color: white;">{{bulk_requests}}</p>
+        <h5 class="card-title" style="font-size: 1em;">Bulk Requests</h5>
+        <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{bulk_requests}}</p>
       </div>
       <div class="card-footer bg-transparent border-success"></div>
     </div>
 
-    <div class="card border-success mb-3" style="max-width: 12rem;/* padding-top: 30px; */height: 15rem;margin-left: 10px;background-color: #1fc1d5;text-align: center;color: gray;">
+    <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color: #1fc1d5;text-align: center;color: gray;">
       <div class="card-body text-success">
-        <h5 class="card-title">Regular Reguests</h5>
-        <p class="card-text" style="font-size: 3rem;margin-top: 53px;color: white;">{{normal_requests}}</p>
+        <h5 class="card-title" style="font-size: 1em;">Regular Reguests</h5>
+        <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{normal_requests}}</p>
       </div>
       <div class="card-footer bg-transparent border-success"></div>
     </div>
 
-    <div class="card border-success mb-3" style="max-width: 12rem;/* padding-top: 30px; */height: 15rem;margin-left: 10px;background-color:#81bcc3;text-align: center;color: gray;">
+    <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color:#81bcc3;text-align: center;color: gray;">
       <div class="card-body text-success">
-        <h5 class="card-title">Average Rating</h5>
-        <p class="card-text" style="font-size: 3rem;margin-top: 53px;color: white;">0.0 <span class="material-icons">
+        <h5 class="card-title" style="font-size: 1em;">Rating</h5>
+        <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{rating}} <span class="material-icons">
           stars
         </span></p>
       </div>
@@ -174,12 +174,12 @@
                      <tbody>
                          {% for client in clients %}
                          <tr>
-                             <td>{{client.name}}</td>
+                             <td>{{client.company.name}}</td>
                              
-                             <td>{{client.address}}</td>
-                             <td>{{client.industry}}</td>
+                             <td>{{client.company.address}}</td>
+                             <td>{{client.company.industry}}</td>
                              <td>{{client.total_value}}</td>
-                             <td>{{client.num_transactions}}</td>
+                             <td>{{client.number_of_trans}}</td>
                              
                              <td style="width: 13%;">
                                  <div class="btn-group">
@@ -195,15 +195,20 @@
                                   <div class="modal-dialog" role="document">
                                   <div class="modal-content">
                                       <div class="modal-header">
-                                      <h5 class="modal-title" id="exampleModalLabel">{{client.name}}'s Transactions</h5>
+                                      <h5 class="modal-title" id="exampleModalLabel">{{client.company.name}}'s Transactions</h5>
                                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                           <span aria-hidden="true">&times;</span>
                                       </button>
                                       </div>
                                       <div class="modal-body">
-                                          <p>No Data Available At The Moment</p>
-                                         
+                                        
+                                        {% for purchase in client.purchases %}
+                                        <div class="row">
+                                          <p>{{purchase.date}} | {{purchase.time}} | {{purchase.request.amount}}</p>
+                                        </div>
+                                        {% endfor%}
                                           
+
                                           
                                       </div>
                                       <div class="modal-footer">
