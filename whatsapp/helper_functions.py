@@ -251,7 +251,7 @@ def view_requests_handler(user, message):
 
 def supplier_handler(request,user,message):
     response_message = ""
-    if message.lower() == 'menu' and user.stage != 'registration':
+    if message.lower() == 'menu':
         user.stage = 'menu'
         user.position = 1
         user.save()
