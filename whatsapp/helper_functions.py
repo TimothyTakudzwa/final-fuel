@@ -5,6 +5,8 @@ from .constants import *
 from buyer.views import token_is_send
 from supplier.models import Offer, Transaction
 from buyer.models import User, FuelRequest
+from company.models import FuelUpdate
+from django.db.models import Q
 
 
 def send_message(phone_number, message):
@@ -26,6 +28,13 @@ def individual_handler(request, user,message):
     pass
 
 def buyer_handler(request,user,message):
+    if message == 'menu':
+        user.stage = 'menu'
+        user.position = 1
+        user.save()
+        full_name = user.first_name + " " + user.last_name
+        response_message = buyer_menu.format(full_name)
+        return response_message 
     if user.stage == 'menu':
         if message == "1":
             user.stage = 'make_fuel_request'
@@ -34,7 +43,7 @@ def buyer_handler(request,user,message):
         elif message == "2":
             user.stage = 'follow_up'
             user.save()
-            response_message = follow_up(user)
+            response_message = follow_up(user, message)
         elif message == "3":
             user.stage = 'fuel_update'
             user.save()
@@ -115,13 +124,98 @@ def requests_handler(user, message):
     return response_message
 
 
-def follow_up(user):
+def follow_up(user, message):
     if user.position == 1:
-        pass
-    pass
+        response_message = "1. Proceed \n2. Cancel"
+        user.position = 20
+        user.save()
+    elif user.position == 20:
+        requests = FuelRequest.objects.filter(name=user).filter(wait=True).all()
+        response_message = 'Which request do you want to follow? \n\n'
+        i = 1
+        for req in requests:
+            response_message = response_message + str(req.id) + ". " + req.fuel_type + str(req.amount) + '\n'
+            i += 1        
+        user.position = 21 
+        user.save()
+    elif user.position == 21:
+        req = FuelRequest.objects.filter(id = int(message)).first()
+        offers = Offer.objects.filter(request=req).all()
+        response_message = 'Which offer do you want to accept? \n\n'
+        i = 1
+        for offer in offers:
+            response_message = response_message + str(offer.id) + ". " + offer.quantity + "@" + str(offer.price) + '\n'
+            i += 1        
+        user.position = 22
+        user.fuel_request = req.id
+        user.save()
+    elif user.position == 22:
+        req = FuelRequest.objects.filter(id = user.fuel_request).first()
+        offer = Offer.objects.filter(id=int(message)).firs()
+        Transaction.objects.create(buyer=user,supplier=offer.supplier,offer=offer,complete=True,request=req)
 
-def view_fuel_updates(user):
-    pass
+    return response_message
+
+
+def view_fuel_updates(user, message):
+    if user.position == 1:
+        response_message = "1. Proceed \n2. Cancel"
+        user.position = 30
+        user.save()
+    elif user.position == 30:
+        updates = FuelUpdate.objects.filter(~Q(sub_type='Company')).all()
+        response_message = 'Which fuel update do you want? \n\n'
+        i = 1
+        for update in updates:
+            response_message = response_message + str(update.id) + ". " + "Petrol" + update.petrol_quantity + "@" + str(update.petrol_price) + "and" + "Diesel" + update.diesel_quantity + "@" + str(update.diesel_price) + '\n'
+            i += 1        
+        user.position = 31 
+        user.save()
+    elif user.position == 31:
+        #update = FuelUpdate.objects.filter(id = int(message)).first()
+        my_request = FuelRequest.objects.create(name=user, is_direct_deal=True)
+        user.fuel_request = my_request.id
+        response_message = "Which type of fuel do you want\n\n1. Petrol\n2. Diesel"
+        user.position = 32
+        user.save()
+    elif user.position == 32:
+        my_request = FuelRequest.objects.get(id=user.fuel_request)
+        if message == "1":
+            my_request.fuel_type = "Petrol"
+        elif message == "2":
+            my_request.fuel_type = "Diesel"
+        else:
+            return "Incorrect Choice"
+        my_request.save()
+        user.position = 33
+        user.save()
+        response_message = "How many litres do you want?"
+    elif user.position == 33:
+        my_request = FuelRequest.objects.get(id=user.fuel_request)
+        my_request.amount = message
+        my_request.save()
+        user.position = 34
+        user.save()
+        response_message = 'What is your payment method.\n\n1. ZWL(Cash)\n2. Ecocash\n3. RTGS(Swipe)/Transfer\n4. USD'
+    elif user.position == 34:
+        choice = payment_methods[int(message)]
+        my_request = FuelRequest.objects.get(id=user.fuel_request)
+        my_request.payment_method = choice
+        my_request.save()
+        user.position = 35
+        user.save()
+        response_message = "*Please select delivery method*\n\n1. Pick Up\n2. Delivery"
+    elif user.position == 35:
+        my_request = FuelRequest.objects.get(id=user.fuel_request)
+        if message == "1":
+            my_request.delivery_method = "SELF COLLECTION"
+        elif message == "2":
+            my_request.delivery_method = "DELIVERY"
+        else:
+            return "Incorrect Choice"        
+        my_request.save()
+   
+    return response_message
 
 def supplier_handler(request,user,message):
     if message.lower() == 'menu' and user.stage != 'registration':

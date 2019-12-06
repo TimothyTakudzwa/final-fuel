@@ -9,9 +9,12 @@ class Notification(models.Model):
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
 
-    class Meta:
-        ordering = ['user']
-
     def __str__(self):
-        return str(self.user)
+        return f'{str(self.user)} - {str(self.date)}'
+
+    class Meta:
+        ordering = ['date', 'time']
+
+    def save(self, *args, **kwargs):
+        super(Notification, self).save(*args, **kwargs)
 
