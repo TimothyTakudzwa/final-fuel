@@ -58,7 +58,7 @@ def buyer_handler(request,user,message):
     elif user.stage == 'follow_up':
         response_message = follow_up(user, message)
     elif user.stage == 'fuel_update':
-        response_message = fuel_update(user, message)
+        response_message = view_fuel_updates(user, message)
     elif user.stage == 'registration':
         user.stage = 'menu'
         user.position = 1        
@@ -152,9 +152,9 @@ def follow_up(user, message):
         user.save()
     elif user.position == 22:
         req = FuelRequest.objects.filter(id = user.fuel_request).first()
-        offer = Offer.objects.filter(id=int(message)).firs()
-        Transaction.objects.create(buyer=user,supplier=offer.supplier,offer=offer,complete=True,request=req)
-
+        offer = Offer.objects.filter(id=int(message)).first()
+        Transaction.objects.create(buyer=user,offer=offer,is_complete=True)
+        response_message = 'Transaction is complete'
     return response_message
 
 
@@ -168,7 +168,7 @@ def view_fuel_updates(user, message):
         response_message = 'Which fuel update do you want? \n\n'
         i = 1
         for update in updates:
-            response_message = response_message + str(update.id) + ". " + "Petrol" + update.petrol_quantity + "@" + str(update.petrol_price) + "and" + "Diesel" + update.diesel_quantity + "@" + str(update.diesel_price) + '\n'
+            response_message = response_message + str(update.id) + ". " + "Petrol" + str(update.petrol_quantity) + "@" + str(update.petrol_price) + "and" + "Diesel" + str(update.diesel_quantity) + "@" + str(update.diesel_price) + '\n'
             i += 1        
         user.position = 31 
         user.save()
@@ -215,6 +215,7 @@ def view_fuel_updates(user, message):
         else:
             return "Incorrect Choice"        
         my_request.save()
+        response_message = 'made request successfully'
    
     return response_message
 
