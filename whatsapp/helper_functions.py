@@ -145,7 +145,7 @@ def follow_up(user, message):
         response_message = 'Which offer do you want to accept? \n\n'
         i = 1
         for offer in offers:
-            response_message = response_message + str(offer.id) + ". " + offer.quantity + "@" + str(offer.price) + '\n'
+            response_message = response_message + str(offer.id) + ". " + str(offer.quantity) + "@" + str(offer.price) + '\n'
             i += 1        
         user.position = 22
         user.fuel_request = req.id
