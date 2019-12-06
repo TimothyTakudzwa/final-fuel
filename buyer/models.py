@@ -40,6 +40,11 @@ class FuelRequest(models.Model):
     fuel_type = models.CharField(max_length=50)
     payment_method = models.CharField(max_length=200)
     delivery_method = models.CharField(max_length=200)
+    delivery_address = models.CharField(max_length=200, default='')
+    storage_tanks = models.CharField(max_length=20, default='', choices=STORAGE_TANKS)
+    pump_required = models.BooleanField(default=False)
+    dipping_stick_required = models.BooleanField(default=False)
+    meter_required = models.BooleanField(default=False)
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
@@ -47,6 +52,7 @@ class FuelRequest(models.Model):
     is_closed = models.BooleanField(default=False)
     wait = models.BooleanField(default=False)
     last_deal = models.IntegerField(default=0)
+    is_complete = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['date', 'time', 'name']

@@ -99,7 +99,7 @@
             </table>
             <div class="col-sm-12"><button class="btn btn-round btn-primary" data-toggle="modal"
                     data-target="#create_request" style="margin-left: 40%;"> <i
-                        class="material-icons">local_gas_station</i>Look for Fuel</button></div>
+                        class="material-icons">local_gas_station</i>Find Fuel</button></div>
 
         </div>
     </div>
@@ -109,7 +109,7 @@
 </div>
 
 <!-- notice modal -->
-<div class="modal fade" id="create_request" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div class="modal fade modal-xl" id="create_request" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-notice">
         <div class="modal-content">
@@ -120,15 +120,55 @@
                 </button>
             </div>
             <div class="modal-body">
-             <form method="POST">
+            <form method="POST" action ="{% url 'buyer-dashboard' %}">
                     {% csrf_token %}
-                    {{ form|crispy }}
+                        <div class="form-group">
+                            {{ form.fuel_type|as_crispy_field }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.amount|as_crispy_field }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.payment_method|as_crispy_field }}
+                        </div>
+
+                        <div class="form-group">
+                            <select id="delivery_method" name="delivery_method" class="form-control">
+                                    <option value='SELF_COLLECTION'>SELF COLLECTION</option>
+                                    <option value='DELIVERY'>DELIVERY</option>
+                                </select>
+                        </div>
+
+                        <div class="form-group" name='choices' id='choices'>
+                            {{ form.delivery_address|as_crispy_field }}
+                            {{ form.storage_tanks|as_crispy_field }}
+                            <br>
+                            <div>
+                                <input class="form-control-md" type="checkbox" value ='False' id="pump_required" name="pump_required">
+                                <label for="pump_required">Pump Required</label>
+                            </div>
+                            
+                            <br>
+                            <div>
+                                <input class="form-control-md" type="checkbox" value="False" id="dipping_stick_required" name="dipping_stick_required">
+                                <label for="dipping_stick_required">Dipping Stick Required</label>
+                            </div>
+
+                            <br>
+                            <div>
+                                <input class="form-control-md" type="checkbox" value="False" id="meter_required" name="meter_required">
+                                <label for="meter_required">Meter Required</label>
+                            </div>
+
+                        </div>    
                     <!--<input type="hidden" value="{{data.company_id}}" name="company_id" /> -->
                 </div>
             
                 <div class="modal-footer justify-content-center">
                         <button type="submit" name="WaitForOffer" class="btn btn-info btn-round">Wait for Offer</button>
-                        <button type="submit" class="btn btn-primary btn-round">System Generated</button>
+                        <button type="submit" name='Recommender' class="btn btn-primary btn-round">System Generated</button>
 
                 </div>
              </form>
