@@ -6,7 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 import json 
 
 @csrf_exempt 
-def index(request):    
+def index(request):
+    response_message = ""    
     data = json.loads(request.body)
     message = data['messages'][0]['body']    
     phone_number = data['messages'][0]['author'].split('@')[0]
