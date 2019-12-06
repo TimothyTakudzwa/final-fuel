@@ -14,7 +14,8 @@ from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from datetime import datetime
 #from .constants import sender, subject
 from .models import FuelRequest
-from supplier.models import Offer
+from supplier.models import Offer, Transaction, Subsidiaries
+from buyer.recommend import recommend
 from django.contrib.auth import get_user_model
 
 user = get_user_model()
@@ -145,20 +146,21 @@ def profile(request):
 #@login_required
 def fuel_request(request):
     user_logged = request.user
-    fuel_requests = FuelRequest.objects.filter(name=user_logged, is_closed=False).all()
+    fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).all()
     for fuel_request in fuel_requests:
         if fuel_request.is_direct_deal:
             print(fuel_request.last_deal)
+
             search_company = FuelUpdate.objects.filter(id= fuel_request.last_deal).first()
-            print(search_company.company_id)
+            print(search_company)
+            depot = Subsidiaries.objects.filter(id=search_company.relationship_id).first()
             company = Company.objects.filter(id= search_company.company_id).first()
             print(company)
-
+            print(depot)
             fuel_request.request_company = company.name
+            fuel_request.depot = depot.name
         else:
-            fuel_request.request_company = 'is not a direct deal'
-
-    #print(type(fuel_requests))
+            fuel_request.request_company = ''
     print(fuel_requests)
     for fuel_request in fuel_requests:
         offer = Offer.objects.filter(request=fuel_request).first()
@@ -220,6 +222,39 @@ def dashboard(request):
             messages.success(request, f'kindly not your request has been made ')
 
         if 'WaitForOffer' in request.POST:
+            print(form.errors)
+
+            if form.is_valid():
+                print("----------dssddsfsdfds----------------------------------")
+
+                amount = form.cleaned_data['amount']
+                payment_method = form.cleaned_data['payment_method']
+                delivery_method = form.cleaned_data['delivery_method']
+                fuel_type = form.cleaned_data['fuel_type']
+                print(request.POST.get('delivery_address'), request.POST.get('storage_tanks'),  request.POST.get('pump_required'))
+                delivery_address = request.POST.get('delivery_address')
+                storage_tanks = request.POST.get('storage_tanks')
+                pump_required = request.POST.get('pump_required')
+                dipping_stick_required = request.POST.get('dipping_stick_required')
+                meter_required = request.POST.get('meter_required')
+
+                fuel_request = FuelRequest()
+                fuel_request.name = request.user       
+                fuel_request.amount = amount
+                fuel_request.fuel_type = fuel_type
+                fuel_request.payment_method = payment_method
+                fuel_request.delivery_method = delivery_method
+                fuel_request.delivery_address = delivery_address
+                fuel_request.storage_tanks = storage_tanks
+                fuel_request.pump_required = pump_required
+                fuel_request.dipping_stick_required =dipping_stick_required
+                fuel_request.meter_required = meter_required
+                fuel_request.wait = True
+                fuel_request.save()
+                print("----------Got to the save part ---------")
+            messages.success(request, f'kindly not your request has been made wait for an offer')
+
+        if 'Recommender' in request.POST:
             if form.is_valid():
                 amount = form.cleaned_data['amount']
                 payment_method = form.cleaned_data['payment_method']
@@ -231,19 +266,28 @@ def dashboard(request):
                 fuel_request.fuel_type = fuel_type
                 fuel_request.payment_method = payment_method
                 fuel_request.delivery_method = delivery_method
-                fuel_request.wait = True
                 fuel_request.save()
-            messages.success(request, f'kindly not your request has been made wait for an offer')
 
+                offer_id = recommend(fuel_request)
+                if not offer_id:
+                    messages.error(request, f'sorry we can not find an offer that fits your request at the moment')
+                    return render(request, 'buyer/offer.html', {'offers': offers })
+                else:
+                    offer = Offer.objects.filter(id=offer_id).first()
+                    return render(request, 'buyer/offer.html', {'offers': offers })
+    
     else:
         form = FuelRequestForm
     
-    updates = FuelUpdate.objects.filter(sub_type="depot")
+    updates = FuelUpdate.objects.filter(sub_type="Depot")
     for update in updates:
+        subsidiary = Subsidiaries.objects.filter(id = update.relationship_id).first()
         company = Company.objects.filter(id=update.company_id).first()
         if company is not None:
             update.company = company.name
-
+            update.depot = subsidiary.name
+            update.address = subsidiary.address 
+            print(subsidiary.name)
     print(updates)
     return render(request, 'buyer/dashboard.html',{'form':form, 'updates': updates})
 
@@ -252,6 +296,42 @@ def dashboard(request):
 def offers(request, id):
     selected_request = FuelRequest.objects.filter(id=id).first()
     offers = Offer.objects.filter(request=selected_request).all()
+    buyer = request.user 
     print(offers)
-    return render(request, 'buyer/offer.html', {'offers': offers } )
+    return render(request, 'buyer/offer.html', {'offers': offers })
 
+
+def accept_offer(request, id):
+    print('l am here')
+    print(id)
+    offer = Offer.objects.filter(id=id).first()
+    buyer = request.user 
+    trans = Transaction()
+    trans.offer = offer
+    trans.buyer = buyer
+    trans.save()
+
+    fuel_request_id = offer.request.id
+    print(fuel_request_id)
+
+    FuelRequest.objects.filter(id=fuel_request_id).update(is_complete=True)
+    return redirect("buyer-fuel-request")
+
+
+def transactions(request):
+    buyer = request.user
+    transactions = Transaction.objects.filter(buyer=buyer).all()
+    context = {
+        'transactions': transactions
+    }
+
+    return render(request, 'buyer/transactions.html', context=context)
+
+def invoice(request):
+    buyer = request.user
+    transactions = Transaction.objects.filter(buyer=buyer).all()
+    context = {
+        'transactions': transactions
+    }
+
+    return render(request, 'buyer/invoice.html', context=context)
