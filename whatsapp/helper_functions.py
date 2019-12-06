@@ -215,6 +215,7 @@ def view_fuel_updates(user, message):
         else:
             return "Incorrect Choice"        
         my_request.save()
+        response_message = 'made request successfully'
    
     return response_message
 
