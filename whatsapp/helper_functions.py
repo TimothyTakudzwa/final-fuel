@@ -220,6 +220,7 @@ def view_fuel_updates(user, message):
 
 
 def view_requests_handler(user, message):
+    response_message = ""
     if user.position == 0:
         requests = FuelRequest.objects.filter(wait=True).all()
         response_message = 'Which request do you want to make an offer? \n\n'
@@ -249,6 +250,7 @@ def view_requests_handler(user, message):
 
 
 def supplier_handler(request,user,message):
+    response_message = ""
     if message.lower() == 'menu' and user.stage != 'registration':
         user.stage = 'menu'
         user.position = 1
@@ -263,7 +265,9 @@ def supplier_handler(request,user,message):
             response_message = view_requests_handler(user, message)
         elif message == "2":
             user.stage = 'view_offers'
-            user.save
+            user.position = 0
+            user.save()
+            response_message = view_offers_handler(user, message)
 
     return response_message
 
