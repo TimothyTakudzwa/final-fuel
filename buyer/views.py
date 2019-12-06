@@ -218,16 +218,17 @@ def dashboard(request):
                 fuel_request.name = request.user       
                 fuel_request.amount = form.cleaned_data['amount']
                 fuel_request.fuel_type = form.cleaned_data['fuel_type']
-                fuel_request.usd = form.cleaned_data['usd']
-                fuel_request.cash = form.cleaned_data['cash']
-                fuel_request.ecocash = form.cleaned_data['ecocash']
-                fuel_request.swipe = form.cleaned_data['swipe']
+                fuel_request.usd = request.POST.get('usd') if request.POST.get('usd') == "True" else False
+                fuel_request.cash = request.POST.get('cash') if request.POST.get('cash') == "True" else False
+                fuel_request.ecocash = request.POST.get('ecocash') if request.POST.get('ecocash') == "True" else False
+                fuel_request.swipe = request.POST.get('swipe') if request.POST.get('swipe') == "True" else False
+               
                 fuel_request.delivery_method = form.cleaned_data['delivery_method']
                 fuel_request.delivery_address = request.POST.get('delivery_address')
-                fuel_request.storage_tanks = request.POST.get('storage_tanks')
-                fuel_request.pump_required = request.POST.get('pump_required')
-                fuel_request.dipping_stick_required =request.POST.get('dipping_stick_required')
-                fuel_request.meter_required = request.POST.get('meter_required')
+                fuel_request.storage_tanks = request.POST.get('storage_tanks') if request.POST.get('storage_tanks') == "True" else False
+                fuel_request.pump_required = request.POST.get('pump_required') if request.POST.get('pump_required') == "True" else False
+                fuel_request.dipping_stick_required =request.POST.get('dipping_stick_required') if request.POST.get('usd') == "True" else False
+                fuel_request.meter_required = request.POST.get('meter_required') if request.POST.get('usd') == "True" else False
                 fuel_request.wait = True
                 fuel_request.save()
                 print("----------Got to the save part ---------")
