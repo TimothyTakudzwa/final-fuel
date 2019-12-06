@@ -217,6 +217,8 @@ def stations(request):
     if request.method == 'POST':
         name = request.POST['name']
         address = request.POST['address']
+        destination_bank = request.POST['destination_bank']
+        account_number = request.POST['account_number']
         is_depot = request.POST['is_depot']
         opening_time = request.POST['opening_time']
         closing_time = request.POST['closing_time']
