@@ -4,7 +4,7 @@
 {% block body%}
 
 <div class="card">
-    <div class="card-header card-header-primary">
+    <div class="card-header card-header-primary" >
         <h4 class="card-title ">Fuel Updates</h4>
         <p class="card-category"> Here is a list of all Suppliers Offering Bulk Fuel</p>
     </div>
@@ -141,15 +141,46 @@
                         <div class="form-group">
                             {{ form.amount|as_crispy_field }}
                         </div>
-
-                        <div class="form-group">
-                            {{ form.payment_method|as_crispy_field }}
+                        <label class="form-group">Select Payment Method</label>
+                        <div class="col-sm-12 row">
+                            <div class="togglebutton form-group col">
+                                <label>
+                                    
+                                    <input type="checkbox" name="cash" id="cash">
+                                   
+                                    <span class="toggle"></span>
+                                    Cash
+                                </label>
+                            </div>
+                            <div class="togglebutton form-group col">
+                                <label>
+                                    <input type="checkbox" name="ecocash" id="ecocash">
+                                    <span class="toggle"></span>
+                                    Ecocash
+                                </label>
+                            </div>
+                            <div class="togglebutton form-group col">
+                                <label>
+                                    <input type="checkbox" name="swipe" id="swipe">
+                                    <span class="toggle"></span>
+                                    Swipe
+                                </label>
+                            </div>
+                            <div class="togglebutton form-group col">
+                                <label>
+                                    <input type="checkbox" name="usd" id="usd" >
+                                    <span class="toggle"></span>
+                                    USD
+                                </label>
+                            </div>
                         </div>
+                        
 
                         <div class="form-group">
+                            <label>Pick Up Method</label>
                             <select id="delivery_method" name="delivery_method" class="form-control">
-                                    <option value='SELF_COLLECTION'>SELF COLLECTION</option>
-                                    <option value='DELIVERY'>DELIVERY</option>
+                                    <option value='SELF_COLLECTION'>Self Collection</option>
+                                    <option value='DELIVERY'>Delivery</option>
                                 </select>
                         </div>
 
