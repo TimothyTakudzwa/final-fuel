@@ -110,7 +110,10 @@ def requests_handler(user, message):
         user.save()
         response_message = 'What is your payment method.\n\n1. ZWL(Cash)\n2. Ecocash\n3. RTGS(Swipe)/Transfer\n4. USD'
     elif user.position == 6:
-        choice = payment_methods[int(message)]
+        try:
+            choice = payment_methods[int(message)]
+        except Exception as e:
+            return "Wrong choice"
         fuel_request = FuelRequest.objects.get(id=user.fuel_request)
         fuel_request.payment_method = choice
         fuel_request.save()
