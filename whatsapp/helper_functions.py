@@ -127,7 +127,7 @@ def requests_handler(user, message):
 
 def follow_up(user, message):
     if user.position == 1:
-        response_message = "1. Proceed \n2. Cancel"
+        response_message = "1. Proceed \n 2. Cancel"
         user.position = 20
         user.save()
     elif user.position == 20:
