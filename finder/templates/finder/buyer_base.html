@@ -59,10 +59,10 @@
             </a>
           </li>  
           
-          <li class="nav-item ">
-            <a class="nav-link" href="./add_org.html">
+          <li class="nav-item {% if request.path == '/buyer/transactions' %} active {% endif %}  ">
+            <a class="nav-link" href="{%url 'buyer-transactions'%}">
               <i class="material-icons">swap_vertical_circle</i>
-              <p>Offers</p>
+              <p>Transactions</p>
             </a>
           </li>
 
@@ -397,6 +397,32 @@
       md.initDashboardPageCharts();
 
     });
+  </script>
+  <script>
+  $(document).ready(function() {
+    $('#choices').hide();
+
+     $('#delivery_method').change(function () {
+        if ($('#delivery_method option:selected').text() == "DELIVERY"){
+            $('#choices').show();
+        }
+         else { 
+              $('#choices').hide();
+         }
+    });
+  });
+
+  $('#pump_required').on('change', function(){
+  $(this).val(this.checked ? "True" : "False");
+  });
+
+  $('#dipping_stick_required').on('change', function(){
+  $(this).val(this.checked ? "True" : "False");
+  });
+
+  $('#meter_required').on('change', function(){
+  $(this).val(this.checked ? "True" : "False");
+  });
   </script>
 </body>
 

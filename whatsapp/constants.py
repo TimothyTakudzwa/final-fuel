@@ -25,10 +25,10 @@ To use this platform as an individual buyer type *NO*
 '''
 
 buyer_menu='''
-Hello {0}, What would you like to do today
+Hello {0}, What would you like to do today\n\n
 
-1. Make a Fuel Request
-2. Follow up on Fuel Request 
+1. Make a Fuel Request\n
+2. Follow up on Fuel Request\n
 3. View Fuel Updates
 
 '''
