@@ -153,7 +153,7 @@ def follow_up(user, message):
     elif user.position == 22:
         req = FuelRequest.objects.filter(id = user.fuel_request).first()
         offer = Offer.objects.filter(id=int(message)).first()
-        Transaction.objects.create(buyer=user,supplier=offer.supplier,offer=offer,complete=True,request=req)
+        Transaction.objects.create(buyer=user,offer=offer,is_complete=True)
         response_message = 'Transaction is complete'
     return response_message
 
