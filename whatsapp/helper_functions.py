@@ -58,7 +58,7 @@ def buyer_handler(request,user,message):
     elif user.stage == 'follow_up':
         response_message = follow_up(user, message)
     elif user.stage == 'fuel_update':
-        response_message = fuel_update(user, message)
+        response_message = view_fuel_updates(user, message)
     elif user.stage == 'registration':
         user.stage = 'menu'
         user.position = 1        
