@@ -16,6 +16,12 @@
                         <th>
                             <h6>Company Name</h6>
                         </th>
+                        <th>
+                            <h6>Depot</h6>
+                        </th>
+                        <th>
+                            <h6>Address</h6>
+                        </th>
 
                         <th>
                             <h6> Petrol Price</h6>
@@ -41,13 +47,19 @@
 
                     {% for data in updates %}
                     <tr>
-                        <td>
+                        <td  class="text-primary">
                             {{data.company}}
+                        </td>
+                        <td  class="text-primary">
+                            {{data.depot}} 
+                        </td>
+                        <td class="text-danger">
+                            {{data.address}}
                         </td>
                         <td class="text-danger">
                             {{data.petrol_price}}
                         </td>
-                        <td class="text-primary">
+                        <td>
                             {{data.diesel_price}}
                         </td>
                         <td class="text-primary">
@@ -57,7 +69,7 @@
                             {{data.diesel_quantity}}
                         </td>
                         <td class="text-primary">
-                            {{data.date}} -- {{data.time}}
+                            {{data.last_updated}} 
                         </td>
                         <td class="text-primary">
 
