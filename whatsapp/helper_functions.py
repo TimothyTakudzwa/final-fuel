@@ -263,11 +263,11 @@ def supplier_handler(request,user,message):
             user.position = 0
             user.save()
             response_message = view_requests_handler(user, message)
-        elif message == "2":
-            user.stage = 'view_offers'
-            user.position = 0
-            user.save()
-            response_message = view_offers_handler(user, message)
+        # elif message == "2":
+        #     user.stage = 'view_offers'
+        #     user.position = 0
+        #     user.save()
+        #     response_message = view_offers_handler(user, message)
 
     return response_message
 
