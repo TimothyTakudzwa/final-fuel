@@ -257,6 +257,7 @@ def supplier_handler(request,user,message):
         user.save()
         full_name = user.first_name + " " + user.last_name
         response_message = supplier_menu.format(full_name)
+        return response_message
     elif user.stage == 'menu':
         if message == "1":
             user.stage = 'view_requests'
