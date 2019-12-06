@@ -102,7 +102,7 @@ def register(request):
     else:
         form = BuyerRegisterForm
     
-    return render(request, 'buyer/register.html', {'form': form})
+    return render(request, 'buyer/signup.html', {'form': form})
 
 def send_message(phone_number, message):
     payload = {

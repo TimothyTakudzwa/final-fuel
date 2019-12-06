@@ -3,10 +3,11 @@ import requests
 from validate_email import validate_email
 from .constants import *
 from buyer.views import token_is_send
-from supplier.models import FuelRequest, Offer, Transaction
-# from finder.reccomend import recommend
-# from django.core.validators import validate_email
-from buyer.models import User
+from supplier.models import Offer, Transaction
+from buyer.models import User, FuelRequest
+from company.models import FuelUpdate
+from django.db.models import Q
+from buyer.recommend import recommend
 
 
 def send_message(phone_number, message):
@@ -19,25 +20,240 @@ def send_message(phone_number, message):
     print(r)
     return r.status_code
 
-
-def bot_action(request, user, message):
+def individual_handler(request, user,message):
     if message.lower() == 'menu' and user.stage != 'registration':
         user.position = 1
         user.stage = 'requesting'
         user.save()
         return requests_handler(user, message)
-    if user.stage == 'registration':
-        response_message = registration_handler(request, user, message)
-    elif user.stage == 'requesting':
+    pass
+
+def buyer_handler(request,user,message):
+    if message == 'menu':
+        user.stage = 'menu'
+        user.position = 1
+        user.save()
+        full_name = user.first_name + " " + user.last_name
+        response_message = buyer_menu.format(full_name)
+        return response_message 
+    if user.stage == 'menu':
+        if message == "1":
+            user.stage = 'make_fuel_request'
+            user.save()
+            response_message = requests_handler(user, message)
+        elif message == "2":
+            user.stage = 'follow_up'
+            user.save()
+            response_message = follow_up(user, message)
+        elif message == "3":
+            user.stage = 'fuel_update'
+            user.save()
+            response_message = view_fuel_updates(user, message)
+        else:
+            full_name = user.first_name + " " + user.last_name
+            response_message = buyer_menu.format(full_name)
+        return response_message   
+    elif user.stage == 'make_fuel_request':
         response_message = requests_handler(user, message)
-    elif user.stage == 'transacting':
-        response_message = transacting_handler(user, message)
+    elif user.stage == 'follow_up':
+        response_message = follow_up(user, message)
+    elif user.stage == 'fuel_update':
+        response_message = fuel_update(user, message)
+    elif user.stage == 'registration':
+        user.stage = 'menu'
+        user.position = 1        
+        full_name = user.first_name + " " + user.last_name
+        if user.activated_for_whatsapp: 
+            response_message = buyer_menu.format(full_name)           
+        else:        
+            response_message = registred_as_a.format(full_name, user.company.name, "Buyer")
+        user.save()
     else:
-        response_message = ''
+       pass
+    return response_message   
+
+def requests_handler(user, message):    
+    if user.position == 1:
+        response_message = "Which type of fuel do you want\n\n1. Petrol\n2. Diesel"
+        user.position = 3
+        user.save()
+    elif user.position == 3:
+        response_message = "How many litres do you want?"
+        if message == "1":
+            fuel_type = "Petrol"
+        elif message == "2":
+            fuel_type = "Diesel"
+        else:
+            return "Incorrect Choice"
+        fuel_request = FuelRequest.objects.create(fuel_type=fuel_type, name=user)
+        user.fuel_request = fuel_request.id
+        user.position = 4
+        user.save()
+    elif user.position == 4:
+        fuel_request = FuelRequest.objects.get(id=user.fuel_request)
+        fuel_request.amount = message
+        fuel_request.save()
+        user.position = 5
+        user.save()
+        response_message = "*Please select delivery method*\n\n1. Pick Up\n2. Delivery"       
+    elif user.position == 5: 
+        if message == "1":
+            delivery_method = "SELF COLLECTION"
+        elif message == "2":
+            delivery_method = "DELIVERY"
+        else:
+            return "Incorrect Choice"        
+        fuel_request = FuelRequest.objects.get(id=user.fuel_request)
+        fuel_request.delivery_method = delivery_method
+        fuel_request.save()
+        user.position = 6 
+        user.save()
+        response_message = 'What is your payment method.\n\n1. ZWL(Cash)\n2. Ecocash\n3. RTGS(Swipe)/Transfer\n4. USD'
+    elif user.position == 6:
+        choice = payment_methods[int(message)]
+        fuel_request = FuelRequest.objects.get(id=user.fuel_request)
+        fuel_request.payment_method = choice
+        fuel_request.save()
+        response = recommend(fuel_request)
+        if response == False:
+            pass
+        else:
+            offer = Offer.objects.filter(id=response).first()
+            response_message = suggested_choice.format(offer.supplier.company.name, offer.request.fuel_type, offer.quantity, offer.price, offer.id)
+        
+        response_message = suggested_choice
     return response_message
 
 
+def follow_up(user, message):
+    if user.position == 1:
+        response_message = "1. Proceed \n2. Cancel"
+        user.position = 20
+        user.save()
+    elif user.position == 20:
+        requests = FuelRequest.objects.filter(name=user).filter(wait=True).all()
+        response_message = 'Which request do you want to follow? \n\n'
+        i = 1
+        for req in requests:
+            response_message = response_message + str(req.id) + ". " + req.fuel_type + str(req.amount) + '\n'
+            i += 1        
+        user.position = 21 
+        user.save()
+    elif user.position == 21:
+        req = FuelRequest.objects.filter(id = int(message)).first()
+        offers = Offer.objects.filter(request=req).all()
+        response_message = 'Which offer do you want to accept? \n\n'
+        i = 1
+        for offer in offers:
+            response_message = response_message + str(offer.id) + ". " + offer.quantity + "@" + str(offer.price) + '\n'
+            i += 1        
+        user.position = 22
+        user.fuel_request = req.id
+        user.save()
+    elif user.position == 22:
+        req = FuelRequest.objects.filter(id = user.fuel_request).first()
+        offer = Offer.objects.filter(id=int(message)).firs()
+        Transaction.objects.create(buyer=user,supplier=offer.supplier,offer=offer,complete=True,request=req)
+
+    return response_message
+
+
+def view_fuel_updates(user, message):
+    if user.position == 1:
+        response_message = "1. Proceed \n2. Cancel"
+        user.position = 30
+        user.save()
+    elif user.position == 30:
+        updates = FuelUpdate.objects.filter(~Q(sub_type='Company')).all()
+        response_message = 'Which fuel update do you want? \n\n'
+        i = 1
+        for update in updates:
+            response_message = response_message + str(update.id) + ". " + "Petrol" + update.petrol_quantity + "@" + str(update.petrol_price) + "and" + "Diesel" + update.diesel_quantity + "@" + str(update.diesel_price) + '\n'
+            i += 1        
+        user.position = 31 
+        user.save()
+    elif user.position == 31:
+        #update = FuelUpdate.objects.filter(id = int(message)).first()
+        my_request = FuelRequest.objects.create(name=user, is_direct_deal=True)
+        user.fuel_request = my_request.id
+        response_message = "Which type of fuel do you want\n\n1. Petrol\n2. Diesel"
+        user.position = 32
+        user.save()
+    elif user.position == 32:
+        my_request = FuelRequest.objects.get(id=user.fuel_request)
+        if message == "1":
+            my_request.fuel_type = "Petrol"
+        elif message == "2":
+            my_request.fuel_type = "Diesel"
+        else:
+            return "Incorrect Choice"
+        my_request.save()
+        user.position = 33
+        user.save()
+        response_message = "How many litres do you want?"
+    elif user.position == 33:
+        my_request = FuelRequest.objects.get(id=user.fuel_request)
+        my_request.amount = message
+        my_request.save()
+        user.position = 34
+        user.save()
+        response_message = 'What is your payment method.\n\n1. ZWL(Cash)\n2. Ecocash\n3. RTGS(Swipe)/Transfer\n4. USD'
+    elif user.position == 34:
+        choice = payment_methods[int(message)]
+        my_request = FuelRequest.objects.get(id=user.fuel_request)
+        my_request.payment_method = choice
+        my_request.save()
+        user.position = 35
+        user.save()
+        response_message = "*Please select delivery method*\n\n1. Pick Up\n2. Delivery"
+    elif user.position == 35:
+        my_request = FuelRequest.objects.get(id=user.fuel_request)
+        if message == "1":
+            my_request.delivery_method = "SELF COLLECTION"
+        elif message == "2":
+            my_request.delivery_method = "DELIVERY"
+        else:
+            return "Incorrect Choice"        
+        my_request.save()
+   
+    return response_message
+
+def supplier_handler(request,user,message):
+    if message.lower() == 'menu' and user.stage != 'registration':
+        user.position = 1
+        user.stage = 'requesting'
+        user.save()
+        return requests_handler(user, message)
+    pass
+
+def service_station_handler(request,user,message):
+    if message.lower() == 'menu' and user.stage != 'registration':
+        user.position = 1
+        user.stage = 'requesting'
+        user.save()
+        return requests_handler(user, message)
+    pass
+
+
+def bot_action(request, user, message):   
+    if user.stage == 'registration' and user.position !=0:
+        return registration_handler(request, user, message)
+    if user.user_type == 'INDIVIDUAL':
+        return individual_handler(request, user, message)
+        
+    elif user.user_type == 'S_ADMIN':
+        return "You are not allowed to use this platform"
+    elif user.user_type == 'BUYER':
+        return buyer_handler(request, user,message)
+    elif user.user_type == 'SUPPLIER':
+        return supplier_handler(requests_handler, user, message)
+    elif user.user_type == 'SS_SUPPLIER':
+        return service_station_handler(request, user,message)    
+    
+
+
 def registration_handler(request, user, message):
+    
     if user.position == 1:
         response_message = "First before we get started can i please have your *Full Name*"
         user.position = 2 
@@ -100,47 +316,6 @@ def registration_handler(request, user, message):
     return response_message
 
 
-def requests_handler(user, message):    
-    if user.position == 1:
-        response_message = "Which type of fuel do you want\n\n1. Petrol\n2. Diesel"
-        user.position = 3
-        user.save()
-    elif user.position == 3:
-        response_message = "How many litres do you want?"
-        fuel_type = "Petrol" if message == '1' else "Diesel"
-        fuel_request = FuelRequest.objects.create(fuel_type=fuel_type, name=user.name)
-        user.fuel_request = fuel_request
-        user.position = 4
-        user.save()
-    elif user.position == 4:
-        fuel_request = FuelRequest.objects.get(id=user.fuel_request.id)
-        fuel_request.amount = message
-        fuel_request.save()
-        user.position = 5
-        user.save()
-        response_message = "*Please select delivery method*\n\n1. Pick Up\n2. Delivery"       
-    elif user.position == 5: 
-        delivery_method = "SELF COLLECTION" if message == '1' else "DELIVERY"
-        fuel_request = FuelRequest.objects.get(id=user.fuel_request.id)
-        fuel_request.delivery_method = delivery_method
-        fuel_request.save()
-        user.position = 6 
-        user.save()
-        response_message = 'What is your payment method.\n\n1. ZWL(Cash)\n2. Ecocash\n3. RTGS(Swipe)/Transfer\n'
-    elif user.position == 6:
-        choice = payment_methods[int(message)]
-        fuel_request = FuelRequest.objects.get(id=user.fuel_request.id)
-        fuel_request.payment_method = choice
-        fuel_request.save()
-        response = recommend(fuel_request.fuel_type, fuel_request.amount, user.name.id, fuel_request.price)
-        if response == False:
-            pass
-        else:
-            offer = Offer.objects.filter(id=response).first()
-            response_message = suggested_choice.format(offer.supplier.company.name, offer.request.fuel_type, offer.quantity, offer.price, offer.id)
-        
-        response_message = suggested_choice
-    return response_message
 
 def transacting_handler(user, message):
     if user.position == 1:

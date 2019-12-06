@@ -35,7 +35,17 @@
               </tr>
               <tr>
                 <td height="50">Payment Method</td>
-                <td height="50">{{updates.payment_methods}}</td>
+                <td height="50">
+                {% if updates.cash %}
+                CASH &nbsp;
+                {% if updates.ecocash %}
+                ECOCASH &nbsp;
+                {% if updates.usd %}
+                USD &nbsp;
+                {% if updates.swipe %}
+                SWIPE
+                {% endif %}{% endif %}{% endif %}{% endif %}
+                </td>
               </tr>
 
       </table>
@@ -58,7 +68,39 @@
                 {% load crispy_forms_tags %}
                 <form action="{% url 'supplier:fuel_update' %}" method="POST">
                            {% csrf_token %}
-                           {{stock_form|crispy}}
+                        <div class="form-group">
+                            <lable>Petrol Quantity</lable>
+                            <input type="text" name="petrol_quantity" class="form-control" value="{{updates.petrol_quantity}}" />
+                        </div>
+                        <div class="form-group">
+                          <lable>Petrol Price</lable>
+                          <input type="text" name="petrol_price" class="form-control" value="{{updates.petrol_price}}" />
+                      </div>
+                      <div class="form-group">
+                        <lable>Diesel Quantity</lable>
+                        <input type="text" name="diesel_quantity" class="form-control" value="{{updates.diesel_quantity}}" />
+                    </div>
+                    <div class="form-group">
+                      <lable>Diesel Price</lable>
+                      <input type="text" name="diesel_price" class="form-control" value="{{updates.diesel_price}}" />
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      {{update_form.cash|as_crispy_field}}
+                    </div>
+                    <div class="col-md-6">
+                      {{update_form.usd|as_crispy_field}}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      {{update_form.swipe|as_crispy_field}}
+                    </div>
+                    <div class="col-md-6">
+                      {{update_form.ecocash|as_crispy_field}}
+                    </div>
+                    </div>
+                  </div>
                 <button class="btn btn-primary" type="submit">Update</button>  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>  
                 </form>
               </div>

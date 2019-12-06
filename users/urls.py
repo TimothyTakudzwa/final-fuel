@@ -15,6 +15,8 @@ urlpatterns = [
     path('myaccount/', views.myaccount, name="myaccount"),
     path('depot_staff/', views.depot_staff, name="depot_staff"),
     path('export_pdf/', views.export_pdf, name="export_pdf"),
+    # path('generate_pdf/', views.generate_pdf, name="generate_pdf"),
+    path('account_activate/', views.account_activate, name="account_activate"),
     path('export_csv/', views.export_csv, name="export_csv"),
     path('statistics/', views.statistics, name="statistics"),
     path('report_generator/', views.report_generator, name="report_generator"),
@@ -25,6 +27,30 @@ urlpatterns = [
     path('buyer_user_delete/<int:sid>', views.buyers_delete, name="buyers_delete"),
     path('supplier_user_delete/<int:cid>/<int:sid>', views.supplier_user_delete, name="supplier_user_delete"),
     path('supplier_user_edit/<int:cid>', views.supplier_user_edit, name="supplier_user_edit"),
+    path('edit_subsidiary/<int:id>', views.edit_subsidiary, name="edit_subsidiary"),
+    path('delete_subsidiary/<int:id>', views.delete_subsidiary, name="delete_subsidiary"),
+    path('edit_fuel_prices/<int:id>', views.edit_fuel_prices, name="edit_fuel_prices"),
+    path('allocate_diesel/<int:id>', views.allocate_diesel, name="allocate_diesel"),
+    path('edit_ss_rep/<int:id>', views.edit_ss_rep, name="edit_ss_rep"),
+    path('edit_depot_rep/<int:id>', views.edit_depot_rep, name="edit_depot_rep"),
+    path('delete_depot_staff/<int:id>', views.delete_depot_staff, name="delete_depot_staff"),
+    path('company_profile/', views.company_profile, name="company_profile"),
+    path('company_petrol/<int:id>', views.company_petrol, name="company_petrol"),
+    path('company_diesel/<int:id>', views.company_diesel, name="company_diesel"),
+
+    
+    
+
+   
+
+    
+    
+    
+    
+    
+
+    
+    
 
 
 

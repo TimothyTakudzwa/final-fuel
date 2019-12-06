@@ -25,112 +25,6 @@ User = get_user_model()
 today = date.today()
 
 
-def register(request):
-    context = {
-        'title': 'Fuel Finder | Register',
-        'email': RegistrationEmailForm(),
-        'registration': RegistrationForm()
-    }
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        username = request.POST.get('username')
-        pass1 = request.POST.get('password1')
-        pass2 = request.POST.get('password2')
-
-        if pass1 == pass2:
-            User.objects.create_user(username=username, email=email, password=pass1)
-
-            user = User.objects.get(username=username)
-            user.is_active = False
-            user.save()
-
-            token = secrets.token_hex(12)
-            TokenAuthentication.objects.create(token=token, user=user)
-            domain = request.get_host()
-            url = f'{domain}/verification/{token}/{user.id}'
-
-            sender = f'Fuel Finder Accounts<tests@marlvinzw.me>'
-            subject = 'User Registration'
-            message = f"Dear {username} , complete signup here : \n {url} \n. Your password is {pass1}"
-
-            try:
-                msg = EmailMultiAlternatives(subject, message, sender, [f'{email}'])
-                msg.send()
-
-                messages.success(request, f"{username} Registered Successfully")
-                return redirect('dashboard')
-
-            except BadHeaderError:
-                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
-                return redirect('register')
-        else:
-            messages.warning(request, "Passwords don't match")
-            return redirect('register')
-    return render(request, 'supplier/accounts/register.html', context=context)
-
-
-def verification(request, token, user_id):
-    context = {
-        'title': 'Fuel Finder | Verification',
-    }
-    check = User.objects.filter(id=user_id)
-    print("here l am ")
-
-    if check.exists():
-        user = User.objects.get(id=user_id)
-        print(user)
-
-        token_check = TokenAuthentication.objects.filter(user=user, token=token)
-        result = bool([token_check])
-        print(result)
-        if result:
-            if request.method == 'POST':
-                user = User.objects.get(id=user_id)
-                form = BuyerUpdateForm(request.POST, request.FILES, instance=user)
-                if form.is_valid():
-                    form.save()
-                    company_id = request.POST.get('company_id')
-                    print(f"---------Supplier {company_id} {type(company_id)}")
-                    selected_company = Company.objects.filter(id=company_id).first()
-                    user.company = selected_company
-                    user.is_active = True
-                    user.save()
-                    return redirect('buyer-login')
-            else:
-                form = BuyerUpdateForm
-                messages.success(request, f'Email verification successs, Fill in the deatails to complete registration')
-                return render(request, 'supplier/accounts/verification.html', {'form': form})
-        else:
-            messages.warning(request, 'Wrong verification token')
-            return redirect('login')
-    else:
-        messages.warning(request, 'Wrong verification id')
-        return redirect('login')
-    return render(request, 'supplier/accounts/verification.html', context=context)
-
-
-def sign_in(request):
-    context = {
-        'title': 'Fuel Finder | Login',
-    }
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        authenticated = authenticate(username=username, password=password)
-        if authenticated:
-            client = User.objects.get(username=username)
-            login(request, client)
-
-            messages.success(request, 'Welcome {client.username}')
-            return redirect('dashboard')
-        else:
-            messages.warning(request, 'Incorrect username or password')
-            return redirect('login')
-
-    return render(request, 'supplier/accounts/login.html', context=context)
-
-
 @login_required()
 def change_password(request):
     context = {
@@ -153,7 +47,7 @@ def change_password(request):
                 update_session_auth_hash(request, user)
 
                 messages.success(request, 'Password Successfully Changed')
-                return redirect('dashboard')
+                return redirect('account')
         else:
             messages.warning(request, 'Wrong Old Password, Please Try Again')
             return redirect('change-password')
@@ -167,21 +61,13 @@ def account(request):
         'user': UserUpdateForm(instance=request.user)
 
     }
-    if request.method == 'POST':
-        userform = UserUpdateForm(request.POST, instance=request.user)
-        if userform.is_valid():
-            userform.save()
-            messages.success(request, f'Profile successfully updated')
-            return redirect('account')
-        else:
-            messages.warning(request, f'Something went wrong while saving your changes')
-            return redirect('account')
     return render(request, 'supplier/accounts/account.html', context=context)
 
 
 @login_required()
 def fuel_request(request):
     requests = FuelRequest.objects.filter(date=today)
+    fuel = FuelUpdate.objects.filter(relationship_id=request.user.id).first()
     for buyer_request in requests:
         if Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).exists():
             offer = Offer.objects.get(supplier_id=request.user, request_id=buyer_request)
@@ -192,6 +78,13 @@ def fuel_request(request):
         else:
             buyer_request.my_offer = 0
             buyer_request.offer_id = 0
+        if fuel:
+            if buyer_request.fuel_type == 'petrol':
+                buyer_request.price = fuel.petrol_price
+            else:
+                buyer_request.price = fuel.diesel_price
+        else:
+            buyer_request.price = 0
     return render(request, 'supplier/accounts/fuel_request.html', {'requests':requests})
 
 
@@ -207,17 +100,20 @@ def rate_supplier(request):
 def fuel_update(request):
     print(f"--------------------------{request.user.subsidiary_id}----------------------")
 
-    updates = FuelUpdate.objects.filter(sub_type='depot', relationship_id=request.user.subsidiary_id).first()
+    updates = FuelUpdate.objects.filter(sub_type='Depot', relationship_id=request.user.subsidiary_id).first()
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     print(f"--------------------------{updates}!!!!!!!!!!!!!!!!!!!!!!!!----------------------")
     if request.method == 'POST':
-        if FuelUpdate.objects.filter(sub_type='depot', relationship_id=request.user.subsidiary_id).exists():
-            fuel_update = FuelUpdate.objects.get(sub_type='depot', relationship_id=request.user.subsidiary_id)
+        if FuelUpdate.objects.filter(sub_type='Depot', relationship_id=request.user.subsidiary_id).exists():
+            fuel_update = FuelUpdate.objects.get(sub_type='Depot', relationship_id=request.user.subsidiary_id)
             fuel_update.petrol_quantity = request.POST['petrol_quantity']
             fuel_update.petrol_price = request.POST['petrol_price']
             fuel_update.diesel_quantity = request.POST['diesel_quantity']
             fuel_update.diesel_price = request.POST['diesel_price']
-            fuel_update.payment_methods = request.POST['payment_methods']
+            fuel_update.cash = request.POST['cash']
+            fuel_update.ecocash = request.POST['ecocash']
+            fuel_update.swipe = request.POST['swipe']
+            fuel_update.usd = request.POST['usd']
             fuel_update.save()
             messages.success(request, 'updated quantities successfully')
             service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
@@ -227,12 +123,15 @@ def fuel_update(request):
             Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
             return redirect('fuel_update')
         else:
-            sub_type = 'depot'
+            sub_type = 'Depot'
             petrol_quantity = request.POST.get('petrol_quantity')
             petrol_price = request.POST.get('petrol_price')
             diesel_quantity = request.POST.get('diesel_quantity')
             diesel_price = request.POST.get('diesel_price')
-            payment_methods = request.POST.get('payment_methods')
+            fuel_update.cash = request.POST['cash']
+            fuel_update.ecocash = request.POST['ecocash']
+            fuel_update.swipe = request.POST['swipe']
+            fuel_update.usd = request.POST['usd']
             relationship_id = request.user.subsidiary_id
             FuelUpdate.objects.create(relationship_id=relationship_id, sub_type=sub_type,payment_methods=payment_methods, petrol_quantity=petrol_quantity, petrol_price=petrol_price, diesel_quantity=diesel_quantity, diesel_price=diesel_price)
             messages.success(request, 'Quantities uploaded successfully')

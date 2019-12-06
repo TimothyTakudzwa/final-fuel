@@ -57,7 +57,14 @@
                                             {% load crispy_forms_tags %}
                                             <form action="{% url 'supplier:supplier' request.id %}" method="POST">
                                                 {% csrf_token %}
-                                                {{ make_offer_form|crispy}}
+                                                <div class="form-group">
+                                                    <lable>Fuel Quantity</lable>
+                                                    <input type="text" name="quantity" class="form-control" value="{{request.amount}}" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <lable>Fuel Price</lable>
+                                                    <input type="text" name="price" class="form-control" value="{{request.price}}" />
+                                                </div>
                                             <button class="btn btn-primary" type="submit">Confirm</button>
                                             </form>
                                     </div>
@@ -82,7 +89,14 @@
                                             {% load crispy_forms_tags %}
                                             <form action="{% url 'supplier:edit_offer' request.offer_id %}" method="POST">
                                                 {% csrf_token %}
-                                                {{ make_offer_form|crispy}}
+                                                <div class="form-group">
+                                                    <lable>Fuel Quantity</lable>
+                                                    <input type="text" name="quantity" class="form-control" value="{{request.offer_quantity}}" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <lable>Fuel Price</lable>
+                                                    <input type="text" name="price" class="form-control" value="{{request.offer_price}}" />
+                                                </div>
                                             <button class="btn btn-primary" type="submit">Confirm</button>
                                             </form>
                                     </div>

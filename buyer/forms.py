@@ -9,14 +9,15 @@ User = get_user_model()
 
 
 class BuyerRegisterForm(forms.ModelForm):
-    email = forms.EmailField()
-    phone_number = forms.CharField()
     first_name = forms.CharField() 
     last_name = forms.CharField()
+    email = forms.EmailField()
+    phone_number = forms.CharField()
+    
 
     class Meta: 
         model = User
-        fields = ['email', 'phone_number', 'first_name', 'last_name']
+        fields = [ 'first_name', 'last_name', 'email', 'phone_number']
 
 OPTIONS= [
 ('BUYER', 'Buyer'),

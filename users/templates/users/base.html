@@ -9,8 +9,13 @@
    <meta charset="utf-8" />
    <!--     ChartistJS CDNS     -->
    <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
-   <link rel="apple-touch-icon" sizes="76x76" href="{% static 'finder/assets/img/apple-icon.png' %}">
-   <link rel="icon" type="image/png" href="{% static 'finder/assets/img/favicon.png' %}">
+   <link rel="icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png"
+        sizes="32x32" />
+    <link rel="icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png"
+        sizes="192x192" />
+    <link rel="apple-touch-icon-precomposed" href="wp-content\themes\oppi\assets\img\logo-color.png" />
+    <meta name="msapplication-TileImage"
+        content="https://droitthemes.com/wp/oppi/wp-content/uploads/2019/10/favicon.png" />
    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
    <title>
      Fuel Finder 
@@ -36,7 +41,7 @@
          Tip 2: you can also add an image using data-image tag
      -->
        <div class="logo">
-         <a href="http://www.creative-tim.com" class="simple-text logo-normal">
+         <a href="{% url 'users:company_profile' %}" class="simple-text logo-normal">
            <strong>{{request.user.company.name}}</strong>
          </a>
        </div>
@@ -94,12 +99,12 @@
               </a>
             </li>
            
-           <li class="nav-item">
-             <a class="nav-link" href="#">
-               <i class="material-icons">close</i>
-               <p>Logout</p>
-             </a>
-           </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}?next=/">
+                  <i class="material-icons">close</i>
+                  <p>Logout</p>
+                </a>
+              </li>
 
            
           
@@ -234,6 +239,14 @@
 
     $(document).ready(function() {
       $('#example').DataTable({"order": [[ 0, "desc" ]]});
+    } );
+
+    $(document).ready(function() {
+      $('#myexample').DataTable({"order": [[ 0, "desc" ]]});
+    } );
+
+    $(document).ready(function() {
+      $('#myexample1').DataTable({"order": [[ 0, "desc" ]]});
     } );
   
      $(document).ready(function() {

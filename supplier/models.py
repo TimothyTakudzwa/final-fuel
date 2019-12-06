@@ -16,6 +16,10 @@ class Subsidiaries(models.Model):
     opening_time = models.CharField(max_length=100, default='08:00')
     closing_time = models.CharField(max_length=100, default='22:00')
     fuel_capacity = models.ForeignKey(FuelUpdate, on_delete=models.DO_NOTHING, null=True)
+    destination_bank = models.CharField(max_length=100, default="")
+    account_number = models.CharField(max_length=100, default="")
+    amount = models.FloatField(default=0.00)
+    logo = models.ImageField(default='default.png', upload_to='subsidiary_profile_logo')
 
 
     def __str__(self):
@@ -30,10 +34,16 @@ class Subsidiaries(models.Model):
 
 class FuelAllocation(models.Model):
     date = models.DateField(auto_now_add=True)
-    assigned_staff = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    fuel_type = models.CharField(max_length=300) 
-    allocated_quantity = models.CharField(max_length=255)
-    current_available_quantity = models.CharField(max_length=255)
+    diesel_quantity = models.IntegerField(default=0)
+    petrol_quantity = models.IntegerField(default=0)
+    sub_type = models.CharField(max_length=255)
+    cash = models.BooleanField(default=False)
+    ecocash = models.BooleanField(default=False)
+    swipe = models.BooleanField(default=False)
+    usd = models.BooleanField(default=False)
+    petrol_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    diesel_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    assigned_staff_id = models.IntegerField()
 
 
 

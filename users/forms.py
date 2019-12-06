@@ -72,17 +72,28 @@ class SupplierContactForm(forms.Form):
                             validators=[validate_user_email])
     phone_number = forms.CharField(label='Cellphone number', required=True,
                                  max_length=100)
-    password = forms.CharField(label='Password', required=True, max_length=100,
-                             widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Password Confirm', required=True,
-                             widget=forms.PasswordInput, max_length=100)
 
     def clean(self):
         cleaned_data = super(SupplierContactForm, self).clean()
-        password = cleaned_data.get("password")
-        password2 = cleaned_data.get("password2")
-        if password != password2:
-            raise forms.ValidationError("The passwords do not match!")
+        
+
+class DepotContactForm(forms.Form):
+    first_name = forms.CharField(label='First Name', required=True,
+                                 max_length=30)  
+    last_name = forms.CharField(label='Last Name', required=True,
+                                 max_length=30)                         
+    username = forms.CharField(label='Username', required=True,
+                                 max_length=30)
+    depot = forms.ChoiceField()
+    email = forms.EmailField(required=True, max_length=100,
+                            validators=[validate_user_email])
+    phone_number = forms.CharField(label='Cellphone number', required=True,
+                                 max_length=100)
+    
+
+    def clean(self):
+        cleaned_data = super(DepotContactForm, self).clean()
+        
 
 
 class SupplierProfileEditForm(forms.Form):

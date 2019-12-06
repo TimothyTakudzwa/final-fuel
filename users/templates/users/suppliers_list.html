@@ -73,7 +73,7 @@
                            <td>{{supplier.email}}</td>
                            <td style="width: 33%;">
                                <div class="btn-group">
-                                      <!--<button class="btn btn-success btn-sm" data-toggle="modal" data-target="#edit_{{supplier.id}}">Edit</button>-->
+                                    <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#edit_{{supplier.id}}">Edit</button>
                                     <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete_{{supplier.id}}">Delete</button>
                                     <!--<a href="{% url 'users:supplier_user_create' supplier.id %}" class="btn btn-info btn-sm">More Details</a>-->
 
@@ -120,43 +120,35 @@
                                     </button>
                                     </div>
                                     <div class="modal-body">
-                                            <form action="{% url 'users:supplier_user_edit' supplier.id %}" method="POST">
+                                            <form action="{% url 'users:edit_ss_rep' supplier.id %}" method="POST">
                                                     {% csrf_token %}
 
-                                                   <!-- <div class="form-group row">
-                                                        
-                                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Company</label>
-                                                    <div class="col-sm-10">
-                                                        <input name="company" type="telephone" class="form-control" id="inputEmail3"  value="{{ supplier.company}}">
-                                                    </div>
-                                                    </div>
-                                                    -->
-                                                    <div class="form-group row">
-                                                        
-                                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Phone</label>
-                                                    <div class="col-sm-10">
-                                                        <input name="phone_number" type="telephone" class="form-control" id="inputEmail3"  value="{{ supplier.phone_number}}">
-                                                    </div>
-                                                    </div>
-                                                    
-
-                                                    <div class="form-group row">
-                                                        <label for="inputState" class="col-sm-2 col-form-label">Role</label>
-                                                        <div class="col-sm-10" style="margin-left: 5px;"></div>
-                                                            <select name="user_type" id="inputState" class="form-control" style="margin-left: 15px;">
-                                                                <option>Staff</option>
-                                                                <option>Admin</option>
-                                                            </select>
-                                                        </div>    
-                                                        <div class="col-md-12 text-center">     
-                                                            <button type="submit" class="btn btn-primary ">Submit</button>
+                                                    <div class="form-group">
+                                                            <lable>First Name</lable>
+                                                            <input type="text" name="first_name" class="form-control"  value="{{ supplier.first_name}}" />
                                                         </div>
+                                                        <div class="form-group">
+                                                                <lable>Last Name</lable>
+                                                                <input type="text" name="last_name" class="form-control"  value="{{ supplier.last_name}}" />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                    <lable>Email</lable>
+                                                                    <input type="email" name="email" class="form-control"  value="{{ supplier.email}}" />
+                                                                </div>
+                                                    <div class="form-group">
+                                                            <lable>Phone Number</lable>
+                                                            <input type="telephone" name="phone_number" class="form-control"  value="{{ supplier.phone_number}}" />
+                                                        </div>
+                                                    
+                                                    <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> <button type="submit" class="btn btn-primary ">Submit</button>
+                                                            </div>
+                            
+                                                        
                                                   </form> 
-                                            </form>
+                                            
                                     </div>
-                                    <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div>
+                                    
                                 </div>
                                 </div>
                             </div>
@@ -178,8 +170,8 @@
                                             {% csrf_token %}
                                             <p>Are You Sure You Want To Delete {{ supplier.username|title }}</p>
                                                 <div class="btn-group">
-                                                    <button class="btn btn-danger" type="submit">Yes</button>
-                                                    <button class="btn btn-warning" data-dismiss="modal">No</button>
+                                                    
+                                                    <button class="btn btn-warning" data-dismiss="modal">No</button> <button class="btn btn-danger" type="submit">Yes</button>
                                                 </div>
                                             </form>
                                     </div>
