@@ -7,6 +7,7 @@ from supplier.models import Offer, Transaction
 from buyer.models import User, FuelRequest
 from company.models import FuelUpdate
 from django.db.models import Q
+from buyer.recommend import recommend
 
 
 def send_message(phone_number, message):
@@ -47,7 +48,7 @@ def buyer_handler(request,user,message):
         elif message == "3":
             user.stage = 'fuel_update'
             user.save()
-            response_message = view_fuel_updates(user)
+            response_message = view_fuel_updates(user, message)
         else:
             full_name = user.first_name + " " + user.last_name
             response_message = buyer_menu.format(full_name)
