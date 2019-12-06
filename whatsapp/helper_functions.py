@@ -291,7 +291,7 @@ def bot_action(request, user, message):
     elif user.user_type == 'BUYER':
         return buyer_handler(request, user,message)
     elif user.user_type == 'SUPPLIER':
-        return supplier_handler(requests_handler, user, message)
+        return supplier_handler(request, user, message)
     elif user.user_type == 'SS_SUPPLIER':
         return service_station_handler(request, user,message)    
     
