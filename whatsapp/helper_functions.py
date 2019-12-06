@@ -218,13 +218,54 @@ def view_fuel_updates(user, message):
    
     return response_message
 
+
+def view_requests_handler(user, message):
+    if user.position == 0:
+        requests = FuelRequest.objects.filter(wait=True).all()
+        response_message = 'Which request do you want to make an offer? \n\n'
+        i = 1
+        for req in requests:
+            response_message = response_message + str(req.id) + ". " + req.fuel_type + str(req.amount) + '\n'
+            i += 1        
+        user.position = 1 
+        user.save()
+    elif user.position == 1:
+        fuel_request = FuelRequest.objects.filter(id=int(message)).first()
+        user.fuel_request = fuel_request
+        response_message = "How many litres are you offering?"
+        user.position = 2
+        user.save()
+    elif user.position == 2:
+        Offer.objects.create(quantity=float(message), supplier=request.user, request=fuel_request)
+        response_message = "At what price per litre?"
+        user.position = 3
+        user.save()
+    elif user.position == 3:
+        offer = Offer.objects.filter(supplier=request.user, request=fuel_request).first()
+        offer.price = float(message)
+        offer.save()
+        response_message = "Offer successfully send! Press *menu* to go back"
+    return response_message
+
+
 def supplier_handler(request,user,message):
     if message.lower() == 'menu' and user.stage != 'registration':
+        user.stage = 'menu'
         user.position = 1
-        user.stage = 'requesting'
         user.save()
-        return requests_handler(user, message)
-    pass
+        full_name = user.first_name + " " + user.last_name
+        response_message = supplier_menu.format(full_name)
+    elif user.stage == 'menu':
+        if message == "1":
+            user.stage = 'view_requests'
+            user.position = 0
+            user.save()
+            response_message = view_requests_handler(user, message)
+        elif message == "2":
+            user.stage = 'view_offers'
+            user.save
+
+    return response_message
 
 def service_station_handler(request,user,message):
     if message.lower() == 'menu' and user.stage != 'registration':
