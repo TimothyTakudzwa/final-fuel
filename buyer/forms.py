@@ -48,9 +48,11 @@ class FuelRequestForm(forms.ModelForm):
 
     delivery_method = forms.CharField(label='Delivery Method', widget=forms.Select(choices=DELIVERY_OPTIONS))
     fuel_type = forms.CharField(label='Fuel Type', widget=forms.Select(choices=FUEL_CHOICES))
-    amount = forms.IntegerField(label='litres')
+    amount = forms.IntegerField(label='Quantity')
     payment_method = forms.CharField(label='Payment Method', widget=forms.Select(choices=PAYING_CHOICES))
-    
-    class Meta:
+    storage_tanks = forms.CharField(label='Storage Tanks', widget=forms.Select(choices=STORAGE_TANKS))
+
+    class Meta: 
         model = FuelRequest
-        fields = ['amount','payment_method', 'delivery_method', 'fuel_type']
+        fields = ['fuel_type','amount','payment_method', 'delivery_method', 'delivery_address',
+        'pump_required', 'dipping_stick_required']

@@ -19,7 +19,7 @@ class Subsidiaries(models.Model):
 
 
     def __str__(self):
-        return f"{self.company} : {self.has_fuel}"
+        return f"{self.company} : {self.id}"
 
     def get_capacity(self):
         return self.capacity
@@ -42,6 +42,8 @@ class Offer(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     supplier = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='offer')
     request = models.ForeignKey(FuelRequest, on_delete=models.DO_NOTHING, related_name='request')
+    date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['quantity']
@@ -70,13 +72,11 @@ class SupplierRating(models.Model):
 
 
 class Transaction(models.Model):
-    request = models.ForeignKey(FuelRequest, on_delete=models.DO_NOTHING, related_name='fuel_request')
     offer = models.ForeignKey(Offer, on_delete=models.DO_NOTHING, related_name='offer')
-    supplier = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='supplier')
     buyer = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='buyer')
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
-    complete = models.BooleanField(default=False)
+    is_complete = models.BooleanField(default=False)
     
     class Meta:
         ordering = ['date', 'time']

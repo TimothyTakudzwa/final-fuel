@@ -1,0 +1,116 @@
+{% extends "finder/buyer_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block body%}
+
+<div class="card">
+    <div class="card-header card-header-primary">
+        <h4 class="card-title "> Fuel Offers </h4>
+        <p class="card-category"> Here is a list of all the available offers for your requests</p>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped" id="fuel_updates">
+                <thead class=" text-primary">
+                    <tr>
+                        <th>
+                            <h6>Offer ID </h6>
+                        </th>
+                        <th>
+                            <h6>Supplier Name</h6>
+                        </th>
+                        <th>
+                            <h6>Supplier Address</h6>
+                        </th>
+                        <th>
+                            <h6> Requested </h6>
+                        </th>
+                        <th>
+                            <h6> Offer </h6>
+                        </th>
+                  
+                        <th>
+                            <h6>Price per Litre </h6>
+                        </th>
+                        <th>
+                            <h6>Requested On </h6>
+                        </th>
+                        <th>
+                            <h6>Action</h6>
+                        </th>
+                        <th>
+                            <h6>Action</h6>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for offer in offers %}
+                    <tr>
+                        <td>
+                            {{offer.id}}
+                        </td>
+                        <td>
+                            {{offer.supplier.company}}
+                        </td>
+                        <td>
+                            {{offer.supplier.company.address}}
+                        </td>
+                        <td>
+                            {{offer.request.amount}}
+                        </td>
+                        <td class="">
+                            {{offer.quantity}}
+                        </td>
+                        <td class="">
+                            RTGS {{offer.price}}
+                        </td>
+                        <td class="">
+                             {{offer.date}} -- {{offer.time}}
+                        </td>
+                        <td class="text-primary">    
+                            <a class="btn btn-facebook btn-sm" href="{% url 'accept-offers' offer.id %}">
+                                <i class="material-icons"></i>Accept Offer 
+                            </a>
+                        </td>
+                        <td class="text-primary">
+                         <a class="btn btn-facebook btn-sm" href="" >
+                                <i class="material-icons"></i>Reject Offer 
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+{% for offer in offers %}
+    <tr>
+        <td class="name truncate">{{offer.id}}</a></td> 
+        <td class="name truncate">{{offer.supplier.company}}</a></td> 
+        <td class="name truncate">{{offer.supplier.company.address}}</a></td> 
+        <td class="name truncate">{{offer.request.amount}}</a></td>
+        <td class="name truncate">{{offer.quantity}}</a></td>
+        <td class="name truncate">{{offer.price}}</a></td>
+        <td class="name truncate">{{offer.date}}</a></td>  
+        <td class="name truncate">{{offer.time}}</a></td>
+        <td class="text-primary">    
+            <a class="btn btn-facebook btn-sm" href="" >
+                <i class="material-icons"></i>Accept Offer 
+            </a>
+        </td>
+    </tr>
+{%endfor%}

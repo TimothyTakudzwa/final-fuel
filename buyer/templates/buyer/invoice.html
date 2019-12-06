@@ -1,0 +1,132 @@
+{% load static %}
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <!-- CSS Files -->
+<link href="{% static 'finder/assets/css/custom.css' %}" rel="stylesheet" />
+<script>
+ $('#printInvoice').click(function(){
+            Popup($('.invoice')[0].outerHTML);
+            function Popup(data) 
+            {
+                window.print();
+                return true;
+            }
+        });
+</script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!------ Include the above in your HEAD tag ---------->
+
+<!--Author      : @arboshiki-->
+<div id="invoice">
+
+    <div class="toolbar hidden-print">
+        <div class="text-right">
+            <button id="printInvoice" class="btn btn-info"><i class="fa fa-print"></i> Print</button>
+            <button class="btn btn-outline-info"><i class="fa fa-file-pdf-o"></i> Export as PDF</button>
+        </div>
+        <hr>
+    </div>
+    <div class="invoice overflow-auto">
+        <div style="min-width: 600px">
+            <header>
+                <div class="row">
+                    <div class="col">
+                        <a target="_blank" href="https://lobianijs.com">
+                            <img src="{% static 'finder/assets/img/intelog.jpg' %}" data-holder-rendered="true" />
+                            </a>
+                    </div>
+                    <div class="col company-details">
+                        <h2 class="name">
+                            <a target="_blank" href="https://lobianijs.com">
+                            Intelli Africa Solutions
+                            </a>
+                        </h2>
+                        <div>22 Lawson Avenue Harare, Zimbabwe</div>
+                        <div>+263 775 463638</div>
+                        <div>info@intelliafrica.solutions.com</div>
+                    </div>
+                </div>
+            </header>
+            <main>
+            {% for transaction in transactions %}
+                <div class="row contacts">
+                    <div class="col invoice-to">
+                        <div class="text-gray-light">INVOICE TO:</div>
+                        <h3 class="to">{{transaction.buyer.first_name}} {{transaction.buyer.last_name}}</h3>
+                        <h6 class="to">{{transaction.buyer.company}}</h6>
+                        <div class="address">{{transaction.buyer.company.address}}</div>
+                        <div class="email"><a href="mailto:john@example.com">{{transaction.buyer.email}}</a></div>
+                    </div>
+                    <div class="col invoice-details">
+                        <h1 class="invoice-id">INVOICE {{transaction.id}}</h1>
+                        <div class="date">Date of Invoice: {{transaction.offer.date}}</div>
+                        <div class="date">Due Date: {{transaction.offer.date}}</div>
+                    </div>
+                </div>
+                <hr/>
+                <br>
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <thead>
+                        <tr>
+                        
+                            <th class="text-left">DESCRIPTION</th>
+                            <th class="text-left">FUEL TYPE</th>
+                            <th class="text-right">LITRES</th>
+                            <th class="text-right">PRICE</th>
+                            <th class="text-right">TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-left text-gray-light"><h3>
+                                <a target="_blank">
+                                Fuel Finder Confirmation
+                                </a>
+                                </h3>
+                               <a target="_blank" href="">
+                                   Approval Code: [Confirmation number]
+                               </a> 
+                               Placed a fuel order to: <strong>{{transaction.offer.supplier.company}}</strong>
+                               @ <strong> {{transaction.offer.supplier.company.address}}</strong>
+                            </td>
+                            <td class="text-left">{{transaction.offer.request.fuel_type}}</td>
+                            <td class="unit">{{transaction.offer.quantity}}</td>
+                            <td class="qty">${{transaction.offer.price}}</td>
+                            <td class="total">$0.00</td>
+                        </tr>
+                        
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td colspan="2">SUBTOTAL</td>
+                            <td>$5,200.00</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td colspan="2">TAX 25%</td>
+                            <td>$1,300.00</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td colspan="2">GRAND TOTAL</td>
+                            <td>$6,500.00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                {%endfor%}
+                <div class="thanks">Thank you!</div>
+                <div class="notices">
+                    <div>NOTICE:</div>
+                    <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
+                </div>
+            </main>
+            <footer>
+                Invoice was created on a computer and is valid without the signature and seal.
+            </footer>
+        </div>
+        <!--DO NOT DELETE THIS div. IT is responsible for showing footer always at the bottom-->
+        <div></div>
+    </div>
+</div>

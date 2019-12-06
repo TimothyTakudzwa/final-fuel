@@ -14,11 +14,10 @@
                 <thead class=" text-primary">
                     <tr>
                         <th>
-                            <h6>Request ID </h6>
+                            <h6>Requested To</h6>
                         </th>
-                        <th>
-                            <h6>Company Name</h6>
-                        </th>
+                        
+                        
                         <th>
                             <h6>Deliver Method</h6>
                         </th>
@@ -45,11 +44,9 @@
                     {% for fuel_request in fuel_requests %}
                     <tr>
                         <td>
-                            {{fuel_request.id}}
+                            <b>{{fuel_request.depot}} - {{fuel_request.request_company}}</b>
                         </td>
-                        <td>
-                            {{fuel_request.request_company}}
-                        </td>
+                      
                         <td>
                             {{fuel_request.delivery_method}}
                         </td>
@@ -87,46 +84,5 @@
 
 </div>
 
-<!-- notice modal -->
-<div class="modal fade" id="create_request" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-notice">
-        <div class="modal-content">
-            <div class="modal-header text-center">
-                <h5 class="modal-title" id="myModalLabel">Make a requests</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <i class="material-icons">close</i>
-                </button>
-            </div>
-            <div class="modal-body">
-             <form method="POST">
-                    {% csrf_token %}
-                    {{ form|crispy }}
-                    <!--<input type="hidden" value="{{data.company_id}}" name="company_id" /> -->
-                </div>
-            
-                <div class="modal-footer justify-content-center">
-                        <button type="submit" name="WaitForOffer" class="btn btn-info btn-round">Wait for Offer</button>
-                        <button type="submit" class="btn btn-primary btn-round">System Generated</button>
-
-                </div>
-             </form>
-        </div>
-    </div>
-</div>
-<!-- end notice modal -->
-
-
 {% endblock %}
 
-{% for fuel_request in fuel_requests %}
-    <tr>
-        <td class="name truncate"><a href="#">{{fuel_request.name.username}}</a></td> 
-        <td class="name truncate"><a href="#">{{fuel_request.request_company}}</a></td> 
-        <td class="name truncate"><a href="#">{{fuel_request.delivery_type}}</a></td>
-        <td class="name truncate"><a href="#">{{fuel_request.payment_method}}</a></td>
-        <td class="name truncate"><a href="#">{{fuel_request.date}}</a></td>  
-        <td class="name truncate"><a href="#">{{fuel_request.time}}</a></td>
-        <td class="name truncate"><a href="#">{{fuel_request.}}</a></td>
-    </tr>
-{%endfor%}

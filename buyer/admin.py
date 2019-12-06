@@ -12,8 +12,9 @@ class UserAdmin(admin.ModelAdmin):
 
 class FuelRequestAdmin(admin.ModelAdmin):
 
-
-    list_display = ('__str__', 'amount', 'fuel_type', 'payment_method' ,'delivery_method', 'date',  'is_direct_deal', 'wait')
+    list_per_page = 10
+    list_display = ('__str__', 'amount', 'fuel_type', 'payment_method' ,'delivery_method', 'date','delivery_address',
+    'pump_required','dipping_stick_required', 'meter_required',  'is_direct_deal', 'wait', 'is_complete')
 
 # Register your models here.
 #admin.site.register(Profile)
