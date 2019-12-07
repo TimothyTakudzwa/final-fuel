@@ -43,7 +43,7 @@ class FuelAllocation(models.Model):
     usd = models.BooleanField(default=False)
     petrol_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     diesel_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    assigned_staff_id = models.IntegerField()
+    assigned_staff_id = models.IntegerField(default=0)
 
 
 
@@ -82,6 +82,7 @@ class SupplierRating(models.Model):
 
 
 class Transaction(models.Model):
+    supplier = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='supplier')
     offer = models.ForeignKey(Offer, on_delete=models.DO_NOTHING, related_name='offer')
     buyer = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='buyer')
     date = models.DateField(auto_now_add=True)

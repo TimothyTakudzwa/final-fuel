@@ -138,7 +138,7 @@ def profile(request):
 #@login_required
 def fuel_request(request):
     user_logged = request.user
-    fuel_requests = FuelRequest.objects.filter(~Q(diesel_quantity=0.00)). filter(~Q(petrol_quantity=0.00)).filter(name=user_logged, is_complete=False).all()
+    fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).all()
     for fuel_request in fuel_requests:
         if fuel_request.is_direct_deal:
             search_company = FuelUpdate.objects.filter(id= fuel_request.last_deal).first()
@@ -210,7 +210,6 @@ def dashboard(request):
 
         if 'WaitForOffer' in request.POST:
             print(form.errors)
-
             if form.is_valid():
                 fuel_request = FuelRequest()
                 fuel_request.name = request.user       
@@ -221,7 +220,7 @@ def dashboard(request):
                 fuel_request.ecocash = True if request.POST.get('ecocash') == "True" else False
                 fuel_request.swipe = True if request.POST.get('swipe') == "True" else False
                 fuel_request.delivery_method = form.cleaned_data['delivery_method']
-                fuel_request.delivery_address = True if request.POST.get('delivery_address') == "True" else False
+                fuel_request.delivery_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
                 fuel_request.storage_tanks = True if request.POST.get('storage_tanks') == "True" else False
                 fuel_request.pump_required = True if request.POST.get('pump_required') == "True" else False
                 fuel_request.dipping_stick_required = True if request.POST.get('usd') == "True" else False
@@ -256,7 +255,7 @@ def dashboard(request):
     else:
         form = FuelRequestForm
     
-    updates = FuelUpdate.objects.filter(sub_type="Depot")
+    updates = FuelUpdate.objects.filter(sub_type="Depot").filter(~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
     for update in updates:
         subsidiary = Subsidiaries.objects.filter(id = update.relationship_id).first()
         company = Company.objects.filter(id=update.company_id).first()

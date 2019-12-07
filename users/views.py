@@ -148,7 +148,7 @@ def statistics(request):
     num_trans = [random.randint(2,12) for i in range(len(companies))]
     counter = 0
 
-    trans = Transaction.objects.filter(supplier=request.user, complete=True).annotate(number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
+    trans = Transaction.objects.filter(supplier=request.user, is_complete=True).annotate(number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
     buyers = [client.buyer for client in trans]
 
     for buyer in buyers:
@@ -172,7 +172,7 @@ def statistics(request):
     # clients = [company for company in  companies]
 
     # revenue = round(float(sum(value)))
-    revenue = get_total_revenue(request.user.company)
+    revenue = get_total_revenue(request.user)
     revenue = '${:,.2f}'.format(revenue)
     #revenue = str(revenue) + '.00'   
 
@@ -184,6 +184,7 @@ def statistics(request):
     return render(request, 'users/statistics.html', {'staff_blocked':staff_blocked, 'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
      'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'staff_pop': staff_pop})
+
 
 @login_required()
 def supplier_user_edit(request, cid):
