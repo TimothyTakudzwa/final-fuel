@@ -2,6 +2,7 @@ from supplier.models import  SupplierRating, Offer
 from company.models import FuelUpdate
 from buyer.models import FuelRequest
 from supplier.models import Subsidiaries
+from django.db.models import Q
 import operator
 from buyer.constants import recommender_response
 from buyer.models import User
@@ -9,9 +10,9 @@ from buyer.models import User
 def recommend(fuel_request):
     status = False
     if fuel_request.fuel_type == "Petrol":
-        supplies = FuelUpdate.objects.filter(petrol_quantity__gte=fuel_request.amount, sub_type='Depot').order_by('-petrol_price').all()      
+        supplies = FuelUpdate.objects.filter(petrol_quantity__gte=fuel_request.amount, sub_type='Depot').filter(~Q(petrol_price=0.00)).order_by('-petrol_price').all()      
     else:
-        supplies = FuelUpdate.objects.filter(diesel_quantity__gte=fuel_request.amount, sub_type='Depot').order_by('-diesel_price').all()    
+        supplies = FuelUpdate.objects.filter(diesel_quantity__gte=fuel_request.amount, sub_type='Depot').filter(~Q(diesel_price=0.00)).order_by('-diesel_price').all()    
     
     if supplies.count() == 0:        
         return status, "Nothin Found"
@@ -45,7 +46,7 @@ def recommend(fuel_request):
 
         offer.save()
         response_message = "Here here"
-        
+
         return offer.id, response_message
 
 
