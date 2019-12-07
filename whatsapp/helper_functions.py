@@ -3,12 +3,11 @@ import requests
 from validate_email import validate_email
 from .constants import *
 from buyer.views import token_is_send
-from supplier.models import Offer, Transaction
+from supplier.models import Offer, Transaction, FuelAllocation
 from buyer.models import User, FuelRequest
 from company.models import FuelUpdate
 from django.db.models import Q
 from buyer.recommend import recommend
-
 
 def send_message(phone_number, message):
     payload = {
@@ -484,7 +483,7 @@ def view_allocations(user, message):
         response_message = 'The following are quantities of the fuel you received. Please type *menu* to go back to main menu. \n\n'
         i = 1
         for allocation in allocations:
-            response_message = response_message + str(i) + "." + " " + str(allocation.date) + " " + "Diesel" + " " + str(allocation.diesel_quantity) + "L" + "&" + "Petrol" + " " +str(allocation.petrol_quantity) + "L" + '\n'
+            response_message = response_message + str(i) + "." + " " + str(allocation.date) + " " + "Diesel" + " " + str(allocation.diesel_quantity) + "L" + " " + "&" + " " + "Petrol" + " " +str(allocation.petrol_quantity) + "L" + '\n'
             i += 1        
         
     return response_message
