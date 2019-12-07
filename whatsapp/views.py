@@ -13,10 +13,11 @@ def index(request):
     phone_number = data['messages'][0]['author'].split('@')[0]
     if phone_number == '263718055061':
         return HttpResponse('')
-    print('--------------------', message, phone_number)    
     check = User.objects.filter(phone_number = phone_number).exists()
     if check:
         user = User.objects.filter(phone_number=phone_number).first()
+        print('--------------------', message, phone_number, user.stage, user.position)    
+
         if user.is_active:
             response_message = bot_action(request, user, message) 
         else:

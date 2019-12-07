@@ -45,9 +45,9 @@ Hello {0}, What would you like to do today\n\n
 
 
 supplier_menu = '''
-Hello {0}, What would you like to do today
+Hello {0}, What would you like to do today\n
 
-1. View Fuel Requests 
+1. View Fuel Requests
 2. View offers
 
 '''
