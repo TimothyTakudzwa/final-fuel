@@ -292,6 +292,19 @@ def view_offers_handler(user, message):
     return response_message
 
 
+def view_transactions_handler(user, message):
+    transactions = Transaction.objects.filter(supplier=user)
+    if transactions:
+        i = 1
+        while i < 10:
+            for transaction in transactions:
+                response_message = f'{transaction.date} {transaction.time} {transaction.buyer.first_name} {transaction.buyer.last_name} {transaction.offer.quantity}'
+                i += 1
+    else:
+        response_message = "You have not performed any transactions yet"
+    return response_message
+
+
 def supplier_handler(request,user,message):
     response_message = ""
     if message.lower() == 'menu':
@@ -312,6 +325,11 @@ def supplier_handler(request,user,message):
             user.position = 0
             user.save()
             response_message = view_offers_handler(user, message)
+        elif message == "3":
+            user.stage = 'menu'
+            user.position = 0
+            user.save()
+            response_message = view_transactions_handler(user, message)
         else:
             response_message = "You entered an invalid option. Type *menu* to restart."
     elif user.stage == 'view_requests':
