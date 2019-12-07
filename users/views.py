@@ -113,78 +113,78 @@ def allocation_update(request,id):
             return redirect('users:allocate')
     return render(request, 'users/allocate.html')
 
-@login_required()
+#@login_required()
 def statistics(request):
-    company = request.user.company
-    yesterday = date.today() - timedelta(days=1)
-    staff_blocked = Subsidiaries.objects.filter(company=company).count() / 2
-    offers = Offer.objects.filter(supplier=request.user).count()
-    bulk_requests = FuelRequest.objects.filter(delivery_method="BULK").count()
-    normal_requests = FuelRequest.objects.filter(delivery_method="REGULAR").count()
-    staff = ''
+    # company = request.user.company
+    # yesterday = date.today() - timedelta(days=1)
+    # staff_blocked = Subsidiaries.objects.filter(company=company).count() / 2
+    # offers = Offer.objects.filter(supplier=request.user).count()
+    # bulk_requests = FuelRequest.objects.filter(delivery_method="BULK").count()
+    # normal_requests = FuelRequest.objects.filter(delivery_method="REGULAR").count()
+    # staff = ''
     
-    new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
-    try:
-        rating = SupplierRating.objects.filter(supplier=request.user.company).first().rating
-    except:
-        rating = 0    
-    #new_orders = 0
-    try:
-        staff = get_aggregate_stock(request.user.company)
-        staff_pop = staff.count()
-    except:
-        staff_pop = 0    
+    # new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
+    # try:
+    #     rating = SupplierRating.objects.filter(supplier=request.user.company).first().rating
+    # except:
+    #     rating = 0    
+    # #new_orders = 0
+    # try:
+    #     staff = get_aggregate_stock(request.user.company)
+    #     staff_pop = staff.count()
+    # except:
+    #     staff_pop = 0    
    
-    clients = []
-    #update = F_Update.objects.filter(company_id=company.id).first()
-    stock = get_aggregate_stock(request.user.company)
-    diesel = stock['diesel']; petrol = stock['petrol']
-    # if update:
-    #     diesel = update.diesel_quantity
-    #     petrol = update.petrol_quantity
+    # clients = []
+    # #update = F_Update.objects.filter(company_id=company.id).first()
+    # stock = get_aggregate_stock(request.user.company)
+    # diesel = stock['diesel']; petrol = stock['petrol']
+    # # if update:
+    # #     diesel = update.diesel_quantity
+    # #     petrol = update.petrol_quantity
     
-    companies = Company.objects.filter(company_type='BUYER')
-    value = [round(random.uniform(5000.5,10000.5),2) for i in range(len(companies))]
-    num_trans = [random.randint(2,12) for i in range(len(companies))]
-    counter = 0
+    # companies = Company.objects.filter(company_type='BUYER')
+    # value = [round(random.uniform(5000.5,10000.5),2) for i in range(len(companies))]
+    # num_trans = [random.randint(2,12) for i in range(len(companies))]
+    # counter = 0
 
-    trans = Transaction.objects.filter(supplier=request.user, complete=True).annotate(number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
-    buyers = [client.buyer for client in trans]
+    # trans = Transaction.objects.filter(supplier=request.user, complete=True).annotate(number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
+    # buyers = [client.buyer for client in trans]
 
-    for buyer in buyers:
-        total_value = 0
-        purchases = []
-        number_of_trans = 0
-        for tran in Transaction.objects.filter(supplier=request.user, buyer=buyer):
-            total_value += tran.request.amount
-            purchases.append(tran)
-            number_of_trans += 1
-        buyer.total_value = total_value
-        buyer.purchases = purchases
-        buyer.number_of_trans = number_of_trans
-    clients = buyers    
+    # for buyer in buyers:
+    #     total_value = 0
+    #     purchases = []
+    #     number_of_trans = 0
+    #     for tran in Transaction.objects.filter(supplier=request.user, buyer=buyer):
+    #         total_value += tran.request.amount
+    #         purchases.append(tran)
+    #         number_of_trans += 1
+    #     buyer.total_value = total_value
+    #     buyer.purchases = purchases
+    #     buyer.number_of_trans = number_of_trans
+    # clients = buyers    
 
-    # for company in companies:
-    #     company.total_value = value[counter]
-    #     company.num_transactions = num_trans[counter]
-    #     counter += 1
+    # # for company in companies:
+    # #     company.total_value = value[counter]
+    # #     company.num_transactions = num_trans[counter]
+    # #     counter += 1
 
-    # clients = [company for company in  companies]
+    # # clients = [company for company in  companies]
 
-    # revenue = round(float(sum(value)))
-    revenue = get_total_revenue(request.user.company)
-    revenue = '${:,.2f}'.format(revenue)
-    #revenue = str(revenue) + '.00'   
+    # # revenue = round(float(sum(value)))
+    # revenue = get_total_revenue(request.user)
+    # revenue = '${:,.2f}'.format(revenue)
+    # #revenue = str(revenue) + '.00'   
 
-    try:
-        trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
-    except:
-        trans = 0    
-    trans = get_transactions_complete_percentage(request.user)
-    return render(request, 'users/statistics.html', {'staff_blocked':staff_blocked, 'offers': offers,
-     'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
-     'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'staff_pop': staff_pop})
-
+    # try:
+    #     trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
+    # except:
+    #     trans = 0    
+    # trans = get_transactions_complete_percentage(request.user)
+    # return render(request, 'users/statistics.html', {'staff_blocked':staff_blocked, 'offers': offers,
+    #  'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
+    #  'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'staff_pop': staff_pop})
+     return render(request, 'users/statistics.html')
 @login_required()
 def supplier_user_edit(request, cid):
     supplier = User.objects.filter(id=cid).first()
