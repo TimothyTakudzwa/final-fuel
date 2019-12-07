@@ -33,7 +33,7 @@
                         <select name="report_type" class="browser-default custom-select">
                             <option selected>Transactions</option>
                             <option value="Requests">Requests</option>
-                            <option value="Allocations">Allocations</option>
+                            <option value="Allocations">Stock</option>
                             <option value="Allocations">Allocations</option>
                             <option value="Allocations">Allocations</option>
                             <option value="Allocations">Allocations</option>
@@ -58,7 +58,7 @@
         </div>
     </div>
 </div>
-{% if not trans and not requests and not allocations %}
+{% if not trans and not requests and not allocations and not revs %}
 <div class="container" style="text-align: center;margin-top: 0px;margin-left: 90px;font-size: 1.5em;color: #5d5a5a;background-color: #e0e0e0;padding: 109px;
 ">No Data, Please Generate Report
     </div>    
@@ -149,6 +149,164 @@
                    
                     {% endfor %}   
                    
+
+                </tbody>
+                </table>
+
+        </div>
+    </div>
+    </div>
+    
+</div>
+{% endif %}
+
+{% if revs %}
+<div class="col-md-12">
+    <div class="card" style="background-color:white">
+        
+        <div class="card-header card-header-primary">
+        <h4 class="card-title ">Revenue Report</h4>
+        </div>
+    <div class="card-body">
+        <div class="container-fluid">
+            <div class="row" style="margin-bottom: 20px;">
+                <form method="POST" action="{% url 'users:export_pdf' %}">
+                    {% csrf_token %}
+                    <input type="hidden" value="revenue" name="type_model">
+                    
+                    <button type="submit" class="btn btn-info">
+                        PDF
+                    </button>
+                </form>
+                <form method="POST" action="{% url 'users:export_csv' %}">
+                    {% csrf_token %}
+                    <input type="hidden" value="revenue" name="type_model">
+                    
+                    <input type="hidden" value="csv" name="format">
+
+                    <button type="submit" class="btn btn-default" style="margin-left: 10px;">
+                        CSV
+                    </button>
+                </form> 
+                <form method="POST" action="{% url 'users:export_csv' %}">
+                        {% csrf_token %}
+                        <input type="hidden" value="transaction" name="type_model">
+                        
+                        <input type="hidden" value="excel" name="format"> 
+    
+                        <button type="submit" class="btn btn-danger" style="margin-left: 10px;">
+                        Excel
+                        </button>
+                    </form>    
+            </div>         
+
+            <table id="example" class="table table-striped table-bordered" style="width:100%">
+                <thead style="color:white; background:lightslategray">
+                    <th style="color:white;">
+                        Date
+                       </th>
+                       <th style="color:white;">
+                        Revenue
+                       </th>
+                       <th style="color:white;">
+                        No Of Transactions
+                       </th>
+                       
+                       
+                         
+                   <tbody>
+                       
+                       <tr>
+                            <td>{{revs.date}}</td>
+                            <td>{{revs.revenue}}</td>
+                            <td>{{revs.hits}}</td>
+                           
+                            
+                        </tr>
+                   
+                      
+                   
+
+                </tbody>
+                </table>
+
+        </div>
+    </div>
+    </div>
+    
+</div>
+{% endif %}
+
+
+
+{% if stock %}
+<div class="col-md-12">
+    <div class="card" style="background-color:white">
+        
+        <div class="card-header card-header-primary">
+        <h4 class="card-title ">Stock Report</h4>
+        </div>
+    <div class="card-body">
+        <div class="container-fluid">
+            <div class="row" style="margin-bottom: 20px;">
+                <form method="POST" action="{% url 'users:export_pdf' %}">
+                    {% csrf_token %}
+                    <input type="hidden" value="stock" name="type_model"> 
+                    <button type="submit" class="btn btn-info">
+                        PDF
+                    </button>
+                </form>
+                <form method="POST" action="{% url 'users:export_csv' %}">
+                    {% csrf_token %}
+                    <input type="hidden" value="stock" name="type_model"> 
+                    <input type="hidden" value="csv" name="format">
+
+                    <button type="submit" class="btn btn-default" style="margin-left: 10px;">
+                        CSV
+                    </button>
+                </form> 
+                <form method="POST" action="{% url 'users:export_csv' %}">
+                        {% csrf_token %}
+                        <input type="hidden" value="stock" name="type_model"> 
+                        <input type="hidden" value="excel" name="format"> 
+    
+                        <button type="submit" class="btn btn-danger" style="margin-left: 10px;">
+                        Excel
+                        </button>
+                    </form>    
+            </div>         
+
+            <table id="example" class="table table-striped table-bordered" style="width:100%">
+                <thead style="color:white; background:lightslategray">
+                    <th style="color:white;">
+                        Last Update
+                       </th>
+                       <th style="color:white;">
+                        Station Type
+                       </th>
+                       <th style="color:white;">
+                        Petrol Price
+                       </th>
+                       <th style="color:white;">
+                        Diesel Price
+                       </th>
+                       <th style="color:white;">
+                        Status
+                        </th>
+                       
+                         
+                   <tbody>
+                       <tr>
+                            <td>{{stock.last_updated}}</td>
+                            <td>{{stock.sub_type}}</td>
+                            <td>{{stock.petrol_price}}</td>
+                            <td>{{stock.status}}</td>
+
+                           
+                            
+                        </tr>
+                   
+                    
 
                 </tbody>
                 </table>

@@ -11,7 +11,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.shortcuts import Http404
 from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
 from django.contrib.auth.decorators import login_required
@@ -30,6 +30,7 @@ from supplier.forms import *
 from supplier.models import *
 from users.models import *
 from company.models import Company
+from company.lib import *
 from django.contrib.auth import authenticate
 from django.db.models import Q
 from .forms import AllocationForm
@@ -115,17 +116,29 @@ def allocation_update(request,id):
 @login_required()
 def statistics(request):
     company = request.user.company
+    yesterday = date.today() - timedelta(days=1)
     staff_blocked = Subsidiaries.objects.filter(company=company).count() / 2
     offers = Offer.objects.filter(supplier=request.user).count()
     bulk_requests = FuelRequest.objects.filter(delivery_method="BULK").count()
     normal_requests = FuelRequest.objects.filter(delivery_method="REGULAR").count()
-    staff_blocked = User.objects.filter(company=company).count()
-    yesterday = date.today() - timedelta(days=1)
-    #new_orders = FuelRequest.objects.filter(date__gt=yesterday)
-    new_orders = 0
+    staff = ''
+    
+    new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
+    try:
+        rating = SupplierRating.objects.filter(supplier=request.user.company).first().rating
+    except:
+        rating = 0    
+    #new_orders = 0
+    try:
+        staff = get_aggregate_stock(request.user.company)
+        staff_pop = staff.count()
+    except:
+        staff_pop = 0    
+   
     clients = []
     #update = F_Update.objects.filter(company_id=company.id).first()
-    diesel = 0; petrol = 0
+    stock = get_aggregate_stock(request.user.company)
+    diesel = stock['diesel']; petrol = stock['petrol']
     # if update:
     #     diesel = update.diesel_quantity
     #     petrol = update.petrol_quantity
@@ -135,26 +148,43 @@ def statistics(request):
     num_trans = [random.randint(2,12) for i in range(len(companies))]
     counter = 0
 
-    for company in companies:
-        company.total_value = value[counter]
-        company.num_transactions = num_trans[counter]
-        counter += 1
+    trans = Transaction.objects.filter(supplier=request.user, is_complete=True).annotate(number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
+    buyers = [client.buyer for client in trans]
 
-    clients = [company for company in  companies]
-    locale.setlocale( locale.LC_ALL, 'en_US.UTF-8' )
+    for buyer in buyers:
+        total_value = 0
+        purchases = []
+        number_of_trans = 0
+        for tran in Transaction.objects.filter(supplier=request.user, buyer=buyer):
+            total_value += tran.offer.request.amount
+            purchases.append(tran)
+            number_of_trans += 1
+        buyer.total_value = total_value
+        buyer.purchases = purchases
+        buyer.number_of_trans = number_of_trans
+    clients = buyers    
 
-    revenue = round(float(sum(value)))
+    # for company in companies:
+    #     company.total_value = value[counter]
+    #     company.num_transactions = num_trans[counter]
+    #     counter += 1
+
+    # clients = [company for company in  companies]
+
+    # revenue = round(float(sum(value)))
+    revenue = get_total_revenue(request.user)
     revenue = '${:,.2f}'.format(revenue)
     #revenue = str(revenue) + '.00'   
 
     try:
-        trans = Transaction.objects.all().count()/Transaction.objects.all().count()/100
+        trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
     except:
         trans = 0    
-    trans = str(trans) + " %"
+    trans = get_transactions_complete_percentage(request.user)
     return render(request, 'users/statistics.html', {'staff_blocked':staff_blocked, 'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
-     'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders})
+     'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'staff_pop': staff_pop})
+
 
 @login_required()
 def supplier_user_edit(request, cid):
@@ -188,6 +218,8 @@ def stations(request):
     if request.method == 'POST':
         name = request.POST['name']
         address = request.POST['address']
+        destination_bank = request.POST['destination_bank']
+        account_number = request.POST['account_number']
         is_depot = request.POST['is_depot']
         opening_time = request.POST['opening_time']
         closing_time = request.POST['closing_time']
@@ -216,28 +248,49 @@ def report_generator(request):
     if request.method == "POST":
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
-        start_date = datetime.strptime(start_date, '%Y-%m-%d')
-        start_date = start_date.date()
+        if start_date:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            start_date = start_date.date()
         report_type = request.POST.get('report_type')
-        end_date = datetime.strptime(end_date, '%Y-%m-%d')
-        end_date = end_date.date()
+        if end_date:
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')
+            end_date = end_date.date()
         print(f'_______________{report_type}_____________________')
         # print(f'_______________{type(start_date)}_____________________')
         # print(f'_______________{end_date}_____________________')
-        if request.POST.get('report_type') == 'Transactions':
-            trans = Transaction.objects.filter(date__range=[start_date, end_date])
+        if request.POST.get('report_type') == 'Stock':
+            stock = FuelUpdate.objects.filter(company_id=request.user.company.id).first()
+            requests = None; allocations = None; trans = None; revs=None
+        if request.POST.get('report_type') == 'Transactions' or 'Revenue':
+            trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier=request.user)
+            revs = None
             print(trans)
-            requests = None; allocations = None
+            if request.POST.get('report_type') == 'Revenue':
+                revs = {}
+                total_revenue = 0
+                trans_no = 0
+
+                for tran in trans:
+                    total_revenue += tran.offer.request.amount
+                    trans_no += 1
+                revs['revenue'] = '${:,.2f}'.format(total_revenue)
+
+                revs['hits'] = trans_no
+                revs['date'] = datetime.today().strftime('%D')
+                trans = None
+
+
+            requests = None; allocations = None; stock = None
         if request.POST.get('report_type') == 'Requests':
             requests = FuelRequest.objects.filter(date__range=[start_date, end_date])
             print(f'__________________{requests}__________________________________')
-            trans = None; allocations = None
+            trans = None; allocations = None; stock = None; revs=None
         if request.POST.get('report_type') == 'Allocations':
             allocations = FuelRequest.objects.filter(date__range=[start_date, end_date])
         start = start_date
         end = end_date 
         return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form,
-        'start': start, 'end': end })
+        'start': start, 'end': end, 'revs': revs })
 
     show = False
 
@@ -248,6 +301,8 @@ def export_pdf(request):
     result = ''
     if request.method == "POST":
         print(request.POST.get('type_model'))
+        if request.POST.get('type_model') == "stock":
+            data = FuelUpdate.objects.filter(company_id=request.user.company.id)
         if request.POST.get('type_model') == "transaction":
             print('------------------Im In Here---------------------------')
             start = request.POST.get('start')
@@ -259,7 +314,7 @@ def export_pdf(request):
 
             
             for i in data:
-                result += f'Date : {i.date}\n Time : {i.time}\n Buyer : {i.buyer}\n Completed : {i.complete}\n'
+                result += f'Date : {i.date}\n Time : {i.time}\n Buyer : {i.buyer}\n Completed : {i.is_complete}\n'
             pdf = FPDF(orientation='P', format='A5')
             pdf.add_page()
             epw = pdf.w - 2*pdf.l_margin
@@ -335,14 +390,17 @@ def export_csv(request):
             print('------------------Im In Here---------------------------')
             start = request.POST.get('start')
             end = request.POST.get('end')
-            start = datetime.strptime(start, '%b. %d, %Y').date()
-            end = datetime.strptime(end, '%b. %d, %Y').date()
+            print(f'__________{start}__________')
+            start = datetime.strptime(start, '%b. %d, %Y')
+            end = datetime.strptime(end, '%b. %d, %Y')
+
+            print(start)
             
             data = Transaction.objects.filter(date__range=[start, end]).values()
             print(data)
             fields = ['Date', 'Time', 'Amount', 'Complete']
             #df = DataFrame(data,columns=fields)
-            df = pd.DataFrame(list(data.values('date','time','buyer','complete'))) 
+            df = pd.DataFrame(list(data.values('date','time','buyer','is_complete'))) 
             #df['Date'] = f'{dt[2]}/{dt[1]}/{dt[0]}'
 
             day = str(datetime.now().day)
@@ -367,7 +425,8 @@ def export_csv(request):
                 with open(f'media/reports/transactions/csv/{csv_name}.csv', 'rb') as csv_name:
                     response = HttpResponse(csv_name.read())
                     response['Content-Disposition'] = f'attachment;filename={name}-{day}/{month}/{year}.csv'
-                    return response        
+                    return response
+    return result                    
                     
             
 

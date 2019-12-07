@@ -5,8 +5,8 @@
 
 <div class="card">
     <div class="card-header card-header-primary">
-        <h4 class="card-title "> My Fuel Requests </h4>
-        <p class="card-category"> Here is a list of all requests you made</p>
+        <h4 class="card-title "> My Fuel Transactions </h4>
+        <p class="card-category"> Here is a list of all transactions you made</p>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -14,7 +14,7 @@
                 <thead class=" text-primary">
                     <tr>
                         <th>
-                            <h6>Requested To</h6>
+                            <h6>Requested ID</h6>
                         </th>
                         
                         
@@ -86,3 +86,29 @@
 
 {% endblock %}
 
+
+
+
+
+
+
+
+
+
+{% for transaction in transactions %}
+    <tr>
+        <td class="name truncate">{{transaction.id}}</a></td> 
+        <td class="name truncate">{{transaction.offer.supplier.company}}</a></td> 
+        <td class="name truncate">{{transaction.offer.supplier.company.address}}</a></td> 
+        <td class="name truncate">{{transaction.offer.request.amount}}</a></td>
+        <td class="name truncate">{{transaction.offer.quantity}}</a></td>
+        <td class="name truncate">{{transaction.offer.price}}</a></td>
+        <td class="name truncate">{{transaction.offer.date}}</a></td>  
+        <td class="name truncate">{{transaction.offer.time}}</a></td>
+        <td class="text-primary">    
+            <a class="btn btn-facebook btn-sm" href="" >
+                <i class="material-icons"></i>Download Invoice 
+            </a>
+        </td>
+    </tr>
+{%endfor%}

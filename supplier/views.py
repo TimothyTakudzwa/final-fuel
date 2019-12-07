@@ -78,10 +78,13 @@ def fuel_request(request):
         else:
             buyer_request.my_offer = 0
             buyer_request.offer_id = 0
-        if buyer_request.fuel_type == 'petrol':
-            buyer_request.price = fuel.petrol_price
+        if fuel:
+            if buyer_request.fuel_type == 'petrol':
+                buyer_request.price = fuel.petrol_price
+            else:
+                buyer_request.price = fuel.diesel_price
         else:
-            buyer_request.price = fuel.diesel_price
+            buyer_request.price = 0
     return render(request, 'supplier/accounts/fuel_request.html', {'requests':requests})
 
 
@@ -97,12 +100,12 @@ def rate_supplier(request):
 def fuel_update(request):
     print(f"--------------------------{request.user.subsidiary_id}----------------------")
 
-    updates = FuelUpdate.objects.filter(sub_type='depot', relationship_id=request.user.subsidiary_id).first()
+    updates = FuelUpdate.objects.filter(sub_type='Depot', relationship_id=request.user.subsidiary_id).first()
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     print(f"--------------------------{updates}!!!!!!!!!!!!!!!!!!!!!!!!----------------------")
     if request.method == 'POST':
-        if FuelUpdate.objects.filter(sub_type='depot', relationship_id=request.user.subsidiary_id).exists():
-            fuel_update = FuelUpdate.objects.get(sub_type='depot', relationship_id=request.user.subsidiary_id)
+        if FuelUpdate.objects.filter(sub_type='Depot', relationship_id=request.user.subsidiary_id).exists():
+            fuel_update = FuelUpdate.objects.get(sub_type='Depot', relationship_id=request.user.subsidiary_id)
             fuel_update.petrol_quantity = request.POST['petrol_quantity']
             fuel_update.petrol_price = request.POST['petrol_price']
             fuel_update.diesel_quantity = request.POST['diesel_quantity']
@@ -120,7 +123,7 @@ def fuel_update(request):
             Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
             return redirect('fuel_update')
         else:
-            sub_type = 'depot'
+            sub_type = 'Depot'
             petrol_quantity = request.POST.get('petrol_quantity')
             petrol_price = request.POST.get('petrol_price')
             diesel_quantity = request.POST.get('diesel_quantity')
