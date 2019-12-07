@@ -33,6 +33,15 @@ Hello {0}, What would you like to do today\n\n
 
 '''
 
+ss_supplier_menu='''
+Hello {0}, What would you like to do today\n\n
+
+1. Update Petrol Quantity\n
+2. Update Diesel Quantity\n
+3. View Today's Received Fuel
+
+'''
+
 
 
 supplier_menu = '''
