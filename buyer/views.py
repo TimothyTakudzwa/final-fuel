@@ -151,7 +151,7 @@ def fuel_request(request):
             fuel_request.depot = depot.name
         else:
             fuel_request.request_company = ''
-    print(fuel_requests)
+    # print(fuel_requests)
     for fuel_request in fuel_requests:
         offer = Offer.objects.filter(request=fuel_request).first()
         if offer is not None:
@@ -191,6 +191,14 @@ def fuel_finder(request):
 
 
 def dashboard(request):
+    updates = FuelUpdate.objects.filter(sub_type="Depot").filter(~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
+    for update in updates:
+        subsidiary = Subsidiaries.objects.filter(id = update.relationship_id).first()
+        company = Company.objects.filter(id=update.company_id).first()
+        if company is not None:
+            update.company = company.name
+            update.depot = subsidiary.name
+            update.address = subsidiary.address
     if request.method == 'POST':
         form = FuelRequestForm(request.POST)
         if 'MakeDeal' in request.POST:
@@ -252,19 +260,10 @@ def dashboard(request):
                     messages.error(request,response_message)                    
                 else:
                     offer = Offer.objects.filter(id=offer_id).first()
-                    
-                   
+                    messages.info(request, "Match Found")
+                    return render(request, 'buyer/dashboard.html',{'form':form, 'updates': updates, 'offer': offer})                
     else:
-        form = FuelRequestForm
-    
-    updates = FuelUpdate.objects.filter(sub_type="Depot").filter(~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
-    for update in updates:
-        subsidiary = Subsidiaries.objects.filter(id = update.relationship_id).first()
-        company = Company.objects.filter(id=update.company_id).first()
-        if company is not None:
-            update.company = company.name
-            update.depot = subsidiary.name
-            update.address = subsidiary.address 
+        form = FuelRequestForm     
     return render(request, 'buyer/dashboard.html',{'form':form, 'updates': updates})
 
 
@@ -277,20 +276,22 @@ def offers(request, id):
     return render(request, 'buyer/offer.html', {'offers': offers })
 
 
-def accept_offer(request, id):
-    print('l am here')
-    print(id)
+def accept_offer(request, id):    
     offer = Offer.objects.filter(id=id).first()
-    buyer = request.user 
-    trans = Transaction()
-    trans.offer = offer
-    trans.buyer = buyer
-    trans.save()
+    print(offer.supplier)
+    Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier)  
+    FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
+    return redirect("buyer-fuel-request")
 
-    fuel_request_id = offer.request.id
-    print(fuel_request_id)
-
-    FuelRequest.objects.filter(id=fuel_request_id).update(is_complete=True)
+def reject_offer(request, id):    
+    offer = Offer.objects.filter(id=id).first()
+    offer.declined = True
+    offer.save()
+    my_request = FuelRequest.objects.filter(id = offer.request.id).first()
+    my_request.wait = True
+    my_request.save()     
+    FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
+    messages.success(request, "Your request has been saved and as offer updates are coming you will receive notifications")
     return redirect("buyer-fuel-request")
 
 

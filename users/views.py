@@ -156,7 +156,7 @@ def statistics(request):
         purchases = []
         number_of_trans = 0
         for tran in Transaction.objects.filter(supplier=request.user, buyer=buyer):
-            total_value += tran.request.amount
+            total_value += tran.offer.request.amount
             purchases.append(tran)
             number_of_trans += 1
         buyer.total_value = total_value
@@ -248,28 +248,49 @@ def report_generator(request):
     if request.method == "POST":
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
-        start_date = datetime.strptime(start_date, '%Y-%m-%d')
-        start_date = start_date.date()
+        if start_date:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            start_date = start_date.date()
         report_type = request.POST.get('report_type')
-        end_date = datetime.strptime(end_date, '%Y-%m-%d')
-        end_date = end_date.date()
+        if end_date:
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')
+            end_date = end_date.date()
         print(f'_______________{report_type}_____________________')
         # print(f'_______________{type(start_date)}_____________________')
         # print(f'_______________{end_date}_____________________')
-        if request.POST.get('report_type') == 'Transactions':
-            trans = Transaction.objects.filter(date__range=[start_date, end_date])
+        if request.POST.get('report_type') == 'Stock':
+            stock = FuelUpdate.objects.filter(company_id=request.user.company.id).first()
+            requests = None; allocations = None; trans = None; revs=None
+        if request.POST.get('report_type') == 'Transactions' or 'Revenue':
+            trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier=request.user)
+            revs = None
             print(trans)
-            requests = None; allocations = None
+            if request.POST.get('report_type') == 'Revenue':
+                revs = {}
+                total_revenue = 0
+                trans_no = 0
+
+                for tran in trans:
+                    total_revenue += tran.offer.request.amount
+                    trans_no += 1
+                revs['revenue'] = '${:,.2f}'.format(total_revenue)
+
+                revs['hits'] = trans_no
+                revs['date'] = datetime.today().strftime('%D')
+                trans = None
+
+
+            requests = None; allocations = None; stock = None
         if request.POST.get('report_type') == 'Requests':
             requests = FuelRequest.objects.filter(date__range=[start_date, end_date])
             print(f'__________________{requests}__________________________________')
-            trans = None; allocations = None
+            trans = None; allocations = None; stock = None; revs=None
         if request.POST.get('report_type') == 'Allocations':
             allocations = FuelRequest.objects.filter(date__range=[start_date, end_date])
         start = start_date
         end = end_date 
         return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form,
-        'start': start, 'end': end })
+        'start': start, 'end': end, 'revs': revs })
 
     show = False
 
@@ -280,6 +301,8 @@ def export_pdf(request):
     result = ''
     if request.method == "POST":
         print(request.POST.get('type_model'))
+        if request.POST.get('type_model') == "stock":
+            data = FuelUpdate.objects.filter(company_id=request.user.company.id)
         if request.POST.get('type_model') == "transaction":
             print('------------------Im In Here---------------------------')
             start = request.POST.get('start')
@@ -291,7 +314,7 @@ def export_pdf(request):
 
             
             for i in data:
-                result += f'Date : {i.date}\n Time : {i.time}\n Buyer : {i.buyer}\n Completed : {i.complete}\n'
+                result += f'Date : {i.date}\n Time : {i.time}\n Buyer : {i.buyer}\n Completed : {i.is_complete}\n'
             pdf = FPDF(orientation='P', format='A5')
             pdf.add_page()
             epw = pdf.w - 2*pdf.l_margin
@@ -367,14 +390,17 @@ def export_csv(request):
             print('------------------Im In Here---------------------------')
             start = request.POST.get('start')
             end = request.POST.get('end')
-            start = datetime.strptime(start, '%b. %d, %Y').date()
-            end = datetime.strptime(end, '%b. %d, %Y').date()
+            print(f'__________{start}__________')
+            start = datetime.strptime(start, '%b. %d, %Y')
+            end = datetime.strptime(end, '%b. %d, %Y')
+
+            print(start)
             
             data = Transaction.objects.filter(date__range=[start, end]).values()
             print(data)
             fields = ['Date', 'Time', 'Amount', 'Complete']
             #df = DataFrame(data,columns=fields)
-            df = pd.DataFrame(list(data.values('date','time','buyer','complete'))) 
+            df = pd.DataFrame(list(data.values('date','time','buyer','is_complete'))) 
             #df['Date'] = f'{dt[2]}/{dt[1]}/{dt[0]}'
 
             day = str(datetime.now().day)
@@ -399,7 +425,8 @@ def export_csv(request):
                 with open(f'media/reports/transactions/csv/{csv_name}.csv', 'rb') as csv_name:
                     response = HttpResponse(csv_name.read())
                     response['Content-Disposition'] = f'attachment;filename={name}-{day}/{month}/{year}.csv'
-                    return response        
+                    return response
+    return result                    
                     
             
 
