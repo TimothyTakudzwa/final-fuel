@@ -227,29 +227,68 @@ def view_requests_handler(user, message):
     response_message = ""
     if user.position == 0:
         requests = FuelRequest.objects.filter(wait=True).all()
-        response_message = 'Which request do you want to make an offer? \n\n'
+        response_message = 'Reply with the number of the request to make an offer? \n\n'
         i = 1
         for req in requests:
-            response_message = response_message + str(req.id) + ". " + req.fuel_type + str(req.amount) + '\n'
+            response_message = response_message + str(req.id) + ". " + req.fuel_type +''+ str(req.amount) + '\n'
             i += 1        
         user.position = 1 
         user.save()
     elif user.position == 1:
-        fuel_request = FuelRequest.objects.filter(id=int(message)).first()
-        user.fuel_request = fuel_request
         response_message = "How many litres are you offering?"
+        fuel_request = FuelRequest.objects.filter(id=int(message)).first()
+        user.fuel_request = fuel_request.id
         user.position = 2
         user.save()
     elif user.position == 2:
-        Offer.objects.create(quantity=float(message), supplier=request.user, request=fuel_request)
+        fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
+        Offer.objects.create(quantity=float(message), supplier=user, request=fuel_request)
         response_message = "At what price per litre?"
         user.position = 3
         user.save()
     elif user.position == 3:
-        offer = Offer.objects.filter(supplier=request.user, request=fuel_request).first()
+        fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
+        offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
         offer.price = float(message)
         offer.save()
         response_message = "Offer successfully send! Press *menu* to go back"
+        user.stage = "menu"
+        user.position = 0
+        user.save()
+    return response_message
+
+
+def view_offers_handler(user, message):
+    if user.position == 0:
+        response_message = "Reply with the offer number to change the initial offer available\n\n"
+        offers = Offer.objects.filter(supplier=user)
+        i = 1
+        for offer in offers:
+            response_message = response_message + f'{offer.id}. {offer.request.fuel_type} {offer.quantity}l at {offer.price}'
+            i += 1
+        user.position = 1
+        user.save()
+    elif user.position == 1:
+        response_message = "How many litres are you offering now?"
+        offer = Offer.objects.filter(id=int(message)).first()
+        user.position = 2
+        user.fuel_request = offer.id
+        user.save()
+    elif user.position == 2:
+        offer = Offer.objects.filter(id=user.fuel_request).first()
+        offer.quantity = float(message)
+        offer.save()
+        response_message = "At what price per litre?"
+        user.position = 3
+        user.save()
+    elif user.position ==3:
+        offer = Offer.objects.filter(id=user.fuel_request).first()
+        offer.price = float(message)
+        offer.save()
+        response_message = "You have successfully updated your offer"
+        user.stage = "menu"
+        user.position = 0
+        user.save()
     return response_message
 
 
@@ -268,11 +307,19 @@ def supplier_handler(request,user,message):
             user.position = 0
             user.save()
             response_message = view_requests_handler(user, message)
-        # elif message == "2":
-        #     user.stage = 'view_offers'
-        #     user.position = 0
-        #     user.save()
-        #     response_message = view_offers_handler(user, message)
+        elif message == "2":
+            user.stage = 'view_offers'
+            user.position = 0
+            user.save()
+            response_message = view_offers_handler(user, message)
+        else:
+            response_message = "You entered an invalid option. Type *menu* to restart."
+    elif user.stage == 'view_requests':
+        response_message= view_requests_handler(user, message)
+    elif user.stage == 'view_offers':
+        response_message = view_offers_handler(user, message)
+    else:
+        pass
 
     return response_message
 

@@ -9,7 +9,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.db.models import Q
 from django.shortcuts import redirect, render
-
+from django.http import HttpResponse
 from buyer.models import User
 from buyer.recommend import recommend
 from company.models import Company, FuelUpdate
@@ -19,6 +19,9 @@ from .constants import sample_data
 from .forms import (BuyerRegisterForm, BuyerUpdateForm, FuelRequestForm,
                     PasswordChangeForm)
 from .models import FuelRequest
+from buyer.utils import render_to_pdf
+
+
 
 user = get_user_model()
 
@@ -307,5 +310,7 @@ def invoice(request):
     context = {
         'transactions': transactions
     }
+    pdf = render_to_pdf('buyer/invoice.html',context)
+    return HttpResponse(pdf, content_type='application/pdf')
 
-    return render(request, 'buyer/invoice.html', context=context)
+    
