@@ -1,19 +1,26 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, update_session_auth_hash
+from django.core.mail import EmailMultiAlternatives
+from django.core.mail.message import BadHeaderError
 from django.http.response import JsonResponse, HttpResponse
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from django.contrib.auth import get_user_model
 
 from buyer.models import User
-from company.models import FuelUpdate, Company
-from supplier.models import Subsidiaries
+from company.models import FuelUpdate
+from supplier.models import Subsidiaries, TokenAuthentication
+
+import secrets
+from fuelfinder import settings
 
 user = get_user_model()
 
 
 @csrf_exempt
 @api_view(['POST'])
-def login_api(request):
+def login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -32,7 +39,7 @@ def login_api(request):
 
 @csrf_exempt
 @api_view(['POST'])
-def login_user_api(request):
+def login_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -55,6 +62,8 @@ def login_user_api(request):
 def register(request):
     if request.method == 'POST':
         username = request.POST.get('username')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
         email = request.POST.get('email')
         phone = request.POST.get('phone')
         password = request.POST.get('password')
@@ -63,6 +72,8 @@ def register(request):
             client = user.objects.create_user(username=username, email=email, password=password)
             client.phone_number = phone
             client.user_type = 'INDIVIDUAL'
+            client.first_name = first_name
+            client.last_name = last_name
             client.save()
 
             data = {'username': client.username}
@@ -81,7 +92,7 @@ def register(request):
 
 @csrf_exempt
 @api_view(['POST'])
-def update_station_api(request):
+def update_station(request):
     if request.method == 'POST':
         username = request.POST.get('username')
 
@@ -96,14 +107,27 @@ def update_station_api(request):
             p_quantity = request.POST.get('petrol_quantity')
             d_quantity = request.POST.get('diesel_quantity')
             queue = request.POST.get('queue')
-            payment = request.POST.get('payment_method')
+
+
+            usd = request.POST.get('usd')
+            swipe = request.POST.get('swipe')
+            ecocash = request.POST.get('ecocash')
+            cash = request.POST.get('cash')
+            s_status = request.POST.get('status')
+            limit = request.POST.get('limit')
 
             update.petrol_price = p_price
             update.diesel_price = d_price
             update.petrol_quantity = p_quantity
             update.diesel_quantity = d_quantity
             update.queue_length = queue
-            update.payment_methods = payment
+
+            update.usd = usd
+            update.swipe = swipe
+            update.ecocash = ecocash
+            update.cash = cash
+            update.status = s_status
+            update.limit = limit
 
             update.save()
 
@@ -114,7 +138,7 @@ def update_station_api(request):
 
 @csrf_exempt
 @api_view(['POST'])
-def view_station_updates_api(request):
+def view_station_updates(request):
     if request.method == 'POST':
         username = request.POST.get('username')
 
@@ -131,7 +155,7 @@ def view_station_updates_api(request):
 
 @csrf_exempt
 @api_view(['POST'])
-def view_updates_user_api(request):
+def view_updates_user(request):
     if request.method == 'POST':
 
         data = []
@@ -140,10 +164,11 @@ def view_updates_user_api(request):
         for update in updates:
             details = Subsidiaries.objects.get(id=update.relationship_id)
             station_update = {
-                              'station': details.name, 'company': details.company.name, 'queue':
-                              update.queue_length, 'petrol': update.petrol_price, 'diesel': update.diesel_price,
-                              'open': details.opening_time, 'close': details.closing_time
-                              }
+                'station': details.name, 'company': details.company.name, 'queue':
+                    update.queue_length, 'petrol': update.petrol_price, 'diesel': update.diesel_price,
+                'open': details.opening_time, 'close': details.closing_time, 'limit': update.limit, 'cash': update.cash,
+                'ecocash': update.ecocash, 'swipe': update.swipe, 'usd': update.usd
+            }
             data.append(station_update)
 
         return JsonResponse(list(data), status=200, safe=False)
@@ -151,13 +176,32 @@ def view_updates_user_api(request):
 
 @csrf_exempt
 @api_view(['POST'])
-def change_password_api(request):
+def get_profile(request):
     if request.method == 'POST':
         username = request.POST.get('username')
 
-        user = User.objects.filter(username=username)
+        data = []
 
-        if user.exists():
+        check = User.objects.filter(username=username)
+        if check.exists():
+            client = User.objects.get(username=username)
+            user_data = {'username': client.username, 'firstName': client.first_name,
+                         'lastName': client.last_name, 'phone': client.phone_number, 'email': client.email}
+            data.append(user_data)
+            return JsonResponse(list(data), status=200, safe=False)
+        else:
+            return HttpResponse(status=403)
+
+
+@csrf_exempt
+@api_view(['POST'])
+def change_password(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+
+        check = User.objects.filter(username=username)
+
+        if check.exists():
             old = request.POST.get('old')
             new1 = request.POST.get('new1')
             new2 = request.POST.get('new2')
@@ -179,5 +223,32 @@ def change_password_api(request):
 
 @csrf_exempt
 @api_view(['POST'])
-def reset_password_api(request):
-    pass
+def password_reset(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+
+        check = User.objects.filter(email=email)
+        if check.exists():
+            client = User.objects.get(email=email)
+            password = secrets.token_hex(3)
+            client.set_password(password)
+            client.save()
+            update_session_auth_hash(request, client)
+
+            sender = f'Fuel Finder Accounts<{settings.EMAIL_HOST_USER}>'
+            title = 'Password Reset'
+            message = f"Your account password was reset.Please use this password when signing in : \n" \
+                      f"{password}\n" \
+                      f"Remember to change the password when you sign in."
+
+            try:
+                msg = EmailMultiAlternatives(title, message, sender, [email])
+                msg.send()
+                return HttpResponse(200)
+
+            except BadHeaderError:
+                return HttpResponse(400)
+
+        else:
+            return HttpResponse(status=404)
+
