@@ -13,6 +13,7 @@ urlpatterns = [
     path('fuel', views.fuel_request, name='buyer-fuel-request'),
     path('offers/<int:id>', views.offers, name='fuel-offers'),
     path('accept/<int:id>', views.accept_offer, name='accept-offers'),
+    path('reject/<int:id>', views.reject_offer, name='reject-offer'),
     path('transactions', views.transactions, name='buyer-transactions'),
     path('invoice', views.invoice, name='buyer-invoice'),
     path('login_success/', views.login_success, name='login_success'),
