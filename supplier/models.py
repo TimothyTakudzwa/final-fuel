@@ -87,6 +87,7 @@ class Transaction(models.Model):
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)
+    supplier = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='supplier')
     
     class Meta:
         ordering = ['date', 'time']
