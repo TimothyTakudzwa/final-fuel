@@ -191,25 +191,29 @@ def dashboard(request):
     if request.method == 'POST':
         form = FuelRequestForm(request.POST)
         if 'MakeDeal' in request.POST:
-            if form.is_valid():
-                amount = form.cleaned_data['amount']
-                payment_method = form.cleaned_data['payment_method']
-                delivery_method = form.cleaned_data['delivery_method']
-                fuel_type = form.cleaned_data['fuel_type']
-                print(f"===================={request.POST.get('company_id')}--------------------  ")
+            if form.is_valid():     
                 fuel_request = FuelRequest()
+
                 fuel_request.name = request.user       
-                fuel_request.amount = amount
-                fuel_request.fuel_type = fuel_type
-                fuel_request.payment_method = payment_method
-                fuel_request.delivery_method = delivery_method
+                fuel_request.amount = form.cleaned_data['amount']
+                fuel_request.fuel_type = form.cleaned_data['fuel_type']
+                fuel_request.usd = True if request.POST.get('usd') == "True" else False
+                fuel_request.cash = True if request.POST.get('cash') == "True" else False
+                fuel_request.ecocash = True if request.POST.get('ecocash') == "True" else False
+                fuel_request.swipe = True if request.POST.get('swipe') == "True" else False
+                fuel_request.delivery_method = form.cleaned_data['delivery_method']
+                fuel_request.delivery_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+                fuel_request.storage_tanks = True if request.POST.get('storage_tanks') == "True" else False
+                fuel_request.pump_required = True if request.POST.get('pump_required') == "True" else False
+                fuel_request.dipping_stick_required = True if request.POST.get('usd') == "True" else False
+                fuel_request.meter_required = True if request.POST.get('usd') == "True" else False
                 fuel_request.is_direct_deal = True
                 fuel_request.last_deal = request.POST.get('company_id')
+                print(fuel_request.last_deal)
                 fuel_request.save()
             messages.success(request, f'kindly not your request has been made ')
 
         if 'WaitForOffer' in request.POST:
-            print(form.errors)
             if form.is_valid():
                 fuel_request = FuelRequest()
                 fuel_request.name = request.user       
@@ -227,31 +231,26 @@ def dashboard(request):
                 fuel_request.meter_required = True if request.POST.get('usd') == "True" else False
                 fuel_request.wait = True
                 fuel_request.save()
-                print("----------Got to the save part ---------")
-            messages.success(request, f'kindly not your request has been made wait for an offer')
+            messages.success(request, f'Fuel Request has been submitted succesfully and now waiting for an offer')
 
         if 'Recommender' in request.POST:
             if form.is_valid():
                 amount = form.cleaned_data['amount']
-                payment_method = form.cleaned_data['payment_method']
                 delivery_method = form.cleaned_data['delivery_method']
                 fuel_type = form.cleaned_data['fuel_type']
                 fuel_request = FuelRequest()
                 fuel_request.name = request.user       
                 fuel_request.amount = amount
                 fuel_request.fuel_type = fuel_type
-                fuel_request.payment_method = payment_method
                 fuel_request.delivery_method = delivery_method
                 fuel_request.save()
-
-                offer_id = recommend(fuel_request)
+                offer_id, response_message = recommend(fuel_request)
                 if not offer_id:
-                    messages.error(request, f'sorry we can not find an offer that fits your request at the moment')
-                    return render(request, 'buyer/offer.html', {'offers': offers })
+                    messages.error(request,response_message)                    
                 else:
                     offer = Offer.objects.filter(id=offer_id).first()
-                    return render(request, 'buyer/offer.html', {'offers': offers })
-    
+                    
+                   
     else:
         form = FuelRequestForm
     
@@ -263,8 +262,6 @@ def dashboard(request):
             update.company = company.name
             update.depot = subsidiary.name
             update.address = subsidiary.address 
-            print(subsidiary.name)
-    print(updates)
     return render(request, 'buyer/dashboard.html',{'form':form, 'updates': updates})
 
 

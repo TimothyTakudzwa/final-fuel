@@ -151,18 +151,23 @@
         </div>
       </nav>
       <!-- End Navbar -->
-
-      <div class="container" style="margin-top:10%">
-        <div class="container-fluid">
-          <!-- your content goes here -->
-            {% if messages %}
-                {% for message in messages%}
-                    <div class="alert-{{ message.tags }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-
-            {% endif %}
+      {% if messages %}
+     
+      <div data-notify="container" class="col-11 col-md-4 alert alert-rose alert-with-icon animated fadeInDown" role="alert"
+        data-notify-position="top-center"
+        style="display: inline-block; margin: 15px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1031; top: 20px; left: 0px; right: 0px;">
+        <button type="button" aria-hidden="true" class="close" data-notify="dismiss"
+          style="position: absolute; right: 10px; top: 50%; margin-top: -9px; z-index: 1033;"><i
+            class="material-icons">close</i></button><i data-notify="icon" class="material-icons">add_alert</i><span
+          data-notify="title"></span> 
+          {% for message in messages%}
+          <span data-notify="message">{{ message }}</span><a href="#" target="_blank" data-notify="url"></a>
+          {% endfor %}
+        </div>
+        {% endif %}
+        <div class="container" style="margin-top:10%">
+       
+           
           
           {% block body %}
           
@@ -401,8 +406,17 @@
   <script>
   $(document).ready(function() {
     $('#choices').hide();
+    $('#choices1').hide();
 
-     $('#delivery_method').change(function () {
+     $('#delivery_method1').change(function () {
+        if ($('#delivery_method1 option:selected').text() == "Direct Delivery"){
+            $('#choices1').show();
+        }
+         else { 
+              $('#choices1').hide();
+         }
+    });
+    $('#delivery_method').change(function () {
         if ($('#delivery_method option:selected').text() == "Delivery"){
             $('#choices').show();
         }
