@@ -16,6 +16,12 @@
                         <th>
                             <h6>Company Name</h6>
                         </th>
+                        <th>
+                            <h6>Depot</h6>
+                        </th>
+                        <th>
+                            <h6>Address</h6>
+                        </th>
 
                         <th>
                             <h6> Petrol Price</h6>
@@ -41,13 +47,19 @@
 
                     {% for data in updates %}
                     <tr>
-                        <td>
+                        <td class="text-primary">
                             {{data.company}}
+                        </td>
+                        <td class="text-primary">
+                            {{data.depot}}
+                        </td>
+                        <td class="text-danger">
+                            {{data.address}}
                         </td>
                         <td class="text-danger">
                             {{data.petrol_price}}
                         </td>
-                        <td class="text-primary">
+                        <td>
                             {{data.diesel_price}}
                         </td>
                         <td class="text-primary">
@@ -57,13 +69,13 @@
                             {{data.diesel_quantity}}
                         </td>
                         <td class="text-primary">
-                            {{data.date}} -- {{data.time}}
+                            {{data.last_updated}}
                         </td>
                         <td class="text-primary">
 
                             <button class="btn btn-facebook btn-sm" data-toggle="modal"
-                                data-target="#make_deal{{data.id}}"> <i
-                                    class="material-icons">ev_station</i>Deal </button>
+                                data-target="#make_deal{{data.id}}"> <i class="material-icons">ev_station</i>Deal
+                            </button>
                         </td>
                     </tr>
                     <div class="modal fade" id="make_deal{{data.id}}" tabindex="-1" role="dialog"
@@ -85,11 +97,12 @@
                                             <input type="hidden" value="{{data.id}}" name="company_id" />
                                     </div>
                                     <div class="modal-footer justify-content-center">
-                                        <button type="submit" name="MakeDeal" class="btn btn-info btn-round">Submit Request</button>
+                                        <button type="submit" name="MakeDeal" class="btn btn-info btn-round">Submit
+                                            Request</button>
                                         </form>
                                     </div>
                                 </div>
-                            
+
                             </div>
                         </div>
                     </div>
@@ -120,58 +133,111 @@
                 </button>
             </div>
             <div class="modal-body">
-            <form method="POST" action ="{% url 'buyer-dashboard' %}">
+                <form method="POST" action="{% url 'buyer-dashboard' %}">
                     {% csrf_token %}
-                        <div class="form-group">
-                            {{ form.fuel_type|as_crispy_field }}
-                        </div>
+                    <div class="form-group">
+                        {{ form.fuel_type|as_crispy_field }}
+                    </div>
 
-                        <div class="form-group">
-                            {{ form.amount|as_crispy_field }}
-                        </div>
+                    <div class="form-group">
+                        {{ form.amount|as_crispy_field }}
+                    </div>
+                    <label class="form-group">Select Payment Method</label>
+                    <div class="col-sm-12 row">
+                        <div class="togglebutton form-group col">
+                            <label>
 
-                        <div class="form-group">
-                            {{ form.payment_method|as_crispy_field }}
-                        </div>
+                                <input type="checkbox" name="cash" id="cash">
 
-                        <div class="form-group">
-                            <select id="delivery_method" name="delivery_method" class="form-control">
-                                    <option value='SELF_COLLECTION'>SELF COLLECTION</option>
-                                    <option value='DELIVERY'>DELIVERY</option>
-                                </select>
+                                <span class="toggle"></span>
+                                Cash
+                            </label>
                         </div>
+                        <div class="togglebutton form-group col">
+                            <label>
+                                <input type="checkbox" name="ecocash" id="ecocash">
+                                <span class="toggle"></span>
+                                Ecocash
+                            </label>
+                        </div>
+                        <div class="togglebutton form-group col">
+                            <label>
+                                <input type="checkbox" name="swipe" id="swipe">
+                                <span class="toggle"></span>
+                                Swipe
+                            </label>
+                        </div>
+                        <div class="togglebutton form-group col">
+                            <label>
+                                <input type="checkbox" name="usd" id="usd">
+                                <span class="toggle"></span>
+                                USD
+                            </label>
+                        </div>
+                    </div>
 
-                        <div class="form-group" name='choices' id='choices'>
-                            {{ form.delivery_address|as_crispy_field }}
-                            {{ form.storage_tanks|as_crispy_field }}
-                            <br>
-                            <div>
-                                <input class="form-control-md" type="checkbox" value ='False' id="pump_required" name="pump_required">
-                                <label for="pump_required">Pump Required</label>
-                            </div>
+
+                    <div class="form-group">
+                        <label>Pick Up Method</label>
+                        <select id="delivery_method" name="delivery_method" class="form-control">
+                            <option value='SELF_COLLECTION'>Self Collection</option>
+                            <option value='DELIVERY'>Delivery</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" name='choices' id='choices'>
+                        <label>Delivery Address</label>
+                        <div class="row form-group">                            
+                                <div class="togglebutton form-group col">
+                                  <label for="">Street Number</label>
+                                  <input type="text" class="form-control" name="s_number" id="" aria-describedby="helpId" placeholder="">
+                                  
+                                </div>
+                                <div class="togglebutton form-group col">
+                                  <label for="">Street Name</label>
+                                  <input type="text" class="form-control" name="s_name" id="" aria-describedby="helpId" placeholder="">
+                                  
+                                </div>
+                                <div class="togglebutton form-group col">
+                                  <label for="">Location/Town</label>
+                                  <input type="text" class="form-control" name="s_town" id="" aria-describedby="helpId" placeholder="">
+                                 
+                                </div>
                             
-                            <br>
-                            <div>
-                                <input class="form-control-md" type="checkbox" value="False" id="dipping_stick_required" name="dipping_stick_required">
-                                <label for="dipping_stick_required">Dipping Stick Required</label>
+                        </div>
+                       
+                        {{ form.storage_tanks|as_crispy_field }}
+                        <br>
+                        <label>Required Equipments</label>
+                        <div class="row">
+                            <div class="col">
+                                <input class="form-control-md" type="checkbox" value='False' id="pump_required"
+                                    name="pump_required">
+                                <label for="pump_required">Pump </label>
+                                
+                            </div>
+                            <div class="col">
+                                <input class="form-control-md" type="checkbox" value="False" id="dipping_stick_required"
+                                    name="dipping_stick_required">
+                                <label for="dipping_stick_required">Dipping Stick </label>
                             </div>
 
-                            <br>
-                            <div>
-                                <input class="form-control-md" type="checkbox" value="False" id="meter_required" name="meter_required">
-                                <label for="meter_required">Meter Required</label>
+                            <div class="col">
+                                <input class="form-control-md" type="checkbox" value="False" id="meter_required"
+                                    name="meter_required">
+                                <label for="meter_required">Meter</label>
                             </div>
-
-                        </div>    
+                        </div>
+                    </div>
                     <!--<input type="hidden" value="{{data.company_id}}" name="company_id" /> -->
-                </div>
-            
-                <div class="modal-footer justify-content-center">
-                        <button type="submit" name="WaitForOffer" class="btn btn-info btn-round">Wait for Offer</button>
-                        <button type="submit" name='Recommender' class="btn btn-primary btn-round">System Generated</button>
+            </div>
 
-                </div>
-             </form>
+            <div class="modal-footer justify-content-center">
+                <button type="submit" name="WaitForOffer" class="btn btn-info btn-round">Wait for Offer</button>
+                <button type="submit" name='Recommender' class="btn btn-primary btn-round">System Generated</button>
+
+            </div>
+            </form>
         </div>
     </div>
 </div>

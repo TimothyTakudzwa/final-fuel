@@ -1,34 +1,26 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
-from .forms import BuyerRegisterForm, BuyerUpdateForm, FuelRequestForm, PasswordChangeForm
-#from supplier.forms import FuelRequestForm
-from .constants import sample_data
-from buyer.models import User
-from company.models import Company, FuelUpdate
-import requests
 import secrets
-from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from datetime import datetime
-#from .constants import sender, subject
-from .models import FuelRequest
-from supplier.models import Offer, Transaction, Subsidiaries
+
+import requests
+from django.contrib import messages
+from django.contrib.auth import (authenticate, get_user_model, login, logout, update_session_auth_hash)
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.core.mail import BadHeaderError, EmailMultiAlternatives
+from django.db.models import Q
+from django.shortcuts import redirect, render
+
+from buyer.models import User
 from buyer.recommend import recommend
-from django.contrib.auth import get_user_model
+from company.models import Company, FuelUpdate
+from supplier.models import Offer, Subsidiaries, Transaction
+
+from .constants import sample_data
+from .forms import (BuyerRegisterForm, BuyerUpdateForm, FuelRequestForm,
+                    PasswordChangeForm)
+from .models import FuelRequest
 
 user = get_user_model()
-
-# def login_success(request):
-#     """
-#     Redirects users based on whether they are in the admins group
-#     """
-#     if request.user(user_type="buyer").exists():
-#         # user is an admin
-#         return redirect("buyer-profile")
-#     else:
-#         return redirect("other_view")
 
 def login_success(request):
     """
@@ -149,14 +141,9 @@ def fuel_request(request):
     fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).all()
     for fuel_request in fuel_requests:
         if fuel_request.is_direct_deal:
-            print(fuel_request.last_deal)
-
             search_company = FuelUpdate.objects.filter(id= fuel_request.last_deal).first()
-            print(search_company)
             depot = Subsidiaries.objects.filter(id=search_company.relationship_id).first()
             company = Company.objects.filter(id= search_company.company_id).first()
-            print(company)
-            print(depot)
             fuel_request.request_company = company.name
             fuel_request.depot = depot.name
         else:
@@ -223,32 +210,21 @@ def dashboard(request):
 
         if 'WaitForOffer' in request.POST:
             print(form.errors)
-
             if form.is_valid():
-                print("----------dssddsfsdfds----------------------------------")
-
-                amount = form.cleaned_data['amount']
-                payment_method = form.cleaned_data['payment_method']
-                delivery_method = form.cleaned_data['delivery_method']
-                fuel_type = form.cleaned_data['fuel_type']
-                print(request.POST.get('delivery_address'), request.POST.get('storage_tanks'),  request.POST.get('pump_required'))
-                delivery_address = request.POST.get('delivery_address')
-                storage_tanks = request.POST.get('storage_tanks')
-                pump_required = request.POST.get('pump_required')
-                dipping_stick_required = request.POST.get('dipping_stick_required')
-                meter_required = request.POST.get('meter_required')
-
                 fuel_request = FuelRequest()
                 fuel_request.name = request.user       
-                fuel_request.amount = amount
-                fuel_request.fuel_type = fuel_type
-                fuel_request.payment_method = payment_method
-                fuel_request.delivery_method = delivery_method
-                fuel_request.delivery_address = delivery_address
-                fuel_request.storage_tanks = storage_tanks
-                fuel_request.pump_required = pump_required
-                fuel_request.dipping_stick_required =dipping_stick_required
-                fuel_request.meter_required = meter_required
+                fuel_request.amount = form.cleaned_data['amount']
+                fuel_request.fuel_type = form.cleaned_data['fuel_type']
+                fuel_request.usd = True if request.POST.get('usd') == "True" else False
+                fuel_request.cash = True if request.POST.get('cash') == "True" else False
+                fuel_request.ecocash = True if request.POST.get('ecocash') == "True" else False
+                fuel_request.swipe = True if request.POST.get('swipe') == "True" else False
+                fuel_request.delivery_method = form.cleaned_data['delivery_method']
+                fuel_request.delivery_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+                fuel_request.storage_tanks = True if request.POST.get('storage_tanks') == "True" else False
+                fuel_request.pump_required = True if request.POST.get('pump_required') == "True" else False
+                fuel_request.dipping_stick_required = True if request.POST.get('usd') == "True" else False
+                fuel_request.meter_required = True if request.POST.get('usd') == "True" else False
                 fuel_request.wait = True
                 fuel_request.save()
                 print("----------Got to the save part ---------")
@@ -279,12 +255,15 @@ def dashboard(request):
     else:
         form = FuelRequestForm
     
-    updates = FuelUpdate.objects.filter(sub_type="depot")
+    updates = FuelUpdate.objects.filter(sub_type="Depot").filter(~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
     for update in updates:
+        subsidiary = Subsidiaries.objects.filter(id = update.relationship_id).first()
         company = Company.objects.filter(id=update.company_id).first()
         if company is not None:
             update.company = company.name
-
+            update.depot = subsidiary.name
+            update.address = subsidiary.address 
+            print(subsidiary.name)
     print(updates)
     return render(request, 'buyer/dashboard.html',{'form':form, 'updates': updates})
 
