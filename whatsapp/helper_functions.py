@@ -3,12 +3,11 @@ import requests
 from validate_email import validate_email
 from .constants import *
 from buyer.views import token_is_send
-from supplier.models import Offer, Transaction
+from supplier.models import Offer, Transaction, FuelAllocation
 from buyer.models import User, FuelRequest
 from company.models import FuelUpdate
 from django.db.models import Q
 from buyer.recommend import recommend
-
 
 def send_message(phone_number, message):
     payload = {
@@ -156,7 +155,7 @@ def follow_up(user, message):
     elif user.position == 22:
         req = FuelRequest.objects.filter(id = user.fuel_request).first()
         offer = Offer.objects.filter(id=int(message)).first()
-        Transaction.objects.create(buyer=user,offer=offer,is_complete=True)
+        Transaction.objects.create(buyer=user,offer=offer,is_complete=True,supplier=offer.supplier)
         response_message = 'Transaction is complete'
     return response_message
 
@@ -292,6 +291,19 @@ def view_offers_handler(user, message):
     return response_message
 
 
+def view_transactions_handler(user, message):
+    transactions = Transaction.objects.filter(supplier=user)
+    if transactions:
+        i = 1
+        while i < 10:
+            for transaction in transactions:
+                response_message = f'{transaction.date} {transaction.time} {transaction.buyer.first_name} {transaction.buyer.last_name} {transaction.offer.quantity}'
+                i += 1
+    else:
+        response_message = "You have not performed any transactions yet"
+    return response_message
+
+
 def supplier_handler(request,user,message):
     response_message = ""
     if message.lower() == 'menu':
@@ -312,6 +324,11 @@ def supplier_handler(request,user,message):
             user.position = 0
             user.save()
             response_message = view_offers_handler(user, message)
+        elif message == "3":
+            user.stage = 'menu'
+            user.position = 0
+            user.save()
+            response_message = view_transactions_handler(user, message)
         else:
             response_message = "You entered an invalid option. Type *menu* to restart."
     elif user.stage == 'view_requests':
@@ -323,21 +340,11 @@ def supplier_handler(request,user,message):
 
     return response_message
 
-def service_station_handler(request,user,message):
-    if message.lower() == 'menu' and user.stage != 'registration':
-        user.position = 1
-        user.stage = 'requesting'
-        user.save()
-        return requests_handler(user, message)
-    pass
-
-
 def bot_action(request, user, message):   
     if user.stage == 'registration' and user.position !=0:
         return registration_handler(request, user, message)
     if user.user_type == 'INDIVIDUAL':
-        return individual_handler(request, user, message)
-        
+        return individual_handler(request, user, message)   
     elif user.user_type == 'S_ADMIN':
         return "You are not allowed to use this platform"
     elif user.user_type == 'BUYER':
@@ -413,6 +420,91 @@ def registration_handler(request, user, message):
     return response_message
 
 
+
+def service_station_handler(request,user,message):
+    if message == 'menu':
+        user.stage = 'menu'
+        user.position = 1
+        user.save()
+        full_name = user.first_name + " " + user.last_name
+        response_message = ss_supplier_menu.format(full_name)
+        return response_message 
+    if user.stage == 'menu':
+        if message == "1":
+            user.stage = 'update_petrol'
+            user.save()
+            response_message = update_petrol(user, message)
+        elif message == "2":
+            user.stage = 'update_diesel'
+            user.save()
+            response_message = update_diesel(user, message)
+        elif message == "3":
+            user.stage = 'view_allocations'
+            user.save()
+            response_message = view_allocations(user, message)
+        else:
+            full_name = user.first_name + " " + user.last_name
+            response_message = ss_supplier_menu.format(full_name)
+        return response_message   
+
+    elif user.stage == 'update_petrol':
+        response_message = update_petrol(user, message)
+    elif user.stage == 'update_diesel':
+        response_message = update_diesel(user, message)
+    elif user.stage == 'view_allocations':
+        response_message = view_allocations(user, message)
+    elif user.stage == 'registration':
+        user.stage = 'menu'
+        user.position = 1        
+        full_name = user.first_name + " " + user.last_name
+        if user.activated_for_whatsapp: 
+            response_message = ss_supplier_menu.format(full_name)           
+        else:        
+            response_message = registred_as_a.format(full_name, user.company.name, "SS_SUPPLIER")
+        user.save()
+    else:
+       pass
+    return response_message   
+
+
+def update_petrol(user, message):
+    if user.position == 1:
+        update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
+        response_message = "The last update of Petrol quantity is" + " " + str(update.petrol_quantity) + "." + "How many litres of petrol left?"
+        user.position = 40
+        user.save()
+    elif user.position == 40:
+        update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
+        update.petrol_quantity = message
+        update.save()
+        response_message = 'Petrol Quantity updated successfully? \n\n'
+    
+    return response_message
+
+def update_diesel(user, message):
+    if user.position == 1:
+        update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
+        response_message = "The last update of Diesel quantity is" + " " + str(update.diesel_quantity) + "." + "How many litres of diesel left?"
+        user.position = 50
+        user.save()
+    elif user.position == 50:
+        update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
+        update.diesel_quantity = message
+        update.save()
+        response_message = 'Diesel Quantity updated successfully? \n\n'
+    
+    return response_message
+
+def view_allocations(user, message):
+    if user.position == 1:
+        allocations = FuelAllocation.objects.filter(assigned_staff_id=user.subsidiary_id).all()
+        response_message = 'The following are quantities of the fuel you received. Please type *menu* to go back to main menu. \n\n'
+        i = 1
+        for allocation in allocations:
+            response_message = response_message + str(i) + "." + " " + str(allocation.date) + " " + "Diesel" + " " + str(allocation.diesel_quantity) + "L" + " " + "&" + " " + "Petrol" + " " +str(allocation.petrol_quantity) + "L" + '\n'
+            i += 1        
+        
+    return response_message
 
 def transacting_handler(user, message):
     if user.position == 1:
