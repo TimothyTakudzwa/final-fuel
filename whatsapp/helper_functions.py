@@ -228,7 +228,7 @@ def view_requests_handler(user, message):
         requests = FuelRequest.objects.filter(wait=True).all()
         response_message = 'Reply with the number of the request to make an offer? \n\n'
         i = 1
-        for req in requests:
+        for req in requests: 
             response_message = response_message + str(req.id) + ". " + req.fuel_type +''+ str(req.amount) + '\n'
             i += 1        
         user.position = 1 
