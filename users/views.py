@@ -148,7 +148,7 @@ def statistics(request):
     num_trans = [random.randint(2,12) for i in range(len(companies))]
     counter = 0
 
-    trans = Transaction.objects.filter(offer.supplier=, is_complete=True).annotate(number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
+    trans = Transaction.objects.filter(supplier=request.user, is_complete=True).annotate(number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
     buyers = [client.buyer for client in trans]
 
     for buyer in buyers:
