@@ -13,20 +13,21 @@
             <table class="table table-bordered table-hover table-striped" id="fuel_updates">
                 <thead class=" text-primary">
                     <tr>
+                        
                         <th>
-                            <h6>Offer ID </h6>
+                            <h6>Supplier Company</h6>
                         </th>
                         <th>
-                            <h6>Supplier Name</h6>
-                        </th>
+                                <h6>Depot Name</h6>
+                            </th>
                         <th>
                             <h6>Supplier Address</h6>
                         </th>
                         <th>
-                            <h6> Requested </h6>
+                            <h6>Fuel Requested </h6>
                         </th>
                         <th>
-                            <h6> Offer </h6>
+                            <h6>Fuel Offer </h6>
                         </th>
                   
                         <th>
@@ -47,20 +48,21 @@
 
                     {% for offer in offers %}
                     <tr>
-                        <td>
-                            {{offer.id}}
-                        </td>
+                        
                         <td>
                             {{offer.supplier.company}}
                         </td>
                         <td>
+                                {{offer.depot_name}}
+                            </td>
+                        <td>
                             {{offer.supplier.company.address}}
                         </td>
                         <td>
-                            {{offer.request.amount}}
+                            {{offer.request.amount}} Litres
                         </td>
                         <td class="">
-                            {{offer.quantity}}
+                            {{offer.quantity}} Litres
                         </td>
                         <td class="">
                             RTGS {{offer.price}}
@@ -69,12 +71,12 @@
                              {{offer.date}} -- {{offer.time}}
                         </td>
                         <td class="text-primary">    
-                            <a class="btn btn-facebook btn-sm" href="{% url 'accept-offers' offer.id %}">
+                            <a class="btn btn-facebook btn-sm" href="accept/{{offer.id}}">
                                 <i class="material-icons"></i>Accept Offer 
                             </a>
                         </td>
                         <td class="text-primary">
-                         <a class="btn btn-facebook btn-sm" href="" >
+                         <a class="btn btn-facebook btn-sm" href="reject/{{offer.id}}" >
                                 <i class="material-icons"></i>Reject Offer 
                             </a>
                         </td>

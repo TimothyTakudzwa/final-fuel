@@ -272,15 +272,18 @@ def dashboard(request):
 
 def offers(request, id):
     selected_request = FuelRequest.objects.filter(id=id).first()
-    offers = Offer.objects.filter(request=selected_request).all()
+    offers = Offer.objects.filter(request=selected_request).filter(declined=False).all()
     buyer = request.user 
-    print(offers)
+    for offer in offers:
+        depot = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
+        offer.depot_name = depot.name
+   
     return render(request, 'buyer/offer.html', {'offers': offers })
 
 
 def accept_offer(request, id):    
     offer = Offer.objects.filter(id=id).first()
-    print(offer.supplier)
+    print(offer.supplier)  
     Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier)  
     FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
     return redirect("buyer-fuel-request")
@@ -291,8 +294,9 @@ def reject_offer(request, id):
     offer.save()
     my_request = FuelRequest.objects.filter(id = offer.request.id).first()
     my_request.wait = True
+    my_request.is_complete = False
     my_request.save()     
-    FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
+    # FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
     messages.success(request, "Your request has been saved and as offer updates are coming you will receive notifications")
     return redirect("buyer-fuel-request")
 
