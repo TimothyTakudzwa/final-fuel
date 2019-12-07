@@ -17,9 +17,8 @@ def get_aggregate_stock(company):
     return {'diesel': diesel, 'petrol': petrol}
 
 
-def get_total_revenue(company):
+def get_total_revenue(user):
     revenue = 0
-    user = company.user_set.get_queryset().first()
     for transaction in Transaction.objects.filter(supplier=user):
         revenue += transaction.request.amount
     return revenue
