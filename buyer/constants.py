@@ -20,14 +20,14 @@ Price: {4}
 
 DELIVERY_OPTIONS= (('BULK', 'BULK'),('REGULAR', 'REGULAR'))
 
-FUEL_CHOICES = (('PETROL BLEND', 'PETROL BLEND'),('DIESEL', 'DIESEL'))
+FUEL_CHOICES = (('Petrol', 'Petrol'),('DIESEL', 'Diesel'))
 
 sender = f'Fuel Finder Accounts<tests@marlvinzw.me>'
 subject = 'User Registration'
 
 PAYING_CHOICES = (('USD', 'USD'),('TRANSFER','TRANSFER'),('BOND CASH','BOND CASH'),('USD & TRANSFER','USD & TRANSFER'),('TRANSFER & BOND CASH','TRANSFER & BOND CASH'),('USD & BOND CASH','USD & BOND CASH'),('USD, TRANSFER & BOND CASH','USD, TRANSFER & BOND CASH'))
 
-STORAGE_TANKS = (('ABOVE GROUND', 'ABOVE GROUND'), ('BELOW GROUND','BELOW GROUND'))
+STORAGE_TANKS = (('ABOVE GROUND', 'Above Ground'), ('BELOW GROUND','Below Ground'))
 
 
 sample_data = [

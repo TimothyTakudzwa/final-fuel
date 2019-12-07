@@ -29,8 +29,48 @@
             <a href="#pablo">Get More Stock...</a>
           </div>
         </div>
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#stock_report" style="position: absolute;right:    0;
+        bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
+            <i class="material-icons">calendar_today</i>
+          Generate Report
+        </button>
       </div>
     </div>
+    <div class="modal fade" id="stock_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content" style="max-width: 66%;">
+            <div class="modal-header" style="background-color: #731d82;">
+                <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Generate Stock Report </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        
+                        <input type="hidden" name="report_type" value="Revenue">   
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Starting Date</label>
+                        <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                        <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Ending Date</label>
+                        <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                        <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
+                      </div>  
+                  <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
+                    Submit
+                  </button>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>   
+
     <div class="col-lg-3 col-md-6 col-sm-6">
       <div class="card card-stats" style="height: 180px;">
         <div class="card-header card-header-success card-header-icon">
@@ -44,9 +84,53 @@
           <div class="stats">
             <i class="material-icons">attach_money</i> Overall
           </div>
+
+          
         </div>
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#revenue_report" style="position: absolute;right:    0;
+        bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
+            <i class="material-icons">calendar_today</i>
+          Generate Report
+        </button>
+        
       </div>
     </div>
+
+      
+      <div class="modal fade" id="revenue_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content" style="max-width: 66%;">
+              <div class="modal-header" style="background-color: #731d82;">
+                  <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Generate Revenue Report </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form>
+                      <div class="form-group">
+                          
+                          <input type="hidden" name="report_type" value="Revenue">   
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Starting Date</label>
+                          <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                          <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Ending Date</label>
+                          <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                          <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
+                        </div>  
+                    <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
+                      Submit
+                    </button>
+                  </form>
+              </div>
+            </div>
+          </div>
+        </div>          
     <div class="col-lg-3 col-md-6 col-sm-6">
       <div class="card card-stats" style="height: 180px;">
         <div class="card-header card-header-danger card-header-icon">
@@ -61,7 +145,47 @@
             <i class="material-icons">date_range</i> Last 24 Hours
           </div>
         </div>
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#complaints_report" style="position: absolute;right:    0;
+        bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
+            <i class="material-icons">calendar_today</i>
+          Generate Report
+        </button>
       </div>
+      
+      <div class="modal fade" id="complaints_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content" style="max-width: 66%;">
+              <div class="modal-header" style="background-color: #731d82;">
+                  <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Generate Complaints Report </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form>
+                      <div class="form-group">
+                          
+                          <input type="hidden" name="report_type" value="Complaints">   
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Starting Date</label>
+                          <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                          <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Ending Date</label>
+                          <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                          <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
+                        </div>  
+                    <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
+                      Submit
+                    </button>
+                  </form>
+              </div>
+            </div>
+          </div>
+        </div> 
     </div>
     <div class="col-lg-3 col-md-6 col-sm-6">
       <div class="card card-stats" style="height: 180px;">
@@ -77,13 +201,301 @@
             <i class="material-icons">date_range</i> Last 24 Hours
           </div>
         </div>
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#request_report" style="position: absolute;right:    0;
+        bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
+            <i class="material-icons">calendar_today</i>
+          Generate Report
+        </button>
       </div>
     </div>
+    <div class="modal fade" id="request_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content" style="max-width: 66%;">
+            <div class="modal-header" style="background-color: #731d82;">
+                <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Generate Requests Report </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        
+                        <input type="hidden" name="report_type" value="Requests">   
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Starting Date</label>
+                        <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                        <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Ending Date</label>
+                        <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                        <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
+                      </div>  
+                  <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
+                    Submit
+                  </button>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div> 
   </div>
+  <div class="row">
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats" style="height: 180px;">
+          <div class="card-header card-header-warning card-header-icon">
+            <div class="card-icon" style="
+            background: linear-gradient(60deg, #ff2626, #b763cc);
+        ">
+              <i class="material-icons">people</i>
+            </div>
+            <p class="card-category">Current Staff</p>
+            <h3 class="card-title" style="font-size: 1em;">Admin : {{staff_pop}}
+              
+            </h3>
+            <h3 class="card-title" style="font-size: 1em;">Stations : {{staff_pop}}
+              
+            </h3>
+          </div>
+          <div class="card-footer">
+            
+          </div>
+          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#staff_report" style="position: absolute;right:    0;
+          bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
+              <i class="material-icons">calendar_today</i>
+            Generate Report
+          </button>
+        </div>
+      </div>
+      <div class="modal fade" id="staff_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content" style="max-width: 66%;">
+              <div class="modal-header" style="background-color: #731d82;">
+                  <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Generate Staff Report </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form>
+                      <div class="form-group">
+                          
+                          <input type="hidden" name="report_type" value="Revenue">   
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Starting Date</label>
+                          <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                          <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
+                        </div>
+  
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Ending Date</label>
+                          <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                          <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
+                        </div>  
+                    <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
+                      Submit
+                    </button>
+                  </form>
+              </div>
+            </div>
+          </div>
+        </div>   
+  
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats" style="height: 180px;">
+          <div class="card-header card-header-success card-header-icon">
+            <div class="card-icon" style="background: linear-gradient(60deg, #c6f554, #20a937);">
+              <i class="material-icons">store</i>
+            </div>
+            <p class="card-category">Orders Fulfilled</p>
+            <h3 class="card-title" style="font-size: 1em;"> {{trans}}</h3>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">attach_money</i> Overall
+            </div>
+  
+            
+          </div>
+          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#revenue_report" style="position: absolute;right:    0;
+          bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
+              <i class="material-icons">calendar_today</i>
+            Generate Report
+          </button>
+          
+        </div>
+      </div>
+  
+        
+        <div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content" style="max-width: 66%;">
+                <div class="modal-header" style="background-color: #731d82;">
+                    <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Generate Revenue Report </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            
+                            <input type="hidden" name="report_type" value="Revenue">   
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Starting Date</label>
+                            <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                            <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
+                          </div>
+  
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">Ending Date</label>
+                            <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                            <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
+                          </div>  
+                      <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
+                        Submit
+                      </button>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>          
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats" style="height: 180px;">
+          <div class="card-header card-header-danger card-header-icon">
+            <div class="card-icon" style="background: linear-gradient(60deg, #9ccdff, #4c44da);">
+              <i class="material-icons">info_outline</i>
+            </div>
+            <p class="card-category">Our Offers</p>
+            <h3 class="card-title" style="font-size: 1em;">{{ offers }}</h3>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">date_range</i> Last 24 Hours
+            </div>
+          </div>
+          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#offers_report" style="position: absolute;right:    0;
+          bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
+              <i class="material-icons">calendar_today</i>
+            Generate Report
+          </button>
+        </div>
+        
+        <div class="modal fade" id="offers_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content" style="max-width: 66%;">
+                <div class="modal-header" style="background-color: #731d82;">
+                    <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Generate Offers Report </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            
+                            <input type="hidden" name="report_type" value="Complaints">   
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Starting Date</label>
+                            <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                            <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
+                          </div>
+  
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">Ending Date</label>
+                            <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                            <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
+                          </div>  
+                      <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
+                        Submit
+                      </button>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div> 
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats" style="height: 180px;">
+          <div class="card-header card-header-info card-header-icon">
+            <div class="card-icon" style="background: linear-gradient(60deg, #ff9cee, #ca44da);">
+              <i class="fa fa-bell"></i>
+            </div>
+            <p class="card-category">Requests</p>
+            <h3 class="card-title" style="font-size: 1em;">Bulk : {{bulk_requests}}</h3>
+            <h3 class="card-title" style="font-size: 1em;">Regular : {{normal_requests}} </h3>
+
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">date_range</i> Last 24 Hours
+            </div>
+          </div>
+          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#ss_request_report" style="position: absolute;right:    0;
+          bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
+              <i class="material-icons">calendar_today</i>
+            Generate Report
+          </button>
+        </div>
+      </div>
+      <div class="modal fade" id="ss_request_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content" style="max-width: 66%;">
+              <div class="modal-header" style="background-color: #731d82;">
+                  <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Generate Requests Report </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form>
+                      <div class="form-group">
+                          <select name="report_type" class="browser-default custom-select">
+                              <option selected>Bulk</option>
+                              <option value="Requests">Regular</option>
+                              
+                          </select>
+                          
+                          <input type="hidden" name="report_type" value="Requests">   
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Starting Date</label>
+                          <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                          <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
+                        </div>
+  
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Ending Date</label>
+                          <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                          <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
+                        </div>  
+                    <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
+                      Submit
+                    </button>
+                  </form>
+              </div>
+            </div>
+          </div>
+        </div> 
+    </div>  
 
 </div>
 
+
+
+<!---->
+
+
+
+
 <div class="row" style="margin-left: 50px;">
+  <!--
   <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color:#92c9ff; text-align: center;color: gray;">
       <div class="card-body text-success">
         <h5 class="card-title" style="font-size: 1em;">Staff  </h5>
@@ -134,6 +546,7 @@
       </div>
       <div class="card-footer bg-transparent border-success"></div>
     </div>
+  -->
     <div class="col-md-12">
       <div class="card" style="background-color:white">
           
@@ -171,6 +584,7 @@
                             
                           </th>
                         -->
+                  </thead>    
                      <tbody>
                          {% for client in clients %}
                          <tr>
@@ -183,48 +597,64 @@
                              
                              <td style="width: 13%;">
                                  <div class="btn-group">
-                                      <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#{{client.id}}">View History</button>  
+                                      <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#{{client.id}}">View History</button>  
                                       
   
                                  </div>
                               </td>
-                             
-                              
-                         
-                          <div class="modal fade" id="{{client.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                  <div class="modal-dialog" role="document">
-                                  <div class="modal-content">
-                                      <div class="modal-header">
-                                      <h5 class="modal-title" id="exampleModalLabel">{{client.company.name}}'s Transactions</h5>
-                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                          <span aria-hidden="true">&times;</span>
-                                      </button>
+                         </tr>
+                         <div class="modal fade" id="{{client.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #9a32b1;">
+                                <h5 class="modal-title" id="exampleModalLabel" style="color: white;">{{client.company.name}}'s Transactions</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-4">Date</div>
+                                        <div class="col-md-4">Time</div>
+                                        <div class="col-md-4">Amount</div>
                                       </div>
-                                      <div class="modal-body">
-                                        
-                                        {% for purchase in client.purchases %}
-                                        <div class="row">
-                                          <p>{{purchase.date}} | {{purchase.time}} | {{purchase.request.amount}}</p>
-                                        </div>
-                                        {% endfor%}
-                                          
+                                  {% for purchase in client.purchases %}
+                                  <div class="row">
+                                  
+                                      <div class="col-md-4">
+                                      {{purchase.date}}
+                                      </div>
+                                      <div class="col-md-4">
+                                      {{purchase.time}}
+                                      </div>
+                                      <div class="col-md-4">
+                                      {{purchase.request.time}}
+                                      </div> 
+                                  </div>     
+                                  {% endfor %}
+                                    
 
-                                          
-                                      </div>
-                                      <div class="modal-footer">
-                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                      </div>
-                                  </div>
-                                  </div>
-                              </div>
+                                    
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                         {% endfor %}   
+
+                     </tbody>   
+              </table>      
+                              
+                         
+                          
                               
                          
                              
-                      </tr>
+                      
                      
-                      {% endfor %}   
-                  </tbody>
-                  </table>
+                  
               {% else %}
               <p>Nothing To Show</p>    
               {% endif %}
@@ -234,7 +664,8 @@
       
   </div>
     
-</div>  
+</div> 
+--> 
 
   <div class="ct-chart ct-perfect-fourth"></div>
 

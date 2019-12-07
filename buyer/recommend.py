@@ -9,12 +9,12 @@ from buyer.models import User
 def recommend(fuel_request):
     status = False
     if fuel_request.fuel_type == "Petrol":
-        supplies = FuelUpdate.objects.filter(petrol_quantity__gte=fuel_request.amount, sub_type='depot').order_by('-petrol_price').all()      
+        supplies = FuelUpdate.objects.filter(petrol_quantity__gte=fuel_request.amount, sub_type='Depot').order_by('-petrol_price').all()      
     else:
-        supplies = FuelUpdate.objects.filter(diesel_quantity__gte=fuel_request.amount, sub_type='depot').order_by('-diesel_price').all()    
+        supplies = FuelUpdate.objects.filter(diesel_quantity__gte=fuel_request.amount, sub_type='Depot').order_by('-diesel_price').all()    
     
-    if supplies.count() == 0:
-        return status
+    if supplies.count() == 0:        
+        return status, "Nothin Found"
     else:
         scoreboard = {}
         for supplier in supplies: 
@@ -33,7 +33,7 @@ def recommend(fuel_request):
             total_rating = 0
         max_rate_provider = min(scoreboard.items(), key=operator.itemgetter(1))[0]
         user = User.objects.filter(subsidiary_id=max_rate_provider).first()
-        price_object = FuelUpdate.objects.filter(relationship_id=max_rate_provider, sub_type='depot').first()
+        price_object = FuelUpdate.objects.filter(relationship_id=max_rate_provider, sub_type='Depot').first()
         selected_supply = Subsidiaries.objects.get(id=max_rate_provider)
         if fuel_request.fuel_type == 'Petrol':
             offer = Offer.objects.create(quantity=fuel_request.amount, supplier=user, request=fuel_request, price=price_object.petrol_price)
@@ -44,7 +44,8 @@ def recommend(fuel_request):
         response_message = recommender_response.format(selected_supply.company.name, selected_supply.name, fuel_request.fuel_type, fuel_request.amount, price_object.diesel_price)
 
         offer.save()
-       
+        response_message = "Here here"
+        
         return offer.id, response_message
 
 
