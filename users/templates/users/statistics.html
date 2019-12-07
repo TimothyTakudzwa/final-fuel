@@ -49,7 +49,7 @@
                 <form>
                     <div class="form-group">
                         
-                        <input type="hidden" name="report_type" value="Revenue">   
+                        <input type="hidden" name="report_type" value="Stock">   
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Starting Date</label>
@@ -107,26 +107,27 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <form>
-                      <div class="form-group">
-                          
-                          <input type="hidden" name="report_type" value="Revenue">   
-                      </div>
-                      <div class="form-group">
-                          <label for="exampleInputEmail1">Starting Date</label>
-                          <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                          <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
-                        </div>
-
+                    <form method="POST" action="{% url 'users:report_generator' %}">
+                        {% csrf_token %}
                         <div class="form-group">
-                          <label for="exampleInputEmail1">Ending Date</label>
-                          <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                          <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
-                        </div>  
-                    <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
-                      Submit
-                    </button>
-                  </form>
+                            
+                            <input type="hidden" name="report_type" value="Revenue">   
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Starting Date</label>
+                            <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                            <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
+                          </div>
+    
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">Ending Date</label>
+                            <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                            <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
+                          </div>  
+                      <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
+                        Submit
+                      </button>
+                    </form>
               </div>
             </div>
           </div>
@@ -628,7 +629,7 @@
                                       {{purchase.time}}
                                       </div>
                                       <div class="col-md-4">
-                                      {{purchase.request.time}}
+                                      {{purchase.offer.request.time}}
                                       </div> 
                                   </div>     
                                   {% endfor %}

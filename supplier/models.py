@@ -52,6 +52,7 @@ class Offer(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     supplier = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='offer')
     request = models.ForeignKey(FuelRequest, on_delete=models.DO_NOTHING, related_name='request')
+    declined = models.BooleanField(default=False)
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
 
@@ -88,6 +89,7 @@ class Transaction(models.Model):
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)
+    
     
     class Meta:
         ordering = ['date', 'time']

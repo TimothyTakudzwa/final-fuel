@@ -1,3 +1,100 @@
+{% extends "finder/buyer_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block body%}
+
+<div class="card">
+    <div class="card-header card-header-primary">
+        <h4 class="card-title "> My Fuel Transactions </h4>
+        <p class="card-category"> Here is a list of all transactions you made</p>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped" id="fuel_updates">
+                <thead class=" text-primary">
+                    <tr>
+                        <th>
+                            <h6>Requested ID</h6>
+                        </th>
+                        
+                        
+                        <th>
+                            <h6>Deliver Method</h6>
+                        </th>
+                        <th>
+                            <h6> Payment Method</h6>
+                        </th>
+                        <th>
+                            <h6> Fuel Type</h6>
+                        </th>
+                  
+                        <th>
+                            <h6>Quantity </h6>
+                        </th>
+                        <th>
+                            <h6>Requested On </h6>
+                        </th>
+                        <th>
+                            <h6>Action</h6>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for fuel_request in fuel_requests %}
+                    <tr>
+                        <td>
+                            <b>{{fuel_request.depot}} - {{fuel_request.request_company}}</b>
+                        </td>
+                      
+                        <td>
+                            {{fuel_request.delivery_method}}
+                        </td>
+                        <td>
+                            {{fuel_request.payment_method}}
+                        </td>
+                        <td class="">
+                            {{fuel_request.fuel_type}}
+                        </td>
+                        <td class="">
+                            {{fuel_request.amount}} Litres
+                        </td>
+                        <td class="">
+                             {{fuel_request.date}} -- {{fuel_request.time}}
+                        </td>
+                        <td class="text-primary">
+                            {% if fuel_request.has_offers == True%}
+                            <a class="btn btn-facebook btn-sm" href="{% url 'fuel-offers' fuel_request.id %}" >
+                                <i class="material-icons">ev_station</i>View Offers 
+                            </a>
+
+                            {% else %}
+                                No Offers yet
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
 {% for transaction in transactions %}
     <tr>
         <td class="name truncate">{{transaction.id}}</a></td> 
