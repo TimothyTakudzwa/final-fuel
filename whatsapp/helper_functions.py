@@ -459,7 +459,7 @@ def update_petrol(user, message):
     elif user.position == 40:
         update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
         update.petrol_quantity = message
-        update.save
+        update.save()
         response_message = 'Petrol Quantity updated successfully? \n\n'
     
     return response_message
@@ -473,7 +473,7 @@ def update_diesel(user, message):
     elif user.position == 50:
         update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
         update.diesel_quantity = message
-        update.save
+        update.save()
         response_message = 'Diesel Quantity updated successfully? \n\n'
     
     return response_message
