@@ -14,34 +14,29 @@
                 <thead class=" text-primary">
                     <tr>
                         <th>
-                            <h6>Requested ID</h6>
-                        </th>
-                        
-                        
-                        <th>
-                            <h6>Deliver Method</h6>
+                            <h6>Company Name</h6>
                         </th>
                         <th>
-                            <h6> Payment Method</h6>
+                            <h6> Company Depot</h6>
                         </th>
                         <th>
-                            <h6> Fuel Type</h6>
+                            <h6> Fuel Requested </h6>
                         </th>
                   
                         <th>
-                            <h6>Quantity </h6>
+                            <h6>Fuel Offered </h6>
                         </th>
                         <th>
                             <h6>Requested On </h6>
                         </th>
                         <th>
-                            <h6>Action</h6>
+                            <h6>Download Invoice</h6>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
 
-                    {% for fuel_request in fuel_requests %}
+                    {% for transaction in transactions %}
                     <tr>
                         <td>
                             <b>{{fuel_request.depot}} - {{fuel_request.request_company}}</b>
