@@ -258,25 +258,28 @@ def report_generator(request):
         print(f'_______________{report_type}_____________________')
         # print(f'_______________{type(start_date)}_____________________')
         # print(f'_______________{end_date}_____________________')
-        if request.POST.get('report_type') == 'Stock':
+        if request.POST.get('report_type') == 'stock':
             stock = FuelUpdate.objects.filter(company_id=request.user.company.id).first()
             requests = None; allocations = None; trans = None; revs=None
         if request.POST.get('report_type') == 'Transactions' or 'Revenue':
-            trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier=request.user)
-            revs = None
+            print('________Im in here_______')
+            trans = Transaction.objects.filter(date__range=[start_date, end_date])
+            requests = None; allocations = None; revs=None
+
             print(trans)
             if request.POST.get('report_type') == 'Revenue':
                 revs = {}
                 total_revenue = 0
                 trans_no = 0
 
-                for tran in trans:
-                    total_revenue += tran.offer.request.amount
-                    trans_no += 1
-                revs['revenue'] = '${:,.2f}'.format(total_revenue)
+                if trans:
+                    for tran in trans:
+                        total_revenue += tran.offer.request.amount
+                        trans_no += 1
+                    revs['revenue'] = '${:,.2f}'.format(total_revenue)
 
-                revs['hits'] = trans_no
-                revs['date'] = datetime.today().strftime('%D')
+                    revs['hits'] = trans_no
+                    revs['date'] = datetime.today().strftime('%D')
                 trans = None
 
 
@@ -290,7 +293,7 @@ def report_generator(request):
         start = start_date
         end = end_date 
         return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form,
-        'start': start, 'end': end, 'revs': revs })
+        'start': start, 'end': end, 'revs': revs, 'stock':stock })
 
     show = False
 
