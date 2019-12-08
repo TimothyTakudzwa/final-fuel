@@ -223,6 +223,21 @@ def allocated_quantity(request):
     return render(request, 'supplier/accounts/allocated_quantity.html', {'allocations': allocations})
 
 
+def activate_whatsapp(request):
+    user = User.objects.filter(id=request.user.id).first()
+    if user.activated_for_whatsapp == False:
+        user.activated_for_whatsapp = True
+        user.save()
+        messages.success(request, 'Your WhatsApp has been activated successfully')
+        return redirect('fuel-request')
+
+    else:
+        user.activated_for_whatsapp = False
+        user.save()
+        messages.warning(request, 'Your WhatsApp has been deactivated successfully')
+        return redirect('fuel-request')
+
+
 def verification(request, token, user_id):
     context = {
         'title': 'Fuel Finder | Verification',
@@ -252,13 +267,13 @@ def verification(request, token, user_id):
                     
             else:
                 form = BuyerUpdateForm
-                messages.success(request, f'Email verification successs, Fill in the deatails to complete registration')
-                return render(request, 'supplier/accounts/verification.html', {'form': form})
+                # messages.success(request, f'Email verification successs, Fill in the deatails to complete registration')
+                return render(request, 'supplier/accounts/verify.html', {'form': form})
         else:
             messages.warning(request, 'Wrong verification token')
             return redirect('login')
     else:
         messages.warning(request, 'Wrong verification id')
         return redirect('login')
-    return render(request, 'supplier/accounts/verification.html', context=context)
+    return render(request, 'supplier/accounts/verify.html', context=context)
 

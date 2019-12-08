@@ -84,7 +84,7 @@
                                                </div>
                                                <div class="modal-body">
                                                   {% load crispy_forms_tags %}
-                                                   <form action="{% url 'users:company_petrol' company_capacity.id %}"
+                                                   <form action=" users/{{company_capacity.id}}"
                                                        method="POST">
                                                        {% csrf_token %}
                                                        
@@ -142,7 +142,7 @@
                                   </div>
                                   <div class="modal-body">
                                       {% load crispy_forms_tags %}
-                                      <form action="{% url 'users:company_diesel' company_capacity.id %}"
+                                      <form action="users/{{company_capacity.id}}"
                                           method="POST">
                                           {% csrf_token %}
                                           
