@@ -191,6 +191,12 @@ def supplier_user_edit(request, cid):
         messages.success(request, 'Your Changes Have Been Saved')
     return render(request, 'users/suppliers_list.html')
 
+@login_required
+def client_history(request, cid):
+    buyer = User.objects.filter(id=cid).first()
+    trans = Transaction.objects.filter(buyer=buyer, supplier=request.user)
+    return render(request, 'users/client_history.html', {'trans':trans})
+
 @login_required()
 def myaccount(request):
     staff = user.objects.get(id=request.user.id)

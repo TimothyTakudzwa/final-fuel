@@ -22,6 +22,7 @@ urlpatterns = [
     path('report_generator/', views.report_generator, name="report_generator"),
     path('buyers/', views.buyers_list, name="buyers_list"),
     path('supplier_user_create/<int:sid>', views.supplier_user_create, name="supplier_user_create"),
+    path('client_history/<int:cid>', views.client_history, name="client_history"),
     path('buyer_user_create/<int:sid>', views.buyer_user_create, name="buyer_user_create"),
     path('supplier_user_delete/<int:sid>', views.suppliers_delete, name="suppliers_delete"),
     path('buyer_user_delete/<int:sid>', views.buyers_delete, name="buyers_delete"),
