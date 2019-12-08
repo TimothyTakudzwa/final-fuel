@@ -129,32 +129,30 @@ def requests_handler(user, message):
 
 def follow_up(user, message):
     if user.position == 1:
-        response_message = "1. Proceed \n 2. Cancel"
-        user.position = 20
-        user.save()
-    elif user.position == 20:
         requests = FuelRequest.objects.filter(name=user).filter(wait=True).all()
         response_message = 'Which request do you want to follow? \n\n'
         i = 1
         for req in requests:
-            response_message = response_message + str(req.id) + ". " + req.fuel_type + str(req.amount) + '\n'
+            response_message = response_message + str(i) + ". " + req.fuel_type + " " + str(req.amount) + "L" + " " + "made on" + " " + str(req.date) + '\n'
             i += 1        
         user.position = 21 
         user.save()
     elif user.position == 21:
-        req = FuelRequest.objects.filter(id = int(message)).first()
+        requests = FuelRequest.objects.filter(name=user).filter(wait=True).all()
+        req = requests[int(message) - 1]
         offers = Offer.objects.filter(request=req).all()
         response_message = 'Which offer do you want to accept? \n\n'
         i = 1
         for offer in offers:
-            response_message = response_message + str(offer.id) + ". " + str(offer.quantity) + "@" + str(offer.price) + '\n'
+            response_message = response_message + str(i) + ". " + str(offer.quantity) + "L" + " " + "@" + " " + str(offer.price) + '\n'
             i += 1        
         user.position = 22
         user.fuel_request = req.id
         user.save()
     elif user.position == 22:
         req = FuelRequest.objects.filter(id = user.fuel_request).first()
-        offer = Offer.objects.filter(id=int(message)).first()
+        offers = Offer.objects.filter(request=req).all()
+        offer = offers[int(message) - 1]
         Transaction.objects.create(buyer=user,offer=offer,is_complete=True,supplier=offer.supplier)
         response_message = 'Transaction is complete'
     return response_message
@@ -162,10 +160,6 @@ def follow_up(user, message):
 
 def view_fuel_updates(user, message):
     if user.position == 1:
-        response_message = "1. Proceed \n2. Cancel"
-        user.position = 30
-        user.save()
-    elif user.position == 30:
         updates = FuelUpdate.objects.filter(~Q(sub_type='Company')).all()
         response_message = 'Which fuel update do you want? \n\n'
         i = 1
