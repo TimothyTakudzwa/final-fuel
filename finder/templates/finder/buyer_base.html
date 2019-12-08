@@ -77,7 +77,7 @@
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="{%url 'buyer-logout'%}">
+            <a class="nav-link" href="{%url 'buyer-logout'%}?next=/login">
               <i class="material-icons">close</i>
               <p>Logout</p>
             </a>
@@ -215,8 +215,8 @@
                 </table>
               </div>
               <div class=" row">
-                  <a href="{% url 'reject-offer' offer.id %}"  class="btn btn-danger col ">Reject and wait for offers</a>
-                  <a   href="{% url 'accept-offers' offer.id %}" class="btn btn-primary col ">Accept Offer</a>
+                  <a href="reject/{{offer.id}}"  class="btn btn-danger col ">Reject and wait for offers</a>
+                  <a href="accept/{{offer.id}}" class="btn btn-primary col ">Accept Offer</a>
                 </div>
             </div>
             

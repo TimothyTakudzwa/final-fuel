@@ -63,6 +63,12 @@
               <p>Transactions</p>
             </a>
           </li>
+          <li class="nav-item {% if request.path == '/allocated_quantity/' %} active {% endif %}">
+            <a class="nav-link" href="{% url 'allocated_quantity' %}">
+              <i class="material-icons">account_balance</i>
+              <p>Audit Trail</p>
+            </a>
+          </li>
           <li class="nav-item {% if request.path == '/account/' %} active {% endif %}" >
             <a class="nav-link" href="{%url 'account'%}">
               <i class="material-icons">person</i>

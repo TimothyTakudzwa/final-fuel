@@ -45,6 +45,8 @@ def token_is_send(request, user):
     token = secrets.token_hex(12)
     domain = request.get_host()            
     url = f'{domain}/verification/{token}/{user.id}'
+    sender = "intelliwhatsappbanking@gmail.com"
+    subject = 'Fuel Finder Registration'
     message = f"Dear {user.first_name}  {user.last_name}, please complete signup here : \n {url} \n. "            
     try:
         print(message)
@@ -151,9 +153,8 @@ def fuel_request(request):
             fuel_request.depot = depot.name
         else:
             fuel_request.request_company = ''
-    # print(fuel_requests)
     for fuel_request in fuel_requests:
-        offer = Offer.objects.filter(request=fuel_request).first()
+        offer = Offer.objects.filter(request=fuel_request).filter(declined=False).first()
         if offer is not None:
             fuel_request.has_offers = True
         else:
@@ -270,15 +271,18 @@ def dashboard(request):
 
 def offers(request, id):
     selected_request = FuelRequest.objects.filter(id=id).first()
-    offers = Offer.objects.filter(request=selected_request).all()
+    offers = Offer.objects.filter(request=selected_request).filter(declined=False).all()
     buyer = request.user 
-    print(offers)
+    for offer in offers:
+        depot = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
+        offer.depot_name = depot.name
+   
     return render(request, 'buyer/offer.html', {'offers': offers })
 
 
 def accept_offer(request, id):    
     offer = Offer.objects.filter(id=id).first()
-    print(offer.supplier)
+    print(offer.supplier)  
     Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier)  
     FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
     return redirect("buyer-fuel-request")
@@ -289,8 +293,9 @@ def reject_offer(request, id):
     offer.save()
     my_request = FuelRequest.objects.filter(id = offer.request.id).first()
     my_request.wait = True
+    my_request.is_complete = False
     my_request.save()     
-    FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
+    # FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
     messages.success(request, "Your request has been saved and as offer updates are coming you will receive notifications")
     return redirect("buyer-fuel-request")
 
