@@ -117,52 +117,44 @@ def allocation_update(request,id):
 def statistics(request):
     company = request.user.company
     yesterday = date.today() - timedelta(days=1)
-    staff_blocked = Subsidiaries.objects.filter(company=company).count() / 2
     offers = Offer.objects.filter(supplier=request.user).count()
     bulk_requests = FuelRequest.objects.filter(delivery_method="BULK").count()
-    normal_requests = FuelRequest.objects.filter(delivery_method="REGULAR").count()
+    normal_requests = FuelRequest.objects.filter(delivery_method="REGULAR").count() # Change these 2 items
     staff = ''
-    
     new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
     try:
         rating = SupplierRating.objects.filter(supplier=request.user.company).first().rating
     except:
-        rating = 0    
-    #new_orders = 0
-    try:
-        staff = get_aggregate_stock(request.user.company)
-        staff_pop = staff.count()
-    except:
-        staff_pop = 0    
+        rating = 0  
    
+    admin_staff = User.objects.filter(company=company).filter(user_type='S_ADMIN').count()
+    all_staff = User.objects.filter(company=company).count()
+    other_staff = all_staff - admin_staff
     clients = []
-    #update = F_Update.objects.filter(company_id=company.id).first()
     stock = get_aggregate_stock(request.user.company)
     diesel = stock['diesel']; petrol = stock['petrol']
-    # if update:
-    #     diesel = update.diesel_quantity
-    #     petrol = update.petrol_quantity
     
-    companies = Company.objects.filter(company_type='BUYER')
-    value = [round(random.uniform(5000.5,10000.5),2) for i in range(len(companies))]
-    num_trans = [random.randint(2,12) for i in range(len(companies))]
-    counter = 0
-
-    trans = Transaction.objects.filter(supplier=request.user, is_complete=True).annotate(number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
-    buyers = [client.buyer for client in trans]
-
+    trans = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).annotate(number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
+    buyers = [client.buyer.company.name for client in trans]
+    new_buyers = []
     for buyer in buyers:
+        total_transactions =  buyers.count(buyer)
+        buyers.remove(buyer)
+        buyer = User.objects.filter(company__name=buyer).first()
+        new_buyer_transactions = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).all()
         total_value = 0
         purchases = []
         number_of_trans = 0
-        for trn in Transaction.objects.filter(supplier=request.user, buyer=buyer):
-            total_value += trn.offer.request.amount
-            purchases.append(trn)
+        for tran in new_buyer_transactions:
+            total_value += tran.offer.request.amount
+            purchases.append(tran)
             number_of_trans += 1
         buyer.total_value = total_value
-        buyer.purchases = purchases[:10]
-        buyer.number_of_trans = number_of_trans
-    clients = buyers    
+        buyer.purchases = purchases
+        buyer.number_of_trans = total_transactions
+        new_buyers.append(buyer)
+       
+    clients = new_buyers    
 
     # for company in companies:
     #     company.total_value = value[counter]
@@ -181,9 +173,9 @@ def statistics(request):
     # except:
     #     trans = 0    
     trans = get_transactions_complete_percentage(request.user)
-    return render(request, 'users/statistics.html', {'staff_blocked':staff_blocked, 'offers': offers,
+    return render(request, 'users/statistics.html', {'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
-     'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'staff_pop': staff_pop})
+     'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'admin_staff': admin_staff,  'other_staff': other_staff })
 
 
 @login_required()
