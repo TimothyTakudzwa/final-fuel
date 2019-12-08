@@ -216,3 +216,8 @@ def notifications(request):
             user_not.is_read = True
             user_not.save()
     return render(request, 'supplier/accounts/notifications.html', context=context)
+
+
+def allocated_quantity(request):
+    allocations = FuelAllocation.objects.filter(assigned_staff_id= request.user.subsidiary_id).all()
+    return render(request, 'supplier/accounts/allocated_quantity.html', {'allocations': allocations})
