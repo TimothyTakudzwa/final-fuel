@@ -39,20 +39,20 @@
                     {% for transaction in transactions %}
                     <tr>
                         <td>
-                            <b>{{fuel_request.depot}} - {{fuel_request.request_company}}</b>
+                            <b>{{transaction.request.depot}} - {{fuel_request.request_company}}</b>
                         </td>
                       
                         <td>
-                            {{fuel_request.delivery_method}}
+                            {{transaction.request.delivery_method}}
                         </td>
                         <td>
-                            {{fuel_request.payment_method}}
+                            {%if transaction.request.usd %} USD {%elif transaction.request.cash %} CASH {%elif transaction.request.swipe %} SWIPE {%elif transaction.request.ecocash %} ECOCASH {%else%} Local {%endif%} 
                         </td>
                         <td class="">
-                            {{fuel_request.fuel_type}}
+                            {{transaction.offer.request.fuel_type}}
                         </td>
                         <td class="">
-                            {{fuel_request.amount}} Litres
+                            {{transaction.offer.quantity}} Litres
                         </td>
                         <td class="">
                              {{fuel_request.date}} -- {{fuel_request.time}}
