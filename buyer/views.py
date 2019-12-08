@@ -44,7 +44,7 @@ def login_success(request):
 def token_is_send(request, user):
     token = secrets.token_hex(12)
     domain = request.get_host()            
-    url = f'{domain}/verification/{token}/{user.id}'
+    url = f'https://{domain}/verification/{token}/{user.id}'
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
     message = f"Dear {user.first_name}  {user.last_name}, please complete signup here : \n {url} \n. "            
@@ -52,7 +52,6 @@ def token_is_send(request, user):
         print(message)
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
         msg.send()
-
         messages.success(request, f"{user.first_name}  {user.last_name} Registered Successfully")
         return True
     except Exception as e:
