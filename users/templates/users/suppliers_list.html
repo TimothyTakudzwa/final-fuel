@@ -1,6 +1,10 @@
 {% extends "users/base.html" %}
 {% block body %}
 
+<div class="jumbotron jumbotron-fluid" style="margin-left: 30px;">
+        <h1 class="display-4">Suppliers</h1>
+      
+      </div>
 
 
 <div class="container" style="margin: 0;display: block; text-align:center;">
@@ -34,7 +38,7 @@
     <div class="card" style="background-color:white">
         
         <div class="card-header card-header-primary">
-        <h4 class="card-title ">{{request.user.company.name}}Staff</h4>
+        <h4 class="card-title ">{{request.user.company.name}} Staff</h4>
         </div>
     <div class="card-body">
         <div class="container-fluid">
