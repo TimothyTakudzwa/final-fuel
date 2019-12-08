@@ -168,10 +168,10 @@ def statistics(request):
     revenue = '${:,.2f}'.format(revenue)
     #revenue = str(revenue) + '.00'   
 
-    try:
-        trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
-    except:
-        trans = 0    
+    # try:
+    #     trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
+    # except:
+    #     trans = 0    
     trans = get_transactions_complete_percentage(request.user)
     return render(request, 'users/statistics.html', {'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
@@ -255,7 +255,7 @@ def report_generator(request):
             requests = None; allocations = None; trans = None; revs=None
         if request.POST.get('report_type') == 'Transactions' or 'Revenue':
             print('________Im in here_______')
-            trans = Transaction.objects.filter(date__range=[start_date, end_date])
+            trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier=request.user)
             requests = None; allocations = None; revs=None
 
             print(trans)
