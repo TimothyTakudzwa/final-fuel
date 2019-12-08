@@ -153,9 +153,8 @@ def fuel_request(request):
             fuel_request.depot = depot.name
         else:
             fuel_request.request_company = ''
-    # print(fuel_requests)
     for fuel_request in fuel_requests:
-        offer = Offer.objects.filter(request=fuel_request).first()
+        offer = Offer.objects.filter(request=fuel_request).filter(declined=False).first()
         if offer is not None:
             fuel_request.has_offers = True
         else:
