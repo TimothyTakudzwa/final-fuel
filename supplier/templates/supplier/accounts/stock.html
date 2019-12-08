@@ -18,16 +18,20 @@
               <td height="50"> {{subsidiary}}</td>
             </tr>
       <tr>
-          <td height="50">Petrol Quantity</td>
-          <td height="50">{{updates.petrol_quantity}}</td>
+        <td height="50">Petrol Quantity</td>
+        <td height="50">
+        {{updates.petrol_quantity}} {% if updates.petrol_quantity < 1000 %} <i class="material-icons text-danger" style="margin-left: 10px;">warning</i><a href="#" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
+      </td>
         </tr>
         <tr>
             <td height="50">Petrol Price</td>
             <td height="50">{{updates.petrol_price}}</td>
           </tr>
           <tr>
-              <td height="50">Diesel Quantity</td>
-              <td height="50">{{updates.diesel_quantity}}</td>
+            <td height="50">Diesel Quantity</td>
+            <td height="50">
+               {{updates.diesel_quantity}} {% if updates.diesel_quantity < 1000 %} <i class="material-icons text-danger" style="margin-left: 10px;">warning</i><a href="#" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
+            </td>
             </tr>
             <tr>
                 <td height="50">Diesel Price</td>
