@@ -42,6 +42,7 @@ urlpatterns = [
     path('fuel_update/', supplier_views.fuel_update, name='fuel_update'),
     path('transaction/', supplier_views.transaction, name='transaction'),
     path('allocated_quantity/', supplier_views.allocated_quantity, name='allocated_quantity'),
+    path('activate_whatsapp/', supplier_views.activate_whatsapp, name='activate_whatsapp'),
     path('change_password/', supplier_views.change_password, name='change_password'),
     
 ]

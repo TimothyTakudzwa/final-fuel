@@ -84,10 +84,10 @@ def register(request):
                     send_message(user.phone_number, "You have been registered succesfully")
                     user.stage = 'requesting'
                     user.save()               
-                return render(request, 'buyer/send_email.html')
+                return render(request, 'buyer/email_send.html')
             else:
                 messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
-                return render(request, 'buyer/send_email.html')
+                return render(request, 'buyer/email_send.html')
         
         else:
             msg = "Error in Information Submitted"

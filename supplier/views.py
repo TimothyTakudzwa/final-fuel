@@ -223,6 +223,21 @@ def allocated_quantity(request):
     return render(request, 'supplier/accounts/allocated_quantity.html', {'allocations': allocations})
 
 
+def activate_whatsapp(request):
+    user = User.objects.filter(id=request.user.id).first()
+    if user.activated_for_whatsapp == False:
+        user.activated_for_whatsapp = True
+        user.save()
+        messages.success(request, 'Your WhatsApp has been activated successfully')
+        return redirect('fuel-request')
+
+    else:
+        user.activated_for_whatsapp = False
+        user.save()
+        messages.warning(request, 'Your WhatsApp has been deactivated successfully')
+        return redirect('fuel-request')
+
+
 def verification(request, token, user_id):
     context = {
         'title': 'Fuel Finder | Verification',
