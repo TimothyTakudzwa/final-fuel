@@ -92,9 +92,9 @@
         <div class="container-fluid">
           
             {% if user.activated_for_whatsapp == True %}
-              <a class="btn btn-primary" href="{% url 'activate_whatsapp' %}" style="margin-top: 0; margin-bottom: 0; margin-left: 400px;">Deactivate Whatsapp</a>
+              <a class="btn btn-outline-primary" href="{% url 'activate_whatsapp' %}" style="margin-top: 0; margin-bottom: 0; margin-left: 400px;">Deactivate Whatsapp</a>
             {% else %}
-              <a class="btn btn-primary" href="{% url 'activate_whatsapp' %}" style="margin-top: 0; margin-bottom: 0; margin-left: 400px;">Activate Whatsapp</a>
+              <a class="btn btn-outline-primary" href="{% url 'activate_whatsapp' %}" style="margin-top: 0; margin-bottom: 0; margin-left: 400px;">Activate Whatsapp</a>
             {% endif %}
           
           <div class="navbar-wrapper">
