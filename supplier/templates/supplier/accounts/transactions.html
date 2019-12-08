@@ -24,7 +24,7 @@
                                 <th style="color: white;">Quantity(l)</th>
                                 <th style="color: white;">Price</th>
                                 <th style="color: white;">Amount</th>
-                                <th style="color: white;"></th>
+                               <!-- <th style="color: white;"></th> -->
 
                             </tr>
                         </thead>
@@ -39,11 +39,11 @@
                                 <td>{{ transaction.offer.quantity }}</td>
                                 <td>{{ transaction.offer.price }}</td>
                                 <td>{% widthratio transaction.offer.quantity 1 transaction.offer.price %}</td>
-                                {%if not transaction.completed %}
+                               <!-- {%if not transaction.completed %}
                                 <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#complete_{{transaction.id}}">Complete</button></td>
                                 {% else %}
                                 <td>Collected</td>
-                                {% endif %}
+                                {% endif %} -->
                             </tr>
 
                             <!--Modal to complete transaction-->
