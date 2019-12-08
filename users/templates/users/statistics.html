@@ -46,7 +46,8 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form>
+                <form method="POST" action="{% url 'users:report_generator' %}">
+                  {% csrf_token %}
                     <div class="form-group">
                         
                         <input type="hidden" name="report_type" value="Stock">   
@@ -629,7 +630,7 @@
                                       {{purchase.time}}
                                       </div>
                                       <div class="col-md-4">
-                                      {{purchase.offer.request.time}}
+                                      {{purchase.offer.request.amount}}
                                       </div> 
                                   </div>     
                                   {% endfor %}

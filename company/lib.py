@@ -19,13 +19,16 @@ def get_aggregate_stock(company):
 
 def get_total_revenue(user):
     revenue = 0
-    for transaction in Transaction.objects.filter(supplier=user):
+    for transaction in Transaction.objects.filter(supplier=user, is_complete=True):
         revenue += transaction.offer.request.amount
     return revenue
 
 
 def get_transactions_complete_percentage(user):
-    trans = (Transaction.objects.filter(supplier=user, is_complete=True).count()/Transaction.objects.filter(supplier=user).count()) * 100
+    try:
+        trans = (Transaction.objects.filter(supplier=user, is_complete=True).count()/Transaction.objects.filter(supplier=user).count()) * 100
+    except:
+        trans = 0    
     return "{:,.1f}%".format(trans)
 
 
