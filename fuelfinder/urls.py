@@ -22,6 +22,7 @@ urlpatterns = [
     path('account/', supplier_views.account, name='account'),
     path('fuel-request/', supplier_views.fuel_request, name='fuel-request'),
     path('rate-supplier/', supplier_views.rate_supplier, name='rate-supplier'),
+    path('verification/<token>/<user_id>', supplier_views.verification, name='verification'),
     path('index', whatsapp_views.index, name='index'),
     path('password-reset/',
          auth_views.PasswordResetView.as_view(template_name='supplier/password/password_reset.html'),
@@ -40,6 +41,7 @@ urlpatterns = [
     path('serviceStation/', include(('serviceStation.urls','serviceStation'), namespace='serviceStation')),
     path('fuel_update/', supplier_views.fuel_update, name='fuel_update'),
     path('transaction/', supplier_views.transaction, name='transaction'),
+    path('allocated_quantity/', supplier_views.allocated_quantity, name='allocated_quantity'),
     path('change_password/', supplier_views.change_password, name='change_password'),
     
 ]

@@ -90,5 +90,6 @@ class Transaction(models.Model):
     time = models.TimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)
     
+    
     class Meta:
         ordering = ['date', 'time']
