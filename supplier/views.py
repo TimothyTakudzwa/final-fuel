@@ -14,7 +14,7 @@ from buyer.models import Company
 from users.models import AuditTrail
 from .forms import PasswordChange, RegistrationForm, \
     RegistrationEmailForm, UserUpdateForm, FuelRequestForm
-from .models import FuelRequest, Transaction, TokenAuthentication, Offer, Subsidiaries
+from .models import FuelRequest, Transaction, TokenAuthentication, Offer, Subsidiaries, FuelAllocation
 from company.models import Company, FuelUpdate
 from notification.models import Notification
 from django.contrib.auth import get_user_model
@@ -216,6 +216,12 @@ def notifications(request):
             user_not.is_read = True
             user_not.save()
     return render(request, 'supplier/accounts/notifications.html', context=context)
+
+
+def allocated_quantity(request):
+    allocations = FuelAllocation.objects.filter(assigned_staff_id= request.user.subsidiary_id).all()
+    return render(request, 'supplier/accounts/allocated_quantity.html', {'allocations': allocations})
+
 
 def verification(request, token, user_id):
     context = {

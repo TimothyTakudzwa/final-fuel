@@ -1,0 +1,62 @@
+{% extends "supplier/dashboard.html" %}
+{% block body %}
+
+<div class="col-md-12">
+    <div class="card" style="background-color:white">
+
+        <div class="card-header card-header-primary">
+            <h4 class="card-title ">Fuel Quantities Received </h4>
+        </div>
+        <div class="card-body">
+        
+            <div class="container-fluid">
+                {% if allocations %}
+
+                <table id="example" class="table table-striped" style="width:100%">
+                    <thead style="color:white; background:lightslategray">
+                        <th style="color:white;">
+                            Date
+                        </th>
+
+                        <th style="color:white;">
+                            Diesel 
+                        </th>
+
+                        <th style="color:white;">
+                            Price
+                        </th>
+                        <th style="color:white;">
+                               Petrol
+                            </th>
+                            <th style="color:white;">
+                                 Price
+                                </th>
+                        
+                        <th style="color:white;">
+                            Payment
+                        </th>
+                    <tbody>
+                        {% for allocation in allocations %}
+                        <tr>
+                            <td>{{allocation.date}}</td>
+                            <td>{{allocation.diesel_quantity}}</td>
+                            <td>{{allocation.diesel_price}}</td>
+                            <td>{{allocation.petrol_quantity}}</td>
+                            <td>{{allocation.petrol_price}}</td>
+                            <td>{%if allocation.cash%}Cash {% else%} {%endif%} {%if allocation.usd%}USD {% else%} {%endif%} {%if allocation.ecocash%}Ecocash {% else%} {%endif%} {%if allocation.swipe%}Swipe {% else%} {%endif%}</td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+                {% else %}
+                <p>Nothing To Show</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
