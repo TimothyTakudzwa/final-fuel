@@ -25,6 +25,7 @@
         </div>
         <div class="card-footer">
           <div class="stats">
+          {% if {{}} %}  
             <i class="material-icons text-danger">warning</i>
             <a href="#pablo">Get More Stock...</a>
           </div>
@@ -314,7 +315,7 @@
               <i class="material-icons">store</i>
             </div>
             <p class="card-category">Orders Fulfilled</p>
-            <h3 class="card-title" style="font-size: 1em;"> {{trans}}</h3>
+            <h3 class="card-title" style="font-size: 1em;"> {{trans_complete}}</h3>
           </div>
           <div class="card-footer">
             <div class="stats">

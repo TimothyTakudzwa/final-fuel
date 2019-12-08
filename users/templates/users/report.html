@@ -328,16 +328,39 @@
         </div>
     <div class="card-body">
         <div class="container-fluid">
-            <form method="POST" action="{% url 'users:export_pdf' %}">
-                {% csrf_token %}
-                <input type="hidden" value="reqs" name="type_model">
-                <input type="hidden"value="{{start}}" name="start">
-                <input type="hidden" value="{{end}}" name="end"> 
-                <button type="submit" class="btn btn-info">
-                    PDF
-                </button>
+                <div class="row" style="margin-bottom: 20px;">
+                        <form method="POST" action="{% url 'users:export_pdf' %}">
+                            {% csrf_token %}
+                            <input type="hidden" value="reqs" name="type_model">
+                            <input type="hidden"value="{{start}}" name="start">
+                            <input type="hidden" value="{{end}}" name="end"> 
+                            <button type="submit" class="btn btn-info">
+                                PDF
+                            </button>
+                            
+                        </form>
+                        
+                        <form method="POST" action="{% url 'users:export_csv' %}">
+                                {% csrf_token %}
+                                <input type="hidden" value="req" name="type_model">
+                                
+                                <input type="hidden" value="csv" name="format">
+
+                                <button type="submit" class="btn btn-default" style="margin-left: 10px;">
+                                    CSV
+                                </button>
+                            </form> 
+                            <form method="POST" action="{% url 'users:export_csv' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="req" name="type_model">
+                                    
+                                    <input type="hidden" value="excel" name="format"> 
                 
-            </form>    
+                                    <button type="submit" class="btn btn-danger" style="margin-left: 10px;">
+                                    Excel
+                                    </button>
+                                </form>
+                </div>                    
 
             <table id="example" class="table table-striped table-bordered" style="width:100%">
                 <thead style="color:white; background:lightslategray">
@@ -367,9 +390,9 @@
                        <tr>
                             <td>{{req.date}}</td>
                             <td>{{req.time}}</td>
-                            <td>{{req.name}}</td>
-                            <td>{{req.amount}}</td>
-                            <td>{{req.fuel_type}}</td>
+                            <td>{{req.name|title}}</td>
+                            <td>$ {{req.amount|stringformat:".2f"}}</td>
+                            <td>{{req.fuel_type|title}}</td>
                             <td>{{req.payment_method}}</td>
                            
                             

@@ -155,12 +155,12 @@ def statistics(request):
         total_value = 0
         purchases = []
         number_of_trans = 0
-        for tran in Transaction.objects.filter(supplier=request.user, buyer=buyer):
-            total_value += tran.offer.request.amount
-            purchases.append(tran)
+        for trn in Transaction.objects.filter(supplier=request.user, buyer=buyer):
+            total_value += trn.offer.request.amount
+            purchases.append(trn)
             number_of_trans += 1
         buyer.total_value = total_value
-        buyer.purchases = purchases
+        buyer.purchases = purchases[:10]
         buyer.number_of_trans = number_of_trans
     clients = buyers    
 
@@ -176,10 +176,10 @@ def statistics(request):
     revenue = '${:,.2f}'.format(revenue)
     #revenue = str(revenue) + '.00'   
 
-    try:
-        trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
-    except:
-        trans = 0    
+    # try:
+    #     trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
+    # except:
+    #     trans = 0    
     trans = get_transactions_complete_percentage(request.user)
     return render(request, 'users/statistics.html', {'staff_blocked':staff_blocked, 'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
@@ -263,7 +263,7 @@ def report_generator(request):
             requests = None; allocations = None; trans = None; revs=None
         if request.POST.get('report_type') == 'Transactions' or 'Revenue':
             print('________Im in here_______')
-            trans = Transaction.objects.filter(date__range=[start_date, end_date])
+            trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier=request.user)
             requests = None; allocations = None; revs=None
 
             print(trans)
