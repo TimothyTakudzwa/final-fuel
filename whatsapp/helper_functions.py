@@ -241,8 +241,8 @@ def view_requests_handler(user, message):
         i = 1
         for req in requests:
             fuel = str(req.fuel_type).capitalize()
-            response_message = f'{response_message} {i}. {fuel} {req.amount} litres made on {req.date}'
-            user.fuel_updates_ids = user.fuel_updates_ids + str(req.id)
+            response_message = f'{response_message} *{i}.* {fuel} *{req.amount}* litres made on {req.date}\n'
+            user.fuel_updates_ids = user.fuel_updates_ids + str(req.id) + " "
             user.save()
             i += 1        
         user.position = 1 
@@ -293,8 +293,8 @@ def view_offers_handler(user, message):
         i = 1
         for offer in offers:
             fuel = offer.request.fuel_type.capitalize()
-            response_message = response_message + f'{i}. {fuel} {offer.quantity} litres at {offer.price} made on {offer.date}'
-            user.fuel_updates_ids = user.fuel_updates_ids + str(offer.id)
+            response_message = response_message + f'*{i}.* {fuel} *{offer.quantity}* litres at {offer.price} made on {offer.date}\n'
+            user.fuel_updates_ids = user.fuel_updates_ids + str(offer.id) + " "
             user.save()
             i += 1
         user.position = 1

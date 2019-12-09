@@ -4,7 +4,17 @@
 {{title}}
 {% endblock %}
 {% block body %}
+<div class="container-fluid">
+    <p style="text-align: center;">Diesel : {{fuel_stocks.diesel_quantity}} litres</p>
+    <p style="text-align: center;">Petrol : {{fuel_stocks.petrol_quantity}} litres</p>
+</div>
 <div class="row">
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-3">Fuel Requests</h1>
+            
+        </div>
+    </div>
     <div class="col-md-12">
         <div class="card mt-5" style="background-color:white">
             <div class="card-header card-header-primary">

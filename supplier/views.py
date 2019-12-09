@@ -68,6 +68,7 @@ def account(request):
 def fuel_request(request):
     requests = FuelRequest.objects.filter(date=today)
     fuel = FuelUpdate.objects.filter(relationship_id=request.user.id).first()
+    fuel_stocks = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
     for buyer_request in requests:
         if Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).exists():
             offer = Offer.objects.get(supplier_id=request.user, request_id=buyer_request)
@@ -85,7 +86,7 @@ def fuel_request(request):
                 buyer_request.price = fuel.diesel_price
         else:
             buyer_request.price = 0
-    return render(request, 'supplier/accounts/fuel_request.html', {'requests':requests})
+    return render(request, 'supplier/accounts/fuel_request.html', {'requests':requests, 'fuel_stocks':fuel_stocks})
 
 
 @login_required()
