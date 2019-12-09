@@ -525,7 +525,6 @@ def update_petrol(user, message):
         response_message = 'What is the queue size?\n\n1. Short\n2. Medium Long\n3. Long'
     elif user.position == 41:
         update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
-        response_message = "What is the status?\n\n1. Pumping\n2. Expecting More Fuel\n3. Empty\n4. Offloading"
         if message == "1":
             update.queue_length = "Short"
         elif message == "2":
@@ -535,8 +534,9 @@ def update_petrol(user, message):
         else:
             response_message = 'wrong choice'
         update.save()
-        user.position == 42
+        user.position = 42
         user.save()
+        response_message = "What is the status?\n\n1. Pumping\n2. Expecting More Fuel\n3. Empty\n4. Offloading"
     elif user.position == 42:
         update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
         if message == "1":
@@ -557,9 +557,7 @@ def update_petrol(user, message):
             response_message = "made an update successfully"
         else:
             response_message = 'wrong choice'
-        update.save()
-        response_message = "made an update successfully"
-       
+        
     return response_message
 
 def update_diesel(user, message):
@@ -587,7 +585,7 @@ def update_diesel(user, message):
         else:
             response_message = 'wrong choice'
         update.save()
-        user.position == 52
+        user.position = 52
         user.save()    
     elif user.position == 52:
         update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
