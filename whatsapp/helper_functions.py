@@ -480,7 +480,7 @@ def service_station_handler(request,user,message):
 def update_petrol(user, message):
     if user.position == 1:
         update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
-        response_message = "The last update of Petrol quantity is" + " " + str(update.petrol_quantity) + "." + "How many litres of petrol left?"
+        response_message = "The last update of Petrol quantity is" + " " + str(update.petrol_quantity) + "L" + "." + " " + "How many litres of petrol left?"
         user.position = 40
         user.save()
     elif user.position == 40:
@@ -494,7 +494,7 @@ def update_petrol(user, message):
 def update_diesel(user, message):
     if user.position == 1:
         update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
-        response_message = "The last update of Diesel quantity is" + " " + str(update.diesel_quantity) + "." + "How many litres of diesel left?"
+        response_message = "The last update of Diesel quantity is" + " " + str(update.diesel_quantity) + "L" + "." + " " + "How many litres of diesel left?"
         user.position = 50
         user.save()
     elif user.position == 50:
