@@ -1,9 +1,6 @@
 {% extends "users/base.html" %}
 {% block body %}
 
-
-
-
 <div class="col-md-12">
 
 
@@ -75,7 +72,7 @@
                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
                                        <div class="modal-dialog" role="document">
                                            <div class="modal-content">
-                                               <div class="modal-header">
+                                               <div class="modal-header" style="background-color: #9c27b0;color: white;">
        
                                                    <h5 class="modal-title" id="exampleModalLabel">Update Company Petrol</h5>
                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -84,7 +81,7 @@
                                                </div>
                                                <div class="modal-body">
                                                   {% load crispy_forms_tags %}
-                                                   <form action="{% url 'users:company_petrol' company_capacity.id %}"
+                                                   <form action=" users/{{company_capacity.id}}"
                                                        method="POST">
                                                        {% csrf_token %}
                                                        
@@ -133,7 +130,7 @@
                           aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog" role="document">
                               <div class="modal-content">
-                                  <div class="modal-header">
+                                  <div class="modal-header" style="background-color: #9c27b0;color: white;">
 
                                       <h5 class="modal-title" id="exampleModalLabel">Update Company Diesel</h5>
                                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -142,7 +139,7 @@
                                   </div>
                                   <div class="modal-body">
                                       {% load crispy_forms_tags %}
-                                      <form action="{% url 'users:company_diesel' company_capacity.id %}"
+                                      <form action="users/{{company_capacity.id}}"
                                           method="POST">
                                           {% csrf_token %}
                                           

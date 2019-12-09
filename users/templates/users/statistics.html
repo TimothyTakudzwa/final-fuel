@@ -1,6 +1,6 @@
 {% extends "users/base.html" %}
 {% block body %}
-<div class="jumbotron col-md-12">
+<div class="jumbotron col-md-12" style="background: linear-gradient(to right, #fdbb2d, #b21f1f, #1a2a6c);color: white;">
     <h1 class="display-3">Statistics </h1>
     
     <hr class="my-2">
@@ -25,8 +25,19 @@
         </div>
         <div class="card-footer">
           <div class="stats">
+          {% if diesel == 0 %}  
             <i class="material-icons text-danger">warning</i>
-            <a href="#pablo">Get More Stock...</a>
+            <a href="#pablo">Get More Diesel...</a>
+          {% elif petrol == 0%}  
+            <i class="material-icons text-danger">warning</i>
+            <a href="#pablo">Get More Petrol...</a>
+          {% elif petrol == 0 and diesel == 0 %}
+            <i class="material-icons text-danger">warning</i>
+            <a href="#pablo">Get More stock...</a>
+          {% else %}
+            <i class="material-icons text-success">alarm_on</i>
+            <a href="#pablo">Get More stock...</a>
+          {% endif %}    
           </div>
         </div>
         <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#stock_report" style="position: absolute;right:    0;
@@ -46,7 +57,8 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form>
+                <form method="POST" action="{% url 'users:report_generator' %}">
+                  {% csrf_token %}
                     <div class="form-group">
                         
                         <input type="hidden" name="report_type" value="Stock">   
@@ -108,6 +120,7 @@
                 </div>
                 <div class="modal-body">
                     <form method="POST" action="{% url 'users:report_generator' %}">
+
                         {% csrf_token %}
                         <div class="form-group">
                             
@@ -254,21 +267,23 @@
               <i class="material-icons">people</i>
             </div>
             <p class="card-category">Current Staff</p>
-            <h3 class="card-title" style="font-size: 1em;">Admin : {{staff_pop}}
+            <h3 class="card-title" style="font-size: 1em;">Depots : {{admin_staff}}
               
             </h3>
-            <h3 class="card-title" style="font-size: 1em;">Stations : {{staff_pop}}
+            <h3 class="card-title" style="font-size: 1em;">Stations : {{other_staff}}
               
             </h3>
           </div>
           <div class="card-footer">
             
           </div>
+          <!--
           <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#staff_report" style="position: absolute;right:    0;
           bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
               <i class="material-icons">calendar_today</i>
             Generate Report
           </button>
+          -->
         </div>
       </div>
       <div class="modal fade" id="staff_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -313,7 +328,7 @@
               <i class="material-icons">store</i>
             </div>
             <p class="card-category">Orders Fulfilled</p>
-            <h3 class="card-title" style="font-size: 1em;"> {{trans}}</h3>
+            <h3 class="card-title" style="font-size: 1em;"> {{trans_complete}}</h3>
           </div>
           <div class="card-footer">
             <div class="stats">
@@ -322,12 +337,13 @@
   
             
           </div>
+          <!--
           <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#revenue_report" style="position: absolute;right:    0;
           bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
               <i class="material-icons">calendar_today</i>
             Generate Report
           </button>
-          
+          -->
         </div>
       </div>
   
@@ -380,11 +396,13 @@
               <i class="material-icons">date_range</i> Last 24 Hours
             </div>
           </div>
+          <!--
           <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#offers_report" style="position: absolute;right:    0;
           bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
               <i class="material-icons">calendar_today</i>
             Generate Report
           </button>
+          -->
         </div>
         
         <div class="modal fade" id="offers_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -495,7 +513,7 @@
 
 
 
-<div class="row" style="margin-left: 50px;">
+<div class="row" >
   <!--
   <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color:#92c9ff; text-align: center;color: gray;">
       <div class="card-body text-success">
@@ -597,52 +615,14 @@
                              <td>{{client.number_of_trans}}</td>
                              
                              <td style="width: 13%;">
-                                 <div class="btn-group">
-                                      <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#{{client.id}}">View History</button>  
+                                 <div>
+                                      <a href="{% url  'users:client_history' client.id %}" class="btn btn-primary btn-sm" >View History</a>  
                                       
   
                                  </div>
                               </td>
                          </tr>
-                         <div class="modal fade" id="{{client.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header" style="background-color: #9a32b1;">
-                                <h5 class="modal-title" id="exampleModalLabel" style="color: white;">{{client.company.name}}'s Transactions</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-4">Date</div>
-                                        <div class="col-md-4">Time</div>
-                                        <div class="col-md-4">Amount</div>
-                                      </div>
-                                  {% for purchase in client.purchases %}
-                                  <div class="row">
-                                  
-                                      <div class="col-md-4">
-                                      {{purchase.date}}
-                                      </div>
-                                      <div class="col-md-4">
-                                      {{purchase.time}}
-                                      </div>
-                                      <div class="col-md-4">
-                                      {{purchase.offer.request.time}}
-                                      </div> 
-                                  </div>     
-                                  {% endfor %}
-                                    
-
-                                    
-                                </div>
-                                <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
+                        
                          {% endfor %}   
 
                      </tbody>   
@@ -666,7 +646,6 @@
   </div>
     
 </div> 
---> 
 
   <div class="ct-chart ct-perfect-fourth"></div>
 

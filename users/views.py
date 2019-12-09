@@ -5,6 +5,10 @@ import tempfile
 
 from fpdf import FPDF
 # from weasyprint import HTML
+from xhtml2pdf import pisa 
+from io import BytesIO
+from django.template.loader import get_template 
+from django.template import Context
 from pandas import DataFrame
 import pandas as pd
 from django.http import HttpResponse
@@ -37,6 +41,32 @@ from .forms import AllocationForm
 from company.models import FuelUpdate as F_Update
 from django.contrib.auth import get_user_model
 user = get_user_model()
+
+
+class Render:
+    
+    @staticmethod
+    def render(path: str, params: dict):
+        template = get_template(path)
+        html = template.render(params)
+        response = BytesIO()
+        pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), response)
+        if not pdf.err:
+            return HttpResponse(response.getvalue(), content_type='application/pdf')
+        else:
+            return HttpResponse("Error Rendering PDF", status=400)
+
+
+    
+def get_pdf(request):
+    trans = Transaction.objects.all()
+    today = timezone.now()
+    params = {
+        'today': today,
+        'trans': trans,
+        'request': request
+    }
+    return Render.render('users/pdf.html', params)            
 
 
 def account_activate(request):
@@ -117,52 +147,44 @@ def allocation_update(request,id):
 def statistics(request):
     company = request.user.company
     yesterday = date.today() - timedelta(days=1)
-    staff_blocked = Subsidiaries.objects.filter(company=company).count() / 2
     offers = Offer.objects.filter(supplier=request.user).count()
     bulk_requests = FuelRequest.objects.filter(delivery_method="BULK").count()
-    normal_requests = FuelRequest.objects.filter(delivery_method="REGULAR").count()
+    normal_requests = FuelRequest.objects.filter(delivery_method="REGULAR").count() # Change these 2 items
     staff = ''
-    
     new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
     try:
         rating = SupplierRating.objects.filter(supplier=request.user.company).first().rating
     except:
-        rating = 0    
-    #new_orders = 0
-    try:
-        staff = get_aggregate_stock(request.user.company)
-        staff_pop = staff.count()
-    except:
-        staff_pop = 0    
+        rating = 0  
    
+    admin_staff = User.objects.filter(company=company).filter(user_type='Supplier').count()
+    all_staff = User.objects.filter(company=company).count()
+    other_staff = all_staff - admin_staff
     clients = []
-    #update = F_Update.objects.filter(company_id=company.id).first()
     stock = get_aggregate_stock(request.user.company)
     diesel = stock['diesel']; petrol = stock['petrol']
-    # if update:
-    #     diesel = update.diesel_quantity
-    #     petrol = update.petrol_quantity
     
-    companies = Company.objects.filter(company_type='BUYER')
-    value = [round(random.uniform(5000.5,10000.5),2) for i in range(len(companies))]
-    num_trans = [random.randint(2,12) for i in range(len(companies))]
-    counter = 0
-
-    trans = Transaction.objects.filter(supplier=request.user, is_complete=True).annotate(number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
-    buyers = [client.buyer for client in trans]
-
+    trans = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).annotate(number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
+    buyers = [client.buyer.company.name for client in trans]
+    new_buyers = []
     for buyer in buyers:
+        total_transactions =  buyers.count(buyer)
+        buyers.remove(buyer)
+        buyer = User.objects.filter(company__name=buyer).first()
+        new_buyer_transactions = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).all()
         total_value = 0
         purchases = []
         number_of_trans = 0
-        for tran in Transaction.objects.filter(supplier=request.user, buyer=buyer):
+        for tran in new_buyer_transactions:
             total_value += tran.offer.request.amount
             purchases.append(tran)
             number_of_trans += 1
         buyer.total_value = total_value
         buyer.purchases = purchases
-        buyer.number_of_trans = number_of_trans
-    clients = buyers    
+        buyer.number_of_trans = total_transactions
+        new_buyers.append(buyer)
+       
+    clients = new_buyers    
 
     # for company in companies:
     #     company.total_value = value[counter]
@@ -176,14 +198,14 @@ def statistics(request):
     revenue = '${:,.2f}'.format(revenue)
     #revenue = str(revenue) + '.00'   
 
-    try:
-        trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
-    except:
-        trans = 0    
-    trans = get_transactions_complete_percentage(request.user)
-    return render(request, 'users/statistics.html', {'staff_blocked':staff_blocked, 'offers': offers,
+    # try:
+    #     trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
+    # except:
+    #     trans = 0    
+    trans_complete = get_transactions_complete_percentage(request.user)
+    return render(request, 'users/statistics.html', {'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
-     'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'staff_pop': staff_pop})
+     'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'admin_staff': admin_staff,  'other_staff': other_staff, 'trans_complete':trans_complete })
 
 
 @login_required()
@@ -198,6 +220,12 @@ def supplier_user_edit(request, cid):
         supplier.save()
         messages.success(request, 'Your Changes Have Been Saved')
     return render(request, 'users/suppliers_list.html')
+
+@login_required
+def client_history(request, cid):
+    buyer = User.objects.filter(id=cid).first()
+    trans = Transaction.objects.filter(buyer=buyer, supplier=request.user)
+    return render(request, 'users/client_history.html', {'trans':trans})
 
 @login_required()
 def myaccount(request):
@@ -241,10 +269,14 @@ def stations(request):
 
     return render(request, 'users/service_stations.html', {'stations': stations})
 
-#@login_required()
+@login_required()
 def report_generator(request):
     form = ReportForm()
-    allocations = requests = trans = None
+    allocations = requests = trans = stock = None
+    trans = Transaction.objects.filter(supplier__company=request.user.company).all()
+    start_date =start = "December 1 2019"
+    end_date =end = "January 1 2019"
+    
     if request.method == "POST":
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
@@ -255,28 +287,29 @@ def report_generator(request):
         if end_date:
             end_date = datetime.strptime(end_date, '%Y-%m-%d')
             end_date = end_date.date()
-        print(f'_______________{report_type}_____________________')
-        # print(f'_______________{type(start_date)}_____________________')
-        # print(f'_______________{end_date}_____________________')
         if request.POST.get('report_type') == 'Stock':
-            stock = FuelUpdate.objects.filter(company_id=request.user.company.id).first()
+            stock = FuelUpdate.objects.filter(company_id=request.user.company.id).all()
+            print("ep",stock)
             requests = None; allocations = None; trans = None; revs=None
-        if request.POST.get('report_type') == 'Transactions' or 'Revenue':
+        if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':
+            print('________Im in here_______m')
             trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier=request.user)
-            revs = None
-            print(trans)
+            requests = None; allocations = None; revs=None
+
+            
             if request.POST.get('report_type') == 'Revenue':
                 revs = {}
                 total_revenue = 0
                 trans_no = 0
 
-                for tran in trans:
-                    total_revenue += tran.offer.request.amount
-                    trans_no += 1
-                revs['revenue'] = '${:,.2f}'.format(total_revenue)
+                if trans:
+                    for tran in trans:
+                        total_revenue += tran.offer.request.amount
+                        trans_no += 1
+                    revs['revenue'] = '${:,.2f}'.format(total_revenue)
 
-                revs['hits'] = trans_no
-                revs['date'] = datetime.today().strftime('%D')
+                    revs['hits'] = trans_no
+                    revs['date'] = datetime.today().strftime('%D')
                 trans = None
 
 
@@ -288,13 +321,15 @@ def report_generator(request):
         if request.POST.get('report_type') == 'Allocations':
             allocations = FuelRequest.objects.filter(date__range=[start_date, end_date])
         start = start_date
-        end = end_date 
-        return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form,
-        'start': start, 'end': end, 'revs': revs })
+        
+        revs = 0
+        return render(request, 'users/reports.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form,
+        'start': start, 'end': end, 'revs': revs, 'stock':stock })
 
     show = False
-
-    return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form, 'show':show })
+    print(trans)
+    return render(request, 'users/reports.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form, 
+        'start': start_date, 'end': end_date,'show':show, 'stock':stock })
 
 @login_required()
 def export_pdf(request):
@@ -346,8 +381,41 @@ def export_pdf(request):
             pdf.multi_cell(w=100, h=10, txt=result)
             pdf.output(f'media/reports/requests/Report - {datetime.now().strftime("%Y-%M-%d")}.pdf', 'F')
 
+        if request.POST.get('type_model') == "revenue":
+            start = request.POST.get('start')
+            end = request.POST.get('end')
+            start = datetime.strptime(start, '%b. %d, %Y').date()
+            end = datetime.strptime(end, '%b. %d, %Y').date()
+
+            data = Transaction.objects.filter(date__range=[start, end])
+            
+
+
+
 
         return redirect('users:report_generator')
+
+def html_to_pdf(request): 
+    data = {'trans': Transaction.objects.all()}
+    template = get_template("users/report.html") 
+    html  = template.render(data)
+    # context = {'pagesize':'A4'}
+    # html = template.render(context) 
+    # result = StringIO() 
+    # pdf = pisa.pisaDocument(StringIO(html), dest=result) 
+    # if not pdf.err: 
+    #     return HttpResponse(result.getvalue(), content_type='application/pdf') 
+    # else: return HttpResponse('Errors')
+    file = open('test.pdf', "w+b")
+    pisaStatus = pisa.CreatePDF(html.encode('utf-8'), dest=file,
+            encoding='utf-8')
+
+    file.seek(0)
+    pdf = file.read()
+    file.close()            
+    return HttpResponse(pdf, 'application/pdf')
+
+
 
 # def generate_pdf(request):
 #     if request.method == "POST":
@@ -362,7 +430,7 @@ def export_pdf(request):
 #             data = Transaction.objects.filter(date__range=[start, end])
 
 #             # Rendered
-#             html_string = render_to_string('users/report.html', {'people': people})
+#             html_string = render_to_string('users/reports.html', {'people': people})
 #             html = HTML(string=html_string)
 #             result = html.write_pdf()
 

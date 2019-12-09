@@ -31,6 +31,8 @@ def login_success(request):
     """
     user_type  = request.user.user_type
     print(user_type)
+    if not user.is_active:
+        messages.danger(request, "This account is waiting activation")
     if user_type == "BUYER":
         return redirect("buyer-dashboard")
     elif user_type == 'SS_SUPPLIER':
@@ -44,13 +46,14 @@ def login_success(request):
 def token_is_send(request, user):
     token = secrets.token_hex(12)
     domain = request.get_host()            
-    url = f'{domain}/verification/{token}/{user.id}'
-    message = f"Dear {user.first_name}  {user.last_name}, please complete signup here : \n {url} \n. "            
+    url = f'https://{domain}/verification/{token}/{user.id}'
+    sender = "intelliwhatsappbanking@gmail.com"
+    subject = 'Fuel Finder Registration'
+    message = f"Dear {user.first_name}  {user.last_name}. \nYour username is: {user.username}\n\nPlease complete signup here : \n {url} \n. "            
     try:
         print(message)
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
         msg.send()
-
         messages.success(request, f"{user.first_name}  {user.last_name} Registered Successfully")
         return True
     except Exception as e:
@@ -69,31 +72,29 @@ def register(request):
             last_name = form.cleaned_data['last_name']
             email = form.cleaned_data['email']
             phone_number = form.cleaned_data['phone_number']
+            user_type = form.cleaned_data['user_type']
             full_name = first_name + " " + last_name
             i = 0
             username = initial_username = first_name[0] + last_name
             while  User.objects.filter(username=username.lower()).exists():
                 username = initial_username + str(i) 
                 i+=1
-            user = User.objects.create(email=email, username=username.lower(),  phone_number=phone_number, first_name=first_name, last_name=last_name, is_active=False)        
+            user = User.objects.create(email=email, username=username.lower(), user_type=user_type,  phone_number=phone_number.replace(" ", ""), first_name=first_name, last_name=last_name, is_active=False)        
             if token_is_send(request, user):
-                messages.success(request, f"{full_name} Registered Successfully")   
+                # messages.success(request, f"{full_name} Registered Successfully")   
                 if user.is_active:
                     send_message(user.phone_number, "You have been registered succesfully")
                     user.stage = 'requesting'
                     user.save()               
-                return render(request, 'buyer/send_email.html')
+                return render(request, 'buyer/email_send.html')
             else:
-                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
-                return render(request, 'buyer/send_email.html')
+                # messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+                return render(request, 'buyer/email_send.html')
         
-        else:
-            msg = "Error in Information Submitted"
-            messages.error(request, msg)
-
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Account created for {username}')
-            return redirect('buyer-login')
+        else:            
+            msg = "Error!!! We have a user with this user email-id"
+            messages.error(request, msg)            
+            return redirect('buyer-register')
     else:
         form = BuyerRegisterForm
     
@@ -151,9 +152,8 @@ def fuel_request(request):
             fuel_request.depot = depot.name
         else:
             fuel_request.request_company = ''
-    # print(fuel_requests)
     for fuel_request in fuel_requests:
-        offer = Offer.objects.filter(request=fuel_request).first()
+        offer = Offer.objects.filter(request=fuel_request).filter(declined=False).first()
         if offer is not None:
             fuel_request.has_offers = True
         else:
@@ -302,15 +302,23 @@ def reject_offer(request, id):
 def transactions(request):
     buyer = request.user
     transactions = Transaction.objects.filter(buyer=buyer).all()
+    for transaction in transactions:
+        subsidiary = Subsidiaries.objects.filter(id = transaction.supplier.subsidiary_id).first()
+        if subsidiary is not None:
+            transaction.depot = subsidiary.name
+            transaction.address = subsidiary.address
+
     context = {
         'transactions': transactions
     }
 
     return render(request, 'buyer/transactions.html', context=context)
 
-def invoice(request):
+def invoice(request, id):
+    
     buyer = request.user
-    transactions = Transaction.objects.filter(buyer=buyer).all()
+    transactions = Transaction.objects.filter(buyer=buyer, id=id).first()
+    
     context = {
         'transactions': transactions
     }

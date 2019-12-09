@@ -8,13 +8,13 @@ from django.contrib import messages
 import secrets
 from users.models import Audit_Trail
 from datetime import date, time
-
+from buyer.constants2 import industries, job_titles
 from buyer.forms import BuyerUpdateForm
 from buyer.models import Company
 from users.models import AuditTrail
 from .forms import PasswordChange, RegistrationForm, \
     RegistrationEmailForm, UserUpdateForm, FuelRequestForm
-from .models import FuelRequest, Transaction, TokenAuthentication, Offer, Subsidiaries
+from .models import FuelRequest, Transaction, TokenAuthentication, Offer, Subsidiaries, FuelAllocation
 from company.models import Company, FuelUpdate
 from notification.models import Notification
 from django.contrib.auth import get_user_model
@@ -216,3 +216,67 @@ def notifications(request):
             user_not.is_read = True
             user_not.save()
     return render(request, 'supplier/accounts/notifications.html', context=context)
+
+
+def allocated_quantity(request):
+    allocations = FuelAllocation.objects.filter(assigned_staff_id= request.user.subsidiary_id).all()
+    return render(request, 'supplier/accounts/allocated_quantity.html', {'allocations': allocations})
+
+
+def activate_whatsapp(request):
+    user = User.objects.filter(id=request.user.id).first()
+    if user.activated_for_whatsapp == False:
+        user.activated_for_whatsapp = True
+        user.save()
+        messages.success(request, 'Your WhatsApp has been activated successfully')
+        return redirect('fuel-request')
+
+    else:
+        user.activated_for_whatsapp = False
+        user.save()
+        messages.warning(request, 'Your WhatsApp has been deactivated successfully')
+        return redirect('fuel-request')
+
+
+def verification(request, token, user_id):
+    context = {
+        'title': 'Fuel Finder | Verification',
+    }
+    check = User.objects.filter(id=user_id)
+    print("here l am ")
+
+    if check.exists():
+        user = User.objects.get(id=user_id)
+        print(user)
+        if user.user_type == 'BUYER':
+            companies = Company.objects.filter(company_type='CORPORATE').all()
+        else:
+            companies = Company.objects.filter(company_type='SUPPLIER').all()
+        token_check = TokenAuthentication.objects.filter(user=user, token=token)
+        result = bool([token_check])
+        print(result)
+        if result == True:
+            if request.method == 'POST':
+                user = User.objects.get(id=user_id)
+                form = BuyerUpdateForm(request.POST, request.FILES, instance=user)
+                if form.is_valid():
+                    form.save()
+                    company_id = request.POST.get('company_id')
+                    print(f"---------Supplier {company_id} {type(company_id)}")
+                    selected_company = Company.objects.filter(id=company_id).first()
+                    user.company = selected_company
+                    user.is_active = True
+                    user.save()
+                    
+            else:
+                form = BuyerUpdateForm
+                # messages.success(request, f'Email verification successs, Fill in the deatails to complete registration')
+                return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
+        else:
+            messages.warning(request, 'Wrong verification token')
+            return redirect('login')
+    else:
+        messages.warning(request, 'Wrong verification id')
+        return redirect('login')
+    return render(request, 'supplier/accounts/verify.html', context=context)
+
