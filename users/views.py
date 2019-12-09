@@ -256,11 +256,12 @@ def report_generator(request):
         print(f'_______________{report_type}_____________________')
         # print(f'_______________{type(start_date)}_____________________')
         # print(f'_______________{end_date}_____________________')
-        if request.POST.get('report_type') == 'stock':
+        if request.POST.get('report_type') == 'Stock':
             stock = FuelUpdate.objects.filter(company_id=request.user.company.id).first()
+            print(stock)
             requests = None; allocations = None; trans = None; revs=None
-        if request.POST.get('report_type') == 'Transactions' or 'Revenue':
-            print('________Im in here_______')
+        if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':
+            print('________Im in here_______m')
             trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier=request.user)
             requests = None; allocations = None; revs=None
 
@@ -295,7 +296,7 @@ def report_generator(request):
 
     show = False
 
-    return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form, 'show':show })
+    return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form, 'show':show, 'stock':stock })
 
 @login_required()
 def export_pdf(request):

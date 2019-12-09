@@ -1,6 +1,7 @@
 {% extends "users/base.html" %}
 {% block title %}{% endblock %}
 {% block body %}
+
 <div class="jumbotron jumbotron-fluid">
     <div class="container" style="text-align: left;margin-left: 0;">
         <h1 class="display-3">Report Generator</h1>
@@ -58,7 +59,7 @@
         </div>
     </div>
 </div>
-{% if not trans and not requests and not allocations and not revs %}
+{% if not trans and not requests and not allocations and not revs and not stock %}
 <div class="container" style="text-align: center;margin-top: 0px;margin-left: 90px;font-size: 1.5em;color: #5d5a5a;background-color: #e0e0e0;padding: 109px;
 ">No Data, Please Generate Report
     </div>    
