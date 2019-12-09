@@ -134,7 +134,7 @@
 
                     </div>
                     <p class="lead" style="padding-left: 15px;padding-top: 30px;">
-                        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#report_modal" role="button"
+                        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#report_modal" type="button"
                             style="color: white;">Generate Report</button>
 
                         <button class="btn btn-info btn-lg" data-toggle="modal" data-target="#trans_info_modal" role="button"
@@ -222,6 +222,7 @@
                                             <th>Fuel Type</th>
                                             <th>Quantity</th>
                                             <th>Price</th>
+                                            <th>Contact Person</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
@@ -233,7 +234,7 @@
                                             <td>{{tran.offer.request.fuel_type|title}}</td>
                                             <td>{{tran.offer.quantity}}</td>
                                             <td>$ {{tran.offer.price|stringformat:".2f"}}</td>
-
+                                            <td>{{tran.buyer.first_name}} {{tran.buyer.last_name }}</td>
                                             <td>
                                                 {% if tran.is_complete %}
                                                 <i class="material-icons" style="color: #2ecc71;">check_circle</i>
