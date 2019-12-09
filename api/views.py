@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 
 from buyer.models import User
 from company.models import FuelUpdate
@@ -160,7 +161,7 @@ def view_updates_user(request):
 
         data = []
 
-        updates = FuelUpdate.objects.filter()
+        updates = FuelUpdate.objects.filter(~Q(sub_type='Company')).all()
         for update in updates:
             details = Subsidiaries.objects.get(id=update.relationship_id)
             station_update = {
