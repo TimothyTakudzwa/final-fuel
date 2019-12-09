@@ -273,7 +273,7 @@ def stations(request):
 def report_generator(request):
     form = ReportForm()
     allocations = requests = trans = stock = None
-    trans = Transaction.objects.filter(supplier__company=request.user.company).all()
+    #trans = Transaction.objects.filter(supplier__company=request.user.company).all()
     start_date =start = "December 1 2019"
     end_date =end = "January 1 2019"
     
@@ -325,7 +325,9 @@ def report_generator(request):
             print(f'__________________{requests}__________________________________')
             trans = None; allocations = None; stock = None; revs=None
         if request.POST.get('report_type') == 'Allocations':
-            allocations = FuelRequest.objects.filter(date__range=[start_date, end_date])
+            print("__________________________I am in allocations____________________________")
+            allocations = FuelAllocation.objects.all()
+            print(f'________________________________{allocations}__________________________')
         start = start_date
         
         revs = 0

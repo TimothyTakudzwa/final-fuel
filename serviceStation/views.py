@@ -7,7 +7,7 @@ from datetime import datetime
 from django.contrib import messages
 from buyer.models import User, Company
 from django.contrib.auth import authenticate
-from supplier.forms import UserUpdateForm
+from supplier.forms import UserUpdateForm, PostForm
 from .forms import ProfileUdateForm
 from supplier.forms import *
 from supplier.models import *
@@ -114,6 +114,7 @@ def allocated_quantity(request):
 def subsidiary_profile(request):
     subsidiary = Subsidiaries.objects.filter(id = request.user.subsidiary_id).first()
     fuel_capacity = FuelUpdate.objects.filter(relationship_id=subsidiary.id).first()
+    form = PostForm()
 
     if request.method == 'POST':
         if FuelUpdate.objects.filter(id=fuel_capacity.id).exists():
@@ -135,4 +136,19 @@ def subsidiary_profile(request):
         else:
             messages.success(request, 'Something went wrong')
             return redirect('serviceStation:subsidiary_profile')    
-    return render(request, 'serviceStation/subsidiary_profile.html', {'subsidiary': subsidiary, 'fuel_capacity': fuel_capacity})
+    return render(request, 'serviceStation/subsidiary_profile.html', {'subsidiary': subsidiary, 'fuel_capacity': fuel_capacity,'form': form})
+
+def logo_upload(request, id):
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES) 
+        subsidiary = Subsidiaries.objects.filter(id = id).first()
+        print(id)
+        subsidiary.logo = request.POST['logo']
+        subsidiary.save()
+        messages.success(request, 'Logo updated successfully')
+        return redirect('serviceStation:subsidiary_profile')
+ 
+    else: 
+        form = PostForm() 
+    return redirect('serviceStation:subsidiary_profile')
+  
