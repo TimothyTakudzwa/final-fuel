@@ -31,6 +31,8 @@ def login_success(request):
     """
     user_type  = request.user.user_type
     print(user_type)
+    if not user.is_active:
+        messages.danger(request, "This account is waiting activation")
     if user_type == "BUYER":
         return redirect("buyer-dashboard")
     elif user_type == 'SS_SUPPLIER':

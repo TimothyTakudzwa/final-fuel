@@ -110,3 +110,29 @@ def allocated_quantity(request):
     allocations = FuelAllocation.objects.filter(assigned_staff_id= request.user.subsidiary_id).all()
     return render(request, 'serviceStation/allocated_quantity.html', {'allocations': allocations})
 
+
+def subsidiary_profile(request):
+    subsidiary = Subsidiaries.objects.filter(id = request.user.subsidiary_id).first()
+    fuel_capacity = FuelUpdate.objects.filter(relationship_id=subsidiary.id).first()
+
+    if request.method == 'POST':
+        if FuelUpdate.objects.filter(id=fuel_capacity.id).exists():
+            fuel_update = FuelUpdate.objects.filter(id=fuel_capacity.id).first()
+            fuel_update.petrol_quantity = request.POST['petrol']
+            fuel_update.diesel_quantity = request.POST['diesel']
+            fuel_update.save()
+            subsidiary.name = request.POST['name']
+            subsidiary.company = request.POST['company']
+            subsidiary.address = request.POST['address']
+            subsidiary.iban_number = request.POST['iban_number']
+            subsidiary.licence_number = request.POST['licence_number']
+            subsidiary.destination_bank = request.POST['destination_bank']
+            subsidiary.account_number = request.POST['account_number']
+            subsidiary.save()
+            messages.success(request, 'Service Station Profile updated successfully')
+            return redirect('serviceStation:subsidiary_profile')
+
+        else:
+            messages.success(request, 'Something went wrong')
+            return redirect('serviceStation:subsidiary_profile')    
+    return render(request, 'serviceStation/subsidiary_profile.html', {'subsidiary': subsidiary, 'fuel_capacity': fuel_capacity})

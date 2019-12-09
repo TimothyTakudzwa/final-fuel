@@ -280,3 +280,9 @@ def verification(request, token, user_id):
         return redirect('login')
     return render(request, 'supplier/accounts/verify.html', context=context)
 
+
+def company(request):
+    compan = Company.objects.filter(id = request.user.company.id).first()
+    num_of_subsidiaries = Subsidiaries.objects.filter(company=request.user.company).count()
+    fuel_capacity = FuelUpdate.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()   
+    return render(request, 'supplier/accounts/company.html', {'compan': compan, 'num_of_subsidiaries': num_of_subsidiaries, 'fuel_capacity': fuel_capacity})

@@ -39,8 +39,8 @@
         Tip 2: you can also add an image using data-image tag
     -->
     <div class="logo">
-      <a href="{%url 'account'%}" class="simple-text logo-normal">
-        <strong>FUEL FINDER</strong>
+      <a href="{%url 'company'%}" class="simple-text logo-normal">
+        <strong>{{request.user.company.name}}</strong>
       </a>
     </div>
       <div class="sidebar-wrapper">
@@ -77,7 +77,7 @@
           </li>
           
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'logout' %}?next=/">
+            <a class="nav-link" href="{% url 'logout' %}?next=/login">
               <i class="material-icons">close</i>
               <p>Logout</p>
             </a>

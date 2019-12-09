@@ -239,23 +239,41 @@ def view_requests_handler(user, message):
         requests = FuelRequest.objects.filter(wait=True).all()
         response_message = 'Reply with the number of the request to make an offer? \n\n'
         i = 1
-        for req in requests: 
-            response_message = response_message + str(req.id) + ". " + req.fuel_type +''+ str(req.amount) + '\n'
+        for req in requests:
+            fuel = str(req.fuel_type).capitalize()
+            response_message = f'{response_message} {i}. {fuel} {req.amount} litres made on {req.date}'
+            user.fuel_updates_ids = user.fuel_updates_ids + str(req.id)
+            user.save()
             i += 1        
         user.position = 1 
         user.save()
     elif user.position == 1:
+        request_list = list(user.fuel_updates_ids.split(" "))
+        print(request_list)
+        request_id = request_list[int(message)]
         response_message = "How many litres are you offering?"
-        fuel_request = FuelRequest.objects.filter(id=int(message)).first()
+        fuel_request = FuelRequest.objects.filter(id=request_id).first()
         user.fuel_request = fuel_request.id
         user.position = 2
         user.save()
     elif user.position == 2:
         fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
-        Offer.objects.create(quantity=float(message), supplier=user, request=fuel_request)
-        response_message = "At what price per litre?"
-        user.position = 3
-        user.save()
+        amount = fuel_request.amount
+        offer_quantity = float(message)
+        if offer_quantity <= amount:
+            if Offer.objects.filter(request=fuel_request, supplier=user).exists():
+                offer = Offer.objects.filter(request=fuel_request, supplier=user).first()
+                offer.quantity = float(message)
+                offer.save()
+            else:
+                Offer.objects.create(quantity=float(message), supplier=user, request=fuel_request)
+            response_message = "At what price per litre?"
+            user.position = 3
+            user.save()
+        else:
+            response_message = "You an not offer fuel that is more than the requested quantity. Please enter a different fuel quantity."
+            user.position = 1
+            user.save()
     elif user.position == 3:
         fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
         offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
@@ -274,23 +292,36 @@ def view_offers_handler(user, message):
         offers = Offer.objects.filter(supplier=user)
         i = 1
         for offer in offers:
-            response_message = response_message + f'{offer.id}. {offer.request.fuel_type} {offer.quantity}l at {offer.price}'
+            fuel = offer.request.fuel_type.capitalize()
+            response_message = response_message + f'{i}. {fuel} {offer.quantity} litres at {offer.price} made on {offer.date}'
+            user.fuel_updates_ids = user.fuel_updates_ids + str(offer.id)
+            user.save()
             i += 1
         user.position = 1
         user.save()
     elif user.position == 1:
+        offer_list = list(user.fuel_updates_ids.split(" "))
+        print(offer_list)
+        offer_id = offer_list[int(message)]
         response_message = "How many litres are you offering now?"
-        offer = Offer.objects.filter(id=int(message)).first()
+        offer = Offer.objects.filter(id=offer_id).first()
         user.position = 2
         user.fuel_request = offer.id
         user.save()
     elif user.position == 2:
         offer = Offer.objects.filter(id=user.fuel_request).first()
-        offer.quantity = float(message)
-        offer.save()
-        response_message = "At what price per litre?"
-        user.position = 3
-        user.save()
+        request_quantity = offer.request.amount
+        offer_quantity = float(message)
+        if offer_quantity <= request_quantity:
+            offer.quantity = float(message)
+            offer.save()
+            response_message = "At what price per litre?"
+            user.position = 3
+            user.save()
+        else:
+            response_message = "You an not offer fuel that is more than the requested quantity. Please enter a different fuel quantity."
+            user.position = 1
+            user.save()
     elif user.position ==3:
         offer = Offer.objects.filter(id=user.fuel_request).first()
         offer.price = float(message)
@@ -319,6 +350,7 @@ def supplier_handler(request,user,message):
     response_message = ""
     if message.lower() == 'menu':
         user.stage = 'menu'
+        user.fuel_updates_ids = " "
         user.position = 1
         user.save()
         full_name = user.first_name + " " + user.last_name
@@ -487,9 +519,45 @@ def update_petrol(user, message):
     elif user.position == 40:
         update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
         update.petrol_quantity = message
+        user.position = 41
+        user.save()
         update.save()
-        response_message = 'Petrol Quantity updated successfully? \n\n'
-    
+        response_message = 'What is the queue size?\n\n1. Short\n2. Medium Long\n3. Long'
+    elif user.position == 41:
+        update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
+        if message == "1":
+            update.queue_length = "Short"
+        elif message == "2":
+            update.queue_length = "Medium Long"
+        elif message == "3":
+            update.queue_length = "Long"
+        else:
+            response_message = 'wrong choice'
+        update.save()
+        user.position = 42
+        user.save()
+        response_message = "What is the status?\n\n1. Pumping\n2. Expecting More Fuel\n3. Empty\n4. Offloading"
+    elif user.position == 42:
+        update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
+        if message == "1":
+            update.status = "Pumping"
+            update.save()
+            response_message = "made an update successfully"
+        elif message == "2":
+            update.status = "Expecting More Fuel"
+            update.save()
+            response_message = "made an update successfully"
+        elif message == "3":
+            update.status = "Empty"
+            update.save()
+            response_message = "made an update successfully"
+        elif message == "4":
+            update.status = "Offloading"
+            update.save()
+            response_message = "made an update successfully"
+        else:
+            response_message = 'wrong choice'
+        
     return response_message
 
 def update_diesel(user, message):
@@ -501,8 +569,38 @@ def update_diesel(user, message):
     elif user.position == 50:
         update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
         update.diesel_quantity = message
+        user.position = 51
+        user.save()
         update.save()
-        response_message = 'Diesel Quantity updated successfully? \n\n'
+        response_message = 'What is the queue size?\n\n1. Short\n2. Medium Long\n3. Long'
+    elif user.position == 51:
+        update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
+        response_message = "What is the status?\n\n1. Pumping\n2. Expecting More Fuel\n3. Empty\n4. Offloading"
+        if message == "1":
+            update.queue_length = "Short"
+        elif message == "2":
+            update.queue_length = "Medium Long"
+        elif message == "3":
+            update.queue_length = "Long"
+        else:
+            response_message = 'wrong choice'
+        update.save()
+        user.position = 52
+        user.save()    
+    elif user.position == 52:
+        update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
+        if message == "1":
+            update.status = "Pumping"
+        elif message == "2":
+            update.status = "Expecting More Fuel"
+        elif message == "3":
+            update.status = "Empty"
+        elif message == "4":
+            update.status = "Offloading"
+        else:
+            response_message = 'wrong choice'
+        update.save()
+        response_message = "made an update successfully"
     
     return response_message
 
