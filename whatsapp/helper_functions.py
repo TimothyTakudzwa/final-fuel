@@ -28,7 +28,7 @@ def individual_handler(request, user,message):
     pass
 
 def buyer_handler(request,user,message):
-    if message == 'menu':
+    if message.lower() == 'menu':
         user.stage = 'menu'
         user.position = 1
         user.fuel_updates_ids = " "
@@ -432,7 +432,7 @@ def registration_handler(request, user, message):
 
 
 def service_station_handler(request,user,message):
-    if message == 'menu':
+    if message.lower() == 'menu':
         user.stage = 'menu'
         user.position = 1
         user.save()
