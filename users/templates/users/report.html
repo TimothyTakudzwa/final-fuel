@@ -92,6 +92,7 @@
                         PDF
                     </button>
                 </form>
+                <a class="btn btn-info" href="{% url 'users:get_pdf'%}">Test</a>
                 <form method="POST" action="{% url 'users:export_csv' %}">
                     {% csrf_token %}
                     <input type="hidden" value="transaction" name="type_model">
@@ -139,7 +140,7 @@
                             <td>{{tran.time}}</td>
                             <td>{{tran.buyer}}</td>
                            <td>
-                               {% if tran.complete %}
+                               {% if tran.is_complete %}
                                <i class="material-icons" style="color: #2ecc71;">check_circle</i>
                                {% else %}
                                <i class="material-icons" style="color: #e74c3c;">report</i>
