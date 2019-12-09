@@ -3,7 +3,7 @@ import requests
 from validate_email import validate_email
 from .constants import *
 from buyer.views import token_is_send
-from supplier.models import Offer, Transaction, FuelAllocation
+from supplier.models import Offer, Transaction, FuelAllocation, Subsidiaries
 from buyer.models import User, FuelRequest
 from company.models import FuelUpdate
 from django.db.models import Q
@@ -165,7 +165,8 @@ def view_fuel_updates(user, message):
         response_message = 'Which fuel update do you want? \n\n'
         i = 1
         for update in updates:
-            response_message = response_message + str(i) + ". " + "Petrol" + " " + str(update.petrol_quantity) + "L" + " " + "@" + " " + str(update.petrol_price) + " " + "and" + " " + "Diesel" + " " + str(update.diesel_quantity) + " " + "@" + " " + str(update.diesel_price) + '\n'
+            sub = Subsidiaries.objects.filter(id = update.relationship_id).first()
+            response_message = response_message + str(i) + ". " + sub.name + '\n' + "Petrol:" + " " + str(update.petrol_quantity) + " " + "Litres" + "\n" + "Price:" + " " + str(update.petrol_price) + "\n" + "Diesel:" + " " + str(update.diesel_quantity) + " " + "Litres" + "\n" + "Price:" + " " + str(update.diesel_price) + '\n\n'
             user.fuel_updates_ids = user.fuel_updates_ids + str(update.id) + " "
             user.save()
             i += 1        
@@ -173,7 +174,7 @@ def view_fuel_updates(user, message):
         user.save()
     elif user.position == 31:
         list1 = list(user.fuel_updates_ids.split(" "))
-        update_id = list1[int(message) - 1]
+        update_id = list1[int(message)]
         update = FuelUpdate.objects.filter(id = update_id).first()
         my_request = FuelRequest.objects.create(name=user, is_direct_deal=True, last_deal=update_id)
         user.fuel_request = my_request.id
