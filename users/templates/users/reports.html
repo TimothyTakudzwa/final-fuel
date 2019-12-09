@@ -20,7 +20,7 @@
 
     <link href="{% static 'finder/assets/css/material-dashboard.css' %}" rel="stylesheet" />
 
-    <title>Beautiful Tables</title>
+    <title>Reports </title>
 </head>
 
 <body class="">
@@ -122,16 +122,16 @@
             <main role="main" class="content" style="margin-top: 0;padding: 0;">
                 <div class="jumbotron jumbotron-fluid">
                     <div class="container" style="text-align: left;margin-left: 0;">
-                        <h1 class="display-3">Report Generator</h1>
+                        <h3 class="display-3">Report Generator</h3>
                         <hr class="my-2">
 
                     </div>
                     <p class="lead" style="padding-left: 15px;padding-top: 30px;">
-                        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#report_modal" role="button"
-                            style="color: white;">Generate Report</button>
+                        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#report_modal"
+                            role="button" style="color: white;">Generate Report</button>
 
-                        <button class="btn btn-info btn-lg" data-toggle="modal" data-target="#trans_info_modal" role="button"
-                            style="color: white;">View Quick Info</button>
+                        <button class="btn btn-info btn-lg" data-toggle="modal" data-target="#trans_info_modal"
+                            role="button" style="color: white;">View Quick Info</button>
 
                     </p>
                 </div>
@@ -150,7 +150,7 @@
                                         <select name="report_type" class="browser-default custom-select">
                                             <option selected>Transactions</option>
                                             <option value="Requests">Requests</option>
-                                            <option value="Allocations">Stock</option>
+                                            <option value="Stock">Stock</option>
                                             <option value="Allocations">Allocations</option>
                                         </select>
                                     </div>
@@ -178,18 +178,11 @@
                         </div>
                     </div>
                 </div>
-                {% if not trans and not requests and not allocations and not revs and not stock %}
-                <div class="container" style="text-align: center;margin-top: 0px;margin-left: 90px;font-size: 1.5em;color: #5d5a5a;background-color: #e0e0e0;padding: 109px;
-">No Data, Please Generate Report
-                </div>
-                {% endif %}
-
-                {% if trans or requests or allocations or stock or revs %}
                 <div
                     style="/* padding: 25px; */background-color:rgb(14, 80, 100);border: #fafbfb 2px solid;border-radius: 10px;padding-left: 15px;padding-top: 30px;padding-bottom: 30px;margin-left: 15px;margin-top: -89px;">
-                    <h1 style="color: #fafafa;font-size: medium;">Show Results From {{start}} To {{end}} </h1>
+                    <h1 style="color: #fafafa;font-size: medium;">Showing results from <b>{{start}}</b> to <b>{{end}} </b> </h1>
                 </div>
-                {% endif %}
+              
                 {%if trans%}
                 <div class="col-md-12">
                     <div class="card" style="background-color:white">
@@ -217,7 +210,8 @@
                                     <tbody>
                                         {% for tran in trans %}
                                         <tr>
-                                            <td>{{tran.date}} <small style="margin-left: 10px;">{{tran.time}}</small></td>
+                                            <td>{{tran.date}} <small style="margin-left: 10px;">{{tran.time}}</small>
+                                            </td>
                                             <td>{{tran.buyer.company.name}}</td>
                                             <td>{{tran.offer.request.fuel_type|title}}</td>
                                             <td>{{tran.offer.quantity}}</td>
@@ -237,12 +231,12 @@
                                     </tbody>
                                     <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
                                         <tr>
-                                                <th>Date</th>
-                                                <th>Buying Company</th>
-                                                <th>Fuel Type</th>
-                                                <th>Quantity</th>
-                                                <th>Price</th>
-                                                <th>Status</th>
+                                            <th>Date</th>
+                                            <th>Buying Company</th>
+                                            <th>Fuel Type</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
+                                            <th>Status</th>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -290,8 +284,97 @@
 
                 </div>
                 {%endif%}
+                {% if stock %}
+                <div class="col-md-12">
+                    <div class="card" style="background-color:white">
+                        <div class="card-header card-header-primary">
+                            <h4 class="card-title ">Stock Report</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="container-fluid"> 
+                                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                                    <thead style="color:white; background:lightslategray">
+                                        <th style="color:white;">
+                                            Last Update
+                                        </th>
+                                        <th style="color:white;">
+                                            Station Type
+                                        </th>
+                                        <th style="color:white;">
+                                            Petrol Price
+                                        </th>
+                                        <th style="color:white;">
+                                            Diesel Price
+                                        </th>
+                                        <th style="color:white;">
+                                            Status
+                                        </th>
 
-                <table id="allocations" class="table table-striped table-bordered" style="width:100%">
+
+                                    <tbody>
+                                        <tr>
+                                            <td>{{stock.last_updated}}</td>
+                                            <td>{{stock.sub_type}}</td>
+                                            <td>{{stock.petrol_price}}</td>
+                                            <td>{{stock.status}}</td>
+
+
+
+                                        </tr>
+
+
+
+                                    </tbody>
+                                </table>
+                                <table id="stock" class="table table-striped table-bordered" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Last Update</th>
+                                                <th>Station Type</th>
+                                                <th>Petrol Price</th>
+                                                <th>Diesel Price</th>
+                                                <th>Status</th>
+                                              
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Tiger Nixon</td>
+                                                <td>System Architecture</td>
+                                                <td>Edinburgh</td>
+                                                <td>61</td>
+                                                <td>2011/04/25</td>
+                                                <td>$320,800</td>
+                                            </tr>
+                    
+                                            <tr>
+                                                <td> Harold Franklin</td>
+                                                <td> Financial Advisor</td>
+                                                <td> Tuwiri Wetan</td>
+                                                <td> 43</td>
+                                                <td> 06/18/2011</td>
+                                                <td> $159671.33</td>
+                                            </tr>
+                    
+                                        </tbody>
+                                        <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Position</th>
+                                                <th>City</th>
+                                                <th>Age</th>
+                                                <th>Start Date</th>
+                                                <th>Salary</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                {% endif %}
+                <!-- <table id="allocations" class="table table-striped table-bordered" style="width:100%">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -332,7 +415,7 @@
                             <th>Salary</th>
                         </tr>
                     </tfoot>
-                </table>
+                </table> -->
                 <!-- <table id="requests" class="table table-striped table-bordered" style="width:100%">
                     <thead>
                         <tr>
@@ -501,48 +584,7 @@
                         </tr>
                     </tfoot>
                 </table>
-                <table id="stock" class="table table-striped table-bordered" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Position</th>
-                            <th>City</th>
-                            <th>Age</th>
-                            <th>Start Date</th>
-                            <th>Salary</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Tiger Nixon</td>
-                            <td>System Architecture</td>
-                            <td>Edinburgh</td>
-                            <td>61</td>
-                            <td>2011/04/25</td>
-                            <td>$320,800</td>
-                        </tr>
-
-                        <tr>
-                            <td> Harold Franklin</td>
-                            <td> Financial Advisor</td>
-                            <td> Tuwiri Wetan</td>
-                            <td> 43</td>
-                            <td> 06/18/2011</td>
-                            <td> $159671.33</td>
-                        </tr>
-
-                    </tbody>
-                    <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
-                        <tr>
-                            <th>Name</th>
-                            <th>Position</th>
-                            <th>City</th>
-                            <th>Age</th>
-                            <th>Start Date</th>
-                            <th>Salary</th>
-                        </tr>
-                    </tfoot>
-                </table> -->
+                -->
             </main>
         </div>
 
@@ -622,7 +664,7 @@
         // 4) Search on Multiple Columns
         $('#allocations tfoot th').each(function () {
             var title = $('#allocations tfoot th').eq($(this).index()).text();
-            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
         });
 
         table.columns().eq(0).each(function (colIdx) {
@@ -688,7 +730,7 @@
         // 4) Search on Multiple Columns
         $('#requests tfoot th').each(function () {
             var title = $('#requests tfoot th').eq($(this).index()).text();
-            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
         });
 
         table2.columns().eq(0).each(function (colIdx) {
@@ -702,7 +744,7 @@
 
 
     </script>
-    
+
     <script>
         var table3 = $('#offers').DataTable({
             mark: true,
@@ -755,7 +797,7 @@
         // 4) Search on Multiple Columns
         $('#offers tfoot th').each(function () {
             var title = $('#offers tfoot th').eq($(this).index()).text();
-            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
         });
 
         table3.columns().eq(0).each(function (colIdx) {
@@ -821,7 +863,7 @@
         // 4) Search on Multiple Columns
         $('#revenue tfoot th').each(function () {
             var title = $('#revenue tfoot th').eq($(this).index()).text();
-            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
         });
 
         table4.columns().eq(0).each(function (colIdx) {
@@ -887,7 +929,7 @@
         // 4) Search on Multiple Columns
         $('#stock tfoot th').each(function () {
             var title = $('#stock tfoot th').eq($(this).index()).text();
-            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
         });
 
         table5.columns().eq(0).each(function (colIdx) {
@@ -953,7 +995,7 @@
         // 4) Search on Multiple Columns
         $('#staff tfoot th').each(function () {
             var title = $('#staff tfoot th').eq($(this).index()).text();
-            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
         });
 
         table6.columns().eq(0).each(function (colIdx) {
