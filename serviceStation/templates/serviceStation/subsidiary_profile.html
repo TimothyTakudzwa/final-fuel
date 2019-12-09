@@ -16,10 +16,19 @@
                 <div class="img-rounded">
                     <a href="#">
                     <img class="img" src="/media/{{subsidiary.logo}}" height="250px" width="250px" />
-                    
+                    {% load crispy_forms_tags %}
+                        
                     </a>
-                </div>    
+                </div> 
+                <form action="{% url 'serviceStation:logo_upload' subsidiary.id %}" method="POST">
+                        {% csrf_token %}
+                        
+                        {{form.logo|as_crispy_field}}
+                        <button type="submit">Update Logo</button> 
+
+                </form>   
               </div>
+              
     <div class="card-body">
         <div class="container-fluid">
             
