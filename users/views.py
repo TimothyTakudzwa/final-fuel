@@ -274,8 +274,9 @@ def report_generator(request):
     form = ReportForm()
     allocations = requests = trans = stock = None
     trans = Transaction.objects.filter(supplier__company=request.user.company).all()
-    start_date = "December 1 2019"
-    end_date = "January 1 2019"
+    start_date =start = "December 1 2019"
+    end_date =end = "January 1 2019"
+    
     if request.method == "POST":
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
@@ -287,15 +288,15 @@ def report_generator(request):
             end_date = datetime.strptime(end_date, '%Y-%m-%d')
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
-            stock = FuelUpdate.objects.filter(company_id=request.user.company.id).first()
-            print(stock)
+            stock = FuelUpdate.objects.filter(company_id=request.user.company.id).all()
+            print("ep",stock)
             requests = None; allocations = None; trans = None; revs=None
         if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':
             print('________Im in here_______m')
             trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier=request.user)
             requests = None; allocations = None; revs=None
 
-            print(trans)
+            
             if request.POST.get('report_type') == 'Revenue':
                 revs = {}
                 total_revenue = 0
@@ -326,7 +327,7 @@ def report_generator(request):
         'start': start, 'end': end, 'revs': revs, 'stock':stock })
 
     show = False
-
+    print(trans)
     return render(request, 'users/reports.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form, 
         'start': start_date, 'end': end_date,'show':show, 'stock':stock })
 
