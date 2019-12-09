@@ -13,6 +13,9 @@ urlpatterns = [
     path('allocated_fuel/', views.allocated_fuel, name='allocated_fuel'),
     path('update_diesel/<int:id>', views.update_diesel, name='update_diesel'),
     path('allocated_quantity/', views.allocated_quantity, name='allocated_quantity'),
+    path('subsidiary_profile/', views.subsidiary_profile, name='subsidiary_profile'),
+
+    
     
 
 
