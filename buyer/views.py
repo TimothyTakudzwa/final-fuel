@@ -18,6 +18,7 @@ from supplier.models import Offer, Subsidiaries, Transaction
 from .constants import sample_data
 from .forms import (BuyerRegisterForm, BuyerUpdateForm, FuelRequestForm,
                     PasswordChangeForm)
+
 from .models import FuelRequest
 from buyer.utils import render_to_pdf
 
@@ -324,5 +325,8 @@ def invoice(request, id):
     }
     pdf = render_to_pdf('buyer/invoice.html',context)
     return HttpResponse(pdf, content_type='application/pdf')
+
+def view_invoice(request):
+    return render(request, 'buyer/invoice2.html')
 
     

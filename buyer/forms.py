@@ -43,12 +43,10 @@ class PasswordChange(PasswordChangeForm):
         fields = ['old_password', 'new_password1', 'new_password2']
 
     
-class BuyerUpdateForm(UserCreationForm):
-    company_id = forms.CharField(label='Company', widget=forms.Select(choices=COMPANY_CHOICES))
-    company_position = forms.CharField()
+class BuyerUpdateForm(UserCreationForm):    
     class Meta:
         model = User   
-        fields = ['image', 'company_id','user_type', 'company_position','password1', 'password2']
+        fields = ['image', 'password1', 'password2']
 
 class FuelRequestForm(forms.ModelForm):
 

@@ -1,19 +1,21 @@
+{% load static %}
+
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
  <link href="{% static 'finder/assets/css/custom.css' %}" rel="stylesheet" />
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
 <!------ Include the above in your HEAD tag ---------->
 
 <!--Author      : @arboshiki-->
+<body>
 <div id="invoice">
 
-    <div class="toolbar hidden-print">
-        <div class="text-right">
-            <button id="printInvoice" class="btn btn-info"><i class="fa fa-print"></i> Print</button>
-            <button class="btn btn-info"><i class="fa fa-file-pdf-o"></i> Export as PDF</button>
-        </div>
-        <hr>
-    </div>
+
     <div class="invoice overflow-auto">
         <div style="min-width: 600px">
             <header>
@@ -130,3 +132,17 @@
         <div></div>
     </div>
 </div>
+
+</body>
+<script>
+        var currentdate = new Date();
+        var datetime =currentdate.getDate() + "-"
+                + (currentdate.getMonth()+1)  + "-" 
+                + currentdate.getFullYear() 
+               
+        var name = "invoice " + datetime
+        let doc = new jsPDF('p','pt','a4');
+        doc.addHTML(document.body,function() {
+            doc.save(name);
+        });
+        </script>
