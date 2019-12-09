@@ -13,6 +13,7 @@ urlpatterns = [
     path('fuel_update/', views.fuel_update, name='fuel_update'),
     path('transaction/', views.transaction, name='transaction'),
     path('allocated_quantity/', views.allocated_quantity, name='allocated_quantity'),
+    path('activate_whatsapp/', views.activate_whatsapp, name='activate_whatsapp'),
     path('change_password/', views.change_password, name='change_password')
 
 ]
