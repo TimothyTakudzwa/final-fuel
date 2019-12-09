@@ -541,12 +541,20 @@ def update_petrol(user, message):
         update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
         if message == "1":
             update.status = "Pumping"
+            update.save()
+            response_message = "made an update successfully"
         elif message == "2":
             update.status = "Expecting More Fuel"
+            update.save()
+            response_message = "made an update successfully"
         elif message == "3":
             update.status = "Empty"
+            update.save()
+            response_message = "made an update successfully"
         elif message == "4":
             update.status = "Offloading"
+            update.save()
+            response_message = "made an update successfully"
         else:
             response_message = 'wrong choice'
         update.save()
