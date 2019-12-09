@@ -120,7 +120,7 @@
 
             </div>
             <main role="main" class="content" style="margin-top: 0;padding: 0;">
-                <div class="jumbotron jumbotron-fluid">
+                <div class="jumbotron jumbotron-fluid" style="background: linear-gradient(to right, #fdbb2d, #b21f1f, #1a2a6c);color: white;margin-bottom: 100px;">
                     <div class="container" style="text-align: left;margin-left: 0;">
                         <h1 class="display-3">Report Generator</h1>
                         <hr class="my-2">
@@ -147,29 +147,31 @@
                                 <form method="POST" action="/users/report_generator/">
                                     {% csrf_token %}
                                     <div class="form-group">
-                                        <select name="report_type" class="browser-default custom-select">
+                                        <select name="report_type" class="browser-default custom-select" id="report_options">
                                             <option selected>Transactions</option>
                                             <option value="Requests">Requests</option>
-                                            <option value="Allocations">Stock</option>
+                                            <option value="Stock">Stock</option>
                                             <option value="Allocations">Allocations</option>
                                         </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Starting Date</label>
-                                        <input name="start_date" type="date" class="form-control"
-                                            id="exampleInputEmail1" aria-describedby="emailHelp"
-                                            placeholder="Enter email">
-                                        <small id="emailHelp" class="form-text text-muted">Please Pick A Starting
-                                            Date.</small>
-                                    </div>
+                                    <div class="report_dates">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Starting Date</label>
+                                            <input name="start_date" type="date" class="form-control"
+                                                id="exampleInputEmail1" aria-describedby="emailHelp"
+                                                placeholder="Enter email">
+                                            <small id="emailHelp" class="form-text text-muted">Please Pick A Starting
+                                                Date.</small>
+                                        </div>
 
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Ending Date</label>
-                                        <input name="end_date" type="date" class="form-control" id="exampleInputEmail1"
-                                            aria-describedby="emailHelp" placeholder="Enter email">
-                                        <small id="emailHelp" class="form-text text-muted"
-                                            style="color: lightslategray;">Please Pick A Ending Date.</small>
-                                    </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Ending Date</label>
+                                            <input name="end_date" type="date" class="form-control" id="exampleInputEmail1"
+                                                aria-describedby="emailHelp" placeholder="Enter email">
+                                            <small id="emailHelp" class="form-text text-muted"
+                                                style="color: lightslategray;">Please Pick A Ending Date.</small>
+                                        </div>
+                                    </div>    
 
                                     <input class="btn btn-info" type="submit" value="Submit">
                                 </form>
@@ -966,6 +968,16 @@
             });
         });
 
+
+    </script>
+    <script>
+        
+        $('#report_options').change(function () {
+            var selected = $('#report_options option:selected').text();
+            if (selected == "Stock"){
+                $('.report_dates').hide();
+            }
+        });
 
     </script>
 </body>
