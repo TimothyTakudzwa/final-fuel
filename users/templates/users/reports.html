@@ -134,11 +134,11 @@
 
                     </div>
                     <p class="lead" style="padding-left: 15px;padding-top: 30px;">
-                        <a class="btn btn-primary btn-lg" data-toggle="modal" data-target="#report_modal" role="button"
-                            style="color: white;">Generate Report</a>
+                        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#report_modal" role="button"
+                            style="color: white;">Generate Report</button>
 
-                        <a class="btn btn-info btn-lg" data-toggle="modal" data-target="#trans_info_modal" role="button"
-                            style="color: white;">View Quick Info</a>
+                        <button class="btn btn-info btn-lg" data-toggle="modal" data-target="#trans_info_modal" role="button"
+                            style="color: white;">View Quick Info</button>
 
                     </p>
                 </div>
@@ -218,18 +218,22 @@
                                     <thead>
                                         <tr>
                                             <th>Date</th>
-                                            <th>Time</th>
-
-                                            <th>Buyer</th>
+                                            <th>Buying Company</th>
+                                            <th>Fuel Type</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for tran in trans %}
                                         <tr>
-                                            <td>{{tran.date}}</td>
-                                            <td>{{tran.time}}</td>
+                                            <td>{{tran.date}} <small style="margin-left: 10px;">{{tran.time}}</small></td>
                                             <td>{{tran.buyer.company.name}}</td>
+                                            <td>{{tran.offer.request.fuel_type|title}}</td>
+                                            <td>{{tran.offer.quantity}}</td>
+                                            <td>$ {{tran.offer.price|stringformat:".2f"}}</td>
+
                                             <td>
                                                 {% if tran.is_complete %}
                                                 <i class="material-icons" style="color: #2ecc71;">check_circle</i>
@@ -244,11 +248,12 @@
                                     </tbody>
                                     <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
                                         <tr>
-                                            <th>Date</th>
-                                            <th>Time</th>
-
-                                            <th>Buyer</th>
-                                            <th>Status</th>
+                                                <th>Date</th>
+                                                <th>Buying Company</th>
+                                                <th>Fuel Type</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                                <th>Status</th>
                                         </tr>
                                     </tfoot>
                                 </table>
