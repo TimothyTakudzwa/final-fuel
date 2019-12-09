@@ -5,6 +5,10 @@ import tempfile
 
 from fpdf import FPDF
 # from weasyprint import HTML
+from xhtml2pdf import pisa 
+from io import BytesIO
+from django.template.loader import get_template 
+from django.template import Context
 from pandas import DataFrame
 import pandas as pd
 from django.http import HttpResponse
@@ -37,6 +41,32 @@ from .forms import AllocationForm
 from company.models import FuelUpdate as F_Update
 from django.contrib.auth import get_user_model
 user = get_user_model()
+
+
+class Render:
+    
+    @staticmethod
+    def render(path: str, params: dict):
+        template = get_template(path)
+        html = template.render(params)
+        response = BytesIO()
+        pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), response)
+        if not pdf.err:
+            return HttpResponse(response.getvalue(), content_type='application/pdf')
+        else:
+            return HttpResponse("Error Rendering PDF", status=400)
+
+
+    
+def get_pdf(request):
+    trans = Transaction.objects.all()
+    today = timezone.now()
+    params = {
+        'today': today,
+        'trans': trans,
+        'request': request
+    }
+    return Render.render('users/pdf.html', params)            
 
 
 def account_activate(request):
@@ -242,7 +272,7 @@ def stations(request):
 #@login_required()
 def report_generator(request):
     form = ReportForm()
-    allocations = requests = trans = None
+    allocations = requests = trans = stock = revs = None
     if request.method == "POST":
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
@@ -361,6 +391,28 @@ def export_pdf(request):
 
 
         return redirect('users:report_generator')
+
+def html_to_pdf(request): 
+    data = {'trans': Transaction.objects.all()}
+    template = get_template("users/report.html") 
+    html  = template.render(data)
+    # context = {'pagesize':'A4'}
+    # html = template.render(context) 
+    # result = StringIO() 
+    # pdf = pisa.pisaDocument(StringIO(html), dest=result) 
+    # if not pdf.err: 
+    #     return HttpResponse(result.getvalue(), content_type='application/pdf') 
+    # else: return HttpResponse('Errors')
+    file = open('test.pdf', "w+b")
+    pisaStatus = pisa.CreatePDF(html.encode('utf-8'), dest=file,
+            encoding='utf-8')
+
+    file.seek(0)
+    pdf = file.read()
+    file.close()            
+    return HttpResponse(pdf, 'application/pdf')
+
+
 
 # def generate_pdf(request):
 #     if request.method == "POST":

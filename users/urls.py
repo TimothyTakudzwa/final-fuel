@@ -15,6 +15,7 @@ urlpatterns = [
     path('myaccount/', views.myaccount, name="myaccount"),
     path('depot_staff/', views.depot_staff, name="depot_staff"),
     path('export_pdf/', views.export_pdf, name="export_pdf"),
+    path('get_pdf/', views.get_pdf, name="get_pdf"),
     # path('generate_pdf/', views.generate_pdf, name="generate_pdf"),
     path('account_activate/', views.account_activate, name="account_activate"),
     path('export_csv/', views.export_csv, name="export_csv"),
