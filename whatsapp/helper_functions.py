@@ -3,7 +3,7 @@ import requests
 from validate_email import validate_email
 from .constants import *
 from buyer.views import token_is_send
-from supplier.models import Offer, Transaction, FuelAllocation
+from supplier.models import Offer, Transaction, FuelAllocation, Subsidiaries
 from buyer.models import User, FuelRequest
 from company.models import FuelUpdate
 from django.db.models import Q
@@ -165,7 +165,8 @@ def view_fuel_updates(user, message):
         response_message = 'Which fuel update do you want? \n\n'
         i = 1
         for update in updates:
-            response_message = response_message + str(i) + ". " + "Petrol" + " " + str(update.petrol_quantity) + "L" + " " + "@" + " " + str(update.petrol_price) + " " + "and" + " " + "Diesel" + " " + str(update.diesel_quantity) + " " + "@" + " " + str(update.diesel_price) + '\n'
+            sub = Subsidiaries.objects.filter(id = update.relationship_id).first()
+            response_message = response_message + str(i) + ". " + sub.name + '\n' + "Petrol:" + " " + str(update.petrol_quantity) + " " + "Litres" + "\n" + "Price:" + " " + str(update.petrol_price) + "\n" + "Diesel:" + " " + str(update.diesel_quantity) + " " + "Litres" + "\n" + "Price:" + " " + str(update.diesel_price) + '\n\n'
             user.fuel_updates_ids = user.fuel_updates_ids + str(update.id) + " "
             user.save()
             i += 1        
@@ -173,7 +174,7 @@ def view_fuel_updates(user, message):
         user.save()
     elif user.position == 31:
         list1 = list(user.fuel_updates_ids.split(" "))
-        update_id = list1[int(message) - 1]
+        update_id = list1[int(message)]
         update = FuelUpdate.objects.filter(id = update_id).first()
         my_request = FuelRequest.objects.create(name=user, is_direct_deal=True, last_deal=update_id)
         user.fuel_request = my_request.id
@@ -238,23 +239,41 @@ def view_requests_handler(user, message):
         requests = FuelRequest.objects.filter(wait=True).all()
         response_message = 'Reply with the number of the request to make an offer? \n\n'
         i = 1
-        for req in requests: 
-            response_message = response_message + str(req.id) + ". " + req.fuel_type +''+ str(req.amount) + '\n'
+        for req in requests:
+            fuel = str(req.fuel_type).capitalize()
+            response_message = f'{response_message} {i}. {fuel} {req.amount} litres made on {req.date}'
+            user.fuel_updates_ids = user.fuel_updates_ids + str(req.id)
+            user.save()
             i += 1        
         user.position = 1 
         user.save()
     elif user.position == 1:
+        request_list = list(user.fuel_updates_ids.split(" "))
+        print(request_list)
+        request_id = request_list[int(message)]
         response_message = "How many litres are you offering?"
-        fuel_request = FuelRequest.objects.filter(id=int(message)).first()
+        fuel_request = FuelRequest.objects.filter(id=request_id).first()
         user.fuel_request = fuel_request.id
         user.position = 2
         user.save()
     elif user.position == 2:
         fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
-        Offer.objects.create(quantity=float(message), supplier=user, request=fuel_request)
-        response_message = "At what price per litre?"
-        user.position = 3
-        user.save()
+        amount = fuel_request.amount
+        offer_quantity = float(message)
+        if offer_quantity <= amount:
+            if Offer.objects.filter(request=fuel_request, supplier=user).exists():
+                offer = Offer.objects.filter(request=fuel_request, supplier=user).first()
+                offer.quantity = float(message)
+                offer.save()
+            else:
+                Offer.objects.create(quantity=float(message), supplier=user, request=fuel_request)
+            response_message = "At what price per litre?"
+            user.position = 3
+            user.save()
+        else:
+            response_message = "You an not offer fuel that is more than the requested quantity. Please enter a different fuel quantity."
+            user.position = 1
+            user.save()
     elif user.position == 3:
         fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
         offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
@@ -273,23 +292,36 @@ def view_offers_handler(user, message):
         offers = Offer.objects.filter(supplier=user)
         i = 1
         for offer in offers:
-            response_message = response_message + f'{offer.id}. {offer.request.fuel_type} {offer.quantity}l at {offer.price}'
+            fuel = offer.request.fuel_type.capitalize()
+            response_message = response_message + f'{i}. {fuel} {offer.quantity} litres at {offer.price} made on {offer.date}'
+            user.fuel_updates_ids = user.fuel_updates_ids + str(offer.id)
+            user.save()
             i += 1
         user.position = 1
         user.save()
     elif user.position == 1:
+        offer_list = list(user.fuel_updates_ids.split(" "))
+        print(offer_list)
+        offer_id = offer_list[int(message)]
         response_message = "How many litres are you offering now?"
-        offer = Offer.objects.filter(id=int(message)).first()
+        offer = Offer.objects.filter(id=offer_id).first()
         user.position = 2
         user.fuel_request = offer.id
         user.save()
     elif user.position == 2:
         offer = Offer.objects.filter(id=user.fuel_request).first()
-        offer.quantity = float(message)
-        offer.save()
-        response_message = "At what price per litre?"
-        user.position = 3
-        user.save()
+        request_quantity = offer.request.amount
+        offer_quantity = float(message)
+        if offer_quantity <= request_quantity:
+            offer.quantity = float(message)
+            offer.save()
+            response_message = "At what price per litre?"
+            user.position = 3
+            user.save()
+        else:
+            response_message = "You an not offer fuel that is more than the requested quantity. Please enter a different fuel quantity."
+            user.position = 1
+            user.save()
     elif user.position ==3:
         offer = Offer.objects.filter(id=user.fuel_request).first()
         offer.price = float(message)
@@ -318,6 +350,7 @@ def supplier_handler(request,user,message):
     response_message = ""
     if message.lower() == 'menu':
         user.stage = 'menu'
+        user.fuel_updates_ids = " "
         user.position = 1
         user.save()
         full_name = user.first_name + " " + user.last_name
