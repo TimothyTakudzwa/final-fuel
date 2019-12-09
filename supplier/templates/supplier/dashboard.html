@@ -39,8 +39,8 @@
         Tip 2: you can also add an image using data-image tag
     -->
     <div class="logo">
-      <a href="{%url 'account'%}" class="simple-text logo-normal">
-        <strong>FUEL FINDER</strong>
+      <a href="{%url 'company'%}" class="simple-text logo-normal">
+        <strong>{{request.user.company.name}}</strong>
       </a>
     </div>
       <div class="sidebar-wrapper">
