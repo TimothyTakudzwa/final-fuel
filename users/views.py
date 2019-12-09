@@ -239,10 +239,13 @@ def stations(request):
 
     return render(request, 'users/service_stations.html', {'stations': stations})
 
-#@login_required()
+@login_required()
 def report_generator(request):
     form = ReportForm()
-    allocations = requests = trans = None
+    allocations = requests = trans = stock = None
+    trans = Transaction.objects.filter(supplier__company=request.user.company).all()
+    start_date = "December 1 2019"
+    end_date = "January 1 2019"
     if request.method == "POST":
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
@@ -253,9 +256,6 @@ def report_generator(request):
         if end_date:
             end_date = datetime.strptime(end_date, '%Y-%m-%d')
             end_date = end_date.date()
-        print(f'_______________{report_type}_____________________')
-        # print(f'_______________{type(start_date)}_____________________')
-        # print(f'_______________{end_date}_____________________')
         if request.POST.get('report_type') == 'Stock':
             stock = FuelUpdate.objects.filter(company_id=request.user.company.id).first()
             print(stock)
@@ -290,13 +290,15 @@ def report_generator(request):
         if request.POST.get('report_type') == 'Allocations':
             allocations = FuelRequest.objects.filter(date__range=[start_date, end_date])
         start = start_date
-        end = end_date 
-        return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form,
+        
+        revs = 0
+        return render(request, 'users/reports.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form,
         'start': start, 'end': end, 'revs': revs, 'stock':stock })
 
     show = False
 
-    return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form, 'show':show, 'stock':stock })
+    return render(request, 'users/reports.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form, 
+        'start': start_date, 'end': end_date,'show':show, 'stock':stock })
 
 @login_required()
 def export_pdf(request):
@@ -375,7 +377,7 @@ def export_pdf(request):
 #             data = Transaction.objects.filter(date__range=[start, end])
 
 #             # Rendered
-#             html_string = render_to_string('users/report.html', {'people': people})
+#             html_string = render_to_string('users/reports.html', {'people': people})
 #             html = HTML(string=html_string)
 #             result = html.write_pdf()
 
