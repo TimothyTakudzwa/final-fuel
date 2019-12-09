@@ -20,6 +20,13 @@
                             <h6> Company Depot</h6>
                         </th>
                         <th>
+                            <h6>Depot Address</h6>
+                        </th>
+                        <th>
+                            <h6>Fuel Type</h6>
+                        </th>
+
+                        <th>
                             <h6> Fuel Requested </h6>
                         </th>
                   
@@ -39,33 +46,31 @@
                     {% for transaction in transactions %}
                     <tr>
                         <td>
-                            <b>{{fuel_request.depot}} - {{fuel_request.request_company}}</b>
+                            <b>{{transaction.offer.supplier.company}}</b>
                         </td>
                       
                         <td>
-                            {{fuel_request.delivery_method}}
+                            {{transaction.depot}}
                         </td>
                         <td>
-                            {{fuel_request.payment_method}}
+                            {{transaction.address}}
                         </td>
                         <td class="">
-                            {{fuel_request.fuel_type}}
+                            {{transaction.offer.request.fuel_type}} 
                         </td>
                         <td class="">
-                            {{fuel_request.amount}} Litres
+                            {{transaction.offer.request.amount}} Litres
                         </td>
                         <td class="">
-                             {{fuel_request.date}} -- {{fuel_request.time}}
+                            {{transaction.offer.quantity}} Litres
+                        </td>
+                        <td class="">
+                             {{transaction.offer.date}} -- {{transaction.offer.time}}
                         </td>
                         <td class="text-primary">
-                            {% if fuel_request.has_offers == True%}
-                            <a class="btn btn-facebook btn-sm" href="{% url 'fuel-offers' fuel_request.id %}" >
-                                <i class="material-icons">ev_station</i>View Offers 
+                            <a class="btn btn-facebook btn-sm" href="{% url 'buyer-invoice' transaction.id %}" >
+                                <i class="material-icons">ev_station</i>Download 
                             </a>
-
-                            {% else %}
-                                No Offers yet
-                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

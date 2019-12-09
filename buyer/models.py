@@ -5,9 +5,6 @@ from PIL import Image
 from django.contrib.auth.models import AbstractUser
 from company.models import Company
 
-
-
-
 class User(AbstractUser):
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, null=True)
     fuel_request = models.PositiveIntegerField(default=0)
@@ -19,7 +16,7 @@ class User(AbstractUser):
     image = models.ImageField(default='default.png', upload_to='buyer_profile_pics')
     activated_for_whatsapp = models.BooleanField(default=False)
     subsidiary_id = models.IntegerField(default=0)
-    fuel_updates_ids = models.CharField(max_length=2000, default=0)
+    #fuel_updates_ids = models.CharField(max_length=2000, default=0)
 
 
     def __str__(self):
