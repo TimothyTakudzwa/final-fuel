@@ -11,7 +11,7 @@
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped" id="fuel_updates">
-                <thead class=" text-primary">
+                <thead style="background-color: lightslategray;color: white;">
                     <tr>
                         <th>
                             <h6>Company Name</h6>
@@ -47,42 +47,42 @@
 
                     {% for data in updates %}
                     <tr>
-                        <td class="text-primary">
+                        <td>
                             {{data.company}}
                         </td>
-                        <td class="text-primary">
+                        <td>
                             {{data.depot}}
                         </td>
-                        <td class="text-danger">
+                        <td>
                             {{data.address}}
                         </td>
-                        <td class="text-danger">
+                        <td>
                             {{data.petrol_price}}
                         </td>
                         <td>
                             {{data.diesel_price}}
                         </td>
-                        <td class="text-primary">
+                        <td>
                             {{data.petrol_quantity}}
                         </td>
-                        <td class="text-primary">
+                        <td>
                             {{data.diesel_quantity}}
                         </td>
-                        <td class="text-primary">
+                        <td>
                             {{data.last_updated}}
                         </td>
-                        <td class="text-primary">
+                        <td>
 
-                            <button class="btn btn-facebook btn-sm" data-toggle="modal"
-                                data-target="#make_deal{{data.id}}"> <i class="material-icons">ev_station</i>Deal
+                            <button class="btn btn-primary btn-sm" data-toggle="modal"
+                                data-target="#make_deal{{data.id}}"> <i class="material-icons" style="margin-right: 3px;">ev_station</i>Deal
                             </button>
                         </td>
                     </tr>
                     <div class="modal fade" id="make_deal{{data.id}}" tabindex="-1" role="dialog"
                         aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-notice">
-                            <div class="modal-content">
-                                <div class="modal-header text-center">
+                            <div class="modal-content" style="max-width: 80%;">
+                                <div class="modal-header text-center" style="background-color: #9c27b0;color: white;">
                                     <h5 class="modal-title" id="myModalLabel">Make a deal</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                                         <i class="material-icons">close</i>
@@ -189,7 +189,7 @@
                                             <input type="hidden" value="{{data.id}}" name="company_id" />
                                     </div>
                                     <div class="modal-footer justify-content-center">
-                                        <button type="submit" name="MakeDeal" class="btn btn-info btn-round">Submit
+                                        <button type="submit" name="MakeDeal" class="btn btn-primary ">Submit
                                             Request</button>
                                         </form>
                                     </div>
@@ -202,9 +202,9 @@
 
                 </tbody>
             </table>
-            <div class="col-sm-12"><button class="btn btn-round btn-primary" data-toggle="modal"
+            <div class="col-sm-12"><button class="btn btn-primary" data-toggle="modal"
                     data-target="#create_request" style="margin-left: 40%;"> <i
-                        class="material-icons">local_gas_station</i>Find Fuel</button></div>
+                        class="material-icons" style="margin-right: 5px;">local_gas_station</i>Find Fuel</button></div>
 
         </div>
     </div>
