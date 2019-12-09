@@ -127,7 +127,7 @@ def statistics(request):
     except:
         rating = 0  
    
-    admin_staff = User.objects.filter(company=company).filter(user_type='S_ADMIN').count()
+    admin_staff = User.objects.filter(company=company).filter(user_type='Supplier').count()
     all_staff = User.objects.filter(company=company).count()
     other_staff = all_staff - admin_staff
     clients = []
@@ -172,10 +172,10 @@ def statistics(request):
     #     trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
     # except:
     #     trans = 0    
-    trans = get_transactions_complete_percentage(request.user)
+    trans_complete = get_transactions_complete_percentage(request.user)
     return render(request, 'users/statistics.html', {'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
-     'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'admin_staff': admin_staff,  'other_staff': other_staff })
+     'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'admin_staff': admin_staff,  'other_staff': other_staff, 'trans_complete':trans_complete })
 
 
 @login_required()
