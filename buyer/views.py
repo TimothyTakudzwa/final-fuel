@@ -300,15 +300,23 @@ def reject_offer(request, id):
 def transactions(request):
     buyer = request.user
     transactions = Transaction.objects.filter(buyer=buyer).all()
+    for transaction in transactions:
+        subsidiary = Subsidiaries.objects.filter(id = transaction.supplier.subsidiary_id).first()
+        if subsidiary is not None:
+            transaction.depot = subsidiary.name
+            transaction.address = subsidiary.address
+
     context = {
         'transactions': transactions
     }
 
     return render(request, 'buyer/transactions.html', context=context)
 
-def invoice(request):
+def invoice(request, id):
+    
     buyer = request.user
-    transactions = Transaction.objects.filter(buyer=buyer).all()
+    transactions = Transaction.objects.filter(buyer=buyer, id=id).first()
+    
     context = {
         'transactions': transactions
     }
