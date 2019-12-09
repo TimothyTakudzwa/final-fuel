@@ -1,5 +1,6 @@
 {% extends "supplier/dashboard.html" %}
 {% load static %}
+{% load mathfilters %}
 {% block title %}
 {{title}}
 {% endblock %}
@@ -38,7 +39,7 @@
                                 <td>{{ transaction.offer.request.fuel_type }}</td>
                                 <td>{{ transaction.offer.quantity }}</td>
                                 <td>{{ transaction.offer.price }}</td>
-                                <td>{% widthratio transaction.offer.quantity 1 transaction.offer.price|floatformat:2 %}</td>
+                                <td>{{ transaction.offer.quantity| mul:transaction.offer.price }}</td>
                             </tr>
                             {%endfor%}
                         </tbody>
