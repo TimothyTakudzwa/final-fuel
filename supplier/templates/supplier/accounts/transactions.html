@@ -38,7 +38,7 @@
                                 <td>{{ transaction.offer.request.fuel_type }}</td>
                                 <td>{{ transaction.offer.quantity }}</td>
                                 <td>{{ transaction.offer.price }}</td>
-                                <td>{% widthratio transaction.offer.quantity 1 transaction.offer.price %}</td>
+                                <td>{% widthratio transaction.offer.quantity 1 transaction.offer.price|floatformat:2 %}</td>
                             </tr>
                             {%endfor%}
                         </tbody>
