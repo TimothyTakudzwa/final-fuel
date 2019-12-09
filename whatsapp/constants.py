@@ -113,4 +113,15 @@ To Close this request type *Close*
 Type *Menu* to go back to Menu
 '''
 
+fuel_updates = '''
+Which fuel update do you want
+
+{}. *{}*: 
+*Petrol*: {}
+*Price*: {}
+*Diesel*: {}
+*Price*: {}
+
+'''
+
 payment_methods=['RTGS', 'ECOCASH', 'SWIPE', 'USD']
