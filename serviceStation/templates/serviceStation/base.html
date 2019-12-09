@@ -89,10 +89,13 @@
        <!-- Navbar -->
        <nav class="navbar navbar-expand-lg navbar-absolute fixed-top ">
          <div class="container-fluid">
-           <div class="navbar-wrapper">
-             <a class="navbar-brand" href="#pablo"></a>
-             
-           </div>
+
+            {% if user.activated_for_whatsapp == True %}
+            <a class="btn btn-outline-primary" href="{% url 'activate_whatsapp' %}" style="margin-top: 0; margin-bottom: 0; margin-left: 400px;">Deactivate Whatsapp</a>
+          {% else %}
+            <a class="btn btn-outline-primary" href="{% url 'activate_whatsapp' %}" style="margin-top: 0; margin-bottom: 0; margin-left: 400px;">Activate Whatsapp</a>
+          {% endif %}
+           
            <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
              <span class="sr-only">Toggle navigation</span>
              <span class="navbar-toggler-icon icon-bar"></span>
