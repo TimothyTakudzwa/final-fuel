@@ -158,8 +158,8 @@
                                 <li itemscope="itemscope" id="menu-item-41"
                                     class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home current-menu-ancestor current-menu-parent menu-item-has-children menu-item-41 dropdown nav-item">
                                     <ul role="menu" class="dropdown-menu menu-depth-2nd">
-                                    </ul><a class="oppi_try_for_free oppi_btn_right"
-                                        href="{% url 'home'%}">Return Home</a>
+                                    </ul><a class="oppi_try_for_free oppi_btn_right" href="{% url 'home'%}">Return
+                                        Home</a>
                         </div>
                         <div class="alter_nav mini_cart_exist">
                             <ul class="navbar-nav search_cart">
@@ -199,18 +199,69 @@
                                                         <div class="row">
                                                             <div class="col-md-12 col-sm-12 col-12">
                                                                 <div class="oppi_signup_body">
-                                                                   
+
                                                                     <form method="POST" enctype="multipart/form-data">
                                                                         {% csrf_token %}
                                                                         <fieldset class="form-group">
-                                                                            <legend class="border-bottom mb-4"> Continue Registration </legend>
-                                                                            {{ form|crispy }}
+                                                                            <legend class="border-bottom mb-4"> Continue
+                                                                                Registration </legend>
+                                                                            
+                                                                                <div class="form-group">
+                                                                                    <label>Company Name</label>
+                                                                                    <input list="companies"
+                                                                                        class="form-control" name="company">
+                                                                                    <datalist id="companies">
+                                                                                        {%for company in companies%}
+                                                                                        <option
+                                                                                            value="{{company}}">
+                                                                                        {%endfor%}
+                                                                                    </datalist>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                   
+                                                                                        <label>Company Industry</label>
+                                                                                        <input list="industries"
+                                                                                            class="form-control" name="industry">
+                                                                                            <datalist id="industries">
+                                                                                                    {%for industry in industries%}
+                                                                                                    <option
+                                                                                                        value="{{industry}}">
+                                                                                                    {%endfor%}
+                                                                                            </datalist>
+                                                                                  
+                                                                                </div>
+                                                                           
+                                                                           
+                                                                                <div class="form-group">
+                                                                                        {{ form.image }}
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                        <label>Job Title</label>
+                                                                                        <input list="job"
+                                                                                            class="form-control" name="job">
+                                                                                            <datalist id="job">
+                                                                                                    {%for job in jobs%}
+                                                                                                    <option
+                                                                                                        value="{{job|capfirst  }}"> 
+                                                                                                    {%endfor%}
+                                                                                            </datalist> 
+                                                                                </div>
+                                                                            
+                                                                            
+                                                                                {{ form.password1|as_crispy_field }}
+                                                                                {{ form.password2|as_crispy_field }}
+                                                                            
+                                                                           
                                                                         </fieldset>
+                                                                        
                                                                         <div class="form-group">
-                                                                            <button class="btn btn-outline-info btn-lg btn-block" type="submit">Finish Registration</button>
+                                                                            <button
+                                                                                class="btn btn-outline-info btn-lg btn-block"
+                                                                                type="submit">Finish
+                                                                                Registration</button>
                                                                         </div>
                                                                     </form>
-                                                                   
+
                                                                 </div>
                                                             </div>
                                                         </div>

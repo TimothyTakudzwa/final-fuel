@@ -127,7 +127,7 @@ def statistics(request):
     except:
         rating = 0  
    
-    admin_staff = User.objects.filter(company=company).filter(user_type='S_ADMIN').count()
+    admin_staff = User.objects.filter(company=company).filter(user_type='Supplier').count()
     all_staff = User.objects.filter(company=company).count()
     other_staff = all_staff - admin_staff
     clients = []
@@ -172,10 +172,10 @@ def statistics(request):
     #     trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
     # except:
     #     trans = 0    
-    trans = get_transactions_complete_percentage(request.user)
+    trans_complete = get_transactions_complete_percentage(request.user)
     return render(request, 'users/statistics.html', {'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
-     'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'admin_staff': admin_staff,  'other_staff': other_staff })
+     'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'admin_staff': admin_staff,  'other_staff': other_staff, 'trans_complete':trans_complete })
 
 
 @login_required()
@@ -256,11 +256,12 @@ def report_generator(request):
         print(f'_______________{report_type}_____________________')
         # print(f'_______________{type(start_date)}_____________________')
         # print(f'_______________{end_date}_____________________')
-        if request.POST.get('report_type') == 'stock':
+        if request.POST.get('report_type') == 'Stock':
             stock = FuelUpdate.objects.filter(company_id=request.user.company.id).first()
+            print(stock)
             requests = None; allocations = None; trans = None; revs=None
-        if request.POST.get('report_type') == 'Transactions' or 'Revenue':
-            print('________Im in here_______')
+        if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':
+            print('________Im in here_______m')
             trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier=request.user)
             requests = None; allocations = None; revs=None
 
@@ -295,7 +296,7 @@ def report_generator(request):
 
     show = False
 
-    return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form, 'show':show })
+    return render(request, 'users/report.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form, 'show':show, 'stock':stock })
 
 @login_required()
 def export_pdf(request):

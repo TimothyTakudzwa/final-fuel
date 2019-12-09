@@ -31,6 +31,7 @@ def buyer_handler(request,user,message):
     if message == 'menu':
         user.stage = 'menu'
         user.position = 1
+        user.fuel_updates_ids = " "
         user.save()
         full_name = user.first_name + " " + user.last_name
         response_message = buyer_menu.format(full_name)
@@ -164,13 +165,17 @@ def view_fuel_updates(user, message):
         response_message = 'Which fuel update do you want? \n\n'
         i = 1
         for update in updates:
-            response_message = response_message + str(update.id) + ". " + "Petrol" + str(update.petrol_quantity) + "@" + str(update.petrol_price) + "and" + "Diesel" + str(update.diesel_quantity) + "@" + str(update.diesel_price) + '\n'
+            response_message = response_message + str(i) + ". " + "Petrol" + " " + str(update.petrol_quantity) + "L" + " " + "@" + " " + str(update.petrol_price) + " " + "and" + " " + "Diesel" + " " + str(update.diesel_quantity) + " " + "@" + " " + str(update.diesel_price) + '\n'
+            user.fuel_updates_ids = user.fuel_updates_ids + str(update.id) + " "
+            user.save()
             i += 1        
         user.position = 31 
         user.save()
     elif user.position == 31:
-        #update = FuelUpdate.objects.filter(id = int(message)).first()
-        my_request = FuelRequest.objects.create(name=user, is_direct_deal=True)
+        list1 = list(user.fuel_updates_ids.split(" "))
+        update_id = list1[int(message) - 1]
+        update = FuelUpdate.objects.filter(id = update_id).first()
+        my_request = FuelRequest.objects.create(name=user, is_direct_deal=True, last_deal=update_id)
         user.fuel_request = my_request.id
         response_message = "Which type of fuel do you want\n\n1. Petrol\n2. Diesel"
         user.position = 32
@@ -195,7 +200,7 @@ def view_fuel_updates(user, message):
         user.save()
         response_message = 'What is your payment method.\n\n1. ZWL(Cash)\n2. Ecocash\n3. RTGS(Swipe)/Transfer\n4. USD'
     elif user.position == 34:
-        choice = payment_methods[int(message)]
+        choice = payment_methods[int(message) - 1]
         my_request = FuelRequest.objects.get(id=user.fuel_request)
         my_request.payment_method = choice
         my_request.save()
@@ -206,12 +211,23 @@ def view_fuel_updates(user, message):
         my_request = FuelRequest.objects.get(id=user.fuel_request)
         if message == "1":
             my_request.delivery_method = "SELF COLLECTION"
+            my_request.save()
+            response_message = 'made request successfully'
         elif message == "2":
             my_request.delivery_method = "DELIVERY"
+            my_request.save()
+            response_message = "what is your location"
+            user.position = 36
+            user.save()
         else:
             return "Incorrect Choice"        
+        
+    elif user.position == 36:
+        my_request = FuelRequest.objects.get(id=user.fuel_request)
+        my_request.delivery_address = message
         my_request.save()
         response_message = 'made request successfully'
+    
    
     return response_message
 
@@ -464,7 +480,7 @@ def service_station_handler(request,user,message):
 def update_petrol(user, message):
     if user.position == 1:
         update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
-        response_message = "The last update of Petrol quantity is" + " " + str(update.petrol_quantity) + "." + "How many litres of petrol left?"
+        response_message = "The last update of Petrol quantity is" + " " + str(update.petrol_quantity) + "L" + "." + " " + "How many litres of petrol left?"
         user.position = 40
         user.save()
     elif user.position == 40:
@@ -478,7 +494,7 @@ def update_petrol(user, message):
 def update_diesel(user, message):
     if user.position == 1:
         update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
-        response_message = "The last update of Diesel quantity is" + " " + str(update.diesel_quantity) + "." + "How many litres of diesel left?"
+        response_message = "The last update of Diesel quantity is" + " " + str(update.diesel_quantity) + "L" + "." + " " + "How many litres of diesel left?"
         user.position = 50
         user.save()
     elif user.position == 50:

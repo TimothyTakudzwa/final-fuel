@@ -7,22 +7,28 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+OPTIONS= [
+('BUYER', ' Corporate Buyer'),
+('SUPPLIER', 'Fuel Supplier'),
+]
+
 
 class BuyerRegisterForm(forms.ModelForm):
     first_name = forms.CharField() 
     last_name = forms.CharField()
     email = forms.EmailField()
-    phone_number = forms.CharField()
-    
-
+    phone_number = forms.CharField(initial=263)
+    user_type = forms.CharField(label='User Type', widget=forms.Select(choices=OPTIONS))
     class Meta: 
         model = User
-        fields = [ 'first_name', 'last_name', 'email', 'phone_number']
+        fields = [ 'first_name', 'last_name', 'email', 'phone_number', 'user_type']
 
-OPTIONS= [
-('BUYER', 'Buyer'),
-('SUPPLIER', 'supplier'),
-]
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        if User.objects.filter(email=data).count() > 0:
+            raise forms.ValidationError("We have a user with this user email-id")
+        return data
+    
 
 
 class SupplierUserForm(forms.Form):
@@ -39,7 +45,6 @@ class PasswordChange(PasswordChangeForm):
     
 class BuyerUpdateForm(UserCreationForm):
     company_id = forms.CharField(label='Company', widget=forms.Select(choices=COMPANY_CHOICES))
-    user_type = forms.CharField(label='User Type', widget=forms.Select(choices=OPTIONS))
     company_position = forms.CharField()
     class Meta:
         model = User   

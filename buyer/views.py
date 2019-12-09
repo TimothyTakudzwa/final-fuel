@@ -47,7 +47,7 @@ def token_is_send(request, user):
     url = f'https://{domain}/verification/{token}/{user.id}'
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
-    message = f"Dear {user.first_name}  {user.last_name}, please complete signup here : \n {url} \n. "            
+    message = f"Dear {user.first_name}  {user.last_name}. \nYour username is: {user.username}\n\nPlease complete signup here : \n {url} \n. "            
     try:
         print(message)
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
@@ -70,31 +70,29 @@ def register(request):
             last_name = form.cleaned_data['last_name']
             email = form.cleaned_data['email']
             phone_number = form.cleaned_data['phone_number']
+            user_type = form.cleaned_data['user_type']
             full_name = first_name + " " + last_name
             i = 0
             username = initial_username = first_name[0] + last_name
             while  User.objects.filter(username=username.lower()).exists():
                 username = initial_username + str(i) 
                 i+=1
-            user = User.objects.create(email=email, username=username.lower(),  phone_number=phone_number, first_name=first_name, last_name=last_name, is_active=False)        
+            user = User.objects.create(email=email, username=username.lower(), user_type=user_type,  phone_number=phone_number.replace(" ", ""), first_name=first_name, last_name=last_name, is_active=False)        
             if token_is_send(request, user):
-                messages.success(request, f"{full_name} Registered Successfully")   
+                # messages.success(request, f"{full_name} Registered Successfully")   
                 if user.is_active:
                     send_message(user.phone_number, "You have been registered succesfully")
                     user.stage = 'requesting'
                     user.save()               
                 return render(request, 'buyer/email_send.html')
             else:
-                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+                # messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
                 return render(request, 'buyer/email_send.html')
         
-        else:
-            msg = "Error in Information Submitted"
-            messages.error(request, msg)
-
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Account created for {username}')
-            return redirect('buyer-login')
+        else:            
+            msg = "Error!!! We have a user with this user email-id"
+            messages.error(request, msg)            
+            return redirect('buyer-register')
     else:
         form = BuyerRegisterForm
     

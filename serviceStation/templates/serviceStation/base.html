@@ -67,12 +67,7 @@
                 <p>Audit Trail</p>
               </a>
             </li>  
-            <li class="nav-item ">
-                <a class="nav-link" href="{% url 'serviceStation:activate_whatsapp' %}">
-                  <i class="material-icons">forum</i>
-                  <p>Activate WhatsApp</p>
-                </a>
-              </li> 
+           
           <li class="nav-item {% if request.path == '/serviceStation/myaccount/' %} active {% endif %}">
             <a class="nav-link" href="{% url 'serviceStation:myaccount' %}">
               <i class="material-icons">person</i>
@@ -96,6 +91,7 @@
          <div class="container-fluid">
            <div class="navbar-wrapper">
              <a class="navbar-brand" href="#pablo"></a>
+             
            </div>
            <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
              <span class="sr-only">Toggle navigation</span>
@@ -114,6 +110,13 @@
                </div>
              </form>
              <ul class="navbar-nav">
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'serviceStation:activate_whatsapp' %}">
+                      <i class="material-icons">forum</i>
+                      <p>Activate WhatsApp</p>
+                    </a>
+                  </li> 
            
                <li class="nav-item dropdown">
                  <a class="nav-link" href="#pablo" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
