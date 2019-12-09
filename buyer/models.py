@@ -16,7 +16,7 @@ class User(AbstractUser):
     image = models.ImageField(default='default.png', upload_to='buyer_profile_pics')
     activated_for_whatsapp = models.BooleanField(default=False)
     subsidiary_id = models.IntegerField(default=0)
-    #fuel_updates_ids = models.CharField(max_length=2000, default=0)
+    fuel_updates_ids = models.CharField(max_length=2000, default=0)
 
 
     def __str__(self):

@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from .models import  FuelRequest
 from company.models import Company
 from django.contrib.auth import get_user_model
+from supplier.models import Subsidiaries
 
 User = get_user_model()
 from .models import  FuelRequest, Offer
@@ -74,6 +75,12 @@ class FuelRequestForm(forms.ModelForm):
     class Meta:
         model = FuelRequest
         fields = ['amount',  'payment_method', 'delivery_method', 'fuel_type']
+
+class PostForm(forms.ModelForm):
+
+    class Meta:
+        model = Subsidiaries
+        fields = ['logo']
         
 
 class FuelUpdateForm(forms.ModelForm):
