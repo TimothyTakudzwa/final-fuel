@@ -6,10 +6,11 @@
 {% block body %}
 <script>
     $(document).ready(function () {
-        var socket = io.connect('http://159.65.66.59:5000/new_offer');
+        var socket = io.connect('https://dreamhub.co.zw/new_offer');
         console.log("Got to this part ")
         console.log(socket)
         socket.on('new_offer', function (msg) {
+            console.log("Got to this part ")
             $('.new_alert').hide()
             var txt1 = " <h4 class='alert-heading'>New Request</h4><hr>" + msg.notification +  "<hr><small>Click to View </small></hr>";   
             $("#new_message").empty(txt1);   
@@ -65,14 +66,11 @@
                         <thead style="background-color: lightslategray; color:white;">
                             <tr>
                                 <th style="color: white;"></th>
-                                <th style="color: white;"> Requested by </th>
+                                <th style="color: white;"> Name </th>
                                 <th style="color: white;">Quantity(l) </th>
                                 <th style="color: white;">Fuel Type</th>
                                 <th style="color: white;">Payment Method</th>
                                 <th style="color: white;">Delivery Method</th>
-                                <th style="color: white;">Delivery Address</th>
-                                <th style="color: white;">Storage</th>
-                                <th style="color: white;">Equipments</th>
                                 <th style="color: white;">My Offer</th>
                                 <th style="color: white;">Action</th>
                             </tr>
@@ -84,11 +82,8 @@
                                 <td>{{ request.name }}</td>
                                 <td>{{ request.amount }}</td>
                                 <td>{{ request.fuel_type }}</td>
-                                <td>{% if request.cash %}CASH &nbsp;{% if request.ecocash %}ECOCASH &nbsp;{% if request.usd %}USD &nbsp;{% if request.swipe %}SWIPE{% endif %}{% endif %}{% endif %}{% endif %}</td>
+                                <td>{{ request.payment_method }}</td>
                                 <td>{{ request.delivery_method }}</td>
-                                <td>{{ request.delivery_address }}</td>
-                                <td>{{ request.storage_tanks }}</td>
-                                <td>{% if request.pump_required %}Pump &nbsp;{% if request.dipping_stick_required %}Stick &nbsp;{% if request.meter_required %}Meter{% endif %}{% endif %}{% endif %}</td>
                                 <td>{{ request.my_offer }}</td>
                                 {% if request.my_offer %}
                                 <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal"
@@ -260,7 +255,7 @@ aria-hidden="true">
 <!-- end notice modal -->
 
                             <!-- Edit offer Modal -->
-                            <div class="modal fade" id="edit_offer_{{request.id}}" tabindex="-1" role="dialog"
+                          <!-- <div class="modal fade" id="edit_offer_{{request.id}}" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -294,7 +289,7 @@ aria-hidden="true">
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
                             {%endfor%}
                         </tbody>
                     </table>

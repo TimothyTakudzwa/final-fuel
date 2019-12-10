@@ -4,6 +4,7 @@
 
 <head>
   <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
   <link rel="icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png"
         sizes="32x32" />
     <link rel="icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png"
@@ -51,6 +52,12 @@
             <a class="nav-link" href="{%url 'fuel-request'%}">
               <i class="material-icons">swap_vertical_circle</i>
               <p>Requests</p>
+            </a>
+          </li>
+          <li class="nav-item {% if request.path == '/my_offers/' %} active {% endif %} ">
+            <a class="nav-link" href="{%url 'my_offers'%}">
+              <i class="material-icons">local_gas_station</i>
+              <p>Offers</p>
             </a>
           </li>
           <li class="nav-item {% if request.path == '/fuel_update/' %} active {% endif %} ">
