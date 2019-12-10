@@ -1,7 +1,7 @@
 {% load static %}
 
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
- <link href="{% static 'finder/assets/css/custom.css' %}" rel="stylesheet" />
+<link href="{% static 'finder/assets/css/custom.css' %}" rel="stylesheet" />
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
@@ -22,7 +22,7 @@
                 <div class="row">
                     <div class="col">
                         <a target="_blank" href="https://lobianijs.com">
-                            <img src="http://lobianijs.com/lobiadmin/version/1.0/ajax/img/logo/lobiadmin-logo-text-64.png" data-holder-rendered="true" />
+                            <img src="{% static 'finder/assets/img/intelog.jpg' %}" data-holder-rendered="true" />
                             </a>
                     </div>
                     <div class="col company-details">
@@ -55,74 +55,65 @@
                 <table border="0" cellspacing="0" cellpadding="0">
                     <thead>
                         <tr>
-                            <th>#</th>
                             <th class="text-left">DESCRIPTION</th>
-                            <th class="text-right">HOUR PRICE</th>
-                            <th class="text-right">HOURS</th>
+                            <th class="text-right">FUEL TYPE</th>
+                            <th class="text-right">FUEL REQUESTED</th>
+                            <th class="text-right">FUEL OFFERED</th>
+                            <th class="text-right">PAYMENT METHOD</th>
+                            <th class="text-right">REQUESTED ON</th>
+                            <th class="text-right">PRICE/LITRE</th>
                             <th class="text-right">TOTAL</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="no">04</td>
                             <td class="text-left"><h3>
-                                <a target="_blank" href="https://www.youtube.com/channel/UC_UMEcP_kF0z4E6KbxCpV1w">
-                                Youtube channel
+                                Confirmation Code: 
                                 </a>
                                 </h3>
-                               <a target="_blank" href="https://www.youtube.com/channel/UC_UMEcP_kF0z4E6KbxCpV1w">
-                                   Useful videos
-                               </a> 
-                               to improve your Javascript skills. Subscribe and stay tuned :)
-                            </td>
-                            <td class="unit">$0.00</td>
-                            <td class="qty">100</td>
-                            <td class="total">$0.00</td>
+                            Issued by Fuel Finder on behalf of {{transaction.offer.supplier.company}} to the {{request.user.company.name}} that indicates the 
+                            quantities and costs of the fuel. Payment terms are indicate as tabulated.</td>
+                            <td class="unit">{{transaction.offer.request.fuel_type}} </td>
+                            <td class="unit">{{transaction.offer.request.amount}} Litres</td>
+                            <td class="qty">{{transaction.offer.quantity}} Litres</td>
+                            <td class="unit">--</td>
+                            <td class="unit">{{transaction.offer.request.date}}</td>
+                            <td class="unit">{{transaction.offer.price}}</td>
+                            <td class="unit">${{total}}</td>
                         </tr>
-                        <tr>
-                            <td class="no">01</td>
-                            <td class="text-left"><h3>Website Design</h3>Creating a recognizable design solution based on the company's existing visual identity</td>
-                            <td class="unit">$40.00</td>
-                            <td class="qty">30</td>
-                            <td class="total">$1,200.00</td>
-                        </tr>
-                        <tr>
-                            <td class="no">02</td>
-                            <td class="text-left"><h3>Website Development</h3>Developing a Content Management System-based Website</td>
-                            <td class="unit">$40.00</td>
-                            <td class="qty">80</td>
-                            <td class="total">$3,200.00</td>
-                        </tr>
-                        <tr>
-                            <td class="no">03</td>
-                            <td class="text-left"><h3>Search Engines Optimization</h3>Optimize the site for search engines (SEO)</td>
-                            <td class="unit">$40.00</td>
-                            <td class="qty">20</td>
-                            <td class="total">$800.00</td>
-                        </tr>
+                        
                     </tbody>
                     <tfoot>
                         <tr>
+                            <td></td>
+                            <td colspan="2"></td>
                             <td colspan="2"></td>
                             <td colspan="2">SUBTOTAL</td>
-                            <td>$5,200.00</td>
+                            <td>${{total}}</td>
                         </tr>
                         <tr>
+                            <td></td>
+                            <td colspan="2"></td>
                             <td colspan="2"></td>
                             <td colspan="2">TAX 25%</td>
-                            <td>$1,300.00</td>
+                            <td>$25.00</td>
                         </tr>
                         <tr>
+                            <td></td>
+                            
+                            <td colspan="2"></td>
                             <td colspan="2"></td>
                             <td colspan="2">GRAND TOTAL</td>
-                            <td>$6,500.00</td>
+                            <td>${{g_total}} </td>
                         </tr>
                     </tfoot>
                 </table>
+                <br/><br/>
+                <hr/>
                 <div class="thanks">Thank you!</div>
                 <div class="notices">
                     <div>NOTICE:</div>
-                    <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
+                    <div class="notice">The invoice is valid only for 2 days after the date of issue</div>
                 </div>
             </main>
             <footer>
