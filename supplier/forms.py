@@ -51,6 +51,14 @@ class UserUpdateForm(forms.ModelForm):
         model = User
         fields = ['first_name', 'last_name', 'email', 'username']
 
+class CreateCompany(forms.ModelForm):
+    company_name = forms.CharField()
+    address = forms.CharField()
+    company_name = forms.CharField() 
+
+    class Meta:
+        model = Company
+        fields = ['company_name', 'address', 'company_name']
 
 # class ProfileUpdateForm(forms.ModelForm):
 #     class Meta:

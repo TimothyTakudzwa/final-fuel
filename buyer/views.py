@@ -18,6 +18,7 @@ from supplier.models import Offer, Subsidiaries, Transaction
 from .constants import sample_data
 from .forms import (BuyerRegisterForm, BuyerUpdateForm, FuelRequestForm,
                     PasswordChangeForm)
+
 from .models import FuelRequest
 from buyer.utils import render_to_pdf
 
@@ -324,5 +325,22 @@ def invoice(request, id):
     }
     pdf = render_to_pdf('buyer/invoice.html',context)
     return HttpResponse(pdf, content_type='application/pdf')
+
+
+def view_invoice(request, id):
+    buyer = request.user
+    transaction = Transaction.objects.filter(buyer=buyer, id=id).all()
+    for transaction in transaction:
+        subsidiary = Subsidiaries.objects.filter(id = transaction.supplier.subsidiary_id).first()
+        if subsidiary is not None:
+            transaction.depot = subsidiary.name
+            transaction.address = subsidiary.address
+            print('l am here')
+            print(transaction.depot)
+    
+    context = {
+        'transaction': transaction
+    }
+    return render(request, 'buyer/invoice2.html', context)
 
     

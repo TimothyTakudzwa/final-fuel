@@ -15,6 +15,7 @@ urlpatterns = [
     path('allocated_quantity/', views.allocated_quantity, name='allocated_quantity'),
     path('activate_whatsapp/', views.activate_whatsapp, name='activate_whatsapp'),
     path('company/', views.company, name='company'),
-    path('change_password/', views.change_password, name='change_password')
+    path('change_password/', views.change_password, name='change_password'),
+    path('create-company/<int:id>', views.create_company, name='create_company')
 
 ]
