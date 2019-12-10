@@ -59,7 +59,7 @@ class Offer(models.Model):
     ecocash = models.BooleanField(default=False)
     swipe = models.BooleanField(default=False)
     usd = models.BooleanField(default=False)
-    delivery_method = models.CharField(max_length=200)
+    delivery_method = models.CharField(max_length=200, default='')
     collection_address = models.CharField(max_length=200, default='', null=True)
     pump_available = models.BooleanField(default=False)
     dipping_stick_available = models.BooleanField(default=False)
