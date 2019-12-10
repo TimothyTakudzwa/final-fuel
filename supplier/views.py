@@ -13,7 +13,7 @@ from buyer.forms import BuyerUpdateForm
 from buyer.models import Company
 from users.models import AuditTrail
 from .forms import PasswordChange, RegistrationForm, \
-    RegistrationEmailForm, UserUpdateForm, FuelRequestForm, CreateCompany
+    RegistrationEmailForm, UserUpdateForm, FuelRequestForm, CreateCompany, OfferForm
 from .models import FuelRequest, Transaction, TokenAuthentication, Offer, Subsidiaries, FuelAllocation
 from company.models import Company, FuelUpdate
 from notification.models import Notification
@@ -70,7 +70,7 @@ def fuel_request(request):
     fuel = FuelUpdate.objects.filter(relationship_id=request.user.id).first()
     for buyer_request in requests:
         if Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).exists():
-            offer = Offer.objects.get(supplier_id=request.user, request_id=buyer_request)
+            offer = Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).first()
             buyer_request.my_offer = f'{offer.quantity}ltrs @ ${offer.price}'
             buyer_request.offer_price = offer.price
             buyer_request.offer_quantity = offer.quantity
@@ -160,7 +160,7 @@ def offer(request, id):
             offer.cash = True if request.POST.get('cash') == "True" else False
             offer.ecocash = True if request.POST.get('ecocash') == "True" else False
             offer.swipe = True if request.POST.get('swipe') == "True" else False
-            offer.delivery_method = form.cleaned_data['delivery_method']
+            offer.delivery_method = request.POST.get('delivery_method')
             offer.collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
             offer.pump_available = True if request.POST.get('pump_required') == "True" else False
             offer.dipping_stick_available = True if request.POST.get('usd') == "True" else False
@@ -168,7 +168,7 @@ def offer(request, id):
             offer.save()
             
             messages.success(request, 'Offer uploaded successfully')
-            action = f"{request.user}  made an offer of {quantity}L @ {price} to a request made by {fuel_request.name.username}"
+            action = f"{request.user}  made an offer of {offer}L @ {request.POST.get('price')} to a request made by {fuel_request.name.username}"
             service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
             reference = 'offers'
             reference_id = fuel_request.id

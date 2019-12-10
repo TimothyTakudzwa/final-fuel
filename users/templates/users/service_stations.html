@@ -41,10 +41,17 @@
                                         <lable>Name</lable>
                                         <input type="text" name="name" class="form-control" value=" " />
                                     </div>
-                                   
                                     <div class="form-group">
-                                        <lable>Location</lable>
-                                        <input type="text" name="address" class="form-control" value=" " />
+                                            {{sub_create_form.city|as_crispy_field}}
+                                          </div>
+                              
+                                    <div class="form-group">
+                                            {{sub_create_form.location|as_crispy_field}}
+                                    </div>
+
+                                    <div class="form-group" name="cbd" id=cbd1>
+                                            <lable>Location</lable>
+                                            <input type="text" name="location" class="form-control" value="CBD" />    
                                     </div>
 
                                     <div class="form-group">
@@ -115,7 +122,9 @@
                         <th style="color:white;">
                             Type
                         </th>
-
+                        <th style="color:white;">
+                             City
+                            </th>
                         <th style="color:white;">
                             Location
                         </th>
@@ -143,7 +152,8 @@
                             {% else  %}
                             <td>Depot</td>
                             {% endif %}
-                            <td>{{station.address}}</td>
+                            <td>{{station.city}}</td>
+                            <td>{{station.location}}</td>
                             <td>{{station.destination_bank}}</td>
                             <td>{{station.account_number}}</td>
                             <td>{{station.opening_time}}</td>

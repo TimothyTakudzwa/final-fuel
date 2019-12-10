@@ -245,7 +245,8 @@ def stations(request):
     stations = Subsidiaries.objects.all()
     if request.method == 'POST':
         name = request.POST['name']
-        address = request.POST['address']
+        city = request.POST['city']
+        location = request.POST['location']
         destination_bank = request.POST['destination_bank']
         account_number = request.POST['account_number']
         is_depot = request.POST['is_depot']
@@ -255,7 +256,7 @@ def stations(request):
         usd = request.POST['usd']
         swipe = request.POST['swipe']
         ecocash = request.POST['ecocash']
-        sub = Subsidiaries.objects.create(company=request.user.company,name=name,address=address,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)    
+        sub = Subsidiaries.objects.create(account_number=account_number,destination_bank=destination_bank,city=city,location=location,company=request.user.company,name=name,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)    
         if request.POST['is_depot'] == True:
             sub_type = 'Depot'  
         else:
