@@ -186,8 +186,17 @@ def edit_offer(request, id):
         new_offer = int(request.POST.get('quantity'))
         request_quantity = offer.request.amount
         if new_offer <= request_quantity:
-            offer.price = request.POST.get('price')
+            offer.price = request.POST.get('price')      
             offer.quantity = request.POST.get('quantity')
+            offer.usd = True if request.POST.get('usd') == "True" else False
+            offer.cash = True if request.POST.get('cash') == "True" else False
+            offer.ecocash = True if request.POST.get('ecocash') == "True" else False
+            offer.swipe = True if request.POST.get('swipe') == "True" else False
+            offer.delivery_method = request.POST.get('delivery_method')
+            offer.collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+            offer.pump_available = True if request.POST.get('pump_required') == "True" else False
+            offer.dipping_stick_available = True if request.POST.get('usd') == "True" else False
+            offer.meter_available = True if request.POST.get('usd') == "True" else False
             offer.save()
             messages.success(request, 'Offer successfully updated')
             return redirect('fuel-request')
