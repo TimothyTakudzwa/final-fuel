@@ -65,6 +65,7 @@
                         <thead style="background-color: lightslategray; color:white;">
                             <tr>
                                 <th style="color: white;"></th>
+                                <th style="color: white;">Date</th>
                                 <th style="color: white;">Buyer</th>
                                 <th style="color: white;">Quantity(l) </th>
                                 <th style="color: white;">Fuel</th>
@@ -80,6 +81,7 @@
                             {% for request in requests %}
                             <tr>
                                 <td></td>
+                                <td>{{ request.date }}</td>
                                 <td>{{ request.name }}</td>
                                 <td>{{ request.amount }}</td>
                                 <td>{{ request.fuel_type }}</td>
