@@ -6,16 +6,20 @@
 {% block body %}
 
 
-<div class="row">
+<div class=>
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
             <h1 class="display-3">Fuel Requests</h1>
-            <p class="lead">
+            <p class="lead" style="position: absolute;right: 0;bottom: 0">
                 
                 {% if user.activated_for_whatsapp == True %}
-                <a class="btn btn-outline-danger" href="{% url 'activate_whatsapp' %}" >Deactivate Whatsapp</a>
+                <a class="btn btn-primary btn-sm" href="{% url 'activate_whatsapp' %}">Activate Whatsapp
+                    <i class="material-icons" style="margin-left: 2px;color: greenyellow;padding-top: 39px;">settings_power</i>
+                </a>
                 {% else %}
-                <a class="btn btn-outline-primary" href="{% url 'activate_whatsapp' %}" >Activate Whatsapp</a>
+                <a class="btn btn-primary btn-sm" href="{% url 'activate_whatsapp' %}">Activate Whatsapp
+                    <i class="material-icons" style="margin-left: 2px;color: #ffaa78;padding-top: 39px;">settings_power</i>
+                </a>
                 {% endif %}
           
             </p>
@@ -61,7 +65,7 @@
                             </tr>
                             
                                 <!-- Make offer Modal -->
-                        <div class="modal fade" id="add_offer_{{request.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                       <!-- <div class="modal fade" id="add_offer_{{request.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -90,7 +94,131 @@
                                     </div>
                                 </div>
                                 </div>
+                            </div>-->
+
+
+                            <!-- notice modal -->
+<div class="modal fade modal-xl" id="add_offer_{{request.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-notice">
+    <div class="modal-content">
+        <div class="modal-header text-center">
+            <h5 class="modal-title" id="myModalLabel">Make an offer</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <i class="material-icons">close</i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form method="POST" action="{% url 'supplier:supplier' request.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <lable>Fuel Type</lable>
+                    <input type="text" name="fuel_type" class="form-control" value="{{request.fuel_type}}" disabled/>
+                </div>
+
+                <div class="form-group">
+                    <lable>Fuel Quantity</lable>
+                    <input type="text" name="quantity" class="form-control" value="{{request.amount}}" />
+                </div>
+                <div class="form-group">
+                    <lable>Fuel Price</lable>
+                    <input type="text" name="price" class="form-control" value="{{request.price}}" />
+                </div>
+                <label class="form-group">Select Payment Method</label>
+                <div class="col-sm-12 row">
+                    <div class="togglebutton form-group col">
+                        <label>
+
+                            <input type="checkbox" name="cash" id="cash">
+
+                            <span class="toggle"></span>
+                            Cash
+                        </label>
+                    </div>
+                    <div class="togglebutton form-group col">
+                        <label>
+                            <input type="checkbox" name="ecocash" id="ecocash">
+                            <span class="toggle"></span>
+                            Ecocash
+                        </label>
+                    </div>
+                    <div class="togglebutton form-group col">
+                        <label>
+                            <input type="checkbox" name="swipe" id="swipe">
+                            <span class="toggle"></span>
+                            Swipe
+                        </label>
+                    </div>
+                    <div class="togglebutton form-group col">
+                        <label>
+                            <input type="checkbox" name="usd" id="usd">
+                            <span class="toggle"></span>
+                            USD
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label>Pick Up Method</label>
+                    <select id="delivery_method" name="delivery_method" class="form-control">
+                        <option value='SELF COLLECTION'>Self Collection</option>
+                        <option value='DELIVERY'>Delivery</option>
+                    </select>
+                </div>
+
+                <div class="form-group" name='choices' id='choices'>
+                    <label>Collection Address</label>
+                    <div class="row form-group">                            
+                            <div class="togglebutton form-group col">
+                              <label for="">Street Number</label>
+                              <input type="text" class="form-control" name="s_number" id="" aria-describedby="helpId" placeholder="">
+                              
                             </div>
+                            <div class="togglebutton form-group col">
+                              <label for="">Street Name</label>
+                              <input type="text" class="form-control" name="s_name" id="" aria-describedby="helpId" placeholder="">
+                              
+                            </div>
+                            <div class="togglebutton form-group col">
+                              <label for="">Location/Town</label>
+                              <input type="text" class="form-control" name="s_town" id="" aria-describedby="helpId" placeholder="">
+                             
+                            </div>
+                        
+                    </div>
+                    <label>Required Equipments</label>
+                    <div class="row">
+                        <div class="col">
+                            <input class="form-control-md" type="checkbox" value='False' id="pump_available"
+                                name="pump_available">
+                            <label for="pump_available">Pump </label>
+                            
+                        </div>
+                        <div class="col">
+                            <input class="form-control-md" type="checkbox" value="False" id="dipping_stick_available"
+                                name="dipping_stick_available">
+                            <label for="dipping_stick_available">Dipping Stick </label>
+                        </div>
+
+                        <div class="col">
+                            <input class="form-control-md" type="checkbox" value="False" id="meter_available"
+                                name="meter_available">
+                            <label for="meter_available">Meter</label>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+        <div class="modal-footer justify-content-center">
+            <button type="submit" name="MakeOffer" class="btn btn-info btn-round">Make Offer</button>
+
+        </div>
+        </form>
+    </div>
+</div>
+</div>
+<!-- end notice modal -->
 
                             <!-- Edit offer Modal -->
                         <div class="modal fade" id="edit_offer_{{request.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

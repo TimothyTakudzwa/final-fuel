@@ -305,40 +305,54 @@ def view_requests_handler(user, message):
         user.save()
     elif user.position == 1:
         request_list = list(user.fuel_updates_ids.split(" "))
-        print(request_list)
-        request_id = request_list[int(message)]
-        response_message = "How many litres are you offering?"
-        fuel_request = FuelRequest.objects.filter(id=request_id).first()
-        user.fuel_request = fuel_request.id
-        user.position = 2
-        user.save()
+        try:
+            request_id = request_list[int(message)]
+            response_message = "How many litres are you offering?"
+            fuel_request = FuelRequest.objects.filter(id=request_id).first()
+            user.fuel_request = fuel_request.id
+            user.position = 2
+            user.save()
+        except:
+            response_message = "Incorrect choice! Please enter a valid choice"
+            user.position = 1
+            user.save()
     elif user.position == 2:
         fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
         amount = fuel_request.amount
-        offer_quantity = float(message)
-        if offer_quantity <= amount:
-            if Offer.objects.filter(request=fuel_request, supplier=user).exists():
-                offer = Offer.objects.filter(request=fuel_request, supplier=user).first()
-                offer.quantity = float(message)
-                offer.save()
+        try:
+            offer_quantity = float(message)
+            if offer_quantity <= amount:
+                if Offer.objects.filter(request=fuel_request, supplier=user).exists():
+                    offer = Offer.objects.filter(request=fuel_request, supplier=user).first()
+                    offer.quantity = float(message)
+                    offer.save()
+                else:
+                    Offer.objects.create(quantity=float(message), supplier=user, request=fuel_request)
+                response_message = "At what price per litre?"
+                user.position = 3
+                user.save()
             else:
-                Offer.objects.create(quantity=float(message), supplier=user, request=fuel_request)
-            response_message = "At what price per litre?"
-            user.position = 3
-            user.save()
-        else:
-            response_message = "You an not offer fuel that is more than the requested quantity. Please enter a different fuel quantity."
-            user.position = 1
+                response_message = "You can not offer fuel that is more than the requested quantity. Please enter a different fuel quantity."
+                user.position = 2
+                user.save()
+        except:
+            response_message = "Incorrect input! Please re-enter the number of litres you are offering"
+            user.position = 2
             user.save()
     elif user.position == 3:
         fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
         offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
-        offer.price = float(message)
-        offer.save()
-        response_message = "Offer successfully send! Press *menu* to go back"
-        user.stage = "menu"
-        user.position = 0
-        user.save()
+        try:
+            offer.price = float(message)
+            offer.save()
+            response_message = "Offer successfully send! Type *menu* to go back"
+            user.stage = "menu"
+            user.position = 0
+            user.save()
+        except:
+            response_message = "I expected a number or decimal not a string. Please enter a valid price"
+            user.position = 3
+            user.save()
     return response_message
 
 
@@ -357,35 +371,49 @@ def view_offers_handler(user, message):
         user.save()
     elif user.position == 1:
         offer_list = list(user.fuel_updates_ids.split(" "))
-        print(offer_list)
-        offer_id = offer_list[int(message)]
-        response_message = "How many litres are you offering now?"
-        offer = Offer.objects.filter(id=offer_id).first()
-        user.position = 2
-        user.fuel_request = offer.id
-        user.save()
+        try:
+            offer_id = offer_list[int(message)]
+            response_message = "How many litres are you offering now?"
+            offer = Offer.objects.filter(id=offer_id).first()
+            user.position = 2
+            user.fuel_request = offer.id
+            user.save()
+        except:
+            response_message = "Invalid option! Please enter a valid option."
+            user.position = 1
+            user.save()
     elif user.position == 2:
         offer = Offer.objects.filter(id=user.fuel_request).first()
         request_quantity = offer.request.amount
-        offer_quantity = float(message)
-        if offer_quantity <= request_quantity:
-            offer.quantity = float(message)
-            offer.save()
-            response_message = "At what price per litre?"
-            user.position = 3
-            user.save()
-        else:
-            response_message = "You an not offer fuel that is more than the requested quantity. Please enter a different fuel quantity."
-            user.position = 1
+        try:
+            offer_quantity = float(message)
+            if offer_quantity <= request_quantity:
+                offer.quantity = float(message)
+                offer.save()
+                response_message = "At what price per litre?"
+                user.position = 3
+                user.save()
+            else:
+                response_message = "You can not offer fuel that is more than the requested quantity. Please enter a different fuel quantity."
+                user.position = 2
+                user.save()
+        except:
+            response_message = "Expected a number! Please re-enter a valid quantity."
+            user.position = 2
             user.save()
     elif user.position ==3:
         offer = Offer.objects.filter(id=user.fuel_request).first()
-        offer.price = float(message)
-        offer.save()
-        response_message = "You have successfully updated your offer"
-        user.stage = "menu"
-        user.position = 0
-        user.save()
+        try:
+            offer.price = float(message)
+            offer.save()
+            response_message = "You have successfully updated your offer"
+            user.stage = "menu"
+            user.position = 0
+            user.save()
+        except:
+            response_message = "Expected a number! Please re-enter a valid price."
+            user.position = 3
+            user.save()
     return response_message
 
 

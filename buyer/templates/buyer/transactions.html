@@ -3,15 +3,24 @@
 
 {% block body%}
 
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-3">Transactions</h1>
+        
+        <hr class="my-2">
+        
+    </div>
+</div>
+
 <div class="card">
     <div class="card-header card-header-primary">
-        <h4 class="card-title "> My Fuel Transactions </h4>
-        <p class="card-category"> Here is a list of all transactions you made</p>
+        <h4 class="card-title "> {{user.company|title}}'s Fuel Transactions </h4>
+        
     </div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped" id="fuel_updates">
-                <thead class=" text-primary">
+                <thead style="background-color: lightslategray;color: white;">
                     <tr>
                         <th>
                             <h6>Company Name</h6>
@@ -67,9 +76,9 @@
                         <td class="">
                              {{transaction.offer.date}} -- {{transaction.offer.time}}
                         </td>
-                        <td class="text-primary">
-                            <a class="btn btn-facebook btn-sm" href="{% url 'view-invoice' transaction.id %}" >
-                                <i class="material-icons">ev_station</i>Download 
+                        <td>
+                            <a class="btn btn-primary btn-sm" href="{% url 'view-invoice' transaction.id %}" >
+                                Download 
                             </a>
                         </td>
                     </tr>

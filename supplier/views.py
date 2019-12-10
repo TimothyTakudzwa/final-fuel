@@ -68,7 +68,6 @@ def account(request):
 def fuel_request(request):
     requests = FuelRequest.objects.filter(date=today)
     fuel = FuelUpdate.objects.filter(relationship_id=request.user.id).first()
-    fuel_stocks = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
     for buyer_request in requests:
         if Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).exists():
             offer = Offer.objects.get(supplier_id=request.user, request_id=buyer_request)
@@ -86,7 +85,7 @@ def fuel_request(request):
                 buyer_request.price = fuel.diesel_price
         else:
             buyer_request.price = 0
-    return render(request, 'supplier/accounts/fuel_request.html', {'requests':requests, 'fuel_stocks':fuel_stocks})
+    return render(request, 'supplier/accounts/fuel_request.html', {'requests':requests})
 
 
 @login_required()
@@ -134,7 +133,7 @@ def fuel_update(request):
             fuel_update.swipe = request.POST['swipe']
             fuel_update.usd = request.POST['usd']
             relationship_id = request.user.subsidiary_id
-            FuelUpdate.objects.create(relationship_id=relationship_id, sub_type=sub_type,payment_methods=payment_methods, petrol_quantity=petrol_quantity, petrol_price=petrol_price, diesel_quantity=diesel_quantity, diesel_price=diesel_price)
+            FuelUpdate.objects.create(relationship_id=relationship_id, sub_type=sub_type, petrol_quantity=petrol_quantity, petrol_price=petrol_price, diesel_quantity=diesel_quantity, diesel_price=diesel_price)
             messages.success(request, 'Quantities uploaded successfully')
             return redirect('fuel_update')
         print(f"--------------------------ndipe object {updates}----------------------")
@@ -143,6 +142,7 @@ def fuel_update(request):
 
 
 def offer(request, id):
+    form = OfferForm(request.POST)
     if request.method == "POST":
         fuel_request = FuelRequest.objects.get(id=id)
 
@@ -150,11 +150,22 @@ def offer(request, id):
         amount = fuel_request.amount
 
         if offer <= amount:
-            price = request.POST.get('price')
-            quantity = request.POST.get('quantity')
-            fuel_request = FuelRequest.objects.get(id=id)
-
-            Offer.objects.create(price=price, quantity=quantity, supplier=request.user, request=fuel_request)
+            offer = Offer()
+            offer.supplier = request.user
+            offer.request = fuel_request
+            offer.price = request.POST.get('price')      
+            offer.quantity = request.POST.get('quantity')
+            offer.fuel_type = request.POST.get('fuel_type')
+            offer.usd = True if request.POST.get('usd') == "True" else False
+            offer.cash = True if request.POST.get('cash') == "True" else False
+            offer.ecocash = True if request.POST.get('ecocash') == "True" else False
+            offer.swipe = True if request.POST.get('swipe') == "True" else False
+            offer.delivery_method = form.cleaned_data['delivery_method']
+            offer.collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+            offer.pump_available = True if request.POST.get('pump_required') == "True" else False
+            offer.dipping_stick_available = True if request.POST.get('usd') == "True" else False
+            offer.meter_available = True if request.POST.get('usd') == "True" else False
+            offer.save()
             
             messages.success(request, 'Offer uploaded successfully')
             action = f"{request.user}  made an offer of {quantity}L @ {price} to a request made by {fuel_request.name.username}"
@@ -273,8 +284,10 @@ def verification(request, token, user_id):
                         user.save()
                     else:
                         user.is_active = False
-                        user.save()                        
-                        return redirect('create_company', pk=user.id)
+                        user.save()
+                        
+                        return redirect('supplier:create_company', id=user.id)
+                    
             else:
                
                 return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
@@ -289,9 +302,11 @@ def verification(request, token, user_id):
 
 def create_company(request, id):
     form = CreateCompany()
-    render(request, 'supplier/accounts/create_company.html', {'form': form })
+    user = User.objects.filter(id=id).first()
+    form.initial['company_name'] = user.company.name
+    return render(request, 'supplier/accounts/create_company.html', {'form': form })
 
-
+    
 def company(request):
     compan = Company.objects.filter(id = request.user.company.id).first()
     num_of_subsidiaries = Subsidiaries.objects.filter(company=request.user.company).count()

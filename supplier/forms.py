@@ -10,6 +10,8 @@ User = get_user_model()
 from .models import  FuelRequest, Offer
 from .constants import Harare
 from company.models import Company, FuelUpdate
+from buyer.constants2 import *
+from buyer.constants import *
 
 User = get_user_model()
 FUEL_CHOICES=[('PETROL', 'PETROL'), ('DIESEL', 'DIESEL'),]
@@ -59,18 +61,7 @@ class CreateCompany(forms.ModelForm):
 
     class Meta:
         model = Company
-        fields = ['company_name', 'address', 'company_name']
-
-# class ProfileUpdateForm(forms.ModelForm):
-#     class Meta:
-#         model = Profile
-#         fields = ['phone']
-
-
-# class ProfilePictureUpdateForm(forms.ModelForm):
-#     class Meta:
-#         model = Profile
-#         fields = ['picture']
+        fields = ['company_name', 'address', 'company_name', 'logo', 'iban_number', 'license_number']
 
 
 class FuelRequestForm(forms.ModelForm):
@@ -83,7 +74,7 @@ class FuelRequestForm(forms.ModelForm):
     
     class Meta:
         model = FuelRequest
-        fields = ['amount',  'payment_method', 'delivery_method', 'fuel_type']
+        fields = ['amount', 'delivery_method', 'fuel_type']
 
 class PostForm(forms.ModelForm):
 
@@ -108,7 +99,6 @@ class FuelUpdateForm(forms.ModelForm):
     ]
 
     fuel_type = forms.CharField(label='Fuel Type', widget=forms.Select(choices=OPTIONS))
-    payment_method = forms.CharField(label='Payment Method', widget=forms.Select(choices=PAYING_CHOICES))
 
 
 
@@ -148,7 +138,6 @@ class StockLevelForm(forms.Form):
     petrol_price = forms.CharField(label='Petrol Price')
     diesel_quantity = forms.CharField(label='Diesel Quantity')
     diesel_price = forms.CharField(label='Diesel Price')
-    payment_methods = forms.CharField(label='Payment Method', widget=forms.Select(choices=PAYING_CHOICES))
     queue_length = forms.CharField(label='Queue Length', widget=forms.Select(choices=(('short', 'Short'), ('medium', 'Medium Long'), ('long', 'Long'))))
 
     #class Meta:
@@ -173,9 +162,13 @@ def create_sub(request):
     }
 
 class OfferForm(forms.ModelForm):
-    class Meta:
+    delivery_method = forms.CharField(label='Delivery Method', widget=forms.Select(choices=DELIVERY_OPTIONS))
+    fuel_type = forms.CharField(label='Fuel Type', widget=forms.Select(choices=FUEL_CHOICES))
+    quantity = forms.IntegerField(label='Quantity')
+
+    class Meta: 
         model = Offer
-        fields = ['quantity', 'price']
+        fields = ['fuel_type','quantity', 'delivery_method','pump_available', 'dipping_stick_available']
 
 class EditOfferForm(forms.ModelForm):
     class Meta:
@@ -188,7 +181,6 @@ class StockForm(forms.Form):
     petrol_price = forms.CharField(label='Petrol Price')
     diesel_quantity = forms.CharField(label='Diesel Quantity')
     diesel_price = forms.CharField(label='Diesel Price')
-    payment_methods = forms.CharField(label='Payment Method',widget=forms.Select(choices=PAYING_CHOICES))
 
 
 def stock_form(request):
