@@ -267,7 +267,7 @@
                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
                                        <div class="modal-dialog" role="document">
                                            <div class="modal-content">
-                                               <div class="modal-header">
+                                               <div class="modal-header" style="background-color: #9c27b0;color: white;">
        
                                                    <h5 class="modal-title" id="exampleModalLabel">Edit Prices</h5>
                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -325,7 +325,7 @@
         aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header" style="background-color: #9c27b0;color: white;">
               <h5 class="modal-title" id="exampleModalLabel">Update Petrol Quantity</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -370,7 +370,7 @@
       aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header" style="background-color: #9c27b0;color: white;">
             <h5 class="modal-title" id="exampleModalLabel">Update Diesel Quantity</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -488,7 +488,7 @@
                            <td>{{alloc.diesel_price}}</td>
                            <td>{{alloc.petrol_quantity}}</td>
                            <td>{{alloc.petrol_price}}</td>
-                           <td>{%if alloc.cash%}Cash {% else%} {%endif%} {%if alloc.usd%}USD {% else%} {%endif%} {%if alloc.ecocash%}Ecocash {% else%} {%endif%} {%if alloc.swipe%}Swipe {% else%} {%endif%}</td>
+                           <td>{%if alloc.cash%}Cash {% else%} {%endif%} {%if alloc.usd%}USD {% else%} {%endif%} {%if alloc.ecocash%}Ecocash {% else%} {%endif%} {%if alloc.swipe%}<i class="fab fa-cc-visa"></i> {% else%} {%endif%}</td>
                         
                         </tr>
 
