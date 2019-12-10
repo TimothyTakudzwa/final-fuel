@@ -82,7 +82,7 @@ class FuelRequestForm(forms.ModelForm):
     
     class Meta:
         model = FuelRequest
-        fields = ['amount',  'payment_method', 'delivery_method', 'fuel_type']
+        fields = ['amount', 'delivery_method', 'fuel_type']
 
 class PostForm(forms.ModelForm):
 
@@ -99,7 +99,6 @@ class FuelUpdateForm(forms.ModelForm):
     ]
 
     fuel_type = forms.CharField(label='Fuel Type', widget=forms.Select(choices=OPTIONS))
-    payment_method = forms.CharField(label='Payment Method', widget=forms.Select(choices=PAYING_CHOICES))
 
 
 
@@ -139,7 +138,6 @@ class StockLevelForm(forms.Form):
     petrol_price = forms.CharField(label='Petrol Price')
     diesel_quantity = forms.CharField(label='Diesel Quantity')
     diesel_price = forms.CharField(label='Diesel Price')
-    payment_methods = forms.CharField(label='Payment Method', widget=forms.Select(choices=PAYING_CHOICES))
     queue_length = forms.CharField(label='Queue Length', widget=forms.Select(choices=(('short', 'Short'), ('medium', 'Medium Long'), ('long', 'Long'))))
 
     #class Meta:
@@ -162,9 +160,13 @@ def create_sub(request):
     }
 
 class OfferForm(forms.ModelForm):
-    class Meta:
-        model = Offer
-        fields = ['quantity', 'price']
+    delivery_method = forms.CharField(label='Delivery Method', widget=forms.Select(choices=DELIVERY_OPTIONS))
+    fuel_type = forms.CharField(label='Fuel Type', widget=forms.Select(choices=FUEL_CHOICES))
+    quantity = forms.IntegerField(label='Quantity')
+
+    class Meta: 
+        model = FuelRequest
+        fields = ['fuel_type','quantity', 'delivery_method','pump_available', 'dipping_stick_available']
 
 class EditOfferForm(forms.ModelForm):
     class Meta:
@@ -177,7 +179,6 @@ class StockForm(forms.Form):
     petrol_price = forms.CharField(label='Petrol Price')
     diesel_quantity = forms.CharField(label='Diesel Quantity')
     diesel_price = forms.CharField(label='Diesel Price')
-    payment_methods = forms.CharField(label='Payment Method',widget=forms.Select(choices=PAYING_CHOICES))
 
 
 def stock_form(request):
