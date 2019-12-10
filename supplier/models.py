@@ -3,6 +3,7 @@ from PIL import Image
 from buyer.models import FuelRequest, User
 from company.models import Company, FuelUpdate
 from buyer.constants import *
+from .constants import *
 from buyer.constants2 import *
 
 STATUS_CHOICES = (('Open','OPEN'),('Closed','CLOSED'),('Offloading','Offloading'))
@@ -11,7 +12,9 @@ class Subsidiaries(models.Model):
     # ADD CLOSING TIME, PAYMENT METHOD 
     company = models.ForeignKey(Company,on_delete=models.CASCADE)
     name = models.CharField(max_length=200, default='')
-    address = models.CharField(max_length=200, help_text='Harare, Livingstone Street')    
+    address = models.CharField(max_length=200, help_text='Harare, Livingstone Street')   
+    city = models.CharField(max_length=200, default='', choices=Zimbabwean_Towns)
+    location = models.CharField(max_length=200, default='', choices='')
     has_fuel = models.BooleanField(default=False)    
     is_depot = models.BooleanField(default=False)    
     opening_time = models.CharField(max_length=100, default='08:00')
@@ -59,7 +62,7 @@ class Offer(models.Model):
     ecocash = models.BooleanField(default=False)
     swipe = models.BooleanField(default=False)
     usd = models.BooleanField(default=False)
-    delivery_method = models.CharField(max_length=200)
+    delivery_method = models.CharField(max_length=200, default='')
     collection_address = models.CharField(max_length=200, default='', null=True)
     pump_available = models.BooleanField(default=False)
     dipping_stick_available = models.BooleanField(default=False)
