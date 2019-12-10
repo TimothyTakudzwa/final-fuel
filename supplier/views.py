@@ -168,7 +168,7 @@ def offer(request, id):
             offer.save()
             
             messages.success(request, 'Offer uploaded successfully')
-            action = f"{request.user}  made an offer of {quantity}L @ {price} to a request made by {fuel_request.name.username}"
+            action = f"{request.user}  made an offer of {offer}L @ {request.POST.get('price')} to a request made by {fuel_request.name.username}"
             service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
             reference = 'offers'
             reference_id = fuel_request.id
