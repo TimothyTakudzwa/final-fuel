@@ -140,6 +140,12 @@ def allocation_update(request,id):
                 Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
                 return redirect('users:allocate')
             else:
+                FuelAllocation.objects.create(petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['petrol_quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=fuel_update.relationship_id)
+                service_station = Subsidiaries.objects.filter(id=fuel_update.relationship_id).first()
+                reference = 'fuel allocation'
+                reference_id = fuel_update.id
+                action = f"You have allocated petrol quantity of {int(request.POST['petrol_quantity'])}L @ {fuel_update.petrol_price} "
+                Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
                 messages.warning(request, 'Please go to Depot or Station staff to assign a station representative before you allocate fuel again')
                 return redirect('users:allocate')
            
@@ -738,6 +744,13 @@ def allocate_diesel(request, id):
                 Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
                 return redirect('users:allocate')
             else:
+                FuelAllocation.objects.create(diesel_price=diesel_update.diesel_price,diesel_quantity=request.POST['diesel_quantity'],sub_type=diesel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=diesel_update.relationship_id)
+                
+                service_station = Subsidiaries.objects.filter(id=diesel_update.relationship_id).first()
+                reference = 'fuel allocation'
+                reference_id = diesel_update.id
+                action = f"You have allocated diesel quantity of {int(request.POST['diesel_quantity'])}L @ {diesel_update.diesel_price} "
+                Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
                 messages.warning(request, 'Please go to Depot or Station staff to assign a station representative before you allocate fuel again')
                 return redirect('users:allocate')
 
