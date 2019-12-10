@@ -6,7 +6,7 @@
 {% block body %}
 <script>
     $(document).ready(function () {
-        var socket = io.connect('https://' + document.domain + ':5000/new_offer');
+        var socket = io.connect('https://fuelfinderzim.com/flask_notifier/new_offer');
         console.log("Got to this part ")
         console.log(socket)
         socket.on('new_offer', function (msg) {
