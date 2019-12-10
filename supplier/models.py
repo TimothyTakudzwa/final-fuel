@@ -3,6 +3,7 @@ from PIL import Image
 from buyer.models import FuelRequest, User
 from company.models import Company, FuelUpdate
 from buyer.constants import *
+from buyer.constants2 import *
 
 STATUS_CHOICES = (('Open','OPEN'),('Closed','CLOSED'),('Offloading','Offloading'))
 
@@ -48,16 +49,25 @@ class FuelAllocation(models.Model):
 
 
 class Offer(models.Model):
+    date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True)
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     supplier = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='offer')
     request = models.ForeignKey(FuelRequest, on_delete=models.DO_NOTHING, related_name='request')
+    cash = models.BooleanField(default=False)
+    ecocash = models.BooleanField(default=False)
+    swipe = models.BooleanField(default=False)
+    usd = models.BooleanField(default=False)
+    delivery_method = models.CharField(max_length=200)
+    collection_address = models.CharField(max_length=200, default='', null=True)
+    pump_available = models.BooleanField(default=False)
+    dipping_stick_available = models.BooleanField(default=False)
+    meter_available = models.BooleanField(default=False)
     declined = models.BooleanField(default=False)
-    date = models.DateField(auto_now_add=True)
-    time = models.TimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['quantity']
+        ordering = ['date', 'time']
 
 
 class TokenAuthentication(models.Model):
