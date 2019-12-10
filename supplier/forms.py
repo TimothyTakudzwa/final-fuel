@@ -5,9 +5,10 @@ from .models import  FuelRequest
 from company.models import Company
 from django.contrib.auth import get_user_model
 from supplier.models import Subsidiaries
-
+from .constants import *
 User = get_user_model()
 from .models import  FuelRequest, Offer
+from .constants import Harare
 from company.models import Company, FuelUpdate
 
 User = get_user_model()
@@ -89,6 +90,14 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Subsidiaries
         fields = ['logo']
+
+class SubForm(forms.ModelForm):
+    city = forms.CharField(label='City', widget=forms.Select(choices=Zimbabwean_Towns))
+
+    class Meta:
+        model = Subsidiaries
+        fields = ['city','location']
+        
         
 
 class FuelUpdateForm(forms.ModelForm):
@@ -154,6 +163,8 @@ class SubsidiaryForm(forms.Form):
     usd = forms.CharField(label='Accepts USD ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
     swipe = forms.CharField(label='Accepts Swipe ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
     ecocash = forms.CharField(label='Accepts Ecocash ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
+    city = forms.CharField(label='City', widget=forms.Select(choices=Zimbabwean_Towns))
+    location = forms.CharField(label='Location', widget=forms.Select(choices=Harare))
     
 
 def create_sub(request):
