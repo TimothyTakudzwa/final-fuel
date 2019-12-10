@@ -493,7 +493,7 @@
                            <td>{{alloc.diesel_price}}</td>
                            <td>{{alloc.petrol_quantity}}</td>
                            <td>{{alloc.petrol_price}}</td>
-                           <td>{%if alloc.cash%}Cash {% else%} {%endif%} {%if alloc.usd%}USD {% else%} {%endif%} {%if alloc.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash">{% else%} {%endif%} {%if alloc.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
+                           <td>{%if alloc.cash%}<i class="fa fa-dollar"></i> {% else%} {%endif%} {%if alloc.usd%}USD {% else%} {%endif%} {%if alloc.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px">{% else%} {%endif%} {%if alloc.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
                         
                         </tr>
 
