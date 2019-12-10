@@ -18,7 +18,7 @@ from supplier.models import Offer, Subsidiaries, Transaction
 from .constants import sample_data
 from .forms import (BuyerRegisterForm, BuyerUpdateForm, FuelRequestForm,
                     PasswordChangeForm)
-
+from supplier.forms import CreateCompany
 from .models import FuelRequest
 from buyer.utils import render_to_pdf
 
@@ -171,7 +171,7 @@ def fuel_finder(request):
         form = FuelRequestForm(request.POST)
         if form.is_valid():
             amount = form.cleaned_data['amount']
-            payment_method = form.cleaned_data['payment_method']
+            #payment_method = form.cleaned_data['payment_method']
             delivery_method = form.cleaned_data['delivery_method']
             fuel_type = form.cleaned_data['fuel_type']
             print(f"===================={request.POST.get('company_id')}--------------------  ")
@@ -179,7 +179,7 @@ def fuel_finder(request):
             fuel_request.name = request.user       
             fuel_request.amount = amount
             fuel_request.fuel_type = fuel_type
-            fuel_request.payment_method = payment_method
+            #fuel_request.payment_method = payment_method
             fuel_request.delivery_method = delivery_method
             fuel_request.wait = True
             fuel_request.save()
