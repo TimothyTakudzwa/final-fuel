@@ -321,3 +321,8 @@ def company(request):
     num_of_subsidiaries = Subsidiaries.objects.filter(company=request.user.company).count()
     fuel_capacity = FuelUpdate.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()   
     return render(request, 'supplier/accounts/company.html', {'compan': compan, 'num_of_subsidiaries': num_of_subsidiaries, 'fuel_capacity': fuel_capacity})
+
+
+def my_offers(request):
+    offers = Offer.objects.filter(supplier=request.user).all()
+    return render(request, 'supplier/accounts/my_offers.html', {'offers':offers})

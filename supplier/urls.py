@@ -11,6 +11,7 @@ urlpatterns = [
     path('edit_offer/<int:id>', views.edit_offer, name="edit_offer"),
     path('account/', views.account, name='account'),
     path('fuel_update/', views.fuel_update, name='fuel_update'),
+    path('my_offers/', views.my_offers, name='my_offers'),
     path('transaction/', views.transaction, name='transaction'),
     path('allocated_quantity/', views.allocated_quantity, name='allocated_quantity'),
     path('activate_whatsapp/', views.activate_whatsapp, name='activate_whatsapp'),
