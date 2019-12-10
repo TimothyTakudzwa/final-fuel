@@ -337,9 +337,15 @@ def view_invoice(request, id):
             transaction.address = subsidiary.address
             print('l am here')
             print(transaction.depot)
+
+    total = transaction.offer.quantity + transaction.offer.price
+    print(total)
+    g_total = total + 25
     
     context = {
-        'transaction': transaction
+        'transaction': transaction,
+        'total': total,
+        'g_total': g_total
     }
     return render(request, 'buyer/invoice2.html', context)
 
