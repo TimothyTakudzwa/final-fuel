@@ -70,7 +70,7 @@
                        <td>{{company_capacity.diesel_price}}</td>
                        <td>{{company_capacity.petrol_quantity}}</td>
                        <td>{{company_capacity.petrol_price}}</td>
-                       <td>{%if company_capacity.cash%}Cash {% else%} {%endif%} {%if company_capacity.usd%}USD {% else%} {%endif%} {%if company_capacity.ecocash%}Ecocash {% else%} {%endif%} {%if company_capacity.swipe%}Swipe {% else%} {%endif%}</td>
+                       <td>{%if alloc.cash%}<i class="fa fa-dollar"></i> {% else%} {%endif%} {%if alloc.usd%}USD {% else%} {%endif%} {%if alloc.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px">{% else%} {%endif%} {%if alloc.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
                        <td>
                           <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#company_petrol{{company_capacity.id}}">Update Petrol Capacity</button>
                           <button class="btn btn-warning btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#company_diesel{{company_capacity.id}}">Update Diesel Capacity</button>
@@ -256,7 +256,7 @@
                             <!--<td>{{allocate.petrol_quantity}}</td>-->
                            <td>{{allocate.petrol_quantity}} {% if allocate.petrol_quantity < 1000 %} <i class="material-icons text-danger" >warning</i>{% endif %}</td>
                            <td>{{allocate.petrol_price}}</td>
-                           <td>{%if allocate.cash%}Cash {% else%} {%endif%} {%if allocate.usd%}USD {% else%} {%endif%} {%if allocate.ecocash%}Ecocash {% else%} {%endif%} {%if allocate.swipe%}Swipe {% else%} {%endif%}</td>
+                           <td>{%if alloc.cash%}<i class="fa fa-dollar"></i> {% else%} {%endif%} {%if alloc.usd%}USD {% else%} {%endif%} {%if alloc.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px">{% else%} {%endif%} {%if alloc.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
                            <td>
                              <div class = "btn-group">
                              <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#petrol{{allocate.id}}">Allocate Petrol</button>
