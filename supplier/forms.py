@@ -156,7 +156,7 @@ class OfferForm(forms.ModelForm):
     quantity = forms.IntegerField(label='Quantity')
 
     class Meta: 
-        model = FuelRequest
+        model = Offer
         fields = ['fuel_type','quantity', 'delivery_method','pump_available', 'dipping_stick_available']
 
 class EditOfferForm(forms.ModelForm):
