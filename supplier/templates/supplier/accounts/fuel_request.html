@@ -10,12 +10,16 @@
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
             <h1 class="display-3">Fuel Requests</h1>
-            <p class="lead">
+            <p class="lead" style="position: absolute;right: 0;bottom: 0">
                 
                 {% if user.activated_for_whatsapp == True %}
-                <a class="btn btn-outline-danger" href="{% url 'activate_whatsapp' %}" >Deactivate Whatsapp</a>
+                <a class="btn btn-primary btn-sm" href="{% url 'activate_whatsapp' %}">Activate Whatsapp
+                    <i class="material-icons" style="margin-left: 2px;color: greenyellow;padding-top: 39px;">settings_power</i>
+                </a>
                 {% else %}
-                <a class="btn btn-outline-primary" href="{% url 'activate_whatsapp' %}" >Activate Whatsapp</a>
+                <a class="btn btn-primary btn-sm" href="{% url 'activate_whatsapp' %}">Activate Whatsapp
+                    <i class="material-icons" style="margin-left: 2px;color: #ffaa78;padding-top: 39px;">settings_power</i>
+                </a>
                 {% endif %}
           
             </p>

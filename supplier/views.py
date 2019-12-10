@@ -68,7 +68,6 @@ def account(request):
 def fuel_request(request):
     requests = FuelRequest.objects.filter(date=today)
     fuel = FuelUpdate.objects.filter(relationship_id=request.user.id).first()
-    fuel_stocks = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
     for buyer_request in requests:
         if Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).exists():
             offer = Offer.objects.get(supplier_id=request.user, request_id=buyer_request)
@@ -86,7 +85,7 @@ def fuel_request(request):
                 buyer_request.price = fuel.diesel_price
         else:
             buyer_request.price = 0
-    return render(request, 'supplier/accounts/fuel_request.html', {'requests':requests, 'fuel_stocks':fuel_stocks})
+    return render(request, 'supplier/accounts/fuel_request.html', {'requests':requests})
 
 
 @login_required()
@@ -285,8 +284,10 @@ def verification(request, token, user_id):
                         user.save()
                     else:
                         user.is_active = False
-                        user.save()                        
-                        return redirect('create_company', pk=user.id)
+                        user.save()
+                        
+                        return redirect('supplier:create_company', id=user.id)
+                    
             else:
                
                 return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
@@ -301,9 +302,11 @@ def verification(request, token, user_id):
 
 def create_company(request, id):
     form = CreateCompany()
-    render(request, 'supplier/accounts/create_company.html', {'form': form })
+    user = User.objects.filter(id=id).first()
+    form.initial['company_name'] = user.company.name
+    return render(request, 'supplier/accounts/create_company.html', {'form': form })
 
-
+    
 def company(request):
     compan = Company.objects.filter(id = request.user.company.id).first()
     num_of_subsidiaries = Subsidiaries.objects.filter(company=request.user.company).count()
