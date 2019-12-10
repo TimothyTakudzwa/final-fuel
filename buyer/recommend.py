@@ -27,7 +27,7 @@ def recommend(fuel_request):
             supplier_profile = Subsidiaries.objects.get(id=key)
             ratings = SupplierRating.objects.filter(id =1).first()
             total_rating = 0          
-            if ratings is None:
+            if ratings is not None:
                 for rating in ratings:
                     total_rating += rating.rating  
                 scoreboard[key] = scoreboard[key] + (total_rating * 0.4)
@@ -47,6 +47,6 @@ def recommend(fuel_request):
         offer.save()
         response_message = "Here here"
 
-        return offer.id, response_message
+        return offer.id
 
 
