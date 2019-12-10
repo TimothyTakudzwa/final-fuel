@@ -97,18 +97,32 @@ def requests_handler(user, message):
         user.save()
         response_message = "*Please select delivery method*\n\n1. Pick Up\n2. Delivery"       
     elif user.position == 5: 
-        if message == "1":
-            delivery_method = "SELF COLLECTION"
-        elif message == "2":
-            delivery_method = "DELIVERY"
-        else:
-            return "Incorrect Choice"        
         fuel_request = FuelRequest.objects.get(id=user.fuel_request)
-        fuel_request.delivery_method = delivery_method
+        if message == "1":
+            fuel_request.delivery_method = "SELF COLLECTION"
+            fuel_request.save()
+            user.position = 6 
+            user.save()
+            response_message = 'What is your payment method.\n\n1. ZWL(Cash)\n2. Ecocash\n3. RTGS(Swipe)/Transfer\n4. USD'
+            
+        elif message == "2":
+            fuel_request.delivery_method = "DELIVERY"
+            fuel_request.save()
+            response_message = "what is your location"
+            user.position = 70 
+            user.save()
+        
+        else:
+            return "Incorrect Choice"   
+
+    elif user.position == 70:
+        fuel_request = FuelRequest.objects.get(id=user.fuel_request)
+        fuel_request.delivery_address = message
         fuel_request.save()
         user.position = 6 
         user.save()
         response_message = 'What is your payment method.\n\n1. ZWL(Cash)\n2. Ecocash\n3. RTGS(Swipe)/Transfer\n4. USD'
+          
     elif user.position == 6:
         try:
             choice = payment_methods[int(message)]
@@ -117,14 +131,56 @@ def requests_handler(user, message):
         fuel_request = FuelRequest.objects.get(id=user.fuel_request)
         fuel_request.payment_method = choice
         fuel_request.save()
-        response = recommend(fuel_request)
-        if response == False:
-            pass
-        else:
-            offer = Offer.objects.filter(id=response).first()
-            response_message = suggested_choice.format(offer.supplier.company.name, offer.request.fuel_type, offer.quantity, offer.price, offer.id)
+        user.position = 7
+        user.save()
+        response_message = 'Please choose between the following:? \n\n1. Wait for Offers\n2. Get System Generated'
+
+    elif user.position == 7:
+        fuel_request = FuelRequest.objects.get(id=user.fuel_request)
+        if message == "1":
+            fuel_request.wait = True
+            fuel_request.save()
+            response_message = 'Request made successfully! Please wait for offers'
+            
+        elif message == "2":
+            response = recommend(fuel_request)
+            if response == False:
+                response_message = 'Oops!!! Could not get best supplier for you, please type *1* to wait for offers'
+            else:
+                offer = Offer.objects.filter(id=response).first()
+                response_message = suggested_choice.format(offer.supplier.company.name, offer.request.fuel_type, offer.quantity, offer.price, offer.id)
+                user.position = 71
+                user.save()
         
-        response_message = suggested_choice
+        else:
+            return "Incorrect Choice"  
+
+    elif user.position == 71:
+        if 'accept' in message.lower():
+            digits = [int(s) for s in message.split() if s.isdigit()]
+            offer_id = int(digits[0])
+            accepted_offer = Offer.objects.filter(id = offer_id).first()
+            if accepted_offer is not None:
+                offer = accepted_offer
+                Transaction.objects.create(buyer=user,offer=offer,is_complete=True,supplier=offer.supplier)
+                response_message = 'Transaction is complete'
+            else:
+                response_message = 'oops!! something went wrong during processing of your request, please type *Wait* to wait for offers'
+                user.position = 72
+                user.save()
+        elif 'wait' in message.lower():
+            fuel_request = FuelRequest.objects.get(id=user.fuel_request)
+            fuel_request.wait = True
+            fuel_request.save()
+            response_message = 'Request made successfully! Please wait for offers'
+
+        else:
+            response_message = 'oops!! something went wrong during processing of your request, please type *Wait* to wait for offers or *Menu* to go back to main menu'
+            user.position = 72
+            user.save()
+
+
+
     return response_message
 
 
