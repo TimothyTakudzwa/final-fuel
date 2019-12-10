@@ -9,6 +9,8 @@ from supplier.models import Subsidiaries
 User = get_user_model()
 from .models import  FuelRequest, Offer
 from company.models import Company, FuelUpdate
+from buyer.constants2 import *
+from buyer.constants import *
 
 User = get_user_model()
 FUEL_CHOICES=[('PETROL', 'PETROL'), ('DIESEL', 'DIESEL'),]
