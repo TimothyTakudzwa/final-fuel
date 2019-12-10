@@ -362,6 +362,54 @@
     } ).draw();
 } );
   </script>
+
+<script>
+  $(document).ready(function () {
+    $('#choices').hide();
+    $('#choices1').hide();
+
+    $('#delivery_method1').change(function () {
+      if ($('#delivery_method1 option:selected').text() == "Direct Delivery") {
+        $('#choices1').show();
+      }
+      else {
+        $('#choices1').hide();
+      }
+    });
+    $('#delivery_method').change(function () {
+      if ($('#delivery_method option:selected').text() == "Self Collection") {
+        $('#choices').show();
+      }
+      else {
+        $('#choices').hide();
+      }
+    });
+  });
+
+  $('#pump_available').on('change', function () {
+    $(this).val(this.checked ? "True" : "False");
+  });
+  $('#swipe').on('change', function () {
+    $(this).val(this.checked ? "True" : "False");
+  });
+  $('#ecocash').on('change', function () {
+    $(this).val(this.checked ? "True" : "False");
+  });
+  $('#cash').on('change', function () {
+    $(this).val(this.checked ? "True" : "False");
+  });
+  $('#usd').on('change', function () {
+    $(this).val(this.checked ? "True" : "False");
+  });
+
+  $('#dipping_stick_available').on('change', function () {
+    $(this).val(this.checked ? "True" : "False");
+  });
+
+  $('#meter_available').on('change', function () {
+    $(this).val(this.checked ? "True" : "False");
+  });
+</script>
 </body>
 
 </html>
