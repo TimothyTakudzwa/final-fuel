@@ -3,6 +3,15 @@
 
 {% block body%}
 
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-3">Fuel Updates</h1>
+        
+        <hr class="my-2">
+        
+    </div>
+</div>
+
 <div class="card">
     <div class="card-header card-header-primary">
         <h4 class="card-title "> My Fuel Requests </h4>
@@ -62,10 +71,10 @@
                         <td class="">
                              {{fuel_request.date}} -- {{fuel_request.time}}
                         </td>
-                        <td class="text-primary">
+                        <td>
                             {% if fuel_request.has_offers == True%}
-                            <a class="btn btn-facebook btn-sm" href="{% url 'fuel-offers' fuel_request.id %}" >
-                                <i class="material-icons">ev_station</i>View Offers 
+                            <a class="btn btn-primary btn-sm" href="{% url 'fuel-offers' fuel_request.id %}" >
+                                <!--<i class="material-icons" style="margin-left: 0px;">ev_station</i>-->View Offers 
                             </a>
 
                             {% else %}
