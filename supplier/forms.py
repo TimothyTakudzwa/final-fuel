@@ -71,7 +71,7 @@ class FuelRequestForm(forms.ModelForm):
     
     class Meta:
         model = FuelRequest
-        fields = ['amount',  'payment_method', 'delivery_method', 'fuel_type']
+        fields = ['amount', 'delivery_method', 'fuel_type']
 
 class PostForm(forms.ModelForm):
 
