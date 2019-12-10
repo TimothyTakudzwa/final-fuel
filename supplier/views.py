@@ -160,7 +160,7 @@ def offer(request, id):
             offer.cash = True if request.POST.get('cash') == "True" else False
             offer.ecocash = True if request.POST.get('ecocash') == "True" else False
             offer.swipe = True if request.POST.get('swipe') == "True" else False
-            offer.delivery_method = form.cleaned_data['delivery_method']
+            offer.delivery_method = request.POST.get('delivery_method')
             offer.collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
             offer.pump_available = True if request.POST.get('pump_required') == "True" else False
             offer.dipping_stick_available = True if request.POST.get('usd') == "True" else False
