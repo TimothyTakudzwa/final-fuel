@@ -70,7 +70,7 @@ def fuel_request(request):
     fuel = FuelUpdate.objects.filter(relationship_id=request.user.id).first()
     for buyer_request in requests:
         if Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).exists():
-            offer = Offer.objects.get(supplier_id=request.user, request_id=buyer_request)
+            offer = Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).first()
             buyer_request.my_offer = f'{offer.quantity}ltrs @ ${offer.price}'
             buyer_request.offer_price = offer.price
             buyer_request.offer_quantity = offer.quantity
