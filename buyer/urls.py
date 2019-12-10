@@ -15,6 +15,7 @@ urlpatterns = [
     path('transactions', views.transactions, name='buyer-transactions'),
     path('invoice/<int:id>', views.invoice, name='buyer-invoice'),
     path('login_success/', views.login_success, name='login_success'),
+    path('view_invoice/<int:id>', views.view_invoice, name='view-invoice'),
 ]
 
 if settings.DEBUG: 

@@ -13,7 +13,7 @@ from buyer.forms import BuyerUpdateForm
 from buyer.models import Company
 from users.models import AuditTrail
 from .forms import PasswordChange, RegistrationForm, \
-    RegistrationEmailForm, UserUpdateForm, FuelRequestForm
+    RegistrationEmailForm, UserUpdateForm, FuelRequestForm, CreateCompany
 from .models import FuelRequest, Transaction, TokenAuthentication, Offer, Subsidiaries, FuelAllocation
 from company.models import Company, FuelUpdate
 from notification.models import Notification
@@ -68,6 +68,7 @@ def account(request):
 def fuel_request(request):
     requests = FuelRequest.objects.filter(date=today)
     fuel = FuelUpdate.objects.filter(relationship_id=request.user.id).first()
+    fuel_stocks = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
     for buyer_request in requests:
         if Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).exists():
             offer = Offer.objects.get(supplier_id=request.user, request_id=buyer_request)
@@ -85,7 +86,7 @@ def fuel_request(request):
                 buyer_request.price = fuel.diesel_price
         else:
             buyer_request.price = 0
-    return render(request, 'supplier/accounts/fuel_request.html', {'requests':requests})
+    return render(request, 'supplier/accounts/fuel_request.html', {'requests':requests, 'fuel_stocks':fuel_stocks})
 
 
 @login_required()
@@ -239,8 +240,10 @@ def activate_whatsapp(request):
 
 
 def verification(request, token, user_id):
+    form = BuyerUpdateForm
     context = {
         'title': 'Fuel Finder | Verification',
+        'form' : form
     }
     check = User.objects.filter(id=user_id)
     print("here l am ")
@@ -252,6 +255,7 @@ def verification(request, token, user_id):
             companies = Company.objects.filter(company_type='CORPORATE').all()
         else:
             companies = Company.objects.filter(company_type='SUPPLIER').all()
+        
         token_check = TokenAuthentication.objects.filter(user=user, token=token)
         result = bool([token_check])
         print(result)
@@ -261,16 +265,18 @@ def verification(request, token, user_id):
                 form = BuyerUpdateForm(request.POST, request.FILES, instance=user)
                 if form.is_valid():
                     form.save()
-                    company_id = request.POST.get('company_id')
-                    print(f"---------Supplier {company_id} {type(company_id)}")
-                    selected_company = Company.objects.filter(id=company_id).first()
-                    user.company = selected_company
-                    user.is_active = True
-                    user.save()
-                    
+                    company_exists = Company.objects.filter(name=request.POST.get('company')).exists()
+                    if company_exists:
+                        selected_company =Company.objects.filter(name=request.POST.get('company')).first()
+                        user.company = selected_company
+                        user.is_active = True
+                        user.save()
+                    else:
+                        user.is_active = False
+                        user.save()                        
+                        return redirect('create_company', pk=user.id)
             else:
-                form = BuyerUpdateForm
-                # messages.success(request, f'Email verification successs, Fill in the deatails to complete registration')
+               
                 return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
         else:
             messages.warning(request, 'Wrong verification token')
@@ -278,7 +284,12 @@ def verification(request, token, user_id):
     else:
         messages.warning(request, 'Wrong verification id')
         return redirect('login')
-    return render(request, 'supplier/accounts/verify.html', context=context)
+    
+    return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
+
+def create_company(request, id):
+    form = CreateCompany()
+    render(request, 'supplier/accounts/create_company.html', {'form': form })
 
 
 def company(request):
