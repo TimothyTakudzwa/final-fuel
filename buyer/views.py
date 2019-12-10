@@ -18,7 +18,7 @@ from supplier.models import Offer, Subsidiaries, Transaction
 from .constants import sample_data
 from .forms import (BuyerRegisterForm, BuyerUpdateForm, FuelRequestForm,
                     PasswordChangeForm)
-
+from supplier.forms import CreateCompany
 from .models import FuelRequest
 from buyer.utils import render_to_pdf
 

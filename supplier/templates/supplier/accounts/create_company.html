@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# product: http://ogp.me/ns/product#" itemscope
     itemtype="http://schema.org/Offer">
@@ -154,7 +152,7 @@
                                 class="bar_icon"> <span class="bar bar_1"></span> <span class="bar bar_2"></span> <span
                                     class="bar bar_3"></span> </span> </button>
                         <div class="collapse navbar-collapse oppi_header_menu" id="oppi_header_menu">
-                                
+
                         </div>
                         <div class="alter_nav mini_cart_exist">
                             <ul class="navbar-nav search_cart">
@@ -192,20 +190,22 @@
                                                             <div class="col-md-12 col-sm-12 col-12">
                                                                 <div class="oppi_signup_body">
                                                                     <div class="oppi_signup_inner">
-                                                                        <h3 class="sign_up_titlle text-center text-danger">Error!!! Company not found</h3>
-                                                                      
-<h4>You have typed in a company that is not registered with us, please apply for your company to be added to the platform</h4>
-{% load crispy_forms_tags %}
+                                                                        <h3
+                                                                            class="sign_up_titlle text-center text-danger">
+                                                                            Error!!! Company not found</h3>
 
-{% csrf_token %}
-<form action="create_company" method="POST">
-{{ form|crispy }}
-<button class="btn btn-outline-info btn-lg btn-block" type="submit">Submit</button>
-</form>
+                                                                        <h4>You have typed in a company that is not
+                                                                            registered with us, please apply for your
+                                                                            company to be added to the platform</h4>
+                                                                        {% load crispy_forms_tags %}
 
-
-
-
+                                                                        {% csrf_token %}
+                                                                        <form action="create_company" method="POST">
+                                                                            {{ form|crispy }}
+                                                                            <button
+                                                                                class="btn btn-outline-info btn-lg btn-block"
+                                                                                type="submit">Send Application</button>
+                                                                        </form>
                                                                     </div>
                                                                 </div>
                                                             </div>

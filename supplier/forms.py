@@ -58,18 +58,7 @@ class CreateCompany(forms.ModelForm):
 
     class Meta:
         model = Company
-        fields = ['company_name', 'address', 'company_name']
-
-# class ProfileUpdateForm(forms.ModelForm):
-#     class Meta:
-#         model = Profile
-#         fields = ['phone']
-
-
-# class ProfilePictureUpdateForm(forms.ModelForm):
-#     class Meta:
-#         model = Profile
-#         fields = ['picture']
+        fields = ['company_name', 'address', 'company_name', 'logo', 'iban_number', 'license_number']
 
 
 class FuelRequestForm(forms.ModelForm):
