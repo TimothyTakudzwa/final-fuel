@@ -24,7 +24,7 @@ SECRET_KEY = '!o)2tl!fqbytg6(@1tc-(nac2!s^smw)amvy^#tos%utjkhpt^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['4a1b0c05.ngrok.io', '127.0.0.1', '159.65.66.59', 'fuelfinderzim.com', '192.168.137.53']
+ALLOWED_HOSTS = ['a477cc88.ngrok.io', '127.0.0.1', '159.65.66.59', 'fuelfinderzim.com', '192.168.137.53']
 
 LOGGING = {
     'version': 1,
