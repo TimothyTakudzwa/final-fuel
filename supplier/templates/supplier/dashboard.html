@@ -54,6 +54,12 @@
               <p>Requests</p>
             </a>
           </li>
+          <li class="nav-item {% if request.path == '/my_offers/' %} active {% endif %} ">
+            <a class="nav-link" href="{%url 'my_offers'%}">
+              <i class="material-icons">local_gas_station</i>
+              <p>Offers</p>
+            </a>
+          </li>
           <li class="nav-item {% if request.path == '/fuel_update/' %} active {% endif %} ">
               <a class="nav-link" href="{%url 'fuel_update'%}">
                 <i class="material-icons">local_gas_station</i>
