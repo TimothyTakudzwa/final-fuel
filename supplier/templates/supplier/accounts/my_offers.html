@@ -67,7 +67,8 @@
                                 <th style="color: white;"></th>
                                 <th style="color: white;">Date</th>
                                 <th style="color: white;">Buyer</th>
-                                <th style="color: white;">Quantity(l) </th>
+                                <th style="color: white;">Requested(l)</th>
+                                <th style="color: white;">Offered(l)</th>
                                 <th style="color: white;">Fuel</th>
                                 <th style="color: white;">Payment</th>
                                 <th style="color: white;">Delivery</th>
@@ -81,9 +82,10 @@
                                 <td></td>
                                 <td>{{ offer.date }}</td>
                                 <td>{{ offer.request.name }}</td>
+                                <td>{{ offer.request.amount }}</td>
                                 <td>{{ offer.quantity }}</td>
                                 <td>{{ offer.request.fuel_type }}</td>
-                                <td>{% if offer.cash %}CASH &nbsp;{% if offer.ecocash %}ECOCASH &nbsp;{% if offer.usd %}USD &nbsp;{% if offer.swipe %}SWIPE{% endif %}{% endif %}{% endif %}{% endif %}</td>
+                                <td>{% if offer.cash %}CASH &nbsp;{%endif%} {% if offer.ecocash %}ECOCASH &nbsp;{%endif%} {% if offer.usd %}USD &nbsp; {%endif%} {% if offer.swipe %}SWIPE{% endif %}</td>
                                 <td>{{ offer.delivery_method }}</td>
                                 <td>{{ offer.collection_address }}</td>
                                 <td>{% if offer.pump_available %}Pump &nbsp;{% if offer.dipping_stick_available %}Stick &nbsp;{% if offer.meter_available %}Meter{% endif %}{% endif %}{% endif %}</td>
