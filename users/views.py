@@ -182,7 +182,7 @@ def statistics(request):
         total_transactions =  buyers.count(buyer)
         buyers.remove(buyer)
         buyer = User.objects.filter(company__name=buyer).first()
-        new_buyer_transactions = Transaction.objects.filter(supplier__company=request.user.company,buyer=buyer, is_complete=True).all()
+        new_buyer_transactions = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).all()
         total_value = 0
         purchases = []
         number_of_trans = 0
