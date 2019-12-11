@@ -8,9 +8,7 @@
 <script>
     $(document).ready(function () {
         var logged_user = {{user.id}}
-        var socket = io.connect('https://dreamhub.co.zw/new_offer');
-        console.log("Got to this part ")
-        console.log(socket)
+        var socket = io.connect('https://dreamhub.co.zw/new_offer');  
         socket.on('new_offer', function (msg) {
             console.log("There is a new offer on the rise", logged_user, msg.user_id)
             if (logged_user == msg.user_id){
@@ -50,10 +48,73 @@
 
     </div>
     <div class="col-md-12">
-            <div class="card mt-5" style="background-color:white">
-                <div class="card-header card-header-primary">
-                    <h4 class="card-title">Today's Requests</h4>
-                    <p class="card-category"> List Of All Requests</p>
+        <div class="card mt-5" style="background-color:white">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title">Today's Requests</h4>
+                <p class="card-category"> List Of All Requests</p>
+            </div>
+            <div class="card-body">
+                <div class="container-fluid">
+                    <table id="example" class="table table-striped table-bordered" style="width:100%">
+                        <thead style="background-color: lightslategray; color:white;">
+                            <tr>
+                                <th style="color: white;"></th>
+                                <th style="color: white;">Date</th>
+                                <th style="color: white;">Buyer</th>
+                                <th style="color: white;">Quantity(l) </th>
+                                <th style="color: white;">Fuel</th>
+                                <th style="color: white;">Payment</th>
+                                <th style="color: white;">Delivery</th>
+                                <th style="color: white;">Address</th>
+                                <th style="color: white;">Equipments</th>
+                                <th style="color: white;">Offer</th>
+                                <th style="color: white;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in requests %}
+                            <tr>
+                                <td></td>
+                                <td>{{ request.date }}</td>
+                                <td>{{ request.name }}</td>
+                                <td>{{ request.amount }}</td>
+                                <td>{{ request.fuel_type }}</td>
+                                <td>{% if request.cash %}CASH &nbsp;{% if request.ecocash %}ECOCASH &nbsp;{% if request.usd %}USD &nbsp;{% if request.swipe %}SWIPE{% endif %}{% endif %}{% endif %}{% endif %}</td>
+                                <td>{{ request.delivery_method }}</td>
+                                <td>{{ request.delivery_address }}</td>
+                                <td>{% if request.pump_required %}Pump &nbsp;{% if request.dipping_stick_required %}Stick &nbsp;{% if request.meter_required %}Meter{% endif %}{% endif %}{% endif %}</td>
+                                <td>{{ request.my_offer }}</td>
+                                {% if request.my_offer %}
+                                <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                                        data-target="#edit_offer_{{request.id}}">Edit Offer</button></td>
+                                {% else %}
+                                <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal"
+                                        data-target="#add_offer_{{request.id}}">Make Offer</button></td>
+                                {% endif %}
+                            </tr>
+
+                            <!-- notice modal -->
+<div class="modal fade modal-xl" id="add_offer_{{request.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-notice">
+    <div class="modal-content">
+        <div class="modal-header text-center">
+            <h5 class="modal-title" id="myModalLabel">Make an offer</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <i class="material-icons">close</i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form method="POST" action="{% url 'supplier:supplier' request.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <lable>Fuel Type</lable>
+                    <input type="text" name="fuel_type" class="form-control" value="{{request.fuel_type}}" disabled/>
+                </div>
+
+                <div class="form-group">
+                    <lable>Fuel Quantity</lable>
+                    <input type="text" name="quantity" class="form-control" value="{{request.amount}}" />
                 </div>
                 <div class="card-body">
                     <div class="container-fluid">
@@ -335,12 +396,12 @@
              </form>
          </div>
      </div>
-     </div>
-     <!-- end edit modal -->
-                                {%endfor%}
-                            </tbody>
-                        </table>
-                    </div>
+ </div>
+ </div>
+ <!-- end edit modal -->
+                          {%endfor%}
+                       </tbody>
+                    </table>
                 </div>
             </div>
         </div>
