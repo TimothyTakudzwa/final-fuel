@@ -95,7 +95,7 @@
                                     {% endif %}
                                 </tr>  
     
-                                <!-- notice modal -->
+                                <!-- make offer modal -->
     <div class="modal fade modal-xl" id="add_offer_{{request.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-notice">
@@ -124,37 +124,35 @@
                     </div>
                     <label class="form-group">Select Payment Method</label>
                     <div class="col-sm-12 row">
-                        <div class="togglebutton form-group col">
-                            <label>
-    
-                                <input type="checkbox" name="cash" id="cash">
-    
-                                <span class="toggle"></span>
-                                Cash
-                            </label>
+                            <div class="togglebutton form-group col">
+                                <label>
+                                    <input type="checkbox" name="cash" id="cash">
+                                    <span class="toggle"></span>
+                                    Cash
+                                </label>
+                            </div>
+                            <div class="togglebutton form-group col">
+                                <label>
+                                    <input type="checkbox" name="ecocash" id="ecocash">
+                                    <span class="toggle" value="True"></span>
+                                    Ecocash
+                                </label>
+                            </div>
+                            <div class="togglebutton form-group col">
+                                <label>
+                                    <input type="checkbox" name="swipe" id="swipe">
+                                    <span class="toggle"></span>
+                                    Swipe
+                                </label>
+                            </div>
+                            <div class="togglebutton form-group col">
+                                <label>
+                                    <input type="checkbox" name="usd" id="usd">
+                                    <span class="toggle"></span>
+                                    USD
+                                </label>
+                            </div>
                         </div>
-                        <div class="togglebutton form-group col">
-                            <label>
-                                <input type="checkbox" name="ecocash" id="ecocash">
-                                <span class="toggle"></span>
-                                Ecocash
-                            </label>
-                        </div>
-                        <div class="togglebutton form-group col">
-                            <label>
-                                <input type="checkbox" name="swipe" id="swipe">
-                                <span class="toggle"></span>
-                                Swipe
-                            </label>
-                        </div>
-                        <div class="togglebutton form-group col">
-                            <label>
-                                <input type="checkbox" name="usd" id="usd">
-                                <span class="toggle"></span>
-                                USD
-                            </label>
-                        </div>
-                    </div>
     
     
                     <div class="form-group">
@@ -185,7 +183,7 @@
                                 </div>
                             
                         </div>
-                        <label>Required Equipments</label>
+                        <label>Available Equipments</label>
                         <div class="row">
                             <div class="col">
                                 <input class="form-control-md" type="checkbox" value='False' id="pump_available"
@@ -216,7 +214,7 @@
         </div>
     </div>
     </div>
-    <!-- end notice modal -->
+    <!-- end make offer modal -->
     
     
      <!-- edit modal -->
@@ -248,37 +246,35 @@
                      </div>
                      <label class="form-group">Select Payment Method</label>
                      <div class="col-sm-12 row">
-                         <div class="togglebutton form-group col">
-                             <label>
-     
-                                 <input type="checkbox" name="cash" id="cash">
-     
-                                 <span class="toggle"></span>
-                                 Cash
-                             </label>
-                         </div>
-                         <div class="togglebutton form-group col">
-                             <label>
-                                 <input type="checkbox" name="ecocash" id="ecocash">
-                                 <span class="toggle"></span>
-                                 Ecocash
-                             </label>
-                         </div>
-                         <div class="togglebutton form-group col">
-                             <label>
-                                 <input type="checkbox" name="swipe" id="swipe">
-                                 <span class="toggle"></span>
-                                 Swipe
-                             </label>
-                         </div>
-                         <div class="togglebutton form-group col">
-                             <label>
-                                 <input type="checkbox" name="usd" id="usd">
-                                 <span class="toggle"></span>
-                                 USD
-                             </label>
-                         </div>
-                     </div>
+                            <div class="togglebutton form-group col">
+                                <label>
+                                    <input type="checkbox" name="cash" id="cash">
+                                    <span class="toggle"></span>
+                                    Cash
+                                </label>
+                            </div>
+                            <div class="togglebutton form-group col">
+                                <label>
+                                    <input type="checkbox" name="ecocash" id="ecocash">
+                                    <span class="toggle" value="True"></span>
+                                    Ecocash
+                                </label>
+                            </div>
+                            <div class="togglebutton form-group col">
+                                <label>
+                                    <input type="checkbox" name="swipe" id="swipe">
+                                    <span class="toggle"></span>
+                                    Swipe
+                                </label>
+                            </div>
+                            <div class="togglebutton form-group col">
+                                <label>
+                                    <input type="checkbox" name="usd" id="usd">
+                                    <span class="toggle"></span>
+                                    USD
+                                </label>
+                            </div>
+                        </div>
      
      
                      <div class="form-group">
@@ -309,7 +305,7 @@
                                  </div>
                              
                          </div>
-                         <label>Required Equipments</label>
+                         <label>Available Equipments</label>
                          <div class="row">
                              <div class="col">
                                  <input class="form-control-md" type="checkbox" value='False' id="pump_available"
@@ -333,7 +329,7 @@
              </div>
      
              <div class="modal-footer justify-content-center">
-                 <button type="submit" name="MakeOffer" class="btn btn-info btn-round">Make Offer</button>
+                 <button type="submit" name="MakeOffer" class="btn btn-info btn-round">Update Offer</button>
      
              </div>
              </form>
