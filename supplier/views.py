@@ -100,12 +100,12 @@ def rate_supplier(request):
 def fuel_update(request):
     print(f"--------------------------{request.user.subsidiary_id}----------------------")
 
-    updates = FuelUpdate.objects.filter(sub_type='Depot', relationship_id=request.user.subsidiary_id).first()
+    updates = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     print(f"--------------------------{updates}!!!!!!!!!!!!!!!!!!!!!!!!----------------------")
     if request.method == 'POST':
-        if FuelUpdate.objects.filter(sub_type='Depot', relationship_id=request.user.subsidiary_id).exists():
-            fuel_update = FuelUpdate.objects.get(sub_type='Depot', relationship_id=request.user.subsidiary_id)
+        if FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).exists():
+            fuel_update = FuelUpdate.objects.get(relationship_id=request.user.subsidiary_id)
             fuel_update.petrol_quantity = request.POST['petrol_quantity']
             fuel_update.petrol_price = request.POST['petrol_price']
             fuel_update.diesel_quantity = request.POST['diesel_quantity']
