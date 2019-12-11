@@ -25,13 +25,13 @@
         </div>
         <div class="card-footer">
           <div class="stats">
-          {% if diesel == 0 and petrol > 0%}  
+          {% if not diesel and petrol %}  
             <i class="material-icons text-danger">warning</i>
             <a href="#pablo">Get More Diesel...</a>
-          {% elif petrol 0 == and diesel > 0%}  
+          {% elif not petrol and diesel %}  
             <i class="material-icons text-danger">warning</i>
             <a href="#pablo">Get More Petrol...</a>
-          {% elif petrol == 0 and diesel == 0 %}
+          {% elif not petrol and not diesel %}
             <i class="material-icons text-danger">warning</i>
             <a href="#pablo">Get More stock...</a>
           {% else %}
