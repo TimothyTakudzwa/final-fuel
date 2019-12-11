@@ -345,14 +345,62 @@ def view_requests_handler(user, message):
         try:
             offer.price = float(message)
             offer.save()
-            response_message = "Offer successfully send! Type *menu* to go back"
-            user.stage = "menu"
-            user.position = 0
+            response_message = "Which form of payment are you accepting?\n\n 1. Cash\n2. USD \n3. Ecocash 4. Swipe or Bank Transfer"
+            user.position = 4
             user.save()
         except:
             response_message = "I expected a number or decimal not a string. Please enter a valid price"
             user.position = 3
             user.save()
+    elif user.position == 4:
+        fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
+        offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
+        try:
+            if int(message) == 1:
+                offer.cash = True
+            elif int(message) == 2:
+                offer.usd = True
+            elif int(message) == 3:
+                offer.ecocash = True
+            elif int(message) == 4:
+                offer.swipe = True
+            offer.save()
+            response_message = "Please choose a delivery method.\n\n 1. Deliver\n 2.Self collection"
+            user.position = 5
+            user.save()
+        except:
+            response_message == "Invalid option! Please select a valid payment method\n\n 1. Cash\n2. USD \n3. Ecocash\n 4. Swipe or Bank Transfer"
+            user.position = 4
+            user.save()
+    elif user.position == 5:
+        fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
+        offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
+        try:
+            if int(message) == 1:
+                offer.delivery_method = "Deliver"
+                user.stage = 'menu'
+                user.position = 0
+                user.save()
+                response_message = "You have successfully made an offer. Type *menu* to go back to the main menu."
+            elif int(message) == 2:
+                offer.delivery_method = "Self Collection"
+                user.position = 6
+                user.save()
+                response_message = "Please provide a collection address."
+            offer.save()
+        except:
+            response_message = "Invalid option! Please select a valid delivery.\n\n 1. Deliver\n 2.Self collection"
+            user.position = 5
+            user.save()
+    elif user.position == 6:
+        fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
+        offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
+        offer.collection_address = message
+        offer.save()
+        user.stage = 'menu'
+        user.position = 0
+        user.save()
+        response_message = "You have successfully made an offer. Type *menu* to go back to the main menu."
     return response_message
 
 
