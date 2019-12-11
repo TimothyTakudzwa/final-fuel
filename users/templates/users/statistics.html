@@ -25,18 +25,18 @@
         </div>
         <div class="card-footer">
           <div class="stats">
-          {% if diesel == 0 %}  
+          {% if not diesel and petrol %}  
             <i class="material-icons text-danger">warning</i>
             <a href="#pablo">Get More Diesel...</a>
-          {% elif petrol == 0%}  
+          {% elif not petrol and diesel %}  
             <i class="material-icons text-danger">warning</i>
             <a href="#pablo">Get More Petrol...</a>
-          {% elif petrol == 0 and diesel == 0 %}
+          {% elif not petrol and not diesel %}
             <i class="material-icons text-danger">warning</i>
             <a href="#pablo">Get More stock...</a>
           {% else %}
             <i class="material-icons text-success">alarm_on</i>
-            <a href="#pablo">Get More stock...</a>
+            <a href="#pablo">Stock Levels Adequate...</a>
           {% endif %}    
           </div>
         </div>
@@ -159,11 +159,14 @@
             <i class="material-icons">date_range</i> Last 24 Hours
           </div>
         </div>
+        <!--
         <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#complaints_report" style="position: absolute;right:    0;
         bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
             <i class="material-icons">calendar_today</i>
           Generate Report
         </button>
+        -->
+
       </div>
       
       <div class="modal fade" id="complaints_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -232,7 +235,8 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form>
+                <form  method="POST" action="{% url 'users:report_generator' %}">
+                  {% csrf_token %}
                     <div class="form-group">
                         
                         <input type="hidden" name="report_type" value="Requests">   
@@ -456,11 +460,13 @@
               <i class="material-icons">date_range</i> Last 24 Hours
             </div>
           </div>
+          <!--
           <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#ss_request_report" style="position: absolute;right:    0;
           bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
               <i class="material-icons">calendar_today</i>
             Generate Report
           </button>
+          -->
         </div>
       </div>
       <div class="modal fade" id="ss_request_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
