@@ -22,7 +22,7 @@
                 <div class="row">
                     <div class="col">
                         <a target="_blank" href="https://lobianijs.com">
-                            <img src="{% static 'finder/assets/img/intelog.jpg' %}" data-holder-rendered="true" />
+                            <img class="img" src="{% static 'finder/assets/img/intelog.jpg' %}" data-holder-rendered="true" />
                             </a>
                     </div>
                     <div class="col company-details">
@@ -76,7 +76,7 @@
                             <td class="unit">{{transaction.offer.request.fuel_type}} </td>
                             <td class="unit">{{transaction.offer.request.amount}} Litres</td>
                             <td class="qty">{{transaction.offer.quantity}} Litres</td>
-                            <td class="unit">--</td>
+                            <td class="unit">{% if transaction.offer.request.cash %}CASH &nbsp;{% if transaction.offer.request.ecocash %}ECOCASH &nbsp;{% if transaction.offer.request.usd %}USD &nbsp;{% if transaction.offer.request.swipe %}SWIPE{% endif %}{% endif %}{% endif %}{% endif %}</td>
                             <td class="unit">{{transaction.offer.request.date}}</td>
                             <td class="unit">{{transaction.offer.price}}</td>
                             <td class="unit">${{total}}</td>
