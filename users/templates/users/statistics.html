@@ -236,6 +236,7 @@
               </div>
               <div class="modal-body">
                 <form  method="POST" action="{% url 'users:report_generator' %}">
+                  {% csrf_token %}
                     <div class="form-group">
                         
                         <input type="hidden" name="report_type" value="Requests">   
