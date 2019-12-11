@@ -99,43 +99,6 @@
                                         data-target="#add_offer_{{request.id}}">Make Offer</button></td>
                                 {% endif %}
                             </tr>
-                            
-                                <!-- Make offer Modal -->
-                       <!-- <div class="modal fade" id="add_offer_{{request.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Upload</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            {% load crispy_forms_tags %}
-                                            <form action="{% url 'supplier:supplier' request.id %}" method="POST">
-                                                {% csrf_token %}
-                                                <div class="form-group">
-                                                    <lable>Fuel Quantity</lable>
-                                                    <input type="text" name="quantity" class="form-control"
-                                                        value="{{request.amount}}" />
-                                                </div>
-                                                <div class="form-group">
-                                                    <lable>Fuel Price</lable>
-                                                    <input type="text" name="price" class="form-control"
-                                                        value="{{request.price}}" />
-                                                </div>
-                                                <button class="btn btn-primary" type="submit">Confirm</button>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                </div>
-                            </div>-->
-
 
                             <!-- notice modal -->
 <div class="modal fade modal-xl" id="add_offer_{{request.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -383,44 +346,8 @@ aria-hidden="true">
  </div>
  </div>
  <!-- end edit modal -->
-                            <!-- Edit offer Modal -->
-                          <!-- <div class="modal fade" id="edit_offer_{{request.id}}" tabindex="-1" role="dialog"
-                                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Upload</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            {% load crispy_forms_tags %}
-                                            <form action="{% url 'supplier:edit_offer' request.offer_id %}"
-                                                method="POST">
-                                                {% csrf_token %}
-                                                <div class="form-group">
-                                                    <lable>Fuel Quantity</lable>
-                                                    <input type="text" name="quantity" class="form-control"
-                                                        value="{{request.offer_quantity}}" />
-                                                </div>
-                                                <div class="form-group">
-                                                    <lable>Fuel Price</lable>
-                                                    <input type="text" name="price" class="form-control"
-                                                        value="{{request.offer_price}}" />
-                                                </div>
-                                                <button class="btn btn-primary" type="submit">Confirm</button>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>-->
-                            {%endfor%}
-                        </tbody>
+                          {%endfor%}
+                       </tbody>
                     </table>
                 </div>
             </div>
