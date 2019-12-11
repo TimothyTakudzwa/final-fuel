@@ -378,11 +378,11 @@
     $('#choices1').hide();
 
     $('#delivery_method1').change(function () {
-      if ($('#delivery_method1 option:selected').text() == "Direct Delivery") {
-        $('#choices1').show();
+      if ($('#delivery_method1 option:selected').text() == "Delivery") {
+        $('#choices1').hide();
       }
       else {
-        $('#choices1').hide();
+        $('#choices1').show();
       }
     });
     $('#delivery_method').change(function () {
