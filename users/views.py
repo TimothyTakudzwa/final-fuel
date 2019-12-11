@@ -182,7 +182,7 @@ def statistics(request):
         total_transactions =  buyers.count(buyer)
         buyers.remove(buyer)
         buyer = User.objects.filter(company__name=buyer).first()
-        new_buyer_transactions = Transaction.objects.filter(supplier__company=request.user.company,buyer=buyer, is_complete=True).all()
+        new_buyer_transactions = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).all()
         total_value = 0
         purchases = []
         number_of_trans = 0
@@ -528,10 +528,25 @@ def depots(request):
 @login_required()
 def audit_trail(request):
     trails = Audit_Trail.objects.filter(company=request.user.company).all()
-    print(trails)
     return render(request, 'users/audit_trail.html', {'trails': trails})    
 
-        
+def waiting_for_approval(request):
+    applicants = user.objects.filter(is_waiting=True,company=request.user.company).all()
+    return render(request, 'users/waiting_for_approval.html', {'applicants': applicants})
+
+def approval(request, id):
+    applicant = user.objects.filter(id = id).first()
+    applicant.is_waiting = False
+    applicant.save()
+    messages.success(request, f'approval for {applicant.first_name} made successfully')
+    return redirect('users:waiting_for_approval')
+
+def decline_applicant(request, id):
+    applicant = user.objects.filter(id = id).first()
+    applicant.delete()
+    messages.warning(request, f'declined a request for registration from {applicant.first_name}')
+    return redirect('users:waiting_for_approval')
+
 @login_required()
 def suppliers_list(request):
     suppliers = User.objects.filter(company=request.user.company).filter(user_type='SS_SUPPLIER').all()

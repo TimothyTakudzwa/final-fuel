@@ -70,7 +70,7 @@
                        <td>{{company_capacity.diesel_price}}</td>
                        <td>{{company_capacity.petrol_quantity}}</td>
                        <td>{{company_capacity.petrol_price}}</td>
-                       <td>{%if alloc.cash%}<i class="fa fa-dollar"></i> {% else%} {%endif%} {%if alloc.usd%}USD {% else%} {%endif%} {%if alloc.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px">{% else%} {%endif%} {%if alloc.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
+                       <td>{%if company_capacity.cash%}<i class="fa fa-dollar"></i> {% else%} {%endif%} {%if company_capacity.usd%}USD {% else%} {%endif%} {%if company_capacity.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px">{% else%} {%endif%} {%if company_capacity.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
                        <td>
                           <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#company_petrol{{company_capacity.id}}">Update Petrol Capacity</button>
                           <button class="btn btn-warning btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#company_diesel{{company_capacity.id}}">Update Diesel Capacity</button>
@@ -249,14 +249,11 @@
                          
                           <td>{{allocate.subsidiary_name}}</td>
                            <td>{{allocate.sub_type}}</td>
-                           <!--<td>{{allocate.diesel_quantity}}</td>-->
-                           
                            <td>{{allocate.diesel_quantity}} {% if allocate.diesel_quantity < 1000 %} <i class="material-icons text-danger" >warning</i>{% endif %}</td>
                            <td>{{allocate.diesel_price}}</td>
-                            <!--<td>{{allocate.petrol_quantity}}</td>-->
                            <td>{{allocate.petrol_quantity}} {% if allocate.petrol_quantity < 1000 %} <i class="material-icons text-danger" >warning</i>{% endif %}</td>
                            <td>{{allocate.petrol_price}}</td>
-                           <td>{%if alloc.cash%}<i class="fa fa-dollar"></i> {% else%} {%endif%} {%if alloc.usd%}USD {% else%} {%endif%} {%if alloc.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px">{% else%} {%endif%} {%if alloc.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
+                           <td>{%if allocate.cash%}<i class="fa fa-dollar"></i> {% else%} {%endif%} {%if allocate.usd%}USD {% else%} {%endif%} {%if allocate.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px">{% else%} {%endif%} {%if allocate.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
                            <td>
                              <div class = "btn-group">
                              <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#petrol{{allocate.id}}">Allocate Petrol</button>

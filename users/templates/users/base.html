@@ -96,6 +96,13 @@
                 <p>Report Generator</p>
               </a>
             </li>
+
+            <li class="nav-item {% if request.path == '/users/waiting_for_approval/' %} active {% endif %}">
+                <a class="nav-link" href="{% url 'users:waiting_for_approval' %}">
+                  <i class="material-icons">people</i>
+                  <p>Staff Applications</p>
+                </a>
+              </li>
            
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'logout' %}?next=/">
@@ -222,6 +229,11 @@
     $(document).ready(function() {
       $('#myexample').DataTable({"order": [[ 0, "desc" ]]});
     } );
+
+    $(document).ready(function() {
+      $('#myexample2').DataTable({"order": [[ 0, "desc" ]]});
+    } );
+
 
     $(document).ready(function() {
       $('#myexample1').DataTable({"order": [[ 0, "desc" ]]});
