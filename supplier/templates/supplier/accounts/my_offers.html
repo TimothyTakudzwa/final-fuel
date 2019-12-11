@@ -88,7 +88,7 @@
                                 <td>{% if offer.cash %}CASH &nbsp;{%endif%} {% if offer.ecocash %}ECOCASH &nbsp;{%endif%} {% if offer.usd %}USD &nbsp; {%endif%} {% if offer.swipe %}SWIPE{% endif %}</td>
                                 <td>{{ offer.delivery_method }}</td>
                                 <td>{{ offer.collection_address }}</td>
-                                <td>{% if offer.pump_available %}Pump &nbsp;{% if offer.dipping_stick_available %}Stick &nbsp;{% if offer.meter_available %}Meter{% endif %}{% endif %}{% endif %}</td>
+                                <td>{% if offer.pump_available %}Pump &nbsp; {%endif%} {% if offer.dipping_stick_available %}Stick &nbsp; {%endif%} {% if offer.meter_available %}Meter{% endif %}</td>
                             </tr>
                             {%endfor%}
                         </tbody>
