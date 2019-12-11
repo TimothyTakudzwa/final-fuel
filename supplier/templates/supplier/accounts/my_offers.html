@@ -74,6 +74,7 @@
                                 <th style="color: white;">Delivery</th>
                                 <th style="color: white;">Address</th>
                                 <th style="color: white;">Equipments</th>
+                                <th style="color: white;"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -89,7 +90,133 @@
                                 <td>{{ offer.delivery_method }}</td>
                                 <td>{{ offer.collection_address }}</td>
                                 <td>{% if offer.pump_available %}Pump &nbsp; {%endif%} {% if offer.dipping_stick_available %}Stick &nbsp; {%endif%} {% if offer.meter_available %}Meter{% endif %}</td>
+                                {%if offer.declined %}
+                                <td>Declined</td>
+                                {% else %}
+                                <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_{{offer.id}}">Edit</button></td>
+                                {%endif%}
                             </tr>
+
+                            <!-- edit modal -->
+     <div class="modal fade modal-xl" id="edit_{{offer.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+     <div class="modal-dialog modal-notice">
+         <div class="modal-content">
+             <div class="modal-header text-center">
+                 <h5 class="modal-title" id="myModalLabel">Make an offer</h5>
+                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                     <i class="material-icons">close</i>
+                 </button>
+             </div>
+             <div class="modal-body">
+                 <form method="POST" action="{% url 'supplier:edit_offer' offer.id %}">
+                     {% csrf_token %}
+                     <div class="form-group">
+                         <lable>Fuel Type</lable>
+                         <input type="text" name="fuel_type" class="form-control" value="{{offer.request.fuel_type}}" disabled/>
+                     </div>
+     
+                     <div class="form-group">
+                         <lable>Fuel Quantity</lable>
+                         <input type="text" name="quantity" class="form-control" value="{{offer.quantity}}" />
+                     </div>
+                     <div class="form-group">
+                         <lable>Fuel Price</lable>
+                         <input type="text" name="price" class="form-control" value="{{offer.price}}" />
+                     </div>
+                     <label class="form-group">Select Payment Method</label>
+                     <div class="col-sm-12 row">
+                         <div class="togglebutton form-group col">
+                             <label>
+                                 <input type="checkbox" name="cash" id="cash">
+                                 <span class="toggle"></span>
+                                 Cash
+                             </label>
+                         </div>
+                         <div class="togglebutton form-group col">
+                             <label>
+                                 <input type="checkbox" name="ecocash" id="ecocash">
+                                 <span class="toggle" value="True"></span>
+                                 Ecocash
+                             </label>
+                         </div>
+                         <div class="togglebutton form-group col">
+                             <label>
+                                 <input type="checkbox" name="swipe" id="swipe">
+                                 <span class="toggle"></span>
+                                 Swipe
+                             </label>
+                         </div>
+                         <div class="togglebutton form-group col">
+                             <label>
+                                 <input type="checkbox" name="usd" id="usd">
+                                 <span class="toggle"></span>
+                                 USD
+                             </label>
+                         </div>
+                     </div>
+     
+     
+                     <div class="form-group">
+                         <label>Pick Up Method</label>
+                         <select id="delivery_method1" name="delivery_method1" class="form-control">
+                            <option value='DELIVERY'>Delivery</option>
+                            <option value='SELF COLLECTION'>Self Collection</option>
+                         </select>
+                     </div>
+     
+                     <div class="form-group" name='choices1' id='choices1'>
+                         <label>Collection Address</label>
+                         <div class="row form-group">                            
+                                 <div class="togglebutton form-group col">
+                                   <label for="">Street Number</label>
+                                   <input type="text" class="form-control" name="s_number" id="" aria-describedby="helpId" placeholder="">
+                                   
+                                 </div>
+                                 <div class="togglebutton form-group col">
+                                   <label for="">Street Name</label>
+                                   <input type="text" class="form-control" name="s_name" id="" aria-describedby="helpId" placeholder="">
+                                   
+                                 </div>
+                                 <div class="togglebutton form-group col">
+                                   <label for="">Location/Town</label>
+                                   <input type="text" class="form-control" name="s_town" id="" aria-describedby="helpId" placeholder="">
+                                  
+                                 </div>
+                             
+                         </div>
+                         <label>Available Equipments</label>
+                         <div class="row">
+                             <div class="col">
+                                 <input class="form-control-md" type="checkbox" value='False' id="pump_available"
+                                     name="pump_available">
+                                 <label for="pump_available">Pump </label>
+                                 
+                             </div>
+                             <div class="col">
+                                 <input class="form-control-md" type="checkbox" value="False" id="dipping_stick_available"
+                                     name="dipping_stick_available">
+                                 <label for="dipping_stick_available">Dipping Stick </label>
+                             </div>
+     
+                             <div class="col">
+                                 <input class="form-control-md" type="checkbox" value="False" id="meter_available"
+                                     name="meter_available">
+                                 <label for="meter_available">Meter</label>
+                             </div>
+                         </div>
+                     </div>
+             </div>
+     
+             <div class="modal-footer justify-content-center">
+                 <button type="submit" name="MakeOffer" class="btn btn-info btn-round">Update Offer</button>
+     
+             </div>
+             </form>
+         </div>
+     </div>
+     </div>
+     <!-- end edit modal -->
                             {%endfor%}
                         </tbody>
                     </table>
