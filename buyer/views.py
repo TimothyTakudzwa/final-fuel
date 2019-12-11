@@ -205,7 +205,6 @@ def dashboard(request):
         if 'MakeDeal' in request.POST:
             if form.is_valid():     
                 fuel_request = FuelRequest()
-
                 fuel_request.name = request.user       
                 fuel_request.amount = form.cleaned_data['amount']
                 fuel_request.fuel_type = form.cleaned_data['fuel_type']
