@@ -1,6 +1,14 @@
 {% extends "supplier/dashboard.html" %}
 {% block body %}
 
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+      <h1 class="display-3">{{request.user.company|title}}'s Inventory</h1>
+      
+      <hr class="my-2">
+      
+  </div>
+</div>
 
 
 <div class="col-md-12">
