@@ -531,15 +531,32 @@ def audit_trail(request):
     return render(request, 'users/audit_trail.html', {'trails': trails})    
 
 def waiting_for_approval(request):
+    #form = ApplicantContactForm()
+    stations = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
+    #form.fields['service_station'].choices = [((station.id, station.name)) for station in stations] 
+    depots = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company).all()
+    #form.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots] 
     applicants = user.objects.filter(is_waiting=True,company=request.user.company).all()
-    return render(request, 'users/waiting_for_approval.html', {'applicants': applicants})
+    return render(request, 'users/waiting_for_approval.html', {'applicants': applicants,'stations': stations, 'depots': depots})
 
 def approval(request, id):
-    applicant = user.objects.filter(id = id).first()
-    applicant.is_waiting = False
-    applicant.save()
-    messages.success(request, f'approval for {applicant.first_name} made successfully')
-    return redirect('users:waiting_for_approval')
+    if request.method == 'POST':
+        if user.objects.filter(id=id).exists():
+            applicant = user.objects.filter(id = id).first()
+            applicant.is_waiting = False
+            selected =  request.POST['subsidiary']
+            print(selected)
+            subsidiari = Subsidiaries.objects.filter(name=selected).first()
+            applicant.subsidiary_id = subsidiari.id
+            applicant.save()
+            messages.success(request, f'approval for {applicant.first_name} made successfully')
+            return redirect('users:waiting_for_approval')
+       
+
+        else:
+            messages.warning(request, 'oops! something went wrong')
+            return redirect('users:waiting_for_approval')    
+    
 
 def decline_applicant(request, id):
     applicant = user.objects.filter(id = id).first()
