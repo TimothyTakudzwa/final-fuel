@@ -168,7 +168,7 @@ def statistics(request):
     except:
         rating = 0  
    
-    admin_staff = User.objects.filter(company=company).filter(user_type='Supplier').count()
+    admin_staff = User.objects.filter(company=company).filter(user_type='SUPPLIER').count()
     all_staff = User.objects.filter(company=company).count()
     other_staff = all_staff - admin_staff
     clients = []
