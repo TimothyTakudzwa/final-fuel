@@ -353,7 +353,8 @@ def view_requests_handler(user, message):
             user.position = 3
             user.save()
     elif user.position == 4:
-        offer = Offer.objects.filter(request__id=user.fuel_request)
+        fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
+        offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
         try:
             if int(message) == 1:
                 offer.cash = True
@@ -363,15 +364,17 @@ def view_requests_handler(user, message):
                 offer.ecocash = True
             elif int(message) == 4:
                 offer.swipe = True
+            offer.save()
             response_message = "Please choose a delivery method.\n\n 1. Deliver\n 2.Self collection"
             user.position = 5
             user.save()
         except:
-            response_message == "Invalid option! Please select a valid payment method\n\n 1. Cash\n2. USD \n3. Ecocash 4. Swipe or Bank Transfer"
+            response_message == "Invalid option! Please select a valid payment method\n\n 1. Cash\n2. USD \n3. Ecocash\n 4. Swipe or Bank Transfer"
             user.position = 4
             user.save()
     elif user.position == 5:
-        offer = Offer.objects.filter(request__id=user.fuel_request)
+        fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
+        offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
         try:
             if int(message) == 1:
                 offer.delivery_method = "Deliver"
@@ -384,12 +387,20 @@ def view_requests_handler(user, message):
                 user.position = 6
                 user.save()
                 response_message = "Please provide a collection address."
+            offer.save()
         except:
             response_message = "Invalid option! Please select a valid delivery.\n\n 1. Deliver\n 2.Self collection"
             user.position = 5
             user.save()
-    elif user.position = 6:
-        
+    elif user.position == 6:
+        fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
+        offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
+        offer.collection_address = message
+        offer.save()
+        user.stage = 'menu'
+        user.position = 0
+        user.save()
+        response_message = "You have successfully made an offer. Type *menu* to go back to the main menu."
     return response_message
 
 
