@@ -100,12 +100,12 @@ def rate_supplier(request):
 def fuel_update(request):
     print(f"--------------------------{request.user.subsidiary_id}----------------------")
 
-    updates = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
+    updates = FuelUpdate.objects.filter(sub_type='Depot', relationship_id=request.user.subsidiary_id).first()
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     print(f"--------------------------{updates}!!!!!!!!!!!!!!!!!!!!!!!!----------------------")
     if request.method == 'POST':
-        if FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).exists():
-            fuel_update = FuelUpdate.objects.get(relationship_id=request.user.subsidiary_id)
+        if FuelUpdate.objects.filter(sub_type='Depot', relationship_id=request.user.subsidiary_id).exists():
+            fuel_update = FuelUpdate.objects.get(sub_type='Depot', relationship_id=request.user.subsidiary_id)
             fuel_update.petrol_quantity = request.POST['petrol_quantity']
             fuel_update.petrol_price = request.POST['petrol_price']
             fuel_update.diesel_quantity = request.POST['diesel_quantity']
@@ -293,6 +293,9 @@ def verification(request, token, user_id):
                         user.save()
                     else:
                         user.is_active = False
+                        user.is_waiting = True
+                        selected_company =Company.objects.filter(name=request.POST.get('company')).first()
+                        user.company = selected_company
                         user.save()
                         
                         return redirect('supplier:create_company', id=user.id)
@@ -310,9 +313,13 @@ def verification(request, token, user_id):
     return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
 
 def create_company(request, id):
+    print(id)
     form = CreateCompany()
     user = User.objects.filter(id=id).first()
+    print(user.company)
+    user_type = user.user_type
     form.initial['company_name'] = user.company.name
+    
     return render(request, 'supplier/accounts/create_company.html', {'form': form })
 
     
