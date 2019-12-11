@@ -8,9 +8,7 @@
 <script>
     $(document).ready(function () {
         var logged_user = {{user.id}}
-        var socket = io.connect('https://dreamhub.co.zw/new_offer');
-        console.log("Got to this part ")
-        console.log(socket)
+        var socket = io.connect('https://dreamhub.co.zw/new_offer');  
         socket.on('new_offer', function (msg) {
             console.log("There is a new offer on the rise", logged_user, msg.user_id)
             if (logged_user == msg.user_id){
