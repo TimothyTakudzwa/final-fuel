@@ -15,6 +15,7 @@ class User(AbstractUser):
     user_type = models.CharField(max_length=20, default='', choices=TYPE_CHOICES)
     image = models.ImageField(default='default.png', upload_to='buyer_profile_pics')
     activated_for_whatsapp = models.BooleanField(default=False)
+    is_waiting = models.BooleanField(default=False)
     subsidiary_id = models.IntegerField(default=0)
     fuel_updates_ids = models.CharField(max_length=2000, default=0)
 
