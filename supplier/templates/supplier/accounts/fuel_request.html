@@ -6,10 +6,11 @@
 {% block body %}
 <script>
     $(document).ready(function () {
-        var socket = io.connect('https://flask-notifier.herokuapp.com/new_offer');
+        var socket = io.connect('https://dreamhub.co.zw/new_offer');
         console.log("Got to this part ")
         console.log(socket)
         socket.on('new_offer', function (msg) {
+            console.log("There is a new offer on the rise")
             $('.new_alert').hide()
             var txt1 = " <h4 class='alert-heading'>New Request</h4><hr>" + msg.notification +  "<hr><small>Click to View </small></hr>";   
             $("#new_message").empty(txt1);   
