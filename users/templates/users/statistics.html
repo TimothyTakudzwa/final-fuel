@@ -159,11 +159,14 @@
             <i class="material-icons">date_range</i> Last 24 Hours
           </div>
         </div>
+        <!--
         <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#complaints_report" style="position: absolute;right:    0;
         bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
             <i class="material-icons">calendar_today</i>
           Generate Report
         </button>
+        -->
+
       </div>
       
       <div class="modal fade" id="complaints_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -232,7 +235,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form>
+                <form  method="POST" action="{% url 'users:report_generator' %}">
                     <div class="form-group">
                         
                         <input type="hidden" name="report_type" value="Requests">   
