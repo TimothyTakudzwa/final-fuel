@@ -547,6 +547,7 @@ def approval(request, id):
             selected =  request.POST['subsidiary']
             print(selected)
             subsidiari = Subsidiaries.objects.filter(name=selected).first()
+            print(subsidiari)
             applicant.subsidiary_id = subsidiari.id
             applicant.save()
             messages.success(request, f'approval for {applicant.first_name} made successfully')
