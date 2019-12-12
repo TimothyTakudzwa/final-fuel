@@ -349,7 +349,8 @@ def view_requests_handler(user, message):
             user.save()
     elif user.position == 2:
         fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
-        amount = fuel_request.amount
+        offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
+        request_quantity = fuel_request.amount
         try:
             offer_quantity = float(message)
             if offer_quantity <= request_quantity:
