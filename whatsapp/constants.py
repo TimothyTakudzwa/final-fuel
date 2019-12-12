@@ -49,6 +49,7 @@ Hello {0}, What would you like to do today\n
 
 1. View Fuel Requests
 2. View offers
+4. Today's Received Fuel
 3. Mini Statement
 
 '''
