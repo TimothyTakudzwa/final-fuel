@@ -57,11 +57,10 @@ class UserUpdateForm(forms.ModelForm):
 class CreateCompany(forms.ModelForm):
     company_name = forms.CharField()
     address = forms.CharField()
-    company_name = forms.CharField() 
 
     class Meta:
         model = Company
-        fields = ['company_name', 'address', 'company_name', 'logo', 'iban_number', 'license_number']
+        fields = ['company_name', 'address', 'logo']
 
 
 class FuelRequestForm(forms.ModelForm):
