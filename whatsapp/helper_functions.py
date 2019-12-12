@@ -236,7 +236,7 @@ def view_fuel_updates(user, message):
         i = 1
         for update in updates:
             sub = Subsidiaries.objects.filter(id = update.relationship_id).first()
-            response_message = response_message + str(i) + ". " + sub.name + '\n' + "Petrol:" + " " + str(update.petrol_quantity) + " " + "Litres" + "\n" + "Price:" + " " + str(update.petrol_price) + "\n" + "Diesel:" + " " + str(update.diesel_quantity) + " " + "Litres" + "\n" + "Price:" + " " + str(update.diesel_price) + '\n\n'
+            response_message = response_message + f'{i} *{sub.name}*\nPetrol: {update.petrol_quantity} Litres\nPrice: {update.petrol_price} \nDiesel:{update.diesel_quantity} Litres \nPrice: {update.diesel_price} \n\n'
             user.fuel_updates_ids = user.fuel_updates_ids + str(update.id) + " "
             user.save()
             i += 1        
@@ -406,8 +406,7 @@ def view_requests_handler(user, message):
         try:
             if int(message) == 1:
                 offer.delivery_method = "Deliver"
-                user.stage = 'menu'
-                user.position = 0
+                user.position = 7
                 user.save()
                 response_message = "You have successfully made an offer. Type *menu* to go back to the main menu."
             elif int(message) == 2:
@@ -417,7 +416,7 @@ def view_requests_handler(user, message):
                 response_message = "Please provide a collection address."
             offer.save()
         except:
-            response_message = "Invalid option! Please select a valid delivery.\n\n 1. Deliver\n 2.Self collection"
+            response_message = "Invalid option! Please select a valid delivery.\n\n 1. Deliver\n2. Self collection"
             user.position = 5
             user.save()
     elif user.position == 6:
@@ -425,10 +424,12 @@ def view_requests_handler(user, message):
         offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
         offer.collection_address = message
         offer.save()
-        user.stage = 'menu'
-        user.position = 0
+        user.position = 7
         user.save()
         response_message = "You have successfully made an offer. Type *menu* to go back to the main menu."
+    elif user.position == 7:
+        if message.lower() != 'menu':
+            response_message = 'Invalid response! Please type *menu* to go back to main menu'
     return response_message
 
 
@@ -501,7 +502,7 @@ def view_offers_handler(user, message):
         try:
             offer.price = float(message)
             offer.save()
-            response_message = "Please choose a delivery method.\n\n 1. Deliver\n 2.Self collection"
+            response_message = "Please choose a delivery method.\n\n 1. Deliver\n 2. Self collection"
             user.position = 5
             user.save()
         except:
@@ -513,8 +514,7 @@ def view_offers_handler(user, message):
         try:
             if int(message) == 1:
                 offer.delivery_method = "Deliver"
-                user.stage = 'menu'
-                user.position = 0
+                user.position = 7
                 user.save()
                 response_message = "You have successfully made an offer. Type *menu* to go back to the main menu."
             elif int(message) == 2:
@@ -531,10 +531,12 @@ def view_offers_handler(user, message):
         offer = Offer.objects.filter(id=user.fuel_request).first()
         offer.collection_address = message
         offer.save()
-        user.stage = 'menu'
-        user.position = 0
+        user.position = 7
         user.save()
         response_message = "You have successfully updated your offer. Type *menu* to go back to the main menu."
+    elif user.position == 7:
+        if message.lower() != 'menu':
+            response_message = 'Invalid response! Please type *menu* to go back to main menu'
     return response_message
 
 
@@ -542,10 +544,10 @@ def view_transactions_handler(user, message):
     transactions = Transaction.objects.filter(supplier=user)
     if transactions:
         i = 1
-        while i < 10:
+        for i in range(1, 10):
             for transaction in transactions:
-                response_message = f'{transaction.date} {transaction.time} {transaction.buyer.first_name} {transaction.buyer.last_name} {transaction.offer.quantity}'
-                i += 1
+                transaction_time = transaction.time.strftime("%H:%M")
+                response_message = f'{i}. {transaction.offer.quantity} litres {transaction.offer.request.fuel_type} sold to {transaction.buyer.first_name} {transaction.buyer.last_name} on {transaction.date} at {transaction_time}'
     else:
         response_message = "You have not performed any transactions yet"
     return response_message
