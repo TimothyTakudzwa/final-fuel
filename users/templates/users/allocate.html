@@ -70,7 +70,7 @@
                        <td>{{company_capacity.diesel_price}}</td>
                        <td>{{company_capacity.petrol_quantity}}</td>
                        <td>{{company_capacity.petrol_price}}</td>
-                       <td>{%if company_capacity.cash%}<i class="fa fa-dollar"></i> {% else%} {%endif%} {%if company_capacity.usd%}USD {% else%} {%endif%} {%if company_capacity.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px">{% else%} {%endif%} {%if company_capacity.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
+                       <td>{%if company_capacity.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="50px" width="50px" title="ZWL"> {% else%} {%endif%} {%if company_capacity.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="40px" width="40px" title="USD"> {% else%} {%endif%} {%if company_capacity.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if company_capacity.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
                        <td>
                           <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#company_petrol{{company_capacity.id}}">Update Petrol Capacity</button>
                           <button class="btn btn-warning btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#company_diesel{{company_capacity.id}}">Update Diesel Capacity</button>
@@ -92,7 +92,7 @@
                                                </div>
                                                <div class="modal-body">
                                                   {% load crispy_forms_tags %}
-                                                   <form action=" users/{{company_capacity.id}}"
+                                                   <form action="{% url 'users:company_petrol' company_capacity.id %}"
                                                        method="POST">
                                                        {% csrf_token %}
                                                        
@@ -150,7 +150,7 @@
                                   </div>
                                   <div class="modal-body">
                                       {% load crispy_forms_tags %}
-                                      <form action="users/{{company_capacity.id}}"
+                                      <form action="{% url 'users:company_diesel' company_capacity.id %}"
                                           method="POST">
                                           {% csrf_token %}
                                           
@@ -253,7 +253,7 @@
                            <td>{{allocate.diesel_price}}</td>
                            <td>{{allocate.petrol_quantity}} {% if allocate.petrol_quantity < 1000 %} <i class="material-icons text-danger" >warning</i>{% endif %}</td>
                            <td>{{allocate.petrol_price}}</td>
-                           <td>{%if allocate.cash%}<i class="fa fa-dollar"></i> {% else%} {%endif%} {%if allocate.usd%}USD {% else%} {%endif%} {%if allocate.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px">{% else%} {%endif%} {%if allocate.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
+                           <td>{%if allocate.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="50px" width="50px" title="ZWL">{% else%} {%endif%} {%if allocate.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="40px" width="40px" title="USD"> {% else%} {%endif%} {%if allocate.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if allocate.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
                            <td>
                              <div class = "btn-group">
                              <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#petrol{{allocate.id}}">Allocate Petrol</button>
@@ -490,7 +490,7 @@
                            <td>{{alloc.diesel_price}}</td>
                            <td>{{alloc.petrol_quantity}}</td>
                            <td>{{alloc.petrol_price}}</td>
-                           <td>{%if alloc.cash%}<i class="fa fa-dollar"></i> {% else%} {%endif%} {%if alloc.usd%}USD {% else%} {%endif%} {%if alloc.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px">{% else%} {%endif%} {%if alloc.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
+                           <td>{%if alloc.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="50px" width="50px" title="ZWL">{% else%} {%endif%} {%if alloc.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="40px" width="40px" title="USD"> {% else%} {%endif%} {%if alloc.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if alloc.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
                         
                         </tr>
 

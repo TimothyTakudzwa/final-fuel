@@ -294,6 +294,7 @@ def verification(request, token, user_id):
                         print("i am here")
 
                     else:
+                        selected_company =Company.objects.create(name=request.POST.get('company'))
                         user.is_active = False
                         user.is_waiting = True
                         selected_company = Company.objects.create(name=request.POST.get('company'))
