@@ -60,6 +60,17 @@ class AllocationForm(forms.Form):
     fuel_type = forms.ChoiceField(choices=FUEL_CHOICES)
     quantity = forms.CharField(label='Quantity', required=True)
     staff = forms.ChoiceField()
+
+class ApplicantContactForm(forms.Form):
+    choice=(('Soccer','Soccer'),('Bibo','Bibo'))
+    service_station = forms.ChoiceField()
+    depot = forms.ChoiceField()
+    sports = forms.ChoiceField(label='Sports', choices=choice)
+
+def approve_staf(request):
+    return {
+        'approve_form': ApplicantContactForm()
+    }    
 class SupplierContactForm(forms.Form):
     first_name = forms.CharField(label='First Name', required=True,
                                  max_length=30)  
