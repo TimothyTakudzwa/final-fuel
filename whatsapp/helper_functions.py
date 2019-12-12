@@ -103,7 +103,7 @@ def requests_handler(user, message):
             fuel_request.save()
             user.position = 6 
             user.save()
-            response_message = 'What is your payment method.\n\n1. ZWL(Cash)\n2. Ecocash\n3. RTGS(Swipe)/Transfer\n4. USD'
+            response_message = 'What do you want to use for payment.\n\n1. ZWL(Cash) Only\n2. Ecocash Only\n3. RTGS(Swipe)/Transfer Only\n4. USD Only\n5. Cash or Ecocash\n6. Cash or Swipe\n7. Ecocash or Swipe\n'
             
         elif message == "2":
             fuel_request.delivery_method = "DELIVERY"
@@ -352,14 +352,10 @@ def view_requests_handler(user, message):
         amount = fuel_request.amount
         try:
             offer_quantity = float(message)
-            if offer_quantity <= amount:
-                if Offer.objects.filter(request=fuel_request, supplier=user).exists():
-                    offer = Offer.objects.filter(request=fuel_request, supplier=user).first()
-                    offer.quantity = float(message)
-                    offer.save()
-                else:
-                    Offer.objects.create(quantity=float(message), supplier=user, request=fuel_request)
-                response_message = "At what price per litre?"
+            if offer_quantity <= request_quantity:
+                offer.quantity = float(message)
+                offer.save()
+                response_message = "Which form of payment are you accepting?\n\n1. Cash\n2. USD \n3. Ecocash \n4. Swipe or Bank Transfer"
                 user.position = 3
                 user.save()
             else:
@@ -367,23 +363,10 @@ def view_requests_handler(user, message):
                 user.position = 2
                 user.save()
         except:
-            response_message = "Incorrect input! Please re-enter the number of litres you are offering"
+            response_message = "Expected a number! Please re-enter a valid quantity."
             user.position = 2
             user.save()
     elif user.position == 3:
-        fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
-        offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
-        try:
-            offer.price = float(message)
-            offer.save()
-            response_message = "Which form of payment are you accepting?\n\n 1. Cash\n2. USD \n3. Ecocash 4. Swipe or Bank Transfer"
-            user.position = 4
-            user.save()
-        except:
-            response_message = "I expected a number or decimal not a string. Please enter a valid price"
-            user.position = 3
-            user.save()
-    elif user.position == 4:
         fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
         offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
         try:
@@ -396,11 +379,24 @@ def view_requests_handler(user, message):
             elif int(message) == 4:
                 offer.swipe = True
             offer.save()
+            response_message = "At what price per litre?"
+            user.position = 4
+            user.save()
+        except:
+            response_message == "Invalid option! Please select a valid payment method\n\n 1. Cash\n2. USD \n3. Ecocash\n4. Swipe or Bank Transfer"
+            user.position = 3
+            user.save()
+    elif user.position == 4:
+        fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
+        offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
+        try:
+            offer.price = float(message)
+            offer.save()
             response_message = "Please choose a delivery method.\n\n 1. Deliver\n 2.Self collection"
             user.position = 5
             user.save()
         except:
-            response_message == "Invalid option! Please select a valid payment method\n\n 1. Cash\n2. USD \n3. Ecocash\n 4. Swipe or Bank Transfer"
+            response_message = "I expected a number or decimal not a string. Please enter a valid price"
             user.position = 4
             user.save()
     elif user.position == 5:
@@ -469,7 +465,7 @@ def view_offers_handler(user, message):
             if offer_quantity <= request_quantity:
                 offer.quantity = float(message)
                 offer.save()
-                response_message = "At what price per litre?"
+                response_message = "Which form of payment are you accepting?\n\n1. Cash\n2. USD \n3. Ecocash \n4. Swipe or Bank Transfer"
                 user.position = 3
                 user.save()
             else:
@@ -483,18 +479,6 @@ def view_offers_handler(user, message):
     elif user.position ==3:
         offer = Offer.objects.filter(id=user.fuel_request).first()
         try:
-            offer.price = float(message)
-            offer.save()
-            response_message = "Which form of payment are you accepting?\n\n 1. Cash\n2. USD \n3. Ecocash 4. Swipe or Bank Transfer"
-            user.position = 4
-            user.save()
-        except:
-            response_message = "I expected a number or decimal not a string. Please enter a valid price"
-            user.position = 3
-            user.save()
-    elif user.position == 4:
-        offer = Offer.objects.filter(id=user.fuel_request).first()
-        try:
             if int(message) == 1:
                 offer.cash = True
             elif int(message) == 2:
@@ -504,11 +488,23 @@ def view_offers_handler(user, message):
             elif int(message) == 4:
                 offer.swipe = True
             offer.save()
+            response_message = "At what price per litre?"
+            user.position = 4
+            user.save()
+        except:
+            response_message == "Invalid option! Please select a valid payment method\n\n 1. Cash\n2. USD \n3. Ecocash\n4. Swipe or Bank Transfer"
+            user.position = 3
+            user.save()
+    elif user.position == 4:
+        offer = Offer.objects.filter(id=user.fuel_request).first()
+        try:
+            offer.price = float(message)
+            offer.save()
             response_message = "Please choose a delivery method.\n\n 1. Deliver\n 2.Self collection"
             user.position = 5
             user.save()
         except:
-            response_message == "Invalid option! Please select a valid payment method\n\n 1. Cash\n2. USD \n3. Ecocash\n 4. Swipe or Bank Transfer"
+            response_message = "I expected a number or decimal not a string. Please enter a valid price"
             user.position = 4
             user.save()
     elif user.position == 5:
