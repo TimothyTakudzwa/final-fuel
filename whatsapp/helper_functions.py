@@ -236,7 +236,7 @@ def view_fuel_updates(user, message):
         i = 1
         for update in updates:
             sub = Subsidiaries.objects.filter(id = update.relationship_id).first()
-            response_message = response_message + str(i) + ". " + sub.name + '\n' + "Petrol:" + " " + str(update.petrol_quantity) + " " + "Litres" + "\n" + "Price:" + " " + str(update.petrol_price) + "\n" + "Diesel:" + " " + str(update.diesel_quantity) + " " + "Litres" + "\n" + "Price:" + " " + str(update.diesel_price) + '\n\n'
+            response_message = response_message + f'{i} *{sub.name}*\nPetrol: {update.petrol_quantity} Litres\nPrice: {update.petrol_price} \nDiesel:{update.diesel_quantity} Litres \nPrice: {update.diesel_price} \n\n'
             user.fuel_updates_ids = user.fuel_updates_ids + str(update.id) + " "
             user.save()
             i += 1        
