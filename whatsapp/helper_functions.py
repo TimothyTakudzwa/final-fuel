@@ -388,7 +388,8 @@ def view_requests_handler(user, message):
             response_message = "Invalid option! Please select a valid delivery.\n\n 1. Deliver\n 2.Self collection"
             user.position = 5
             user.save()
-    elif user.position = 6:
+    elif user.position == 6:
+        pass
         
     return response_message
 
