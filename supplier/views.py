@@ -292,6 +292,7 @@ def verification(request, token, user_id):
                         user.is_active = True
                         user.save()
                     else:
+                        selected_company =Company.objects.create(name=request.POST.get('company'))
                         user.is_active = False
                         user.save()
                         
