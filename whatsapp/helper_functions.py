@@ -604,6 +604,11 @@ def supplier_handler(request,user,message):
             user.save()
             response_message = view_offers_handler(user, message)
         elif message == "3":
+            user.stage = 'view_allocations'
+            user.position = 1
+            user.save()
+            response_message = view_allocations(user, message)
+        elif message == "4":
             user.stage = 'view_transactions'
             user.position = 0
             user.save()
@@ -614,6 +619,8 @@ def supplier_handler(request,user,message):
         response_message= view_requests_handler(user, message)
     elif user.stage == 'view_offers':
         response_message = view_offers_handler(user, message)
+    elif user.stage == 'view_allocations':
+        response_message = view_allocations(user, message)
     else:
         pass
 
@@ -848,7 +855,11 @@ def view_allocations(user, message):
         for allocation in allocations:
             response_message = response_message + str(i) + "." + " " + str(allocation.date) + " " + "Diesel" + " " + str(allocation.diesel_quantity) + "L" + " " + "&" + " " + "Petrol" + " " +str(allocation.petrol_quantity) + "L" + '\n'
             i += 1        
-        
+        user.position = 2
+        user.save()
+    elif user.position == 2:
+        if message.lower() != 'menu':
+            response_message = "Invalid response! Please type *menu* to go back to main menu."
     return response_message
 
 def transacting_handler(user, message):
