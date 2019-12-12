@@ -103,7 +103,7 @@ def requests_handler(user, message):
             fuel_request.save()
             user.position = 6 
             user.save()
-            response_message = 'What is your payment method.\n\n1. ZWL(Cash)\n2. Ecocash\n3. RTGS(Swipe)/Transfer\n4. USD'
+            response_message = 'What do you want to use for payment.\n\n1. ZWL(Cash) Only\n2. Ecocash Only\n3. RTGS(Swipe)/Transfer Only\n4. USD Only\n5. Cash or Ecocash\n6. Cash or Swipe\n7. Ecocash or Swipe\n'
             
         elif message == "2":
             fuel_request.delivery_method = "DELIVERY"
