@@ -94,6 +94,7 @@ TEMPLATES = [
 
                 'supplier.forms.fuelupdate',
                 'supplier.forms.create_sub',
+                'users.forms.approve_staf',
                 'supplier.forms.fuelupdating1',
                 'supplier.forms.fuelupdating2',
                 'supplier.forms.stock_form',

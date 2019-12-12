@@ -192,7 +192,7 @@ def edit_offer(request, id):
             offer.cash = True if request.POST.get('cash') == "True" else False
             offer.ecocash = True if request.POST.get('ecocash') == "True" else False
             offer.swipe = True if request.POST.get('swipe') == "True" else False
-            offer.delivery_method = request.POST.get('delivery_method')
+            offer.delivery_method = request.POST.get('delivery_method1')
             offer.collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
             offer.pump_available = True if request.POST.get('pump_required') == "True" else False
             offer.dipping_stick_available = True if request.POST.get('usd') == "True" else False
@@ -203,7 +203,7 @@ def edit_offer(request, id):
         else:
             messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
             return redirect('fuel-request')
-    return render(request, 'supplier/accounts/fuel_request.html')
+    return render(request, 'supplier/accounts/fuel_request.html', {'offer': offer})
 
 
 @login_required
@@ -292,6 +292,7 @@ def verification(request, token, user_id):
                         user.is_active = True
                         user.save()
                     else:
+                        selected_company =Company.objects.create(name=request.POST.get('company'))
                         user.is_active = False
                         user.save()
                         
@@ -319,7 +320,7 @@ def create_company(request, id):
 def company(request):
     compan = Company.objects.filter(id = request.user.company.id).first()
     num_of_subsidiaries = Subsidiaries.objects.filter(company=request.user.company).count()
-    fuel_capacity = FuelUpdate.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()   
+    fuel_capacity = FuelUpdate.objects.filter(company_id=request.user.company.id).first()   
     return render(request, 'supplier/accounts/company.html', {'compan': compan, 'num_of_subsidiaries': num_of_subsidiaries, 'fuel_capacity': fuel_capacity})
 
 
