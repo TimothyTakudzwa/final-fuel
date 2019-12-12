@@ -544,12 +544,10 @@ def view_transactions_handler(user, message):
     transactions = Transaction.objects.filter(supplier=user)
     if transactions:
         i = 1
-        while i < 10:
+        for i in range(1, 10):
             for transaction in transactions:
                 transaction_time = transaction.time.strftime("%H:%M")
                 response_message = f'{i}. {transaction.offer.quantity} litres {transaction.offer.request.fuel_type} sold to {transaction.buyer.first_name} {transaction.buyer.last_name} on {transaction.date} at {transaction_time}'
-            i += 1
-            break
     else:
         response_message = "You have not performed any transactions yet"
     return response_message
