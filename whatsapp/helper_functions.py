@@ -406,8 +406,7 @@ def view_requests_handler(user, message):
         try:
             if int(message) == 1:
                 offer.delivery_method = "Deliver"
-                user.stage = 'menu'
-                user.position = 0
+                user.position = 7
                 user.save()
                 response_message = "You have successfully made an offer. Type *menu* to go back to the main menu."
             elif int(message) == 2:
@@ -417,7 +416,7 @@ def view_requests_handler(user, message):
                 response_message = "Please provide a collection address."
             offer.save()
         except:
-            response_message = "Invalid option! Please select a valid delivery.\n\n 1. Deliver\n 2.Self collection"
+            response_message = "Invalid option! Please select a valid delivery.\n\n 1. Deliver\n2. Self collection"
             user.position = 5
             user.save()
     elif user.position == 6:
@@ -425,10 +424,12 @@ def view_requests_handler(user, message):
         offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
         offer.collection_address = message
         offer.save()
-        user.stage = 'menu'
-        user.position = 0
+        user.position = 7
         user.save()
         response_message = "You have successfully made an offer. Type *menu* to go back to the main menu."
+    elif user.position == 7:
+        if message.lower() != 'menu':
+            response_message = 'Invalid response! Please type *menu* to go back to main menu'
     return response_message
 
 
@@ -501,7 +502,7 @@ def view_offers_handler(user, message):
         try:
             offer.price = float(message)
             offer.save()
-            response_message = "Please choose a delivery method.\n\n 1. Deliver\n 2.Self collection"
+            response_message = "Please choose a delivery method.\n\n 1. Deliver\n 2. Self collection"
             user.position = 5
             user.save()
         except:
@@ -513,8 +514,7 @@ def view_offers_handler(user, message):
         try:
             if int(message) == 1:
                 offer.delivery_method = "Deliver"
-                user.stage = 'menu'
-                user.position = 0
+                user.position = 7
                 user.save()
                 response_message = "You have successfully made an offer. Type *menu* to go back to the main menu."
             elif int(message) == 2:
@@ -531,10 +531,12 @@ def view_offers_handler(user, message):
         offer = Offer.objects.filter(id=user.fuel_request).first()
         offer.collection_address = message
         offer.save()
-        user.stage = 'menu'
-        user.position = 0
+        user.position = 7
         user.save()
         response_message = "You have successfully updated your offer. Type *menu* to go back to the main menu."
+    elif user.position == 7:
+        if message.lower() != 'menu':
+            response_message = 'Invalid response! Please type *menu* to go back to main menu'
     return response_message
 
 
