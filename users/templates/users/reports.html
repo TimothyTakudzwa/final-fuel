@@ -26,8 +26,7 @@
 <body class="">
     <div class="wrapper ">
 
-        <div class="sidebar" data-color="purple" data-background-color="black"
-            data-image="{% static 'finder/assets/img/sidebar-1.jpg' %}">
+        <div class="sidebar" data-color="purple" data-background-color="black" data-image="{% static 'finder/assets/img/sidebar-1.jpg' %}">
             <!--
               Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
       
@@ -84,6 +83,13 @@
                             <p>Report Generator</p>
                         </a>
                     </li>
+
+                    <li class="nav-item {% if request.path == '/users/waiting_for_approval/' %} active {% endif %}">
+                        <a class="nav-link" href="{% url 'users:waiting_for_approval' %}">
+                          <i class="material-icons">people</i>
+                          <p>Staff Applications</p>
+                        </a>
+                      </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}?next=/">
