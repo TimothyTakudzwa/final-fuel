@@ -291,13 +291,16 @@ def verification(request, token, user_id):
                         user.company = selected_company
                         user.is_active = True
                         user.save()
+                        print("i am here")
+
                     else:
                         user.is_active = False
                         user.is_waiting = True
-                        selected_company =Company.objects.filter(name=request.POST.get('company')).first()
+                        selected_company = Company.objects.create(name=request.POST.get('company'))
+                        selected_company.save()
                         user.company = selected_company
-                        user.save()
-                        
+                        user.save() 
+                        print("i am here")
                         return redirect('supplier:create_company', id=user.id)
                     
             else:
@@ -318,9 +321,36 @@ def create_company(request, id):
     user = User.objects.filter(id=id).first()
     print(user.company)
     user_type = user.user_type
+    print(user_type)
     form.initial['company_name'] = user.company.name
-    
-    return render(request, 'supplier/accounts/create_company.html', {'form': form })
+
+    if request.method == 'POST':
+        form = CreateCompany(request.POST)
+        print("inside post")
+        print(form.errors)
+        if form.is_valid():
+            print('inside form valid')
+            if user_type == 'BUYER':
+                print("hezvo tapinda mubyer")
+                company_name = request.POST.get('company_name')
+                address = request.POST.get('address')
+                logo = request.FILES.get('logo')
+                company_name = user.company.name
+                Company.objects.filter(name=company_name).update(name = company_name,
+                address = address, logo = logo)
+                print("l have updated the buyer company")
+
+            else:
+                company_name = request.POST.get('company_name')
+                address = request.POST.get('address')
+                logo = request.FILES.get('logo')
+                iban_number = request.POST.get('iban_number')
+                license_number = request.POST.get('license_number')
+                Company.objects.filter(name=company_name).update(name = company_name,
+                address = address, logo = logo, iban_number = iban_number, license_number = license_number)
+                print("l have saved the supplier company")
+            return redirect('home')
+    return render(request, 'supplier/accounts/create_company.html', {'form': form, 'user_type':user_type })
 
     
 def company(request):
