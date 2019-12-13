@@ -57,6 +57,7 @@ class UserUpdateForm(forms.ModelForm):
 class CreateCompany(forms.ModelForm):
     company_name = forms.CharField()
     address = forms.CharField()
+   
 
     class Meta:
         model = Company
