@@ -1,6 +1,23 @@
 {% extends "serviceStation/base.html" %}
 {% block body %}
 
+<div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-3">Fuel Inventory</h1>
+            <p class="lead">
+                <a class="btn btn-outline-primary" href="{% url 'serviceStation:activate_whatsapp' %}" style="margin-top: 23px;margin-bottom: 0;margin-left: 30px;background-color: #25d366;color: white;border: none;">
+                    <i class="fa fa-whatsapp" style="margin-right: 11px;"></i>
+                    {% if request.user.activated_for_whatsapp %}
+                        Deactivate Whatsapp
+                    {% else %}
+                        Activate Whatsapp
+                    {% endif %}
+                </a>
+            </p>
+    
+        </div>
+    </div>
+
 <div class="col-md-12">
     <div class="card" style="background-color:white">
 

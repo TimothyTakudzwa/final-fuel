@@ -1,6 +1,25 @@
 {% extends "serviceStation/base.html" %}
 {% block body %}
 
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+      <h1 class="display-3">Fuel Updates</h1>
+      
+      <hr class="my-2">
+      <a class="btn btn-outline-primary" href="{% url 'serviceStation:activate_whatsapp' %}" style="margin-top: 23px;margin-bottom: 0;margin-left: 30px;background-color: #25d366;color: white;border: none;">
+        <i class="fa fa-whatsapp" style="margin-right: 11px;"></i>
+        {% if request.user.activated_for_whatsapp %}
+          Deactivate Whatsapp
+        {% else %}
+          Activate Whatsapp
+        {% endif %}
+      </a>
+      
+  </div>
+</div>
+
+
+
 
 
 <div class="col-md-12">
@@ -62,7 +81,7 @@
           aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
-              <div class="modal-header">
+              <div class="modal-header" style="background-color: #9c27b0;color: white;">
                 <h5 class="modal-title" id="exampleModalLabel">Update Today's Petrol Capacity</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
@@ -119,9 +138,10 @@
                     
                   </div>
                   <div class="modal-footer">
-                          <div >
-                              <button class="btn btn-success" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
-                              </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary ">Submit</button> 
+                        <button class="btn btn-default" data-dismiss="modal">No</button> 
+                    </div>
     
                   
                   
@@ -137,7 +157,7 @@
         aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header" style="background-color: #9c27b0;color: white;">
               <h5 class="modal-title" id="exampleModalLabel">Update Today's diesel Capacity</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -196,7 +216,8 @@
                 </div>
                 <div class="modal-footer">
                         <div >
-                            <button class="btn btn-success" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
+                            <button type="submit" class="btn btn-primary ">Submit</button> 
+                            <button class="btn btn-default" data-dismiss="modal">Close</button> 
                             </div>
   
                 
