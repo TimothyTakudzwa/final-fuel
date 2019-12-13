@@ -329,7 +329,7 @@ def create_company(request, id):
         if form.is_valid():
             print('inside form valid')
             if user_type == 'BUYER':
-                print("hezvo tapinda mubyer")
+                print("hezvo tapinda mubuyer")
                 company_name = request.POST.get('company_name')
                 address = request.POST.get('address')
                 logo = request.FILES.get('logo')
