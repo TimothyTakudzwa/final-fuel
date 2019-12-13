@@ -199,9 +199,16 @@
                                                                             company to be added to the platform</h4>
                                                                         {% load crispy_forms_tags %}
 
+                                                                        
+                                                                        <form method="POST" enctype="multipart/form-data">
                                                                         {% csrf_token %}
-                                                                        <form action="create_company" method="POST">
-                                                                            {{ form|crispy }}
+                                                                            {% if user_type == 'BUYER' %}
+                                                                                {{ form.company_name|as_crispy_field }}
+                                                                                {{ form.address|as_crispy_field }}
+                                                                                {{ form.logo|as_crispy_field }}
+                                                                            {% else %}
+                                                                                {{ form|crispy }}
+                                                                            {% endif %}
                                                                             <button
                                                                                 class="btn btn-outline-info btn-lg btn-block"
                                                                                 type="submit">Send Application</button>

@@ -20,3 +20,19 @@ Kariba = (('CBD','CBD'))
 Karoi = (('CBD','CBD'))
 Kwekwe = (('CBD','CBD'))
 Marondera = (('CBD','CBD'))
+
+
+Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane', 'North End', 'Northvale', 'North Lynne', 'Northlea', 
+            'North Trenance', 'Ntaba Moyo', 'Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont', 'Bradfield',
+            'Burnside', 'Cement', 'Cowdray Park', 'Donnington West', 'Donnington', 'Douglasdale', 'Emakhandeni', 'Eloana', 'Emganwini', 'Enqameni', 'Enqotsheni', 
+            'Entumbane', 'Fagadola', 'Fortunes Gate (Including Mtaba Moya)', 'Famona', 'Four Winds', 'Glengarry', 'Glencoe', 'Glenville', 'Granite Park', 'Greenhill', 
+            'Gwabalanda', 'Harrisvale', 'Helenvale', 'Highmount', 'Hillcrest', 'Hillside', 'Hillside South', 'Hume Park', 'Hyde Park', 'Ilanda', 'Iminyela', 'Intini', 
+            'Jacaranda', 'Kevin', 'Kilallo', 'Kenilworth', 'Killarney', 'Kingsdale', 'Kumalo', 'Kumalo North', 'Lobengula', 'Lakeside', 'Lobenvale', 'Lochview', 'Luveve',
+            'Magwegwe', 'Mabutweni', 'Magwegwe West', 'Magwegwe North', 'Makokoba', 'Mahatshula', 'Malindela', 'Manningdale', 'Matsheumhlope', 'Marlands', 'Matshobana', 
+            'Montrose', 'Montgomery', 'Morningside', 'Mpopoma', 'Mzilikazi', 'Munda', 'Orange Grove', 'Paddonhurst', 'Parklands', 'Parkview', 'Pelandaba', 'Pumula', 
+            'Pumula South', 'Queensdale', 'Queens Park', 'Queens Park East', 'Queens Park West', 'Rangemore', 'Raylton', 'Richmond', 'Riverside', 'Romney Park', 'Sauerstown',
+            'Selbourne Park', 'Sizinda', 'Steeldale', 'Suburbs', 'Southdale', 'Southwold', 'Sunninghill', 'Sunnyside', 'Tegela', 'The Jungle', 'Thorngrove', 'Tshabalala', 
+            'Trenance', 'Tshabalala Extension', 'Umguza Estate', 'Upper Rangemore', 'Waterford', 'Waterlea', 'Westgate', 'Westondale', 'West Somerton', 'Willsgrove', 'Windsor Park',
+            'Woodlands', 'Woodville']
+
+Harare = ['Avenues', 'Budiriro','Dzivaresekwa',  'Kuwadzana', 'Warren Park','Glen Norah', 'Glen View',  'Avondale',  'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park','Borrowdale',  'Chisipiti',  'Glen Lorne', 'Greendale', 'Greystone Park', 'Helensvale', 'Highlands',   'Mandara', 'Manresa','Msasa','Newlands',  'The Grange',  'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft', 'Hatcliffe', 'Mabelreign', 'Marlborough',  'Meyrick Park', 'Mount Pleasant',  'Pomona',   'Tynwald',  'Vainona', 'Arcadia','Braeside', 'CBD',  'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale', 'Sunningdale', 'Epworth','Highfield' 'Kambuzuma',  'Southerton', 'Warren Park', 'Southerton',  'Mabvuku', 'Tafara',  'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park',  'Marimba Park', 'Mufakose']

@@ -632,16 +632,73 @@
                          {% endfor %}   
 
                      </tbody>   
-              </table>      
-                              
+              </table>         
+              {% else %}
+              <p>No Sales Yet To Report</p>    
+              {% endif %}
+          </div>
+      </div>
+      </div>
+      
+  </div>
+
+  <div class="col-md-12">
+      <div class="card" style="background-color:white">
+          
+          <div class="card-header card-header-primary">
+          <h4 class="card-title ">Top Subsidiaries</h4>
+          </div>
+      <div class="card-body">
+          <div class="container-fluid">
+              {% if subs %}
+  
+              <table id="subs_table" class="table table-striped table-bordered" style="width:100%">
+                  <thead style="color:white; background:lightslategray">
+                      <th style="color:white;">
+                          Name
+                         </th>
                          
+                         <th style="color:white;">
+                            Address 
+                           </th>
                           
+                           <th style="color:white;">
+                              Total Value 
+                             </th>
+                           <th style="color:white;">
+                             No Of Transactions
+                            </th>
+                            <th style="color:white;">
                               
-                         
+                             </th>
+                            <!--
+                            <th style="color:white;">
+                            
+                          </th>
+                        -->
+                  </thead>    
+                     <tbody>
+                         {% for sub in subs %}
+                         <tr>
+                             <td>{{sub.name}}</td>
                              
-                      
-                     
-                  
+                             <td>{{sub.location}}</td>
+                             <td>$ {{sub.tran_value|stringformat:".2f"}}</td>
+                             <td>{{sub.tran_count}}</td>
+                             
+                             <td style="width: 13%;">
+                                 <div>
+                                      <a href="" class="btn btn-primary btn-sm" >View History</a>  
+                                      
+  
+                                 </div>
+                              </td>
+                         </tr>
+                        
+                         {% endfor %}   
+
+                     </tbody>   
+              </table>         
               {% else %}
               <p>No Sales Yet To Report</p>    
               {% endif %}
@@ -655,7 +712,10 @@
 
   <div class="ct-chart ct-perfect-fourth"></div>
 
+<script>
 
+
+</script>
   
 
 
