@@ -22,10 +22,42 @@ def send_message(phone_number, message):
 def individual_handler(request, user,message):
     if message.lower() == 'menu' and user.stage != 'registration':
         user.position = 1
-        user.stage = 'requesting'
+        user.stage = 'menu'
         user.save()
-        return requests_handler(user, message)
-    pass
+        full_name = user.first_name + " " + user.last_name
+        response_message = individual_menu.format(full_name)
+        return response_message
+    
+    if user.stage == 'menu':
+        if message == "1":
+            user.stage = 'requesting'
+            user.save()
+            response_message = requesting(user, message)
+        elif message == "2":
+            user.stage = 'station_updates'
+            user.save()
+            response_message = station_updates(user, message)
+        else:
+            full_name = user.first_name + " " + user.last_name
+            response_message = individual_menu.format(full_name)
+        return response_message  
+
+    elif user.stage == 'requesting':
+        response_message = requesting(user, message)
+    elif user.stage == 'station_updates':
+        response_message = station_updates(user, message)
+    elif user.stage == 'registration':
+        user.stage = 'menu'
+        user.position = 1        
+        full_name = user.first_name + " " + user.last_name
+        if user.activated_for_whatsapp: 
+            response_message = buyer_menu.format(full_name)           
+        else:        
+            response_message = registred_as_a.format(full_name, user.company.name, "Buyer")
+        user.save()
+    else:
+       pass
+    return response_message     
 
 def buyer_handler(request,user,message):
     if message.lower() == 'menu':
@@ -832,6 +864,86 @@ def transacting_handler(user, message):
                 response_message = 'This transaction has been completed'
         elif message.lower() == 'wait':
             pass
+    return response_message
+
+
+def requesting(user, message):
+    if user.position == 1:
+        cities = ["Harare","Bulawayo","Beitbridge","Bindura","Chinhoyi","Chirundu","Gweru","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Mutare","Mutoko","Nyanga","Victoria Falls"]
+        response_message = "Which City are you in?\n\n"
+        i = 1
+        for city in cities:
+            response_message = response_message + f'{i}. {city}\n'
+            i += 1 
+        user.position = 11
+        user.save()
+    elif user.position == 11:
+        if message =="1":
+            Harare = ['Avenues', 'Budiriro','Dzivaresekwa',  'Kuwadzana', 'Warren Park','Glen Norah', 'Glen View',  'Avondale',  'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park','Borrowdale',  'Chisipiti',  'Glen Lorne', 'Greendale', 'Greystone Park', 'Helensvale', 'Highlands',   'Mandara', 'Manresa','Msasa','Newlands',  'The Grange',  'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft', 'Hatcliffe', 'Mabelreign', 'Marlborough',  'Meyrick Park', 'Mount Pleasant',  'Pomona',   'Tynwald',  'Vainona', 'Arcadia','Braeside', 'CBD',  'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale', 'Sunningdale', 'Epworth','Highfield' 'Kambuzuma',  'Southerton', 'Warren Park', 'Southerton',  'Mabvuku', 'Tafara',  'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park',  'Marimba Park', 'Mufakose']
+            user.fuel_updates_ids = "Harare"
+            response_message = 'Which location do you want to look for fuel in?\n\n'
+            i = 1
+            for location in Harare:
+                response_message = response_message + f'{i}. {location}\n'
+                i += 1
+            user.position = 12
+            user.save()
+        elif message == "2":
+            Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane', 'North End', 'Northvale', 'North Lynne', 'Northlea', 'North Trenance', 'Ntaba Moyo', 'Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont', 'Bradfield','Burnside', 'Cement', 'Cowdray Park', 'Donnington West', 'Donnington', 'Douglasdale', 'Emakhandeni', 'Eloana', 'Emganwini', 'Enqameni', 'Enqotsheni']
+            user.fuel_updates_ids = "Bulawayo"
+            response_message = 'Which location do you want to look for fuel in?\n\n'
+            i = 1
+            for location in Bulawayo:
+                response_message = response_message + f'{i}. {location}\n'
+                i += 1
+            user.position = 13
+            user.save()
+        else:
+            cities = ["Harare","Bulawayo","Beitbridge","Bindura","Chinhoyi","Chirundu","Gweru","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Mutare","Mutoko","Nyanga","Victoria Falls"]
+            my_city = cities[int(message) - 1]
+            stations = Subsidiaries.objects.filter(city=my_city,is_depot=False).all()
+            response_message = 'Please visit one of the service stations below to buy fuel\n\n'
+            i = 1
+            for station in stations:
+                fuel_update = FuelUpdate.objects.filter(relationship_id=station.id).first()
+                response_message = response_message + f'{i}. *{station.name}*\nPetrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nDiesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n' 
+                i += 1
+            
+    elif user.position == 12:
+        Harare = ['Avenues', 'Budiriro','Dzivaresekwa',  'Kuwadzana', 'Warren Park','Glen Norah', 'Glen View',  'Avondale',  'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park','Borrowdale',  'Chisipiti',  'Glen Lorne', 'Greendale', 'Greystone Park', 'Helensvale', 'Highlands',   'Mandara', 'Manresa','Msasa','Newlands',  'The Grange',  'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft', 'Hatcliffe', 'Mabelreign', 'Marlborough',  'Meyrick Park', 'Mount Pleasant',  'Pomona',   'Tynwald',  'Vainona', 'Arcadia','Braeside', 'CBD',  'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale', 'Sunningdale', 'Epworth','Highfield' 'Kambuzuma',  'Southerton', 'Warren Park', 'Southerton',  'Mabvuku', 'Tafara',  'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park',  'Marimba Park', 'Mufakose']
+        loc = Harare[int(message) - 1]
+        stations = Subsidiaries.objects.filter(city=user.fuel_updates_ids,location=loc,is_depot=False).all()
+        response_message = 'Please visit one of the service stations below to buy fuel\n\n'
+        i = 1
+        for station in stations:
+            fuel_update = FuelUpdate.objects.filter(relationship_id=station.id).first()
+            response_message = response_message + f'{i}. *{station.name}*\nPetrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nDiesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n' 
+            i += 1
+    
+    elif user.position == 13:
+        Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane', 'North End', 'Northvale', 'North Lynne', 'Northlea', 'North Trenance', 'Ntaba Moyo', 'Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont', 'Bradfield','Burnside', 'Cement', 'Cowdray Park', 'Donnington West', 'Donnington', 'Douglasdale', 'Emakhandeni', 'Eloana', 'Emganwini', 'Enqameni', 'Enqotsheni']
+        loc = Bulawayo[int(message) - 1]
+        stations = Subsidiaries.objects.filter(city=user.fuel_updates_ids,location=loc,is_depot=False).all()
+        response_message = 'Please visit one of the service stations below to buy fuel\n\n'
+        i = 1
+        for station in stations:
+            fuel_update = FuelUpdate.objects.filter(relationship_id=station.id).first()
+            response_message = response_message + f'{i}. *{station.name}*\nPetrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nDiesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n' 
+            i += 1
+
+    
+    return response_message
+
+def station_updates(user, message):
+    if user.position == 1:
+        updates = FuelUpdate.objects.filter(sub_type='Service Station').all()
+        response_message = 'The following are the current updates of fuel availability in different stations. Please type *menu* to go back to menu and look for fuel\n\n'
+        i = 1
+        for update in updates:
+            station = Subsidiaries.objects.filter(id = update.relationship_id).first()
+            response_message = response_message + f'{i}. *{station.name}*\nPetrol: {update.petrol_quantity} Litres\nPrice: {update.petrol_price}\nDiesel: {update.diesel_quantity} Litres\nPrice: {update.diesel_price}\nQueue Length: {update.queue_length}\nStatus: {update.status}\n\n'
+            i += 1
+
     return response_message
 
 

@@ -33,6 +33,14 @@ Hello {0}, What would you like to do today\n\n
 
 '''
 
+individual_menu='''
+Hello {0}, What would you like to do today\n
+
+1. Look for Fuel\n
+2. View Updates\n
+
+'''
+
 ss_supplier_menu='''
 Hello {0}, What would you like to do today\n\n
 

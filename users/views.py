@@ -254,6 +254,11 @@ def myaccount(request):
 @login_required()
 def stations(request):
     stations = Subsidiaries.objects.all()
+    zimbabwean_towns = ["Harare","Bulawayo","Gweru","Mutare","Chirundu","Bindura","Beitbridge","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Chinhoyi","Mutoko","Nyanga","Victoria Falls"]
+    Harare = ['Avenues', 'Budiriro','Dzivaresekwa',  'Kuwadzana', 'Warren Park','Glen Norah', 'Glen View',  'Avondale',  'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park','Borrowdale',  'Chisipiti',  'Glen Lorne', 'Greendale', 'Greystone Park', 'Helensvale', 'Highlands',   'Mandara', 'Manresa','Msasa','Newlands',  'The Grange',  'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft', 'Hatcliffe', 'Mabelreign', 'Marlborough',  'Meyrick Park', 'Mount Pleasant',  'Pomona',   'Tynwald',  'Vainona', 'Arcadia','Braeside', 'CBD',  'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale', 'Sunningdale', 'Epworth','Highfield' 'Kambuzuma',  'Southerton', 'Warren Park', 'Southerton',  'Mabvuku', 'Tafara',  'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park',  'Marimba Park', 'Mufakose']
+    Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane', 'North End', 'Northvale', 'North Lynne', 'Northlea','North Trenance', 'Ntaba Moyo', 'Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont', 'Bradfield']
+    Mutare = ['Murambi', 'Hillside', 'Fairbridge Park', 'Morningside', 'Tigers Kloof', 'Yeovil', 'Westlea', 'Florida', 'Chikanga', 'Garikai', 'Sakubva', 'Dangamvura','Weirmouth', 'Fern Valley', 'Palmerstone', 'Avenues', 'Utopia','Darlington', 'Greeside', 'Greenside Extension', 'Toronto', 'Bordervale', 'Natview Park','Mai Maria', 'Gimboki', 'Musha Mukadzi']
+    Gweru = ['Gweru East', 'Woodlands Park', 'Kopje', 'Mtausi Park', 'Nashville', 'Senga', 'Hertifordshire', 'Athlone', 'Daylesford', 'Mkoba', 'Riverside', 'Southview', 'Nehosho','Clydesdale Park', 'Lundi Park', 'Montrose', 'Ascot', 'Ridgemont', 'Windsor Park', 'Ivene', 'Haben Park', 'Bata', 'ThornHill Air Field' 'Green Dale', 'Bristle', 'Southdowns']
     if request.method == 'POST':
         name = request.POST['name']
         city = request.POST['city']
@@ -268,7 +273,7 @@ def stations(request):
         swipe = request.POST['swipe']
         ecocash = request.POST['ecocash']
         sub = Subsidiaries.objects.create(account_number=account_number,destination_bank=destination_bank,city=city,location=location,company=request.user.company,name=name,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)    
-        if request.POST['is_depot'] == True:
+        if is_depot == "True":
             sub_type = 'Depot'  
         else:
             sub_type = 'Service Station'
@@ -279,7 +284,7 @@ def stations(request):
         messages.success(request, 'Subsidiary Created Successfully')
         return redirect('users:stations')
 
-    return render(request, 'users/service_stations.html', {'stations': stations})
+    return render(request, 'users/service_stations.html', {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns, 'Mutare': Mutare, 'Gweru': Gweru})
 
 @login_required()
 def report_generator(request):
@@ -531,11 +536,8 @@ def audit_trail(request):
     return render(request, 'users/audit_trail.html', {'trails': trails})    
 
 def waiting_for_approval(request):
-    #form = ApplicantContactForm()
-    stations = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
-    #form.fields['service_station'].choices = [((station.id, station.name)) for station in stations] 
+    stations = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all() 
     depots = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company).all()
-    #form.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots] 
     applicants = user.objects.filter(is_waiting=True,company=request.user.company).all()
     return render(request, 'users/waiting_for_approval.html', {'applicants': applicants,'stations': stations, 'depots': depots})
 
