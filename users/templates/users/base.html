@@ -141,6 +141,11 @@
       
       
         </div>
+        <div class="progress">
+            <div class="determinate" style="width: 70%"></div>
+        </div>
+
+        
         {% block body %}{% endblock %}
       </main>
  
@@ -200,6 +205,10 @@
 
     $(document).ready(function() {
       $('#example').DataTable({"order": [[ 0, "desc" ]]});
+    } );
+
+    $(document).ready(function() {
+      $('#subs_table').DataTable({"order": [[ 0, "desc" ]]});
     } );
 
     $(document).ready(function() {

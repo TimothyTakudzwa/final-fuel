@@ -482,83 +482,103 @@ def view_offers_handler(user, message):
         offer_list = list(user.fuel_updates_ids.split(" "))
         try:
             offer_id = offer_list[int(message)]
-            response_message = "How many litres are you offering now?"
+            response_message = "How many litres are you offering now? Type *pass* if you do not wish to edit."
             offer = Offer.objects.filter(id=offer_id).first()
             user.position = 2
             user.fuel_request = offer.id
             user.save()
         except:
-            response_message = "Invalid option! Please enter a valid option."
+            response_message = "Invalid option! Please enter a valid option or type *pass* if you do not wish to edit."
             user.position = 1
             user.save()
     elif user.position == 2:
         offer = Offer.objects.filter(id=user.fuel_request).first()
         request_quantity = offer.request.amount
-        try:
-            offer_quantity = float(message)
-            if offer_quantity <= request_quantity:
-                offer.quantity = float(message)
-                offer.save()
-                response_message = "Which form of payment are you accepting?\n\n1. Cash\n2. USD \n3. Ecocash \n4. Swipe or Bank Transfer"
-                user.position = 3
-                user.save()
-            else:
-                response_message = "You can not offer fuel that is more than the requested quantity. Please enter a different fuel quantity."
-                user.position = 2
-                user.save()
-        except:
-            response_message = "Expected a number! Please re-enter a valid quantity."
-            user.position = 2
-            user.save()
-    elif user.position ==3:
-        offer = Offer.objects.filter(id=user.fuel_request).first()
-        try:
-            if int(message) == 1:
-                offer.cash = True
-            elif int(message) == 2:
-                offer.usd = True
-            elif int(message) == 3:
-                offer.ecocash = True
-            elif int(message) == 4:
-                offer.swipe = True
-            offer.save()
-            response_message = "At what price per litre?"
-            user.position = 4
-            user.save()
-        except:
-            response_message == "Invalid option! Please select a valid payment method\n\n 1. Cash\n2. USD \n3. Ecocash\n4. Swipe or Bank Transfer"
+        if message.lower() == 'pass':
+            response_message = "Which form of payment are you accepting? Type *pass* if you do not wish to edit.\n\n1. Cash\n2. USD \n3. Ecocash \n4. Swipe or Bank Transfer"
             user.position = 3
             user.save()
-    elif user.position == 4:
+        else:
+            try:
+                offer_quantity = float(message)
+                if offer_quantity <= request_quantity:
+                    offer.quantity = float(message)
+                    offer.save()
+                    response_message = "Which form of payment are you accepting? Type *pass* if you do not wish to edit.\n\n1. Cash\n2. USD \n3. Ecocash \n4. Swipe or Bank Transfer"
+                    user.position = 3
+                    user.save()
+                else:
+                    response_message = "You can not offer fuel that is more than the requested quantity. Please enter a different fuel quantity or type *pass* if you do not wish to edit."
+                    user.position = 2
+                    user.save()
+            except:
+                response_message = "Expected a number! Please re-enter a valid quantity or type *pass* if you do not wish to edit."
+                user.position = 2
+                user.save()
+    elif user.position ==3:
         offer = Offer.objects.filter(id=user.fuel_request).first()
-        try:
-            offer.price = float(message)
-            offer.save()
-            response_message = "Please choose a delivery method.\n\n 1. Deliver\n 2. Self collection"
-            user.position = 5
-            user.save()
-        except:
-            response_message = "I expected a number or decimal not a string. Please enter a valid price"
+        if message.lower() == 'pass':
+            response_message = "At what price per litre? Type *pass* if you do not wish to edit."
             user.position = 4
             user.save()
-    elif user.position == 5:
+        else:
+            try:
+                if int(message) == 1:
+                    offer.cash = True
+                elif int(message) == 2:
+                    offer.usd = True
+                elif int(message) == 3:
+                    offer.ecocash = True
+                elif int(message) == 4:
+                    offer.swipe = True
+                offer.save()
+                response_message = "At what price per litre? Type *pass* if you do not wish to edit."
+                user.position = 4
+                user.save()
+            except:
+                response_message == "Invalid option! Please select a valid payment method or type *pass* if you do not wish to edit.\n\n 1. Cash\n2. USD \n3. Ecocash\n4. Swipe or Bank Transfer"
+                user.position = 3
+                user.save()
+    elif user.position == 4:
         offer = Offer.objects.filter(id=user.fuel_request).first()
-        try:
-            if int(message) == 1:
-                offer.delivery_method = "Deliver"
-                user.position = 7
-                user.save()
-                response_message = "You have successfully made an offer. Type *menu* to go back to the main menu."
-            elif int(message) == 2:
-                offer.delivery_method = "Self Collection"
-                user.position = 6
-                user.save()
-                response_message = "Please provide a collection address."
-            offer.save()
-        except:
-            response_message = "Invalid option! Please select a valid delivery.\n\n 1. Deliver\n 2.Self collection"
+        if message.lower() == 'pass':
+            response_message = "Please choose a delivery method. Type *pass* if you do not wish to edit.\n\n 1. Deliver\n 2. Self collection"
             user.position = 5
             user.save()
+        else:
+            try:
+                offer.price = float(message)
+                offer.save()
+                response_message = "Please choose a delivery method or type *pass* if you do not wish to edit.\n\n 1. Deliver\n 2. Self collection"
+                user.position = 5
+                user.save()
+            except:
+                response_message = "I expected a number or decimal not a string. Please enter a valid price or type *pass* if you do not wish to edit."
+                user.position = 4
+                user.save()
+    elif user.position == 5:
+        offer = Offer.objects.filter(id=user.fuel_request).first()
+        if message.lower() == 'pass':
+            response_message = "You have successfully updated your offer. Type *menu* to go back to the main menu."
+            user.position = 7
+            user.save()
+        else:
+            try:
+                if int(message) == 1:
+                    offer.delivery_method = "Deliver"
+                    user.position = 7
+                    user.save()
+                    response_message = "You have successfully updated your offer. Type *menu* to go back to the main menu."
+                elif int(message) == 2:
+                    offer.delivery_method = "Self Collection"
+                    user.position = 6
+                    user.save()
+                    response_message = "Please provide a collection address or type *pass* if you do not wish to edit."
+                offer.save()
+            except:
+                response_message = "Invalid option! Please select a valid delivery or type *pass* if you do not wish to edit.\n\n 1. Deliver\n 2.Self collection"
+                user.position = 5
+                user.save()
     elif user.position == 6:
         offer = Offer.objects.filter(id=user.fuel_request).first()
         offer.collection_address = message
@@ -573,15 +593,121 @@ def view_offers_handler(user, message):
 
 
 def view_transactions_handler(user, message):
-    transactions = Transaction.objects.filter(supplier=user)
-    if transactions:
-        i = 1
-        while i < 10:
+    if user.position == 0:
+        transactions = Transaction.objects.filter(supplier=user).all().order_by('-id')[:10]
+        if transactions:
+            response_message = "Here is a list of your recent transaction. Type *menu* to go back to main menu\n\n"
+            i = 1
             for transaction in transactions:
-                response_message = f'{transaction.date} {transaction.time} {transaction.buyer.first_name} {transaction.buyer.last_name} {transaction.offer.quantity}'
+                transaction_time = transaction.time.strftime("%H:%M")
+                response_message = response_message + f'{i}. {transaction.offer.quantity} litres {transaction.offer.request.fuel_type} sold to {transaction.buyer.first_name} {transaction.buyer.last_name} on {transaction.date} at {transaction_time}\n'
                 i += 1
-    else:
-        response_message = "You have not performed any transactions yet"
+            user.position = 1
+            user.save
+        else:
+            response_message = "You have not performed any transactions yet. Type *menu* to go bak to the main menu"
+            user.position = 1
+            user.save
+    elif user.position == 1:
+        if message.lower() != 'menu':
+            response_message = "Invalid response! Please type *menu* to go back to the main menu"
+    return response_message
+
+
+def update_fuel(user, message):
+    if user.position == 0:
+        response_message = "How much petrol do you have?"
+        user.position = 1
+        user.save()
+    elif user.position == 1:
+        fuel_update = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).first()
+        if fuel_update:
+            try:
+                fuel_update.petrol_quantity = float(message)
+                fuel_update.save()
+                user.position = 2
+                user.save()
+                response_message = "How much is the petrol price per litre?"
+            except:
+                response_message = "Please provide a valid petrol quantity."
+        else:
+            try:
+                FuelUpdate.objects.create(sub_type='Depot', relationship_id = user.subsidiary_id, petrol_quantity = float(message))
+                user.position = 2
+                user.save()
+                response_message = "How much is the petrol price per litre?"
+            except:
+                response_message = "Please provide a valid petrol quantity."
+                user.position = 1
+                user.save()
+    elif user.position == 2:
+        fuel_update = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).first()
+        try:
+            fuel_update.petrol_price = float(message)
+            fuel_update.save()
+            user.position = 3
+            user.save()
+            response_message = "How much diesel do you have in stock?"
+        except:
+            response_message = "Please provide a valid petrol price"
+            user.position = 2
+            user.save()
+    elif user.position == 3:
+        fuel_update = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).first()
+        try:
+            fuel_update.diesel_quantity = float(message)
+            fuel_update.save()
+            user.position = 4
+            user.save()
+            response_message = "What is the diesel price per litre?"
+        except:
+            response_message = "Please provide a valid diesel quantity"
+            user.position = 3
+            user.save()
+    elif user.position == 4:
+        fuel_update = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).first()
+        try:
+            fuel_update.diesel_quantity = float(message)
+            fuel_update.save()
+            user.position = 5
+            user.save()
+            response_message = "Which forms of payment are you accepting?\n\n1. ZWL(Cash) Only\n2. Ecocash Only\n3. RTGS(Swipe)/Transfer Only\n4. USD Only\n5. Cash or Ecocash\n6. Cash or Swipe\n7. Ecocash or Swipe\n"
+        except:
+            response_message = "Please provide a valid diesel quantity"
+            user.position = 4
+            user.save()
+    elif user.position == 5:
+        fuel_update = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).first()
+        try:
+            if message == "1":
+                fuel_update.cash = True 
+            elif message == "2":
+                fuel_update.ecocash = True
+            elif message == "3":
+                fuel_update.swipe = True
+            elif message == "4":
+                fuel_update.usd = True
+            elif message == "5":
+                fuel_update.ecocash = True
+                fuel_update.cash = True
+            elif message == "6":
+                fuel_update.swipe = True
+                fuel_update.cash = True
+            elif message == "7":
+                fuel_update.ecocash = True
+                fuel_update.swipe = True
+            fuel_update.save()
+            user.position = 6
+            user.save()
+            response_message = "You have successfully updated you fuel stocks. Send *menu* to go back to main menu"
+        except:
+            response_message = "Invalid option! Please select a valid payment method"
+            user.position = 5
+            user.save()
+    elif user.position == 6:
+        if message.lower != 'menu':
+            response_message = "Invalid response. Please send *menu* to go back to main menu"
+    
     return response_message
 
 
@@ -607,7 +733,17 @@ def supplier_handler(request,user,message):
             user.save()
             response_message = view_offers_handler(user, message)
         elif message == "3":
-            user.stage = 'menu'
+            user.stage = 'view_allocations'
+            user.position = 1
+            user.save()
+            response_message = view_allocations(user, message)
+        elif message == "4":
+            user.position = 0
+            user.stage = 'update_fuel'
+            user.save()
+            response_message = update_fuel(user, message)
+        elif message == "5":
+            user.stage = 'view_transactions'
             user.position = 0
             user.save()
             response_message = view_transactions_handler(user, message)
@@ -617,6 +753,10 @@ def supplier_handler(request,user,message):
         response_message= view_requests_handler(user, message)
     elif user.stage == 'view_offers':
         response_message = view_offers_handler(user, message)
+    elif user.stage == 'view_allocations':
+        response_message = view_allocations(user, message)
+    elif user.stage == 'update_fuel':
+        response_message = update_fuel(user, message)
     else:
         pass
 
@@ -851,7 +991,11 @@ def view_allocations(user, message):
         for allocation in allocations:
             response_message = response_message + str(i) + "." + " " + str(allocation.date) + " " + "Diesel" + " " + str(allocation.diesel_quantity) + "L" + " " + "&" + " " + "Petrol" + " " +str(allocation.petrol_quantity) + "L" + '\n'
             i += 1        
-        
+        user.position = 2
+        user.save()
+    elif user.position == 2:
+        if message.lower() != 'menu':
+            response_message = "Invalid response! Please type *menu* to go back to main menu."
     return response_message
 
 def transacting_handler(user, message):

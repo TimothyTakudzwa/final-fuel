@@ -98,11 +98,9 @@ def rate_supplier(request):
 
 @login_required
 def fuel_update(request):
-    print(f"--------------------------{request.user.subsidiary_id}----------------------")
 
     updates = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-    print(f"--------------------------{updates}!!!!!!!!!!!!!!!!!!!!!!!!----------------------")
     if request.method == 'POST':
         if FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).exists():
             fuel_update = FuelUpdate.objects.get(relationship_id=request.user.subsidiary_id)
@@ -136,7 +134,6 @@ def fuel_update(request):
             FuelUpdate.objects.create(relationship_id=relationship_id, sub_type=sub_type, petrol_quantity=petrol_quantity, petrol_price=petrol_price, diesel_quantity=diesel_quantity, diesel_price=diesel_price)
             messages.success(request, 'Quantities uploaded successfully')
             return redirect('fuel_update')
-        print(f"--------------------------ndipe object {updates}----------------------")
 
     return render(request, 'supplier/accounts/stock.html', {'updates': updates, 'subsidiary': subsidiary_name.name})
 
@@ -291,11 +288,17 @@ def verification(request, token, user_id):
                         user.company = selected_company
                         user.is_active = True
                         user.save()
+                        print("i am here")
+
                     else:
                         selected_company =Company.objects.create(name=request.POST.get('company'))
                         user.is_active = False
-                        user.save()
-                        
+                        user.is_waiting = True
+                        selected_company = Company.objects.create(name=request.POST.get('company'))
+                        selected_company.save()
+                        user.company = selected_company
+                        user.save() 
+                        print("i am here")
                         return redirect('supplier:create_company', id=user.id)
                     
             else:
@@ -311,10 +314,41 @@ def verification(request, token, user_id):
     return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
 
 def create_company(request, id):
+    print(id)
     form = CreateCompany()
     user = User.objects.filter(id=id).first()
+    print(user.company)
+    user_type = user.user_type
+    print(user_type)
     form.initial['company_name'] = user.company.name
-    return render(request, 'supplier/accounts/create_company.html', {'form': form })
+
+    if request.method == 'POST':
+        form = CreateCompany(request.POST)
+        print("inside post")
+        print(form.errors)
+        if form.is_valid():
+            print('inside form valid')
+            if user_type == 'BUYER':
+                print("hezvo tapinda mubyer")
+                company_name = request.POST.get('company_name')
+                address = request.POST.get('address')
+                logo = request.FILES.get('logo')
+                company_name = user.company.name
+                Company.objects.filter(name=company_name).update(name = company_name,
+                address = address, logo = logo)
+                print("l have updated the buyer company")
+
+            else:
+                company_name = request.POST.get('company_name')
+                address = request.POST.get('address')
+                logo = request.FILES.get('logo')
+                iban_number = request.POST.get('iban_number')
+                license_number = request.POST.get('license_number')
+                Company.objects.filter(name=company_name).update(name = company_name,
+                address = address, logo = logo, iban_number = iban_number, license_number = license_number)
+                print("l have saved the supplier company")
+            return redirect('home')
+    return render(request, 'supplier/accounts/create_company.html', {'form': form, 'user_type':user_type })
 
     
 def company(request):

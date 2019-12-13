@@ -177,6 +177,20 @@ def statistics(request):
     
     trans = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).annotate(number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
     buyers = [client.buyer.company.name for client in trans]
+
+    branches = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company)
+
+    subs = []
+
+    for sub in branches:
+        tran_amount = 0
+        sub_trans = Transaction.objects.filter(supplier__company=request.user.company,supplier__subsidiary_id=sub.id)
+        for sub_tran in sub_trans:
+            tran_amount += sub_tran.request.amount
+        sub.tran_count = sub_trans.count()
+        sub.tran_value = tran_amount
+        subs.append(sub)
+
     new_buyers = []
     for buyer in buyers:
         total_transactions =  buyers.count(buyer)
@@ -216,7 +230,8 @@ def statistics(request):
     trans_complete = get_transactions_complete_percentage(request.user)
     return render(request, 'users/statistics.html', {'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
-     'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'admin_staff': admin_staff,  'other_staff': other_staff, 'trans_complete':trans_complete })
+     'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'admin_staff': admin_staff,
+       'other_staff': other_staff, 'trans_complete':trans_complete, 'subs':subs })
 
 
 @login_required()
