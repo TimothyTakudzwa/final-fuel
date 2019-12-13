@@ -51,16 +51,18 @@
     <div class="container">
         <h1 class="display-3">Fuel Requests</h1>
         <p class="lead">
-
-            {% if user.activated_for_whatsapp == True %}
-            <a class="btn btn-outline-danger" href="{% url 'activate_whatsapp' %}">Deactivate Whatsapp</a>
-            {% else %}
-            <a class="btn btn-outline-primary" href="{% url 'activate_whatsapp' %}">Activate Whatsapp</a>
-            {% endif %}
-
+            <a class="btn btn-outline-primary" href="{% url 'serviceStation:activate_whatsapp' %}" style="margin-top: 23px;margin-bottom: 0;margin-left: 30px;background-color: #25d366;color: white;border: none;">
+                <i class="fa fa-whatsapp" style="margin-right: 11px;"></i>
+                {% if request.user.activated_for_whatsapp %}
+                    Deactivate Whatsapp
+                {% else %}
+                    Activate Whatsapp
+                {% endif %}
+            </a>
         </p>
 
     </div>
+</div>    
     <div class="col-md-12">
             <div class="card mt-5" style="background-color:white">
                 <div class="card-header card-header-primary">

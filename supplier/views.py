@@ -98,14 +98,12 @@ def rate_supplier(request):
 
 @login_required
 def fuel_update(request):
-    print(f"--------------------------{request.user.subsidiary_id}----------------------")
 
-    updates = FuelUpdate.objects.filter(sub_type='Depot', relationship_id=request.user.subsidiary_id).first()
+    updates = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-    print(f"--------------------------{updates}!!!!!!!!!!!!!!!!!!!!!!!!----------------------")
     if request.method == 'POST':
-        if FuelUpdate.objects.filter(sub_type='Depot', relationship_id=request.user.subsidiary_id).exists():
-            fuel_update = FuelUpdate.objects.get(sub_type='Depot', relationship_id=request.user.subsidiary_id)
+        if FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).exists():
+            fuel_update = FuelUpdate.objects.get(relationship_id=request.user.subsidiary_id)
             fuel_update.petrol_quantity = request.POST['petrol_quantity']
             fuel_update.petrol_price = request.POST['petrol_price']
             fuel_update.diesel_quantity = request.POST['diesel_quantity']
@@ -136,7 +134,6 @@ def fuel_update(request):
             FuelUpdate.objects.create(relationship_id=relationship_id, sub_type=sub_type, petrol_quantity=petrol_quantity, petrol_price=petrol_price, diesel_quantity=diesel_quantity, diesel_price=diesel_price)
             messages.success(request, 'Quantities uploaded successfully')
             return redirect('fuel_update')
-        print(f"--------------------------ndipe object {updates}----------------------")
 
     return render(request, 'supplier/accounts/stock.html', {'updates': updates, 'subsidiary': subsidiary_name.name})
 

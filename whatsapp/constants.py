@@ -33,6 +33,14 @@ Hello {0}, What would you like to do today\n\n
 
 '''
 
+individual_menu='''
+Hello {0}, What would you like to do today\n
+
+1. Look for Fuel\n
+2. View Updates\n
+
+'''
+
 ss_supplier_menu='''
 Hello {0}, What would you like to do today\n\n
 
@@ -49,7 +57,9 @@ Hello {0}, What would you like to do today\n
 
 1. View Fuel Requests
 2. View offers
-3. Mini Statement
+3. Today's Received Fuel
+4. Update Fuel Stocks
+5. Mini Statement
 
 '''
 zimbabwean_towns = ["Beitbridge","Bindura","Bulawayo","Chinhoyi","Chirundu","Gweru","Harare","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Mutare","Mutoko","Nyanga","Victoria Falls"]
