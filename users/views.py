@@ -254,7 +254,7 @@ def client_history(request, cid):
     return render(request, 'users/client_history.html', {'trans':trans, 'buyer':buyer})
 
 @login_required
-def subsidiary_transacrion_history(request, sid):
+def subsidiary_transaction_history(request, sid):
     subsidiary = Subsidiaries.objects.filter(id=sid).first()
     trans = Transaction.objects.filter(supplier__company=request.user.company,supplier__subsidiary_id=sub.id)
     return render(request, 'users/subs_history.html', {'trans':trans, 'subsidiary':subsidiary})
