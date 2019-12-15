@@ -16,7 +16,7 @@
 
 
 
-
+    {% if company_capacity %}
     <div class="card" style="background-color:white">
             
         <div class="card-header card-header-primary">
@@ -72,8 +72,10 @@
                        <td>{{company_capacity.petrol_price}}</td>
                        <td>{%if company_capacity.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL"> {% else%} {%endif%} {%if company_capacity.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if company_capacity.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if company_capacity.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
                        <td>
+                        <div class="btn-group">
                           <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#company_petrol{{company_capacity.id}}">Update Petrol Capacity</button>
                           <button class="btn btn-warning btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#company_diesel{{company_capacity.id}}">Update Diesel Capacity</button>
+                        </div>  
                        </td>
                     </tr>
 
@@ -92,8 +94,8 @@
                                                </div>
                                                <div class="modal-body">
                                                   {% load crispy_forms_tags %}
-                                                   <form action="{% url 'users:company_petrol' company_capacity.id %}"
-                                                       method="POST">
+                                                  <form action="{% url 'users:company_petrol' company_capacity.id %}">
+                                                      method="POST">
                                                        {% csrf_token %}
                                                        
        
@@ -150,7 +152,7 @@
                                   </div>
                                   <div class="modal-body">
                                       {% load crispy_forms_tags %}
-                                      <form action="{% url 'users:company_diesel' company_capacity.id %}"
+                                      <form action="{% url 'users:company_diesel' company_capacity.id %}">
                                           method="POST">
                                           {% csrf_token %}
                                           
@@ -200,6 +202,8 @@
             </div>
             </div>
             </div>
+
+    {% endif %}        
 
 
     <div class="card" style="background-color:white">
@@ -313,7 +317,7 @@
                                                </div>
                                                <div class="modal-footer">
                                                        <div >
-                                                           <button class="btn btn-success" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
+                                                           <button class="btn btn-default" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
                                                            </div>
                                                        </form>
                                                    </form>
@@ -359,8 +363,11 @@
                               {{update_form.ecocash|as_crispy_field}}
                             </div>
                             </div>
-                   <button class="btn btn-primary" type="submit">Update</button>  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                  
+
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                              <button class="btn btn-primary" type="submit">Update</button>  
+                            </div>  
             </form>
             </div>
             
@@ -404,9 +411,10 @@
                             {{update_form.ecocash|as_crispy_field}}
                           </div>
                           </div>
-                       
-                 <button class="btn btn-primary" type="submit">Update</button>  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-primary" type="submit">Update</button>  
+                          </div>
           </form>
           </div>
           
