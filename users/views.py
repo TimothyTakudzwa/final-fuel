@@ -192,7 +192,7 @@ def statistics(request):
         subs.append(sub)
 
     # sort subsidiaries by transaction value
-    subs.sort(key=lamba sb: sb.tran_value, reverse=True)    
+    sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True)    
 
     new_buyers = []
     for buyer in buyers:
@@ -234,7 +234,7 @@ def statistics(request):
     return render(request, 'users/statistics.html', {'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
      'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'admin_staff': admin_staff,
-       'other_staff': other_staff, 'trans_complete':trans_complete, 'subs':subs })
+       'other_staff': other_staff, 'trans_complete':trans_complete, 'sorted_subs':sorted_subs })
 
 
 @login_required()
