@@ -191,6 +191,9 @@ def statistics(request):
         sub.tran_value = tran_amount
         subs.append(sub)
 
+    # sort subsidiaries by transaction value
+    sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True)    
+
     new_buyers = []
     for buyer in buyers:
         total_transactions =  buyers.count(buyer)
@@ -231,7 +234,7 @@ def statistics(request):
     return render(request, 'users/statistics.html', {'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
      'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'admin_staff': admin_staff,
-       'other_staff': other_staff, 'trans_complete':trans_complete, 'subs':subs })
+       'other_staff': other_staff, 'trans_complete':trans_complete, 'sorted_subs':sorted_subs })
 
 
 @login_required()
@@ -698,7 +701,8 @@ def depot_staff(request):
     suppliers = User.objects.filter(company=request.user.company).filter(user_type='SUPPLIER').all()
     for supplier in suppliers:
         subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
-        supplier.subsidiary_name = subsidiary.name
+        if subsidiary:
+            supplier.subsidiary_name = subsidiary.name
     #suppliers = [sup for sup in suppliers if not sup == request.user]   
     form1 = DepotContactForm()         
     subsidiaries = Subsidiaries.objects.filter(is_depot=True).all()
