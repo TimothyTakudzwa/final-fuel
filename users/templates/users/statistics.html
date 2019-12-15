@@ -646,7 +646,7 @@
       <div class="card" style="background-color:white">
           
           <div class="card-header card-header-primary">
-          <h4 class="card-title ">Top Subsidiaries</h4>
+          <h4 class="card-title ">Subsidiaries</h4>
           </div>
       <div class="card-body">
           <div class="container-fluid">
@@ -679,21 +679,23 @@
                   </thead>    
                      <tbody>
                          {% for sub in subs %}
-                         <tr>
-                             <td>{{sub.name}}</td>
-                             
-                             <td>{{sub.location}}</td>
-                             <td>$ {{sub.tran_value|stringformat:".2f"}}</td>
-                             <td>{{sub.tran_count}}</td>
-                             
-                             <td style="width: 13%;">
-                                 <div>
-                                      <a href="{% url  'users:subsidiary_transaction_history' sub.id %}" class="btn btn-primary btn-sm" >View History</a>  
-                                      
-  
-                                 </div>
-                              </td>
-                         </tr>
+                          {% if sub.tran_value > 0 %}
+                            <tr>
+                                <td>{{sub.name}}</td>
+                                
+                                <td>{{sub.location}}</td>
+                                <td>$ {{sub.tran_value|stringformat:".2f"}}</td>
+                                <td>{{sub.tran_count}}</td>
+                                
+                                <td style="width: 13%;">
+                                    <div>
+                                          <a href="{% url  'users:subsidiary_transaction_history' sub.id %}" class="btn btn-primary btn-sm" >View History</a>  
+                                          
+      
+                                    </div>
+                                  </td>
+                            </tr>
+                          {% endif %}  
                         
                          {% endfor %}   
 

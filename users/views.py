@@ -191,6 +191,9 @@ def statistics(request):
         sub.tran_value = tran_amount
         subs.append(sub)
 
+    # sort subsidiaries by transaction value
+    subs.sort(key=lamba sb: sb.tran_value, reverse=True)    
+
     new_buyers = []
     for buyer in buyers:
         total_transactions =  buyers.count(buyer)

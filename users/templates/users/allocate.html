@@ -94,8 +94,7 @@
                                                </div>
                                                <div class="modal-body">
                                                   {% load crispy_forms_tags %}
-                                                  <form action="{% url 'users:company_petrol' company_capacity.id %}">
-                                                      method="POST">
+                                                  <form action="{% url 'users:company_petrol' company_capacity.id %}" method="POST">
                                                        {% csrf_token %}
                                                        
        
@@ -129,7 +128,7 @@
                                                </div>
                                                <div class="modal-footer">
                                                        <div >
-                                                           <button class="btn btn-success" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
+                                                           <button class="btn" style="background-color: lightgray; color: #333333;" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
                                                            </div>
                                                        </form>
                                                    </form>
@@ -152,8 +151,7 @@
                                   </div>
                                   <div class="modal-body">
                                       {% load crispy_forms_tags %}
-                                      <form action="{% url 'users:company_diesel' company_capacity.id %}">
-                                          method="POST">
+                                      <form action="{% url 'users:company_diesel' company_capacity.id %}" method="POST">
                                           {% csrf_token %}
                                           
 
@@ -187,7 +185,7 @@
                                   </div>
                                   <div class="modal-footer">
                                           <div >
-                                              <button class="btn btn-success" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
+                                              <button class="btn" style="background-color: lightgray; color: #333333;" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
                                               </div>
                                           </form>
                                       </form>
@@ -317,7 +315,7 @@
                                                </div>
                                                <div class="modal-footer">
                                                        <div >
-                                                           <button class="btn btn-default" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
+                                                           <button class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
                                                            </div>
                                                        </form>
                                                    </form>
@@ -343,8 +341,8 @@
               <form action="{% url 'users:allocation_update' allocate.id %}" method="POST">
                          {% csrf_token %}
                          <div class="form-group">
-                            <lable>Petrol Capacity</lable>
-                            <input type="text" name="petrol_quantity" class="form-control" value=" " />
+                            <lable>Petrol Capacitdy</lable>
+                            <input type="text" name="petrol_quantity" class="form-control" value=" " required/>
                         </div>
   
                         <div class="row">
@@ -365,7 +363,7 @@
                             </div>
 
                             <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                              <button type="button" class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">Close</button>
                               <button class="btn btn-primary" type="submit">Update</button>  
                             </div>  
             </form>
@@ -412,7 +410,7 @@
                           </div>
                           </div>
                           <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn" style="background-color: lightgray; color: #000;" data-dismiss="modal">Close</button>
                             <button class="btn btn-primary" type="submit">Update</button>  
                           </div>
           </form>
