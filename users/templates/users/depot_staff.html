@@ -36,7 +36,7 @@
                             {{ form1|crispy }}
                             {% csrf_token %}
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">Close</button>
                                 <button class="btn btn-primary" type="submit">Add User Profile</button>  
                             </div>   
                             </form>
@@ -83,8 +83,8 @@
                            <td style="width: 33%;">
                                <div class="btn-group">
                                    <!-- <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#{{supplier.id}}">View Details</button> --> 
-                                    <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#edit_{{supplier.id}}">Edit</button>
-                                    <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#delete_{{supplier.id}}">Delete</button>
+                                    <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_{{supplier.id}}">Edit</button>
+                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#delete_{{supplier.id}}">Delete</button>
                                     <!--<a href="{% url 'users:supplier_user_create' supplier.id %}" class="btn btn-info btn-sm">More Details</a>-->
 
                                </div>
@@ -124,7 +124,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header" style="background-color: #9c27b0;color: white;">
                                             
-                                    <h5 class="modal-title" id="exampleModalLabel">Edit {{supplier.company}}</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Edit {{supplier.company}} <i class="fa fa-edit" style="padding-left: 3px;"></i></h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -152,8 +152,9 @@
                        
                                                             
                                                             <div class="modal-footer">
-                                                                    <button type="submit" class="btn btn-primary ">Submit</button>
                                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                    <button type="submit" class="btn btn-primary ">Submit</button>
+                                                                    
                                                                     </div>
                                     
                                             </form>
@@ -168,7 +169,7 @@
                                 <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header" style="background-color: #9c27b0;color: white;">
-                                    <h5 class="modal-title" id="exampleModalLabel">Delete {{supplier.username}}</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Delete {{supplier.username|title}} <i class="fa fa-trash" style="padding-left: 3px;"></i></h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>

@@ -281,9 +281,9 @@
                             <td style="width: 33%;">
                                 <div class="btn-group">
                                   
-                                    <button class="btn btn-success btn-sm" data-toggle="modal"
+                                    <button class="btn btn-info btn-sm" data-toggle="modal"
                                         data-target="#edit_{{station.id}}">Edit</button>
-                                    <button class="btn btn-warning btn-sm" data-toggle="modal"
+                                    <button class="btn btn-primary btn-sm" data-toggle="modal"
                                         data-target="#delete_{{station.id}}">Delete</button>
 
 
@@ -327,7 +327,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header" style="background-color: #9c27b0;color: white;">
 
-                                            <h5 class="modal-title" id="exampleModalLabel">Edit {{station.name}}</h5>
+                                            <h5 class="modal-title" id="exampleModalLabel">Edit {{station.name}} <i class="fa fa-edit" style="padding-left: 3px;"></i></h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -338,27 +338,27 @@
                                                 {% csrf_token %}
                                                 <div class="form-group">
                                                     <lable>Name</lable>
-                                                    <input type="text" name="name" class="form-control" value="{{station.name}}" />
+                                                    <input type="text" name="name" class="form-control" value="{{station.name}}" required/>
                                                 </div>
                                                
                                                 <div class="form-group">
                                                     <lable>Location</lable>
-                                                    <input type="text" name="address" class="form-control" value="{{station.address}}" />
+                                                    <input type="text" name="address" class="form-control" value="{{station.address}}" required/>
                                                 </div>
 
                                                 <div class="form-group">
                                                     <lable>Is Depot</lable>
-                                                    <input type="text" name="is_depot" class="form-control" value="{{station.is_depot}}" />
+                                                    <input type="text" name="is_depot" class="form-control" value="{{station.is_depot}}" required/>
                                                 </div>
                                                 
                                                 <div class="form-group">
                                                     <lable>Opening Time</lable>
-                                                    <input type="time"  name="opening_time"  value="{{station.opening_time}}" class="form-control" />
+                                                    <input type="time"  name="opening_time"  value="{{station.opening_time}}" class="form-control" required/>
                                                 </div>
 
                                                 <div class="form-group">
                                                     <lable>Closing Time</lable>
-                                                    <input type="time" name="closing_time" value="{{station.closing_time}}" class="form-control" />
+                                                    <input type="time" name="closing_time" value="{{station.closing_time}}" class="form-control" required/>
                                                 </div>
 
                                                
@@ -366,7 +366,7 @@
                                         </div>
                                         <div class="modal-footer">
                                                 <div >
-                                                    <button class="btn btn-success" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
+                                                    <button class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
                                                     </div>
                                                 </form>
                                             </form>
@@ -392,11 +392,11 @@
                                             <form action="{% url 'users:delete_subsidiary' station.id %}" method="POST">
                                                 {{ delete_form }}
                                                 {% csrf_token %}
-                                                <p><b>Are You Sure You Want To Delete {{ station.name }}</b></p>
+                                                <p style="padding: 50px;">Are You Sure You Want To Delete {{ station.name }} </p>
 
                                                 <div class="modal-footer">
                                                     <div >
-                                                            <button class="btn btn-secondary " data-dismiss="modal">No</button> <button class="btn btn-danger" type="submit">Yes</button>
+                                                            <button class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">No</button> <button class="btn btn-primary" type="submit">Yes</button>
                                                             
         
                                                         </div>
