@@ -35,8 +35,10 @@
                             <form action="{% url 'users:depot_staff' %}" method="POST">
                             {{ form1|crispy }}
                             {% csrf_token %}
-                            <button class="btn btn-primary" type="submit">Add User Profile</button>  <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
-                               
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button class="btn btn-primary" type="submit">Add User Profile</button>  
+                            </div>   
                             </form>
                         </div>
                        
@@ -151,13 +153,12 @@
                                                             
                                                             <div class="modal-footer">
                                                                     <button type="submit" class="btn btn-primary ">Submit</button>
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                                     </div>
                                     
                                             </form>
                                     </div>
-                                    <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div>
+                                    
                                 </div>
                                 </div>
                             </div>
@@ -177,16 +178,17 @@
                                             <form action="{% url 'users:delete_depot_staff' supplier.id %}" method="POST">
                                             {{ delete_form }}
                                             {% csrf_token %}
-                                            <p>Are You Sure You Want To Delete {{ supplier.username|title }}</p>
+                                            <p style="padding: 44px;"> Are You Sure You Want To Delete {{ supplier.username|title }}?</p>
+
+                                            <div class="modal-footer">
                                                 <div class="btn-group">
                                                     
-                                                    <button class="btn btn-warning" data-dismiss="modal">No</button> <button class="btn btn-danger" type="submit">Yes</button>
+                                                    <button class="btn btn-default" data-dismiss="modal">No</button> <button class="btn btn-primary" type="submit">Yes</button>
                                                 </div>
+                                            </div>    
                                             </form>
                                     </div>
-                                    <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div>
+                                    
                                 </div>
                                 </div>
                             </div>      
