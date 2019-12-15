@@ -698,7 +698,8 @@ def depot_staff(request):
     suppliers = User.objects.filter(company=request.user.company).filter(user_type='SUPPLIER').all()
     for supplier in suppliers:
         subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
-        supplier.subsidiary_name = subsidiary.name
+        if subsidiary:
+            supplier.subsidiary_name = subsidiary.name
     #suppliers = [sup for sup in suppliers if not sup == request.user]   
     form1 = DepotContactForm()         
     subsidiaries = Subsidiaries.objects.filter(is_depot=True).all()
