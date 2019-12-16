@@ -76,7 +76,7 @@ def account(request):
     if request.method == 'POST':
         try:
             phone_number = int(request.POST.get('phone_number'))
-            if len(str(phone_number)) == 12 and int(str(phone_number)[:3]) == 263:
+            if len(str(phone_number)) == 12 and int(str(phone_number)[:4]) == 2637:
                 user.phone_number = phone_number
                 user.save()
                 messages.success(request, "Profile updated successfully!")
