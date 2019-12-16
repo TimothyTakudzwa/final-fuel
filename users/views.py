@@ -354,7 +354,7 @@ def report_generator(request):
             requests = None; allocations = None; trans = None; revs=None
         if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':
             print('________Im in here_______m')
-            trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier=request.user)
+            trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier__company=request.user.company)
             requests = None; allocations = None; revs=None
 
             
