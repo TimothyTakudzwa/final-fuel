@@ -217,7 +217,7 @@ def statistics(request):
             total_value += tran.offer.request.amount
             purchases.append(tran)
             number_of_trans += 1
-        buyer.total_value = total_value
+        buyer.total_revenue = total_value
         buyer.purchases = purchases
         buyer.number_of_trans = total_transactions
         if buyer not in new_buyers:
