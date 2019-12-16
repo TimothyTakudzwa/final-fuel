@@ -99,11 +99,13 @@
                                     }
                                     else {
                                       $('#choices1{{forloop.counter}}').show();
+                                      $('#choices1{{forloop.counter}}').attr("required","required");
                                     }
                                   });
                                   $('#delivery_method{{forloop.counter}}').change(function () {
                                     if ($('#delivery_method{{forloop.counter}} option:selected').text() == "Self Collection") {
                                       $('#choices{{forloop.counter}}').show();
+                                      $('#choices{{forloop.counter}}').attr("required","required");
                                     }
                                     else {
                                       $('#choices{{forloop.counter}}').hide();
