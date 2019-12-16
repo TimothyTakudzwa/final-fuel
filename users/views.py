@@ -186,7 +186,7 @@ def statistics(request):
     diesel = stock['diesel']; petrol = stock['petrol']
     
     trans = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).annotate(number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
-    buyers = [client.buyer.company.name for client in trans]
+    buyers = [client.buyer for client in trans]
 
     branches = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company)
 
@@ -208,8 +208,7 @@ def statistics(request):
     for buyer in buyers:
         total_transactions =  buyers.count(buyer)
         buyers.remove(buyer)
-        buyer = User.objects.filter(company__name=buyer).first()
-        new_buyer_transactions = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).all()
+        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, is_complete=True).all()
         total_value = 0
         purchases = []
         number_of_trans = 0
@@ -349,11 +348,11 @@ def report_generator(request):
                     my_stock.subsidiary_name = request.user.company.name
                 else:
                     sub = Subsidiaries.objects.filter(id=my_stock.relationship_id).first()
-                    my_stock.subsidiary_name = sub.name
-            print("ep",stock)
+                    if sub:
+                        my_stock.subsidiary_name = sub.name
+            
             requests = None; allocations = None; trans = None; revs=None
         if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':
-            print('________Im in here_______m')
             trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier__company=request.user.company)
             requests = None; allocations = None; revs=None
 
