@@ -72,6 +72,21 @@ def account(request):
         'user': UserUpdateForm(instance=request.user)
 
     }
+    user = request.user
+    if request.method == 'POST':
+        try:
+            phone_number = int(request.POST.get('phone_number'))
+            if len(str(phone_number)) == 12 and int(str(phone_number)[:4]) == 2637:
+                user.phone_number = phone_number
+                user.save()
+                messages.success(request, "Profile updated successfully!")
+                return redirect('account')
+            else:
+                messages.warning(request, "Wrong phone number format! Please re-enter the phone number")
+                return redirect('account')
+        except:
+            messages.warning(request, 'Phone number can only contain numbers!')
+            return redirect('account')
     return render(request, 'supplier/accounts/account.html', context=context)
 
 
@@ -324,10 +339,15 @@ def verification(request, token, user_id):
                         selected_company =Company.objects.filter(name=request.POST.get('company')).first()
                         user.company = selected_company
                         user.is_active = True
+                        user.is_waiting = True
                         user.save()
                         TokenAuthentication.objects.filter(user=user).update(used=True)
-                        
-                        return redirect('login')
+                        my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
+                        if my_admin is not None:
+                            return render(request,'supplier/final_registration.html',{'my_admin': my_admin})
+                        else:
+                            return render(request,'supplier/final_reg.html')
+
                     else:
                         selected_company =Company.objects.create(name=request.POST.get('company'))
                         user.is_active = False
@@ -335,6 +355,7 @@ def verification(request, token, user_id):
                         selected_company = Company.objects.create(name=request.POST.get('company'))
                         selected_company.save()
                         user.company = selected_company
+                        user.is_waiting = True
                         user.save() 
                         TokenAuthentication.objects.filter(user=user).update(used=True)
                         print("i am here")
@@ -396,3 +417,4 @@ def company(request):
 def my_offers(request):
     offers = Offer.objects.filter(supplier=request.user).all()
     return render(request, 'supplier/accounts/my_offers.html', {'offers':offers})
+
