@@ -257,58 +257,52 @@ def activate_whatsapp(request):
 
 
 def verification(request, token, user_id):
-    form = BuyerUpdateForm
-    context = {
-        'title': 'Fuel Finder | Verification',
-        'form' : form
-    }
-    check = User.objects.filter(id=user_id)
-    print("here l am ")
-
-    if check.exists():
-        user = User.objects.get(id=user_id)
-        print(user)
-        if user.user_type == 'BUYER':
-            companies = Company.objects.filter(company_type='CORPORATE').all()
-        else:
-            companies = Company.objects.filter(company_type='SUPPLIER').all()
-        
-        token_check = TokenAuthentication.objects.filter(user=user, token=token)
-        result = bool([token_check])
-        print(result)
-        if result == True:
-            if request.method == 'POST':
-                user = User.objects.get(id=user_id)
-                form = BuyerUpdateForm(request.POST, request.FILES, instance=user)
-                if form.is_valid():
-                    form.save()
-                    company_exists = Company.objects.filter(name=request.POST.get('company')).exists()
-                    if company_exists:
-                        selected_company =Company.objects.filter(name=request.POST.get('company')).first()
-                        user.company = selected_company
-                        user.is_active = True
-                        user.save()
-                        print("i am here")
-
-                    else:
-                        selected_company =Company.objects.create(name=request.POST.get('company'))
-                        user.is_active = False
-                        user.is_waiting = True
-                        selected_company = Company.objects.create(name=request.POST.get('company'))
-                        selected_company.save()
-                        user.company = selected_company
-                        user.save() 
-                        print("i am here")
-                        return redirect('supplier:create_company', id=user.id)
-                    
+    user = User.objects.get(id=user_id)
+    token_check = TokenAuthentication.objects.filter(user=user, token=token, used=False)
+    if token_check.exists():
+        form = BuyerUpdateForm
+        check = User.objects.filter(id=user_id)
+        if check.exists():
+            user = User.objects.get(id=user_id)
+            print(user)
+            if user.user_type == 'BUYER':
+                companies = Company.objects.filter(company_type='CORPORATE').all()
             else:
-               
-                return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
+                companies = Company.objects.filter(company_type='SUPPLIER').all()
+
+        if request.method == 'POST':
+            user = User.objects.get(id=user_id)
+            form = BuyerUpdateForm(request.POST, request.FILES, instance=user)
+            if form.is_valid():
+                form.save()
+                company_exists = Company.objects.filter(name=request.POST.get('company')).exists()
+                if company_exists:
+                    selected_company =Company.objects.filter(name=request.POST.get('company')).first()
+                    user.company = selected_company
+                    user.is_active = True
+                    token_auth = TokenAuthentication()
+                    token_auth.used = True
+                    token_auth.save()
+                    user.save()
+                    return redirect('login')
+                else:
+                    selected_company =Company.objects.create(name=request.POST.get('company'))
+                    user.is_active = False
+                    user.is_waiting = True
+                    selected_company = Company.objects.create(name=request.POST.get('company'))
+                    selected_company.save()
+                    user.company = selected_company
+                    token_auth = TokenAuthentication()
+                    token_auth.used = True
+                    token_auth.save()
+                    user.save() 
+                    print("i am here")
+                    return redirect('supplier:create_company', id=user.id)
+                
         else:
-            messages.warning(request, 'Wrong verification token')
-            return redirect('login')
+            return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
     else:
-        messages.warning(request, 'Wrong verification id')
+        messages.warning(request, 'Wrong verification token, kindly follow the link send in the email')
         return redirect('login')
     
     return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
@@ -324,12 +318,8 @@ def create_company(request, id):
 
     if request.method == 'POST':
         form = CreateCompany(request.POST)
-        print("inside post")
-        print(form.errors)
         if form.is_valid():
-            print('inside form valid')
             if user_type == 'BUYER':
-                print("hezvo tapinda mubuyer")
                 company_name = request.POST.get('company_name')
                 address = request.POST.get('address')
                 logo = request.FILES.get('logo')
@@ -347,7 +337,7 @@ def create_company(request, id):
                 Company.objects.filter(name=company_name).update(name = company_name,
                 address = address, logo = logo, iban_number = iban_number, license_number = license_number)
                 print("l have saved the supplier company")
-            return redirect('home')
+            return redirect('login')
     return render(request, 'supplier/accounts/create_company.html', {'form': form, 'user_type':user_type })
 
     
