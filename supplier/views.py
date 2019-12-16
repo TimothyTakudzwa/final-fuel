@@ -316,7 +316,9 @@ def verification(request, token, user_id):
                         user.company = selected_company
                         user.is_active = True
                         user.save()
-                        print("i am here")
+                        my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
+                        print("i am here now")
+                        return render(request,'supplier/final_registration.html', {'my_admin': my_admin})
 
                     else:
                         selected_company =Company.objects.create(name=request.POST.get('company'))
