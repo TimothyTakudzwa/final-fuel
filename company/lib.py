@@ -8,7 +8,7 @@ def get_all_subsidiaries(company):
 
 
 def get_aggregate_stock(company): 
-    fuel_update = FuelUpdate.objects.filter(sub_type="Company", company_id = company.id).first()
+    fuel_update = FuelUpdate.objects.filter(sub_type="Company", company_id=company.id).first()
     if fuel_update:
         return {'diesel': fuel_update.diesel_quantity, 'petrol': fuel_update.petrol_quantity}
     return {'diesel': 0, 'petrol': 0}

@@ -40,6 +40,17 @@ def change_password(request):
             if new1 != new2:
                 messages.warning(request, "Passwords Don't Match")
                 return redirect('change-password')
+            elif new1 == old:
+                messages.warning(request, "New password can not be similar to the old one")
+                return redirect('change-password')
+            elif len(new1) < 8:
+                messages.warning(request, "Password is too short")
+                return redirect('change-password')
+            elif new1.isnumeric():
+                messages.warning(request, "Password can not be entirely numeric!")
+            elif not new1.isalnum():
+                messages.warning(request, "Password should be alphanumeric")
+                return redirect('change-password')
             else:
                 user = request.user
                 user.set_password(new1)
@@ -61,6 +72,21 @@ def account(request):
         'user': UserUpdateForm(instance=request.user)
 
     }
+    user = request.user
+    if request.method == 'POST':
+        try:
+            phone_number = int(request.POST.get('phone_number'))
+            if len(str(phone_number)) == 12 and int(str(phone_number)[:4]) == 2637:
+                user.phone_number = phone_number
+                user.save()
+                messages.success(request, "Profile updated successfully!")
+                return redirect('account')
+            else:
+                messages.warning(request, "Wrong phone number format! Please re-enter the phone number")
+                return redirect('account')
+        except:
+            messages.warning(request, 'Phone number can only contain numbers!')
+            return redirect('account')
     return render(request, 'supplier/accounts/account.html', context=context)
 
 
@@ -79,7 +105,7 @@ def fuel_request(request):
             buyer_request.my_offer = 'No Offer'
             buyer_request.offer_id = 0
         if fuel:
-            if buyer_request.fuel_type == 'petrol':
+            if buyer_request.fuel_type.lower() == 'petrol':
                 buyer_request.price = fuel.petrol_price
             else:
                 buyer_request.price = fuel.diesel_price
@@ -148,7 +174,7 @@ def fuel_update(request):
 
 def offer(request, id):
     form = OfferForm(request.POST)
-    if request.method == "POST":
+    if request.method == "POST" and float(request.POST.get('price')) != 0 and float(request.POST.get('quantity')) != 0:
         fuel_request = FuelRequest.objects.get(id=id)
         fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
         
@@ -191,6 +217,9 @@ def offer(request, id):
         else:
             messages.warning(request, 'You can not offer fuel more than the available fuel stock')
             return redirect('fuel-request')
+    else:
+        messages.warning(request, "Please fill all required fields to complete an offer")
+        return redirect('fuel-request')
     return render(request, 'supplier/accounts/fuel_request.html')
 
 @login_required
@@ -286,51 +315,58 @@ def activate_whatsapp(request):
 
 def verification(request, token, user_id):
     user = User.objects.get(id=user_id)
-    token_check = TokenAuthentication.objects.filter(user=user, token=token, used=False)
+    token_check = TokenAuthentication.objects.filter(user=user, token=token)  
     if token_check.exists():
-        form = BuyerUpdateForm
-        check = User.objects.filter(id=user_id)
-        if check.exists():
-            user = User.objects.get(id=user_id)
-            print(user)
-            if user.user_type == 'BUYER':
-                companies = Company.objects.filter(company_type='CORPORATE').all()
-            else:
-                companies = Company.objects.filter(company_type='SUPPLIER').all()
-
-        if request.method == 'POST':
-            user = User.objects.get(id=user_id)
-            form = BuyerUpdateForm(request.POST, request.FILES, instance=user)
-            if form.is_valid():
-                form.save()
-                company_exists = Company.objects.filter(name=request.POST.get('company')).exists()
-                if company_exists:
-                    selected_company =Company.objects.filter(name=request.POST.get('company')).first()
-                    user.company = selected_company
-                    user.is_active = True
-                    token_auth = TokenAuthentication()
-                    token_auth.used = True
-                    token_auth.save()
-                    user.save()
-                    my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
-                    print("i am here now")
-                    return render(request,'supplier/final_registration.html', {'my_admin': my_admin})
+        token_not_used = TokenAuthentication.objects.filter(user=user, used=False)
+        if token_not_used.exists():
+            form = BuyerUpdateForm
+            check = User.objects.filter(id=user_id)
+            if check.exists():
+                user = User.objects.get(id=user_id)
+                print(user)
+                if user.user_type == 'BUYER':
+                    companies = Company.objects.filter(company_type='CORPORATE').all()
                 else:
-                    selected_company =Company.objects.create(name=request.POST.get('company'))
-                    user.is_active = False
-                    user.is_waiting = True
-                    selected_company = Company.objects.create(name=request.POST.get('company'))
-                    selected_company.save()
-                    user.company = selected_company
-                    token_auth = TokenAuthentication()
-                    token_auth.used = True
-                    token_auth.save()
-                    user.save() 
-                    print("i am here")
-                    return redirect('supplier:create_company', id=user.id)
-                
+                    companies = Company.objects.filter(company_type='SUPPLIER').all()
+
+            if request.method == 'POST':
+                user = User.objects.get(id=user_id)
+                form = BuyerUpdateForm(request.POST, request.FILES, instance=user)
+                if form.is_valid():
+                    form.save()
+                    company_exists = Company.objects.filter(name=request.POST.get('company')).exists()
+                    if company_exists:
+                        selected_company =Company.objects.filter(name=request.POST.get('company')).first()
+                        user.company = selected_company
+                        user.is_active = False
+                        user.is_waiting = True
+                        user.save()
+                        TokenAuthentication.objects.filter(user=user).update(used=True)
+                        my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
+                        if my_admin is not None:
+                            return render(request,'supplier/final_registration.html',{'my_admin': my_admin})
+                        else:
+                            return render(request,'supplier/final_reg.html')
+
+                    else:
+                        selected_company =Company.objects.create(name=request.POST.get('company'))
+                        user.is_active = False
+                        user.is_waiting = True
+                        selected_company = Company.objects.create(name=request.POST.get('company'))
+                        selected_company.save()
+                        user.company = selected_company
+                        user.is_waiting = True
+                        user.save() 
+                        TokenAuthentication.objects.filter(user=user).update(used=True)
+                        print("i am here")
+                        return redirect('supplier:create_company', id=user.id)
+                    
+            else:
+                return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
         else:
-            return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
+            messages.warning(request, 'This link has been used before')
+            return redirect('buyer-register')
+        
     else:
         messages.warning(request, 'Wrong verification token, kindly follow the link send in the email')
         return redirect('login')
@@ -381,3 +417,4 @@ def company(request):
 def my_offers(request):
     offers = Offer.objects.filter(supplier=request.user).all()
     return render(request, 'supplier/accounts/my_offers.html', {'offers':offers})
+

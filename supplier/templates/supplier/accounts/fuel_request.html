@@ -122,11 +122,17 @@
                                         }
                                         else {
                                           $('#choices1{{forloop.counter}}').show();
+                                          this.getField("street_name").required = true;
+                                          this.getField("street_number").required = true;
+                                          this.getField("location").required = true;                                        
                                         }
                                       });
                                       $('#delivery_method{{forloop.counter}}').change(function () {
                                         if ($('#delivery_method{{forloop.counter}} option:selected').text() == "Self Collection") {
                                           $('#choices{{forloop.counter}}').show();
+                                          this.getField("street_name").required = true;
+                                          this.getField("street_number").required = true;
+                                          this.getField("location").required = true;
                                         }
                                         else {
                                           $('#choices{{forloop.counter}}').hide();
@@ -180,11 +186,11 @@
     
                     <div class="form-group">
                         <lable>Fuel Quantity</lable>
-                        <input type="text" name="quantity" class="form-control" value="{{req.amount}}" />
+                        <input type="text" name="quantity" class="form-control" value="{{req.amount}}" required/>
                     </div>
                     <div class="form-group">
                         <lable>Fuel Price</lable>
-                        <input type="text" name="price" class="form-control" value="{{req.price}}" />
+                        <input type="text" name="price" class="form-control" value="{{req.price}}" required />
                     </div>
                     <label class="form-group">Select Payment Method</label>
                     <div class="col-sm-12 row">
@@ -232,17 +238,17 @@
                         <div class="row form-group">                            
                                 <div class="togglebutton form-group col">
                                   <label for="">Street Number</label>
-                                  <input type="text" class="form-control" name="s_number" id="" aria-describedby="helpId" placeholder="">
+                                  <input type="text" class="form-control" name="s_number" id="street_number" aria-describedby="helpId" placeholder="">
                                   
                                 </div>
                                 <div class="togglebutton form-group col">
                                   <label for="">Street Name</label>
-                                  <input type="text" class="form-control" name="s_name" id="" aria-describedby="helpId" placeholder="">
+                                  <input type="text" class="form-control" name="s_name" id="street_name" aria-describedby="helpId" placeholder="">
                                   
                                 </div>
                                 <div class="togglebutton form-group col">
                                   <label for="">Location/Town</label>
-                                  <input type="text" class="form-control" name="s_town" id="" aria-describedby="helpId" placeholder="">
+                                  <input type="text" class="form-control" name="s_town" id="location" aria-describedby="helpId" placeholder="">
                                  
                                 </div>
                             

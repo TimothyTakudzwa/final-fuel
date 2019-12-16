@@ -44,7 +44,7 @@ class Company(models.Model):
     amount = models.FloatField(default=0.00)
     
     def __str__(self):
-        return self.name
+        return f'{str(self.id)} - {str(self.name)}'
 
     @classmethod
     def get_model_by_id(cls, id):
