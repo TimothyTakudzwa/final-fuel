@@ -151,13 +151,13 @@
      
                      <div class="form-group">
                          <label>Pick Up Method</label>
-                         <select id="delivery_method1" name="delivery_method1" class="form-control">
+                         <select id="delivery_method1{{forloop.counter}}" name="delivery_method1" class="form-control">
                             <option value='DELIVERY'>Delivery</option>
                             <option value='SELF COLLECTION'>Self Collection</option>
                          </select>
                      </div>
      
-                     <div class="form-group" name='choices1' id='choices1'>
+                     <div class="form-group" name='choices1' id='choices1{{forloop.counter}}'>
                          <label>Collection Address</label>
                          <div class="row form-group">                            
                                  <div class="togglebutton form-group col">

@@ -373,23 +373,23 @@
 
 <script>
   $(document).ready(function () {
-    $('#choices').hide();
-    $('#choices1').hide();
+    $('#choices{{forloop.counter}}').hide();
+    $('#choices1{{forloop.counter}}').hide();
 
-    $('#delivery_method1').change(function () {
+    $('#delivery_method1{{forloop.counter}}').change(function () {
       if ($('#delivery_method1 option:selected').text() == "Delivery") {
-        $('#choices1').hide();
+        $('#choices1{{forloop.counter}}').hide();
       }
       else {
-        $('#choices1').show();
+        $('#choices1{{forloop.counter}}').show();
       }
     });
-    $('#delivery_method').change(function () {
+    $('#delivery_method{{forloop.counter}}').change(function () {
       if ($('#delivery_method option:selected').text() == "Self Collection") {
-        $('#choices').show();
+        $('#choices{{forloop.counter}}').show();
       }
       else {
-        $('#choices').hide();
+        $('#choices{{forloop.counter}}').hide();
       }
     });
   });
