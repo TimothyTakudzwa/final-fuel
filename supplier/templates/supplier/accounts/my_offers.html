@@ -1,5 +1,5 @@
 {% extends "supplier/dashboard.html" %}
-{% load static %}
+{% load humanize %}
 {% block title %}
 {{title}}
 {% endblock %}
@@ -41,16 +41,6 @@
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
             <h1 class="display-3">Offers</h1>
-            <p class="lead">
-
-                {% if user.activated_for_whatsapp == True %}
-                <a class="btn btn-outline-danger" href="{% url 'activate_whatsapp' %}">Deactivate Whatsapp</a>
-                {% else %}
-                <a class="btn btn-outline-primary" href="{% url 'activate_whatsapp' %}">Activate Whatsapp</a>
-                {% endif %}
-
-            </p>
-
         </div>
     </div>
     <div class="col-md-12">
@@ -67,9 +57,10 @@
                                 <th style="color: white;"></th>
                                 <th style="color: white;">Date</th>
                                 <th style="color: white;">Buyer</th>
+                                <th style="color: white;">Fuel</th>
                                 <th style="color: white;">Requested(l)</th>
                                 <th style="color: white;">Offered(l)</th>
-                                <th style="color: white;">Fuel</th>
+                                <th style="color: white;">Price</th>
                                 <th style="color: white;">Payment</th>
                                 <th style="color: white;">Delivery</th>
                                 <th style="color: white;">Address</th>
@@ -83,9 +74,10 @@
                                 <td></td>
                                 <td>{{ offer.date }}</td>
                                 <td>{{ offer.request.name }}</td>
-                                <td>{{ offer.request.amount }}</td>
-                                <td>{{ offer.quantity }}</td>
                                 <td>{{ offer.request.fuel_type }}</td>
+                                <td>{{ offer.request.amount|intcomma }}</td>
+                                <td>{{ offer.quantity|intcomma }}</td>
+                                <td>{{ offer.price|intcomma }}</td>                                
                                 <td>{% if offer.cash %}CASH &nbsp;{%endif%} {% if offer.ecocash %}ECOCASH &nbsp;{%endif%} {% if offer.usd %}USD &nbsp; {%endif%} {% if offer.swipe %}SWIPE{% endif %}</td>
                                 <td>{{ offer.delivery_method }}</td>
                                 <td>{{ offer.collection_address }}</td>
@@ -96,13 +88,65 @@
                                 <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_{{offer.id}}">Edit</button></td>
                                 {%endif%}
                             </tr>
+                            <script>
+                                $(document).ready(function () {
+                                  $('#choices{{forloop.counter}}').hide();
+                                  $('#choices1{{forloop.counter}}').hide();
+                              
+                                  $('#delivery_method1{{forloop.counter}}').change(function () {
+                                    if ($('#delivery_method1{{forloop.counter}} option:selected').text() == "Delivery") {
+                                      $('#choices1{{forloop.counter}}').hide();
+                                    }
+                                    else {
+                                      $('#choices1{{forloop.counter}}').show();
+                                    }
+                                  });
+                                  $('#delivery_method{{forloop.counter}}').change(function () {
+                                    if ($('#delivery_method{{forloop.counter}} option:selected').text() == "Self Collection") {
+                                      $('#choices{{forloop.counter}}').show();
+                                    }
+                                    else {
+                                      $('#choices{{forloop.counter}}').hide();
+                                    }
+                                  });
+                                });
+                              
+                                $('#pump_available').on('change', function () {
+                                  $(this).val(this.checked ? "True" : "False");
+                                });
+                                $('#swipe').on('change', function () {
+                                  $(this).val(this.checked ? "True" : "False");
+                                });
+                                $('#ecocash').on('change', function () {
+                                  $(this).val(this.checked ? "True" : "False");
+                                });
+                                $('#cash').on('change', function () {
+                                  $(this).val(this.checked ? "True" : "False");
+                                });
+                                $('#usd').on('change', function () {
+                                  $(this).val(this.checked ? "True" : "False");
+                                });
+                              
+                                $('#dipping_stick_available').on('change', function () {
+                                  $(this).val(this.checked ? "True" : "False");
+                                });
+                              
+                                $('#meter_available').on('change', function () {
+                                  $(this).val(this.checked ? "True" : "False");
+                                });
+                              </script>
 
                             <!-- edit modal -->
      <div class="modal fade modal-xl" id="edit_{{offer.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
      <div class="modal-dialog modal-notice">
          <div class="modal-content">
-             <div class="modal-header text-center">
+            <div class="modal-header text-center" style="background: purple; color: white;">
+                        <h5 class="modal-title" id="myModalLabel">Make an offer</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="material-icons">close</i>
+                        </button>
+                    </div>
                  <h5 class="modal-title" id="myModalLabel">Make an offer</h5>
                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                      <i class="material-icons">close</i>
@@ -159,13 +203,13 @@
      
                      <div class="form-group">
                          <label>Pick Up Method</label>
-                         <select id="delivery_method1" name="delivery_method1" class="form-control">
+                         <select id="delivery_method1{{forloop.counter}}" name="delivery_method1" class="form-control">
                             <option value='DELIVERY'>Delivery</option>
                             <option value='SELF COLLECTION'>Self Collection</option>
                          </select>
                      </div>
      
-                     <div class="form-group" name='choices1' id='choices1'>
+                     <div class="form-group" name='choices1' id='choices1{{forloop.counter}}'>
                          <label>Collection Address</label>
                          <div class="row form-group">                            
                                  <div class="togglebutton form-group col">

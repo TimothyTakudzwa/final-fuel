@@ -282,7 +282,8 @@ def offers(request, id):
     buyer = request.user 
     for offer in offers:
         depot = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
-        offer.depot_name = depot.name
+        if depot:
+            offer.depot_name = depot.name            
    
     return render(request, 'buyer/offer.html', {'offers': offers })
 

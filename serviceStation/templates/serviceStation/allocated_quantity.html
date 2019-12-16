@@ -36,6 +36,11 @@
                         </th>
 
                         <th style="color:white;">
+                            Action
+                        </th>
+
+
+                        <th style="color:white;">
                             Diesel 
                         </th>
 
@@ -56,6 +61,7 @@
                         {% for allocation in allocations %}
                         <tr>
                             <td>{{allocation.date}}</td>
+                            <td>{{allocation.action}}</td>
                             <td>{{allocation.diesel_quantity}}</td>
                             <td>{{allocation.diesel_price}}</td>
                             <td>{{allocation.petrol_quantity}}</td>

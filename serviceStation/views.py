@@ -24,7 +24,10 @@ def fuel_updates(request):
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     if request.method == 'POST':
         #fuel_update = FuelUpdate.objects.filter(sub_type=request.POST['sub_type']).first()
-        updates.petrol_quantity = request.POST['petrol_quantity']
+        if int(updates.petrol_quantity) < int(request.POST['petrol_quantity']):
+            messages.warning(request, 'You cannot update Petrol to an amount more than the available quantity')
+            return redirect('serviceStation:home')
+        updates.petrol_quantity = request.POST['petrol_quantity'] 
         updates.queue_length = request.POST['queue_length']
         updates.status = request.POST['status']
         updates.cash = request.POST['cash']
@@ -34,7 +37,7 @@ def fuel_updates(request):
         if int(updates.petrol_quantity) < 1000:
             updates.status = 'Expecting Fuel'
             updates.save()
-            messages.warning(request, 'Please stop selling and request for more fuel from you Company')
+            messages.warning(request, 'Please request for more fuel from you Company')
             return redirect('serviceStation:home')
 
         updates.save()
@@ -52,6 +55,9 @@ def fuel_updates(request):
 def update_diesel(request, id):
     if request.method == 'POST':
         diesel_update = FuelUpdate.objects.filter(id=id).first()
+        if int(diesel_update.diesel_quantity) < int(request.POST['diesel_quantity']):
+            messages.warning(request, 'You cannot update Diesel to an amount more than the available quantity')
+            return redirect('serviceStation:home')
         diesel_update.diesel_quantity = request.POST['diesel_quantity']
         diesel_update.queue_length = request.POST['queue_length']
         diesel_update.status = request.POST['status']
@@ -62,7 +68,7 @@ def update_diesel(request, id):
         if int(diesel_update.diesel_quantity) < 1000:
             diesel_update.status = 'Expecting Fuel'
             diesel_update.save()
-            messages.warning(request, 'Please stop selling and request for more fuel from you Company')
+            messages.warning(request, 'Please request for more fuel from you Company')
             return redirect('serviceStation:home')
 
         diesel_update.save()

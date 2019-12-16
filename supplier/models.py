@@ -48,6 +48,7 @@ class FuelAllocation(models.Model):
     petrol_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     diesel_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     assigned_staff_id = models.IntegerField(default=0)
+    action = models.CharField(max_length=255)
 
 
 
