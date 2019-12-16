@@ -217,13 +217,13 @@ def statistics(request):
             total_value += tran.offer.request.amount
             purchases.append(tran)
             number_of_trans += 1
-        buyer.total_value = total_value
+        buyer.total_revenue = total_value
         buyer.purchases = purchases
         buyer.number_of_trans = total_transactions
         if buyer not in new_buyers:
             new_buyers.append(buyer)
        
-    clients = sorted(new_buyers, key=lambda x: x.total_value, reverse=True)    
+    clients = sorted(new_buyers, key=lambda x: x.total_revenue, reverse=True)    
 
     # for company in companies:
     #     company.total_value = value[counter]
@@ -354,7 +354,7 @@ def report_generator(request):
             requests = None; allocations = None; trans = None; revs=None
         if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':
             print('________Im in here_______m')
-            trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier=request.user)
+            trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier__company=request.user.company)
             requests = None; allocations = None; revs=None
 
             
