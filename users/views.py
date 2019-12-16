@@ -186,7 +186,7 @@ def statistics(request):
     diesel = stock['diesel']; petrol = stock['petrol']
     
     trans = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).annotate(number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
-    buyers = [client.buyer.company.name for client in trans]
+    buyers = [client.buyer for client in trans]
 
     branches = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company)
 
@@ -208,8 +208,7 @@ def statistics(request):
     for buyer in buyers:
         total_transactions =  buyers.count(buyer)
         buyers.remove(buyer)
-        buyer = User.objects.filter(company__name=buyer).first()
-        new_buyer_transactions = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).all()
+        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, is_complete=True).all()
         total_value = 0
         purchases = []
         number_of_trans = 0
@@ -291,7 +290,7 @@ def myaccount(request):
 
 @login_required()
 def stations(request):
-    stations = Subsidiaries.objects.all()
+    stations = Subsidiaries.objects.filter(company=request.user.company).all()
     zimbabwean_towns = ["Harare","Bulawayo","Gweru","Mutare","Chirundu","Bindura","Beitbridge","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Chinhoyi","Mutoko","Nyanga","Victoria Falls"]
     Harare = ['Avenues', 'Budiriro','Dzivaresekwa',  'Kuwadzana', 'Warren Park','Glen Norah', 'Glen View',  'Avondale',  'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park','Borrowdale',  'Chisipiti',  'Glen Lorne', 'Greendale', 'Greystone Park', 'Helensvale', 'Highlands',   'Mandara', 'Manresa','Msasa','Newlands',  'The Grange',  'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft', 'Hatcliffe', 'Mabelreign', 'Marlborough',  'Meyrick Park', 'Mount Pleasant',  'Pomona',   'Tynwald',  'Vainona', 'Arcadia','Braeside', 'CBD',  'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale', 'Sunningdale', 'Epworth','Highfield' 'Kambuzuma',  'Southerton', 'Warren Park', 'Southerton',  'Mabvuku', 'Tafara',  'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park',  'Marimba Park', 'Mufakose']
     Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane', 'North End', 'Northvale', 'North Lynne', 'Northlea','North Trenance', 'Ntaba Moyo', 'Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont', 'Bradfield']
@@ -349,12 +348,12 @@ def report_generator(request):
                     my_stock.subsidiary_name = request.user.company.name
                 else:
                     sub = Subsidiaries.objects.filter(id=my_stock.relationship_id).first()
-                    my_stock.subsidiary_name = sub.name
-            print("ep",stock)
+                    if sub:
+                        my_stock.subsidiary_name = sub.name
+            
             requests = None; allocations = None; trans = None; revs=None
         if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':
-            print('________Im in here_______m')
-            trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier=request.user)
+            trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier__company=request.user.company)
             requests = None; allocations = None; revs=None
 
             
