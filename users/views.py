@@ -158,9 +158,9 @@ def allocation_update(request,id):
 def statistics(request):
     company = request.user.company
     yesterday = date.today() - timedelta(days=1)
-    offers = Offer.objects.filter(supplier=request.user).count()
-    bulk_requests = FuelRequest.objects.filter(delivery_method="BULK").count()
-    normal_requests = FuelRequest.objects.filter(delivery_method="REGULAR").count() # Change these 2 items
+    offers = Offer.objects.filter(supplier__company=request.user.company).count()
+    bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
+    normal_requests = FuelRequest.objects.filter(delivery_method="DELIVERY").count() # Change these 2 items
     staff = ''
     new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
     try:
@@ -210,7 +210,8 @@ def statistics(request):
         buyer.total_value = total_value
         buyer.purchases = purchases
         buyer.number_of_trans = total_transactions
-        new_buyers.append(buyer)
+        if buyer not in new_buyers:
+            new_buyers.append(buyer)
        
     clients = sorted(new_buyers, key=lambda x: x.total_value, reverse=True)    
 
