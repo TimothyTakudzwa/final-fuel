@@ -116,14 +116,20 @@
                             {% load crispy_forms_tags %}
                             <form action="{% url 'users:stations' %}" method="POST">
                                 {% csrf_token %}
-
-                                <div class="form-group">
+                                <div class="row">
+                                <div class="form-group col-md-6">
                                         <lable>Name</lable>
                                         <input type="text" name="name" class="form-control" value=" " />
                                     </div>
+
+                                    <div class="form-group col-md-6">
+                                        <lable>Is Depot</lable>
+                                        <input type="text" name="is_depot" class="form-control" value="False" />
+                                    </div>
+                                </div>
                                    
-                                   
-                                    <div class="form-group" name="city" id="city{{forloop.counter}}">
+                                    <div class="row">
+                                    <div class="form-group col-md-6" name="city" id="city{{forloop.counter}}">
                                             <label><b>City</b></label>
                                             <select class="form-control" name="city">
                                                 {% for citi in zimbabwean_towns %}
@@ -133,8 +139,8 @@
                                         </div>
     
 
-                                <div class="form-group" name="harare" id="harare{{forloop.counter}}">
-                                        <label><b>Harare</b></label>
+                                <div class="form-group col-md-6" name="harare" id="harare{{forloop.counter}}">
+                                        <label><b>Location</b></label>
                                         <select class="form-control" name="location">
                                             {% for location in Harare %}
                                             <option >{{location}}</option>
@@ -142,8 +148,8 @@
                                         </select>
                                     </div>
 
-                            <div class="form-group" name="bulawayo" id="bulawayo{{forloop.counter}}">
-                                    <label><b>Bulawayo</b></label>
+                            <div class="form-group col-md-6" name="bulawayo" id="bulawayo{{forloop.counter}}">
+                                    <label><b>Location</b></label>
                                     <select class="form-control" name="location">
                                         {% for locationn in Bulawayo %}
                                         <option >{{locationn}}</option>
@@ -151,8 +157,8 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group" name="mutare" id="mutare{{forloop.counter}}">
-                                        <label><b>Mutare</b></label>
+                                <div class="form-group col-md-6" name="mutare" id="mutare{{forloop.counter}}">
+                                        <label><b>Location</b></label>
                                         <select class="form-control" name="location">
                                             {% for loc in Mutare %}
                                             <option >{{loc}}</option>
@@ -160,33 +166,52 @@
                                         </select>
                                     </div>
 
-                                    <div class="form-group" name="gweru" id="gweru{{forloop.counter}}">
-                                            <label><b>Gweru</b></label>
+                                    <div class="form-group col-md-6" name="gweru" id="gweru{{forloop.counter}}">
+                                            <label><b>Location</b></label>
                                             <select class="form-control" name="location">
                                                 {% for locationy in Bulawayo %}
                                                 <option >{{locationy}}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
-                                        <div class="form-group" id="default_location">
+                                        <div class="form-group col-md-6" id="default_location">
                                                 <lable>Location</lable>
                                                 <input type="text" name="location" class="form-control" value=" " />
                                             </div>
 
-                                    <div class="form-group">
-                                            <lable>Bank</lable>
-                                            <input type="text" name="destination_bank" class="form-control" value=" " />
-                                        </div>
+                                    <div class="row">
                                        
-                                        <div class="form-group">
+                                            <div class="form-group col-md-6">
+                                                <label><b>Bank</b></label>
+                                                <select class="form-control" name="destination_bank">
+                                            
+                                                    <option >CBZ</option>
+                                                    <option >BancABC</option>
+                                                    <option >First Capital</option>
+                                                    <option >Agribank</option>
+                                                    <option >Ecobank</option>
+                                                    <option >FBC</option>
+                                                    <option >Nedbank</option>
+                                                    <option >Metbank</option>
+                                                    <option >NMB</option>
+                                                    <option >Standard Chatered</option>
+                                                    <option >Steward Bank</option>
+                                                    <option >ZB Bank</option>
+                                                    <option >CABS</option>
+                                                    <option >POSB</option>
+                                         
+                                                    
+                                                </select>
+                                            </div>
+                                   
+                                       
+                                        <div class="form-group col-md-6">
                                             <lable>Account</lable>
                                             <input type="text" name="account_number" class="form-control" value=" " />
                                         </div>
-
-                                    <div class="form-group">
-                                        <lable>Is Depot</lable>
-                                        <input type="text" name="is_depot" class="form-control" value="False" />
                                     </div>
+
+                                    
                                     
                                 <div class="row">
                                         <div class="col-md-6">
