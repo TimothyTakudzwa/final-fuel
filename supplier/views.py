@@ -315,51 +315,52 @@ def activate_whatsapp(request):
 
 def verification(request, token, user_id):
     user = User.objects.get(id=user_id)
-    token_check = TokenAuthentication.objects.filter(user=user, token=token, used=False)
+    token_check = TokenAuthentication.objects.filter(user=user, token=token)  
     if token_check.exists():
-        form = BuyerUpdateForm
-        check = User.objects.filter(id=user_id)
-        if check.exists():
-            user = User.objects.get(id=user_id)
-            print(user)
-            if user.user_type == 'BUYER':
-                companies = Company.objects.filter(company_type='CORPORATE').all()
-            else:
-                companies = Company.objects.filter(company_type='SUPPLIER').all()
-
-        if request.method == 'POST':
-            user = User.objects.get(id=user_id)
-            form = BuyerUpdateForm(request.POST, request.FILES, instance=user)
-            if form.is_valid():
-                form.save()
-                company_exists = Company.objects.filter(name=request.POST.get('company')).exists()
-                if company_exists:
-                    selected_company =Company.objects.filter(name=request.POST.get('company')).first()
-                    user.company = selected_company
-                    user.is_active = True
-                    token_auth = TokenAuthentication()
-                    token_auth.used = True
-                    token_auth.save()
-                    user.save()
-                    my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
-                    print("i am here now")
-                    return render(request,'supplier/final_registration.html', {'my_admin': my_admin})
+        token_not_used = TokenAuthentication.objects.filter(user=user, used=False)
+        if token_not_used.exists():
+            form = BuyerUpdateForm
+            check = User.objects.filter(id=user_id)
+            if check.exists():
+                user = User.objects.get(id=user_id)
+                print(user)
+                if user.user_type == 'BUYER':
+                    companies = Company.objects.filter(company_type='CORPORATE').all()
                 else:
-                    selected_company =Company.objects.create(name=request.POST.get('company'))
-                    user.is_active = False
-                    user.is_waiting = True
-                    selected_company = Company.objects.create(name=request.POST.get('company'))
-                    selected_company.save()
-                    user.company = selected_company
-                    token_auth = TokenAuthentication()
-                    token_auth.used = True
-                    token_auth.save()
-                    user.save() 
-                    print("i am here")
-                    return redirect('supplier:create_company', id=user.id)
-                
+                    companies = Company.objects.filter(company_type='SUPPLIER').all()
+
+            if request.method == 'POST':
+                user = User.objects.get(id=user_id)
+                form = BuyerUpdateForm(request.POST, request.FILES, instance=user)
+                if form.is_valid():
+                    form.save()
+                    company_exists = Company.objects.filter(name=request.POST.get('company')).exists()
+                    if company_exists:
+                        selected_company =Company.objects.filter(name=request.POST.get('company')).first()
+                        user.company = selected_company
+                        user.is_active = True
+                        user.save()
+                        TokenAuthentication.objects.filter(user=user).update(used=True)
+                        my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
+                        return render(request,'supplier/final_registration.html',{'my_admin': my_admin})
+                    else:
+                        selected_company =Company.objects.create(name=request.POST.get('company'))
+                        user.is_active = False
+                        user.is_waiting = True
+                        selected_company = Company.objects.create(name=request.POST.get('company'))
+                        selected_company.save()
+                        user.company = selected_company
+                        user.save() 
+                        TokenAuthentication.objects.filter(user=user).update(used=True)
+                        print("i am here")
+                        return redirect('supplier:create_company', id=user.id)
+                    
+            else:
+                return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
         else:
-            return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
+            messages.warning(request, 'This link has been used before')
+            return redirect('buyer-register')
+        
     else:
         messages.warning(request, 'Wrong verification token, kindly follow the link send in the email')
         return redirect('login')
