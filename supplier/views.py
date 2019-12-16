@@ -338,7 +338,7 @@ def verification(request, token, user_id):
                     if company_exists:
                         selected_company =Company.objects.filter(name=request.POST.get('company')).first()
                         user.company = selected_company
-                        user.is_active = True
+                        user.is_active = False
                         user.is_waiting = True
                         user.save()
                         TokenAuthentication.objects.filter(user=user).update(used=True)
