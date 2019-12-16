@@ -48,7 +48,7 @@ class FuelAllocation(models.Model):
     petrol_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     diesel_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     assigned_staff_id = models.IntegerField(default=0)
-    action = models.CharField(max_length=255)
+    action = models.CharField(max_length=255, default='')
 
 
 
@@ -77,6 +77,7 @@ class Offer(models.Model):
 class TokenAuthentication(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='token_name')
     token = models.CharField(max_length=100)
+    used = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['user']

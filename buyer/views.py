@@ -13,7 +13,7 @@ from django.http import HttpResponse
 from buyer.models import User
 from buyer.recommend import recommend
 from company.models import Company, FuelUpdate
-from supplier.models import Offer, Subsidiaries, Transaction
+from supplier.models import Offer, Subsidiaries, Transaction, TokenAuthentication
 
 from .constants import sample_data
 from .forms import (BuyerRegisterForm, BuyerUpdateForm, FuelRequestForm,
@@ -22,16 +22,12 @@ from supplier.forms import CreateCompany
 from .models import FuelRequest
 from buyer.utils import render_to_pdf
 
-
-
 user = get_user_model()
 
+#The login in functions, it handles how users are authenticated into the system
+#Users are redirected to their landing page based on whether they are in which group
 def login_success(request):
-    """
-    Redirects users based on whether they are in which group
-    """
     user_type  = request.user.user_type
-    print(user_type)
     if not user.is_active:
         messages.danger(request, "This account is waiting activation")
     if user_type == "BUYER":
@@ -44,10 +40,20 @@ def login_success(request):
         return redirect("users:allocate")
     else:
         return redirect("users:suppliers_list")
+
+#The function is responsible for sending emails after successful completions of stage one registration
+#The function generates the authentication token 
+#The second registration is in supplier view "Verification", responsible for authentication token verification
 def token_is_send(request, user):
     token = secrets.token_hex(12)
+    token_id = user
+    token_auth = TokenAuthentication()
+    token_auth.token = token
+    token_auth.user= token_id
+    token_auth.save()
     domain = request.get_host()            
     url = f'https://{domain}/verification/{token}/{user.id}'
+    print(url)
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
     message = f"Dear {user.first_name}  {user.last_name}. \nYour username is: {user.username}\n\nPlease complete signup here : \n {url} \n. "            
@@ -64,7 +70,7 @@ def token_is_send(request, user):
     messages.success(request, ('Your profile was successfully updated!'))
     return render(request, 'buyer/send_email.html')
 
-# Create your views here.
+#Stage one registration view
 def register(request):
     if request.method == 'POST':
         form = BuyerRegisterForm(request.POST)
@@ -81,12 +87,12 @@ def register(request):
                 username = initial_username + str(i) 
                 i+=1
             user = User.objects.create(email=email, username=username.lower(), user_type=user_type,  phone_number=phone_number.replace(" ", ""), first_name=first_name, last_name=last_name, is_active=False)        
-            if token_is_send(request, user):
-                # messages.success(request, f"{full_name} Registered Successfully")   
+            if token_is_send(request, user):   
                 if user.is_active:
                     send_message(user.phone_number, "You have been registered succesfully")
                     user.stage = 'requesting'
-                    user.save()               
+                    user.save()  
+                                 
                 return render(request, 'buyer/email_send.html')
             else:
                 # messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
@@ -101,6 +107,7 @@ def register(request):
     
     return render(request, 'buyer/signup.html', {'form': form})
 
+#function repsonsible for sending token to whatsapp 
 def send_message(phone_number, message):
     payload = {
         "phone": phone_number,
@@ -112,6 +119,7 @@ def send_message(phone_number, message):
     return r.status_code
 
 @login_required
+#for loading user profile, editing profile and changing password 
 def profile(request):
     if request.method == 'POST':
         old = request.POST.get('old_password')
@@ -124,7 +132,7 @@ def profile(request):
                 return redirect('buyer-profile')
             else:
                 user = request.user
-                user.set_password(new1)
+                user.set_password(new1)         
                 user.save()
                 update_session_auth_hash(request, user)
 
@@ -140,7 +148,9 @@ def profile(request):
     }
     return render(request, 'buyer/profile.html', context)
 
-#@login_required
+# The function based view is responsible for showing the buyer request.
+# The requests shown are those that are not complete and             that have been made buy the buyer.
+@login_required
 def fuel_request(request):
     user_logged = request.user
     fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).all()
