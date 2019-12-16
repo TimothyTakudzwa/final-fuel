@@ -451,8 +451,8 @@
               <i class="fa fa-bell"></i>
             </div>
             <p class="card-category">Requests</p>
-            <h3 class="card-title" style="font-size: 1em;">SELF COLLECTION : {{bulk_requests}}</h3>
-            <h3 class="card-title" style="font-size: 1em;">DELIVERY : {{normal_requests}} </h3>
+            <h3 class="card-title" style="font-size: 1em;">Self Collection : {{bulk_requests}}</h3>
+            <h3 class="card-title" style="font-size: 1em;">Delivery : {{normal_requests}} </h3>
 
           </div>
           <div class="card-footer">
@@ -613,11 +613,17 @@
                      <tbody>
                          {% for client in clients %}
                          <tr>
-                             <td>{{client.company.name}}</td>
+                             <td>
+                               {% if forloop.counter == 1%}
+                               <i class="fa fa-star" style="color: goldenrod;"></i>
+                               {% else %}
+                               {% endif %}
+                               {{client.company.name}}
+                              </td>
                              
                              <td>{{client.company.address}}</td>
                              <td>{{client.company.industry}}</td>
-                             <td>{{client.total_value}}</td>
+                             <td>$ {{client.total_value|stringformat:".2f"}}</td>
                              <td>{{client.number_of_trans}}</td>
                              
                              <td style="width: 13%;">
