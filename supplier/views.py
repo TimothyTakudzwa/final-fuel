@@ -40,6 +40,17 @@ def change_password(request):
             if new1 != new2:
                 messages.warning(request, "Passwords Don't Match")
                 return redirect('change-password')
+            elif new1 == old:
+                messages.warning(request, "New password can not be similar to the old one")
+                return redirect('change-password')
+            elif len(new1) < 8:
+                messages.warning(request, "Password is too short")
+                return redirect('change-password')
+            elif new1.isnumeric():
+                messages.warning(request, "Password can not be entirely numeric!")
+            elif not new1.isalnum():
+                messages.warning(request, "Password should be alphanumeric")
+                return redirect('change-password')
             else:
                 user = request.user
                 user.set_password(new1)
@@ -79,7 +90,7 @@ def fuel_request(request):
             buyer_request.my_offer = 'No Offer'
             buyer_request.offer_id = 0
         if fuel:
-            if buyer_request.fuel_type == 'petrol':
+            if buyer_request.fuel_type.lower() == 'petrol':
                 buyer_request.price = fuel.petrol_price
             else:
                 buyer_request.price = fuel.diesel_price
@@ -148,7 +159,7 @@ def fuel_update(request):
 
 def offer(request, id):
     form = OfferForm(request.POST)
-    if request.method == "POST":
+    if request.method == "POST" and float(request.POST.get('price')) != 0 and float(request.POST.get('quantity')) != 0:
         fuel_request = FuelRequest.objects.get(id=id)
         fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
         
@@ -191,6 +202,9 @@ def offer(request, id):
         else:
             messages.warning(request, 'You can not offer fuel more than the available fuel stock')
             return redirect('fuel-request')
+    else:
+        messages.warning(request, "Please fill all required fields to complete an offer")
+        return redirect('fuel-request')
     return render(request, 'supplier/accounts/fuel_request.html')
 
 @login_required
