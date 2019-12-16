@@ -15,7 +15,7 @@ def recommend(fuel_request):
         supplies = FuelUpdate.objects.filter(diesel_quantity__gte=fuel_request.amount, sub_type='Depot').filter(~Q(diesel_price=0.00)).order_by('-diesel_price').all()    
     
     if supplies.count() == 0:        
-        return status, "Nothin Found"
+        return status, "Nothing Found"
     else:
         scoreboard = {}
         for supplier in supplies: 
