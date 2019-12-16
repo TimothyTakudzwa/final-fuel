@@ -139,7 +139,7 @@ def allocation_update(request,id):
             fuel_update.save()
             assigned_staff = user.objects.filter(subsidiary_id =fuel_update.relationship_id).first()
             if assigned_staff is not None:
-                action = 'allocation of Petrol'
+                action = 'Allocation of Petrol'
                 FuelAllocation.objects.create(action = action,petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['petrol_quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=assigned_staff.subsidiary_id)
                 messages.success(request, 'updated petrol quantity successfully')
                 service_station = Subsidiaries.objects.filter(id=fuel_update.relationship_id).first()
@@ -149,7 +149,7 @@ def allocation_update(request,id):
                 Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
                 return redirect('users:allocate')
             else:
-                action = 'allocation of Petrol'
+                action = 'Allocation of Petrol'
                 FuelAllocation.objects.create(action=action,petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['petrol_quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=fuel_update.relationship_id)
                 service_station = Subsidiaries.objects.filter(id=fuel_update.relationship_id).first()
                 reference = 'fuel allocation'
@@ -815,7 +815,7 @@ def allocate_diesel(request, id):
             diesel_update.save()
             assigned_staff = user.objects.filter(subsidiary_id =diesel_update.relationship_id).first()
             if assigned_staff is not None:
-                action = 'allocation of Diesel'
+                action = 'Allocation of Diesel'
                 FuelAllocation.objects.create(action = action,diesel_price=diesel_update.diesel_price,diesel_quantity=request.POST['diesel_quantity'],sub_type=diesel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=assigned_staff.subsidiary_id)
                 messages.success(request, 'Updated diesel quantity successfully')
                 service_station = Subsidiaries.objects.filter(id=diesel_update.relationship_id).first()
@@ -825,7 +825,7 @@ def allocate_diesel(request, id):
                 Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
                 return redirect('users:allocate')
             else:
-                action = 'allocation of Diesel'
+                action = 'Allocation of Diesel'
                 FuelAllocation.objects.create(action=action,diesel_price=diesel_update.diesel_price,diesel_quantity=request.POST['diesel_quantity'],sub_type=diesel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=diesel_update.relationship_id)
                 
                 service_station = Subsidiaries.objects.filter(id=diesel_update.relationship_id).first()
