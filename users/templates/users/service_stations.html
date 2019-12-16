@@ -19,241 +19,7 @@
                 </button>
 
             </div>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-            <script>
-                    $(document).ready(function () {
-                      $('#harare{{forloop.counter}}').show();
-                      $('#bulawayo{{forloop.counter}}').hide();
-                      $('#mutare{{forloop.counter}}').hide();
-                      $('#gweru{{forloop.counter}}').hide();
-                      $('#default_location').hide();
-
-                     
-                      $('#city{{forloop.counter}}').change(function () {
-                        if ($('#city{{forloop.counter}} option:selected').text() == "Harare") {
-                          $('#harare{{forloop.counter}}').show();
-                          $('#bulawayo{{forloop.counter}}').hide();
-                          $('#mutare{{forloop.counter}}').hide();
-                          $('#gweru{{forloop.counter}}').hide();
-                          $('#default_location').hide();
-                          $('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
-                          $('#mutare{{forloop.counter}} :input').prop('disabled',true);
-                          $('#gweru{{forloop.counter}} :input').prop('disabled',true);
-                          $('#default_location :input').prop('disabled',true);
-                          $('#harare{{forloop.counter}} :input').prop('disabled',false);
-                          
-                        }
-                        else if ($('#city{{forloop.counter}} option:selected').text() == "Bulawayo") {
-                          $('#harare{{forloop.counter}}').hide();
-                          $('#mutare{{forloop.counter}}').hide();
-                          $('#gweru{{forloop.counter}}').hide();
-                          $('#default_location').hide();
-                          $('#bulawayo{{forloop.counter}}').show();
-                          $('#harare{{forloop.counter}} :input').prop('disabled',true);
-                          $('#mutare{{forloop.counter}} :input').prop('disabled',true);
-                          $('#gweru{{forloop.counter}} :input').prop('disabled',true);
-                          $('#default_location :input').prop('disabled',true);
-                          $('#bulawayo{{forloop.counter}} :input').prop('disabled',false);
-                          
-                        }
-                        else if ($('#city{{forloop.counter}} option:selected').text() == "Mutare") {
-                          $('#harare{{forloop.counter}}').hide();
-                          $('#mutare{{forloop.counter}}').show();
-                          $('#gweru{{forloop.counter}}').hide();
-                          $('#default_location').hide();
-                          $('#bulawayo{{forloop.counter}}').hide();
-                          $('#harare{{forloop.counter}} :input').prop('disabled',true);
-                          $('#mutare{{forloop.counter}} :input').prop('disabled',false);
-                          $('#gweru{{forloop.counter}} :input').prop('disabled',true);
-                          $('#default_location :input').prop('disabled',true);
-                          $('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
-                          
-                        }
-                        else if ($('#city{{forloop.counter}} option:selected').text() == "Gweru") {
-                          $('#harare{{forloop.counter}}').hide();
-                          $('#mutare{{forloop.counter}}').hide();
-                          $('#gweru{{forloop.counter}}').show();
-                          $('#default_location').hide();
-                          $('#bulawayo{{forloop.counter}}').hide();
-                          $('#harare{{forloop.counter}} :input').prop('disabled',true);
-                          $('#mutare{{forloop.counter}} :input').prop('disabled',true);
-                          $('#gweru{{forloop.counter}} :input').prop('disabled',false);
-                          $('#default_location :input').prop('disabled',true);
-                          $('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
-                          
-                        }
-                        else {
-                          $('#harare{{forloop.counter}}').hide();
-                          $('#bulawayo{{forloop.counter}}').hide();
-                          $('#mutare{{forloop.counter}}').hide();
-                          $('#gweru{{forloop.counter}}').hide();
-                          $('#default_location').show();
-                          $('#harare{{forloop.counter}} :input').prop('disabled',true);
-                          $('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
-                          $('#mutare{{forloop.counter}} :input').prop('disabled',true);
-                          $('#gweru{{forloop.counter}} :input').prop('disabled',true);
-                          $('#default_location :input').prop('disabled',false);
-                          
-                        }
-                      });
-                    });
-                
-                   
-                  </script>
-
-            <div class="modal fade" id="new_sub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header" style="background-color: #9c27b0;color: white;">
-                            <h5 class="modal-title" id="exampleModalLabel">Add Subsidiary </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-
-                            {% load crispy_forms_tags %}
-                            <form action="{% url 'users:stations' %}" method="POST">
-                                {% csrf_token %}
-                                <div class="row">
-                                <div class="form-group col-md-6">
-                                        <lable>Name</lable>
-                                        <input type="text" name="name" class="form-control" value=" " />
-                                    </div>
-
-                                    <div class="form-group col-md-6">
-                                        <lable>Is Depot</lable>
-                                        <input type="text" name="is_depot" class="form-control" value="False" />
-                                    </div>
-                                </div>
-                                   
-                                    <div class="row">
-                                    <div class="form-group col-md-6" name="city" id="city{{forloop.counter}}">
-                                            <label><b>City</b></label>
-                                            <select class="form-control" name="city">
-                                                {% for citi in zimbabwean_towns %}
-                                                <option >{{citi}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-    
-
-                                <div class="form-group col-md-6" name="harare" id="harare{{forloop.counter}}">
-                                        <label><b>Location</b></label>
-                                        <select class="form-control" name="location">
-                                            {% for location in Harare %}
-                                            <option >{{location}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-
-                            <div class="form-group col-md-6" name="bulawayo" id="bulawayo{{forloop.counter}}">
-                                    <label><b>Location</b></label>
-                                    <select class="form-control" name="location">
-                                        {% for locationn in Bulawayo %}
-                                        <option >{{locationn}}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-
-                                <div class="form-group col-md-6" name="mutare" id="mutare{{forloop.counter}}">
-                                        <label><b>Location</b></label>
-                                        <select class="form-control" name="location">
-                                            {% for loc in Mutare %}
-                                            <option >{{loc}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-6" name="gweru" id="gweru{{forloop.counter}}">
-                                            <label><b>Location</b></label>
-                                            <select class="form-control" name="location">
-                                                {% for locationy in Bulawayo %}
-                                                <option >{{locationy}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-md-6" id="default_location">
-                                                <lable>Location</lable>
-                                                <input type="text" name="location" class="form-control" value=" " />
-                                            </div>
-
-                                    <div class="row">
-                                       
-                                            <div class="form-group col-md-6">
-                                                <label><b>Bank</b></label>
-                                                <select class="form-control" name="destination_bank">
-                                            
-                                                    <option >CBZ</option>
-                                                    <option >BancABC</option>
-                                                    <option >First Capital</option>
-                                                    <option >Agribank</option>
-                                                    <option >Ecobank</option>
-                                                    <option >FBC</option>
-                                                    <option >Nedbank</option>
-                                                    <option >Metbank</option>
-                                                    <option >NMB</option>
-                                                    <option >Standard Chatered</option>
-                                                    <option >Steward Bank</option>
-                                                    <option >ZB Bank</option>
-                                                    <option >CABS</option>
-                                                    <option >POSB</option>
-                                         
-                                                    
-                                                </select>
-                                            </div>
-                                   
-                                       
-                                        <div class="form-group col-md-6">
-                                            <lable>Account</lable>
-                                            <input type="text" name="account_number" class="form-control" value=" " />
-                                        </div>
-                                    </div>
-
-                                    
-                                    
-                                <div class="row">
-                                        <div class="col-md-6">
-                                          {{sub_create_form.cash|as_crispy_field}}
-                                        </div>
-                                        <div class="col-md-6">
-                                          {{sub_create_form.usd|as_crispy_field}}
-                                        </div>
-                                      </div>
-                                      <div class="row">
-                                        <div class="col-md-6">
-                                          {{sub_create_form.swipe|as_crispy_field}}
-                                        </div>
-                                        <div class="col-md-6">
-                                          {{sub_create_form.ecocash|as_crispy_field}}
-                                        </div>
-                                        </div>
-
-                                 <div class="row">
-                                <div class="form-group col-md-6">
-                                    <lable>Opening Time</lable>
-                                    <input type="time" name="opening_time" class="form-control" />
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <lable>Closing Time</lable>
-                                    <input type="time" name="closing_time" class="form-control" />
-                                </div>
-                                </div>
-
-
-
-                        </div>
-                        <div class="modal-footer row col-md-12">
-                            <button class="btn btn-secondary" style="width:40%"
-                                data-dismiss="modal">Close</button><button style="width: 50%;" class="btn btn-primary"
-                                type="submit">Add</button>
-                            </form>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+           
             <div class="container-fluid">
                 {% if stations %}
 
@@ -314,6 +80,242 @@
 
                                 </div>
                             </td>
+
+                            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                            <script>
+                                    $(document).ready(function () {
+                                      $('#harare{{forloop.counter}}').show();
+                                      $('#bulawayo{{forloop.counter}}').hide();
+                                      $('#mutare{{forloop.counter}}').hide();
+                                      $('#gweru{{forloop.counter}}').hide();
+                                      $('#default_location').hide();
+                
+                                     
+                                      $('#city{{forloop.counter}}').change(function () {
+                                        if ($('#city{{forloop.counter}} option:selected').text() == "Harare") {
+                                          $('#harare{{forloop.counter}}').show();
+                                          $('#bulawayo{{forloop.counter}}').hide();
+                                          $('#mutare{{forloop.counter}}').hide();
+                                          $('#gweru{{forloop.counter}}').hide();
+                                          $('#default_location').hide();
+                                          $('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
+                                          $('#mutare{{forloop.counter}} :input').prop('disabled',true);
+                                          $('#gweru{{forloop.counter}} :input').prop('disabled',true);
+                                          $('#default_location :input').prop('disabled',true);
+                                          $('#harare{{forloop.counter}} :input').prop('disabled',false);
+                                          
+                                        }
+                                        else if ($('#city{{forloop.counter}} option:selected').text() == "Bulawayo") {
+                                          $('#harare{{forloop.counter}}').hide();
+                                          $('#mutare{{forloop.counter}}').hide();
+                                          $('#gweru{{forloop.counter}}').hide();
+                                          $('#default_location').hide();
+                                          $('#bulawayo{{forloop.counter}}').show();
+                                          $('#harare{{forloop.counter}} :input').prop('disabled',true);
+                                          $('#mutare{{forloop.counter}} :input').prop('disabled',true);
+                                          $('#gweru{{forloop.counter}} :input').prop('disabled',true);
+                                          $('#default_location :input').prop('disabled',true);
+                                          $('#bulawayo{{forloop.counter}} :input').prop('disabled',false);
+                                          
+                                        }
+                                        else if ($('#city{{forloop.counter}} option:selected').text() == "Mutare") {
+                                          $('#harare{{forloop.counter}}').hide();
+                                          $('#mutare{{forloop.counter}}').show();
+                                          $('#gweru{{forloop.counter}}').hide();
+                                          $('#default_location').hide();
+                                          $('#bulawayo{{forloop.counter}}').hide();
+                                          $('#harare{{forloop.counter}} :input').prop('disabled',true);
+                                          $('#mutare{{forloop.counter}} :input').prop('disabled',false);
+                                          $('#gweru{{forloop.counter}} :input').prop('disabled',true);
+                                          $('#default_location :input').prop('disabled',true);
+                                          $('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
+                                          
+                                        }
+                                        else if ($('#city{{forloop.counter}} option:selected').text() == "Gweru") {
+                                          $('#harare{{forloop.counter}}').hide();
+                                          $('#mutare{{forloop.counter}}').hide();
+                                          $('#gweru{{forloop.counter}}').show();
+                                          $('#default_location').hide();
+                                          $('#bulawayo{{forloop.counter}}').hide();
+                                          $('#harare{{forloop.counter}} :input').prop('disabled',true);
+                                          $('#mutare{{forloop.counter}} :input').prop('disabled',true);
+                                          $('#gweru{{forloop.counter}} :input').prop('disabled',false);
+                                          $('#default_location :input').prop('disabled',true);
+                                          $('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
+                                          
+                                        }
+                                        else {
+                                          $('#harare{{forloop.counter}}').hide();
+                                          $('#bulawayo{{forloop.counter}}').hide();
+                                          $('#mutare{{forloop.counter}}').hide();
+                                          $('#gweru{{forloop.counter}}').hide();
+                                          $('#default_location').show();
+                                          $('#harare{{forloop.counter}} :input').prop('disabled',true);
+                                          $('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
+                                          $('#mutare{{forloop.counter}} :input').prop('disabled',true);
+                                          $('#gweru{{forloop.counter}} :input').prop('disabled',true);
+                                          $('#default_location :input').prop('disabled',false);
+                                          
+                                        }
+                                      });
+                                    });
+                                
+                                   
+                                  </script>
+                            <div class="modal fade" id="new_sub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color: #9c27b0;color: white;">
+                                        <h5 class="modal-title" id="exampleModalLabel">Add Subsidiary </h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+            
+                                        {% load crispy_forms_tags %}
+                                        <form action="{% url 'users:stations' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="row">
+                                            <div class="form-group col-md-6">
+                                                    <lable>Name</lable>
+                                                    <input type="text" name="name" class="form-control" value=" " />
+                                                </div>
+            
+                                                <div class="form-group col-md-6">
+                                                    <lable>Is Depot</lable>
+                                                    <input type="text" name="is_depot" class="form-control" value="False" />
+                                                </div>
+                                            </div>
+                                               
+                                                <div class="row">
+                                                <div class="form-group col-md-6" name="city" id="city{{forloop.counter}}">
+                                                        <label><b>City</b></label>
+                                                        <select class="form-control" name="city">
+                                                            {% for citi in zimbabwean_towns %}
+                                                            <option >{{citi}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                
+            
+                                            <div class="form-group col-md-6" name="harare" id="harare{{forloop.counter}}">
+                                                    <label><b>Location</b></label>
+                                                    <select class="form-control" name="location">
+                                                        {% for location in Harare %}
+                                                        <option >{{location}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+            
+                                        <div class="form-group col-md-6" name="bulawayo" id="bulawayo{{forloop.counter}}">
+                                                <label><b>Location</b></label>
+                                                <select class="form-control" name="location">
+                                                    {% for locationn in Bulawayo %}
+                                                    <option >{{locationn}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+            
+                                            <div class="form-group col-md-6" name="mutare" id="mutare{{forloop.counter}}">
+                                                    <label><b>Location</b></label>
+                                                    <select class="form-control" name="location">
+                                                        {% for loc in Mutare %}
+                                                        <option >{{loc}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+            
+                                                <div class="form-group col-md-6" name="gweru" id="gweru{{forloop.counter}}">
+                                                        <label><b>Location</b></label>
+                                                        <select class="form-control" name="location">
+                                                            {% for locationy in Bulawayo %}
+                                                            <option >{{locationy}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-6" id="default_location">
+                                                            <lable>Location</lable>
+                                                            <input type="text" name="location" class="form-control" value=" " />
+                                                        </div>
+            
+                                                <div class="row">
+                                                   
+                                                        <div class="form-group col-md-6">
+                                                            <label><b>Bank</b></label>
+                                                            <select class="form-control" name="destination_bank">
+                                                        
+                                                                <option >CBZ</option>
+                                                                <option >BancABC</option>
+                                                                <option >First Capital</option>
+                                                                <option >Agribank</option>
+                                                                <option >Ecobank</option>
+                                                                <option >FBC</option>
+                                                                <option >Nedbank</option>
+                                                                <option >Metbank</option>
+                                                                <option >NMB</option>
+                                                                <option >Standard Chatered</option>
+                                                                <option >Steward Bank</option>
+                                                                <option >ZB Bank</option>
+                                                                <option >CABS</option>
+                                                                <option >POSB</option>
+                                                     
+                                                                
+                                                            </select>
+                                                        </div>
+                                               
+                                                   
+                                                    <div class="form-group col-md-6">
+                                                        <lable>Account</lable>
+                                                        <input type="text" name="account_number" class="form-control" value=" " />
+                                                    </div>
+                                                </div>
+            
+                                                
+                                                
+                                            <div class="row">
+                                                    <div class="col-md-6">
+                                                      {{sub_create_form.cash|as_crispy_field}}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                      {{sub_create_form.usd|as_crispy_field}}
+                                                    </div>
+                                                  </div>
+                                                  <div class="row">
+                                                    <div class="col-md-6">
+                                                      {{sub_create_form.swipe|as_crispy_field}}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                      {{sub_create_form.ecocash|as_crispy_field}}
+                                                    </div>
+                                                    </div>
+            
+                                             <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <lable>Opening Time</lable>
+                                                <input type="time" name="opening_time" class="form-control" />
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <lable>Closing Time</lable>
+                                                <input type="time" name="closing_time" class="form-control" />
+                                            </div>
+                                            </div>
+            
+            
+            
+                                    </div>
+                                    <div class="modal-footer row col-md-12">
+                                        <button class="btn btn-secondary" style="width:40%"
+                                            data-dismiss="modal">Close</button><button style="width: 50%;" class="btn btn-primary"
+                                            type="submit">Add</button>
+                                        </form>
+                                    </div>
+            
+                                </div>
+                            </div>
+                        </div>
+
 
 
                             <div class="modal fade" id="{{station.id}}" tabindex="-1" role="dialog"
