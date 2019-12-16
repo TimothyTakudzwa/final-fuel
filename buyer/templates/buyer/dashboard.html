@@ -87,6 +87,53 @@
                             </button>
                         </td>
                     </tr>
+                    <script>
+                        $(document).ready(function () {
+                          $('#choices{{forloop.counter}}').hide();
+                          $('#choices1{{forloop.counter}}').hide();
+                    
+                          $('#delivery_method1{{forloop.counter}}').change(function () {
+                            if ($('#delivery_method1{{forloop.counter}} option:selected').text() == "Direct Delivery") {
+                              $('#choices1{{forloop.counter}}').show();
+                            }
+                            else {
+                              $('#choices1{{forloop.counter}}').hide();
+                            }
+                          });
+                          $('#delivery_method{{forloop.counter}}').change(function () {
+                            if ($('#delivery_method{{forloop.counter}} option:selected').text() == "Delivery") {
+                              $('#choices{{forloop.counter}}').show();
+                            }
+                            else {
+                              $('#choices{{forloop.counter}}').hide();
+                            }
+                          });
+                        });
+                    
+                        $('#pump_required').on('change', function () {
+                          $(this).val(this.checked ? "True" : "False");
+                        });
+                        $('#swipe').on('change', function () {
+                          $(this).val(this.checked ? "True" : "False");
+                        });
+                        $('#ecocash').on('change', function () {
+                          $(this).val(this.checked ? "True" : "False");
+                        });
+                        $('#cash').on('change', function () {
+                          $(this).val(this.checked ? "True" : "False");
+                        });
+                        $('#usd').on('change', function () {
+                          $(this).val(this.checked ? "True" : "False");
+                        });
+                    
+                        $('#dipping_stick_required').on('change', function () {
+                          $(this).val(this.checked ? "True" : "False");
+                        });
+                    
+                        $('#meter_required').on('change', function () {
+                          $(this).val(this.checked ? "True" : "False");
+                        });
+                      </script>
                     <div class="modal fade" id="make_deal{{data.id}}" tabindex="-1" role="dialog"
                         aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-notice">
@@ -145,13 +192,13 @@
                         
                                             <div class="form-group">
                                                 <label>Pick Up Method</label>
-                                                <select id="delivery_method1" name="delivery_method" class="form-control">
+                                                <select id="delivery_method1{{forloop.counter}}" name="delivery_method" class="form-control">
                                                     <option value='SELF_COLLECTION'>Self Collection</option>
                                                     <option value='DELIVERY'>Direct Delivery</option>
                                                 </select>
                                             </div>
                         
-                                            <div class="form-group" name='choices' id='choices1'>
+                                            <div class="form-group" name='choices' id='choices1{{forloop.counter}}'>
                                                 <label>Delivery Address</label>
                                                 <div class="row form-group">                            
                                                         <div class="togglebutton form-group col">
@@ -207,6 +254,129 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- notice modal -->
+<div class="modal fade modal-xl" id="create_request" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-notice">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color: #9c27b0;color: white;">
+            <h5 class="modal-title" id="myModalLabel">Make a requests</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <i class="material-icons">close</i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form method="POST" action="{% url 'buyer-dashboard' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.fuel_type|as_crispy_field }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.amount|as_crispy_field }}
+                </div>
+                <label class="form-group">Select Payment Method</label>
+                <div class="col-sm-12 row">
+                    <div class="togglebutton form-group col">
+                        <label>
+
+                            <input type="checkbox" name="cash" id="cash">
+
+                            <span class="toggle"></span>
+                            Cash
+                        </label>
+                    </div>
+                    <div class="togglebutton form-group col">
+                        <label>
+                            <input type="checkbox" name="ecocash" id="ecocash">
+                            <span class="toggle"></span>
+                            Ecocash
+                        </label>
+                    </div>
+                    <div class="togglebutton form-group col">
+                        <label>
+                            <input type="checkbox" name="swipe" id="swipe">
+                            <span class="toggle"></span>
+                            Swipe
+                        </label>
+                    </div>
+                    <div class="togglebutton form-group col">
+                        <label>
+                            <input type="checkbox" name="usd" id="usd">
+                            <span class="toggle"></span>
+                            USD
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label>Pick Up Method</label>
+                    <select id="delivery_method{{forloop.counter}}" name="delivery_method" class="form-control">
+                        <option value='SELF COLLECTION'>Self Collection</option>
+                        <option value='DELIVERY'>Delivery</option>
+                    </select>
+                </div>
+
+                <div class="form-group" name='choices' id='choices{{forloop.counter}}'>
+                    <label>Delivery Address</label>
+                    <div class="row form-group">                            
+                            <div class="togglebutton form-group col">
+                              <label for="">Street Number</label>
+                              <input type="text" class="form-control" name="s_number" id="" aria-describedby="helpId" placeholder="">
+                              
+                            </div>
+                            <div class="togglebutton form-group col">
+                              <label for="">Street Name</label>
+                              <input type="text" class="form-control" name="s_name" id="" aria-describedby="helpId" placeholder="">
+                              
+                            </div>
+                            <div class="togglebutton form-group col">
+                              <label for="">Location/Town</label>
+                              <input type="text" class="form-control" name="s_town" id="" aria-describedby="helpId" placeholder="">
+                             
+                            </div>
+                        
+                    </div>
+                   
+                    {{ form.storage_tanks|as_crispy_field }}
+                    <br>
+                    <label>Required Equipments</label>
+                    <div class="row">
+                        <div class="col">
+                            <input class="form-control-md" type="checkbox" value='False' id="pump_required"
+                                name="pump_required">
+                            <label for="pump_required">Pump </label>
+                            
+                        </div>
+                        <div class="col">
+                            <input class="form-control-md" type="checkbox" value="False" id="dipping_stick_required"
+                                name="dipping_stick_required">
+                            <label for="dipping_stick_required">Dipping Stick </label>
+                        </div>
+
+                        <div class="col">
+                            <input class="form-control-md" type="checkbox" value="False" id="meter_required"
+                                name="meter_required">
+                            <label for="meter_required">Meter</label>
+                        </div>
+                    </div>
+                </div>
+                <!--<input type="hidden" value="{{data.company_id}}" name="company_id" /> -->
+        </div>
+
+        <div class="modal-footer justify-content-left">
+            <div>
+                <button type="submit" name="WaitForOffer" class="btn btn-info btn-sm">Wait for Offer</button>
+                <button type="submit" name='Recommender' class="btn btn-primary btn-sm">System Generated</button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+</div>
+<!-- end notice modal -->
                     {% endfor %}
 
                 </tbody>
@@ -221,128 +391,8 @@
 
 </div>
 
-<!-- notice modal -->
-<div class="modal fade modal-xl" id="create_request" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-notice">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #9c27b0;color: white;">
-                <h5 class="modal-title" id="myModalLabel">Make a requests</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <i class="material-icons">close</i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="{% url 'buyer-dashboard' %}">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        {{ form.fuel_type|as_crispy_field }}
-                    </div>
-
-                    <div class="form-group">
-                        {{ form.amount|as_crispy_field }}
-                    </div>
-                    <label class="form-group">Select Payment Method</label>
-                    <div class="col-sm-12 row">
-                        <div class="togglebutton form-group col">
-                            <label>
-
-                                <input type="checkbox" name="cash" id="cash">
-
-                                <span class="toggle"></span>
-                                Cash
-                            </label>
-                        </div>
-                        <div class="togglebutton form-group col">
-                            <label>
-                                <input type="checkbox" name="ecocash" id="ecocash">
-                                <span class="toggle"></span>
-                                Ecocash
-                            </label>
-                        </div>
-                        <div class="togglebutton form-group col">
-                            <label>
-                                <input type="checkbox" name="swipe" id="swipe">
-                                <span class="toggle"></span>
-                                Swipe
-                            </label>
-                        </div>
-                        <div class="togglebutton form-group col">
-                            <label>
-                                <input type="checkbox" name="usd" id="usd">
-                                <span class="toggle"></span>
-                                USD
-                            </label>
-                        </div>
-                    </div>
 
 
-                    <div class="form-group">
-                        <label>Pick Up Method</label>
-                        <select id="delivery_method" name="delivery_method" class="form-control">
-                            <option value='SELF COLLECTION'>Self Collection</option>
-                            <option value='DELIVERY'>Delivery</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group" name='choices' id='choices'>
-                        <label>Delivery Address</label>
-                        <div class="row form-group">                            
-                                <div class="togglebutton form-group col">
-                                  <label for="">Street Number</label>
-                                  <input type="text" class="form-control" name="s_number" id="" aria-describedby="helpId" placeholder="">
-                                  
-                                </div>
-                                <div class="togglebutton form-group col">
-                                  <label for="">Street Name</label>
-                                  <input type="text" class="form-control" name="s_name" id="" aria-describedby="helpId" placeholder="">
-                                  
-                                </div>
-                                <div class="togglebutton form-group col">
-                                  <label for="">Location/Town</label>
-                                  <input type="text" class="form-control" name="s_town" id="" aria-describedby="helpId" placeholder="">
-                                 
-                                </div>
-                            
-                        </div>
-                       
-                        {{ form.storage_tanks|as_crispy_field }}
-                        <br>
-                        <label>Required Equipments</label>
-                        <div class="row">
-                            <div class="col">
-                                <input class="form-control-md" type="checkbox" value='False' id="pump_required"
-                                    name="pump_required">
-                                <label for="pump_required">Pump </label>
-                                
-                            </div>
-                            <div class="col">
-                                <input class="form-control-md" type="checkbox" value="False" id="dipping_stick_required"
-                                    name="dipping_stick_required">
-                                <label for="dipping_stick_required">Dipping Stick </label>
-                            </div>
-
-                            <div class="col">
-                                <input class="form-control-md" type="checkbox" value="False" id="meter_required"
-                                    name="meter_required">
-                                <label for="meter_required">Meter</label>
-                            </div>
-                        </div>
-                    </div>
-                    <!--<input type="hidden" value="{{data.company_id}}" name="company_id" /> -->
-            </div>
-
-            <div class="modal-footer justify-content-center">
-                <div class="btn-group">
-                    <button type="submit" name="WaitForOffer" class="btn btn-success btn-sm">Wait for Offer</button>
-                    <button type="submit" name='Recommender' class="btn btn-warning btn-sm">System Generated</button>
-                </div>
-            </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!-- end notice modal -->
 
 
 {% endblock %}
