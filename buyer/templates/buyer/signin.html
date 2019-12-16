@@ -199,6 +199,18 @@
                                                                     <div class="oppi_signup_inner">
                                                                         <h3 class="sign_up_titlle text-center">Welcome
                                                                             Back</h3>
+
+                                                                            {% if messages %}
+                                                                        {% for message in messages%}
+                                                                        <div class="alert alert-danger" role="alert">
+                                                                          <h4 class="alert-heading"></h4>
+                                                                          <p>{{ message }}</p>
+                                                                          <p class="mb-0"></p>
+                                                                        </div>
+                                                                          
+                                                                        {% endfor %}
+                                                        
+                                                                    {% endif %}
                                                                         <form action="#" method="POST"
                                                                             class="sign_up_form">
                                                                            
