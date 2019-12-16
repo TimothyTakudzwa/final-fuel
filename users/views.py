@@ -194,7 +194,7 @@ def statistics(request):
 
     for sub in branches:
         tran_amount = 0
-        sub_trans = Transaction.objects.filter(supplier__company=request.user.company,supplier__subsidiary_id=sub.id)
+        sub_trans = Transaction.objects.filter(supplier__company=request.user.company,supplier__subsidiary_id=sub.id, is_complete=True)
         for sub_tran in sub_trans:
             tran_amount += sub_tran.offer.request.amount
         sub.tran_count = sub_trans.count()
@@ -208,7 +208,7 @@ def statistics(request):
     for buyer in buyers:
         total_transactions =  buyers.count(buyer)
         buyers.remove(buyer)
-        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, is_complete=True).all()
+        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, supplier__company=request.user.company, is_complete=True).all()
         total_value = 0
         purchases = []
         number_of_trans = 0
