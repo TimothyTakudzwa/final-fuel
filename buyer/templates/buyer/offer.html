@@ -20,7 +20,7 @@
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped" id="fuel_updates">
-                <thead class=" text-primary">
+                <thead style="background-color: lightslategray; color: white;">
                     <tr>
                         
                         <th>
@@ -80,12 +80,12 @@
                              {{offer.date}} -- {{offer.time}}
                         </td>
                         <td class="text-primary">    
-                            <a class="btn btn-facebook btn-sm" href="#"  data-toggle="modal" data-target="#complete_{{offer.id}}" >
+                            <a class="btn btn-primary btn-sm" href="#"  data-toggle="modal" data-target="#complete_{{offer.id}}" >
                                 <i class="material-icons"></i>Accept Offer 
                             </a>
                         </td>
                         <td class="text-primary">
-                         <a class="btn btn-facebook btn-sm" href="{% url 'reject-offer' offer.id %}" >
+                         <a class="btn btn-primary btn-sm" href="{% url 'reject-offer' offer.id %}" >
                                 <i class="material-icons"></i>Reject Offer 
                             </a>
                         </td>
