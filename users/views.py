@@ -223,7 +223,7 @@ def statistics(request):
         if buyer not in new_buyers:
             new_buyers.append(buyer)
        
-    clients = sorted(new_buyers, key=lambda x: x.total_value, reverse=True)    
+    clients = sorted(new_buyers, key=lambda x: x.total_revenue, reverse=True)    
 
     # for company in companies:
     #     company.total_value = value[counter]
