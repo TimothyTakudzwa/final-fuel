@@ -326,8 +326,8 @@ def verification(request, token, user_id):
                         user.is_active = True
                         user.save()
                         TokenAuthentication.objects.filter(user=user).update(used=True)
-                        
-                        return redirect('login')
+                        my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
+                        return render(request,'supplier/final_registration.html',{'my_admin': my_admin})
                     else:
                         selected_company =Company.objects.create(name=request.POST.get('company'))
                         user.is_active = False
