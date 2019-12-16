@@ -56,7 +56,7 @@
           </li>
           <li class="nav-item {% if request.path == '/my_offers/' %} active {% endif %} ">
             <a class="nav-link" href="{%url 'my_offers'%}">
-              <i class="material-icons">local_gas_station</i>
+              <i class="material-icons">local_offer</i>
               <p>Offers</p>
             </a>
           </li>
@@ -358,10 +358,9 @@
     var t = $('#example').DataTable( {
         "columnDefs": [ {
             "searchable": false,
-            "orderable": false,
             "targets": 0
         } ],
-        "order": [[ 1, 'asc' ]]
+        "order": [[ 1, 'desc' ]]
     } );
  
     t.on( 'order.dt search.dt', function () {

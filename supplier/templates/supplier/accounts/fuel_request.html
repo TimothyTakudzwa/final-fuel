@@ -1,5 +1,6 @@
 {% extends "supplier/dashboard.html" %}
 {% load static %}
+{% load humanize %}
 {% block title %}
 {{title}}
 {% endblock %}
@@ -51,7 +52,7 @@
     <div class="container">
         <h1 class="display-3">Fuel Requests</h1>
         <p class="lead">
-            <a class="btn btn-outline-primary" href="{% url 'serviceStation:activate_whatsapp' %}" style="margin-top: 23px;margin-bottom: 0;margin-left: 30px;background-color: #25d366;color: white;border: none;">
+            <a class="btn btn-outline-primary" href="{% url 'activate_whatsapp' %}" style="margin-top: 23px;margin-bottom: 0;margin-left: 30px;background-color: #25d366;color: white;border: none;">
                 <i class="fa fa-whatsapp" style="margin-right: 11px;"></i>
                 {% if request.user.activated_for_whatsapp %}
                     Deactivate Whatsapp
@@ -66,7 +67,7 @@
     <div class="col-md-12">
             <div class="card mt-5" style="background-color:white">
                 <div class="card-header card-header-primary">
-                    <h4 class="card-title">Today's Requests</h4>
+                    <h4 class="card-title">Requests</h4>
                     <p class="card-category"> List Of All Requests</p>
                 </div>
                 <div class="card-body">
@@ -88,29 +89,33 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for request in requests %}
+                                {% for req in requests %}
                                 <tr>
                                     <td></td>
-                                    <td>{{ request.date }}</td>
-                                    <td>{{ request.name }}</td>
-                                    <td>{{ request.amount }}</td>
-                                    <td>{{ request.fuel_type }}</td>
-                                    <td>{% if request.cash %}CASH &nbsp;{% if request.ecocash %}ECOCASH &nbsp;{% if request.usd %}USD &nbsp;{% if request.swipe %}SWIPE{% endif %}{% endif %}{% endif %}{% endif %}</td>
-                                    <td>{{ request.delivery_method }}</td>
-                                    <td>{{ request.delivery_address }}</td>
-                                    <td>{% if request.pump_required %}Pump &nbsp;{% if request.dipping_stick_required %}Stick &nbsp;{% if request.meter_required %}Meter{% endif %}{% endif %}{% endif %}</td>
-                                    <td>{{ request.my_offer }}</td>
-                                    {% if request.my_offer %}
+                                    <td>{{ req.date }}</td>
+                                    <td>{{ req.name }}</td>
+                                    <td>{{ req.amount|intcomma }}</td>
+                                    <td>{{ req.fuel_type }}</td>
+                                    <td>{% if req.cash %}CASH &nbsp;{% if req.ecocash %}ECOCASH &nbsp;{% if req.usd %}USD &nbsp;{% if req.swipe %}SWIPE{% endif %}{% endif %}{% endif %}{% endif %}</td>
+                                    <td>{{ req.delivery_method }}</td>
+                                    {% if req.delivery_address%}
+                                    <td>{{ req.delivery_address }}</td>
+                                    {% else %}
+                                    <td>N/A</td>
+                                    {% endif %}
+                                    <td>{% if req.pump_required %}Pump &nbsp;{% if req.dipping_stick_required %}Stick &nbsp;{% if req.meter_required %}Meter{% endif %}{% endif %}{% endif %}</td>
+                                    <td>{{ req.my_offer }}</td>
+                                    {% if req.my_offer != 'No Offer' %}
                                     <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal"
-                                            data-target="#edit_offer_{{request.id}}">Edit Offer</button></td>
+                                            data-target="#edit_offer_{{req.id}}">Edit Offer</button></td>
                                     {% else %}
                                     <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal"
-                                            data-target="#add_offer_{{request.id}}">Make Offer</button></td>
+                                            data-target="#add_offer_{{req.id}}">Make Offer</button></td>
                                     {% endif %}
                                 </tr>  
     
                                 <!-- make offer modal -->
-    <div class="modal fade modal-xl" id="add_offer_{{request.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    <div class="modal fade modal-xl" id="add_offer_{{req.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-notice">
         <div class="modal-content">
@@ -121,20 +126,20 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{% url 'supplier:supplier' request.id %}">
+                <form method="POST" action="{% url 'supplier:supplier' req.id %}">
                     {% csrf_token %}
                     <div class="form-group">
                         <lable>Fuel Type</lable>
-                        <input type="text" name="fuel_type" class="form-control" value="{{request.fuel_type}}" disabled/>
+                        <input type="text" name="fuel_type" class="form-control" value="{{req.fuel_type}}" disabled/>
                     </div>
     
                     <div class="form-group">
                         <lable>Fuel Quantity</lable>
-                        <input type="text" name="quantity" class="form-control" value="{{request.amount}}" />
+                        <input type="text" name="quantity" class="form-control" value="{{req.amount}}" />
                     </div>
                     <div class="form-group">
                         <lable>Fuel Price</lable>
-                        <input type="text" name="price" class="form-control" value="{{request.price}}" />
+                        <input type="text" name="price" class="form-control" value="{{req.price}}" />
                     </div>
                     <label class="form-group">Select Payment Method</label>
                     <div class="col-sm-12 row">
@@ -232,7 +237,7 @@
     
     
      <!-- edit modal -->
-     <div class="modal fade modal-xl" id="edit_offer_{{request.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     <div class="modal fade modal-xl" id="edit_offer_{{req.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
      <div class="modal-dialog modal-notice">
          <div class="modal-content">
@@ -243,20 +248,20 @@
                  </button>
              </div>
              <div class="modal-body">
-                 <form method="POST" action="{% url 'supplier:edit_offer' request.offer_id %}">
+                 <form method="POST" action="{% url 'supplier:edit_offer' req.offer_id %}">
                      {% csrf_token %}
                      <div class="form-group">
                          <lable>Fuel Type</lable>
-                         <input type="text" name="fuel_type" class="form-control" value="{{request.fuel_type}}" disabled/>
+                         <input type="text" name="fuel_type" class="form-control" value="{{req.fuel_type}}" disabled/>
                      </div>
      
                      <div class="form-group">
                          <lable>Fuel Quantity</lable>
-                         <input type="text" name="quantity" class="form-control" value="{{request.offer_quantity}}" />
+                         <input type="text" name="quantity" class="form-control" value="{{req.offer_quantity}}" />
                      </div>
                      <div class="form-group">
                          <lable>Fuel Price</lable>
-                         <input type="text" name="price" class="form-control" value="{{request.offer_price}}" />
+                         <input type="text" name="price" class="form-control" value="{{req.offer_price}}" />
                      </div>
                      <label class="form-group">Select Payment Method</label>
                      <div class="col-sm-12 row">

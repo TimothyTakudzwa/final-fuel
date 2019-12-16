@@ -3,6 +3,15 @@
 
 {% block body%}
 
+<div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-3">Offers</h1>
+            
+            <hr class="my-2">
+            
+        </div>
+      </div>
+
 <div class="card">
     <div class="card-header card-header-primary">
         <h4 class="card-title "> Fuel Offers </h4>
@@ -11,7 +20,7 @@
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped" id="fuel_updates">
-                <thead class=" text-primary">
+                <thead style="background-color: lightslategray; color: white;">
                     <tr>
                         
                         <th>
@@ -71,12 +80,12 @@
                              {{offer.date}} -- {{offer.time}}
                         </td>
                         <td class="text-primary">    
-                            <a class="btn btn-facebook btn-sm" href="#"  data-toggle="modal" data-target="#complete_{{offer.id}}" >
+                            <a class="btn btn-primary btn-sm" href="#"  data-toggle="modal" data-target="#complete_{{offer.id}}" >
                                 <i class="material-icons"></i>Accept Offer 
                             </a>
                         </td>
                         <td class="text-primary">
-                         <a class="btn btn-facebook btn-sm" href="{% url 'reject-offer' offer.id %}" >
+                         <a class="btn btn-primary btn-sm" href="{% url 'reject-offer' offer.id %}" >
                                 <i class="material-icons"></i>Reject Offer 
                             </a>
                         </td>

@@ -201,6 +201,9 @@ def statistics(request):
         sub.tran_value = tran_amount
         subs.append(sub)
 
+    # sort subsidiaries by transaction value
+    sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True)    
+
     new_buyers = []
     for buyer in buyers:
         total_transactions =  buyers.count(buyer)
@@ -219,7 +222,7 @@ def statistics(request):
         buyer.number_of_trans = total_transactions
         new_buyers.append(buyer)
        
-    clients = new_buyers    
+    clients = sorted(new_buyers, key=lambda x: x.total_value, reverse=True)    
 
     # for company in companies:
     #     company.total_value = value[counter]
@@ -241,7 +244,7 @@ def statistics(request):
     return render(request, 'users/statistics.html', {'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
      'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'admin_staff': admin_staff,
-       'other_staff': other_staff, 'trans_complete':trans_complete, 'subs':subs })
+       'other_staff': other_staff, 'trans_complete':trans_complete, 'sorted_subs':sorted_subs })
 
 
 @login_required()
@@ -262,6 +265,15 @@ def client_history(request, cid):
     buyer = User.objects.filter(id=cid).first()
     trans = Transaction.objects.filter(buyer=buyer)
     return render(request, 'users/client_history.html', {'trans':trans, 'buyer':buyer})
+
+@login_required
+def subsidiary_transaction_history(request, sid):
+    subsidiary = Subsidiaries.objects.filter(id=sid).first()
+    trans = Transaction.objects.filter(supplier__company=request.user.company,supplier__subsidiary_id=subsidiary.id)
+    return render(request, 'users/subs_history.html', {'trans':trans, 'subsidiary':subsidiary})
+
+
+    
 
 @login_required()
 def myaccount(request):
@@ -699,7 +711,8 @@ def depot_staff(request):
     suppliers = User.objects.filter(company=request.user.company).filter(user_type='SUPPLIER').all()
     for supplier in suppliers:
         subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
-        supplier.subsidiary_name = subsidiary.name
+        if subsidiary:
+            supplier.subsidiary_name = subsidiary.name
     #suppliers = [sup for sup in suppliers if not sup == request.user]   
     form1 = DepotContactForm()         
     subsidiaries = Subsidiaries.objects.filter(is_depot=True).all()
