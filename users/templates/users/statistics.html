@@ -613,11 +613,13 @@
                      <tbody>
                          {% for client in clients %}
                          <tr>
-                             <td>{{client.company.name}}</td>
+                             <td>
+                               {{client.company.name}}
+                              </td>
                              
                              <td>{{client.company.address}}</td>
                              <td>{{client.company.industry}}</td>
-                             <td>{{client.total_value}}</td>
+                             <td>$ {{client.total_revenue|stringformat:".2f"}}</td>
                              <td>{{client.number_of_trans}}</td>
                              
                              <td style="width: 13%;">
@@ -681,7 +683,13 @@
                          {% for sub in sorted_subs %}
                           {% if sub.tran_value > 0 %}
                             <tr>
-                                <td>{{sub.name}}</td>
+                                <td>
+                                  {% if forloop.counter0 == 1}
+                                    <i class="fa fa-star" style="color: gold;"></i>
+                                  {% else %}
+                                  {% endif %}
+                                  {{sub.name}}
+                                </td>
                                 
                                 <td>{{sub.location}}</td>
                                 <td>$ {{sub.tran_value|stringformat:".2f"}}</td>

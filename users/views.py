@@ -217,13 +217,13 @@ def statistics(request):
             total_value += tran.offer.request.amount
             purchases.append(tran)
             number_of_trans += 1
-        buyer.total_value = total_value
+        buyer.total_revenue = total_value
         buyer.purchases = purchases
         buyer.number_of_trans = total_transactions
         if buyer not in new_buyers:
             new_buyers.append(buyer)
        
-    clients = sorted(new_buyers, key=lambda x: x.total_value, reverse=True)    
+    clients = sorted(new_buyers, key=lambda x: x.total_revenue, reverse=True)    
 
     # for company in companies:
     #     company.total_value = value[counter]
