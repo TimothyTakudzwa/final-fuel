@@ -687,10 +687,13 @@
                           {% if sub.tran_value > 0 %}
                             <tr>
                                 <td>
-                                  {% if forloop.counter|== 1%}<i class="fa fa-star" style="color: gold;"></i>{% endif %}
-                                  
+                                  {% if forloop.counter == 1%}
+                                  <i class="fa fa-trophy" style="color: gold;" style="padding-right: 2px;"></i>
+                                  {% elif forloop.counter == 2%}
+                                  <i class="fa fa-star" style="color: gold;" style="padding-right: 2px;"></i>
+                                  {% else %}
+                                  {% endif %}
                                   {{sub.name}}
-                                  
                                 </td>
                                 
                                 <td>{{sub.location}}</td>
