@@ -187,7 +187,7 @@ def offer(request, id):
         if fuel_request.fuel_type.lower() == 'petrol':
             available_fuel = fuel.petrol_quantity
         elif fuel_request.fuel_type.lower() == 'diesel':
-            available_fuel = fuel_request.diesel_quantity
+            available_fuel = fuel.diesel_quantity
         offer = int(request.POST.get('quantity'))
         amount = fuel_request.amount
 
