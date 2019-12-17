@@ -187,7 +187,7 @@ def offer(request, id):
         if fuel_request.fuel_type.lower() == 'petrol':
             available_fuel = fuel.petrol_quantity
         elif fuel_request.fuel_type.lower() == 'diesel':
-            available_fuel = fuel_request.diesel_quantity
+            available_fuel = fuel.diesel_quantity
         offer = int(request.POST.get('quantity'))
         amount = fuel_request.amount
 
@@ -414,10 +414,9 @@ def create_company(request, id):
 
     
 def company(request):
-    compan = Company.objects.filter(id = request.user.company.id).first()
-    num_of_subsidiaries = Subsidiaries.objects.filter(company=request.user.company).count()
-    fuel_capacity = FuelUpdate.objects.filter(company_id=request.user.company.id).first()   
-    return render(request, 'supplier/accounts/company.html', {'compan': compan, 'num_of_subsidiaries': num_of_subsidiaries, 'fuel_capacity': fuel_capacity})
+    subsidiary = Subsidiaries.objects.filter(id = request.user.subsidiary_id).first()
+    num_of_suppliers = User.objects.filter(subsidiary_id=request.user.subsidiary_id).count() 
+    return render(request, 'supplier/accounts/company.html', {'subsidiary': subsidiary, 'num_of_suppliers': num_of_suppliers})
 
 
 def my_offers(request):
@@ -461,3 +460,7 @@ def view_invoice(request, id):
     }
     return render(request, 'supplier/accounts/invoice2.html', context)
 
+
+def subsidiary_name(request):
+    subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+    return render(request, 'supplier/dashboard.html', {'subsidiary':subsidiary})
