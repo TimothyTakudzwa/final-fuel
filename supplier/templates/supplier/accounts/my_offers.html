@@ -73,15 +73,15 @@
                             <tr>
                                 <td></td>
                                 <td>{{ offer.date }}</td>
-                                <td>{{ offer.request.name }}</td>
-                                <td>{{ offer.request.fuel_type }}</td>
+                                <td>{{ offer.request.name.first_name|lower|capfirst }} {{ offer.request.name.last_name|lower|capfirst }}</td>
+                                <td>{{ offer.request.fuel_type|lower|capfirst }}</td>
                                 <td>{{ offer.request.amount|intcomma }}</td>
                                 <td>{{ offer.quantity|intcomma }}</td>
                                 <td>{{ offer.price|intcomma }}</td>                                
-                                <td>{% if offer.cash %}CASH &nbsp;{%endif%} {% if offer.ecocash %}ECOCASH &nbsp;{%endif%} {% if offer.usd %}USD &nbsp; {%endif%} {% if offer.swipe %}SWIPE{% endif %}</td>
-                                <td>{{ offer.delivery_method }}</td>
-                                <td>{{ offer.collection_address }}</td>
-                                <td>{% if offer.pump_available %}Pump &nbsp; {%endif%} {% if offer.dipping_stick_available %}Stick &nbsp; {%endif%} {% if offer.meter_available %}Meter{% endif %}</td>
+                                <td>{% if offer.cash %}Cash &nbsp;{%endif%} {% if offer.ecocash %}Ecocash &nbsp;{%endif%} {% if offer.usd %}Usd &nbsp; {%endif%} {% if offer.swipe %}Swipe{% endif %}{% if offer.no_payment %}Not Specified{%endif%}</td>
+                                <td>{{ offer.delivery_method|lower|title}}</td>
+                                <td>{{ offer.collection_address|lower|title }}</td>
+                                <td>{% if offer.pump_available %}Pump &nbsp; {%endif%} {% if offer.dipping_stick_available %}Stick &nbsp; {%endif%} {% if offer.meter_available %}Meter&nbsp;{% endif %}{% if offer.no_equipments %}No Equipment{%endif%}</td>
                                 {%if offer.declined %}
                                 <td>Declined</td>
                                 {% else %}

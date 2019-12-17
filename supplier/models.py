@@ -37,6 +37,7 @@ class Subsidiaries(models.Model):
 
 
 class FuelAllocation(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, null=True)
     date = models.DateField(auto_now_add=True)
     diesel_quantity = models.IntegerField(default=0)
     petrol_quantity = models.IntegerField(default=0)
@@ -59,16 +60,16 @@ class Offer(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     supplier = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='offer')
     request = models.ForeignKey(FuelRequest, on_delete=models.DO_NOTHING, related_name='request')
-    cash = models.BooleanField(default=False)
-    ecocash = models.BooleanField(default=False)
-    swipe = models.BooleanField(default=False)
-    usd = models.BooleanField(default=False)
-    delivery_method = models.CharField(max_length=200, default='')
-    collection_address = models.CharField(max_length=200, default='', null=True)
-    pump_available = models.BooleanField(default=False)
-    dipping_stick_available = models.BooleanField(default=False)
-    meter_available = models.BooleanField(default=False)
-    declined = models.BooleanField(default=False)
+    cash = models.BooleanField(default=False, blank=True, null=True)
+    ecocash = models.BooleanField(default=False,  blank=True, null=True)
+    swipe = models.BooleanField(default=False,  blank=True, null=True)
+    usd = models.BooleanField(default=False,  blank=True, null=True)
+    delivery_method = models.CharField(max_length=200, default='',  blank=True, null=True)
+    collection_address = models.CharField(max_length=200, default='',  blank=True, null=True)
+    pump_available = models.BooleanField(default=False,  blank=True, null=True)
+    dipping_stick_available = models.BooleanField(default=False,  blank=True, null=True)
+    meter_available = models.BooleanField(default=False,  blank=True, null=True)
+    declined = models.BooleanField(default=False,  blank=True, null=True)
 
     class Meta:
         ordering = ['date', 'time']
@@ -108,3 +109,16 @@ class Transaction(models.Model):
     
     class Meta:
         ordering = ['date', 'time']
+
+class UserReview(models.Model):
+    date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True)
+    rating = models.IntegerField(default=0)
+    company_type = models.CharField(max_length=255, default= '')
+    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, related_name='company_rating')
+    transaction = models.ForeignKey(Transaction, on_delete=models.DO_NOTHING, related_name='transaction')
+    rater = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='rater')
+    depot = models.ForeignKey(Subsidiaries, on_delete=models.DO_NOTHING, related_name='subsidiary_rating')
+
+    def __str__(self):
+        return f'{self.rating}'

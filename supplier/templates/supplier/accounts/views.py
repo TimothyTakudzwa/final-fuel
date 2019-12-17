@@ -96,11 +96,7 @@ def fuel_request(request):
     fuel = FuelUpdate.objects.filter(relationship_id=request.user.id).first()
     for buyer_request in requests:
         if buyer_request.dipping_stick_required==buyer_request.meter_required==buyer_request.pump_required==False:
-            buyer_request.no_equipments = True
-        if buyer_request.cash==buyer_request.ecocash==buyer_request.swipe==buyer_request.usd==False:
-            buyer_request.no_payment = True
-        if not buyer_request.delivery_address.strip():
-            buyer_request.delivery_address = f'N/A'
+            buyer_request.equipments = f'No Equipment Required'
         if Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).exists():
             offer = Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).first()
             buyer_request.my_offer = f'{offer.quantity}ltrs @ ${offer.price}'
@@ -344,7 +340,7 @@ def verification(request, token, user_id):
                     if company_exists:
                         selected_company =Company.objects.filter(name=request.POST.get('company')).first()
                         user.company = selected_company
-                        user.is_active = False
+                        user.is_active = True
                         user.is_waiting = True
                         user.save()
                         TokenAuthentication.objects.filter(user=user).update(used=True)
@@ -422,13 +418,6 @@ def company(request):
 
 def my_offers(request):
     offers = Offer.objects.filter(supplier=request.user).all()
-    for offer_temp in offers:
-        if offer_temp.cash==offer_temp.ecocash==offer_temp.swipe==offer_temp.usd==False:
-            offer_temp.no_payment = True
-        if offer_temp.dipping_stick_available==offer_temp.meter_available==offer_temp.pump_available==False:
-            offer_temp.no_equipments = True
-        if not offer_temp.collection_address.strip():
-            offer_temp.collection_address = f'N/A'
     return render(request, 'supplier/accounts/my_offers.html', {'offers':offers})
 
 
@@ -451,7 +440,7 @@ def view_invoice(request, id):
         if subsidiary is not None:
             transaction.depot = subsidiary.name
             transaction.address = subsidiary.address
-    total = transaction.offer.quantity * transaction.offer.price
+    total = transaction.offer.quantity + transaction.offer.price
     g_total = total + 25
     
     context = {
