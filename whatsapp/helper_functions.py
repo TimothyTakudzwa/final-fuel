@@ -234,7 +234,8 @@ def requests_handler(user, message):
         if 'rating' in message.lower():
             rating = [int(s) for s in message.split() if s.isdigit()]
             tran = Transaction.objects.filter(id=user.fuel_request).first()
-            UserReview.objects.create(transaction=tran, supplier=tran.supplier, buyer=tran.buyer, rating=rating[0])
+            subsidiary = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
+            UserReview.objects.create(transaction=tran, supplier=tran.supplier, subsidiary=subsidiary, buyer=tran.buyer, rating=rating[0])
             response_message = "Your Review Has Ben Submitted Successfully."
         else:
             response_message = "Ooops!!! something went wrong during processing."
@@ -279,7 +280,8 @@ def follow_up(user, message):
         if 'rating' in message.lower():
             rating = [int(s) for s in message.split() if s.isdigit()]
             tran = Transaction.objects.filter(id=user.fuel_request).first()
-            UserReview.objects.create(transaction=tran, supplier=tran.supplier, buyer=tran.buyer, rating=rating[0])
+            subsidiary = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
+            UserReview.objects.create(transaction=tran, supplier=tran.supplier, subsidiary=subsidiary, buyer=tran.buyer, rating=rating[0])
             response_message = "Your Review Has Ben Submitted Successfully."
         else:
             response_message = "Ooops!!! something went wrong during processing."
