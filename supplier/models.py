@@ -37,6 +37,7 @@ class Subsidiaries(models.Model):
 
 
 class FuelAllocation(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, null=True)
     date = models.DateField(auto_now_add=True)
     diesel_quantity = models.IntegerField(default=0)
     petrol_quantity = models.IntegerField(default=0)
