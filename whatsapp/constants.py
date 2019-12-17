@@ -24,6 +24,13 @@ However for you to be able to use this platform you need to log in to your porta
 To use this platform as an individual buyer type *NO*
 '''
 
+rating_response_message = '''
+Your Transaction With id {} has been completed. How Would You Rate This 
+Supplier Out Of 5. 
+Kindly Respond With The Word Rating and Your Score as below
+*Rating 5* 
+'''
+
 buyer_menu='''
 Hello {0}, What would you like to do today\n\n
 

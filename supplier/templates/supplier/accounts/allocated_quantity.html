@@ -19,13 +19,15 @@
         <div class="card-body">
         
             <div class="container-fluid">
-                {% if allocations %}
-
                 <table id="example" class="table table-striped" style="width:100%">
                     <thead style="color:white; background:lightslategray">
                         <th style="color: white;"></th>
                         <th style="color:white;">
                             Date
+                        </th>
+
+                        <th style="color:white;">
+                            Action
                         </th>
 
                         <th style="color:white;">
@@ -50,20 +52,28 @@
                         <tr>
                             <td></td>
                             <td>{{allocation.date}}</td>
+                            <td>{{allocation.action}}</td>
+                            {% if allocation.diesel_quantity != 0 %}
                             <td>{{allocation.diesel_quantity}}</td>
                             <td>{{allocation.diesel_price}}</td>
+                            {% else %}
+                            <td>N/A</td>
+                            <td>N/A</td>
+                            {% endif %}
+                            {% if allocation.petrol_quantity != 0 %}
                             <td>{{allocation.petrol_quantity}}</td>
                             <td>{{allocation.petrol_price}}</td>
-                            <td>{%if allocation.cash%}Cash {% else%} {%endif%} {%if allocation.usd%}USD {% else%} {%endif%} {%if allocation.ecocash%}Ecocash {% else%} {%endif%} {%if allocation.swipe%}Swipe {% else%} {%endif%}</td>
+                            {% else %}
+                            <td>N/A</td>
+                            <td>N/A</td>
+                            {%endif%}
+                            <td>{%if allocation.cash%}Cash &nbsp;{%endif%} {%if allocation.usd%}USD &nbsp;{%endif%} {%if allocation.ecocash%}Ecocash &nbsp;{%endif%} {%if allocation.swipe%}Swipe &nbsp;{%endif%}</td>
                         </tr>
 
                         {% endfor %}
 
                     </tbody>
                 </table>
-                {% else %}
-                <p>Nothing To Show</p>
-                {% endif %}
             </div>
         </div>
     </div>

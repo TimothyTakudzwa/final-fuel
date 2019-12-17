@@ -79,7 +79,7 @@ def index(request):
 @login_required()
 def allocate(request):
     allocates = F_Update.objects.filter(company_id=request.user.company.id).filter(~Q(sub_type='Company')).all()
-    allocations = FuelAllocation.objects.all()
+    allocations = FuelAllocation.objects.filter(company=request.user.company)
     company_capacity = F_Update.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()
 
     if company_capacity is not None:

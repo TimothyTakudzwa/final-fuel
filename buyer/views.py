@@ -348,7 +348,7 @@ def view_invoice(request, id):
             print('l am here')
             print(transaction.depot)
 
-    total = transaction.offer.quantity + transaction.offer.price
+    total = transaction.offer.quantity * transaction.offer.price
     print(total)
     g_total = total + 25
     
