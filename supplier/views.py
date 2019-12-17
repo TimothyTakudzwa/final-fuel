@@ -96,7 +96,11 @@ def fuel_request(request):
     fuel = FuelUpdate.objects.filter(relationship_id=request.user.id).first()
     for buyer_request in requests:
         if buyer_request.dipping_stick_required==buyer_request.meter_required==buyer_request.pump_required==False:
-            buyer_request.equipments = f'No Equipment Required'
+            buyer_request.no_equipments = True
+        if buyer_request.cash==buyer_request.ecocash==buyer_request.swipe==buyer_request.usd==False:
+            buyer_request.no_payment = True
+        if not buyer_request.delivery_address.strip():
+            buyer_request.delivery_address = f'N/A'
         if Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).exists():
             offer = Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).first()
             buyer_request.my_offer = f'{offer.quantity}ltrs @ ${offer.price}'
@@ -418,6 +422,13 @@ def company(request):
 
 def my_offers(request):
     offers = Offer.objects.filter(supplier=request.user).all()
+    for offer_temp in offers:
+        if offer_temp.cash==offer_temp.ecocash==offer_temp.swipe==offer_temp.usd==False:
+            offer_temp.no_payment = True
+        if offer_temp.dipping_stick_available==offer_temp.meter_available==offer_temp.pump_available==False:
+            offer_temp.no_equipments = True
+        if not offer_temp.collection_address.strip():
+            offer_temp.collection_address = f'N/A'
     return render(request, 'supplier/accounts/my_offers.html', {'offers':offers})
 
 
