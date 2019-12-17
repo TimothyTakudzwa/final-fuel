@@ -3,7 +3,7 @@ import requests
 from validate_email import validate_email
 from .constants import *
 from buyer.views import token_is_send
-from supplier.models import Offer, Transaction, FuelAllocation, Subsidiaries
+from supplier.models import Offer, Transaction, FuelAllocation, Subsidiaries, UserReview
 from buyer.models import User, FuelRequest
 from company.models import FuelUpdate
 from django.db.models import Q
@@ -256,8 +256,22 @@ def follow_up(user, message):
         req = FuelRequest.objects.filter(id = user.fuel_request).first()
         offers = Offer.objects.filter(request=req).all()
         offer = offers[int(message) - 1]
-        Transaction.objects.create(buyer=user,offer=offer,is_complete=True,supplier=offer.supplier)
-        response_message = 'Transaction is complete'
+        tran = Transaction.objects.create(buyer=user,offer=offer,supplier=offer.supplier)
+        tran.is_complete = True
+        tran.save()
+        user.fuel_request = tran.id
+        response_message = rating_response_message.format(offer.id)
+        user.position = 23
+        user.save()
+    elif user.position == 23:
+        if 'rating' in message.lower():
+            rating = [int(s) for s in message.split() if s.isdigit()]
+            tran = Transaction.objects.filter(id=user.fuel_request).first()
+            UserReview.objects.create(transaction=tran, supplier=tran.supplier, buyer=tran.buyer, rating=rating)
+            response_message = "Your Review Has Ben Submitted Successfully."
+        else:
+            response_message = "Ooops!!! something went wrong during processing."
+
     return response_message
 
 

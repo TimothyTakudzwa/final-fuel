@@ -108,3 +108,12 @@ class Transaction(models.Model):
     
     class Meta:
         ordering = ['date', 'time']
+
+class UserReview(models.Model):
+    rating = models.IntegerField(default=0)
+    transaction = models.ForeignKey(Transaction, on_delete=models.DO_NOTHING, related_name='transaction')
+    buyer = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='buyer_rating')
+    supplier = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='supplier_rating')
+
+    def __str__(self):
+        return f'{self.rating}'
