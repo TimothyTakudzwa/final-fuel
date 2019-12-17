@@ -25,7 +25,7 @@ To use this platform as an individual buyer type *NO*
 '''
 
 rating_response_message = '''
-Your Transaction With offer id {} has been completed. How Would You Rate This 
+Your Transaction With id {} has been completed. How Would You Rate This 
 Supplier Out Of 5. 
 Kindly Respond With The Word Rating and Your Score as below
 *Rating 5* 
