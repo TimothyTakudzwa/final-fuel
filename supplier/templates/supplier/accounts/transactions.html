@@ -35,7 +35,7 @@
                                 <th style="color: white;">Quantity(l)</th>
                                 <th style="color: white;">Price</th>
                                 <th style="color: white;">Amount</th>
-                               <!-- <th style="color: white;"></th> -->
+                                <th style="color: white;"></th>
 
                             </tr>
                         </thead>
@@ -50,6 +50,7 @@
                                 <td>{{ transaction.offer.quantity |intcomma}}</td>
                                 <td>{{ transaction.offer.price }}</td>
                                 <td>{{ transaction.offer.quantity| mul:transaction.offer.price |intcomma}}</td>
+                                <td><a class="btn btn-primary btn-sm" href="{% url 'view_invoice' transaction.id %}" >Download</a></td>
                             </tr>
                             {%endfor%}
                         </tbody>

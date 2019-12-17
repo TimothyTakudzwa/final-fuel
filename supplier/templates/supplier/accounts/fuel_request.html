@@ -98,12 +98,12 @@
                                     <td>{{ req.fuel_type }}</td>
                                     <td>{% if req.cash %}CASH &nbsp;{% if req.ecocash %}ECOCASH &nbsp;{% if req.usd %}USD &nbsp;{% if req.swipe %}SWIPE{% endif %}{% endif %}{% endif %}{% endif %}</td>
                                     <td>{{ req.delivery_method }}</td>
-                                    {% if req.delivery_address%}
+                                    {% if req.delivery_address %}
                                     <td>{{ req.delivery_address }}</td>
                                     {% else %}
                                     <td>N/A</td>
                                     {% endif %}
-                                    <td>{% if req.pump_required %}Pump &nbsp;{% if req.dipping_stick_required %}Stick &nbsp;{% if req.meter_required %}Meter{% endif %}{% endif %}{% endif %}</td>
+                                    <td>{% if req.pump_required %}Pump &nbsp;{% if req.dipping_stick_required %}Stick &nbsp;{% if req.meter_required %}Meter&nbsp;{% endif %}{% endif %}{% endif %}</td>
                                     <td>{{ req.my_offer }}</td>
                                     {% if req.my_offer != 'No Offer' %}
                                     <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal"
