@@ -440,7 +440,7 @@ def view_invoice(request, id):
         if subsidiary is not None:
             transaction.depot = subsidiary.name
             transaction.address = subsidiary.address
-    total = transaction.offer.quantity * transaction.offer.price
+    total = transaction.offer.quantity + transaction.offer.price
     g_total = total + 25
     
     context = {
