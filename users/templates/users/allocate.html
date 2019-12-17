@@ -482,6 +482,9 @@
                         <th style="color:white;">
                             Payment 
                           </th>
+                          <th style="color:white;">
+                            Action 
+                          </th>
                         
                          
                    <tbody>
@@ -497,8 +500,51 @@
                            <td>{{alloc.petrol_quantity}}</td>
                            <td>{{alloc.petrol_price}}</td>
                            <td>{%if alloc.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL">{% else%} {%endif%} {%if alloc.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if alloc.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if alloc.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
-                        
+                           <td>
+                            
+                           <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#edit_{{alloc.id}}">Edit Allocation</button>
+  
+                         </td>
                         </tr>
+
+
+                        <div class="modal fade" id="edit_{{alloc.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header" style="background-color: #9c27b0;color: white;">
+                              <h5 class="modal-title" id="exampleModalLabel">Edit Previous Allocation</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                  
+                              {% load crispy_forms_tags %}
+                              <form action="#" method="POST">
+                                         {% csrf_token %}
+                                       
+                                         <div class="form-group">
+                                            <lable>Diesel Quantity</lable>
+                                            <input type="text" name="diesel_quantity" class="form-control" value="{{alloc.diesel_quantity}}" />
+                                        </div>
+                                       
+                                        <div class="form-group">
+                                          <lable>Petrol Quantity</lable>
+                                          <input type="text" name="petrol_quantity" class="form-control" value="{{alloc.petrol_quantity}}" />
+                                      </div>
+                                       
+                      
+                                            <div class="modal-footer">
+                                              <button type="button" class="btn" style="background-color: lightgray; color: #000;" data-dismiss="modal">Close</button>
+                                              <button class="btn btn-primary" type="submit">Update</button>  
+                                            </div>
+                            </form>
+                            </div>
+                            
+                          </div>
+                        </div>
+                      </div>
 
                     {% endfor %}   
                 </tbody>
