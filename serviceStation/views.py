@@ -164,4 +164,43 @@ def logo_upload(request, id):
     else: 
         form = PostForm() 
     return redirect('serviceStation:subsidiary_profile')
+
+def edit_password(request):
+    context = {
+        'title': 'Fuel Finder | Change Password',
+        'password_change': PasswordChange(user=request.user)
+    }
+    if request.method == 'POST':
+        old = request.POST.get('old_password')
+        new1 = request.POST.get('new_password1')
+        new2 = request.POST.get('new_password2')
+
+        if authenticate(request, username=request.user.username, password=old):
+            if new1 != new2:
+                messages.warning(request, "Passwords Don't Match")
+                return redirect('edit_password')
+            elif new1 == old:
+                messages.warning(request, "New password can not be similar to the old one")
+                return redirect('edit_password')
+            elif len(new1) < 8:
+                messages.warning(request, "Password is too short")
+                return redirect('edit_password')
+            elif new1.isnumeric():
+                messages.warning(request, "Password can not be entirely numeric!")
+                return redirect('edit_password')
+            elif not new1.isalnum():
+                messages.warning(request, "Password should be alphanumeric")
+                return redirect('edit_password')
+            else:
+                user = request.user
+                user.set_password(new1)
+                user.save()
+                update_session_auth_hash(request, user)
+
+                messages.success(request, 'Password Successfully Changed')
+                return redirect('home')
+        else:
+            messages.warning(request, 'Wrong Old Password, Please Try Again')
+            return redirect('edit_password')
+    return render(request, 'serviceStation/change_password.html', context=context)
   
