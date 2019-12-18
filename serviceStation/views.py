@@ -178,19 +178,19 @@ def edit_password(request):
         if authenticate(request, username=request.user.username, password=old):
             if new1 != new2:
                 messages.warning(request, "Passwords Don't Match")
-                return redirect('edit_password')
+                return redirect('serviceStation:edit_password')
             elif new1 == old:
                 messages.warning(request, "New password can not be similar to the old one")
-                return redirect('edit_password')
+                return redirect('serviceStation:edit_password')
             elif len(new1) < 8:
                 messages.warning(request, "Password is too short")
-                return redirect('edit_password')
+                return redirect('serviceStation:edit_password')
             elif new1.isnumeric():
                 messages.warning(request, "Password can not be entirely numeric!")
-                return redirect('edit_password')
+                return redirect('serviceStation:edit_password')
             elif not new1.isalnum():
                 messages.warning(request, "Password should be alphanumeric")
-                return redirect('edit_password')
+                return redirect('serviceStation:edit_password')
             else:
                 user = request.user
                 user.set_password(new1)
@@ -198,9 +198,9 @@ def edit_password(request):
                 update_session_auth_hash(request, user)
 
                 messages.success(request, 'Password Successfully Changed')
-                return redirect('home')
+                return redirect('serviceStation:myaccount')
         else:
             messages.warning(request, 'Wrong Old Password, Please Try Again')
-            return redirect('edit_password')
+            return redirect('serviceStation:edit_password')
     return render(request, 'serviceStation/change_password.html', context=context)
   
