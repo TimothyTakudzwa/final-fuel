@@ -18,7 +18,7 @@ def get_total_revenue(user):
     revenue = 0
 
     for transaction in Transaction.objects.filter(supplier__company=user.company, is_complete=True):
-        revenue += transaction.offer.request.amount
+        revenue += (transaction.offer.request.amount * transaction.offer.price)
     return revenue
 
 

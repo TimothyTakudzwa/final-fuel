@@ -30,17 +30,17 @@ class FuelUpdate(models.Model):
     
 
 class Company(models.Model):
-    name = models.CharField(max_length=255)
-    address = models.CharField(max_length=255)
-    industry = models.CharField(max_length=255, choices=INDUSTRY_CHOICES)
+    name = models.CharField(max_length=255, default='')
+    address = models.CharField(max_length=255, default='')
+    industry = models.CharField(max_length=255,  default='', choices=INDUSTRY_CHOICES)
     logo = models.ImageField(default='default.png', upload_to='company_profile_logo')
     is_verified = models.BooleanField(default=False)
-    company_type = models.CharField(max_length=255, choices=COMPANY_CHOICES)
+    company_type = models.CharField(max_length=255, default='',choices=COMPANY_CHOICES)
     fuel_capacity = models.ForeignKey(FuelUpdate, on_delete=models.DO_NOTHING,blank=True, null=True)
-    iban_number = models.CharField(max_length=100, default="0")
-    license_number = models.CharField(max_length=100, default="0")
-    destination_bank = models.CharField(max_length=100, default="0")
-    account_number = models.CharField(max_length=100, default="0")
+    iban_number = models.CharField(max_length=100, default='')
+    license_number = models.CharField(max_length=100, default='')
+    destination_bank = models.CharField(max_length=100, default='')
+    account_number = models.CharField(max_length=100, default='')
     amount = models.FloatField(default=0.00)
     
     def __str__(self):

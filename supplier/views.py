@@ -183,11 +183,12 @@ def offer(request, id):
     if request.method == "POST" and float(request.POST.get('price')) != 0 and float(request.POST.get('quantity')) != 0:
         fuel_request = FuelRequest.objects.get(id=id)
         fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
+        subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         
         if fuel_request.fuel_type.lower() == 'petrol':
             available_fuel = fuel.petrol_quantity
         elif fuel_request.fuel_type.lower() == 'diesel':
-            available_fuel = fuel_request.diesel_quantity
+            available_fuel = fuel.diesel_quantity
         offer = int(request.POST.get('quantity'))
         amount = fuel_request.amount
 
@@ -204,7 +205,12 @@ def offer(request, id):
                 offer.ecocash = True if request.POST.get('ecocash') == "True" else False
                 offer.swipe = True if request.POST.get('swipe') == "True" else False
                 offer.delivery_method = request.POST.get('delivery_method')
-                offer.collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+                delivery_method = request.POST.get('delivery_method')
+                collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+                if not collection_address.strip() and delivery_method.lower() == 'self collection':
+                    offer.collection_address = subsidiary.address
+                else:
+                    offer.collection_address = collection_address
                 offer.pump_available = True if request.POST.get('pump_required') == "True" else False
                 offer.dipping_stick_available = True if request.POST.get('usd') == "True" else False
                 offer.meter_available = True if request.POST.get('usd') == "True" else False
@@ -250,7 +256,12 @@ def edit_offer(request, id):
                 offer.ecocash = True if request.POST.get('ecocash') == "True" else False
                 offer.swipe = True if request.POST.get('swipe') == "True" else False
                 offer.delivery_method = request.POST.get('delivery_method1')
-                offer.collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+                delivery_method = request.POST.get('delivery_method')
+                collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+                if not collection_address.strip() and delivery_method.lower() == 'self collection':
+                    offer.collection_address = subsidiary.address
+                else:
+                    offer.collection_address = collection_address
                 offer.pump_available = True if request.POST.get('pump_required') == "True" else False
                 offer.dipping_stick_available = True if request.POST.get('usd') == "True" else False
                 offer.meter_available = True if request.POST.get('usd') == "True" else False
@@ -414,10 +425,9 @@ def create_company(request, id):
 
     
 def company(request):
-    compan = Company.objects.filter(id = request.user.company.id).first()
-    num_of_subsidiaries = Subsidiaries.objects.filter(company=request.user.company).count()
-    fuel_capacity = FuelUpdate.objects.filter(company_id=request.user.company.id).first()   
-    return render(request, 'supplier/accounts/company.html', {'compan': compan, 'num_of_subsidiaries': num_of_subsidiaries, 'fuel_capacity': fuel_capacity})
+    subsidiary = Subsidiaries.objects.filter(id = request.user.subsidiary_id).first()
+    num_of_suppliers = User.objects.filter(subsidiary_id=request.user.subsidiary_id).count() 
+    return render(request, 'supplier/accounts/company.html', {'subsidiary': subsidiary, 'num_of_suppliers': num_of_suppliers})
 
 
 def my_offers(request):
@@ -461,3 +471,7 @@ def view_invoice(request, id):
     }
     return render(request, 'supplier/accounts/invoice2.html', context)
 
+
+def subsidiary_name(request):
+    subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+    return render(request, 'supplier/dashboard.html', {'subsidiary':subsidiary})
