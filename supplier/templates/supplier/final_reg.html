@@ -1,4 +1,5 @@
-{% load crispy_forms_tags %}
+
+
 <!DOCTYPE html>
 <html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# product: http://ogp.me/ns/product#" itemscope
     itemtype="http://schema.org/Offer">
@@ -7,7 +8,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Reset &#8211; Finder App &#8211; IAS</title>
+    <title>Sign In &#8211; Finder App &#8211; IAS</title>
     <meta name='robots' content='noindex,follow' />
     <link rel='dns-prefetch' href='http://fonts.googleapis.com/' />
     <link rel='dns-prefetch' href='http://s.w.org/' />
@@ -153,12 +154,7 @@
                                 class="bar_icon"> <span class="bar bar_1"></span> <span class="bar bar_2"></span> <span
                                     class="bar bar_3"></span> </span> </button>
                         <div class="collapse navbar-collapse oppi_header_menu" id="oppi_header_menu">
-                            <ul id="menu-main-menu" class="navbar-nav ml-auto">
-                                <li itemscope="itemscope" id="menu-item-41"
-                                    class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home current-menu-ancestor current-menu-parent menu-item-has-children menu-item-41 dropdown nav-item">
-                                    <ul role="menu" class="dropdown-menu menu-depth-2nd">
-                                    </ul><a class="oppi_try_for_free oppi_btn_right"
-                                        href="{% url 'home'%}">Return Home</a>
+                                
                         </div>
                         <div class="alter_nav mini_cart_exist">
                             <ul class="navbar-nav search_cart">
@@ -195,29 +191,27 @@
                                                         <div class="row">
                                                             <div class="col-md-12 col-sm-12 col-12">
                                                                 <div class="oppi_signup_body">
-                                                                    <div class="card shadow p-3 mb-5 bg-white rounded">
-                                                                    <div class="card-body">
                                                                     <div class="oppi_signup_inner">
-                                                                        <h3 class="sign_up_titlle text-center ">Insert Your New Password Here</h3>
-                                                                        <form action="#" method="POST"
-                                                                            class="sign_up_form">
-                                                                           
-                                                                                {% csrf_token %}
-                                                                                <fieldset class="form-group">
-                                                                                    <h4 class="card-title">Password Reset</h4>
-                                                                                    {{ form|crispy }}
-                                                                                </fieldset>
-                                                                               
-                                                                            <div class="form-group sign_up_btn_group">
-                                                                                <button class="btn sign_up_btn"
-                                                                                    type="submit"
-                                                                                    name="wp-submit">Change Password</button>
-                                                                            </div>
-                                                                            
-                                                                        </form>
+                                                                        <h3 class="sign_up_titlle text-center">Stage 2 of Registration Complete</h3>
+                                                                      
+<h4 class="text-center">Your application to register has been submitted successfully. Please wait for approval from the Fuel Finder admin.</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                                                     </div>
-                                                                </div>
-                                                                </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -328,7 +322,9 @@
                                                                         <div
                                                                             class="elementor-text-editor elementor-clearfix">
                                                                             <p>© Copyright 2019 Intelli Africa Solutions
-                                                                                Design
+                                                                                Design by <a
+                                                                                    href="https://www.linkedin.com/in/waltersomerai/">Walter
+                                                                                    Somerai</a></p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -343,6 +339,28 @@
                                                                     data-id="8682c50" data-element_type="widget"
                                                                     data-widget_type="social-icons.default">
                                                                     <div class="elementor-widget-container">
+                                                                        <div class="elementor-social-icons-wrapper"> <a
+                                                                                href="https://facebook.com/"
+                                                                                class="elementor-icon elementor-social-icon elementor-social-icon-facebook-f elementor-repeater-item-c5b5c66"
+                                                                                target="_blank"> <span
+                                                                                    class="elementor-screen-only">Facebook-f</span>
+                                                                                <i class="fab fa-facebook-f"></i> </a>
+                                                                            <a href="https://twitter.com/"
+                                                                                class="elementor-icon elementor-social-icon elementor-social-icon-twitter elementor-repeater-item-fd224ac"
+                                                                                target="_blank"> <span
+                                                                                    class="elementor-screen-only">Twitter</span>
+                                                                                <i class="fab fa-twitter"></i> </a> <a
+                                                                                href="https://vimeo.com/"
+                                                                                class="elementor-icon elementor-social-icon elementor-social-icon-vimeo-v elementor-repeater-item-fc78ead"
+                                                                                target="_blank"> <span
+                                                                                    class="elementor-screen-only">Vimeo-v</span>
+                                                                                <i class="fab fa-vimeo-v"></i> </a> <a
+                                                                                href="https://linkedin.com/"
+                                                                                class="elementor-icon elementor-social-icon elementor-social-icon-linkedin-in elementor-repeater-item-1f928fa"
+                                                                                target="_blank"> <span
+                                                                                    class="elementor-screen-only">Linkedin-in</span>
+                                                                                <i class="fab fa-linkedin-in"></i> </a>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -391,26 +409,6 @@
         jQuery('.oppi_contact_form_group form').addClass('oppi_contact_form');</script>
     <script defer src='https://timothytakudzwa.github.io/static/wp-content/cache/wpfc-minified/ehuddlfd/47amk.js'
         type="text/javascript"></script>
-    
-    <script>
-        $(document).ready(function() {
-        // executes when HTML-Document is loaded and DOM is ready
-        console.log("document is ready");
-  
-
-        $( ".card" ).hover(
-        function() {
-            $(this).addClass('shadow-lg').css('cursor', 'pointer'); 
-        }, function() {
-            $(this).removeClass('shadow-lg');
-        }
-        );
-  
-        // document ready  
-        });    
-    
-    </script>
-
 </body>
 
 </html>

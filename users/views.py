@@ -79,7 +79,7 @@ def index(request):
 @login_required()
 def allocate(request):
     allocates = F_Update.objects.filter(company_id=request.user.company.id).filter(~Q(sub_type='Company')).all()
-    allocations = FuelAllocation.objects.all()
+    allocations = FuelAllocation.objects.filter(company=request.user.company)
     company_capacity = F_Update.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()
 
     if company_capacity is not None:
@@ -194,7 +194,7 @@ def statistics(request):
 
     for sub in branches:
         tran_amount = 0
-        sub_trans = Transaction.objects.filter(supplier__company=request.user.company,supplier__subsidiary_id=sub.id)
+        sub_trans = Transaction.objects.filter(supplier__company=request.user.company,supplier__subsidiary_id=sub.id, is_complete=True)
         for sub_tran in sub_trans:
             tran_amount += sub_tran.offer.request.amount
         sub.tran_count = sub_trans.count()
@@ -208,7 +208,7 @@ def statistics(request):
     for buyer in buyers:
         total_transactions =  buyers.count(buyer)
         buyers.remove(buyer)
-        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, is_complete=True).all()
+        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, supplier__company=request.user.company, is_complete=True).all()
         total_value = 0
         purchases = []
         number_of_trans = 0
@@ -583,6 +583,7 @@ def approval(request, id):
         if user.objects.filter(id=id).exists():
             applicant = user.objects.filter(id = id).first()
             applicant.is_waiting = False
+            applicant.is_active = True
             selected =  request.POST['subsidiary']
             print(selected)
             subsidiari = Subsidiaries.objects.filter(name=selected).first()

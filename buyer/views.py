@@ -46,13 +46,14 @@ def login_success(request):
 #The second registration is in supplier view "Verification", responsible for authentication token verification
 def token_is_send(request, user):
     token = secrets.token_hex(12)
-    token_id = user.id 
+    token_id = user
     token_auth = TokenAuthentication()
     token_auth.token = token
-    token_auth.id = token_id
+    token_auth.user= token_id
     token_auth.save()
     domain = request.get_host()            
     url = f'https://{domain}/verification/{token}/{user.id}'
+    print(url)
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
     message = f"Dear {user.first_name}  {user.last_name}. \nYour username is: {user.username}\n\nPlease complete signup here : \n {url} \n. "            
@@ -90,7 +91,8 @@ def register(request):
                 if user.is_active:
                     send_message(user.phone_number, "You have been registered succesfully")
                     user.stage = 'requesting'
-                    user.save()               
+                    user.save()  
+                                 
                 return render(request, 'buyer/email_send.html')
             else:
                 # messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
@@ -346,7 +348,7 @@ def view_invoice(request, id):
             print('l am here')
             print(transaction.depot)
 
-    total = transaction.offer.quantity + transaction.offer.price
+    total = transaction.offer.quantity * transaction.offer.price
     print(total)
     g_total = total + 25
     
