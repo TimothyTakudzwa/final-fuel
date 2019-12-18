@@ -5,7 +5,7 @@ from buyer.models import User
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='notification_name')
     message = models.CharField(max_length=5000)
-    offer = models.CharField(max_length=30, choices=(('REQUEST' , 'REQUEST'), ('OFFER' , 'OFFER')))
+    action = models.CharField(max_length=30, choices=(('REQUEST' , 'REQUEST'), ('OFFER' , 'OFFER')))
     reference_id = models.PositiveIntegerField(default=0)
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
