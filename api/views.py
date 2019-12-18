@@ -29,7 +29,10 @@ def login(request):
         status = authenticate(username=username, password=password)
         if status:
             user = User.objects.get(username=username)
-            if user.user_type == 'SS_SUPPLIER':
+            if user.user_type == 'SS_SUPPLIER' and user.password_reset:
+                data = {'username': user.username}
+                return JsonResponse(status=201, data=data)
+            elif user.user_type == 'SS_SUPPLIER':
                 data = {'username': user.username}
                 return JsonResponse(status=200, data=data)
             else:
@@ -50,8 +53,12 @@ def login_user(request):
             status = authenticate(username=username, password=password)
             if status:
                 user = User.objects.get(username=username)
-                data = {'username': user.username}
-                return JsonResponse(status=200, data=data)
+                if user.password_reset:
+                    data = {'username': user.username}
+                    return JsonResponse(status=201, data=data)
+                else:
+                    data = {'username': user.username}
+                    return JsonResponse(status=200, data=data)
             else:
                 return HttpResponse(status=401)
         else:
@@ -69,25 +76,25 @@ def register(request):
         phone = request.POST.get('phone')
         password = request.POST.get('password')
 
-        try:
-            client = user.objects.create_user(username=username, email=email, password=password)
-            client.phone_number = phone
-            client.user_type = 'INDIVIDUAL'
-            client.first_name = first_name
-            client.last_name = last_name
-            client.save()
+        email_check = User.objects.filter(email=email)
+        username_check = User.objects.filter(username=username)
 
-            data = {'username': client.username}
-            return JsonResponse(status=200, data=data)
+        if username_check.exists():
+            return HttpResponse(status=409)
+        elif email_check.exists():
+            return HttpResponse(status=406)
+        else:
+            try:
+                client = user.objects.create_user(username=username, email=email, password=password)
+                client.phone_number = phone
+                client.user_type = 'INDIVIDUAL'
+                client.first_name = first_name
+                client.last_name = last_name
+                client.save()
 
-        except:
-            email_check = User.objects.filter(email=email)
-            username_check = User.objects.filter(username=username)
-            if username_check.exists():
-                return HttpResponse(status=409)
-            elif email_check.exists():
-                return HttpResponse(status=406)
-            else:
+                data = {'username': client.username}
+                return JsonResponse(status=200, data=data)
+            except:
                 return HttpResponse(status=403)
 
 
@@ -143,13 +150,22 @@ def view_station_updates(request):
     if request.method == 'POST':
         username = request.POST.get('username')
 
+        data = []
+
         user = User.objects.get(username=username)
         status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id)
 
         if status.exists():
-            data = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).values()
-            response = list(data)
-            return JsonResponse(response, status=200, safe=False)
+            updates = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id)
+            for update in updates:
+                company = Subsidiaries.objects.get(id=update.relationship_id)
+                station_update = {
+                    'name': company.name, 'diesel_quantity': update.diesel_quantity, 'diesel_price': update.diesel_price,
+                    'petrol_quantity': update.petrol_quantity, 'petrol_price': update.petrol_price,
+                    'cash': update.cash, 'ecocash': update.ecocash, 'swipe': update.swipe, 'usd': update.usd
+                }
+                data.append(station_update)
+            return JsonResponse(list(data), status=200, safe=False)
         else:
             return HttpResponse(status=403)
 
@@ -196,6 +212,31 @@ def get_profile(request):
 
 @csrf_exempt
 @api_view(['POST'])
+def force_password_change(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+
+        check = User.objects.filter(username=username)
+        if check.exists():
+            new1 = request.POST.get('new1')
+            new2 = request.POST.get('new2')
+
+            if new1 == new2:
+                client = User.objects.get(username=username)
+                client.set_password(new1)
+                client.password_reset = False
+                client.save()
+                update_session_auth_hash(request, client)
+                values = dict(user=client.username)
+                return JsonResponse(status=200, data=values)
+            else:
+                return HttpResponse(status=401)
+        else:
+            return HttpResponse(status=403)
+
+
+@csrf_exempt
+@api_view(['POST'])
 def change_password(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -233,6 +274,7 @@ def password_reset(request):
             client = User.objects.get(email=email)
             password = secrets.token_hex(3)
             client.set_password(password)
+            client.password_reset = True
             client.save()
             update_session_auth_hash(request, client)
 

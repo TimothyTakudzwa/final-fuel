@@ -18,6 +18,7 @@ class User(AbstractUser):
     is_waiting = models.BooleanField(default=False)
     subsidiary_id = models.IntegerField(default=0)
     fuel_updates_ids = models.CharField(max_length=2000, default=0)
+    password_reset = models.BooleanField(default=False)
 
 
     def __str__(self):
