@@ -6,47 +6,11 @@
 {% endblock %}
 {% block body %}
 
-<script>
-    $(document).ready(function () {
-        var logged_user = {{user.id}}
-        var socket = io.connect('https://dreamhub.co.zw/new_offer');
-        console.log("Got to this part ")
-        console.log(socket)
-        socket.on('new_offer', function (msg) {
-            console.log("There is a new offer on the rise", logged_user, msg.user_id)
-            if (logged_user == msg.user_id){
-                $('.new_alert').hide()
-                var txt1 = "<h4 class='alert-heading' style='text-align: center;'>New Request</h4><hr>" + msg.notification + "<hr><small style='text-align: center;'>Click to View </small></hr>";
-                $("#new_message").empty(txt1);
-                $("#new_message").append(txt1);
-                $(".new_alert").fadeTo(10000, 1000).slideUp(1000, function(){
-                    $(".new_alert").slideUp(1000);
-                }); 
-            }   
-        });
-    });
-</script>
 
 
 
 
-<div class="new_alert alert alert-success alert-dismissible fade show" role="alert" style="border-radius: 5px;padding: 8px;font-size: 12px;max-width: 97%;
-;background-color: #505577e8;margin-left: 15px;margin-top: 10px;" >
 
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    <strong><i data-notify="icon" class="material-icons">add_alert</i><span data-notify="title"></span>
-            <h4 class='alert-heading' style="text-align: center;">
-                <div id='new_message'><i class="material-icons" style="color: gold;line-height: 0;margin-right: 3px;">add_alert</i>
-                
-                New Request</h4><hr>
-            <p style="text-align: center;margin-top: 13px;background-color: #707aa785;padding: 10px;border-radius: 8px;">
-                When you say that you love her eand you really know everything that used to matter dont matter no more like my money all my cars, you can have it all girl. Flowers cardss and candy, said um fortunate to have you girl i want you to know i really adore you</p><hr><small style="text-align: center;"><p>Click to View</p> </small></hr></div><a href="#" target="_blank" data-notify="url"></a>
-    
-            </strong>
-
-</div>
 <div class="col-md-12">
 <div class="jumbotron jumbotron-fluid" style="padding: 1rem 1rem;">
     <div class="container">
@@ -276,7 +240,7 @@
             </div>
     
             <div class="modal-footer justify-content-center">
-                <button type="submit" name="MakeOffer" class="btn btn-info btn-round">Make Offer</button>
+                <button type="submit" name="MakeOffer" class="btn btn-primary">Make Offer</button>
     
             </div>
             </form>
