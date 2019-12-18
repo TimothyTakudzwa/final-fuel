@@ -1,3 +1,4 @@
+from itertools import chain
 from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
@@ -93,6 +94,8 @@ def account(request):
 @login_required()
 def fuel_request(request):
     requests = FuelRequest.objects.filter(is_deleted=False ,wait=True).all()
+    direct_requests =  FuelRequest.objects.filter(is_deleted=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
+    requests = list(chain(requests, direct_requests))
     fuel = FuelUpdate.objects.filter(relationship_id=request.user.id).first()
     for buyer_request in requests:
         if buyer_request.dipping_stick_required==buyer_request.meter_required==buyer_request.pump_required==False:
@@ -136,43 +139,28 @@ def fuel_update(request):
     if request.method == 'POST':
         petrol_update = float(request.POST['petrol_quantity'])
         diesel_update = float(request.POST['diesel_quantity'])
-        if FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).exists():
-            fuel_update = FuelUpdate.objects.get(relationship_id=request.user.subsidiary_id)
-            petrol_available = fuel_update.petrol_quantity
-            diesel_available = fuel_update.diesel_quantity
-            if petrol_update < petrol_available and diesel_update < diesel_available:
-                fuel_update.petrol_quantity = request.POST['petrol_quantity']
-                fuel_update.petrol_price = request.POST['petrol_price']
-                fuel_update.diesel_quantity = request.POST['diesel_quantity']
-                fuel_update.diesel_price = request.POST['diesel_price']
-                fuel_update.cash = request.POST['cash']
-                fuel_update.ecocash = request.POST['ecocash']
-                fuel_update.swipe = request.POST['swipe']
-                fuel_update.usd = request.POST['usd']
-                fuel_update.save()
-                messages.success(request, 'updated quantities successfully')
-                service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-                reference = 'fuel quantity updates'
-                reference_id = fuel_update.id
-                action = f"{request.user.username} has made an update of diesel quantity to {fuel_update.diesel_quantity}L @ {fuel_update.diesel_price} and petrol quantity to {fuel_update.petrol_quantity}L @ {fuel_update.petrol_price}"
-                Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
-                return redirect('fuel_update')
-            else:
-                messages.warning(request, 'You can only reduce your current stocks not increase')
-                return redirect('fuel_update')
-        else:
-            sub_type = 'Depot'
-            petrol_quantity = request.POST.get('petrol_quantity')
-            petrol_price = request.POST.get('petrol_price')
-            diesel_quantity = request.POST.get('diesel_quantity')
-            diesel_price = request.POST.get('diesel_price')
+        fuel_update = FuelUpdate.objects.get(relationship_id=request.user.subsidiary_id)
+        petrol_available = fuel_update.petrol_quantity
+        diesel_available = fuel_update.diesel_quantity
+        if petrol_update < petrol_available and diesel_update < diesel_available:
+            fuel_update.petrol_quantity = request.POST['petrol_quantity']
+            fuel_update.petrol_price = request.POST['petrol_price']
+            fuel_update.diesel_quantity = request.POST['diesel_quantity']
+            fuel_update.diesel_price = request.POST['diesel_price']
             fuel_update.cash = request.POST['cash']
             fuel_update.ecocash = request.POST['ecocash']
             fuel_update.swipe = request.POST['swipe']
             fuel_update.usd = request.POST['usd']
-            relationship_id = request.user.subsidiary_id
-            FuelUpdate.objects.create(relationship_id=relationship_id, sub_type=sub_type, petrol_quantity=petrol_quantity, petrol_price=petrol_price, diesel_quantity=diesel_quantity, diesel_price=diesel_price)
-            messages.success(request, 'Quantities uploaded successfully')
+            fuel_update.save()
+            messages.success(request, 'updated quantities successfully')
+            service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+            reference = 'fuel quantity updates'
+            reference_id = fuel_update.id
+            action = f"{request.user.username} has made an update of diesel quantity to {fuel_update.diesel_quantity}L @ {fuel_update.diesel_price} and petrol quantity to {fuel_update.petrol_quantity}L @ {fuel_update.petrol_price}"
+            Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
+            return redirect('fuel_update')
+        else:
+            messages.warning(request, 'You can only reduce your current stocks not increase')
             return redirect('fuel_update')
 
     return render(request, 'supplier/accounts/stock.html', {'updates': updates, 'subsidiary': subsidiary_name.name})
@@ -189,11 +177,11 @@ def offer(request, id):
             available_fuel = fuel.petrol_quantity
         elif fuel_request.fuel_type.lower() == 'diesel':
             available_fuel = fuel.diesel_quantity
-        offer = int(request.POST.get('quantity'))
+        offer_quantity = int(request.POST.get('quantity'))
         amount = fuel_request.amount
 
-        if offer <= available_fuel:
-            if offer <= amount:
+        if offer_quantity <= available_fuel:
+            if offer_quantity <= amount:
                 offer = Offer()
                 offer.supplier = request.user
                 offer.request = fuel_request
@@ -217,7 +205,11 @@ def offer(request, id):
                 offer.save()
                 
                 messages.success(request, 'Offer uploaded successfully')
-                action = f"{request.user}  made an offer of {offer}L @ {request.POST.get('price')} to a request made by {fuel_request.name.username}"
+
+                message = f'You have a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {fuel_request.amount}L'
+                Notification.objects.create(message = message, user = fuel_request.name, reference_id = offer.id, action = "OFFER")
+
+                action = f"{request.user}  made an offer of {offer_quantity}L @ {request.POST.get('price')} to a request made by {fuel_request.name.username}"
                 service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
                 reference = 'offers'
                 reference_id = fuel_request.id
@@ -240,9 +232,9 @@ def edit_offer(request, id):
     if request.method == 'POST':
         fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
         
-        if fuel_request.fuel_type.lower() == 'petrol':
+        if offer.request.fuel_type.lower() == 'petrol':
             available_fuel = fuel.petrol_quantity
-        elif fuel_request.fuel_type.lower() == 'diesel':
+        elif offer.request.fuel_type.lower() == 'diesel':
             available_fuel = fuel_request.diesel_quantity
         new_offer = int(request.POST.get('quantity'))
         request_quantity = offer.request.amount
@@ -256,9 +248,8 @@ def edit_offer(request, id):
                 offer.ecocash = True if request.POST.get('ecocash') == "True" else False
                 offer.swipe = True if request.POST.get('swipe') == "True" else False
                 offer.delivery_method = request.POST.get('delivery_method1')
-                delivery_method = request.POST.get('delivery_method')
                 collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
-                if not collection_address.strip() and delivery_method.lower() == 'self collection':
+                if not collection_address.strip() and request.POST.get('delivery_method1').lower() == 'self collection':
                     offer.collection_address = subsidiary.address
                 else:
                     offer.collection_address = collection_address
@@ -267,6 +258,8 @@ def edit_offer(request, id):
                 offer.meter_available = True if request.POST.get('usd') == "True" else False
                 offer.save()
                 messages.success(request, 'Offer successfully updated')
+                message = f'You have a new offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {offer.request.amount}L'
+                Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "OFFER")
                 return redirect('fuel-request')
             else:
                 messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
@@ -291,23 +284,6 @@ def complete_transaction(request, id):
     transaction.save()
     messages.success(request, 'Transaction completed successfully')
     return redirect('transaction')
-
-
-@login_required()
-def notifications(request):
-    context = {
-        'title': 'Fuel Finder | Notification',
-        'notifications': Notification.objects.filter(user=request.user),
-        'notifications_count': Notification.objects.filter(user=request.user, is_read=False).count(),
-    }
-    msgs = Notification.objects.filter(user=request.user, is_read=False)
-    if msgs.exists():
-        nots = Notification.objects.filter(user=request.user, is_read=False)
-        for i in nots:
-            user_not = Notification.objects.get(user=request.user, id=i.id)
-            user_not.is_read = True
-            user_not.save()
-    return render(request, 'supplier/accounts/notifications.html', context=context)
 
 
 def allocated_quantity(request):
