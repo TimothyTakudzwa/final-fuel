@@ -257,7 +257,7 @@ def dashboard(request):
                 fuel_request.save()
             messages.success(request, f'Fuel Request has been submitted succesfully and now waiting for an offer')
             message = f'{request.user} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
-            Notification.objects.create(message = message, user_id = fuel_request.last_deal, reference_id = fuel_request.id, offer = "REQUEST")
+            Notification.objects.create(message = message, reference_id = fuel_request.id, offer = "REQUEST")
 
         if 'Recommender' in request.POST:
             if form.is_valid():
