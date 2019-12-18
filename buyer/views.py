@@ -193,10 +193,11 @@ def fuel_finder(request):
             #fuel_request.payment_method = payment_method
             fuel_request.delivery_method = delivery_method
             fuel_request.wait = True
-            fuel_request.save()
+            fuel_request.save()            
+            messages.success(request, f'kindly note your request has been made ')
 
-            
-            messages.success(request, f'kindly not your request has been made ')
+            message = f'{request.user.name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
+            Notification.objects.create(message = message, reference_id = fuel_request.id, action = "REQUEST")
     else:
         form = FuelRequestForm
     return render(request, 'buyer/dashboard.html',{'form':form, 'sample_data':sample_data})
@@ -234,7 +235,7 @@ def dashboard(request):
                 print(fuel_request.last_deal)
                 fuel_request.save()
             messages.success(request, f'kindly note your request has been made ')
-            message = f'{request.user} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
+            message = f'{request.user.name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
             Notification.objects.create(message = message, user_id = fuel_request.last_deal, reference_id = fuel_request.id, action = "REQUEST")
 
         if 'WaitForOffer' in request.POST:
@@ -256,7 +257,7 @@ def dashboard(request):
                 fuel_request.wait = True
                 fuel_request.save()
             messages.success(request, f'Fuel Request has been submitted succesfully and now waiting for an offer')
-            message = f'{request.user} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
+            message = f'{request.user.name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
             Notification.objects.create(message = message, reference_id = fuel_request.id, action = "REQUEST")
 
         if 'Recommender' in request.POST:

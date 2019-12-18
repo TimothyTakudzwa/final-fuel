@@ -192,7 +192,7 @@ def offer(request, id):
         offer_quantity = int(request.POST.get('quantity'))
         amount = fuel_request.amount
 
-        if offer <= available_fuel:
+        if offer_quantity <= available_fuel:
             if offer_quantity <= amount:
                 offer = Offer()
                 offer.supplier = request.user
@@ -244,9 +244,9 @@ def edit_offer(request, id):
     if request.method == 'POST':
         fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
         
-        if fuel_request.fuel_type.lower() == 'petrol':
+        if offer.request.fuel_type.lower() == 'petrol':
             available_fuel = fuel.petrol_quantity
-        elif fuel_request.fuel_type.lower() == 'diesel':
+        elif offer.request.fuel_type.lower() == 'diesel':
             available_fuel = fuel_request.diesel_quantity
         new_offer = int(request.POST.get('quantity'))
         request_quantity = offer.request.amount
@@ -260,9 +260,8 @@ def edit_offer(request, id):
                 offer.ecocash = True if request.POST.get('ecocash') == "True" else False
                 offer.swipe = True if request.POST.get('swipe') == "True" else False
                 offer.delivery_method = request.POST.get('delivery_method1')
-                delivery_method = request.POST.get('delivery_method')
                 collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
-                if not collection_address.strip() and delivery_method.lower() == 'self collection':
+                if not collection_address.strip() and request.POST.get('delivery_method1').lower() == 'self collection':
                     offer.collection_address = subsidiary.address
                 else:
                     offer.collection_address = collection_address
@@ -271,6 +270,8 @@ def edit_offer(request, id):
                 offer.meter_available = True if request.POST.get('usd') == "True" else False
                 offer.save()
                 messages.success(request, 'Offer successfully updated')
+                message = f'You have a new offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {offer.request.amount}L'
+                Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "OFFER")
                 return redirect('fuel-request')
             else:
                 messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
@@ -295,23 +296,6 @@ def complete_transaction(request, id):
     transaction.save()
     messages.success(request, 'Transaction completed successfully')
     return redirect('transaction')
-
-
-@login_required()
-def notifications(request):
-    context = {
-        'title': 'Fuel Finder | Notification',
-        'notifications': Notification.objects.filter(user=request.user),
-        'notifications_count': Notification.objects.filter(user=request.user, is_read=False).count(),
-    }
-    msgs = Notification.objects.filter(user=request.user, is_read=False)
-    if msgs.exists():
-        nots = Notification.objects.filter(user=request.user, is_read=False)
-        for i in nots:
-            user_not = Notification.objects.get(user=request.user, id=i.id)
-            user_not.is_read = True
-            user_not.save()
-    return render(request, 'supplier/accounts/notifications.html', context=context)
 
 
 def allocated_quantity(request):

@@ -15,10 +15,10 @@ def distribute(sender, instance, created, **kwargs):
 
         if messages.action == "REQUEST":
             fuel_request = FuelRequest.objects.get(id=messages.reference_id)
-            msg = f'Hello {messages.user.name},  {fuel_request.name.name} has requested for {fuel_request.amount}l of {fuel_request.fuel_type}'
+            msg = f'Hello {messages.user.username},  {fuel_request.name} has requested for {fuel_request.amount}l of {fuel_request.fuel_type}'
         elif messages.action == "OFFER":
             offer = Offer.objects.get(id=messages.reference_id)
-            msg = f'Hello {messages.user.name} {offer.supplier.name} is selling fuel at ${offer.supplier.price}'
+            msg = f'Hello {messages.user.username} {offer.supplier.username} is selling fuel at ${offer.price}'
 
 
         url = 'https://dreamhub.co.zw/notify'
