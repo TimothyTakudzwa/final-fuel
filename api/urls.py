@@ -17,6 +17,7 @@ urlpatterns = [
 
     path('reset-password/', api.password_reset),
     path('change-password/', api.change_password),
+    path('force-password-change/', api.force_password_change),
 
 ]
 
