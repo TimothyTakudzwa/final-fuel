@@ -17,6 +17,7 @@ urlpatterns = [
     path('activate_whatsapp/', views.activate_whatsapp, name='activate_whatsapp'),
     path('company/', views.company, name='company'),
     path('change_password/', views.change_password, name='change_password'),
+    path('view_invoice/<int:id>', views.view_invoice, name='view_invoice'),
     path('create-company/<int:id>', views.create_company, name='create_company')
 
 ]

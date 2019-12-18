@@ -6,7 +6,7 @@
 {% endblock %}
 {% block body %}
 
-<div class="jumbotron jumbotron-fluid">
+<div class="jumbotron jumbotron-fluid" style="padding: 1rem 1rem;">
     <div class="container">
         <h1 class="display-3">{{request.user.company|title}}'s Transactions</h1>
         
@@ -35,7 +35,7 @@
                                 <th style="color: white;">Quantity(l)</th>
                                 <th style="color: white;">Price</th>
                                 <th style="color: white;">Amount</th>
-                               <!-- <th style="color: white;"></th> -->
+                                <th style="color: white;"></th>
 
                             </tr>
                         </thead>
@@ -44,12 +44,13 @@
                             <tr>
                                 <td></td>
                                 <td>{{ transaction.date }}</td>
-                                <td>{{ transaction.buyer.username }}</td>
+                                <td>{{ transaction.buyer.first_name|lower|capfirst }} {{ transaction.buyer.last_name|lower|capfirst }}</td>
                                 <td>{{ transaction.buyer.company.name }}</td>
-                                <td>{{ transaction.offer.request.fuel_type }}</td>
+                                <td>{{ transaction.offer.request.fuel_type|lower|capfirst }}</td>
                                 <td>{{ transaction.offer.quantity |intcomma}}</td>
                                 <td>{{ transaction.offer.price }}</td>
                                 <td>{{ transaction.offer.quantity| mul:transaction.offer.price |intcomma}}</td>
+                                <td><a class="btn btn-primary btn-sm" href="{% url 'view_invoice' transaction.id %}" >Download</a></td>
                             </tr>
                             {%endfor%}
                         </tbody>

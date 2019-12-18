@@ -8,7 +8,7 @@ def get_all_subsidiaries(company):
 
 
 def get_aggregate_stock(company): 
-    fuel_update = FuelUpdate.objects.filter(sub_type="Company", company_id = company.id).first()
+    fuel_update = FuelUpdate.objects.filter(sub_type="Company", company_id=company.id).first()
     if fuel_update:
         return {'diesel': fuel_update.diesel_quantity, 'petrol': fuel_update.petrol_quantity}
     return {'diesel': 0, 'petrol': 0}
@@ -18,7 +18,7 @@ def get_total_revenue(user):
     revenue = 0
 
     for transaction in Transaction.objects.filter(supplier__company=user.company, is_complete=True):
-        revenue += transaction.offer.request.amount
+        revenue += (transaction.offer.request.amount * transaction.offer.price)
     return revenue
 
 

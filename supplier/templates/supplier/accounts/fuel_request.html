@@ -6,51 +6,16 @@
 {% endblock %}
 {% block body %}
 
-<script>
-    $(document).ready(function () {
-        var logged_user = {{user.id}}
-        var socket = io.connect('https://dreamhub.co.zw/new_offer');
-        console.log("Got to this part ")
-        console.log(socket)
-        socket.on('new_offer', function (msg) {
-            console.log("There is a new offer on the rise", logged_user, msg.user_id)
-            if (logged_user == msg.user_id){
-                $('.new_alert').hide()
-                var txt1 = "<h4 class='alert-heading' style='text-align: center;'>New Request</h4><hr>" + msg.notification + "<hr><small style='text-align: center;'>Click to View </small></hr>";
-                $("#new_message").empty(txt1);
-                $("#new_message").append(txt1);
-                $(".new_alert").fadeTo(10000, 1000).slideUp(1000, function(){
-                    $(".new_alert").slideUp(1000);
-                }); 
-            }   
-        });
-    });
-</script>
 
 
 
 
-<div class="new_alert alert alert-success alert-dismissible fade show" role="alert" style="border-radius: 5px;padding: 8px;font-size: 12px;max-width: 97%;
-;background-color: #505577e8;margin-left: 15px;margin-top: 10px;" >
 
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    <strong><i data-notify="icon" class="material-icons">add_alert</i><span data-notify="title"></span>
-            <h4 class='alert-heading' style="text-align: center;">
-                <div id='new_message'><i class="material-icons" style="color: gold;line-height: 0;margin-right: 3px;">add_alert</i>
-                
-                New Request</h4><hr>
-            <p style="text-align: center;margin-top: 13px;background-color: #707aa785;padding: 10px;border-radius: 8px;">
-                When you say that you love her eand you really know everything that used to matter dont matter no more like my money all my cars, you can have it all girl. Flowers cardss and candy, said um fortunate to have you girl i want you to know i really adore you</p><hr><small style="text-align: center;"><p>Click to View</p> </small></hr></div><a href="#" target="_blank" data-notify="url"></a>
-    
-            </strong>
-
-</div>
 <div class="col-md-12">
-<div class="jumbotron jumbotron-fluid">
+<div class="jumbotron jumbotron-fluid" style="padding: 1rem 1rem;">
     <div class="container">
         <h1 class="display-3">Fuel Requests</h1>
+        <hr class="my-2">
         <p class="lead">
             <a class="btn btn-outline-primary" href="{% url 'activate_whatsapp' %}" style="margin-top: 23px;margin-bottom: 0;margin-left: 30px;background-color: #25d366;color: white;border: none;">
                 <i class="fa fa-whatsapp" style="margin-right: 11px;"></i>
@@ -67,7 +32,7 @@
     <div class="col-md-12">
             <div class="card mt-5" style="background-color:white">
                 <div class="card-header card-header-primary">
-                    <h4 class="card-title">Requests</h4>
+                    <h4 class="card-title">Fuel Requests</h4>
                     <p class="card-category"> List Of All Requests</p>
                 </div>
                 <div class="card-body">
@@ -93,17 +58,13 @@
                                 <tr>
                                     <td></td>
                                     <td>{{ req.date }}</td>
-                                    <td>{{ req.name }}</td>
+                                    <td>{{ req.name.first_name|lower|capfirst }} {{ req.name.last_name|lower|capfirst }}</td>
                                     <td>{{ req.amount|intcomma }}</td>
-                                    <td>{{ req.fuel_type }}</td>
-                                    <td>{% if req.cash %}CASH &nbsp;{% if req.ecocash %}ECOCASH &nbsp;{% if req.usd %}USD &nbsp;{% if req.swipe %}SWIPE{% endif %}{% endif %}{% endif %}{% endif %}</td>
-                                    <td>{{ req.delivery_method }}</td>
-                                    {% if req.delivery_address%}
-                                    <td>{{ req.delivery_address }}</td>
-                                    {% else %}
-                                    <td>N/A</td>
-                                    {% endif %}
-                                    <td>{% if req.pump_required %}Pump &nbsp;{% if req.dipping_stick_required %}Stick &nbsp;{% if req.meter_required %}Meter{% endif %}{% endif %}{% endif %}</td>
+                                    <td>{{ req.fuel_type|lower|capfirst }}</td>
+                                    <td>{% if req.cash %}Cash &nbsp;{% endif %}{% if req.ecocash %}Ecocash&nbsp;{% endif %}{% if req.usd %}Usd &nbsp;{% endif %}{% if req.swipe %}Swipe &nbsp;{% endif %}{% if req.no_payment %}Not Specified{% endif %}</td>
+                                    <td>{{ req.delivery_method|lower|capfirst }}</td>
+                                    <td>{{ req.delivery_address|lower|title}}</td>                                    
+                                    <td>{% if req.dipping_stick_required %}Stick &nbsp;{% endif %}{% if req.pump_required %}Pump &nbsp;{% endif %}{% if req.meter_required %}Meter&nbsp;{% endif %}{% if req.no_equipments %}No Equipment Required{% endif %}</td>
                                     <td>{{ req.my_offer }}</td>
                                     {% if req.my_offer != 'No Offer' %}
                                     <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal"
@@ -235,7 +196,7 @@
                         </select>
                     </div>
     
-                    <div class="form-group" name='choices' id='choices{{forloop.counter}}'>
+                    <div class="form-group" name='choices' id='choices{{forloop.counter}}'>                
                         <label>Collection Address</label>
                         <div class="row form-group">                            
                                 <div class="togglebutton form-group col">
@@ -279,7 +240,7 @@
             </div>
     
             <div class="modal-footer justify-content-center">
-                <button type="submit" name="MakeOffer" class="btn btn-info btn-round">Make Offer</button>
+                <button type="submit" name="MakeOffer" class="btn btn-primary">Make Offer</button>
     
             </div>
             </form>
