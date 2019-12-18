@@ -295,6 +295,7 @@ def accept_offer(request, id):
     print(offer.supplier)  
     Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier)  
     FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
+    messages.success(request, "Your request has been saved successfully") 
     return redirect("buyer-fuel-request")
 
 def reject_offer(request, id):    
