@@ -234,8 +234,8 @@ def requests_handler(user, message):
         if 'rating' in message.lower():
             rating = [int(s) for s in message.split() if s.isdigit()]
             tran = Transaction.objects.filter(id=user.fuel_request).first()
-            subsidiary = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
-            UserReview.objects.create(transaction=tran, supplier=tran.supplier, subsidiary=subsidiary, buyer=tran.buyer, rating=rating[0])
+            depot = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
+            UserReview.objects.create(company_type = 'Supplier',company = depot.company,transaction=tran, depot=depot, rater=tran.buyer, rating=rating[0])
             response_message = "Your Review Has Ben Submitted Successfully."
         else:
             response_message = "Ooops!!! something went wrong during processing."
@@ -280,8 +280,8 @@ def follow_up(user, message):
         if 'rating' in message.lower():
             rating = [int(s) for s in message.split() if s.isdigit()]
             tran = Transaction.objects.filter(id=user.fuel_request).first()
-            subsidiary = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
-            UserReview.objects.create(transaction=tran, supplier=tran.supplier, subsidiary=subsidiary, buyer=tran.buyer, rating=rating[0])
+            depot = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
+            UserReview.objects.create(company_type = 'Supplier',company = depot.company,transaction=tran, depot=depot, rater=tran.buyer, rating=rating[0])
             response_message = "Your Review Has Ben Submitted Successfully."
         else:
             response_message = "Ooops!!! something went wrong during processing."
@@ -411,16 +411,27 @@ def view_requests_handler(user, message):
         fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
         offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
         request_quantity = fuel_request.amount
+        fuel = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).first()
+        
+        if fuel_request.fuel_type.lower() == 'petrol':
+            available_fuel = fuel.petrol_quantity
+        elif fuel_request.fuel_type.lower() == 'diesel':
+            available_fuel = fuel_request.diesel_quantity
         try:
             offer_quantity = float(message)
-            if offer_quantity <= request_quantity:
-                offer.quantity = float(message)
-                offer.save()
-                response_message = "Which form of payment are you accepting?\n\n1. Cash\n2. USD \n3. Ecocash \n4. Swipe or Bank Transfer"
-                user.position = 3
-                user.save()
+            if offer_quantity <= available_fuel:
+                if offer_quantity <= request_quantity:
+                    offer.quantity = float(message)
+                    offer.save()
+                    response_message = "Which form of payment are you accepting?\n\n1. Cash\n2. USD \n3. Ecocash \n4. Swipe or Bank Transfer"
+                    user.position = 3
+                    user.save()
+                else:
+                    response_message = "You can not offer fuel that is more than the requested quantity. Please enter a different fuel quantity."
+                    user.position = 2
+                    user.save()
             else:
-                response_message = "You can not offer fuel that is more than the requested quantity. Please enter a different fuel quantity."
+                response_message = f"You can not offer fuel more than the available fuel stock. You have *{available_fuel}* litres left. Please try a leser quantity."
                 user.position = 2
                 user.save()
         except:
@@ -522,6 +533,12 @@ def view_offers_handler(user, message):
     elif user.position == 2:
         offer = Offer.objects.filter(id=user.fuel_request).first()
         request_quantity = offer.request.amount
+        fuel = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).first()
+        
+        if fuel_request.fuel_type.lower() == 'petrol':
+            available_fuel = fuel.petrol_quantity
+        elif fuel_request.fuel_type.lower() == 'diesel':
+            available_fuel = fuel_request.diesel_quantity
         if message.lower() == 'pass':
             response_message = "Which form of payment are you accepting? Type *pass* if you do not wish to edit.\n\n1. Cash\n2. USD \n3. Ecocash \n4. Swipe or Bank Transfer"
             user.position = 3
@@ -529,14 +546,19 @@ def view_offers_handler(user, message):
         else:
             try:
                 offer_quantity = float(message)
-                if offer_quantity <= request_quantity:
-                    offer.quantity = float(message)
-                    offer.save()
-                    response_message = "Which form of payment are you accepting? Type *pass* if you do not wish to edit.\n\n1. Cash\n2. USD \n3. Ecocash \n4. Swipe or Bank Transfer"
-                    user.position = 3
-                    user.save()
+                if offer_quantity <= available_fuel:
+                    if offer_quantity <= request_quantity:
+                        offer.quantity = float(message)
+                        offer.save()
+                        response_message = "Which form of payment are you accepting? Type *pass* if you do not wish to edit.\n\n1. Cash\n2. USD \n3. Ecocash \n4. Swipe or Bank Transfer"
+                        user.position = 3
+                        user.save()
+                    else:
+                        response_message = "You can not offer fuel that is more than the requested quantity. Please enter a different fuel quantity or type *pass* if you do not wish to edit."
+                        user.position = 2
+                        user.save()
                 else:
-                    response_message = "You can not offer fuel that is more than the requested quantity. Please enter a different fuel quantity or type *pass* if you do not wish to edit."
+                    response_message = f"You can not offer fuel more than the available fuel stock. You have *{available_fuel}* litres left. Please try a leser quantity."
                     user.position = 2
                     user.save()
             except:
@@ -649,25 +671,23 @@ def update_fuel(user, message):
         user.save()
     elif user.position == 1:
         fuel_update = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).first()
-        if fuel_update:
-            try:
-                fuel_update.petrol_quantity = float(message)
+        petrol_available = fuel_update.petrol_quantity
+        try:
+            petrol_update = float(message)
+            if petrol_update < petrol_available:
+                fuel_update.petrol_quantity = petrol_update
                 fuel_update.save()
                 user.position = 2
                 user.save()
                 response_message = "How much is the petrol price per litre?"
-            except:
-                response_message = "Please provide a valid petrol quantity."
-        else:
-            try:
-                FuelUpdate.objects.create(sub_type='Depot', relationship_id = user.subsidiary_id, petrol_quantity = float(message))
-                user.position = 2
-                user.save()
-                response_message = "How much is the petrol price per litre?"
-            except:
-                response_message = "Please provide a valid petrol quantity."
+            else:
+                response_message = f"You can only reduce your stock. To increase it contact you admin to update your fuel allocations! You currently have *{diesel_availabe}* litre, please enter available stock if it is less."
                 user.position = 1
                 user.save()
+        except:
+            response_message = "Please provide a valid petrol quantity."
+            user.position = 1
+            user.save()
     elif user.position == 2:
         fuel_update = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).first()
         try:
@@ -683,11 +703,18 @@ def update_fuel(user, message):
     elif user.position == 3:
         fuel_update = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).first()
         try:
-            fuel_update.diesel_quantity = float(message)
-            fuel_update.save()
-            user.position = 4
-            user.save()
-            response_message = "What is the diesel price per litre?"
+            diesel_update = float(message)
+            diesel_available = fuel_update.diesel_quantity
+            if diesel_update < diesel_available:
+                fuel_update.diesel_quantity = float(message)
+                fuel_update.save()
+                user.position = 4
+                user.save()
+                response_message = "What is the diesel price per litre?"
+            else:
+                response_message = f"You can only reduce your stock. To increase it contact you admin to update your fuel allocations! You currently have *{diesel_availabe}* litres, update if you have less stock."
+                user.position = 3
+                user.save()
         except:
             response_message = "Please provide a valid diesel quantity"
             user.position = 3
