@@ -26,8 +26,7 @@
 <body class="">
     <div class="wrapper ">
 
-        <div class="sidebar" data-color="purple" data-background-color="black"
-            data-image="{% static 'finder/assets/img/sidebar-1.jpg' %}">
+        <div class="sidebar" data-color="purple" data-background-color="black" data-image="{% static 'finder/assets/img/sidebar-1.jpg' %}">
             <!--
               Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
       
@@ -84,6 +83,13 @@
                             <p>Report Generator</p>
                         </a>
                     </li>
+
+                    <li class="nav-item {% if request.path == '/users/waiting_for_approval/' %} active {% endif %}">
+                        <a class="nav-link" href="{% url 'users:waiting_for_approval' %}">
+                          <i class="material-icons">people</i>
+                          <p>Staff Applications</p>
+                        </a>
+                      </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}?next=/">
@@ -391,7 +397,9 @@
                                             <td>{{req.name|title}}</td>
                                             <td>$ {{req.amount|stringformat:".2f"}}</td>
                                             <td>{{req.fuel_type|title}}</td>
-                                            <td>{{req.payment_method}}</td>
+                                            <td>
+                                                {%if req.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL">{% else%} {%endif%} {%if req.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if req.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if req.swipe%}<i class="fa fa-cc-visa"></i> {% else%} No Payment Method {%endif%}
+                                            </td>
                                         
                                             
                                         </tr>

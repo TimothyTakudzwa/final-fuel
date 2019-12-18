@@ -1,4 +1,5 @@
-{% load crispy_forms_tags %}
+
+
 <!DOCTYPE html>
 <html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# product: http://ogp.me/ns/product#" itemscope
     itemtype="http://schema.org/Offer">
@@ -7,7 +8,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Reset Done &#8211; Finder App &#8211; IAS</title>
+    <title>Sign In &#8211; Finder App &#8211; IAS</title>
     <meta name='robots' content='noindex,follow' />
     <link rel='dns-prefetch' href='http://fonts.googleapis.com/' />
     <link rel='dns-prefetch' href='http://s.w.org/' />
@@ -153,12 +154,7 @@
                                 class="bar_icon"> <span class="bar bar_1"></span> <span class="bar bar_2"></span> <span
                                     class="bar bar_3"></span> </span> </button>
                         <div class="collapse navbar-collapse oppi_header_menu" id="oppi_header_menu">
-                            <ul id="menu-main-menu" class="navbar-nav ml-auto">
-                                <li itemscope="itemscope" id="menu-item-41"
-                                    class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home current-menu-ancestor current-menu-parent menu-item-has-children menu-item-41 dropdown nav-item">
-                                    <ul role="menu" class="dropdown-menu menu-depth-2nd">
-                                    </ul><a class="oppi_try_for_free oppi_btn_right"
-                                        href="{% url 'home'%}">Return Home</a>
+                                
                         </div>
                         <div class="alter_nav mini_cart_exist">
                             <ul class="navbar-nav search_cart">
@@ -196,8 +192,25 @@
                                                             <div class="col-md-12 col-sm-12 col-12">
                                                                 <div class="oppi_signup_body">
                                                                     <div class="oppi_signup_inner">
-                                                                        <h3 class="sign_up_titlle text-center alert alert-info">An Email Has Been Sent With Instructions To Reset Your Password</h3>
-                                                                        
+                                                                        <h3 class="sign_up_titlle text-center">Stage 2 of Registration Complete</h3>
+                                                                      
+<h4 class="text-center">Your application to register has been sent to {{my_admin.first_name}} {{my_admin.last_name}}, the admin of {{my_admin.company}}. Please contact him/her on {{my_admin.email}} to get approved</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -309,7 +322,9 @@
                                                                         <div
                                                                             class="elementor-text-editor elementor-clearfix">
                                                                             <p>© Copyright 2019 Intelli Africa Solutions
-                                                                                Design
+                                                                                Design by <a
+                                                                                    href="https://www.linkedin.com/in/waltersomerai/">Walter
+                                                                                    Somerai</a></p>
                                                                         </div>
                                                                     </div>
                                                                 </div>

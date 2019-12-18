@@ -59,10 +59,12 @@
               <div class="modal-body">
                 <form method="POST" action="{% url 'users:report_generator' %}">
                   {% csrf_token %}
+                  
                     <div class="form-group">
                         
                         <input type="hidden" name="report_type" value="Stock">   
                     </div>
+                    <!--
                     <div class="form-group">
                         <label for="exampleInputEmail1">Starting Date</label>
                         <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
@@ -73,9 +75,10 @@
                         <label for="exampleInputEmail1">Ending Date</label>
                         <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
                         <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
-                      </div>  
-                  <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
-                    Submit
+                      </div> 
+                    -->   
+                  <button type="submit" class="btn btn-success btn-sm" style="color: whitesmoke;">
+                    Generate Report
                   </button>
                 </form>
             </div>
@@ -149,10 +152,12 @@
       <div class="card card-stats" style="height: 180px;">
         <div class="card-header card-header-danger card-header-icon">
           <div class="card-icon">
-            <i class="material-icons">info_outline</i>
+            <i class="material-icons">rate_review</i>
           </div>
-          <p class="card-category">Complaints/ Issues</p>
-          <h3 class="card-title" style="font-size: 1em;">0</h3>
+          <p class="card-category">Average Rating</p>
+          <h3 class="card-title" style="font-size: 1em;">{{average_rating}} / 5
+            <i class="fa fa-star" style="color: khaki;"></i>
+          </h3>
         </div>
         <div class="card-footer">
           <div class="stats">
@@ -451,13 +456,13 @@
               <i class="fa fa-bell"></i>
             </div>
             <p class="card-category">Requests</p>
-            <h3 class="card-title" style="font-size: 1em;">Bulk : {{bulk_requests}}</h3>
-            <h3 class="card-title" style="font-size: 1em;">Regular : {{normal_requests}} </h3>
+            <h3 class="card-title" style="font-size: 1em;">Self Collection : {{bulk_requests}}</h3>
+            <h3 class="card-title" style="font-size: 1em;">Delivery : {{normal_requests}} </h3>
 
           </div>
           <div class="card-footer">
             <div class="stats">
-              <i class="material-icons">date_range</i> Last 24 Hours
+             <!-- <i class="material-icons">date_range</i> Last 24 Hours -->
             </div>
           </div>
           <!--
@@ -582,7 +587,7 @@
           <div class="container-fluid">
               {% if clients %}
   
-              <table id="example" class="table table-striped table-bordered" style="width:100%">
+              <table id="clients_table" class="table table-striped table-bordered" style="width:100%">
                   <thead style="color:white; background:lightslategray">
                       <th style="color:white;">
                           Name
@@ -613,11 +618,13 @@
                      <tbody>
                          {% for client in clients %}
                          <tr>
-                             <td>{{client.company.name}}</td>
+                             <td>
+                               {{client.company.name}}
+                              </td>
                              
                              <td>{{client.company.address}}</td>
                              <td>{{client.company.industry}}</td>
-                             <td>{{client.total_value}}</td>
+                             <td>$ {{client.total_revenue|stringformat:".2f"}}</td>
                              <td>{{client.number_of_trans}}</td>
                              
                              <td style="width: 13%;">
@@ -632,18 +639,85 @@
                          {% endfor %}   
 
                      </tbody>   
-              </table>      
-                              
-                         
-                          
-                              
-                         
-                             
-                      
-                     
-                  
+              </table>         
               {% else %}
-              <p>Nothing To Show</p>    
+              <p>No Sales Yet To Report</p>    
+              {% endif %}
+          </div>
+      </div>
+      </div>
+      
+  </div>
+
+  <div class="col-md-12">
+      <div class="card" style="background-color:white">
+          
+          <div class="card-header card-header-primary">
+          <h4 class="card-title ">Subsidiaries</h4>
+          </div>
+      <div class="card-body">
+          <div class="container-fluid">
+              {% if sorted_subs %}
+  
+              <table id="subs_table" class="table table-striped table-bordered" style="width:100%">
+                  <thead style="color:white; background:lightslategray">
+                      <th style="color:white;">
+                          Name
+                         </th>
+                         
+                         <th style="color:white;">
+                            Address 
+                           </th>
+                          
+                           <th style="color:white;">
+                              Total Value 
+                             </th>
+                           <th style="color:white;">
+                             No Of Transactions
+                            </th>
+                            <th style="color:white;">
+                              
+                             </th>
+                            <!--
+                            <th style="color:white;">
+                            
+                          </th>
+                        -->
+                  </thead>    
+                     <tbody>
+                         {% for sub in sorted_subs %}
+                          {% if sub.tran_value > 0 %}
+                            <tr>
+                                <td>
+                                  {% if forloop.counter == 1%}
+                                  <i class="fa fa-trophy" style="color: gold;" style="padding-right: 2px;"></i>
+                                  {% elif forloop.counter == 2 or forloop.counter == 3 %}
+                                  <i class="fa fa-star" style="color: gold;" style="padding-right: 2px;"></i>
+                                  {% else %}
+                                  {% endif %}
+                                  {{sub.name}}
+                                </td>
+                                
+                                <td>{{sub.location}}</td>
+                                <td>$ {{sub.tran_value|stringformat:".2f"}}</td>
+                                <td>{{sub.tran_count}}</td>
+                                
+                                <td style="width: 13%;">
+                                    <div>
+                                          <a href="{% url  'users:subsidiary_transaction_history' sub.id %}" class="btn btn-primary btn-sm" >View History</a>  
+                                          
+      
+                                    </div>
+                                  </td>
+                            </tr>
+                          {% endif %}  
+                        
+                         {% endfor %}   
+
+                     </tbody>   
+              </table>         
+              {% else %}
+              <p>No Sales Yet To Report</p>    
               {% endif %}
           </div>
       </div>
@@ -655,7 +729,10 @@
 
   <div class="ct-chart ct-perfect-fourth"></div>
 
+<script>
 
+
+</script>
   
 
 

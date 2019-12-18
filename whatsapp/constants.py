@@ -24,12 +24,27 @@ However for you to be able to use this platform you need to log in to your porta
 To use this platform as an individual buyer type *NO*
 '''
 
+rating_response_message = '''
+Your Transaction With id {} has been completed. How Would You Rate This 
+Supplier Out Of 5. 
+Kindly Respond With The Word Rating and Your Score as below
+*Rating 5* 
+'''
+
 buyer_menu='''
 Hello {0}, What would you like to do today\n\n
 
 1. Make a Fuel Request\n
 2. Follow up on Fuel Request\n
 3. View Fuel Updates
+
+'''
+
+individual_menu='''
+Hello {0}, What would you like to do today\n
+
+1. Look for Fuel\n
+2. View Updates\n
 
 '''
 
@@ -49,7 +64,9 @@ Hello {0}, What would you like to do today\n
 
 1. View Fuel Requests
 2. View offers
-3. Mini Statement
+3. Today's Received Fuel
+4. Update Fuel Stocks
+5. Mini Statement
 
 '''
 zimbabwean_towns = ["Beitbridge","Bindura","Bulawayo","Chinhoyi","Chirundu","Gweru","Harare","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Mutare","Mutoko","Nyanga","Victoria Falls"]

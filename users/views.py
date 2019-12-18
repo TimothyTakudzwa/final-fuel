@@ -79,8 +79,16 @@ def index(request):
 @login_required()
 def allocate(request):
     allocates = F_Update.objects.filter(company_id=request.user.company.id).filter(~Q(sub_type='Company')).all()
-    allocations = FuelAllocation.objects.all()
+    allocations = FuelAllocation.objects.filter(company=request.user.company).all()
     company_capacity = F_Update.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()
+
+    if company_capacity is not None:
+        company_capacity.diesel_quantity= '{:,}'.format(company_capacity.diesel_quantity)
+        company_capacity.petrol_quantity= '{:,}'.format(company_capacity.petrol_quantity)
+    else:
+        company_capacity = company_capacity
+
+
     if allocations is not None: 
         for alloc in allocations:
             
@@ -122,7 +130,7 @@ def allocation_update(request,id):
             fuel_update.swipe = request.POST['swipe']
             fuel_update.ecocash = request.POST['ecocash']
             company_quantity = F_Update.objects.filter(company_id = request.user.company.id).filter(sub_type='Company').first()
-            if int(request.POST['petrol_quantity']) >= company_quantity.petrol_quantity:
+            if int(request.POST['petrol_quantity']) > company_quantity.petrol_quantity:
                 messages.warning(request, f'You can not allocate fuel above your company petrol capacity of {company_quantity.petrol_quantity}')
                 return redirect('users:allocate')
             
@@ -131,7 +139,8 @@ def allocation_update(request,id):
             fuel_update.save()
             assigned_staff = user.objects.filter(subsidiary_id =fuel_update.relationship_id).first()
             if assigned_staff is not None:
-                FuelAllocation.objects.create(petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['petrol_quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=assigned_staff.subsidiary_id)
+                action = 'Allocation of Petrol'
+                FuelAllocation.objects.create(company=request.user.company,action = action,petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['petrol_quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=assigned_staff.subsidiary_id)
                 messages.success(request, 'updated petrol quantity successfully')
                 service_station = Subsidiaries.objects.filter(id=fuel_update.relationship_id).first()
                 reference = 'fuel allocation'
@@ -140,7 +149,8 @@ def allocation_update(request,id):
                 Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
                 return redirect('users:allocate')
             else:
-                FuelAllocation.objects.create(petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['petrol_quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=fuel_update.relationship_id)
+                action = 'Allocation of Petrol'
+                FuelAllocation.objects.create(company=request.user.company,action=action,petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['petrol_quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=fuel_update.relationship_id)
                 service_station = Subsidiaries.objects.filter(id=fuel_update.relationship_id).first()
                 reference = 'fuel allocation'
                 reference_id = fuel_update.id
@@ -158,9 +168,9 @@ def allocation_update(request,id):
 def statistics(request):
     company = request.user.company
     yesterday = date.today() - timedelta(days=1)
-    offers = Offer.objects.filter(supplier=request.user).count()
-    bulk_requests = FuelRequest.objects.filter(delivery_method="BULK").count()
-    normal_requests = FuelRequest.objects.filter(delivery_method="REGULAR").count() # Change these 2 items
+    offers = Offer.objects.filter(supplier__company=request.user.company).count()
+    bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
+    normal_requests = FuelRequest.objects.filter(delivery_method="DELIVERY").count() # Change these 2 items
     staff = ''
     new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
     try:
@@ -176,13 +186,29 @@ def statistics(request):
     diesel = stock['diesel']; petrol = stock['petrol']
     
     trans = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).annotate(number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
-    buyers = [client.buyer.company.name for client in trans]
+    buyers = [client.buyer for client in trans]
+
+    branches = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company)
+
+    subs = []
+
+    for sub in branches:
+        tran_amount = 0
+        sub_trans = Transaction.objects.filter(supplier__company=request.user.company,supplier__subsidiary_id=sub.id, is_complete=True)
+        for sub_tran in sub_trans:
+            tran_amount += sub_tran.offer.request.amount
+        sub.tran_count = sub_trans.count()
+        sub.tran_value = tran_amount
+        subs.append(sub)
+
+    # sort subsidiaries by transaction value
+    sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True)    
+
     new_buyers = []
     for buyer in buyers:
         total_transactions =  buyers.count(buyer)
         buyers.remove(buyer)
-        buyer = User.objects.filter(company__name=buyer).first()
-        new_buyer_transactions = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).all()
+        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, supplier__company=request.user.company, is_complete=True).all()
         total_value = 0
         purchases = []
         number_of_trans = 0
@@ -190,12 +216,13 @@ def statistics(request):
             total_value += tran.offer.request.amount
             purchases.append(tran)
             number_of_trans += 1
-        buyer.total_value = total_value
+        buyer.total_revenue = total_value
         buyer.purchases = purchases
         buyer.number_of_trans = total_transactions
-        new_buyers.append(buyer)
+        if buyer not in new_buyers:
+            new_buyers.append(buyer)
        
-    clients = new_buyers    
+    clients = sorted(new_buyers, key=lambda x: x.total_revenue, reverse=True)    
 
     # for company in companies:
     #     company.total_value = value[counter]
@@ -214,9 +241,11 @@ def statistics(request):
     # except:
     #     trans = 0    
     trans_complete = get_transactions_complete_percentage(request.user)
+    average_rating = get_average_rating(request.user.company)
     return render(request, 'users/statistics.html', {'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
-     'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'admin_staff': admin_staff,  'other_staff': other_staff, 'trans_complete':trans_complete })
+     'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'admin_staff': admin_staff,
+       'other_staff': other_staff, 'trans_complete':trans_complete, 'sorted_subs':sorted_subs, 'average_rating': average_rating })
 
 
 @login_required()
@@ -238,6 +267,15 @@ def client_history(request, cid):
     trans = Transaction.objects.filter(buyer=buyer)
     return render(request, 'users/client_history.html', {'trans':trans, 'buyer':buyer})
 
+@login_required
+def subsidiary_transaction_history(request, sid):
+    subsidiary = Subsidiaries.objects.filter(id=sid).first()
+    trans = Transaction.objects.filter(supplier__company=request.user.company,supplier__subsidiary_id=subsidiary.id)
+    return render(request, 'users/subs_history.html', {'trans':trans, 'subsidiary':subsidiary})
+
+
+    
+
 @login_required()
 def myaccount(request):
     staff = user.objects.get(id=request.user.id)
@@ -253,7 +291,12 @@ def myaccount(request):
 
 @login_required()
 def stations(request):
-    stations = Subsidiaries.objects.all()
+    stations = Subsidiaries.objects.filter(company=request.user.company).all()
+    zimbabwean_towns = ["Harare","Bulawayo","Gweru","Mutare","Chirundu","Bindura","Beitbridge","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Chinhoyi","Mutoko","Nyanga","Victoria Falls"]
+    Harare = ['Avenues', 'Budiriro','Dzivaresekwa',  'Kuwadzana', 'Warren Park','Glen Norah', 'Glen View',  'Avondale',  'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park','Borrowdale',  'Chisipiti',  'Glen Lorne', 'Greendale', 'Greystone Park', 'Helensvale', 'Highlands',   'Mandara', 'Manresa','Msasa','Newlands',  'The Grange',  'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft', 'Hatcliffe', 'Mabelreign', 'Marlborough',  'Meyrick Park', 'Mount Pleasant',  'Pomona',   'Tynwald',  'Vainona', 'Arcadia','Braeside', 'CBD',  'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale', 'Sunningdale', 'Epworth','Highfield' 'Kambuzuma',  'Southerton', 'Warren Park', 'Southerton',  'Mabvuku', 'Tafara',  'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park',  'Marimba Park', 'Mufakose']
+    Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane', 'North End', 'Northvale', 'North Lynne', 'Northlea','North Trenance', 'Ntaba Moyo', 'Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont', 'Bradfield']
+    Mutare = ['Murambi', 'Hillside', 'Fairbridge Park', 'Morningside', 'Tigers Kloof', 'Yeovil', 'Westlea', 'Florida', 'Chikanga', 'Garikai', 'Sakubva', 'Dangamvura','Weirmouth', 'Fern Valley', 'Palmerstone', 'Avenues', 'Utopia','Darlington', 'Greeside', 'Greenside Extension', 'Toronto', 'Bordervale', 'Natview Park','Mai Maria', 'Gimboki', 'Musha Mukadzi']
+    Gweru = ['Gweru East', 'Woodlands Park', 'Kopje', 'Mtausi Park', 'Nashville', 'Senga', 'Hertifordshire', 'Athlone', 'Daylesford', 'Mkoba', 'Riverside', 'Southview', 'Nehosho','Clydesdale Park', 'Lundi Park', 'Montrose', 'Ascot', 'Ridgemont', 'Windsor Park', 'Ivene', 'Haben Park', 'Bata', 'ThornHill Air Field' 'Green Dale', 'Bristle', 'Southdowns']
     if request.method == 'POST':
         name = request.POST['name']
         city = request.POST['city']
@@ -268,7 +311,7 @@ def stations(request):
         swipe = request.POST['swipe']
         ecocash = request.POST['ecocash']
         sub = Subsidiaries.objects.create(account_number=account_number,destination_bank=destination_bank,city=city,location=location,company=request.user.company,name=name,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)    
-        if request.POST['is_depot'] == True:
+        if is_depot == "True":
             sub_type = 'Depot'  
         else:
             sub_type = 'Service Station'
@@ -279,7 +322,7 @@ def stations(request):
         messages.success(request, 'Subsidiary Created Successfully')
         return redirect('users:stations')
 
-    return render(request, 'users/service_stations.html', {'stations': stations})
+    return render(request, 'users/service_stations.html', {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns, 'Mutare': Mutare, 'Gweru': Gweru})
 
 @login_required()
 def report_generator(request):
@@ -306,12 +349,12 @@ def report_generator(request):
                     my_stock.subsidiary_name = request.user.company.name
                 else:
                     sub = Subsidiaries.objects.filter(id=my_stock.relationship_id).first()
-                    my_stock.subsidiary_name = sub.name
-            print("ep",stock)
+                    if sub:
+                        my_stock.subsidiary_name = sub.name
+            
             requests = None; allocations = None; trans = None; revs=None
         if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':
-            print('________Im in here_______m')
-            trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier=request.user)
+            trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier__company=request.user.company)
             requests = None; allocations = None; revs=None
 
             
@@ -531,15 +574,32 @@ def audit_trail(request):
     return render(request, 'users/audit_trail.html', {'trails': trails})    
 
 def waiting_for_approval(request):
+    stations = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all() 
+    depots = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company).all()
     applicants = user.objects.filter(is_waiting=True,company=request.user.company).all()
-    return render(request, 'users/waiting_for_approval.html', {'applicants': applicants})
+    return render(request, 'users/waiting_for_approval.html', {'applicants': applicants,'stations': stations, 'depots': depots})
 
 def approval(request, id):
-    applicant = user.objects.filter(id = id).first()
-    applicant.is_waiting = False
-    applicant.save()
-    messages.success(request, f'approval for {applicant.first_name} made successfully')
-    return redirect('users:waiting_for_approval')
+    if request.method == 'POST':
+        if user.objects.filter(id=id).exists():
+            applicant = user.objects.filter(id = id).first()
+            applicant.is_waiting = False
+            applicant.is_active = True
+            selected =  request.POST['subsidiary']
+            print(selected)
+            subsidiari = Subsidiaries.objects.filter(name=selected).first()
+            print(subsidiari)
+            applicant.subsidiary_id = subsidiari.id
+            print(applicant.subsidiary_id)
+            applicant.save()
+            messages.success(request, f'approval for {applicant.first_name} made successfully')
+            return redirect('users:waiting_for_approval')
+       
+
+        else:
+            messages.warning(request, 'oops! something went wrong')
+            return redirect('users:waiting_for_approval')    
+    
 
 def decline_applicant(request, id):
     applicant = user.objects.filter(id = id).first()
@@ -653,18 +713,25 @@ def depot_staff(request):
     suppliers = User.objects.filter(company=request.user.company).filter(user_type='SUPPLIER').all()
     for supplier in suppliers:
         subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
-        supplier.subsidiary_name = subsidiary.name
+        if subsidiary:
+            supplier.subsidiary_name = subsidiary.name
     #suppliers = [sup for sup in suppliers if not sup == request.user]   
     form1 = DepotContactForm()         
     subsidiaries = Subsidiaries.objects.filter(is_depot=True).all()
     form1.fields['depot'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in subsidiaries] 
 
     if request.method == 'POST':
+        
         form1 = DepotContactForm( request.POST)
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         username = request.POST.get('username')
         email = request.POST.get('email')
+        sup = User.objects.filter(email=email).first()
+        if sup is not None:
+            messages.warning(request, f"{sup.email} already used in the system, please use a different email")
+            return redirect('users:depot_staff')
+
         password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
         phone_number = request.POST.get('phone_number')
         subsidiary_id = request.POST.get('depot')
@@ -741,7 +808,7 @@ def allocate_diesel(request, id):
             diesel_update = F_Update.objects.filter(id=id).first()
             diesel_update.diesel_quantity = diesel_update.diesel_quantity + int(request.POST['diesel_quantity'])
             company_quantity = F_Update.objects.filter(company_id = request.user.company.id).filter(sub_type='Company').first()
-            if int(request.POST['diesel_quantity']) >= company_quantity.diesel_quantity:
+            if int(request.POST['diesel_quantity']) > company_quantity.diesel_quantity:
                 messages.warning(request, f'You can not allocate fuel above your company diesel capacity of {company_quantity.diesel_quantity}')
                 return redirect('users:allocate')
             
@@ -750,7 +817,8 @@ def allocate_diesel(request, id):
             diesel_update.save()
             assigned_staff = user.objects.filter(subsidiary_id =diesel_update.relationship_id).first()
             if assigned_staff is not None:
-                FuelAllocation.objects.create(diesel_price=diesel_update.diesel_price,diesel_quantity=request.POST['diesel_quantity'],sub_type=diesel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=assigned_staff.subsidiary_id)
+                action = 'Allocation of Diesel'
+                FuelAllocation.objects.create(company=request.user.company,action = action,diesel_price=diesel_update.diesel_price,diesel_quantity=request.POST['diesel_quantity'],sub_type=diesel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=assigned_staff.subsidiary_id)
                 messages.success(request, 'Updated diesel quantity successfully')
                 service_station = Subsidiaries.objects.filter(id=diesel_update.relationship_id).first()
                 reference = 'fuel allocation'
@@ -759,7 +827,8 @@ def allocate_diesel(request, id):
                 Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
                 return redirect('users:allocate')
             else:
-                FuelAllocation.objects.create(diesel_price=diesel_update.diesel_price,diesel_quantity=request.POST['diesel_quantity'],sub_type=diesel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=diesel_update.relationship_id)
+                action = 'Allocation of Diesel'
+                FuelAllocation.objects.create(company=request.user.company,action=action,diesel_price=diesel_update.diesel_price,diesel_quantity=request.POST['diesel_quantity'],sub_type=diesel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=diesel_update.relationship_id)
                 
                 service_station = Subsidiaries.objects.filter(id=diesel_update.relationship_id).first()
                 reference = 'fuel allocation'

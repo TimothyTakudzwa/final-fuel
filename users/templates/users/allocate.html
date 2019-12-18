@@ -16,11 +16,11 @@
 
 
 
-
+    {% if company_capacity %}
     <div class="card" style="background-color:white">
             
         <div class="card-header card-header-primary">
-        <h4 class="card-title ">Company Capacity</h4>
+        <h4 class="card-title ">Company Unallocated Fuel</h4>
         </div>
     <div class="card-body">
             
@@ -33,26 +33,24 @@
                 
                    
                     
+                  
                    <th style="color:white;">
-                    Sub Type
+                    Diesel Quantity
                      </th>
                    <th style="color:white;">
-                    Diesel
-                     </th>
-                   <th style="color:white;">
-                    Price
+                    Diesel Price
                      </th>
                      
                     <th style="color:white;">
-                   Petrol
+                   Petrol Quantity
                        </th>
                     
                     <th style="color:white;">
-                      Price
+                      Petrol Price
                     </th>
 
                     <th style="color:white;">
-                        Payment 
+                        Payment Methods 
                       </th>
                     
 
@@ -65,15 +63,15 @@
                    <tr>
                      
                      
-                       <td>{{company_capacity.sub_type}}</td>
+                       
                        <td>{{company_capacity.diesel_quantity}}</td>
                        <td>{{company_capacity.diesel_price}}</td>
                        <td>{{company_capacity.petrol_quantity}}</td>
                        <td>{{company_capacity.petrol_price}}</td>
-                       <td>{%if company_capacity.cash%}<i class="fa fa-dollar"></i> {% else%} {%endif%} {%if company_capacity.usd%}USD {% else%} {%endif%} {%if company_capacity.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px">{% else%} {%endif%} {%if company_capacity.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
+                       <td>{%if company_capacity.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL"> {% else%} {%endif%} {%if company_capacity.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if company_capacity.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if company_capacity.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
                        <td>
-                          <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#company_petrol{{company_capacity.id}}">Update Petrol Capacity</button>
-                          <button class="btn btn-warning btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#company_diesel{{company_capacity.id}}">Update Diesel Capacity</button>
+                          <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#company_petrol{{company_capacity.id}}">Update Company Unallocated Petrol</button>
+                          <button class="btn btn-warning btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#company_diesel{{company_capacity.id}}">Update Company Unallocated Diesel</button>
                        </td>
                     </tr>
 
@@ -92,8 +90,7 @@
                                                </div>
                                                <div class="modal-body">
                                                   {% load crispy_forms_tags %}
-                                                   <form action=" users/{{company_capacity.id}}"
-                                                       method="POST">
+                                                  <form action="{% url 'users:company_petrol' company_capacity.id %}" method="POST">
                                                        {% csrf_token %}
                                                        
        
@@ -127,7 +124,7 @@
                                                </div>
                                                <div class="modal-footer">
                                                        <div >
-                                                           <button class="btn btn-success" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
+                                                           <button class="btn" style="background-color: lightgray; color: #333333;" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
                                                            </div>
                                                        </form>
                                                    </form>
@@ -150,8 +147,7 @@
                                   </div>
                                   <div class="modal-body">
                                       {% load crispy_forms_tags %}
-                                      <form action="users/{{company_capacity.id}}"
-                                          method="POST">
+                                      <form action="{% url 'users:company_diesel' company_capacity.id %}" method="POST">
                                           {% csrf_token %}
                                           
 
@@ -185,7 +181,7 @@
                                   </div>
                                   <div class="modal-footer">
                                           <div >
-                                              <button class="btn btn-success" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
+                                              <button class="btn" style="background-color: lightgray; color: #333333;" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
                                               </div>
                                           </form>
                                       </form>
@@ -200,6 +196,8 @@
             </div>
             </div>
             </div>
+
+    {% endif %}        
 
 
     <div class="card" style="background-color:white">
@@ -239,7 +237,7 @@
                         <th style="color:white;">
                           Payment
                               </th>
-                         <th style="color:white;width:40px;margin-right: 10px;">
+                         <th style="color:white;width:25px;margin-right: 10px;">
                              Action
                              </th>
                              
@@ -253,11 +251,11 @@
                            <td>{{allocate.diesel_price}}</td>
                            <td>{{allocate.petrol_quantity}} {% if allocate.petrol_quantity < 1000 %} <i class="material-icons text-danger" >warning</i>{% endif %}</td>
                            <td>{{allocate.petrol_price}}</td>
-                           <td>{%if allocate.cash%}<i class="fa fa-dollar"></i> {% else%} {%endif%} {%if allocate.usd%}USD {% else%} {%endif%} {%if allocate.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px">{% else%} {%endif%} {%if allocate.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
+                           <td>{%if allocate.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL">{% else%} {%endif%} {%if allocate.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if allocate.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if allocate.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
                            <td>
                              <div class = "btn-group">
-                             <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#petrol{{allocate.id}}">Allocate Petrol</button>
-                             <button class="btn btn-warning btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#diesel{{allocate.id}}">Allocate Diesel</button>
+                             <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#petrol{{allocate.id}}">Add Petrol</button>
+                             <button class="btn btn-warning btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#diesel{{allocate.id}}">Add Diesel</button>
                             <button class="btn btn-success btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#edit_{{allocate.id}}">Edit Prices</button>
                           </div>
                           </td>
@@ -313,7 +311,7 @@
                                                </div>
                                                <div class="modal-footer">
                                                        <div >
-                                                           <button class="btn btn-success" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
+                                                           <button class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
                                                            </div>
                                                        </form>
                                                    </form>
@@ -339,8 +337,8 @@
               <form action="{% url 'users:allocation_update' allocate.id %}" method="POST">
                          {% csrf_token %}
                          <div class="form-group">
-                            <lable>Petrol Capacity</lable>
-                            <input type="text" name="petrol_quantity" class="form-control" value=" " />
+                            <lable>Petrol Capacitdy</lable>
+                            <input type="text" name="petrol_quantity" class="form-control" value=" " required/>
                         </div>
   
                         <div class="row">
@@ -359,8 +357,11 @@
                               {{update_form.ecocash|as_crispy_field}}
                             </div>
                             </div>
-                   <button class="btn btn-primary" type="submit">Update</button>  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                  
+
+                            <div class="modal-footer">
+                              <button type="button" class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">Close</button>
+                              <button class="btn btn-primary" type="submit">Update</button>  
+                            </div>  
             </form>
             </div>
             
@@ -404,9 +405,10 @@
                             {{update_form.ecocash|as_crispy_field}}
                           </div>
                           </div>
-                       
-                 <button class="btn btn-primary" type="submit">Update</button>  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                
+                          <div class="modal-footer">
+                            <button type="button" class="btn" style="background-color: lightgray; color: #000;" data-dismiss="modal">Close</button>
+                            <button class="btn btn-primary" type="submit">Update</button>  
+                          </div>
           </form>
           </div>
           
@@ -459,6 +461,9 @@
                        <th style="color:white;">
                         Sub Type
                          </th>
+                         <th style="color:white;">
+                          Action
+                           </th>
                        <th style="color:white;">
                         Diesel
                          </th>
@@ -477,6 +482,9 @@
                         <th style="color:white;">
                             Payment 
                           </th>
+                          <th style="color:white;">
+                            Action 
+                          </th>
                         
                          
                    <tbody>
@@ -486,13 +494,57 @@
                           <td>{{alloc.date}}</td>
                           <td>{{alloc.subsidiary_name}}</td>
                            <td>{{alloc.sub_type}}</td>
+                           <td>{{alloc.action}}</td>
                            <td>{{alloc.diesel_quantity}}</td>
                            <td>{{alloc.diesel_price}}</td>
                            <td>{{alloc.petrol_quantity}}</td>
                            <td>{{alloc.petrol_price}}</td>
-                           <td>{%if alloc.cash%}<i class="fa fa-dollar"></i> {% else%} {%endif%} {%if alloc.usd%}USD {% else%} {%endif%} {%if alloc.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px">{% else%} {%endif%} {%if alloc.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
-                        
+                           <td>{%if alloc.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL">{% else%} {%endif%} {%if alloc.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if alloc.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if alloc.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
+                           <td>
+                            
+                           <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#edit_{{alloc.id}}">Edit Allocation</button>
+  
+                         </td>
                         </tr>
+
+
+                        <div class="modal fade" id="edit_{{alloc.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header" style="background-color: #9c27b0;color: white;">
+                              <h5 class="modal-title" id="exampleModalLabel">Edit Previous Allocation</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                  
+                              {% load crispy_forms_tags %}
+                              <form action="#" method="POST">
+                                         {% csrf_token %}
+                                       
+                                         <div class="form-group">
+                                            <lable>Diesel Quantity</lable>
+                                            <input type="text" name="diesel_quantity" class="form-control" value="{{alloc.diesel_quantity}}" />
+                                        </div>
+                                       
+                                        <div class="form-group">
+                                          <lable>Petrol Quantity</lable>
+                                          <input type="text" name="petrol_quantity" class="form-control" value="{{alloc.petrol_quantity}}" />
+                                      </div>
+                                       
+                      
+                                            <div class="modal-footer">
+                                              <button type="button" class="btn" style="background-color: lightgray; color: #000;" data-dismiss="modal">Close</button>
+                                              <button class="btn btn-primary" type="submit">Update</button>  
+                                            </div>
+                            </form>
+                            </div>
+                            
+                          </div>
+                        </div>
+                      </div>
 
                     {% endfor %}   
                 </tbody>

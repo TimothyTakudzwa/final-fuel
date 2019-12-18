@@ -96,11 +96,7 @@ def fuel_request(request):
     fuel = FuelUpdate.objects.filter(relationship_id=request.user.id).first()
     for buyer_request in requests:
         if buyer_request.dipping_stick_required==buyer_request.meter_required==buyer_request.pump_required==False:
-            buyer_request.no_equipments = True
-        if buyer_request.cash==buyer_request.ecocash==buyer_request.swipe==buyer_request.usd==False:
-            buyer_request.no_payment = True
-        if not buyer_request.delivery_address.strip():
-            buyer_request.delivery_address = f'N/A'
+            buyer_request.equipments = f'No Equipment Required'
         if Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).exists():
             offer = Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).first()
             buyer_request.my_offer = f'{offer.quantity}ltrs @ ${offer.price}'
@@ -183,12 +179,11 @@ def offer(request, id):
     if request.method == "POST" and float(request.POST.get('price')) != 0 and float(request.POST.get('quantity')) != 0:
         fuel_request = FuelRequest.objects.get(id=id)
         fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
-        subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         
         if fuel_request.fuel_type.lower() == 'petrol':
             available_fuel = fuel.petrol_quantity
         elif fuel_request.fuel_type.lower() == 'diesel':
-            available_fuel = fuel.diesel_quantity
+            available_fuel = fuel_request.diesel_quantity
         offer = int(request.POST.get('quantity'))
         amount = fuel_request.amount
 
@@ -205,12 +200,7 @@ def offer(request, id):
                 offer.ecocash = True if request.POST.get('ecocash') == "True" else False
                 offer.swipe = True if request.POST.get('swipe') == "True" else False
                 offer.delivery_method = request.POST.get('delivery_method')
-                delivery_method = request.POST.get('delivery_method')
-                collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
-                if not collection_address.strip() and delivery_method.lower() == 'self collection':
-                    offer.collection_address = subsidiary.address
-                else:
-                    offer.collection_address = collection_address
+                offer.collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
                 offer.pump_available = True if request.POST.get('pump_required') == "True" else False
                 offer.dipping_stick_available = True if request.POST.get('usd') == "True" else False
                 offer.meter_available = True if request.POST.get('usd') == "True" else False
@@ -256,12 +246,7 @@ def edit_offer(request, id):
                 offer.ecocash = True if request.POST.get('ecocash') == "True" else False
                 offer.swipe = True if request.POST.get('swipe') == "True" else False
                 offer.delivery_method = request.POST.get('delivery_method1')
-                delivery_method = request.POST.get('delivery_method')
-                collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
-                if not collection_address.strip() and delivery_method.lower() == 'self collection':
-                    offer.collection_address = subsidiary.address
-                else:
-                    offer.collection_address = collection_address
+                offer.collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
                 offer.pump_available = True if request.POST.get('pump_required') == "True" else False
                 offer.dipping_stick_available = True if request.POST.get('usd') == "True" else False
                 offer.meter_available = True if request.POST.get('usd') == "True" else False
@@ -355,7 +340,7 @@ def verification(request, token, user_id):
                     if company_exists:
                         selected_company =Company.objects.filter(name=request.POST.get('company')).first()
                         user.company = selected_company
-                        user.is_active = False
+                        user.is_active = True
                         user.is_waiting = True
                         user.save()
                         TokenAuthentication.objects.filter(user=user).update(used=True)
@@ -425,20 +410,14 @@ def create_company(request, id):
 
     
 def company(request):
-    subsidiary = Subsidiaries.objects.filter(id = request.user.subsidiary_id).first()
-    num_of_suppliers = User.objects.filter(subsidiary_id=request.user.subsidiary_id).count() 
-    return render(request, 'supplier/accounts/company.html', {'subsidiary': subsidiary, 'num_of_suppliers': num_of_suppliers})
+    compan = Company.objects.filter(id = request.user.company.id).first()
+    num_of_subsidiaries = Subsidiaries.objects.filter(company=request.user.company).count()
+    fuel_capacity = FuelUpdate.objects.filter(company_id=request.user.company.id).first()   
+    return render(request, 'supplier/accounts/company.html', {'compan': compan, 'num_of_subsidiaries': num_of_subsidiaries, 'fuel_capacity': fuel_capacity})
 
 
 def my_offers(request):
     offers = Offer.objects.filter(supplier=request.user).all()
-    for offer_temp in offers:
-        if offer_temp.cash==offer_temp.ecocash==offer_temp.swipe==offer_temp.usd==False:
-            offer_temp.no_payment = True
-        if offer_temp.dipping_stick_available==offer_temp.meter_available==offer_temp.pump_available==False:
-            offer_temp.no_equipments = True
-        if not offer_temp.collection_address.strip():
-            offer_temp.collection_address = f'N/A'
     return render(request, 'supplier/accounts/my_offers.html', {'offers':offers})
 
 
@@ -461,7 +440,7 @@ def view_invoice(request, id):
         if subsidiary is not None:
             transaction.depot = subsidiary.name
             transaction.address = subsidiary.address
-    total = transaction.offer.quantity * transaction.offer.price
+    total = transaction.offer.quantity + transaction.offer.price
     g_total = total + 25
     
     context = {
@@ -471,7 +450,3 @@ def view_invoice(request, id):
     }
     return render(request, 'supplier/accounts/invoice2.html', context)
 
-
-def subsidiary_name(request):
-    subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-    return render(request, 'supplier/dashboard.html', {'subsidiary':subsidiary})

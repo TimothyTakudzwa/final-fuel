@@ -52,7 +52,7 @@
                                <div class="btn-group">
                                   
                                     <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#approve{{applicant.id}}">Approve</button>
-                                    <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#decline{{applicant.id}}">Decline</button>
+                                    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#decline{{applicant.id}}">Decline</button>
                                     
 
                                </div>
@@ -69,37 +69,78 @@
                                     </button>
                                     </div>
                                     <div class="modal-body">
-                                            <form action="{% url 'users:approval' applicant.id %}" method="POST">
-                                                    {% csrf_token %}
-                                                    <div class="form-group">
-                                                            <lable>First Name</lable>
-                                                            <input type="text" name="first_name" class="form-control"  value="{{ applicant.first_name}}" />
-                                                        </div>
-                                                        <div class="form-group">
-                                                                <lable>Last Name</lable>
-                                                                <input type="text" name="last_name" class="form-control"  value="{{ applicant.last_name}}" />
-                                                            </div>
-                                                            <div class="form-group">
-                                                                    <lable>Email</lable>
-                                                                    <input type="email" name="email" class="form-control"  value="{{ applicant.email}}" />
-                                                                </div>
-                                                    <div class="form-group">
-                                                            <lable>Phone Number</lable>
-                                                            <input type="telephone" name="phone_number" class="form-control"  value="{{ applicant.phone_number}}" />
-                                                        </div>
-                                                 
-                       
-                                                            
-                                                            <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button><button type="submit" class="btn btn-primary ">Submit</button>
-                                                                    </div>
-                                    
-                                            </form>
+                                           
+                            <form action="{% url 'users:approval' applicant.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                            <label><b>Depot or Station ?</b></label>
+                                            <select id="category{{forloop.counter}}" name="category" class="form-control">
+                                                <option value='Depot'>Depot</option>
+                                                <option value='ServiceStation'>ServiceStation</option>
+                                                
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group" name="depot" id="depot{{forloop.counter}}">
+                                                <label><b>Depots</b></label>
+                                                <select class="form-control" name="subsidiary">
+                                                    {% for depot in depots %}
+                                                    <option >{{depot.name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                    <div class="form-group" name="service_station" id="service_station{{forloop.counter}}">
+                                            <label><b>Service Stations</b></label>
+                                            <select class="form-control" name="subsidiary">
+                                                {% for station in stations %}
+                                                <option >{{station.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
+                                        
+                                        
+                                
+                                    <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button><button type="submit" class="btn btn-primary ">Submit</button>
+                                            </div>
+            
+                            </form>
                                     </div>
                                     
                                 </div>
                                 </div>
                             </div>
+                            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                            <script>
+                                    $(document).ready(function () {
+                                      $('#service_station{{forloop.counter}}').hide();
+                                      $('#depot{{forloop.counter}}').show();
+                                      
+                                      
+                                
+                                      $('#category{{forloop.counter}}').change(function () {
+                                        if ($('#category{{forloop.counter}} option:selected').text() == "Depot") {
+                                          $('#depot{{forloop.counter}}').show();
+                                          $('#service_station{{forloop.counter}} :input').prop('disabled',true);
+                                          
+                                          $('#service_station{{forloop.counter}}').hide();
+                                        
+                                        }
+                                       
+                                        else {
+                                          $('#service_station{{forloop.counter}}').show();
+                                          $('#dedepot{{forloop.counter}} :input').prop('disabled',true);
+                                        
+                                          $('#depot{{forloop.counter}}').hide();
+                                         
+                                        }
+                                      });
+                                    });
+                                
+                                   
+                                  </script>
                             
                         
                         <div class="modal fade" id="decline{{applicant.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -116,10 +157,11 @@
                                             <form action="{% url 'users:decline_applicant' applicant.id %}" method="POST">
                                             {{ delete_form }}
                                             {% csrf_token %}
-                                            <p>Are You Sure You Want To Decline {{ applicant.first_name|title }}</p>
-                                                <div class="btn-group">
+                                            <p style="padding: 50px;">Are You Sure You Want To Decline {{ applicant.first_name|title }}</p>
+                                                <div class="modal-footer">
                                                     
-                                                    <button class="btn btn-warning" data-dismiss="modal">No</button> <button class="btn btn-danger" type="submit">Yes</button>
+                                                    <button class="btn btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">No</button> 
+                                                    <button class="btn btn-primary" type="submit">Yes</button>
                                                 </div>
                                             </form>
                                     </div>

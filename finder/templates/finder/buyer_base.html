@@ -22,6 +22,7 @@
     href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
   <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
   <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
   <link rel="stylesheets" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
@@ -94,10 +95,10 @@
       {% for message in messages%}
 
       <div data-notify="container"
-        class="col-11 col-md-4 alert {%if message.error%}alert-rose {%else%} alert-success {%endif%}  alert-with-icon animated fadeInDown"
+        class="col-11 col-md-4 alert {%if message.error%}alert-rose {%else%} alert-success {%endif%} alert-dismissible alert-with-icon animated fadeInDown"
         role="alert" data-notify-position="top-center"
         style="display: inline-block; margin: 15px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1031; top: 20px; left: 0px; right: 0px;">
-        <button type="button" aria-hidden="true" class="close" data-notify="dismiss"
+        <button type="button" aria-hidden="true" class="close" data-notify="dismiss" data-dismiss="alert"
           style="position: absolute; right: 10px; top: 50%; margin-top: -9px; z-index: 1033;"><i
             class="material-icons">close</i></button><i data-notify="icon" class="material-icons">add_alert</i><span
           data-notify="title"></span>
@@ -169,11 +170,46 @@
       {% endif %}
       <div class="container">
 
+        <script>
+          $(document).ready(function () {
+            var logged_user = {{ request.user.id }};
+            var socket = io.connect('https://dreamhub.co.zw/new_offer');
+          console.log(socket)
 
+          socket.on('new_offer', function (msg) {
+            console.log("There is a new offer on the rise", logged_user, msg.user_id)
+            if (logged_user == msg.user_id) {
+              $('.new_alert').hide()
+              var txt1 = "<h4 class='alert-heading' style='text-align: center;'> <i class='material-icons' style='color: gold;line-height: 0;margin-right: 3px;'> \
+                                  add_alert</i>New Offer</h4><hr><p style='text-align: center;margin-top: 13px;background-color: #707aa785;padding: 10px;border-radius: 8px;'> \
+                                  " + msg.notification + "<hr><div class='col-sm-12'><a class='text-center' href='" + msg.url + "'>Click to View</a> </small></hr>";
+              $("#new_message").empty(txt1);
+              $("#new_message").append(txt1);
+              $(".new_alert").fadeTo(10000, 1000).slideUp(1000, function () {
+                $(".new_alert").slideUp(1000);
+              });
+            }
+          });
 
-        {% block body %}
+                });
+        </script>
+      
+      <div class="new_alert alert alert-success alert-dismissible fade show" role="alert" style="border-radius: 5px;padding: 8px;font-size: 12px;max-width: 97%; display: none;background-color: #505577e8;margin-left: 15px;margin-top: 10px;" >
+      
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+      </button>
+      <strong><i data-notify="icon" class="material-icons">add_alert</i><span data-notify="title"></span>
+      <div id='new_message'>
+      
+      
+      </div>
+      
+      </strong>
+      
+      </div>
 
-        {% endblock %}
+        {% block body %}{% endblock %}
       </div>
     </div>
 
@@ -405,53 +441,7 @@
 
     });
   </script>
-  <script>
-    $(document).ready(function () {
-      $('#choices').hide();
-      $('#choices1').hide();
-
-      $('#delivery_method1').change(function () {
-        if ($('#delivery_method1 option:selected').text() == "Direct Delivery") {
-          $('#choices1').show();
-        }
-        else {
-          $('#choices1').hide();
-        }
-      });
-      $('#delivery_method').change(function () {
-        if ($('#delivery_method option:selected').text() == "Delivery") {
-          $('#choices').show();
-        }
-        else {
-          $('#choices').hide();
-        }
-      });
-    });
-
-    $('#pump_required').on('change', function () {
-      $(this).val(this.checked ? "True" : "False");
-    });
-    $('#swipe').on('change', function () {
-      $(this).val(this.checked ? "True" : "False");
-    });
-    $('#ecocash').on('change', function () {
-      $(this).val(this.checked ? "True" : "False");
-    });
-    $('#cash').on('change', function () {
-      $(this).val(this.checked ? "True" : "False");
-    });
-    $('#usd').on('change', function () {
-      $(this).val(this.checked ? "True" : "False");
-    });
-
-    $('#dipping_stick_required').on('change', function () {
-      $(this).val(this.checked ? "True" : "False");
-    });
-
-    $('#meter_required').on('change', function () {
-      $(this).val(this.checked ? "True" : "False");
-    });
-  </script>
+  
 </body>
 
 </html>

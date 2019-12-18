@@ -1,5 +1,6 @@
 {% extends "supplier/dashboard.html" %}
 {% load static %}
+{% load humanize %}
 {% block title %}
 {{title}}
 {% endblock %}
@@ -10,12 +11,12 @@
     <div class="card" style="background-color:rgb(241, 239, 243); background-image: url('finder/static/assets/img/sidebar-1.jpg')">
         
         <div class="card-header card-header-primary"> 
-        <h3 class="card-title ">{{request.user.company.name}} Profile</h3>
+        <h3 class="card-title ">{{subsidiary.name}} Profile</h3>
         </div>
         <div class="card-avatar" style="margin-top: 30px;display: block;text-align: center;">
                 <div class="img-rounded">
                     <a href="#">
-                    <img class="img" src="/media/{{compan.logo}}" height="250px" width="250px" />
+                    <img class="img" src="/media/{{subsidiary.logo}}" height="250px" width="250px" />
                     
                     </a>
                 </div>    
@@ -31,7 +32,7 @@
                         <div class="col-sm-6">
                     <label for="name" class="-form-label">Name</label>
                     
-                        <input name="name" type="text" class="form-control"  id="name"  value="{{compan.name}}" disabled>
+                        <input name="name" type="text" class="form-control"  id="name"  value="{{subsidiary.name}}" disabled>
                     </div>
                     
                     
@@ -39,7 +40,7 @@
                     <div class="col-sm-6">                              
                         <label for="address" class="col-form-label">Location</label>
                         
-                            <input name="address" type="text" class="form-control"  id="address"  value="{{ compan.address}}" disabled>
+                            <input name="address" type="text" class="form-control"  id="address"  value="{{ subsidiary.address}}" disabled>
                         </div>
                         </div>
 
@@ -47,17 +48,17 @@
                         <div class="form-group row">
                               
                                 <div class="col-sm-6">
-                            <label for="industry" class=" col-form-label">Industry</label>
+                            <label for="industry" class=" col-form-label">Company</label>
                             
-                                <input name="industry" type="text" class="form-control" id="industry"  value="{{ compan.industry}}" disabled>
+                                <input name="industry" type="text" class="form-control" id="company"  value="{{ subsidiary.company.name}}" disabled>
                             </div>
                            
                             
                            
                             <div class="col-sm-6">                     
-                                <label for="num_of_subs" class="col-form-label">Number of Subsidiaries</label>
+                                <label for="num_of_subs" class="col-form-label">Depot Staff</label>
                                 
-                                    <input name="num_of_subs" type="text" class="form-control" id="num_of_subs"  value="{{num_of_subsidiaries}}" disabled>
+                                    <input name="num_of_subs" type="text" class="form-control" id="num_of_staff"  value="{{num_of_suppliers}}" disabled>
                                 </div>
                                 </div>
 
@@ -66,53 +67,36 @@
                                 <div class="form-group row">
                               
                                     <div class="col-sm-6">
-                                        <label for="iban_number" class=" col-form-label">Iban Number</label>
+                                        <label for="iban_number" class=" col-form-label">Destination Bank</label>
                                     
-                                        <input name="iban_number" type="text" class="form-control" id="diesel"  value="{{compan.iban_number}}" disabled>
+                                        <input name="iban_number" type="text" class="form-control" id="bank"  value="{{subsidiary.destination_bank}}" disabled>
                                     </div>
                                     
                                     
                                     
                                     <div class="col-sm-6">                     
-                                        <label for="licence_number" class="col-form-label">Licence Number</label>
+                                        <label for="licence_number" class="col-form-label">Account Number</label>
                                         
-                                        <input name="licence_number" type="text" class="form-control" id="petrol"  value="{{compan.license_number}}" disabled>
+                                        <input name="licence_number" type="text" class="form-control" id="account"  value="{{subsidiary.account_number}}" disabled>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
                               
                                     <div class="col-sm-6">
-                                        <label for="destination_bank" class=" col-form-label">Destination Bank</label>
+                                        <label for="destination_bank" class=" col-form-label">Diesel Quantity</label>
                                     
-                                        <input name="destination_bank" type="text" class="form-control" id="diesel"  value="{{compan.destination_bank}}" disabled>
+                                        <input name="destination_bank" type="text" class="form-control" id="diesel"  value="{{subsidiary.fuel_capacity.diesel_quantity|intcomma}}" disabled>
                                     </div>
                                     
                                     
                                     
                                     <div class="col-sm-6">                     
-                                        <label for="account_number" class="col-form-label">Account Number</label>
+                                        <label for="account_number" class="col-form-label">Petrol Quantity</label>
                                         
-                                        <input name="account_number" type="text" class="form-control" id="petrol"  value="{{compan.account_number}}" disabled>
+                                        <input name="account_number" type="text" class="form-control" id="petrol"  value="{{subsidiary.fuel_capacity.petrol_quantity|intcomma}}" disabled>
                                     </div>
                                 </div>
-
-                                <div class="form-group row">
-                              
-                                        <div class="col-sm-6">
-                                            <label for="diesel" class=" col-form-label">Diesel Capacity</label>
-                                        
-                                            <input name="diesel" type="text" class="form-control" id="diesel"  value="{{fuel_capacity.diesel_quantity}}" disabled>
-                                        </div>
-                                       
-                                        
-                                       
-                                        <div class="col-sm-6">                     
-                                            <label for="petrol" class="col-form-label">Petrol Quantity</label>
-                                            
-                                            <input name="petrol" type="text" class="form-control" id="petrol"  value="{{fuel_capacity.petrol_quantity}}" disabled>
-                                        </div>
-                                    </div>
             </form>
 
 

@@ -105,7 +105,7 @@
               </li>
            
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'logout' %}?next=/">
+                <a class="nav-link" href="{% url 'logout' %}?next=/login">
                   <i class="material-icons">close</i>
                   <p>Logout</p>
                 </a>
@@ -141,6 +141,8 @@
       
       
         </div>
+
+        
         {% block body %}{% endblock %}
       </main>
  
@@ -195,35 +197,19 @@
    <!-- Material Dashboard DEMO methods, don't include it in your project! -->
    <script src="{% static 'finder/assets/demo/demo.js' %}"></script>
 
-
-   <script>
-      $(document).ready(function () {
-        $('#id_location').hide();
-        $('#cbd1').hide();
-  
-        $('#id_city').change(function () {
-          if ($('#id_city option:selected').text() == "Harare") {
-            $('#id_location').show();
-            $('#cbd1 :input').prop('disabled',true);
-            $('#cbd1').attr('disabled', true).hide();
-          }
-          else {
-            $('#cbd1').show();
-            $('#cbd1 :input').prop('disabled',false);
-            $('#cbd1').attr('disabled', false);
-            $('#id_location').hide();
-          }
-        });
-      });
-  
-     
-    </script>
-
    <script>
 
 
     $(document).ready(function() {
       $('#example').DataTable({"order": [[ 0, "desc" ]]});
+    } );
+
+    $(document).ready(function() {
+      $('#subs_table').DataTable({"order": [[ 2, "desc" ]]});
+    } );
+
+    $(document).ready(function() {
+      $('#clients_table').DataTable({"order": [[ 3, "desc" ]]});
     } );
 
     $(document).ready(function() {

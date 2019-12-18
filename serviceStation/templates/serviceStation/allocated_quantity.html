@@ -1,6 +1,23 @@
 {% extends "serviceStation/base.html" %}
 {% block body %}
 
+<div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-3">Fuel Inventory</h1>
+            <p class="lead">
+                <a class="btn btn-outline-primary" href="{% url 'serviceStation:activate_whatsapp' %}" style="margin-top: 23px;margin-bottom: 0;margin-left: 30px;background-color: #25d366;color: white;border: none;">
+                    <i class="fa fa-whatsapp" style="margin-right: 11px;"></i>
+                    {% if request.user.activated_for_whatsapp %}
+                        Deactivate Whatsapp
+                    {% else %}
+                        Activate Whatsapp
+                    {% endif %}
+                </a>
+            </p>
+    
+        </div>
+    </div>
+
 <div class="col-md-12">
     <div class="card" style="background-color:white">
 
@@ -17,6 +34,11 @@
                         <th style="color:white;">
                             Date
                         </th>
+
+                        <th style="color:white;">
+                            Action
+                        </th>
+
 
                         <th style="color:white;">
                             Diesel 
@@ -39,6 +61,7 @@
                         {% for allocation in allocations %}
                         <tr>
                             <td>{{allocation.date}}</td>
+                            <td>{{allocation.action}}</td>
                             <td>{{allocation.diesel_quantity}}</td>
                             <td>{{allocation.diesel_price}}</td>
                             <td>{{allocation.petrol_quantity}}</td>

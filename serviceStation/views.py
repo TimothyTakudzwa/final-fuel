@@ -22,18 +22,24 @@ user = get_user_model()
 def fuel_updates(request):
     updates = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=request.user.subsidiary_id).first()
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-    print(f"--------------------------{updates}----------------------")
     if request.method == 'POST':
         #fuel_update = FuelUpdate.objects.filter(sub_type=request.POST['sub_type']).first()
-        updates.petrol_quantity = request.POST['petrol_quantity']
+        if int(updates.petrol_quantity) < int(request.POST['petrol_quantity']):
+            messages.warning(request, 'You cannot update Petrol to an amount more than the available quantity')
+            return redirect('serviceStation:home')
+        updates.petrol_quantity = request.POST['petrol_quantity'] 
         updates.queue_length = request.POST['queue_length']
-        if int(updates.petrol_quantity) < 2000:
+        updates.status = request.POST['status']
+        updates.cash = request.POST['cash']
+        updates.ecocash = request.POST['ecocash']
+        updates.swipe = request.POST['swipe']
+        updates.usd = request.POST['usd']
+        if int(updates.petrol_quantity) < 1000:
             updates.status = 'Expecting Fuel'
             updates.save()
-            messages.warning(request, 'Please stop selling and request for more fuel from you Company')
+            messages.warning(request, 'Please request for more fuel from you Company')
             return redirect('serviceStation:home')
 
-        updates.status = 'Pumping'
         updates.save()
         messages.success(request, 'Updated Petrol QuantitY Successfully')
         service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
@@ -49,15 +55,22 @@ def fuel_updates(request):
 def update_diesel(request, id):
     if request.method == 'POST':
         diesel_update = FuelUpdate.objects.filter(id=id).first()
+        if int(diesel_update.diesel_quantity) < int(request.POST['diesel_quantity']):
+            messages.warning(request, 'You cannot update Diesel to an amount more than the available quantity')
+            return redirect('serviceStation:home')
         diesel_update.diesel_quantity = request.POST['diesel_quantity']
         diesel_update.queue_length = request.POST['queue_length']
-        if int(diesel_update.diesel_quantity) < 2000:
+        diesel_update.status = request.POST['status']
+        diesel_update.cash = request.POST['cash']
+        diesel_update.ecocash = request.POST['ecocash']
+        diesel_update.swipe = request.POST['swipe']
+        diesel_update.usd = request.POST['usd']
+        if int(diesel_update.diesel_quantity) < 1000:
             diesel_update.status = 'Expecting Fuel'
             diesel_update.save()
-            messages.warning(request, 'Please stop selling and request for more fuel from you Company')
+            messages.warning(request, 'Please request for more fuel from you Company')
             return redirect('serviceStation:home')
 
-        diesel_update.status = 'Pumping'
         diesel_update.save()
         messages.success(request, 'Updated Diesel QuantitY Successfully')
         service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
@@ -151,4 +164,43 @@ def logo_upload(request, id):
     else: 
         form = PostForm() 
     return redirect('serviceStation:subsidiary_profile')
+
+def edit_password(request):
+    context = {
+        'title': 'Fuel Finder | Change Password',
+        'password_change': PasswordChange(user=request.user)
+    }
+    if request.method == 'POST':
+        old = request.POST.get('old_password')
+        new1 = request.POST.get('new_password1')
+        new2 = request.POST.get('new_password2')
+
+        if authenticate(request, username=request.user.username, password=old):
+            if new1 != new2:
+                messages.warning(request, "Passwords Don't Match")
+                return redirect('serviceStation:edit_password')
+            elif new1 == old:
+                messages.warning(request, "New password can not be similar to the old one")
+                return redirect('serviceStation:edit_password')
+            elif len(new1) < 8:
+                messages.warning(request, "Password is too short")
+                return redirect('serviceStation:edit_password')
+            elif new1.isnumeric():
+                messages.warning(request, "Password can not be entirely numeric!")
+                return redirect('serviceStation:edit_password')
+            elif not new1.isalnum():
+                messages.warning(request, "Password should be alphanumeric")
+                return redirect('serviceStation:edit_password')
+            else:
+                user = request.user
+                user.set_password(new1)
+                user.save()
+                update_session_auth_hash(request, user)
+
+                messages.success(request, 'Password Successfully Changed')
+                return redirect('serviceStation:myaccount')
+        else:
+            messages.warning(request, 'Wrong Old Password, Please Try Again')
+            return redirect('serviceStation:edit_password')
+    return render(request, 'serviceStation/change_password.html', context=context)
   

@@ -55,13 +55,13 @@ class UserUpdateForm(forms.ModelForm):
         fields = ['first_name', 'last_name', 'email', 'username']
 
 class CreateCompany(forms.ModelForm):
-    company_name = forms.CharField()
-    address = forms.CharField()
-    company_name = forms.CharField() 
+    company_name = forms.CharField(required=True)
+    address = forms.CharField(required=True)
+   
 
     class Meta:
         model = Company
-        fields = ['company_name', 'address', 'company_name', 'logo', 'iban_number', 'license_number']
+        fields = ['company_name', 'address', 'logo']
 
 
 class FuelRequestForm(forms.ModelForm):
@@ -145,6 +145,7 @@ class StockLevelForm(forms.Form):
         #fields = [ 'petrol_quantity']
 
 class SubsidiaryForm(forms.Form):
+    
     name = forms.CharField(label='Subsisdiary Name')
     address = forms.CharField(label='Subsisdiary Address')
     is_depot = forms.CharField(label='Is Depot',  widget=forms.Select(choices=((True,True),(False,False))))   
@@ -154,7 +155,7 @@ class SubsidiaryForm(forms.Form):
     ecocash = forms.CharField(label='Accepts Ecocash ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
     city = forms.CharField(label='City', widget=forms.Select(choices=Zimbabwean_Towns))
     location = forms.CharField(label='Location', widget=forms.Select(choices=Harare))
-    
+   
 
 def create_sub(request):
     return {

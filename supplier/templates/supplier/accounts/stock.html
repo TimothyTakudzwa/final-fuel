@@ -1,7 +1,8 @@
 {% extends "supplier/dashboard.html" %}
 {% block body %}
+{% load humanize %}
 
-<div class="jumbotron jumbotron-fluid">
+<div class="jumbotron jumbotron-fluid" style="padding: 1rem 1rem;">
   <div class="container">
       <h1 class="display-3">{{request.user.company|title}}'s Inventory</h1>
       
@@ -28,7 +29,7 @@
       <tr>
         <td height="50">Petrol Quantity</td>
         <td height="50">
-        {{updates.petrol_quantity}} {% if updates.petrol_quantity < 1000 %} <i class="material-icons text-danger" style="margin-left: 10px;">warning</i><a href="#" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
+        {{updates.petrol_quantity|intcomma}} {% if updates.petrol_quantity < 1000 %} <i class="material-icons text-danger" style="margin-left: 10px;">warning</i><a href="#" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
       </td>
         </tr>
         <tr>
@@ -38,7 +39,7 @@
           <tr>
             <td height="50">Diesel Quantity</td>
             <td height="50">
-               {{updates.diesel_quantity}} {% if updates.diesel_quantity < 1000 %} <i class="material-icons text-danger" style="margin-left: 10px;">warning</i><a href="#" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
+               {{updates.diesel_quantity|intcomma}} {% if updates.diesel_quantity < 1000 %} <i class="material-icons text-danger" style="margin-left: 10px;">warning</i><a href="#" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
             </td>
             </tr>
             <tr>
