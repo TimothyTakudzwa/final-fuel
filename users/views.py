@@ -933,5 +933,33 @@ def company_diesel(request,id):
             return redirect('users:allocate') 
 
 
+def edit_allocation(request, id):
+    if request.method == 'POST':
+        if FuelAllocation.objects.filter(id=id).exists():
+            correction = FuelAllocation.objects.filter(id=id).first()
+            if int(request.POST['diesel_quantity']) > 0:   
+                updated = F_Update.objects.filter(relationship_id=correction.assigned_staff_id).first()
+                updated.diesel_quantity = int(updated.diesel_quantity) - int(int(correction.diesel_quantity) - int(request.POST['diesel_quantity']))
+                updated.save()
+                company_fuel = F_Update.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()
+                company_fuel.diesel_quantity = int(company_fuel.diesel_quantity) + int(int(correction.diesel_quantity) - int(request.POST['diesel_quantity'])) 
+                company_fuel.save()
+                correction.diesel_quantity = request.POST['diesel_quantity']
+                correction.save()
+            else:
+                updated = F_Update.objects.filter(relationship_id=correction.assigned_staff_id).first()
+                updated.petrol_quantity = int(updated.petrol_quantity) - int(int(correction.petrol_quantity) - int(request.POST['petrol_quantity']))
+                updated.save()
+                company_fuel = F_Update.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()
+                company_fuel.petrol_quantity = int(company_fuel.petrol_quantity) + int(int(correction.petrol_quantity) - int(request.POST['petrol_quantity'])) 
+                company_fuel.save()
+                correction.petrol_quantity = request.POST['petrol_quantity']
+                correction.save()
+            messages.success(request, 'Quantity of fuel corrected successfully')
+            return redirect('users:allocate')
+
+        else:
+            messages.warning(request, 'Fuel object does not exists')
+            return redirect('users:allocate') 
 
 
