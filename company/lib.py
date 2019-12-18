@@ -1,6 +1,21 @@
-from supplier.models import Subsidiaries, Transaction
+from supplier.models import Subsidiaries, Transaction, UserReview
 from company.models import Company, FuelUpdate
 from buyer.models import User
+
+def get_average_rating(company):
+    average_rating = 0
+    reviews = UserReview.objects.filter(company_type='Supplier', company=company)
+    
+    for review in reviews:
+        average_rating += review.rating
+
+    try:
+        average_rating = average_rating/reviews.count()
+    except:
+        average_rating = 0
+
+    return average_rating            
+
 
 
 def get_all_subsidiaries(company):
