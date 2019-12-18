@@ -52,7 +52,7 @@
                                <div class="btn-group">
                                   
                                     <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#approve{{applicant.id}}">Approve</button>
-                                    <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#decline{{applicant.id}}">Decline</button>
+                                    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#decline{{applicant.id}}">Decline</button>
                                     
 
                                </div>
@@ -157,10 +157,11 @@
                                             <form action="{% url 'users:decline_applicant' applicant.id %}" method="POST">
                                             {{ delete_form }}
                                             {% csrf_token %}
-                                            <p>Are You Sure You Want To Decline {{ applicant.first_name|title }}</p>
-                                                <div class="btn-group">
+                                            <p style="padding: 50px;">Are You Sure You Want To Decline {{ applicant.first_name|title }}</p>
+                                                <div class="modal-footer">
                                                     
-                                                    <button class="btn btn-warning" data-dismiss="modal">No</button> <button class="btn btn-danger" type="submit">Yes</button>
+                                                    <button class="btn btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">No</button> 
+                                                    <button class="btn btn-primary" type="submit">Yes</button>
                                                 </div>
                                             </form>
                                     </div>

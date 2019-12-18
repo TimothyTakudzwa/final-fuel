@@ -27,7 +27,7 @@ class Subsidiaries(models.Model):
 
 
     def __str__(self):
-        return f"{self.company} : {self.id}"
+        return f"{self.name}"
 
     def get_capacity(self):
         return self.capacity
@@ -119,6 +119,7 @@ class UserReview(models.Model):
     transaction = models.ForeignKey(Transaction, on_delete=models.DO_NOTHING, related_name='transaction')
     rater = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='rater')
     depot = models.ForeignKey(Subsidiaries, on_delete=models.DO_NOTHING, related_name='subsidiary_rating')
+    comment = models.CharField(max_length=500, default='')
 
     def __str__(self):
-        return f'{self.rating}'
+        return f'{self.rating} - {self.rater}'
