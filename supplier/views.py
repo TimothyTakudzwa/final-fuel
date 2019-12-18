@@ -207,7 +207,7 @@ def offer(request, id):
                 messages.success(request, 'Offer uploaded successfully')
 
                 message = f'You have a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {fuel_request.amount}L'
-                Notification.objects.create(message = message, user = fuel_request.name, reference_id = offer.id, action = "OFFER")
+                Notification.objects.create(message = message, user = fuel_request.name, reference_id = offer.id, action = "new_offer")
 
                 action = f"{request.user}  made an offer of {offer_quantity}L @ {request.POST.get('price')} to a request made by {fuel_request.name.username}"
                 service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
@@ -259,7 +259,7 @@ def edit_offer(request, id):
                 offer.save()
                 messages.success(request, 'Offer successfully updated')
                 message = f'You have a new offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {offer.request.amount}L'
-                Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "OFFER")
+                Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
                 return redirect('fuel-request')
             else:
                 messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
