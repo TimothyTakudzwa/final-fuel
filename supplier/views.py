@@ -189,11 +189,11 @@ def offer(request, id):
             available_fuel = fuel.petrol_quantity
         elif fuel_request.fuel_type.lower() == 'diesel':
             available_fuel = fuel.diesel_quantity
-        offer = int(request.POST.get('quantity'))
+        offer_quantity = int(request.POST.get('quantity'))
         amount = fuel_request.amount
 
         if offer <= available_fuel:
-            if offer <= amount:
+            if offer_quantity <= amount:
                 offer = Offer()
                 offer.supplier = request.user
                 offer.request = fuel_request
@@ -217,7 +217,11 @@ def offer(request, id):
                 offer.save()
                 
                 messages.success(request, 'Offer uploaded successfully')
-                action = f"{request.user}  made an offer of {offer}L @ {request.POST.get('price')} to a request made by {fuel_request.name.username}"
+
+                message = f'You have a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${request.POST.get('price')} from {request.user.first_name} {request.user.last_name} for your request of {fuel_request.amount}L'
+                Notification.objects.create(message = message, user = fuel_request.name, reference_id = fuel_request, reference_id = offer.id, offer = "OFFER")
+
+                action = f"{request.user}  made an offer of {offer_quantity}L @ {request.POST.get('price')} to a request made by {fuel_request.name.username}"
                 service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
                 reference = 'offers'
                 reference_id = fuel_request.id

@@ -241,10 +241,11 @@ def statistics(request):
     # except:
     #     trans = 0    
     trans_complete = get_transactions_complete_percentage(request.user)
+    average_rating = get_average_rating(request.user.company)
     return render(request, 'users/statistics.html', {'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
      'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'admin_staff': admin_staff,
-       'other_staff': other_staff, 'trans_complete':trans_complete, 'sorted_subs':sorted_subs })
+       'other_staff': other_staff, 'trans_complete':trans_complete, 'sorted_subs':sorted_subs, 'average_rating': average_rating })
 
 
 @login_required()
