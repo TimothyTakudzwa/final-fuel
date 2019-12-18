@@ -218,8 +218,8 @@ def offer(request, id):
                 
                 messages.success(request, 'Offer uploaded successfully')
 
-                message = f'You have a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${request.POST.get('price')} from {request.user.first_name} {request.user.last_name} for your request of {fuel_request.amount}L'
-                Notification.objects.create(message = message, user = fuel_request.name, reference_id = fuel_request, reference_id = offer.id, offer = "OFFER")
+                message = f'You have a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {fuel_request.amount}L'
+                Notification.objects.create(message = message, user = fuel_request.name, reference_id = fuel_request, reference_id = offer.id, action = "OFFER")
 
                 action = f"{request.user}  made an offer of {offer_quantity}L @ {request.POST.get('price')} to a request made by {fuel_request.name.username}"
                 service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
