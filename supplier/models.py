@@ -30,7 +30,7 @@ class Subsidiaries(models.Model):
         return f"{self.name}"
 
     def get_capacity(self):
-        return self.capacity
+        return self.fuel_capacity
 
     def fuel_available(self):
         return self.has_fuel        

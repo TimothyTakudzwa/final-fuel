@@ -43,6 +43,8 @@ urlpatterns = [
     path('waiting_for_approval/', views.waiting_for_approval, name="waiting_for_approval"),
     path('approval/<int:id>', views.approval, name="approval"),
     path('decline_applicant/<int:id>', views.decline_applicant, name="decline_applicant"),
+    path('edit_allocation/<int:id>', views.edit_allocation, name="edit_allocation"),
+    
 
     
 
