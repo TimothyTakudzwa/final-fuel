@@ -146,7 +146,7 @@
                
               });
 
-              socket.on('ofer_accepted', function (msg) {
+              socket.on('offer_accepted', function (msg) {
                 console.log("Your offer has been accepted", logged_user, msg.user_id)
                 if (logged_user == msg.user_id) {
                   $('.new_alert').hide()
