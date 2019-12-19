@@ -385,6 +385,7 @@ def report_generator(request):
             allocations = FuelAllocation.objects.all()
             print(f'________________________________{allocations}__________________________')
         start = start_date
+        end = end_date
         
         #revs = 0
         return render(request, 'users/reports.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form,
