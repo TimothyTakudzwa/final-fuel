@@ -51,6 +51,9 @@ class FuelAllocation(models.Model):
     assigned_staff_id = models.IntegerField(default=0)
     action = models.CharField(max_length=255, default='')
 
+    class Meta:
+        ordering = ['-date']
+
 
 
 class Offer(models.Model):
@@ -72,7 +75,7 @@ class Offer(models.Model):
     declined = models.BooleanField(default=False,  blank=True, null=True)
 
     class Meta:
-        ordering = ['date', 'time']
+        ordering = ['-date', '-time']
 
 
 class TokenAuthentication(models.Model):
@@ -108,7 +111,7 @@ class Transaction(models.Model):
     
     
     class Meta:
-        ordering = ['date', 'time']
+        ordering = ['-date', '-time']
 
 class UserReview(models.Model):
     date = models.DateField(auto_now_add=True)

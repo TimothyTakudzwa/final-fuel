@@ -67,7 +67,7 @@
           <li class="nav-item {% if request.path == '/fuel_update/' %} active {% endif %} ">
             <a class="nav-link" href="{%url 'fuel_update'%}">
               <i class="material-icons">local_gas_station</i>
-              <p>Fuel Stocks</p>
+              <p>Current Stocks</p>
             </a>
           </li>
           <li class="nav-item {% if request.path == '/transaction/' %} active {% endif %}">
@@ -429,9 +429,8 @@
       var t = $('#example').DataTable({
         "columnDefs": [{
           "searchable": false,
-          "targets": 0
+          "targets": 0,
         }],
-        "order": [[1, 'desc']]
       });
 
       t.on('order.dt search.dt', function () {
