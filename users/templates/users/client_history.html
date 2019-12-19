@@ -3,7 +3,7 @@
 
 <div class="jumbotron jumbotron-fluid">
     <div class="container">
-        <h1 class="display-3">{{buyer.company|title}}'s Transaction History</h1>
+        <h1 class="display-3">{{buyer.company.name|title}}'s Transaction History</h1>
         
         
     </div>
@@ -48,7 +48,7 @@
                             <td>{{tran.date}}</td>
                             <td>{{tran.time}}</td>
                             <td>{{tran.buyer}}</td>
-                            <td>{{tran.offer.request.amount}</td>
+                            <td>{{tran.offer.request.amount}}</td>
                             <td>$ {{tran.revenue|stringformat:".2f"}}</td>
                            <td>
                                {% if tran.is_complete %}
