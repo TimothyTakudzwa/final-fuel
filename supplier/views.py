@@ -262,7 +262,7 @@ def edit_offer(request, id):
                 offer.meter_available = True if request.POST.get('usd') == "True" else False
                 offer.save()
                 messages.success(request, 'Offer successfully updated')
-                message = f'You have a new offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {offer.request.amount}L'
+                message = f'You have an updated offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {offer.request.amount}L'
                 Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
                 return redirect('fuel-request')
             else:
