@@ -359,6 +359,7 @@ def report_generator(request):
 
             
             if request.POST.get('report_type') == 'Revenue':
+                trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier__company=request.user.company, is_complete=True)
                 revs = {}
                 total_revenue = 0
                 trans_no = 0
