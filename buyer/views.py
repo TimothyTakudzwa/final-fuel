@@ -303,7 +303,7 @@ def accept_offer(request, id):
     Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier)  
     FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
     
-    message = f'{Transaction.buyer.first_name} {Transaction.buyer.last_name} accepted your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
+    message = f'{offer.request.buyer.first_name} {offer.request.buyer.last_name} accepted your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
     Notification.objects.create(message = message, user = offer.supplier, reference_id = offer.id, action = "offer_accepted")
 
     messages.success(request, "Your request has been saved successfully") 
