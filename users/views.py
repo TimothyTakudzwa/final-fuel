@@ -196,7 +196,7 @@ def statistics(request):
         tran_amount = 0
         sub_trans = Transaction.objects.filter(supplier__company=request.user.company,supplier__subsidiary_id=sub.id, is_complete=True)
         for sub_tran in sub_trans:
-            tran_amount += sub_tran.offer.request.amount
+            tran_amount += (sub_tran.offer.request.amount * sub_tran.offer.price)
         sub.tran_count = sub_trans.count()
         sub.tran_value = tran_amount
         subs.append(sub)
@@ -213,7 +213,7 @@ def statistics(request):
         purchases = []
         number_of_trans = 0
         for tran in new_buyer_transactions:
-            total_value += tran.offer.request.amount
+            total_value += (tran.offer.request.amount * tran.offer.price)
             purchases.append(tran)
             number_of_trans += 1
         buyer.total_revenue = total_value
