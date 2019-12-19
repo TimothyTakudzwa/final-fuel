@@ -31,10 +31,10 @@
                     Buyer
                     </th>
                     <th style="color:white;">
-                    Quantity
+                    Quantity (Litres)
                     </th>
                     <th style="color:white;">
-                    Cost
+                    Revenue
                     </th>
                     <th>
                     Status
@@ -48,7 +48,7 @@
                             <td>{{tran.date}}</td>
                             <td>{{tran.time}}</td>
                             <td>{{tran.buyer}}</td>
-                            <td>{{tran.offer.request.amount}}</td>
+                            <td>{{tran.offer.request.amount}} l</td>
                             <td>$ {{tran.revenue|stringformat:".2f"}}</td>
                            <td>
                                {% if tran.is_complete %}
