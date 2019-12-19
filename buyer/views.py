@@ -304,7 +304,7 @@ def accept_offer(request, id):
     FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
     
     message = f'{offer.request.name.first_name} {offer.request.name.last_name} accepted your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
-    Notification.objects.create(message = message, user = offer.supplier, reference_id = offer.id, action = "offer_accepted")
+    Notification.objects.create(message = message, user = offer.supplier, reference_id = offer.id, action = "ofer_accepted")
 
     messages.success(request, "Your request has been saved successfully") 
     return redirect("buyer-fuel-request")
