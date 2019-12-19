@@ -90,7 +90,7 @@ def register(request):
             user = User.objects.create(email=email, username=username.lower(), user_type=user_type,  phone_number=phone_number.replace(" ", ""), first_name=first_name, last_name=last_name, is_active=False)        
             if token_is_send(request, user):   
                 if user.is_active:
-                    send_message(user.phone_number, "You have been registered succesfully")
+                    messages.success(user.phone_number, "You have been registered succesfully")
                     user.stage = 'requesting'
                     user.save()  
                                  
