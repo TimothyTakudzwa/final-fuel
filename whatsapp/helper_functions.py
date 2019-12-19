@@ -8,6 +8,7 @@ from buyer.models import User, FuelRequest
 from company.models import FuelUpdate
 from django.db.models import Q
 from buyer.recommend import recommend
+from notification.models import Notification
 
 def send_message(phone_number, message):
     payload = {
