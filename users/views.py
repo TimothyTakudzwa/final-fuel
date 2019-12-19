@@ -264,7 +264,13 @@ def supplier_user_edit(request, cid):
 @login_required
 def client_history(request, cid):
     buyer = User.objects.filter(id=cid).first()
-    trans = Transaction.objects.filter(buyer=buyer)
+    trns = Transaction.objects.filter(buyer=buyer)
+    trans = []
+    for tran in trns:
+        tran.revenue = tran.offer.request.amount * tran.offer.price
+        trans.append(tran)
+
+
     return render(request, 'users/client_history.html', {'trans':trans, 'buyer':buyer})
 
 @login_required
