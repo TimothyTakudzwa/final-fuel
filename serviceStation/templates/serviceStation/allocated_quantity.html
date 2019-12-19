@@ -62,10 +62,20 @@
                         <tr>
                             <td>{{allocation.date}}</td>
                             <td>{{allocation.action}}</td>
+                            {% if allocation.diesel_quantity != 0 %}
                             <td>{{allocation.diesel_quantity}}</td>
                             <td>{{allocation.diesel_price}}</td>
+                            {% else %}
+                           <td>-</td>
+                           <td>-</td>
+                           {% endif %}
+                           {% if allocation.petrol_quantity != 0 %}
                             <td>{{allocation.petrol_quantity}}</td>
                             <td>{{allocation.petrol_price}}</td>
+                            {% else %}
+                           <td>-</td>
+                           <td>-</td>
+                           {%endif%}
                             <td>{%if allocation.cash%}Cash {% else%} {%endif%} {%if allocation.usd%}USD {% else%} {%endif%} {%if allocation.ecocash%}Ecocash {% else%} {%endif%} {%if allocation.swipe%}Swipe {% else%} {%endif%}</td>
                         </tr>
 

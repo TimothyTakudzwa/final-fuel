@@ -359,13 +359,14 @@ def report_generator(request):
 
             
             if request.POST.get('report_type') == 'Revenue':
+                trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier__company=request.user.company, is_complete=True)
                 revs = {}
                 total_revenue = 0
                 trans_no = 0
 
                 if trans:
                     for tran in trans:
-                        total_revenue += tran.offer.request.amount
+                        total_revenue += (tran.offer.request.amount * tran.offer.price)
                         trans_no += 1
                     revs['revenue'] = '${:,.2f}'.format(total_revenue)
 
@@ -385,7 +386,7 @@ def report_generator(request):
             print(f'________________________________{allocations}__________________________')
         start = start_date
         
-        revs = 0
+        #revs = 0
         return render(request, 'users/reports.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form,
         'start': start, 'end': end, 'revs': revs, 'stock':stock })
 
