@@ -62,7 +62,7 @@ class FuelRequest(models.Model):
     class Meta:
         ordering = ['date', 'time', 'name']
 
-    def __str__(self):
-        return f'{str(self.name)}'
+    # def __str__(self):
+    #     return f'{str(self.name)}'
 
     
