@@ -495,10 +495,20 @@
                           <td>{{alloc.subsidiary_name}}</td>
                            <td>{{alloc.sub_type}}</td>
                            <td>{{alloc.action}}</td>
+                           {% if alloc.diesel_quantity != 0 %}
                            <td>{{alloc.diesel_quantity}}</td>
                            <td>{{alloc.diesel_price}}</td>
+                           {% else %}
+                           <td>-</td>
+                           <td>-</td>
+                           {% endif %}
+                           {% if alloc.petrol_quantity != 0 %}
                            <td>{{alloc.petrol_quantity}}</td>
                            <td>{{alloc.petrol_price}}</td>
+                           {% else %}
+                           <td>-</td>
+                           <td>-</td>
+                           {%endif%}
                            <td>{%if alloc.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL">{% else%} {%endif%} {%if alloc.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if alloc.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if alloc.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
                            <td>
                             

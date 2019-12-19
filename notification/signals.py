@@ -13,10 +13,10 @@ def distribute(sender, instance, created, **kwargs):
         
         msg = ''
 
-        if messages.action == "REQUEST":
+        if messages.action == "new_request":
             fuel_request = FuelRequest.objects.get(id=messages.reference_id)
             msg = f'Hello {messages.user.username},  {fuel_request.name} has requested for {fuel_request.amount}l of {fuel_request.fuel_type}'
-        elif messages.action == "OFFER":
+        elif messages.action == "new_offer":
             offer = Offer.objects.get(id=messages.reference_id)
             msg = f'Hello {messages.user.username} {offer.supplier.username} is selling fuel at ${offer.price}'
 
