@@ -188,6 +188,8 @@ def requests_handler(user, message):
             fuel_request.wait = True
             fuel_request.save()
             response_message = 'Request made successfully! Please wait for offers'
+            message = f'{user.first_name} {user.last_name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
+            Notification.objects.create(message = message, user = user, reference_id = fuel_request.id, action = "new_request")
             
         elif message == "2":
             response = recommend(fuel_request)
@@ -216,6 +218,8 @@ def requests_handler(user, message):
                 user.position = 100
                 user.save()
                 response_message = rating_response_message.format(tran.id)
+                message = f'{offer.request.name.first_name} {offer.request.name.last_name} accepted your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
+                Notification.objects.create(message = message, user = offer.supplier, reference_id = offer.id, action = "offer_accepted")
             else:
                 response_message = 'oops!! something went wrong during processing of your request, please type *Wait* to wait for offers'
                 user.position = 72
