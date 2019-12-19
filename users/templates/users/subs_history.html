@@ -1,4 +1,5 @@
 {% extends "users/base.html" %}
+{% load humanize %}
 {% block body %}
 
 <div class="jumbotron jumbotron-fluid">
@@ -31,7 +32,10 @@
                     Buyer
                     </th>
                     <th style="color:white;">
-                    Amount
+                    Quantity (Litres)
+                    </th>
+                    <th style="color: white;">
+                    Revenue
                     </th>
                     <th>
                     Status
@@ -45,7 +49,8 @@
                             <td>{{tran.date}}</td>
                             <td>{{tran.time}}</td>
                             <td>{{tran.buyer}}</td>
-                            <td>$ {{tran.offer.request.amount|stringformat:".2f"}}</td>
+                            <td>{{tran.offer.request.amount}}</td>
+                            <td>$ {{tran.revenue|intcomma|stringformat:".2f"}}</td>
                            <td>
                                {% if tran.is_complete %}
                                <i class="material-icons" style="color: #2ecc71;">check_circle</i>
