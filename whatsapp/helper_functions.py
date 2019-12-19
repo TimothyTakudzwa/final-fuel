@@ -498,13 +498,16 @@ def view_requests_handler(user, message):
                 offer.delivery_method = "Deliver"
                 user.position = 7
                 user.save()
+                offer.save()
                 response_message = "You have successfully made an offer. Type *menu* to go back to the main menu."
+                message = f'You have a new offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price} from {user.first_name} {user.last_name} for your request of {offer.request.amount}L'
+                Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
             elif int(message) == 2:
                 offer.delivery_method = "Self Collection"
                 user.position = 6
                 user.save()
                 response_message = "Please provide a collection address."
-            offer.save()
+                offer.save()
         except:
             response_message = "Invalid option! Please select a valid delivery.\n\n 1. Deliver\n2. Self collection"
             user.position = 5
@@ -517,6 +520,8 @@ def view_requests_handler(user, message):
         user.position = 7
         user.save()
         response_message = "You have successfully made an offer. Type *menu* to go back to the main menu."
+        message = f'You have a new offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price} from {user.first_name} {user.last_name} for your request of {offer.request.amount}L'
+        Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
     elif user.position == 7:
         if message.lower() != 'menu':
             response_message = 'Invalid response! Please type *menu* to go back to main menu'
@@ -631,19 +636,24 @@ def view_offers_handler(user, message):
             response_message = "You have successfully updated your offer. Type *menu* to go back to the main menu."
             user.position = 7
             user.save()
+            message = f'You have a new offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price} from {user.first_name} {user.last_name} for your request of {offer.request.amount}L'
+            Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
         else:
             try:
                 if int(message) == 1:
                     offer.delivery_method = "Deliver"
                     user.position = 7
                     user.save()
+                    offer.save()
                     response_message = "You have successfully updated your offer. Type *menu* to go back to the main menu."
+                    message = f'You have a new offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price} from {user.first_name} {user.last_name} for your request of {offer.request.amount}L'
+                    Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
                 elif int(message) == 2:
                     offer.delivery_method = "Self Collection"
                     user.position = 6
                     user.save()
                     response_message = "Please provide a collection address or type *pass* if you do not wish to edit."
-                offer.save()
+                    offer.save()
             except:
                 response_message = "Invalid option! Please select a valid delivery or type *pass* if you do not wish to edit.\n\n 1. Deliver\n 2.Self collection"
                 user.position = 5
@@ -655,6 +665,8 @@ def view_offers_handler(user, message):
         user.position = 7
         user.save()
         response_message = "You have successfully updated your offer. Type *menu* to go back to the main menu."
+        message = f'You have a new offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price} from {user.first_name} {user.last_name} for your request of {offer.request.amount}L'
+        Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
     elif user.position == 7:
         if message.lower() != 'menu':
             response_message = 'Invalid response! Please type *menu* to go back to main menu'
