@@ -640,7 +640,7 @@ def view_offers_handler(user, message):
             response_message = "You have successfully updated your offer. Type *menu* to go back to the main menu."
             user.position = 7
             user.save()
-            message = f'You have a new offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price} from {user.first_name} {user.last_name} for your request of {offer.request.amount}L'
+            message = f'You have an updated offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price} from {user.first_name} {user.last_name} for your request of {offer.request.amount}L'
             Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
         else:
             try:
@@ -650,7 +650,7 @@ def view_offers_handler(user, message):
                     user.save()
                     offer.save()
                     response_message = "You have successfully updated your offer. Type *menu* to go back to the main menu."
-                    message = f'You have a new offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price} from {user.first_name} {user.last_name} for your request of {offer.request.amount}L'
+                    message = f'You have an updated offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price} from {user.first_name} {user.last_name} for your request of {offer.request.amount}L'
                     Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
                 elif int(message) == 2:
                     offer.delivery_method = "Self Collection"
