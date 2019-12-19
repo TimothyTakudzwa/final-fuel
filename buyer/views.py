@@ -90,7 +90,7 @@ def register(request):
             user = User.objects.create(email=email, username=username.lower(), user_type=user_type,  phone_number=phone_number.replace(" ", ""), first_name=first_name, last_name=last_name, is_active=False)        
             if token_is_send(request, user):   
                 if user.is_active:
-                    send_message(user.phone_number, "You have been registered succesfully")
+                    messages.success(user.phone_number, "You have been registered succesfully")
                     user.stage = 'requesting'
                     user.save()  
                                  
@@ -303,7 +303,7 @@ def accept_offer(request, id):
     Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier)  
     FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
     
-    message = f'{offer.buyer.first_name} {offer.buyer.last_name} accepted your offer of {offer.quantity}L {offer.fuel_type.lower()} at ${offer.price}'
+    message = f'{offer.request.name.first_name} {offer.request.name.last_name} accepted your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
     Notification.objects.create(message = message, user = offer.supplier, reference_id = offer.id, action = "offer_accepted")
 
     messages.success(request, "Your request has been saved successfully") 
@@ -318,7 +318,7 @@ def reject_offer(request, id):
     my_request.is_complete = False
     my_request.save()
 
-    message = f'{offer.buyer.first_name} {offer.buyer.last_name} rejected your offer of {offer.quantity}L {offer.fuel_type.lower()} at ${offer.price}'
+    message = f'{offer.request.name.first_name} {offer.request.name.last_name} rejected your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
     Notification.objects.create(message = message, user = offer.supplier, reference_id = offer.id, action = "offer_rejected")
 
     # FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)

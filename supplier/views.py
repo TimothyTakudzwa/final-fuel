@@ -1,4 +1,6 @@
 from itertools import chain
+from operator import attrgetter
+
 from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
@@ -6,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.contrib import messages
+
 import secrets
 from users.models import Audit_Trail
 from datetime import date, time
@@ -96,6 +99,7 @@ def fuel_request(request):
     requests = FuelRequest.objects.filter(is_deleted=False ,wait=True).all()
     direct_requests =  FuelRequest.objects.filter(is_deleted=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
     requests = list(chain(requests, direct_requests))
+    requests.sort(key = attrgetter('date', 'time'), reverse = True)
     fuel = FuelUpdate.objects.filter(relationship_id=request.user.id).first()
     for buyer_request in requests:
         if buyer_request.dipping_stick_required==buyer_request.meter_required==buyer_request.pump_required==False:
@@ -331,16 +335,19 @@ def verification(request, token, user_id):
                     if company_exists:
                         selected_company =Company.objects.filter(name=request.POST.get('company')).first()
                         user.company = selected_company
-                        user.is_active = False
-                        user.is_waiting = True
+                        user.is_active = True
                         user.save()
                         TokenAuthentication.objects.filter(user=user).update(used=True)
-                        my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
-                        if my_admin is not None:
-                            return render(request,'supplier/final_registration.html',{'my_admin': my_admin})
+                        if user.user_type == 'BUYER':
+                            return redirect('login')
                         else:
-                            return render(request,'supplier/final_reg.html')
-
+                            user.is_active = False
+                            user.is_waiting = True
+                            my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
+                            if my_admin is not None:
+                                return render(request,'supplier/final_registration.html',{'my_admin': my_admin})
+                            else:
+                                return render(request,'supplier/final_reg.html')
                     else:
                         selected_company =Company.objects.create(name=request.POST.get('company'))
                         user.is_active = False
