@@ -331,16 +331,20 @@ def verification(request, token, user_id):
                     if company_exists:
                         selected_company =Company.objects.filter(name=request.POST.get('company')).first()
                         user.company = selected_company
-                        user.is_active = False
-                        user.is_waiting = True
+                        user.is_active = True
                         user.save()
                         TokenAuthentication.objects.filter(user=user).update(used=True)
-                        my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
-                        if my_admin is not None:
-                            return render(request,'supplier/final_registration.html',{'my_admin': my_admin})
+                        if user.user_type == 'BUYER':
+                            messages.success(request, 'Buyer registered successfully')
+                            return redirect('login')
                         else:
-                            return render(request,'supplier/final_reg.html')
-
+                            user.is_active = False
+                            user.is_waiting = True
+                            my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
+                            if my_admin is not None:
+                                return render(request,'supplier/final_registration.html',{'my_admin': my_admin})
+                            else:
+                                return render(request,'supplier/final_reg.html')
                     else:
                         selected_company =Company.objects.create(name=request.POST.get('company'))
                         user.is_active = False
