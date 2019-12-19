@@ -197,7 +197,7 @@ def fuel_finder(request):
             messages.success(request, f'kindly note your request has been made ')
 
             message = f'{request.user.name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
-            Notification.objects.create(message = message, reference_id = fuel_request.id, action = "REQUEST")
+            Notification.objects.create(message = message, reference_id = fuel_request.id, action = "new_request")
     else:
         form = FuelRequestForm
     return render(request, 'buyer/dashboard.html',{'form':form, 'sample_data':sample_data})
@@ -237,7 +237,7 @@ def dashboard(request):
                 user = User.objects.filter(subsidiary_id = fuel_request.last_deal).first()
             messages.success(request, f'kindly note your request has been made ')
             message = f'{request.user.first_name} {request.user.last_name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
-            Notification.objects.create(message = message, user = user, reference_id = fuel_request.id, action = "REQUEST")
+            Notification.objects.create(message = message, user = user, reference_id = fuel_request.id, action = "new_request")
 
         if 'WaitForOffer' in request.POST:
             if form.is_valid():
@@ -259,7 +259,7 @@ def dashboard(request):
                 fuel_request.save()
             messages.success(request, f'Fuel Request has been submitted succesfully and now waiting for an offer')
             message = f'{request.user.first_name} {request.user.last_name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
-            Notification.objects.create(message = message, user = request.user, reference_id = fuel_request.id, action = "REQUEST")
+            Notification.objects.create(message = message, user = request.user, reference_id = fuel_request.id, action = "new_request")
 
         if 'Recommender' in request.POST:
             if form.is_valid():
@@ -304,7 +304,7 @@ def accept_offer(request, id):
     FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
     
     message = f'{offer.buyer.first_name} {offer.buyer.last_name} accepted your offer of {offer.quantity}L {offer.fuel_type.lower()} at ${offer.price}'
-    Notification.objects.create(message = message, user = offer.supplier, reference_id = offer.id, action = "OFFER")
+    Notification.objects.create(message = message, user = offer.supplier, reference_id = offer.id, action = "offer_accepted")
 
     messages.success(request, "Your request has been saved successfully") 
     return redirect("buyer-fuel-request")
@@ -319,7 +319,7 @@ def reject_offer(request, id):
     my_request.save()
 
     message = f'{offer.buyer.first_name} {offer.buyer.last_name} rejected your offer of {offer.quantity}L {offer.fuel_type.lower()} at ${offer.price}'
-    Notification.objects.create(message = message, user = offer.supplier, reference_id = offer.id, action = "OFFER")
+    Notification.objects.create(message = message, user = offer.supplier, reference_id = offer.id, action = "offer_rejected")
 
     # FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
     messages.success(request, "Your request has been saved and as offer updates are coming you will receive notifications")
