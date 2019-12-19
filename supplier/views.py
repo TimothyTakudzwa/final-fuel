@@ -343,6 +343,7 @@ def verification(request, token, user_id):
                         else:
                             user.is_active = False
                             user.is_waiting = True
+                            user.save()
                             my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
                             if my_admin is not None:
                                 return render(request,'supplier/final_registration.html',{'my_admin': my_admin})
