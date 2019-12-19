@@ -127,9 +127,10 @@
           <div class="container">
             <script>
               $(document).ready(function () {
-                var logged_user = {{ user.id }} 
-              var socket = io.connect('https://dreamhub.co.zw/new_offer');
+                var logged_user = {{request.user.id}};
+                var socket = io.connect('https://dreamhub.co.zw/new_offer');
               console.log(socket)
+
               socket.on('new_request', function (msg) {
                 console.log("There is a new offer on the rise", logged_user, msg.user_id)
                
@@ -144,12 +145,28 @@
                   });
                
               });
-              socket.on('new_offer', function (msg) {
-                console.log("There is a new offer on the rise", logged_user, msg.user_id)
+
+              socket.on('offer_accepted', function (msg) {
+                console.log("Your offer has been accepted", logged_user, msg.user_id)
                 if (logged_user == msg.user_id) {
                   $('.new_alert').hide()
                   var txt1 = "<h4 class='alert-heading' style='text-align: center;'> <i class='material-icons' style='color: gold;line-height: 0;margin-right: 3px;'> \
-                                      add_alert</i>New Offer</h4><hr><p style='text-align: center;margin-top: 13px;background-color: #707aa785;padding: 10px;border-radius: 8px;'> \
+                                      add_alert</i>Offer Accepted</h4><hr><p style='text-align: center;margin-top: 13px;background-color: #707aa785;padding: 10px;border-radius: 8px;'> \
+                                      " + msg.notification + "<hr><div class='col-sm-12'><a class='text-center' href='" + msg.url + "'>Click to View</a> </small></hr>";
+                  $("#new_message").empty(txt1);
+                  $("#new_message").append(txt1);
+                  $(".new_alert").fadeTo(10000, 1000).slideUp(1000, function () {
+                    $(".new_alert").slideUp(1000);
+                  });
+                }
+              });
+
+              socket.on('offer_rejected', function (msg) {
+                console.log("Your offer has been rejected", logged_user, msg.user_id)
+                if (logged_user == msg.user_id) {
+                  $('.new_alert').hide()
+                  var txt1 = "<h4 class='alert-heading' style='text-align: center;'> <i class='material-icons' style='color: gold;line-height: 0;margin-right: 3px;'> \
+                                      add_alert</i>Offer Rejected</h4><hr><p style='text-align: center;margin-top: 13px;background-color: #707aa785;padding: 10px;border-radius: 8px;'> \
                                       " + msg.notification + "<hr><div class='col-sm-12'><a class='text-center' href='" + msg.url + "'>Click to View</a> </small></hr>";
                   $("#new_message").empty(txt1);
                   $("#new_message").append(txt1);

@@ -42,6 +42,7 @@ def recommend(fuel_request):
 
         else:
             offer = Offer.objects.create(quantity=fuel_request.amount, supplier=user, request=fuel_request, price=price_object.diesel_price)
+            
         response_message = recommender_response.format(selected_supply.company.name, selected_supply.name, fuel_request.fuel_type, fuel_request.amount, price_object.diesel_price)
 
         offer.save()

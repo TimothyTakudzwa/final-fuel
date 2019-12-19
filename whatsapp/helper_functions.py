@@ -235,10 +235,19 @@ def requests_handler(user, message):
             rating = [int(s) for s in message.split() if s.isdigit()]
             tran = Transaction.objects.filter(id=user.fuel_request).first()
             depot = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
-            UserReview.objects.create(company_type = 'Supplier',company = depot.company,transaction=tran, depot=depot, rater=tran.buyer, rating=rating[0])
-            response_message = "Your Review Has Ben Submitted Successfully."
+            rev = UserReview.objects.create(company_type = 'Supplier',company = depot.company,transaction=tran, depot=depot, rater=tran.buyer, rating=rating[0])
+            rev.save()
+            response_message = "Your review has been submitted successfully. Please leave a comment based on your rating of this supplier"
+            user.position = 101
+            user.fuel_request = rev.id
+            user.save()
         else:
             response_message = "Ooops!!! something went wrong during processing."
+    elif user.position == 101:
+        review = UserReview.objects.filter(id=user.fuel_request).first()
+        review.comment = message
+        review.save()
+        response_message = "Your review has been submitted successfully"
 
     return response_message
 
@@ -281,10 +290,19 @@ def follow_up(user, message):
             rating = [int(s) for s in message.split() if s.isdigit()]
             tran = Transaction.objects.filter(id=user.fuel_request).first()
             depot = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
-            UserReview.objects.create(company_type = 'Supplier',company = depot.company,transaction=tran, depot=depot, rater=tran.buyer, rating=rating[0])
-            response_message = "Your Review Has Ben Submitted Successfully."
+            rev = UserReview.objects.create(company_type = 'Supplier',company = depot.company,transaction=tran, depot=depot, rater=tran.buyer, rating=rating[0])
+            rev.save()
+            response_message = "Your review has been submitted successfully. Please leave a comment based on your rating of this supplier"
+            user.position = 24
+            user.fuel_request = rev.id
+            user.save()
         else:
             response_message = "Ooops!!! something went wrong during processing."
+    elif user.position == 24:
+        review = UserReview.objects.filter(id=user.fuel_request).first()
+        review.comment = message
+        review.save()
+        response_message = "Your review has been submitted successfully"
 
     return response_message
 
@@ -976,21 +994,44 @@ def update_petrol(user, message):
         if message == "1":
             update.status = "Pumping"
             update.save()
-            response_message = "made an update successfully"
         elif message == "2":
             update.status = "Expecting More Fuel"
             update.save()
-            response_message = "made an update successfully"
         elif message == "3":
             update.status = "Empty"
             update.save()
-            response_message = "made an update successfully"
         elif message == "4":
             update.status = "Offloading"
             update.save()
-            response_message = "made an update successfully"
         else:
             response_message = 'wrong choice'
+        user.position = 43
+        user.fuel_request = update.id
+        user.save()
+        response_message = 'What do you want to use for payment.\n\n1. ZWL(Cash) Only\n2. Ecocash Only\n3. RTGS(Swipe)/Transfer Only\n4. USD Only\n5. Cash or Ecocash\n6. Cash or Swipe\n7. Ecocash or Swipe\n'
+          
+    elif user.position == 43:
+        update = FuelUpdate.objects.filter(id=user.fuel_request).first()
+        if message == "1":
+            update.cash = True 
+        elif message == "2":
+            update.ecocash = True
+        elif message == "3":
+            update.swipe = True
+        elif message == "4":
+            update.usd = True
+        elif message == "5":
+            update.ecocash = True
+            update.cash = True
+        elif message == "6":
+            update.swipe = True
+            update.cash = True
+        elif message == "7":
+            update.ecocash = True
+            update.swipe = True
+        else:
+            return "Incorrect Choice"  
+        response_message = "made an update successfully"     
         
     return response_message
 
@@ -1034,7 +1075,33 @@ def update_diesel(user, message):
         else:
             response_message = 'wrong choice'
         update.save()
-        response_message = "made an update successfully"
+        user.position = 53
+        user.fuel_request = update.id
+        user.save()
+        response_message = 'What do you want to use for payment.\n\n1. ZWL(Cash) Only\n2. Ecocash Only\n3. RTGS(Swipe)/Transfer Only\n4. USD Only\n5. Cash or Ecocash\n6. Cash or Swipe\n7. Ecocash or Swipe\n'
+          
+    elif user.position == 53:
+        update = FuelUpdate.objects.filter(id=user.fuel_request).first()
+        if message == "1":
+            update.cash = True 
+        elif message == "2":
+            update.ecocash = True
+        elif message == "3":
+            update.swipe = True
+        elif message == "4":
+            update.usd = True
+        elif message == "5":
+            update.ecocash = True
+            update.cash = True
+        elif message == "6":
+            update.swipe = True
+            update.cash = True
+        elif message == "7":
+            update.ecocash = True
+            update.swipe = True
+        else:
+            return "Incorrect Choice"  
+        response_message = "made an update successfully" 
     
     return response_message
 

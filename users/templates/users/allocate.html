@@ -495,10 +495,20 @@
                           <td>{{alloc.subsidiary_name}}</td>
                            <td>{{alloc.sub_type}}</td>
                            <td>{{alloc.action}}</td>
+                           {% if alloc.diesel_quantity != 0 %}
                            <td>{{alloc.diesel_quantity}}</td>
                            <td>{{alloc.diesel_price}}</td>
+                           {% else %}
+                           <td>-</td>
+                           <td>-</td>
+                           {% endif %}
+                           {% if alloc.petrol_quantity != 0 %}
                            <td>{{alloc.petrol_quantity}}</td>
                            <td>{{alloc.petrol_price}}</td>
+                           {% else %}
+                           <td>-</td>
+                           <td>-</td>
+                           {%endif%}
                            <td>{%if alloc.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL">{% else%} {%endif%} {%if alloc.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if alloc.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if alloc.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
                            <td>
                             
@@ -521,20 +531,39 @@
                             <div class="modal-body">
                   
                               {% load crispy_forms_tags %}
-                              <form action="#" method="POST">
+                              <form action="{% url 'users:edit_allocation' alloc.id %}" method="POST">
                                          {% csrf_token %}
-                                       
+                                       {% if alloc.diesel_quantity > 0 %}
                                          <div class="form-group">
-                                            <lable>Diesel Quantity</lable>
-                                            <input type="text" name="diesel_quantity" class="form-control" value="{{alloc.diesel_quantity}}" />
+                                            <lable>Diesel Quantity Mistakenly Added</lable>
+                                            <input type="text" class="form-control" value="{{alloc.diesel_quantity}}" />
                                         </div>
-                                       
+
                                         <div class="form-group">
-                                          <lable>Petrol Quantity</lable>
-                                          <input type="text" name="petrol_quantity" class="form-control" value="{{alloc.petrol_quantity}}" />
+                                          <lable>Actual Diesel Quantity</lable>
+                                          <input type="text" name="diesel_quantity" class="form-control" value="" />
                                       </div>
+                                      <div class="form-group">
+                                        <lable></lable>
+                                        <input type="hidden" name="petrol_quantity" class="form-control" value="0" />
+                                    </div>
+                                        {% endif %}
                                        
-                      
+                                        {% if alloc.petrol_quantity > 0 %}
+                                        <div class="form-group">
+                                          <lable>Petrol Quantity Mistakenly Added</lable>
+                                          <input type="text" class="form-control" value="{{alloc.petrol_quantity}}" />
+                                      </div>
+
+                                      <div class="form-group">
+                                        <lable>Actual Petrol Quantity</lable>
+                                        <input type="text" name="petrol_quantity" class="form-control" value="" />
+                                    </div>
+                                    <div class="form-group">
+                                      <lable></lable>
+                                      <input  type="hidden" name="diesel_quantity" class="form-control" value="0" />
+                                  </div>
+                                      {% endif %}
                                             <div class="modal-footer">
                                               <button type="button" class="btn" style="background-color: lightgray; color: #000;" data-dismiss="modal">Close</button>
                                               <button class="btn btn-primary" type="submit">Update</button>  

@@ -15,6 +15,8 @@ urlpatterns = [
     path('allocated_quantity/', views.allocated_quantity, name='allocated_quantity'),
     path('subsidiary_profile/', views.subsidiary_profile, name='subsidiary_profile'),
     path('logo_upload/<int:id>', views.logo_upload, name='logo_upload'), 
+    path('edit_password/', views.edit_password, name='edit_password'), 
+    
     
 
     

@@ -21,6 +21,7 @@ from .forms import (BuyerRegisterForm, BuyerUpdateForm, FuelRequestForm,
 from supplier.forms import CreateCompany
 from .models import FuelRequest
 from buyer.utils import render_to_pdf
+from notification.models import Notification
 
 user = get_user_model()
 
@@ -192,10 +193,11 @@ def fuel_finder(request):
             #fuel_request.payment_method = payment_method
             fuel_request.delivery_method = delivery_method
             fuel_request.wait = True
-            fuel_request.save()
+            fuel_request.save()            
+            messages.success(request, f'kindly note your request has been made ')
 
-            
-            messages.success(request, f'kindly not your request has been made ')
+            message = f'{request.user.name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
+            Notification.objects.create(message = message, reference_id = fuel_request.id, action = "new_request")
     else:
         form = FuelRequestForm
     return render(request, 'buyer/dashboard.html',{'form':form, 'sample_data':sample_data})
@@ -232,7 +234,10 @@ def dashboard(request):
                 fuel_request.last_deal = request.POST.get('company_id')
                 print(fuel_request.last_deal)
                 fuel_request.save()
-            messages.success(request, f'kindly not your request has been made ')
+                user = User.objects.filter(subsidiary_id = fuel_request.last_deal).first()
+            messages.success(request, f'kindly note your request has been made ')
+            message = f'{request.user.first_name} {request.user.last_name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
+            Notification.objects.create(message = message, user = user, reference_id = fuel_request.id, action = "new_request")
 
         if 'WaitForOffer' in request.POST:
             if form.is_valid():
@@ -253,6 +258,8 @@ def dashboard(request):
                 fuel_request.wait = True
                 fuel_request.save()
             messages.success(request, f'Fuel Request has been submitted succesfully and now waiting for an offer')
+            message = f'{request.user.first_name} {request.user.last_name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
+            Notification.objects.create(message = message, user = request.user, reference_id = fuel_request.id, action = "new_request")
 
         if 'Recommender' in request.POST:
             if form.is_valid():
@@ -295,6 +302,11 @@ def accept_offer(request, id):
     print(offer.supplier)  
     Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier)  
     FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
+    
+    message = f'{offer.buyer.first_name} {offer.buyer.last_name} accepted your offer of {offer.quantity}L {offer.fuel_type.lower()} at ${offer.price}'
+    Notification.objects.create(message = message, user = offer.supplier, reference_id = offer.id, action = "offer_accepted")
+
+    messages.success(request, "Your request has been saved successfully") 
     return redirect("buyer-fuel-request")
 
 def reject_offer(request, id):    
@@ -304,7 +316,11 @@ def reject_offer(request, id):
     my_request = FuelRequest.objects.filter(id = offer.request.id).first()
     my_request.wait = True
     my_request.is_complete = False
-    my_request.save()     
+    my_request.save()
+
+    message = f'{offer.buyer.first_name} {offer.buyer.last_name} rejected your offer of {offer.quantity}L {offer.fuel_type.lower()} at ${offer.price}'
+    Notification.objects.create(message = message, user = offer.supplier, reference_id = offer.id, action = "offer_rejected")
+
     # FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
     messages.success(request, "Your request has been saved and as offer updates are coming you will receive notifications")
     return redirect("buyer-fuel-request")

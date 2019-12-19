@@ -19,7 +19,7 @@ class Subsidiaries(models.Model):
     is_depot = models.BooleanField(default=False)    
     opening_time = models.CharField(max_length=100, default='08:00')
     closing_time = models.CharField(max_length=100, default='22:00')
-    fuel_capacity = models.ForeignKey(FuelUpdate, on_delete=models.DO_NOTHING, null=True)
+    fuel_capacity = models.ForeignKey(FuelUpdate, on_delete=models.CASCADE, null=True)
     destination_bank = models.CharField(max_length=100, default="")
     account_number = models.CharField(max_length=100, default="")
     amount = models.FloatField(default=0.00)
@@ -30,7 +30,7 @@ class Subsidiaries(models.Model):
         return f"{self.name}"
 
     def get_capacity(self):
-        return self.capacity
+        return self.fuel_capacity
 
     def fuel_available(self):
         return self.has_fuel        
