@@ -339,7 +339,6 @@ def verification(request, token, user_id):
                         user.save()
                         TokenAuthentication.objects.filter(user=user).update(used=True)
                         if user.user_type == 'BUYER':
-                            messages.success(request, 'Buyer registered successfully')
                             return redirect('login')
                         else:
                             user.is_active = False
