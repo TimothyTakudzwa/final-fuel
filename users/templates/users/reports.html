@@ -328,10 +328,10 @@
                                                     <td>{{my_stock.last_updated}}</td>
                                                     <td>{{my_stock.sub_type}}</td>
                                                     <td>{{my_stock.subsidiary_name}}</td>
-                                                    <td>{{my_stock.petrol_quantity}} Litres</td>
+                                                    <td>{{my_stock.petrol_quantity}} l</td>
                                                     <td>{{my_stock.petrol_price}}</td>
-                                                    <td>{{my_stock.diesel_quantity}} Litres</td>
-                                                    <td>{{my_stock.diesel_price}}</td>
+                                                    <td>{{my_stock.diesel_quantity}} l</td>
+                                                    <td>$ {{my_stock.diesel_price}}</td>
                                                     
                                             </tr>
                                             {%endfor%}
@@ -400,7 +400,7 @@
                                             <td>$ {{req.amount|stringformat:".2f"}}</td>
                                             <td>{{req.fuel_type|title}}</td>
                                             <td>
-                                                {%if req.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL">{% else%} {%endif%} {%if req.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if req.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if req.swipe%}<i class="fa fa-cc-visa"></i> {% else%} No Payment Method {%endif%}
+                                                {%if req.cash%}<i class="fa fa-dollar"></i>{%endif%} {% if req.cash %}<img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL"> {%endif%} {%if req.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {%endif%} {%if req.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH"> {%endif%} {%if req.swipe%}<i class="fa fa-cc-visa"></i> {% endif%} {%if not req.cash and not req.ecocash and not req.swipe and not req.usd%}No Payment Method {%endif%}
                                             </td>
                                         
                                             
@@ -455,11 +455,11 @@
                                         {% for allocation in allocations %}
                                         <tr>
                                                 <td>{{allocation.date}}</td>
-                                                <td>{{allocation.petrol_quantity}}</td>
-                                                <td>{{allocation.diesel_quantity}}</td>
+                                                <td>{{allocation.petrol_quantity}} l</td>
+                                                <td>{{allocation.diesel_quantity}} l</td>
                                                 <td>{{allocation.sub_type}}</td>
-                                                <td>{{allocation.petrol_price}}</td>
-                                                <td>{{allocation.diesel_price}}</td>
+                                                <td>$ {{allocation.petrol_price}}</td>
+                                                <td>$ {{allocation.diesel_price}}</td>
                                             
                                                 
                                             </tr>
