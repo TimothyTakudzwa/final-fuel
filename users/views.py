@@ -384,6 +384,7 @@ def report_generator(request):
             print("__________________________I am in allocations____________________________")
             allocations = FuelAllocation.objects.all()
             print(f'________________________________{allocations}__________________________')
+            requests = None; revs = None; stock = None
         start = start_date
         end = end_date
         
