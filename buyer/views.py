@@ -300,7 +300,7 @@ def offers(request, id):
 def accept_offer(request, id):    
     offer = Offer.objects.filter(id=id).first()
     print(offer.supplier)  
-    Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier)  
+    Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier,is_complete=True) 
     FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
     
     message = f'{offer.request.name.first_name} {offer.request.name.last_name} accepted your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
