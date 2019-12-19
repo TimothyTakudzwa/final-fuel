@@ -274,7 +274,6 @@ def dashboard(request):
                 fuel_request.save()
                 offer_id = recommend(fuel_request)
                 if not offer_id:
-                    print('I passed ------------')
                     messages.error(request,response_message)                    
                 else:
                     offer = Offer.objects.filter(id=offer_id).first()
