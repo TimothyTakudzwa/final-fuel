@@ -200,7 +200,7 @@ def offer(request, id):
                 delivery_method = request.POST.get('delivery_method')
                 collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
                 if not collection_address.strip() and delivery_method.lower() == 'self collection':
-                    offer.collection_address = subsidiary.address
+                    offer.collection_address = subsidiary.location
                 else:
                     offer.collection_address = collection_address
                 offer.pump_available = True if request.POST.get('pump_required') == "True" else False
@@ -235,6 +235,7 @@ def edit_offer(request, id):
     offer = Offer.objects.get(id=id)
     if request.method == 'POST':
         fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
+        subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         
         if offer.request.fuel_type.lower() == 'petrol':
             available_fuel = fuel.petrol_quantity
@@ -254,7 +255,7 @@ def edit_offer(request, id):
                 offer.delivery_method = request.POST.get('delivery_method1')
                 collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
                 if not collection_address.strip() and request.POST.get('delivery_method1').lower() == 'self collection':
-                    offer.collection_address = subsidiary.address
+                    offer.collection_address = subsidiary.location
                 else:
                     offer.collection_address = collection_address
                 offer.pump_available = True if request.POST.get('pump_required') == "True" else False
@@ -393,7 +394,7 @@ def create_company(request, id):
                 company_name = user.company.name
                 Company.objects.filter(name=company_name).update(name = company_name,
                 address = address, logo = logo)
-                print("l have updated the buyer company")
+                return redirect('login')
 
             else:
                 company_name = request.POST.get('company_name')
@@ -403,8 +404,8 @@ def create_company(request, id):
                 license_number = request.POST.get('license_number')
                 Company.objects.filter(name=company_name).update(name = company_name,
                 address = address, logo = logo, iban_number = iban_number, license_number = license_number)
-                print("l have saved the supplier company")
-            return redirect('login')
+                return render(request,'supplier/final_reg.html')
+            
     return render(request, 'supplier/accounts/create_company.html', {'form': form, 'user_type':user_type })
 
     
