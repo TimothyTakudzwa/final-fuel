@@ -29,7 +29,7 @@
             </div>
             <div class="modal-body" style="background:#eeee">
 
-                <form method="POST" action="/users/client_history/{{buyer.id}}">
+                <form method="POST" action="/users/subsidiary_transaction_history/{{subsidiary.id}}">
                     {% csrf_token %}
                     <div class="form-group">
                         <select name="report_type" class="browser-default custom-select" id="report_options">
