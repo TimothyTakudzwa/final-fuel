@@ -319,7 +319,7 @@ def subsidiary_transaction_history(request, sid):
             state = 'Complete'
 
         if request.POST.get('report_type') == 'Incomplete':
-            trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id=subsidiary, is_complete=False)
+            trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id, is_complete=False)
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
@@ -333,7 +333,7 @@ def subsidiary_transaction_history(request, sid):
                 tran.revenue = tran.offer.request.amount * tran.offer.price
                 trans.append(tran)
             state = 'All'
-        return render(request, 'users/subs_history.html', {'trans':trans, 'buyer':buyer, 'state': state})
+        return render(request, 'users/subs_history.html', {'trans':trans, 'subsidiary':subsidiary, 'state': state})
 
      
 
