@@ -535,7 +535,7 @@
                                          {% csrf_token %}
                                        {% if alloc.diesel_quantity > 0 %}
                                          <div class="form-group">
-                                            <lable>Diesel Quantity Mistakenly Added</lable>
+                                            <lable>Diesel User Input</lable>
                                             <input type="text" class="form-control" value="{{alloc.diesel_quantity}}" />
                                         </div>
 
@@ -551,7 +551,7 @@
                                        
                                         {% if alloc.petrol_quantity > 0 %}
                                         <div class="form-group">
-                                          <lable>Petrol Quantity Mistakenly Added</lable>
+                                          <lable>Petrol User Input</lable>
                                           <input type="text" class="form-control" value="{{alloc.petrol_quantity}}" />
                                       </div>
 
