@@ -655,7 +655,7 @@ def suppliers_list(request):
         while  User.objects.filter(username=username.lower()).exists():
             username = initial_username + str(i) 
             i+=1
-        User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username.lower(), first_name=first_name, last_name=last_name, user_type = 'SS_SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
+        user = User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username.lower(), first_name=first_name, last_name=last_name, user_type = 'SS_SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
         if message_is_send(request, user):   
             if user.is_active:
                 messages.success(user.phone_number, "You have been registered succesfully")
@@ -789,7 +789,7 @@ def depot_staff(request):
         while  User.objects.filter(username=username.lower()).exists():
             username = initial_username + str(i) 
             i+=1
-        User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username.lower(), first_name=first_name, last_name=last_name, user_type = 'SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
+        user = User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username.lower(), first_name=first_name, last_name=last_name, user_type = 'SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
         if message_is_send(request, user):   
             if user.is_active:
                 messages.success(user.phone_number, "You have been registered succesfully")
