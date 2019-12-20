@@ -264,25 +264,83 @@ def supplier_user_edit(request, cid):
 @login_required
 def client_history(request, cid):
     buyer = User.objects.filter(id=cid).first()
+    trans = []
+    state = 'All'
+
+    if request.method == "POST":
+
+        if request.POST.get('report_type') == 'Complete':
+            trns = Transaction.objects.filter(buyer=buyer, is_complete=True)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Complete'
+
+        if request.POST.get('report_type') == 'Incomplete':
+            trns = Transaction.objects.filter(buyer=buyer, is_complete=False)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Incomplete'
+
+        if request.POST.get('report_type') == 'All':
+            trns = Transaction.objects.filter(buyer=buyer)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'All'
+        return render(request, 'users/client_history.html', {'trans':trans, 'buyer':buyer, 'state': state})
+
     trns = Transaction.objects.filter(buyer=buyer)
     trans = []
     for tran in trns:
         tran.revenue = tran.offer.request.amount * tran.offer.price
-        trans.append(tran)
+        trans.append(tran)      
 
-
-    return render(request, 'users/client_history.html', {'trans':trans, 'buyer':buyer})
+    return render(request, 'users/client_history.html', {'trans':trans, 'buyer':buyer, 'state': state})
 
 @login_required
 def subsidiary_transaction_history(request, sid):
     subsidiary = Subsidiaries.objects.filter(id=sid).first()
-    trns = Transaction.objects.filter(supplier__company=request.user.company,supplier__subsidiary_id=subsidiary.id)
     trans = []
+    state = 'All'
+
+    if request.method == "POST":
+    
+        if request.POST.get('report_type') == 'Complete':
+            trns = Transaction.objects.filter(supplier=subsidiary, is_complete=True)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Complete'
+
+        if request.POST.get('report_type') == 'Incomplete':
+            trns = Transaction.objects.filter(supplier=subsidiary, is_complete=False)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Incomplete'
+
+        if request.POST.get('report_type') == 'All':
+            trns = Transaction.objects.filter(supplier=subsidiary)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'All'
+        return render(request, 'users/subs_history.html', {'trans':trans, 'buyer':buyer, 'state': state})
+
+     
 
     for tran in trns:
         tran.revenue = tran.offer.request.amount * tran.offer.price
         trans.append(tran)
-        
+
     return render(request, 'users/subs_history.html', {'trans':trans, 'subsidiary':subsidiary})
 
 
