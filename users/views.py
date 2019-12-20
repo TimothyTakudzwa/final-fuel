@@ -1051,7 +1051,7 @@ def company_diesel(request,id):
             return redirect('users:allocate')
 
         else:
-            messages.success(request, 'Fuel object does not exists')
+            messages.warning(request, 'Fuel object does not exists')
             return redirect('users:allocate') 
 
 
@@ -1064,6 +1064,9 @@ def edit_allocation(request, id):
                 updated.diesel_quantity = int(updated.diesel_quantity) - int(int(correction.diesel_quantity) - int(request.POST['diesel_quantity']))
                 updated.save()
                 company_fuel = F_Update.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()
+                if int(request.POST['diesel_quantity']) > int(company_fuel.diesel_quantity):
+                    messages.warning(request, 'You can not edit an allocation to an amount greater than the company unallocated diesel quantity ')
+                    return redirect('users:allocate')
                 company_fuel.diesel_quantity = int(company_fuel.diesel_quantity) + int(int(correction.diesel_quantity) - int(request.POST['diesel_quantity'])) 
                 company_fuel.save()
                 correction.diesel_quantity = request.POST['diesel_quantity']
@@ -1073,6 +1076,9 @@ def edit_allocation(request, id):
                 updated.petrol_quantity = int(updated.petrol_quantity) - int(int(correction.petrol_quantity) - int(request.POST['petrol_quantity']))
                 updated.save()
                 company_fuel = F_Update.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()
+                if int(request.POST['petrol_quantity']) > int(company_fuel.petrol_quantity):
+                    messages.warning(request, 'You can not edit an allocation to an amount greater than the company unallocated petrol quantity ')
+                    return redirect('users:allocate')
                 company_fuel.petrol_quantity = int(company_fuel.petrol_quantity) + int(int(correction.petrol_quantity) - int(request.POST['petrol_quantity'])) 
                 company_fuel.save()
                 correction.petrol_quantity = request.POST['petrol_quantity']
