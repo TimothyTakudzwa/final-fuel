@@ -711,7 +711,7 @@
                                 
                                 <td style="width: 13%;">
                                     <div>
-                                      <form method="POST" action="{% url 'users:subsidiary_transaction_history' client.id %}">
+                                      <form method="POST" action="{% url 'users:subsidiary_transaction_history' sub.id %}">
                                         {% csrf_token %}
                                         <input type="hidden" name="report_type" value="Complete">
                      
