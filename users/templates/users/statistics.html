@@ -629,9 +629,16 @@
                              
                              <td style="width: 13%;">
                                  <div>
-                                      <a href="{% url  'users:client_history' client.id %}" class="btn btn-primary btn-sm" >View History</a>  
-                                      
-  
+                                      <form method="POST" action="{% url 'users:client_history' client.id %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="report_type" value="Complete">
+                     
+
+                                        <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
+                                          View History
+                                        </button>
+                                      </form>
+                                    
                                  </div>
                               </td>
                          </tr>
@@ -704,7 +711,15 @@
                                 
                                 <td style="width: 13%;">
                                     <div>
-                                          <a href="{% url  'users:subsidiary_transaction_history' sub.id %}" class="btn btn-primary btn-sm" >View History</a>  
+                                      <form method="POST" action="{% url 'users:subsidiary_transaction_history' sub.id %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="report_type" value="Complete">
+                     
+
+                                        <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
+                                          View History
+                                        </button>
+                                      </form> 
                                           
       
                                     </div>
