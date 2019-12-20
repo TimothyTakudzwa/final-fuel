@@ -100,13 +100,17 @@
                                     }
                                     else {
                                       $('#choices1{{forloop.counter}}').show();
-                                      $('#choices1{{forloop.counter}}').attr("required","required");
+                                      $('#street_name').attr('required', '');
+                                      $('#street_number').attr('required', '');
+                                      $('#location').attr('required', '');
                                     }
                                   });
                                   $('#delivery_method{{forloop.counter}}').change(function () {
                                     if ($('#delivery_method{{forloop.counter}} option:selected').text() == "Self Collection") {
                                       $('#choices{{forloop.counter}}').show();
-                                      $('#choices{{forloop.counter}}').attr("required","required");
+                                      $('#street_name').attr('required', '');
+                                      $('#street_number').attr('required', '');
+                                      $('#location').attr('required', '');
                                     }
                                     else {
                                       $('#choices{{forloop.counter}}').hide();
