@@ -333,7 +333,7 @@ def subsidiary_transaction_history(request, sid):
                 tran.revenue = tran.offer.request.amount * tran.offer.price
                 trans.append(tran)
             state = 'All'
-        return render(request, 'users/subs_history.html', {'trans':trans, 'buyer':buyer, 'state': state})
+        return render(request, 'users/subs_history.html', {'trans':trans, 'subsidiary':subsidiary, 'state': state})
 
      
 
