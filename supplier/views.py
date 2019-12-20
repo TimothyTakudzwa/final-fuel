@@ -200,7 +200,7 @@ def offer(request, id):
                 delivery_method = request.POST.get('delivery_method')
                 collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
                 if not collection_address.strip() and delivery_method.lower() == 'self collection':
-                    offer.collection_address = subsidiary.address
+                    offer.collection_address = subsidiary.location
                 else:
                     offer.collection_address = collection_address
                 offer.pump_available = True if request.POST.get('pump_required') == "True" else False
@@ -255,7 +255,7 @@ def edit_offer(request, id):
                 offer.delivery_method = request.POST.get('delivery_method1')
                 collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
                 if not collection_address.strip() and request.POST.get('delivery_method1').lower() == 'self collection':
-                    offer.collection_address = subsidiary.address
+                    offer.collection_address = subsidiary.location
                 else:
                     offer.collection_address = collection_address
                 offer.pump_available = True if request.POST.get('pump_required') == "True" else False
