@@ -196,8 +196,11 @@ def offer(request, id):
                 offer.cash = True if request.POST.get('cash') == "True" else False
                 offer.ecocash = True if request.POST.get('ecocash') == "True" else False
                 offer.swipe = True if request.POST.get('swipe') == "True" else False
-                offer.delivery_method = request.POST.get('delivery_method')
                 delivery_method = request.POST.get('delivery_method')
+                if not delivery_method.strip():
+                    offer.delivery_method = 'Delivery'
+                else:
+                     offer.delivery_method = delivery_method      
                 collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
                 if not collection_address.strip() and delivery_method.lower() == 'self collection':
                     offer.collection_address = subsidiary.location
@@ -252,9 +255,13 @@ def edit_offer(request, id):
                 offer.cash = True if request.POST.get('cash') == "True" else False
                 offer.ecocash = True if request.POST.get('ecocash') == "True" else False
                 offer.swipe = True if request.POST.get('swipe') == "True" else False
-                offer.delivery_method = request.POST.get('delivery_method1')
+                delivery_method = request.POST.get('delivery_method1')
+                if not delivery_method.strip():
+                    offer.delivery_method = 'Delivery'
+                else:
+                    offer.delivery_method = delivery_method
                 collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
-                if not collection_address.strip() and request.POST.get('delivery_method1').lower() == 'self collection':
+                if not collection_address.strip() and delivery_method.lower() == 'self collection':
                     offer.collection_address = subsidiary.location
                 else:
                     offer.collection_address = collection_address
