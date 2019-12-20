@@ -264,13 +264,25 @@ def supplier_user_edit(request, cid):
 @login_required
 def client_history(request, cid):
     buyer = User.objects.filter(id=cid).first()
-    trans = Transaction.objects.filter(buyer=buyer)
+    trns = Transaction.objects.filter(buyer=buyer)
+    trans = []
+    for tran in trns:
+        tran.revenue = tran.offer.request.amount * tran.offer.price
+        trans.append(tran)
+
+
     return render(request, 'users/client_history.html', {'trans':trans, 'buyer':buyer})
 
 @login_required
 def subsidiary_transaction_history(request, sid):
     subsidiary = Subsidiaries.objects.filter(id=sid).first()
-    trans = Transaction.objects.filter(supplier__company=request.user.company,supplier__subsidiary_id=subsidiary.id)
+    trns = Transaction.objects.filter(supplier__company=request.user.company,supplier__subsidiary_id=subsidiary.id)
+    trans = []
+
+    for tran in trns:
+        tran.revenue = tran.offer.request.amount * tran.offer.price
+        trans.append(tran)
+        
     return render(request, 'users/subs_history.html', {'trans':trans, 'subsidiary':subsidiary})
 
 
