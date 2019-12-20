@@ -393,7 +393,7 @@ def create_company(request, id):
                 company_name = user.company.name
                 Company.objects.filter(name=company_name).update(name = company_name,
                 address = address, logo = logo)
-                print("l have updated the buyer company")
+                return redirect('login')
 
             else:
                 company_name = request.POST.get('company_name')
@@ -403,8 +403,8 @@ def create_company(request, id):
                 license_number = request.POST.get('license_number')
                 Company.objects.filter(name=company_name).update(name = company_name,
                 address = address, logo = logo, iban_number = iban_number, license_number = license_number)
-                print("l have saved the supplier company")
-            return redirect('login')
+                return render(request,'supplier/final_reg.html')
+            
     return render(request, 'supplier/accounts/create_company.html', {'form': form, 'user_type':user_type })
 
     
