@@ -311,7 +311,7 @@ def subsidiary_transaction_history(request, sid):
     if request.method == "POST":
     
         if request.POST.get('report_type') == 'Complete':
-            trns = Transaction.objects.filter(supplier=subsidiary, is_complete=True)
+            trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id, is_complete=True)
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
@@ -319,7 +319,7 @@ def subsidiary_transaction_history(request, sid):
             state = 'Complete'
 
         if request.POST.get('report_type') == 'Incomplete':
-            trns = Transaction.objects.filter(supplier=subsidiary, is_complete=False)
+            trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id=subsidiary, is_complete=False)
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
@@ -327,7 +327,7 @@ def subsidiary_transaction_history(request, sid):
             state = 'Incomplete'
 
         if request.POST.get('report_type') == 'All':
-            trns = Transaction.objects.filter(supplier=subsidiary)
+            trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
