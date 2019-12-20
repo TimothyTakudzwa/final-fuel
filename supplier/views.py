@@ -235,6 +235,7 @@ def edit_offer(request, id):
     offer = Offer.objects.get(id=id)
     if request.method == 'POST':
         fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
+        subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         
         if offer.request.fuel_type.lower() == 'petrol':
             available_fuel = fuel.petrol_quantity
