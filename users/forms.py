@@ -76,8 +76,6 @@ class SupplierContactForm(forms.Form):
                                  max_length=30)  
     last_name = forms.CharField(label='Last Name', required=True,
                                  max_length=30)                         
-    username = forms.CharField(label='Username', required=True,
-                                 max_length=30)
     service_station = forms.ChoiceField()
     email = forms.EmailField(required=True, max_length=100,
                             validators=[validate_user_email])
@@ -93,8 +91,6 @@ class DepotContactForm(forms.Form):
                                  max_length=30)  
     last_name = forms.CharField(label='Last Name', required=True,
                                  max_length=30)                         
-    username = forms.CharField(label='Username', required=True,
-                                 max_length=30)
     depot = forms.ChoiceField()
     email = forms.EmailField(required=True, max_length=100,
                             validators=[validate_user_email])
