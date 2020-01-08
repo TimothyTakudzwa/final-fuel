@@ -885,53 +885,55 @@ def registration_handler(request, user, message):
         user.save()
     elif user.position == 3:         
         try: 
-            selected_option = user_types[int(message)-1]
+            selected_option = user_types[int(message) - 1]
             user.user_type = selected_option
             user.position = 4
             user.save()
+            print(user.user_type)
         except:
             return "Please select a valid option\n\n" + greetings_message
-        if selected_option == 'supplier' or selected_option == 'buyer':
+        print("got here")
+        if selected_option == 'SUPPLIER' or selected_option == 'BUYER':
             response_message = "Can i have your company email address.\n*NB* using your personal email address gets you lower precedence in the fuel finding process"
         else:
             response_message = "Can i please have your email address"   
-    elif user.position == 4:              
-        is_valid = validate_email(message, verify=True)        
-        if is_valid is None:           
-            pass
-        else: 
-            return "*_This email does not exist_*.\n\nPlease enter the a valid email address"  
-        user.email = message.lower()
-        if user.user_type == 'individual':
-            user.stage = 'individual_finder'
-            user.position = 1
-            user.save()
-            return "You have finished the registration process for Fuel Finder. To now start looking for fuel, Please type *Pakaipa*" 
-        else:
-            user.position = 4 
-            user.save()
-            if user.last_name != '':
-                username = initial_username = user.first_name[0] + user.last_name 
-            else:
-                 username = initial_username = user.first_name[0] + user.first_name
-            i = 0
-            while User.objects.filter(username=username.lower()).exists():
-                username = initial_username + str(i)  
-            user.username = username.lower()          
-            if token_is_send(request, user):
-                response_message = "We have sent a verification email to your supplied email, Please visit the link to complete the registration process"
-                user.is_active = True
-                user.save()
-            else:
-                response_message = "*_We have failed to register you to the platform_*.\n\nPlease enter a valid email address"
-                user.position = 3
-                user.save()
     elif user.position == 4:
-        user.user_type = 'Supplier' if message == "1" else "Buyer"
-        
+        user_exists = User.objects.filter(email=message).first()
+        if user_exists is not None:
+            response_message = "There is an existing user with the same email, please user a different email"   
+        else:          
+            is_valid = validate_email(message, verify=True)        
+            if is_valid is not None:           
+                pass
+            else: 
+                return "*_Couldn't verify the email_*.\n\nPlease enter the a valid email address"  
+            user.email = message.lower()
+            if user.user_type == 'INDIVIDUAL':
+                user.stage = 'individual_finder'
+                user.position = 1
+                user.save()
+                return "You have finished the registration process for Fuel Finder. To now start looking for fuel, Please type *menu*" 
+            else:
+                user.position = 5 
+                user.save()
+                if user.last_name != '':
+                    username = initial_username = user.first_name[0] + user.last_name 
+                else:
+                    username = initial_username = user.first_name[0] + user.first_name
+                i = 0
+                while User.objects.filter(username=username.lower()).exists():
+                    username = initial_username + str(i)  
+                user.username = username.lower()          
+                if token_is_send(request, user):
+                    response_message = "We have sent a verification email to your supplied email, Please visit the link to complete the registration process"
+                    user.is_active = True
+                    user.save()
+                else:
+                    response_message = "*_We have failed to register you to the platform_*.\n\nPlease enter a valid email address"
+                    user.position = 3
+                    user.save()
+
     return response_message
-
-
 
 def service_station_handler(request,user,message):
     if message.lower() == 'menu':
