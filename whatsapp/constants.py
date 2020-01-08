@@ -89,7 +89,7 @@ To begin the registration process please select one of the below options
 Please Type the desired option to continue. 
 '''
 
-user_types=['individual', 'buyer', 'supplier']
+user_types=['INDIVIDUAL', 'BUYER', 'SUPPLIER']
 
 successful_integration = '''
 You have succesfully integrated your Whatsapp with you company account.
