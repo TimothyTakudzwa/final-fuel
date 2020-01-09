@@ -932,7 +932,8 @@ def registration_handler(request, user, message):
                     response_message = "*_We have failed to register you to the platform_*.\n\nPlease enter a valid email address"
                     user.position = 3
                     user.save()
-
+    elif user.position == 5:
+        response_message = "Please wait for approval of your company"
     return response_message
 
 def service_station_handler(request,user,message):
