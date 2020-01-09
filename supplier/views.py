@@ -344,6 +344,7 @@ def verification(request, token, user_id):
                         selected_company =Company.objects.filter(name=request.POST.get('company')).first()
                         user.company = selected_company
                         user.is_active = True
+                        user.stage = 'menu'
                         user.save()
                         TokenAuthentication.objects.filter(user=user).update(used=True)
                         if user.user_type == 'BUYER':
@@ -351,6 +352,7 @@ def verification(request, token, user_id):
                         else:
                             user.is_active = False
                             user.is_waiting = True
+                            user.stage = 'menu'
                             user.save()
                             my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
                             if my_admin is not None:

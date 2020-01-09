@@ -307,7 +307,7 @@ def accept_offer(request, id):
     Notification.objects.create(message = message, user = offer.supplier, reference_id = offer.id, action = "ofer_accepted")
 
     messages.success(request, "Your request has been saved successfully") 
-    return redirect("buyer-fuel-request")
+    return redirect("buyer-transactions")
 
 def reject_offer(request, id):    
     offer = Offer.objects.filter(id=id).first()
