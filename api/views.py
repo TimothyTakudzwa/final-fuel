@@ -160,7 +160,8 @@ def view_station_updates(request):
                     'name': company.name, 'diesel_quantity': update.diesel_quantity,
                     'diesel_price': update.diesel_price, 'petrol_quantity': update.petrol_quantity,
                     'petrol_price': update.petrol_price, 'cash': update.cash, 'ecocash': update.ecocash,
-                    'swipe': update.swipe, 'usd': update.usd, 'queue': update.queue_length, 'limit': update.limit
+                    'swipe': update.swipe, 'usd': update.usd, 'queue': update.queue_length, 'limit': update.limit,
+                    'status': update.status
                 }
                 data.append(station_update)
             return JsonResponse(list(data), status=200, safe=False)
