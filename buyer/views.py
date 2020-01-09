@@ -327,6 +327,24 @@ def reject_offer(request, id):
 
 
 def transactions(request):
+    if request.method == "POST":
+        # print(f"________{Transaction.objects.get(id=request.POST.get('transaction_id'))}__________")
+        # print(f"_____________{request.POST.get('rating')}______________")
+        # print(f"_____________{request.POST.get('comment')}______________")
+        tran = Transaction.objects.get(id=request.POST.get('transaction_id'))
+        now = datetime.now(),
+        from supplier.models import UserReview
+        UserReview.objects.create(
+            rater = request.user,
+            rating = int(request.POST.get('rating')),
+            company = tran.supplier.company,
+            transaction = tran,
+            depot = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
+            comment = request.POST.get('comment')
+        )
+        messages.success(request, 'Transaction Successfully Reviewed')
+
+        
     buyer = request.user
     transactions = Transaction.objects.filter(buyer=buyer).all()
     for transaction in transactions:
@@ -334,12 +352,22 @@ def transactions(request):
         if subsidiary is not None:
             transaction.depot = subsidiary.name
             transaction.address = subsidiary.address
+        from supplier.models import UserReview    
+        transaction.review = UserReview.objects.filter(transaction=transaction)    
 
     context = {
         'transactions': transactions
     }
 
     return render(request, 'buyer/transactions.html', context=context)
+
+
+def transactions_review_delete(request, id):
+    from supplier.models import UserReview
+    rev = UserReview.objects.filter(id=id).first()
+    rev.delete()
+    messages.success(request, 'Review Successfully Deleted')
+    return redirect("buyer-transactions")
 
 def invoice(request, id):
     
