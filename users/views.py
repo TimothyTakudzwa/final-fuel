@@ -196,7 +196,7 @@ def statistics(request):
         tran_amount = 0
         sub_trans = Transaction.objects.filter(supplier__company=request.user.company,supplier__subsidiary_id=sub.id, is_complete=True)
         for sub_tran in sub_trans:
-            tran_amount += sub_tran.offer.request.amount
+            tran_amount += (sub_tran.offer.request.amount * sub_tran.offer.price)
         sub.tran_count = sub_trans.count()
         sub.tran_value = tran_amount
         subs.append(sub)
@@ -213,7 +213,7 @@ def statistics(request):
         purchases = []
         number_of_trans = 0
         for tran in new_buyer_transactions:
-            total_value += tran.offer.request.amount
+            total_value += (tran.offer.request.amount * tran.offer.price)
             purchases.append(tran)
             number_of_trans += 1
         buyer.total_revenue = total_value
@@ -264,13 +264,83 @@ def supplier_user_edit(request, cid):
 @login_required
 def client_history(request, cid):
     buyer = User.objects.filter(id=cid).first()
-    trans = Transaction.objects.filter(buyer=buyer)
-    return render(request, 'users/client_history.html', {'trans':trans, 'buyer':buyer})
+    trans = []
+    state = 'All'
+
+    if request.method == "POST":
+
+        if request.POST.get('report_type') == 'Complete':
+            trns = Transaction.objects.filter(buyer=buyer, is_complete=True)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Complete'
+
+        if request.POST.get('report_type') == 'Incomplete':
+            trns = Transaction.objects.filter(buyer=buyer, is_complete=False)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Incomplete'
+
+        if request.POST.get('report_type') == 'All':
+            trns = Transaction.objects.filter(buyer=buyer)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'All'
+        return render(request, 'users/client_history.html', {'trans':trans, 'buyer':buyer, 'state': state})
+
+    trns = Transaction.objects.filter(buyer=buyer)
+    trans = []
+    for tran in trns:
+        tran.revenue = tran.offer.request.amount * tran.offer.price
+        trans.append(tran)      
+
+    return render(request, 'users/client_history.html', {'trans':trans, 'buyer':buyer, 'state': state})
 
 @login_required
 def subsidiary_transaction_history(request, sid):
     subsidiary = Subsidiaries.objects.filter(id=sid).first()
-    trans = Transaction.objects.filter(supplier__company=request.user.company,supplier__subsidiary_id=subsidiary.id)
+    trans = []
+    state = 'All'
+
+    if request.method == "POST":
+    
+        if request.POST.get('report_type') == 'Complete':
+            trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id, is_complete=True)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Complete'
+
+        if request.POST.get('report_type') == 'Incomplete':
+            trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id, is_complete=False)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Incomplete'
+
+        if request.POST.get('report_type') == 'All':
+            trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'All'
+        return render(request, 'users/subs_history.html', {'trans':trans, 'subsidiary':subsidiary, 'state': state})
+
+     
+
+    for tran in trns:
+        tran.revenue = tran.offer.request.amount * tran.offer.price
+        trans.append(tran)
+
     return render(request, 'users/subs_history.html', {'trans':trans, 'subsidiary':subsidiary})
 
 
@@ -384,7 +454,9 @@ def report_generator(request):
             print("__________________________I am in allocations____________________________")
             allocations = FuelAllocation.objects.all()
             print(f'________________________________{allocations}__________________________')
+            requests = None; revs = None; stock = None
         start = start_date
+        end = end_date
         
         #revs = 0
         return render(request, 'users/reports.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form,
@@ -593,7 +665,7 @@ def approval(request, id):
             applicant.subsidiary_id = subsidiari.id
             print(applicant.subsidiary_id)
             applicant.save()
-            messages.success(request, f'approval for {applicant.first_name} made successfully')
+            messages.success(request, f'Approval for {applicant.first_name} made successfully')
             return redirect('users:waiting_for_approval')
        
 
@@ -626,16 +698,50 @@ def suppliers_list(request):
         form1 = SupplierContactForm( request.POST)
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
-        username = request.POST.get('username')
         email = request.POST.get('email')
+        sup = User.objects.filter(email=email).first()
+        if sup is not None:
+            messages.warning(request, f"{sup.email} already used in the system, please use a different email")
+            return redirect('users:suppliers_list')
+
         password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
         phone_number = request.POST.get('phone_number')
         subsidiary_id = request.POST.get('service_station')
-        User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username, first_name=first_name, last_name=last_name, user_type = 'SS_SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
-        messages.success(request, f"{username.capitalize()} succesfully registered as service station rep")
+        full_name = first_name + " " + last_name
+        i = 0
+        username = initial_username = first_name[0] + last_name
+        while  User.objects.filter(username=username.lower()).exists():
+            username = initial_username + str(i) 
+            i+=1
+        user = User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username.lower(), first_name=first_name, last_name=last_name, user_type = 'SS_SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
+        if message_is_send(request, user):   
+            if user.is_active:
+                messages.success(request, "You have been registered succesfully")
+                user.stage = 'menu'
+                user.save()  
+                                 
+                return render(request, 'buyer/email_send.html')
+            else:
+                # messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+                return render(request, 'buyer/email_send.html')
+        messages.success(request, f"{username.lower()} succesfully registered as service station rep")
         return redirect('users:suppliers_list')
     
     return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1})
+
+def message_is_send(request, user):
+    sender = "intelliwhatsappbanking@gmail.com"
+    subject = 'Fuel Finder Registration'
+    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: 12345 \n\nPlease login on Fuel Finder Website and access your assigned Station & don't forget to change your password on user profile. \n. "            
+    try:
+        msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
+        msg.send()
+        messages.success(request, f"{user.first_name}  {user.last_name} Registered Successfully")
+        return True
+    except Exception as e:
+        messages.warning(request, f"Oops , Something Wen't Wrong sending email, Please make sure you have Internet access")
+        return False              
+    return render(request, 'buyer/send_email.html')
 
 @login_required()
 def suppliers_delete(request, sid):
@@ -726,7 +832,6 @@ def depot_staff(request):
         form1 = DepotContactForm( request.POST)
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
-        username = request.POST.get('username')
         email = request.POST.get('email')
         sup = User.objects.filter(email=email).first()
         if sup is not None:
@@ -736,8 +841,24 @@ def depot_staff(request):
         password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
         phone_number = request.POST.get('phone_number')
         subsidiary_id = request.POST.get('depot')
-        User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username, first_name=first_name, last_name=last_name, user_type = 'SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
-        messages.success(request, f"{username} Registered as Depot Rep Successfully")
+        full_name = first_name + " " + last_name
+        i = 0
+        username = initial_username = first_name[0] + last_name
+        while  User.objects.filter(username=username.lower()).exists():
+            username = initial_username + str(i) 
+            i+=1
+        user = User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username.lower(), first_name=first_name, last_name=last_name, user_type = 'SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
+        if message_is_send(request, user):   
+            if user.is_active:
+                messages.success(request, "You have been registered succesfully")
+                user.stage = 'menu'
+                user.save()  
+                                 
+                return render(request, 'buyer/email_send.html')
+            else:
+                # messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+                return render(request, 'buyer/email_send.html')
+        messages.success(request, f"{username.lower()} Registered as Depot Rep Successfully")
         return redirect('users:depot_staff')
     '''
     else:
@@ -930,7 +1051,7 @@ def company_diesel(request,id):
             return redirect('users:allocate')
 
         else:
-            messages.success(request, 'Fuel object does not exists')
+            messages.warning(request, 'Fuel object does not exists')
             return redirect('users:allocate') 
 
 
@@ -943,6 +1064,9 @@ def edit_allocation(request, id):
                 updated.diesel_quantity = int(updated.diesel_quantity) - int(int(correction.diesel_quantity) - int(request.POST['diesel_quantity']))
                 updated.save()
                 company_fuel = F_Update.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()
+                if int(request.POST['diesel_quantity']) > int(company_fuel.diesel_quantity):
+                    messages.warning(request, 'You can not edit an allocation to an amount greater than the company unallocated diesel quantity ')
+                    return redirect('users:allocate')
                 company_fuel.diesel_quantity = int(company_fuel.diesel_quantity) + int(int(correction.diesel_quantity) - int(request.POST['diesel_quantity'])) 
                 company_fuel.save()
                 correction.diesel_quantity = request.POST['diesel_quantity']
@@ -952,6 +1076,9 @@ def edit_allocation(request, id):
                 updated.petrol_quantity = int(updated.petrol_quantity) - int(int(correction.petrol_quantity) - int(request.POST['petrol_quantity']))
                 updated.save()
                 company_fuel = F_Update.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()
+                if int(request.POST['petrol_quantity']) > int(company_fuel.petrol_quantity):
+                    messages.warning(request, 'You can not edit an allocation to an amount greater than the company unallocated petrol quantity ')
+                    return redirect('users:allocate')
                 company_fuel.petrol_quantity = int(company_fuel.petrol_quantity) + int(int(correction.petrol_quantity) - int(request.POST['petrol_quantity'])) 
                 company_fuel.save()
                 correction.petrol_quantity = request.POST['petrol_quantity']

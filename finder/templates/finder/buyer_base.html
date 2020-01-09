@@ -172,7 +172,7 @@
 
         <script>
           $(document).ready(function () {
-            var logged_user = {{ request.user.id }};
+            var logged_user = {{request.user.id}};
             var socket = io.connect('https://dreamhub.co.zw/new_offer');
           console.log(socket)
 
@@ -190,8 +190,7 @@
               });
             }
           });
-
-                });
+                    });
         </script>
       
       <div class="new_alert alert alert-success alert-dismissible fade show" role="alert" style="border-radius: 5px;padding: 8px;font-size: 12px;max-width: 97%; display: none;background-color: #505577e8;margin-left: 15px;margin-top: 10px;" >
@@ -209,7 +208,7 @@
       
       </div>
 
-        {% block body %}{% endblock %}
+        {% block body %} {% endblock %}
       </div>
     </div>
 

@@ -67,7 +67,7 @@
           <li class="nav-item {% if request.path == '/fuel_update/' %} active {% endif %} ">
             <a class="nav-link" href="{%url 'fuel_update'%}">
               <i class="material-icons">local_gas_station</i>
-              <p>Fuel Stocks</p>
+              <p>Current Stocks</p>
             </a>
           </li>
           <li class="nav-item {% if request.path == '/transaction/' %} active {% endif %}">
@@ -146,12 +146,12 @@
                
               });
 
-              socket.on('offer_accepted', function (msg) {
-                console.log("Your offer has been accepted", logged_user, msg.user_id)
+              socket.on('offer_rejected', function (msg) {
+                console.log("Your offer has been rejected", logged_user, msg.user_id)
                 if (logged_user == msg.user_id) {
                   $('.new_alert').hide()
                   var txt1 = "<h4 class='alert-heading' style='text-align: center;'> <i class='material-icons' style='color: gold;line-height: 0;margin-right: 3px;'> \
-                                      add_alert</i>Offer Accepted</h4><hr><p style='text-align: center;margin-top: 13px;background-color: #707aa785;padding: 10px;border-radius: 8px;'> \
+                                      add_alert</i>Offer Rejected</h4><hr><p style='text-align: center;margin-top: 13px;background-color: #707aa785;padding: 10px;border-radius: 8px;'> \
                                       " + msg.notification + "<hr><div class='col-sm-12'><a class='text-center' href='" + msg.url + "'>Click to View</a> </small></hr>";
                   $("#new_message").empty(txt1);
                   $("#new_message").append(txt1);
@@ -161,12 +161,12 @@
                 }
               });
 
-              socket.on('offer_rejected', function (msg) {
-                console.log("Your offer has been rejected", logged_user, msg.user_id)
+              socket.on('offer_accepted', function (msg) {
+                console.log("Your offer has been accepted", logged_user, msg.user_id)
                 if (logged_user == msg.user_id) {
                   $('.new_alert').hide()
                   var txt1 = "<h4 class='alert-heading' style='text-align: center;'> <i class='material-icons' style='color: gold;line-height: 0;margin-right: 3px;'> \
-                                      add_alert</i>Offer Rejected</h4><hr><p style='text-align: center;margin-top: 13px;background-color: #707aa785;padding: 10px;border-radius: 8px;'> \
+                                      add_alert</i>Offer Accepted</h4><hr><p style='text-align: center;margin-top: 13px;background-color: #707aa785;padding: 10px;border-radius: 8px;'> \
                                       " + msg.notification + "<hr><div class='col-sm-12'><a class='text-center' href='" + msg.url + "'>Click to View</a> </small></hr>";
                   $("#new_message").empty(txt1);
                   $("#new_message").append(txt1);
@@ -429,9 +429,8 @@
       var t = $('#example').DataTable({
         "columnDefs": [{
           "searchable": false,
-          "targets": 0
+          "targets": 0,
         }],
-        "order": [[1, 'desc']]
       });
 
       t.on('order.dt search.dt', function () {

@@ -17,6 +17,13 @@
     <link rel="stylesheet" type="text/css"
         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+    <link rel="icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png"
+    sizes="32x32" />
+    <link rel="icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png"
+        sizes="192x192" />
+    <link rel="apple-touch-icon-precomposed" href="wp-content\themes\oppi\assets\img\logo-color.png" />
+    <meta name="msapplication-TileImage"
+        content="https://droitthemes.com/wp/oppi/wp-content/uploads/2019/10/favicon.png" />
 
     <link href="{% static 'finder/assets/css/material-dashboard.css' %}" rel="stylesheet" />
 
@@ -188,17 +195,16 @@
                         </div>
                     </div>
                 </div>
-                {% if start and end %}
+                {% if trans or revs or stock or allocations or requests %}
                 <div style="/* padding: 25px; */background-color:rgb(14, 80, 100);border: #fafbfb 2px solid;border-radius: 10px;padding-left: 15px;padding-top: 30px;padding-bottom: 30px;margin-left: 15px;margin-top: -89px;">
                     <h1 style="color: #fafafa;font-size: medium;">Showing results from <b>{{start}}</b> to <b>{{end}} </b> </h1>
                 </div>
                 {% else %}
-                <div>
-                    style="/* padding: 25px; */background-color:rgb(14, 80, 100);border: #fafbfb 2px solid;border-radius: 10px;padding-left: 15px;padding-top: 30px;padding-bottom: 30px;margin-left: 15px;margin-top: -89px;">
-                    <h1 style="color: #fafafa;font-size: medium;">No data, kindly generate new report.</b> </h1>
+                <div style="/* padding: 25px; */background-color:rgb(14, 80, 100);border: #fafbfb 2px solid;border-radius: 10px;padding-left: 15px;padding-top: 30px;padding-bottom: 30px;margin-left: 15px;margin-top: -89px;">
+                    <h1 style="color: #fafafa;font-size: medium;">No Data, Generate New Report Above </h1>
                 </div>
-                {%endif%}
-              
+                {%endif%}  
+            
                 {%if trans%}
                 <div class="col-md-12">
                     <div class="card" style="background-color:white">
@@ -218,7 +224,7 @@
                                             <th>Date</th>
                                             <th>Buying Company</th>
                                             <th>Fuel Type</th>
-                                            <th>Quantity</th>
+                                            <th>Quantity (Litres) </th>
                                             <th>Price</th>
                                             <th>Contact Person</th>
                                             <th>Status</th>
@@ -318,9 +324,9 @@
                                                 <th>Last Update</th>
                                                 <th>Station Type</th>
                                                 <th>Station Name</th>
-                                                <th>Petrol Quantity</th>
+                                                <th>Petrol (Litres)</th>
                                                 <th>Petrol Price</th>
-                                                <th>Diesel Quantity</th>
+                                                <th>Diesel (Litres)</th>
                                                 <th>Diesel Price</th>
                                                 
                                               
@@ -333,10 +339,10 @@
                                                     <td>{{my_stock.last_updated}}</td>
                                                     <td>{{my_stock.sub_type}}</td>
                                                     <td>{{my_stock.subsidiary_name}}</td>
-                                                    <td>{{my_stock.petrol_quantity}} Litres</td>
+                                                    <td>{{my_stock.petrol_quantity}} l</td>
                                                     <td>{{my_stock.petrol_price}}</td>
-                                                    <td>{{my_stock.diesel_quantity}} Litres</td>
-                                                    <td>{{my_stock.diesel_price}}</td>
+                                                    <td>{{my_stock.diesel_quantity}} l</td>
+                                                    <td>$ {{my_stock.diesel_price}}</td>
                                                     
                                             </tr>
                                             {%endfor%}
@@ -386,7 +392,7 @@
                                     Name
                                     </th>
                                     <th style="color:white;">
-                                    Amount
+                                    Amount (Litres)
                                     </th>
                                     <th style="color:white;">
                                     Fuel Type
@@ -405,7 +411,7 @@
                                             <td>$ {{req.amount|stringformat:".2f"}}</td>
                                             <td>{{req.fuel_type|title}}</td>
                                             <td>
-                                                {%if req.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL">{% else%} {%endif%} {%if req.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if req.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if req.swipe%}<i class="fa fa-cc-visa"></i> {% else%} No Payment Method {%endif%}
+                                                {%if req.cash%}<i class="fa fa-dollar"></i>{%endif%} {% if req.cash %}<img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL"> {%endif%} {%if req.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {%endif%} {%if req.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH"> {%endif%} {%if req.swipe%}<i class="fa fa-cc-visa"></i> {% endif%} {%if not req.cash and not req.ecocash and not req.swipe and not req.usd%}No Payment Method {%endif%}
                                             </td>
                                         
                                             
@@ -440,10 +446,10 @@
                                         Date
                                         </th>
                                         <th style="color:white;">
-                                        Diesel Quantity
+                                        Diesel Quantity (Litres)
                                         </th>
                                         <th style="color:white;">
-                                        Petrol Quantity
+                                        Petrol Quantity (Litres)
                                         </th>
                                         <th style="color:white;">
                                         Sub Type
@@ -460,11 +466,11 @@
                                         {% for allocation in allocations %}
                                         <tr>
                                                 <td>{{allocation.date}}</td>
-                                                <td>{{allocation.petrol_quantity}}</td>
-                                                <td>{{allocation.diesel_quantity}}</td>
+                                                <td>{{allocation.petrol_quantity}} l</td>
+                                                <td>{{allocation.diesel_quantity}} l</td>
                                                 <td>{{allocation.sub_type}}</td>
-                                                <td>{{allocation.petrol_price}}</td>
-                                                <td>{{allocation.diesel_price}}</td>
+                                                <td>$ {{allocation.petrol_price}}</td>
+                                                <td>$ {{allocation.diesel_price}}</td>
                                             
                                                 
                                             </tr>

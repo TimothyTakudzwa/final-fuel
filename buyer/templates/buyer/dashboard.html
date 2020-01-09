@@ -5,7 +5,7 @@
 
 <div class="jumbotron jumbotron-fluid">
     <div class="container">
-        <h1 class="display-3">{{user.company|title}}'s Dashboard</h1>
+        <h1 class="display-3">{{user.company.name|title}}'s Dashboard</h1>
         
         <hr class="my-2">
         
@@ -83,7 +83,7 @@
                         <td>
 
                             <button class="btn btn-primary btn-sm" data-toggle="modal"
-                                data-target="#make_deal{{data.id}}">Deal
+                                data-target="#make_deal{{data.id}}">Accept Offer
                             </button>
                         </td>
                     </tr>

@@ -1,4 +1,6 @@
 from itertools import chain
+from operator import attrgetter
+
 from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
@@ -6,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.contrib import messages
+
 import secrets
 from users.models import Audit_Trail
 from datetime import date, time
@@ -96,6 +99,7 @@ def fuel_request(request):
     requests = FuelRequest.objects.filter(is_deleted=False ,wait=True).all()
     direct_requests =  FuelRequest.objects.filter(is_deleted=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
     requests = list(chain(requests, direct_requests))
+    requests.sort(key = attrgetter('date', 'time'), reverse = True)
     fuel = FuelUpdate.objects.filter(relationship_id=request.user.id).first()
     for buyer_request in requests:
         if buyer_request.dipping_stick_required==buyer_request.meter_required==buyer_request.pump_required==False:
@@ -192,11 +196,14 @@ def offer(request, id):
                 offer.cash = True if request.POST.get('cash') == "True" else False
                 offer.ecocash = True if request.POST.get('ecocash') == "True" else False
                 offer.swipe = True if request.POST.get('swipe') == "True" else False
-                offer.delivery_method = request.POST.get('delivery_method')
                 delivery_method = request.POST.get('delivery_method')
+                if not delivery_method.strip():
+                    offer.delivery_method = 'Delivery'
+                else:
+                     offer.delivery_method = delivery_method      
                 collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
                 if not collection_address.strip() and delivery_method.lower() == 'self collection':
-                    offer.collection_address = subsidiary.address
+                    offer.collection_address = subsidiary.location
                 else:
                     offer.collection_address = collection_address
                 offer.pump_available = True if request.POST.get('pump_required') == "True" else False
@@ -231,11 +238,12 @@ def edit_offer(request, id):
     offer = Offer.objects.get(id=id)
     if request.method == 'POST':
         fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
+        subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         
         if offer.request.fuel_type.lower() == 'petrol':
             available_fuel = fuel.petrol_quantity
         elif offer.request.fuel_type.lower() == 'diesel':
-            available_fuel = fuel_request.diesel_quantity
+            available_fuel = fuel.diesel_quantity
         new_offer = int(request.POST.get('quantity'))
         request_quantity = offer.request.amount
 
@@ -247,10 +255,14 @@ def edit_offer(request, id):
                 offer.cash = True if request.POST.get('cash') == "True" else False
                 offer.ecocash = True if request.POST.get('ecocash') == "True" else False
                 offer.swipe = True if request.POST.get('swipe') == "True" else False
-                offer.delivery_method = request.POST.get('delivery_method1')
+                delivery_method = request.POST.get('delivery_method1')
+                if not delivery_method.strip():
+                    offer.delivery_method = 'Delivery'
+                else:
+                    offer.delivery_method = delivery_method
                 collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
-                if not collection_address.strip() and request.POST.get('delivery_method1').lower() == 'self collection':
-                    offer.collection_address = subsidiary.address
+                if not collection_address.strip() and delivery_method.lower() == 'self collection':
+                    offer.collection_address = subsidiary.location
                 else:
                     offer.collection_address = collection_address
                 offer.pump_available = True if request.POST.get('pump_required') == "True" else False
@@ -258,7 +270,7 @@ def edit_offer(request, id):
                 offer.meter_available = True if request.POST.get('usd') == "True" else False
                 offer.save()
                 messages.success(request, 'Offer successfully updated')
-                message = f'You have a new offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {offer.request.amount}L'
+                message = f'You have an updated offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {offer.request.amount}L'
                 Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
                 return redirect('fuel-request')
             else:
@@ -331,16 +343,22 @@ def verification(request, token, user_id):
                     if company_exists:
                         selected_company =Company.objects.filter(name=request.POST.get('company')).first()
                         user.company = selected_company
-                        user.is_active = False
-                        user.is_waiting = True
+                        user.is_active = True
+                        user.stage = 'menu'
                         user.save()
                         TokenAuthentication.objects.filter(user=user).update(used=True)
-                        my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
-                        if my_admin is not None:
-                            return render(request,'supplier/final_registration.html',{'my_admin': my_admin})
+                        if user.user_type == 'BUYER':
+                            return redirect('login')
                         else:
-                            return render(request,'supplier/final_reg.html')
-
+                            user.is_active = False
+                            user.is_waiting = True
+                            user.stage = 'menu'
+                            user.save()
+                            my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
+                            if my_admin is not None:
+                                return render(request,'supplier/final_registration.html',{'my_admin': my_admin})
+                            else:
+                                return render(request,'supplier/final_reg.html')
                     else:
                         selected_company =Company.objects.create(name=request.POST.get('company'))
                         user.is_active = False
@@ -385,7 +403,7 @@ def create_company(request, id):
                 company_name = user.company.name
                 Company.objects.filter(name=company_name).update(name = company_name,
                 address = address, logo = logo)
-                print("l have updated the buyer company")
+                return redirect('login')
 
             else:
                 company_name = request.POST.get('company_name')
@@ -395,8 +413,8 @@ def create_company(request, id):
                 license_number = request.POST.get('license_number')
                 Company.objects.filter(name=company_name).update(name = company_name,
                 address = address, logo = logo, iban_number = iban_number, license_number = license_number)
-                print("l have saved the supplier company")
-            return redirect('login')
+                return render(request,'supplier/final_reg.html')
+            
     return render(request, 'supplier/accounts/create_company.html', {'form': form, 'user_type':user_type })
 
     

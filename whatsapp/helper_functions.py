@@ -8,6 +8,7 @@ from buyer.models import User, FuelRequest
 from company.models import FuelUpdate
 from django.db.models import Q
 from buyer.recommend import recommend
+from notification.models import Notification
 
 def send_message(phone_number, message):
     payload = {
@@ -187,6 +188,8 @@ def requests_handler(user, message):
             fuel_request.wait = True
             fuel_request.save()
             response_message = 'Request made successfully! Please wait for offers'
+            message = f'{user.first_name} {user.last_name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
+            Notification.objects.create(message = message, user = user, reference_id = fuel_request.id, action = "new_request")
             
         elif message == "2":
             response = recommend(fuel_request)
@@ -215,6 +218,8 @@ def requests_handler(user, message):
                 user.position = 100
                 user.save()
                 response_message = rating_response_message.format(tran.id)
+                message = f'{offer.request.name.first_name} {offer.request.name.last_name} accepted your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
+                Notification.objects.create(message = message, user = offer.supplier, reference_id = offer.id, action = "offer_accepted")
             else:
                 response_message = 'oops!! something went wrong during processing of your request, please type *Wait* to wait for offers'
                 user.position = 72
@@ -497,13 +502,16 @@ def view_requests_handler(user, message):
                 offer.delivery_method = "Deliver"
                 user.position = 7
                 user.save()
+                offer.save()
                 response_message = "You have successfully made an offer. Type *menu* to go back to the main menu."
+                message = f'You have a new offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price} from {user.first_name} {user.last_name} for your request of {offer.request.amount}L'
+                Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
             elif int(message) == 2:
                 offer.delivery_method = "Self Collection"
                 user.position = 6
                 user.save()
                 response_message = "Please provide a collection address."
-            offer.save()
+                offer.save()
         except:
             response_message = "Invalid option! Please select a valid delivery.\n\n 1. Deliver\n2. Self collection"
             user.position = 5
@@ -516,6 +524,8 @@ def view_requests_handler(user, message):
         user.position = 7
         user.save()
         response_message = "You have successfully made an offer. Type *menu* to go back to the main menu."
+        message = f'You have a new offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price} from {user.first_name} {user.last_name} for your request of {offer.request.amount}L'
+        Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
     elif user.position == 7:
         if message.lower() != 'menu':
             response_message = 'Invalid response! Please type *menu* to go back to main menu'
@@ -568,7 +578,7 @@ def view_offers_handler(user, message):
                     if offer_quantity <= request_quantity:
                         offer.quantity = float(message)
                         offer.save()
-                        response_message = "Which form of payment are you accepting? Type *pass* if you do not wish to edit.\n\n1. Cash\n2. USD \n3. Ecocash \n4. Swipe or Bank Transfer"
+                        response_message = "Which form of payment are you accepting? Type *pass* if you do not wish to edit.\n\n1. ZWL(Cash) Only\n2. Ecocash Only\n3. RTGS(Swipe)/Transfer Only\n4. USD Only\n5. Cash or Ecocash\n6. Cash or Swipe\n7. Ecocash or Swipe\n"
                         user.position = 3
                         user.save()
                     else:
@@ -591,13 +601,22 @@ def view_offers_handler(user, message):
             user.save()
         else:
             try:
-                if int(message) == 1:
-                    offer.cash = True
-                elif int(message) == 2:
-                    offer.usd = True
-                elif int(message) == 3:
+                if message == "1":
+                    offer.cash = True 
+                elif message == "2":
                     offer.ecocash = True
-                elif int(message) == 4:
+                elif message == "3":
+                    offer.swipe = True
+                elif message == "4":
+                    offer.usd = True
+                elif message == "5":
+                    offer.ecocash = True
+                    offer.cash = True
+                elif message == "6":
+                    offer.swipe = True
+                    offer.cash = True
+                elif message == "7":
+                    offer.ecocash = True
                     offer.swipe = True
                 offer.save()
                 response_message = "At what price per litre? Type *pass* if you do not wish to edit."
@@ -630,19 +649,24 @@ def view_offers_handler(user, message):
             response_message = "You have successfully updated your offer. Type *menu* to go back to the main menu."
             user.position = 7
             user.save()
+            message = f'You have an updated offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price} from {user.first_name} {user.last_name} for your request of {offer.request.amount}L'
+            Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
         else:
             try:
                 if int(message) == 1:
                     offer.delivery_method = "Deliver"
                     user.position = 7
                     user.save()
+                    offer.save()
                     response_message = "You have successfully updated your offer. Type *menu* to go back to the main menu."
+                    message = f'You have an updated offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price} from {user.first_name} {user.last_name} for your request of {offer.request.amount}L'
+                    Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
                 elif int(message) == 2:
                     offer.delivery_method = "Self Collection"
                     user.position = 6
                     user.save()
                     response_message = "Please provide a collection address or type *pass* if you do not wish to edit."
-                offer.save()
+                    offer.save()
             except:
                 response_message = "Invalid option! Please select a valid delivery or type *pass* if you do not wish to edit.\n\n 1. Deliver\n 2.Self collection"
                 user.position = 5
@@ -654,6 +678,8 @@ def view_offers_handler(user, message):
         user.position = 7
         user.save()
         response_message = "You have successfully updated your offer. Type *menu* to go back to the main menu."
+        message = f'You have a new offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price} from {user.first_name} {user.last_name} for your request of {offer.request.amount}L'
+        Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
     elif user.position == 7:
         if message.lower() != 'menu':
             response_message = 'Invalid response! Please type *menu* to go back to main menu'
@@ -868,53 +894,56 @@ def registration_handler(request, user, message):
         user.save()
     elif user.position == 3:         
         try: 
-            selected_option = user_types[int(message)-1]
+            selected_option = user_types[int(message) - 1]
             user.user_type = selected_option
             user.position = 4
             user.save()
+            print(user.user_type)
         except:
             return "Please select a valid option\n\n" + greetings_message
-        if selected_option == 'supplier' or selected_option == 'buyer':
+        print("got here")
+        if selected_option == 'SUPPLIER' or selected_option == 'BUYER':
             response_message = "Can i have your company email address.\n*NB* using your personal email address gets you lower precedence in the fuel finding process"
         else:
             response_message = "Can i please have your email address"   
-    elif user.position == 4:              
-        is_valid = validate_email(message, verify=True)        
-        if is_valid is None:           
-            pass
-        else: 
-            return "*_This email does not exist_*.\n\nPlease enter the a valid email address"  
-        user.email = message.lower()
-        if user.user_type == 'individual':
-            user.stage = 'individual_finder'
-            user.position = 1
-            user.save()
-            return "You have finished the registration process for Fuel Finder. To now start looking for fuel, Please type *Pakaipa*" 
-        else:
-            user.position = 4 
-            user.save()
-            if user.last_name != '':
-                username = initial_username = user.first_name[0] + user.last_name 
-            else:
-                 username = initial_username = user.first_name[0] + user.first_name
-            i = 0
-            while User.objects.filter(username=username.lower()).exists():
-                username = initial_username + str(i)  
-            user.username = username.lower()          
-            if token_is_send(request, user):
-                response_message = "We have sent a verification email to your supplied email, Please visit the link to complete the registration process"
-                user.is_active = True
-                user.save()
-            else:
-                response_message = "*_We have failed to register you to the platform_*.\n\nPlease enter a valid email address"
-                user.position = 3
-                user.save()
     elif user.position == 4:
-        user.user_type = 'Supplier' if message == "1" else "Buyer"
-        
+        user_exists = User.objects.filter(email=message).first()
+        if user_exists is not None:
+            response_message = "There is an existing user with the same email, please user a different email"   
+        else:          
+            is_valid = validate_email(message, verify=True)        
+            if is_valid is not None:           
+                pass
+            else: 
+                return "*_Couldn't verify the email_*.\n\nPlease enter the a valid email address"  
+            user.email = message.lower()
+            if user.user_type == 'INDIVIDUAL':
+                user.stage = 'individual_finder'
+                user.position = 1
+                user.save()
+                return "You have finished the registration process for Fuel Finder. To now start looking for fuel, Please type *menu*" 
+            else:
+                user.position = 5 
+                user.save()
+                if user.last_name != '':
+                    username = initial_username = user.first_name[0] + user.last_name 
+                else:
+                    username = initial_username = user.first_name[0] + user.first_name
+                i = 0
+                while User.objects.filter(username=username.lower()).exists():
+                    username = initial_username + str(i)  
+                user.username = username.lower()          
+                if token_is_send(request, user):
+                    response_message = "We have sent a verification email to your supplied email, Please visit the link to complete the registration process"
+                    user.is_active = True
+                    user.save()
+                else:
+                    response_message = "*_We have failed to register you to the platform_*.\n\nPlease enter a valid email address"
+                    user.position = 3
+                    user.save()
+    elif user.position == 5:
+        response_message = "Please wait for approval of your company"
     return response_message
-
-
 
 def service_station_handler(request,user,message):
     if message.lower() == 'menu':

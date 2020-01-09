@@ -3,9 +3,47 @@
 
 <div class="jumbotron jumbotron-fluid">
     <div class="container">
-        <h1 class="display-3">{{buyer.company|title}}'s Transaction History</h1>
+        <h1 class="display-3">{{buyer.company.name|title}}'s Transaction History</h1>
+
+        <p class="lead" style="padding-left: 15px;padding-top: 30px;">
+            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#state_modal"
+                role="button" style="color: white;">Filtered State - {{ state }}</button>
+            
+            <!--    
+            <button class="btn btn-info btn-lg" data-toggle="modal" data-target="#trans_info_modal"
+                role="button" style="color: white;">View Quick Info</button> -->
+
+        </p>
         
         
+    </div>
+</div>
+
+<div class="modal fade" id="state_modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#402d57e0">
+                <h4 class="modal-title" style="color:whitesmoke"> Filter By State</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="background:#eeee">
+
+                <form method="POST" action="/users/client_history/{{buyer.id}}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <select name="report_type" class="browser-default custom-select" id="report_options">
+                            <option selected>Completed</option>
+                            <option value="Incomplete">Incomplete</option>
+                            <option value="All">All</option>
+                        </select>
+                    </div>
+                       
+
+                    <input class="btn btn-info" type="submit" value="Submit">
+                </form>
+
+            </div>
+        </div>
     </div>
 </div>
 
@@ -31,7 +69,10 @@
                     Buyer
                     </th>
                     <th style="color:white;">
-                    Amount
+                    Quantity (Litres)
+                    </th>
+                    <th style="color:white;">
+                    Revenue
                     </th>
                     <th>
                     Status
@@ -45,7 +86,8 @@
                             <td>{{tran.date}}</td>
                             <td>{{tran.time}}</td>
                             <td>{{tran.buyer}}</td>
-                            <td>$ {{tran.offer.request.amount|stringformat:".2f"}}</td>
+                            <td>{{tran.offer.request.amount}} l</td>
+                            <td>$ {{tran.revenue|stringformat:".2f"}}</td>
                            <td>
                                {% if tran.is_complete %}
                                <i class="material-icons" style="color: #2ecc71;">check_circle</i>
@@ -67,6 +109,10 @@
     </div>
     
 </div>
+{% else %}
+<p class="text-center" style="margin-top: 50px;color: #333;">
+    No Transactions Match The Filter <strong>{{state}}</strong>
+</p>    
 {% endif %}
 
 {% endblock %}
