@@ -578,7 +578,7 @@ def view_offers_handler(user, message):
                     if offer_quantity <= request_quantity:
                         offer.quantity = float(message)
                         offer.save()
-                        response_message = "Which form of payment are you accepting? Type *pass* if you do not wish to edit.\n\n1. Cash\n2. USD \n3. Ecocash \n4. Swipe or Bank Transfer"
+                        response_message = "Which form of payment are you accepting? Type *pass* if you do not wish to edit.\n\n1. ZWL(Cash) Only\n2. Ecocash Only\n3. RTGS(Swipe)/Transfer Only\n4. USD Only\n5. Cash or Ecocash\n6. Cash or Swipe\n7. Ecocash or Swipe\n"
                         user.position = 3
                         user.save()
                     else:
@@ -601,13 +601,22 @@ def view_offers_handler(user, message):
             user.save()
         else:
             try:
-                if int(message) == 1:
-                    offer.cash = True
-                elif int(message) == 2:
-                    offer.usd = True
-                elif int(message) == 3:
+                if message == "1":
+                    offer.cash = True 
+                elif message == "2":
                     offer.ecocash = True
-                elif int(message) == 4:
+                elif message == "3":
+                    offer.swipe = True
+                elif message == "4":
+                    offer.usd = True
+                elif message == "5":
+                    offer.ecocash = True
+                    offer.cash = True
+                elif message == "6":
+                    offer.swipe = True
+                    offer.cash = True
+                elif message == "7":
+                    offer.ecocash = True
                     offer.swipe = True
                 offer.save()
                 response_message = "At what price per litre? Type *pass* if you do not wish to edit."
@@ -932,7 +941,8 @@ def registration_handler(request, user, message):
                     response_message = "*_We have failed to register you to the platform_*.\n\nPlease enter a valid email address"
                     user.position = 3
                     user.save()
-
+    elif user.position == 5:
+        response_message = "Please wait for approval of your company"
     return response_message
 
 def service_station_handler(request,user,message):
