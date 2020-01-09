@@ -10,6 +10,7 @@ urlpatterns = [
     path('', views.dashboard, name='buyer-dashboard'),
     path('fuel', views.fuel_request, name='buyer-fuel-request'),
     path('offers/<int:id>', views.offers, name='fuel-offers'),
+    path('transaction_review/delete/<int:id>', views.transactions_review_delete, name='tran-review-delete'),
     path('accept/<int:id>', views.accept_offer, name='accept-offer'),
     path('reject/<int:id>', views.reject_offer, name='reject-offer'),
     path('transactions', views.transactions, name='buyer-transactions'),
