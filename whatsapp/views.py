@@ -21,7 +21,7 @@ def index(request):
         if user.is_active:
             response_message = bot_action(request, user, message) 
         else:
-            response_message = "Your cannot use this, please create a buyer account and then add the phone number"
+            response_message = "Your cannot use this, please create a buyer account or wait for approval if you have already registered"
     else:
         user = User.objects.create(phone_number=phone_number, stage='registration', position=1)
         response_message = bot_action(request, user, message)
