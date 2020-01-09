@@ -5,6 +5,7 @@ from company.models import Company, FuelUpdate
 from buyer.constants import *
 from .constants import *
 from buyer.constants2 import *
+#from supplier.models import UserReview
 
 STATUS_CHOICES = (('Open','OPEN'),('Closed','CLOSED'),('Offloading','Offloading'))
 
