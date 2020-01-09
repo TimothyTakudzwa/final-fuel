@@ -80,8 +80,88 @@
                             <a class="btn btn-primary btn-sm" href="{% url 'view-invoice' transaction.id %}" >
                                 Download 
                             </a>
+                            {% if not transaction.review %}
+                                <a class="btn btn-primary btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
+                                    Rate {{transaction.supplier}}
+                                </a>
+                            {% else %}
+                            <a class="btn btn-primary btn-sm" style="color: white;" href="{% url 'tran-review-delete' transaction.review.id %}">
+                                Delete Review
+                            </a>    
+                            {% endif %}    
                         </td>
                     </tr>
+                    <!--Modal to review transaction-->
+                    <div class="modal fade" id="review_{{transaction.id}}" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header" style= "background:#402d57e0">
+                                    <h4 class="modal-title" style= "color:whitesmoke" >Review {{transaction.supplier}}</h4>   
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body" style= "background:white">
+                                    
+                                    <form method="POST" action="">
+                                        {% csrf_token %}
+                                        <input type="text" name="transaction_id" value="{{transaction.id}}" hidden/>
+                                        <div class="form-group">
+                                            <label>Rating</label>
+                                            <select name="rating" class="browser-default custom-select" id="report_options">
+                                                <option value="1" style="color: goldenrod;">*</option>
+                                                <option value="2">**</option>
+                                                <option value="3">***</option>
+                                                <option value="4">****</option>
+                                                <option value="5">*****</option>    
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Comment</label>
+                                            <input type="text" name="comment" class="form-control"/>
+                                        </div>
+                                        
+                                        <input class="btn btn-info" type="submit" value="Submit">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Modal to edit review-->
+                    <div class="modal fade" id="edit_review_{{transaction.id}}" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header" style= "background:#402d57e0">
+                                    <h4 class="modal-title" style= "color:whitesmoke" >Edit {{transaction.supplier.company}}'s Review</h4>   
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body" style= "background:white">
+                                    <form method="POST" action="">
+                                        {% csrf_token %}
+                                        <input type="text" name="transaction_id" hidden/>
+                                        <div class="form-group">
+                                            <label>Rating</label>
+                                            {{transaction.review.rating}}
+                                            
+                                            <select name="rating" class="browser-default custom-select" id="report_options">
+                                                
+                                                <option value="1" style="color: goldenrod;">*</option>
+                                                <option value="2">**</option>
+                                                <option value="3">***</option>
+                                                <option value="4">****</option>
+                                                <option value="5">*****</option>    
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Comment</label>
+                                            <input type="text" name="comment" class="form-control" placeholder=""/>
+                                        </div>
+                                        
+                                        <input class="btn btn-info" type="submit" value="Submit">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {% endfor %}
 
                 </tbody>
