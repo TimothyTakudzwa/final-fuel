@@ -369,6 +369,18 @@ def transactions_review_delete(request, id):
     messages.success(request, 'Review Successfully Deleted')
     return redirect("buyer-transactions")
 
+
+def transaction_review_edit(request,id):
+    from supplier.models import UserReview
+    review = UserReview.objects.filter(id=id).first()
+    if request.method == "POST":
+        review.rating = int(request.POST.get('rating'))
+        review.comment = request.POST.get('comment')
+        review.save()
+        messages.success(request, 'Review Successfully Edited')
+    return redirect("buyer-transactions")    
+
+
 def invoice(request, id):
     
     buyer = request.user
