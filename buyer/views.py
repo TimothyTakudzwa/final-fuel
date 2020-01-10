@@ -353,7 +353,7 @@ def transactions(request):
             transaction.depot = subsidiary.name
             transaction.address = subsidiary.address
         from supplier.models import UserReview    
-        transaction.review = UserReview.objects.filter(transaction=transaction)    
+        transaction.review = UserReview.objects.filter(transaction=transaction).first()    
 
     context = {
         'transactions': transactions
