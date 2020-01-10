@@ -3,6 +3,7 @@ import requests
 from validate_email import validate_email
 from .constants import *
 from buyer.views import token_is_send
+from users.views import message_is_sent
 from supplier.models import Offer, Transaction, FuelAllocation, Subsidiaries, UserReview
 from buyer.models import User, FuelRequest
 from company.models import FuelUpdate
@@ -875,8 +876,6 @@ def bot_action(request, user, message):
     elif user.user_type == 'SS_SUPPLIER':
         return service_station_handler(request, user,message)    
     
-
-
 def registration_handler(request, user, message):
     
     if user.position == 1:
@@ -919,9 +918,25 @@ def registration_handler(request, user, message):
             user.email = message.lower()
             if user.user_type == 'INDIVIDUAL':
                 user.stage = 'individual_finder'
+                user.password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+                user.password_reset = True
                 user.position = 1
+                if user.last_name != '':
+                    username = initial_username = user.first_name[0] + user.last_name 
+                else:
+                    username = initial_username = user.first_name[0] + user.first_name
+                i = 0
+                while User.objects.filter(username=username.lower()).exists():
+                    username = initial_username + str(i)  
+                user.username = username.lower()
+                user.is_active = True 
                 user.save()
-                return "You have finished the registration process for Fuel Finder. To now start looking for fuel, Please type *menu*" 
+                if message_is_sent(request, user):   
+                    user.stage = 'menu'
+                    user.save()  
+                else:
+                    response_message = 'oooops!!! something went wrong'
+                return "You have finished the registration process for Fuel Finder. To now start looking for fuel, Please type *menu* or open your email to get your username and initial password if you want to use the mobile app." 
             else:
                 user.position = 5 
                 user.save()
