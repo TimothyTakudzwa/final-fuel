@@ -110,8 +110,7 @@ def update_station(request):
         if status.exists():
             update = FuelUpdate.objects.get(relationship_id=user.subsidiary_id)
 
-            p_price = request.POST.get('petrol_price')
-            d_price = request.POST.get('diesel_price')
+
             p_quantity = request.POST.get('petrol_quantity')
             d_quantity = request.POST.get('diesel_quantity')
             queue = request.POST.get('queue')
@@ -124,8 +123,6 @@ def update_station(request):
             s_status = request.POST.get('status')
             limit = request.POST.get('limit')
 
-            update.petrol_price = p_price
-            update.diesel_price = d_price
             update.petrol_quantity = p_quantity
             update.diesel_quantity = d_quantity
             update.queue_length = queue
@@ -160,9 +157,11 @@ def view_station_updates(request):
             for update in updates:
                 company = Subsidiaries.objects.get(id=update.relationship_id)
                 station_update = {
-                    'name': company.name, 'diesel_quantity': update.diesel_quantity, 'diesel_price': update.diesel_price,
-                    'petrol_quantity': update.petrol_quantity, 'petrol_price': update.petrol_price,
-                    'cash': update.cash, 'ecocash': update.ecocash, 'swipe': update.swipe, 'usd': update.usd
+                    'name': company.name, 'diesel_quantity': update.diesel_quantity,
+                    'diesel_price': update.diesel_price, 'petrol_quantity': update.petrol_quantity,
+                    'petrol_price': update.petrol_price, 'cash': update.cash, 'ecocash': update.ecocash,
+                    'swipe': update.swipe, 'usd': update.usd, 'queue': update.queue_length, 'limit': update.limit,
+                    'status': update.status
                 }
                 data.append(station_update)
             return JsonResponse(list(data), status=200, safe=False)
@@ -184,7 +183,7 @@ def view_updates_user(request):
                 'station': details.name, 'company': details.company.name, 'queue':
                     update.queue_length, 'petrol': update.petrol_price, 'diesel': update.diesel_price,
                 'open': details.opening_time, 'close': details.closing_time, 'limit': update.limit, 'cash': update.cash,
-                'ecocash': update.ecocash, 'swipe': update.swipe, 'usd': update.usd
+                'ecocash': update.ecocash, 'swipe': update.swipe, 'usd': update.usd, 'status': update.status,
             }
             data.append(station_update)
 
