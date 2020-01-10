@@ -407,7 +407,7 @@ def view_fuel_updates(user, message):
 def view_requests_handler(user, message):
     response_message = ""
     if user.position == 0:
-        requests = FuelRequest.objects.filter(wait=True).all()
+        requests = FuelRequest.objects.filter(wait=True).all().order_by('-id')
         response_message = 'Reply with the number of the request to make an offer? \n\n'
         i = 1
         for req in requests:
@@ -536,7 +536,7 @@ def view_requests_handler(user, message):
 def view_offers_handler(user, message):
     if user.position == 0:
         response_message = "Reply with the offer number to change the initial offer available\n\n"
-        offers = Offer.objects.filter(supplier=user)
+        offers = Offer.objects.filter(supplier=user).order_by('-id')
         i = 1
         for offer in offers:
             fuel = offer.request.fuel_type.capitalize()
