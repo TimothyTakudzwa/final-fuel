@@ -11,6 +11,7 @@ urlpatterns = [
     path('fuel', views.fuel_request, name='buyer-fuel-request'),
     path('offers/<int:id>', views.offers, name='fuel-offers'),
     path('transaction_review/delete/<int:id>', views.transactions_review_delete, name='tran-review-delete'),
+    path('transaction_review/edit/<int:id>', views.transaction_review_edit, name='tran-review-edit'),
     path('accept/<int:id>', views.accept_offer, name='accept-offer'),
     path('reject/<int:id>', views.reject_offer, name='reject-offer'),
     path('transactions', views.transactions, name='buyer-transactions'),
