@@ -132,6 +132,8 @@
                     </div>
 
                     <!--Modal to edit review-->
+
+                    {% if transaction.review %}
                     <div class="modal fade" id="edit_review_{{transaction.id}}" role="dialog">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -141,7 +143,7 @@
                                 </div>
                                 <div class="modal-body" style= "background:white">
                                     <form method="POST" action="{% url 'tran-review-edit' transaction.review.id %}">
-                                        {% csrf_token %}
+                                        {% csrf_token %} 
                                         <input type="text" name="transaction_id" hidden/>
                                         <div class="form-group">
                                             <label>Rating</label>
@@ -179,6 +181,7 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                     {% endfor %}
 
                 </tbody>
