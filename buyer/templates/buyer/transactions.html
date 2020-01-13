@@ -132,6 +132,8 @@
                     </div>
 
                     <!--Modal to edit review-->
+
+                    {% if transaction.review %}
                     <div class="modal fade" id="edit_review_{{transaction.id}}" role="dialog">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -179,6 +181,7 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                     {% endfor %}
 
                 </tbody>
