@@ -1,10 +1,21 @@
 {% extends "supplier/dashboard.html" %}
 {% load humanize %}
+
+{% block icon %}
+<i class="fa fa-book"></i>
+{%endblock%}
+
 {% block title %}
-{{title}}
+<h1>Offers</h1>
+<small>List of all offers you have made</small>
+<ol class="breadcrumb hidden-xs">
+    <li><a href="{%url 'fuel-request'%}"><i class="pe-7s-home"></i> Home</a></li>
+    <li class="active">Offers</li>
+</ol>
 {% endblock %}
+
 {% block body %}
-<script>
+<!-- <script>
     $(document).ready(function () {
         var socket = io.connect('http://159.65.66.59:5000/new_offer');
         console.log("Got to this part ")
@@ -28,51 +39,43 @@
   </button>
   <strong><i data-notify="icon" class="material-icons">add_alert</i><span
     data-notify="title"></span> <div id='new_message' ></div><a href="#" target="_blank" data-notify="url"></a></strong> 
-</div>
+</div> -->
 
-<!-- <div data-notify="container" style="display: none;" class="col-11 col-md-4 alert alert-info alert-with-icon animated fadeInDown" role="alert"
-    data-notify-position="top-center"
-    style="display: inline-block; margin: 15px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1031; top: 20px; left: 0px; right: 0px;">
-    <button type="button" aria-hidden="true" class="close" data-notify="dismiss"
-        style="position: absolute; right: 10px; top: 50%; margin-top: -9px; z-index: 1033;"><i
-            class="material-icons">close</i></button><i data-notify="icon" class="material-icons">add_alert</i><span
-        data-notify="title"></span> <span data-notify="message">Welcome to <b>Material Dashboard Pro</b> - a beautiful
-        admin panel for every web developer.</span><a href="#" target="_blank" data-notify="url"></a></div> -->
-    <div class="jumbotron jumbotron-fluid" style="padding: 1rem 1rem;">
-        <div class="container">
-            <h1 class="display-3">Offers</h1>
-            <hr class="my-2">
-        </div>
-    </div>
+
     <div class="col-md-12">
-        <div class="card mt-5" style="background-color:white">
-            <div class="card-header card-header-primary">
-                <h4 class="card-title">Offers</h4>
-                <p class="card-category"> List Of All Offers</p>
-            </div>
-            <div class="card-body">
-                <div class="container-fluid">
-                    <table id="example" class="table table-striped table-bordered" style="width:100%">
-                        <thead style="background-color: lightslategray; color:white;">
+        <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+            <div class="panel-heading ui-sortable-handle">                
+            <div class="dropdown">
+                <ul class="dropdown-menu dropdown-menu-right">
+                   
+                  
+                </ul>
+                <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+                </div>
+                </div>
+                </div>       <div class="panel-body">
+              
+      
+      <div class="table-responsive">
+        <table id="example" class="table table-striped table-bordered" style="width:100%">
+            <thead style="background-color: lightslategray; color:white;">
                             <tr>
-                                <th style="color: white;"></th>
                                 <th style="color: white;">Date</th>
                                 <th style="color: white;">Buyer</th>
                                 <th style="color: white;">Fuel</th>
-                                <th style="color: white;">Requested(l)</th>
-                                <th style="color: white;">Offered(l)</th>
+                                <th style="color: white;">Requested</th>
+                                <th style="color: white;">Offered</th>
                                 <th style="color: white;">Price</th>
                                 <th style="color: white;">Payment</th>
-                                <th style="color: white;">Delivery</th>
+                                <th style="color: white;">Delivery</th>                                            
                                 <th style="color: white;">Address</th>
-                                <th style="color: white;">Equipments</th>
-                                <th style="color: white;"></th>
+                                <th style="color: white;">Equipment</th>
+                                <th style="color: white;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for offer in offers %}
                             <tr>
-                                <td></td>
                                 <td>{{ offer.date }}</td>
                                 <td>{{ offer.request.name.first_name|lower|capfirst }} {{ offer.request.name.last_name|lower|capfirst }}</td>
                                 <td>{{ offer.request.fuel_type|lower|capfirst }}</td>
@@ -270,6 +273,5 @@
             </div>
         </div>
     </div>
-</div>
 
 {%endblock%}

@@ -1,21 +1,41 @@
 {% extends "users/base.html" %}
 {% block body %}
 
-<div class="jumbotron jumbotron-fluid" style="margin-left: 30px;">
-        <h1 class="display-4">Subsidiaries</h1>
-      
-      </div>
+<section class="content-header">
+    <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+           <div class="input-group">
+           <input type="text" name="q" class="form-control" placeholder="Search...">
+               <span class="input-group-btn">
+                   <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+               </span>
+           </div>
+       </form>   
+   <div class="header-icon">
+       <i class="fa fa-book"></i>
+   </div>
+   <div class="header-title">
+  
+       <h1> Subsidiaries</h1>
+       <small>Fuel Finder Zimbabwe</small>
+       <ol class="breadcrumb hidden-xs">
+           <li><a href="{% url 'users:allocate' %}"><i class="pe-7s-home"></i> Home</a></li>
+           <li class="active">Subsidiaries</li>
+       </ol>
+  
+   </div>
+  
+  </section>
 
 <div class="col-md-12">
     <div class="card" style="background-color:white">
 
-        <div class="card-header card-header-primary">
+        <div class="card-header card-header-primary" style="margin-bottom: 10px;">
             <h4 class="card-title ">{{request.user.company}} Subsidiaries </h4>
         </div>
         <div class="card-body">
             <div id="container" align="center">
 
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_sub">Add Subsidiary </button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_sub" style="margin-bottom: 10px;">Add Subsidiary </button>
 
             </div>
             
@@ -87,7 +107,7 @@
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
-                                        <div class="modal-header" style="background-color: #9c27b0;color: white;">
+                                        <div class="modal-header" style="background-color: #2a3f54;color: white;">
                                             <h5 class="modal-title" id="exampleModalLabel">Delete {{station.name|title}}
                                             </h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -120,7 +140,7 @@
                              aria-labelledby="exampleModalLabel" aria-hidden="true">
                              <div class="modal-dialog" role="document">
                                  <div class="modal-content">
-                                     <div class="modal-header" style="background-color: #9c27b0;color: white;">
+                                     <div class="modal-header" style="background-color: #2a3f54;color: white;">
 
                                          <h5 class="modal-title" id="exampleModalLabel">Edit {{station.name}} <i class="fa fa-edit" style="padding-left: 3px;"></i></h5>
                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -296,7 +316,7 @@
                 <div class="modal fade" id="new_sub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
-                            <div class="modal-header" style="background-color: #9c27b0;color: white;">
+                            <div class="modal-header" style="background-color: #2a3f54;color: white;">
                                 <h5 class="modal-title" id="exampleModalLabel">Add Subsidiary </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
