@@ -151,12 +151,10 @@
      aria-hidden="true">
      <div class="modal-dialog modal-notice">
          <div class="modal-content">
-            <div class="modal-header text-center" style="background: purple; color: white;">
-                 <h5 class="modal-title" id="myModalLabel">Make an offer</h5>
-                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                     <i class="material-icons">close</i>
-                 </button>
-             </div>
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <h1 class="modal-title">Edit Offer</h1>
+        </div>
              <div class="modal-body">
                  <form method="POST" action="{% url 'supplier:edit_offer' offer.id %}">
                      {% csrf_token %}
@@ -173,7 +171,7 @@
                         <lable>Fuel Price</lable>
                         <input type="text" name="price" class="form-control" value="{{offer.price}}" />
                     </div>
-                     <label class="form-group">Select Payment Method</label>
+                     <p style="text-align: center;"><label class="form-group">Select Payment Method</label></p>
                      <div class="col-sm-12 row">
                             <div class="togglebutton form-group col">
                                 <label>
@@ -215,50 +213,46 @@
                      </div>
      
                      <div class="form-group" name='choices1' id='choices1{{forloop.counter}}'>
-                         <label>Collection Address</label>
-                         <div class="row form-group">                            
-                                 <div class="togglebutton form-group col">
-                                   <label for="">Street Number</label>
-                                   <input type="text" class="form-control" name="s_number" id="" aria-describedby="helpId" placeholder="">
-                                   
-                                 </div>
-                                 <div class="togglebutton form-group col">
-                                   <label for="">Street Name</label>
-                                   <input type="text" class="form-control" name="s_name" id="" aria-describedby="helpId" placeholder="">
-                                   
-                                 </div>
-                                 <div class="togglebutton form-group col">
-                                   <label for="">Location/Town</label>
-                                   <input type="text" class="form-control" name="s_town" id="" aria-describedby="helpId" placeholder="">
-                                  
-                                 </div>
-                             
-                         </div>
-                         <label>Available Equipments</label>
+                      <p style="text-align: center;"><label>Collection Address</label></p>
+                        <div class="col form-group">                            
+                          <div class="togglebutton form-group col">
+                            <label for="">Street Number</label>
+                            <input type="text" class="form-control" name="s_number" id="street_number" aria-describedby="helpId" placeholder="">
+                            
+                          </div>
+                          <div class="togglebutton form-group col">
+                            <label for="">Street Name</label>
+                            <input type="text" class="form-control" name="s_name" id="street_name" aria-describedby="helpId" placeholder="">
+                            
+                          </div>
+                          <div class="togglebutton form-group col">
+                            <label for="">Location/Town</label>
+                            <input type="text" class="form-control" name="s_town" id="location" aria-describedby="helpId" placeholder="">
+                           
+                          </div>
+                        </div>
+                        <p style="text-align: center;"><label>Available Equipments</label></p>
                          <div class="row">
-                             <div class="col">
-                                 <input class="form-control-md" type="checkbox" value='False' id="pump_available"
-                                     name="pump_available">
-                                 <label for="pump_available">Pump </label>
-                                 
-                             </div>
-                             <div class="col">
-                                 <input class="form-control-md" type="checkbox" value="False" id="dipping_stick_available"
-                                     name="dipping_stick_available">
-                                 <label for="dipping_stick_available">Dipping Stick </label>
-                             </div>
-     
-                             <div class="col">
-                                 <input class="form-control-md" type="checkbox" value="False" id="meter_available"
-                                     name="meter_available">
-                                 <label for="meter_available">Meter</label>
-                             </div>
-                         </div>
+                          <div class="col-sm-4">
+                              <input class="form-control-md" type="checkbox" value="False" id="pump_available" name="pump_available">
+                              <label for="pump_available">Pump </label>
+                              
+                          </div>
+                          <div class="col-sm-4">
+                              <input class="form-control-md" type="checkbox" value="False" id="dipping_stick_available" name="dipping_stick_available">
+                              <label for="dipping_stick_available">Dipping Stick </label>
+                          </div>
+              
+                          <div class="col-sm-4">
+                              <input class="form-control-md" type="checkbox" value="False" id="meter_available" name="meter_available">
+                              <label for="meter_available">Meter</label>
+                          </div>
+                      </div>
                      </div>
              </div>
      
              <div class="modal-footer justify-content-center">
-                 <button type="submit" name="MakeOffer" class="btn btn-info btn-sm">Update Offer</button>
+              <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-info btn-sm">Update Offer</button></p>
      
              </div>
              </form>
