@@ -15,33 +15,6 @@
 {% endblock %}
 
 {% block body %}
-<!-- <script>
-    $(document).ready(function () {
-        var socket = io.connect('http://159.65.66.59:5000/new_offer');
-        console.log("Got to this part ")
-        console.log(socket)
-        socket.on('new_offer', function (msg) {
-            $('.new_alert').hide()
-            var txt1 = " <h4 class='alert-heading'>New Request</h4><hr>" + msg.notification +  "<hr><small>Click to View </small></hr>";   
-            $("#new_message").empty(txt1);   
-            $("#new_message").append(txt1);  
-            $('.new_alert').show()
-
-
-        });
-    });
-</script>
-
-<div  style="display:none" class=" new_alert alert alert-success alert-dismissible fade show" role="alert">
-    
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-  <strong><i data-notify="icon" class="material-icons">add_alert</i><span
-    data-notify="title"></span> <div id='new_message' ></div><a href="#" target="_blank" data-notify="url"></a></strong> 
-</div> -->
-
-
     <div class="col-md-12">
         <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
             <div class="panel-heading ui-sortable-handle">                
@@ -158,19 +131,21 @@
              <div class="modal-body">
                  <form method="POST" action="{% url 'supplier:edit_offer' offer.id %}">
                      {% csrf_token %}
-                     <div class="form-group">
+                     <div class="col-md-12">
+                     <div class="col-md-4">
                         <lable>Fuel Type</lable>
                         <input type="text" name="fuel_type" class="form-control" value="{{offer.request.fuel_type}}" disabled/>
                     </div>
     
-                    <div class="form-group">
+                    <div class="col-md-4">
                         <lable>Fuel Quantity</lable>
                         <input type="text" name="quantity" class="form-control" value="{{offer.quantity}}" />
                     </div>
-                    <div class="form-group">
+                    <div class="col-md-4">
                         <lable>Fuel Price</lable>
                         <input type="text" name="price" class="form-control" value="{{offer.price}}" />
                     </div>
+                     </div>
                      <p style="text-align: center;"><label class="form-group">Select Payment Method</label></p>
                      <div class="col-sm-12 row">
                             <div class="togglebutton form-group col">
@@ -214,18 +189,18 @@
      
                      <div class="form-group" name='choices1' id='choices1{{forloop.counter}}'>
                       <p style="text-align: center;"><label>Collection Address</label></p>
-                        <div class="col form-group">                            
-                          <div class="togglebutton form-group col">
+                      <div class="col-md-12">                           
+                          <div class="togglebutton col-md-4">
                             <label for="">Street Number</label>
                             <input type="text" class="form-control" name="s_number" id="street_number" aria-describedby="helpId" placeholder="">
                             
                           </div>
-                          <div class="togglebutton form-group col">
+                          <div class="togglebutton col-md-4">
                             <label for="">Street Name</label>
                             <input type="text" class="form-control" name="s_name" id="street_name" aria-describedby="helpId" placeholder="">
                             
                           </div>
-                          <div class="togglebutton form-group col">
+                          <div class="togglebutton col-md-4">
                             <label for="">Location/Town</label>
                             <input type="text" class="form-control" name="s_town" id="location" aria-describedby="helpId" placeholder="">
                            
