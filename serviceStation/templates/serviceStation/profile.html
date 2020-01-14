@@ -1,116 +1,113 @@
-{% extends "serviceStation/base.html" %}
+{% extends "serviceStation/my_base.html" %}
 {% load crispy_forms_tags %} 
 
 {% block body%}
 
-<div class="jumbotron jumbotron-fluid">
-  <div class="container">
-      <h1 class="display-3">{{request.user.username|title}}'s Profile</h1>
+<section class="content-header">
+  <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+         <div class="input-group">
+         <input type="text" name="q" class="form-control" placeholder="Search...">
+             <span class="input-group-btn">
+                 <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+             </span>
+         </div>
+     </form>   
+ <div class="header-icon">
+     <i class="fa fa-address-book"></i>
+ </div>
+ <div class="header-title">
+     <h1> Service Station Portal</h1>
+     <small>{{user.company.name}}</small>
+     
+ </div>
+</section>
+
+<div class="col-md-12">
+
+
+<div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
+data-index="0">
+<div class="panel-heading ui-sortable-handle">
+    <div class="btn-group">
+        <h3 class="display-3" style="color: rgb(79, 189, 150);">Fuel Received</h3>
+
+    </div>
+    <div class="dropdown">
+        <ul class="dropdown-menu dropdown-menu-right">
+
+
+        </ul>
+        <div class="dropdown-toggle" data-toggle="dropdown"><span
+                class="panel-control-icon glyphicon glyphicon-cog"></span>
+        </div>
+    </div>
+</div>
+<div class="panel-body">
+
+  <form method="POST"action="#">
+    {% csrf_token %}
+  <div>
+    <div class="row">
+      <div class="col-md-5">
+        <div class="form-group">
+          <label class="bmd-label-floating">Company</label>
+          <input type="text" class="form-control" value="{{request.user.company.name}}" disabled > 
+          
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label class="bmd-label-floating">Username</label>
+          <input type="text" class="form-control" value="{{request.user.username}}" disabled>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="bmd-label-floating">Email address</label>
+          <input type="email" class="form-control" value="{{request.user.email}}" disabled>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="bmd-label-floating">Fist Name</label>
+          <input type="text" class="form-control" value="{{request.user.first_name}}" disabled>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="bmd-label-floating">Last Name</label>
+          <input type="text" class="form-control" value="{{request.user.last_name}}" disabled>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="bmd-label-floating">Cell Number</label>
+          <input type="text" name="phone_number" class="form-control" value="{{request.user.phone_number}}">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="bmd-label-floating">Adress</label> 
+          <input type="text" class="form-control" value="{{request.user.company.address}}" disabled >
+        </div>
+      </div>
+    </div>
+    <div class="row">
+    <div class="col-md-12 text-center">
       
-      <hr class="my-2">
-      
-  </div>
+      <a class="btn btn-info pull-center" href="{% url 'serviceStation:edit_password' %}">Change Password</a>
+      </div>
+    </div>
+  </form>
+   
+
+
+</div>
 </div>
 
-<div class="row">
-  <div class="col-md-11">
-    <div class="card">
-      <div class="card-header card-header-primary">
-        <h4 class="card-title">Edit Profile</h4>
-        <p class="card-category">Complete your profile</p>
-      </div>
-      <div class="card-body">
-        <form method="POST"action="#">
-          {% csrf_token %}
-        <div>
-          <div class="row">
-            <div class="col-md-5">
-              <div class="form-group">
-                <label class="bmd-label-floating">Company</label>
-                <input type="text" class="form-control" value="{{request.user.company.name}}" disabled > 
-                
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label class="bmd-label-floating">Username</label>
-                <input type="text" class="form-control" value="{{request.user.username}}" disabled>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="bmd-label-floating">Email address</label>
-                <input type="email" class="form-control" value="{{request.user.email}}" disabled>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="bmd-label-floating">Fist Name</label>
-                <input type="text" class="form-control" value="{{request.user.first_name}}" disabled>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="bmd-label-floating">Last Name</label>
-                <input type="text" class="form-control" value="{{request.user.last_name}}" disabled>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="bmd-label-floating">Cell Number</label>
-                <input type="text" name="phone_number" class="form-control" value="{{request.user.phone_number}}">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="form-group">
-                <label class="bmd-label-floating">Adress</label> 
-                <input type="text" class="form-control" value="{{request.user.company.address}}" disabled >
-              </div>
-            </div>
-          </div>
-          <div class="row">
-          <div class="col-md-12 text-center">
-            
-            <a class="btn btn-info pull-center" href="{% url 'serviceStation:edit_password' %}">Change Password</a>
-            </div>
-          </div>
-        </form>
-
-        <!-- <form method="post">
-          {% csrf_token %}
-          <br> <h4 class="card-title">Change your Password</h4>
-          <br>
-          
-          <div class="row">
-            <div class="col-md-9">
-              {{form|crispy}}
-            </div>
-          </div>
-          <div class="col-md-4 text-center">
-          <button type="submit" class="btn btn-primary pull-center">Update Profile</button>
-          </div>
-          <div class="clearfix"></div>
-        </form> -->
-      </div>
-    </div>
-  </div>
-  <!-- <div class="col-md-4">
-    <div class="card card-profile">
-      <div class="card-avatar">
-        <a href="#">
-          <img class="img" src="{{ user.image.url }}" /> 
-        </a>
-      </div>
-      <div class="card-body">
-        <h6 class="card-category text-gray">{{user_logged.company_position}}</h6>
-        <h4 class="card-title">{{request.user.first_name}} {{request.user.last_name}}</h4>
-        <!--<a href="#" class="btn btn-primary btn-round">Follow</a>-->
-      </div>
-    </div>
-  </div> -->
 </div>
 {% endblock %}
