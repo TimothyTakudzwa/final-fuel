@@ -66,7 +66,7 @@ def change_password(request):
         else:
             messages.warning(request, 'Wrong Old Password, Please Try Again')
             return redirect('change-password')
-    return render(request, 'supplier/accounts/change_password.html', context=context)
+    return render(request, 'supplier/change_password.html', context=context)
 
 
 @login_required()
@@ -91,7 +91,7 @@ def account(request):
         except:
             messages.warning(request, 'Phone number can only contain numbers!')
             return redirect('account')
-    return render(request, 'supplier/accounts/account.html', context=context)
+    return render(request, 'supplier/account.html', context=context)
 
 
 @login_required()
@@ -124,15 +124,7 @@ def fuel_request(request):
                 buyer_request.price = fuel.diesel_price
         else:
             buyer_request.price = 0
-    return render(request, 'supplier/accounts/fuel_request.html', {'requests':requests})
-
-
-@login_required()
-def rate_supplier(request):
-    context = {
-        'title': 'Fuel Finder | Rate Supplier',
-    }
-    return render(request, 'supplier/accounts/ratings.html', context=context)
+    return render(request, 'supplier/fuel_request.html', {'requests':requests})
 
 
 @login_required
@@ -167,7 +159,7 @@ def fuel_update(request):
             messages.warning(request, 'You can only reduce your current stocks not increase')
             return redirect('fuel_update')
 
-    return render(request, 'supplier/accounts/stock.html', {'updates': updates, 'subsidiary': subsidiary_name.name})
+    return render(request, 'supplier/stock.html', {'updates': updates, 'subsidiary': subsidiary_name.name})
 
 
 def offer(request, id):
@@ -231,7 +223,7 @@ def offer(request, id):
     else:
         messages.warning(request, "Please fill all required fields to complete an offer")
         return redirect('fuel-request')
-    return render(request, 'supplier/accounts/fuel_request.html')
+    return render(request, 'supplier/fuel_request.html')
 
 @login_required
 def edit_offer(request, id):
@@ -279,7 +271,7 @@ def edit_offer(request, id):
         else:
             messages.warning(request, 'You can not offer fuel more than the available fuel stock')
             return redirect('fuel-request')
-    return render(request, 'supplier/accounts/fuel_request.html', {'offer': offer})
+    return render(request, 'supplier/fuel_request.html', {'offer': offer})
 
 
 @login_required
@@ -287,20 +279,12 @@ def transaction(request):
     context= { 
        'transactions' : Transaction.objects.filter(supplier=request.user).all()
         }
-    return render(request, 'supplier/accounts/transactions.html',context=context)
-
-@login_required
-def complete_transaction(request, id):
-    transaction = Transaction.objects.get(id=id)
-    transaction.complete == True
-    transaction.save()
-    messages.success(request, 'Transaction completed successfully')
-    return redirect('transaction')
+    return render(request, 'supplier/transactions.html',context=context)
 
 
 def allocated_quantity(request):
     allocations = FuelAllocation.objects.filter(assigned_staff_id= request.user.subsidiary_id).all()
-    return render(request, 'supplier/accounts/allocated_quantity.html', {'allocations': allocations})
+    return render(request, 'supplier/allocated_quantity.html', {'allocations': allocations})
 
 
 def activate_whatsapp(request):
@@ -382,7 +366,7 @@ def verification(request, token, user_id):
         messages.warning(request, 'Wrong verification token, kindly follow the link send in the email')
         return redirect('login')
     
-    return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
+    return render(request, 'supplier/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
 
 def create_company(request, id):
     print(id)
@@ -415,13 +399,13 @@ def create_company(request, id):
                 address = address, logo = logo, iban_number = iban_number, license_number = license_number)
                 return render(request,'supplier/final_reg.html')
             
-    return render(request, 'supplier/accounts/create_company.html', {'form': form, 'user_type':user_type })
+    return render(request, 'supplier/create_company.html', {'form': form, 'user_type':user_type })
 
     
 def company(request):
     subsidiary = Subsidiaries.objects.filter(id = request.user.subsidiary_id).first()
     num_of_suppliers = User.objects.filter(subsidiary_id=request.user.subsidiary_id).count() 
-    return render(request, 'supplier/accounts/company.html', {'subsidiary': subsidiary, 'num_of_suppliers': num_of_suppliers})
+    return render(request, 'supplier/company.html', {'subsidiary': subsidiary, 'num_of_suppliers': num_of_suppliers})
 
 
 def my_offers(request):
@@ -433,7 +417,7 @@ def my_offers(request):
             offer_temp.no_equipments = True
         if not offer_temp.collection_address.strip():
             offer_temp.collection_address = f'N/A'
-    return render(request, 'supplier/accounts/my_offers.html', {'offers':offers})
+    return render(request, 'supplier/my_offers.html', {'offers':offers})
 
 
 def invoice(request, id):
@@ -463,9 +447,4 @@ def view_invoice(request, id):
         'total': total,
         'g_total': g_total
     }
-    return render(request, 'supplier/accounts/invoice2.html', context)
-
-
-def subsidiary_name(request):
-    subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-    return render(request, 'supplier/dashboard.html', {'subsidiary':subsidiary})
+    return render(request, 'supplier/invoice2.html', context)
