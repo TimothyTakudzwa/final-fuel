@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css"
         href="https://timothytakudzwa.github.io/static/datatable/css/buttons.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://timothytakudzwa.github.io/static/datatable/css/style.css">
-    <link rel="stylesheet" type="text/css"
+    <!--<link rel="stylesheet" type="text/css"
         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
     <link rel="icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png"
@@ -25,20 +25,58 @@
     <meta name="msapplication-TileImage"
         content="https://droitthemes.com/wp/oppi/wp-content/uploads/2019/10/favicon.png" />
 
-    <link href="{% static 'finder/assets/css/material-dashboard.css' %}" rel="stylesheet" />
+    <link href="{% static 'finder/assets/css/material-dashboard.css' %}" rel="stylesheet" />-->
+
+    <link rel="shortcut icon" href="https://timothytakudzwa.github.io/static/new/assets/dist/img/ico/favicon.png" type="image/x-icon">
+   <!-- Start Global Mandatory Style
+   =====================================================================-->
+   <!-- jquery-ui css -->
+   <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
+   <!-- Bootstrap -->
+   <link href="https://timothytakudzwa.github.io/static/new/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+   <!-- Bootstrap rtl -->
+   <!--<link href="https://timothytakudzwa.github.io/static/new/assets/bootstrap-rtl/bootstrap-rtl.min.css" rel="stylesheet" type="text/css"/>-->
+   <!-- Lobipanel css -->
+   <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/lobipanel/lobipanel.min.css" rel="stylesheet" type="text/css"/>
+   <!-- Pace css -->
+   <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/pace/flash.css" rel="stylesheet" type="text/css"/>
+   <!-- Font Awesome -->
+   <link href="https://timothytakudzwa.github.io/static/new/assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+   <!-- Pe-icon -->
+   <link href="https://timothytakudzwa.github.io/static/new/assets/pe-icon-7-stroke/css/pe-icon-7-stroke.css" rel="stylesheet" type="text/css"/>
+   <!-- Themify icons -->
+   <link href="https://timothytakudzwa.github.io/static/new/assets/themify-icons/themify-icons.css" rel="stylesheet" type="text/css"/>
+        <!-- End Global Mandatory Style
+        =====================================================================-->
+        <!-- Start page Label Plugins 
+        =====================================================================-->
+        <!-- Toastr css -->
+        <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/toastr/toastr.css" rel="stylesheet" type="text/css"/>
+        <!-- Emojionearea -->
+        <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/emojionearea/emojionearea.min.css" rel="stylesheet" type="text/css"/>
+        <!-- Monthly css -->
+        <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/monthly/monthly.css" rel="stylesheet" type="text/css"/>
+        <!-- End page Label Plugins 
+        =====================================================================-->
+        <!-- Start Theme Layout Style
+        =====================================================================-->
+        <!-- Theme style -->
+        <link href="https://timothytakudzwa.github.io/static/new/assets/dist/css/stylehealth.min.css" rel="stylesheet" type="text/css"/>
+        <!--<link href="https://timothytakudzwa.github.io/static/new/assets/dist/css/stylehealth-rtl.css" rel="stylesheet" type="text/css"/>-->
+        <!-- End Theme Layout Style
+        =====================================================================-->
 
     <title>{% if trans %}Transactions {% elif revs%} Revenue{% elif allocations %}Allocations {% elif stock %}Stock {% elif requests %}Requests {% endif%} Report</title>
 </head>
 
 <body class="">
     <div class="wrapper ">
-
-        <div class="sidebar" data-color="purple" data-background-color="black" data-image="{% static 'finder/assets/img/sidebar-1.jpg' %}">
-            <!--
+        <!--        <div class="sidebar" data-color="purple" data-background-color="black" data-image="{% static 'finder/assets/img/sidebar-1.jpg' %}">
+            
               Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
       
               Tip 2: you can also add an image using data-image tag
-          -->
+          
             <div class="logo">
                 <a href="{% url 'users:company_profile' %}" class="simple-text logo-normal">
                     <strong>{{request.user.company.name}}</strong>
@@ -110,6 +148,7 @@
                 </ul>
             </div>
         </div>
+        -->
         <div class="main-panel" style="margin-top: 0;">
             <div class="row">
 
@@ -132,6 +171,1476 @@
 
 
             </div>
+
+            <body class="hold-transition sidebar-mini">
+                <!-- Site wrapper -->
+                <div class="wrapper">
+                    <header class="main-header">
+                        <a href="index.html" class="logo"> <!-- Logo -->
+                            <span class="logo-mini">
+                                <!--<b>A</b>H-admin-->
+                               
+                            </span>
+                            <span class="logo-lg">
+                                <!--<b>Admin</b>H-admin-->
+                               <h3>Fuel Finder Zim</h3>
+                            </span>
+                        </a>
+                        <!-- Header Navbar -->
+                        <nav class="navbar navbar-static-top ">
+                            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"> <!-- Sidebar toggle button-->
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="fa fa-tasks"></span>
+                            </a>
+                            <div class="navbar-custom-menu">
+                                <ul class="nav navbar-nav">
+                              
+                                    <!-- Notifications -->
+                                    <li class="dropdown notifications-menu">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                            <i class="pe-7s-bell"></i>
+                                            <span class="label label-warning">8</span>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li class="header"><i class="fa fa-bell"></i> 8 Notifications</li>
+                                            <li>
+                                                <ul class="menu">
+                                                    <li>
+                                                    <a href="#" class="border-gray"><i class="fa fa-inbox"></i> Inbox  <span class=" label-success label label-default pull-right">9</span></a>
+                                                    </li>
+                                                    <li>
+                                                    <a href="#" class="border-gray"><i class="fa fa-cart-plus"></i> New Order <span class=" label-success label label-default pull-right">3</span> </a>
+                                                    </li>
+                                                    <li>
+                                                    <a href="#" class="border-gray"><i class="fa fa-money"></i> Payment Failed  <span class="label-success label label-default pull-right">6</span> </a>
+                                                    </li>
+                                                    <li>
+                                                    <a href="#" class="border-gray"><i class="fa fa-cart-plus"></i> Order Confirmation <span class="label-success label label-default pull-right">7</span> </a>
+                                                    </li>
+                                                    <li>
+                                                    <a href="#" class="border-gray"><i class="fa fa-cart-plus"></i> Update system status <span class=" label-success label label-default pull-right">11</span> </a>
+                                                    </li>
+                                                    <li>
+                                                    <a href="#" class="border-gray"><i class="fa fa-cart-plus"></i> client update <span class="label-success label label-default pull-right">12</span> </a>
+                                                    </li>
+                                                    <li>
+                                                    <a href="#" class="border-gray"><i class="fa fa-cart-plus"></i> shipment cancel 
+                                                    <span class="label-success label label-default pull-right">2</span> </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                           <li class="footer">
+                                           <a href="#"> See all Notifications <i class=" fa fa-arrow-right"></i></a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                   
+                                    <li class="dropdown dropdown-user admin-user">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> 
+                                        <div class="user-image">
+                                        <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar4.png" class="img-circle" height="40" width="40" alt="User Image">
+                                        </div>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="profile.html"><i class="fa fa-users"></i> User Profile</a></li>
+                                            <li><a href="#"><i class="fa fa-gear"></i> Settings</a></li>
+                                            <li><a href="login.html"><i class="fa fa-sign-out"></i> Logout</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </header>
+                    <!-- =============================================== -->
+                    <!-- Left side column. contains the sidebar -->
+                  <aside class="main-sidebar">
+                        <!-- sidebar -->
+                        <div class="sidebar">
+                            <!-- Sidebar user panel -->
+                            <div class="user-panel">
+                                <div class="image pull-left">
+                                    <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar5.png" class="img-circle" alt="User Image">
+                                </div>
+                                <div class="info">
+                                    <p>{{request.user}}</p> 
+                                </div>
+                            </div>
+                           
+                            <!-- sidebar menu -->
+                            <ul class="sidebar-menu">
+                                <li>
+                                    <a href="index.html"><i class="fa fa-hospital-o"></i><span>Fuel Allocations</span>
+                                    </a>
+                                </li>
+        
+                                <li>
+                                    <a href="index.html"><i class="fa fa-hospital-o"></i><span>Service Stations</span>
+                                    </a>
+                                </li>
+                                <li>    
+                                    <a href="index.html"><i class="fa fa-hospital-o"></i><span>Depot Staff</span>
+                                    </a>
+                                </li>
+                                <li>    
+                                    <a href="index.html"><i class="fa fa-hospital-o"></i><span>Subsidiaries</span>
+                                    </a>
+                                </li>
+                                <li>    
+                                    <a href="index.html"><i class="fa fa-hospital-o"></i><span>Report Generator</span>
+                                    </a>
+                                </li>
+                                <li>    
+                                    <a href="index.html"><i class="fa fa-hospital-o"></i><span>Stafff Applicarions</span>
+                                    </a>
+                                </li>    
+                               
+            
+                                   
+                    </ul>
+                </div> <!-- /.sidebar -->
+            </aside>
+                    <!-- =============================================== -->
+                    <!-- Content Wrapper. Contains page content -->
+                    <div class="content-wrapper">
+                        <!-- Content Header (Page header) -->
+                        <section class="content-header">
+                             <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+                                    <div class="input-group">
+                                    <input type="text" name="q" class="form-control" placeholder="Search...">
+                                        <span class="input-group-btn">
+                                            <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+                                        </span>
+                                    </div>
+                                </form>   
+                            <div class="header-icon">
+                                <i class="fa fa-tachometer"></i>
+                            </div>
+                            <div class="header-title">
+                                <h1> Dashboard</h1>
+                                <small> Dashboard features</small>
+                                <ol class="breadcrumb hidden-xs">
+                                    <li><a href="index.html"><i class="pe-7s-home"></i> Home</a></li>
+                                    <li class="active">Dashboard</li>
+                                </ol>
+                            </div>
+        
+        
+                        </section>
+                        <section class="content">
+                            <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#report_modal"
+                                    role="button" style="color: white;">Generate Report</button>
+                            <div class="jumbotron jumbotron-fluid" >
+                            <!--
+                            <div class="container" style="text-align: left;margin-left: 0;">
+                                <h3 class="display-3">Report Generator</h3>
+                                <hr class="my-2">
+        
+                            </div>
+                            -->
+                            <!-- 
+                            <p class="lead" style="padding-left: 15px;padding-top: 30px;">
+                                <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#report_modal"
+                                    role="button" style="color: white;">Generate Report</button>
+                                
+                                   
+                                <button class="btn btn-info btn-lg" data-toggle="modal" data-target="#trans_info_modal"
+                                    role="button" style="color: white;">View Quick Info</button> --
+        
+                            </p>
+                            -->
+        
+        
+                            <div class="modal fade" id="report_modal" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background:#402d57e0">
+                                        <h4 class="modal-title" style="color:whitesmoke"> Generate Report</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <div class="modal-body" style="background:#eeee">
+        
+                                        <form method="POST" action="/users/report_generator/">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <select name="report_type" class="browser-default custom-select" id="report_options">
+                                                    <option selected>Transactions</option>
+                                                    <option value="Requests">Requests</option>
+                                                    <option value="Stock">Stock</option>
+                                                    <option value="Allocations">Allocations</option>
+                                                </select>
+                                            </div>
+                                            <div class="report_dates">
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Starting Date</label>
+                                                    <input name="start_date" type="date" class="form-control"
+                                                        id="exampleInputEmail1" aria-describedby="emailHelp"
+                                                        placeholder="Enter email">
+                                                    <small id="emailHelp" class="form-text text-muted">Please Pick A Starting
+                                                        Date.</small>
+                                                </div>
+        
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Ending Date</label>
+                                                    <input name="end_date" type="date" class="form-control" id="exampleInputEmail1"
+                                                        aria-describedby="emailHelp" placeholder="Enter email">
+                                                    <small id="emailHelp" class="form-text text-muted"
+                                                        style="color: lightslategray;">Please Pick A Ending Date.</small>
+                                                </div>
+                                            </div>    
+        
+                                            <input class="btn btn-info" type="submit" value="Submit">
+                                        </form>
+        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    <!-- /.row -->
+                        </section>
+                        <main role="main" class="content" style="margin-top: 0;padding: 0;">
+                            <!-- <div class="jumbotron jumbotron-fluid" style="background: linear-gradient(to right, #fdbb2d, #b21f1f, #1a2a6c);color: white;margin-bottom: 100px;"> -->
+                        <div class="jumbotron jumbotron-fluid" >
+                            <div class="container" style="text-align: left;margin-left: 0;">
+                                <h3 class="display-3">Report Generator</h3>
+                                <hr class="my-2">
+        
+                            </div>
+                            <p class="lead" style="padding-left: 15px;padding-top: 30px;">
+                                <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#report_modal"
+                                    role="button" style="color: white;">Generate Report</button>
+                                
+                                <!--    
+                                <button class="btn btn-info btn-lg" data-toggle="modal" data-target="#trans_info_modal"
+                                    role="button" style="color: white;">View Quick Info</button> -->
+        
+                            </p>
+                        </div>
+                        <div class="modal fade" id="report_modal" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background:#402d57e0">
+                                        <h4 class="modal-title" style="color:whitesmoke"> Generate Report</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <div class="modal-body" style="background:#eeee">
+        
+                                        <form method="POST" action="/users/report_generator/">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <select name="report_type" class="browser-default custom-select" id="report_options">
+                                                    <option selected>Transactions</option>
+                                                    <option value="Requests">Requests</option>
+                                                    <option value="Stock">Stock</option>
+                                                    <option value="Allocations">Allocations</option>
+                                                </select>
+                                            </div>
+                                            <div class="report_dates">
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Starting Date</label>
+                                                    <input name="start_date" type="date" class="form-control"
+                                                        id="exampleInputEmail1" aria-describedby="emailHelp"
+                                                        placeholder="Enter email">
+                                                    <small id="emailHelp" class="form-text text-muted">Please Pick A Starting
+                                                        Date.</small>
+                                                </div>
+        
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Ending Date</label>
+                                                    <input name="end_date" type="date" class="form-control" id="exampleInputEmail1"
+                                                        aria-describedby="emailHelp" placeholder="Enter email">
+                                                    <small id="emailHelp" class="form-text text-muted"
+                                                        style="color: lightslategray;">Please Pick A Ending Date.</small>
+                                                </div>
+                                            </div>    
+        
+                                            <input class="btn btn-info" type="submit" value="Submit">
+                                        </form>
+        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% if trans or revs or stock or allocations or requests %}
+                        <div style="/* padding: 25px; */background-color:rgb(14, 80, 100);border: #fafbfb 2px solid;border-radius: 10px;padding-left: 15px;padding-top: 30px;padding-bottom: 30px;margin-left: 15px;margin-top: -89px;">
+                            <h1 style="color: #fafafa;font-size: medium;">Showing results from <b>{{start}}</b> to <b>{{end}} </b> </h1>
+                        </div>
+                        {% else %}
+                        <div style="/* padding: 25px; */background-color:rgb(14, 80, 100);border: #fafbfb 2px solid;border-radius: 10px;padding-left: 15px;padding-top: 30px;padding-bottom: 30px;margin-left: 15px;margin-top: -89px;">
+                            <h1 style="color: #fafafa;font-size: medium;">No Data, Generate New Report Above </h1>
+                        </div>
+                        {%endif%}  
+                    
+                        {%if trans%}
+                        <div class="col-md-12">
+                            <div class="card" style="background-color:white">
+        
+                                <div class="card-header card-header-primary">
+                                    <h4 class="card-title ">Transactions Report</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="container-fluid">
+                                        <div class="row" style="margin-bottom: 20px;">
+        
+        
+                                        </div>
+                                        <table id="maintable" class="table table-striped table-bordered" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Buying Company</th>
+                                                    <th>Fuel Type</th>
+                                                    <th>Quantity (Litres) </th>
+                                                    <th>Price</th>
+                                                    <th>Contact Person</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for tran in trans %}
+                                                <tr>
+                                                    <td>{{tran.date}} <small style="margin-left: 10px;">{{tran.time}}</small>
+                                                    </td>
+                                                    <td>{{tran.buyer.company.name}}</td>
+                                                    <td>{{tran.offer.request.fuel_type|title}}</td>
+                                                    <td>{{tran.offer.quantity}}</td>
+                                                    <td>$ {{tran.offer.price|stringformat:".2f"}}</td>
+                                                    <td>{{tran.buyer.first_name}} {{tran.buyer.last_name }}</td>
+                                                    <td>
+                                                        {% if tran.is_complete %}
+                                                        <i class="material-icons" style="color: #2ecc71;">check_circle</i>
+                                                        {% else %}
+                                                        <i class="material-icons" style="color: #e74c3c;">report</i>
+                                                        {% endif %}
+                                                    </td>
+        
+                                                </tr>
+        
+                                                {% endfor %}
+                                            </tbody>
+                                            <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Buying Company</th>
+                                                    <th>Fuel Type</th>
+                                                    <th>Quantity</th>
+                                                    <th>Price</th>
+                                                    <th>Contact Person</th>
+        
+                                                    <th>Status</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                        <!-- <table id="example" class="table table-striped table-bordered" style="width:100%">
+                                            <thead style="color:white; background:lightslategray">
+                                                <th style="color:white;">
+                                                    Date
+                                                </th>
+                                                <th style="color:white;">
+                                                    Time
+                                                </th>
+                                                <th style="color:white;">
+                                                    Buyer
+                                                </th>
+                                                <th style="color:white;">
+                                                    Status
+                                                </th>
+        
+        
+                                            <tbody>
+                                                {% for tran in trans %}
+                                                <tr>
+                                                    <td>{{tran.date}}</td>
+                                                    <td>{{tran.time}}</td>
+                                                    <td>{{tran.buyer}}</td>
+                                                    <td>
+                                                        {% if tran.complete %}
+                                                        <i class="material-icons" style="color: #2ecc71;">check_circle</i>
+                                                        {% else %}
+                                                        <i class="material-icons" style="color: #e74c3c;">report</i>
+                                                        {% endif %}
+                                                    </td>
+        
+                                                </tr>
+        
+                                                {% endfor %}
+        
+        
+                                            </tbody>
+                                        </table> -->
+        
+                                    </div>
+                                </div>
+                            </div>
+        
+                        </div>
+                        {%endif%}
+                        {% if stock %}
+                        <div class="col-md-12">
+                            <div class="card" style="background-color:white">
+                                <div class="card-header card-header-primary">
+                                    <h4 class="card-title ">Stock Report</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="container-fluid"> 
+                                      
+                                        <table id="stock" class="table table-striped table-bordered" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Last Update</th>
+                                                        <th>Station Type</th>
+                                                        <th>Station Name</th>
+                                                        <th>Petrol (Litres)</th>
+                                                        <th>Petrol Price</th>
+                                                        <th>Diesel (Litres)</th>
+                                                        <th>Diesel Price</th>
+                                                        
+                                                      
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {%for my_stock in stock %}
+                                                    <tr>
+                                                        
+                                                            <td>{{my_stock.last_updated}}</td>
+                                                            <td>{{my_stock.sub_type}}</td>
+                                                            <td>{{my_stock.subsidiary_name}}</td>
+                                                            <td>{{my_stock.petrol_quantity}} l</td>
+                                                            <td>{{my_stock.petrol_price}}</td>
+                                                            <td>{{my_stock.diesel_quantity}} l</td>
+                                                            <td>$ {{my_stock.diesel_price}}</td>
+                                                            
+                                                    </tr>
+                                                    {%endfor%}
+                                                  
+                            
+                                                </tbody>
+                                                <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
+                                                    <tr>
+                                                            <th>Last Update</th>
+                                                            <th>Station Type</th>
+                                                            <th>Station Name</th>
+                                                            <th>Diesel Quantity</th>
+                                                            <th>Petrol Price</th>
+                                                            <th>Diesel Quantity</th>
+                                                            <th>Diesel Price</th>
+                                                         
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                    </div>
+                                </div>
+                            </div>
+        
+                        </div>
+                        {% endif %}
+                        {% if requests %}
+                        <div class="col-md-12">
+                            <div class="card" style="background-color:white">
+                                
+                                <div class="card-header card-header-primary">
+                                <h4 class="card-title ">Requests Report</h4>
+                                </div>
+                            <div class="card-body">
+                                <div class="container-fluid">
+                                                          
+        
+                                    <table id="requests" class="table table-striped table-bordered" style="width:100%">
+                                        <thead style="color:white; background:lightslategray">
+                                            <th style="color:white;">
+                                            Date
+                                            </th>
+                                            <th style="color:white;">
+                                            Time
+                                            </th>
+                                            
+                                            <th style="color:white;">
+                                            Name
+                                            </th>
+                                            <th style="color:white;">
+                                            Amount (Litres)
+                                            </th>
+                                            <th style="color:white;">
+                                            Fuel Type
+                                            </th>
+                                            <th style="color:white;">
+                                            Payment Method
+                                            </th>
+                                            
+                                                
+                                        <tbody>
+                                            {% for req in requests %}
+                                            <tr>
+                                                    <td>{{req.date}}</td>
+                                                    <td>{{req.time}}</td>
+                                                    <td>{{req.name|title}}</td>
+                                                    <td>$ {{req.amount|stringformat:".2f"}}</td>
+                                                    <td>{{req.fuel_type|title}}</td>
+                                                    <td>
+                                                        {%if req.cash%}<i class="fa fa-dollar"></i>{%endif%} {% if req.cash %}<img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL"> {%endif%} {%if req.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {%endif%} {%if req.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH"> {%endif%} {%if req.swipe%}<i class="fa fa-cc-visa"></i> {% endif%} {%if not req.cash and not req.ecocash and not req.swipe and not req.usd%}No Payment Method {%endif%}
+                                                    </td>
+                                                
+                                                    
+                                                </tr>
+                                        
+                                            {% endfor %}   
+                                        
+        
+                                        </tbody>
+                                        </table>
+        
+                                </div>
+                            </div>
+                            </div>
+                            
+                        </div>
+                        {% endif %}
+                        {% if allocations %}
+                        <div class="col-md-12">
+                                <div class="card" style="background-color:white">
+                                    
+                                    <div class="card-header card-header-primary">
+                                    <h4 class="card-title ">Allocations Report</h4>
+                                    </div>
+                                <div class="card-body">
+                                    <div class="container-fluid">
+                                                              
+            
+                                        <table id="allocations" class="table table-striped table-bordered" style="width:100%">
+                                            <thead style="color:white; background:lightslategray">
+                                                <th style="color:white;">
+                                                Date
+                                                </th>
+                                                <th style="color:white;">
+                                                Diesel Quantity (Litres)
+                                                </th>
+                                                <th style="color:white;">
+                                                Petrol Quantity (Litres)
+                                                </th>
+                                                <th style="color:white;">
+                                                Sub Type
+                                                </th>
+                                                <th style="color:white;">
+                                                Petrol Price
+                                                </th>
+                                                <th style="color:white;">
+                                                Diesel Price
+                                                </th>
+                                                
+                                                    
+                                            <tbody>
+                                                {% for allocation in allocations %}
+                                                <tr>
+                                                        <td>{{allocation.date}}</td>
+                                                        <td>{{allocation.petrol_quantity}} l</td>
+                                                        <td>{{allocation.diesel_quantity}} l</td>
+                                                        <td>{{allocation.sub_type}}</td>
+                                                        <td>$ {{allocation.petrol_price}}</td>
+                                                        <td>$ {{allocation.diesel_price}}</td>
+                                                    
+                                                        
+                                                    </tr>
+                                            
+                                                {% endfor %}   
+                                            
+            
+                                            </tbody>
+                                            </table>
+            
+                                    </div>
+                                </div>
+                                </div>
+                                
+                            </div>
+                        {% endif %}
+        
+                        {% if revs %}
+                        <div class="col-md-12">
+                            <div class="card" style="background-color:white">
+                                
+                                <div class="card-header card-header-primary">
+                                <h4 class="card-title ">Revenue Report</h4>
+                                </div>
+                            <div class="card-body">
+                                <div class="container-fluid">
+                                                          
+        
+                                    <table id="revenue" class="table table-striped table-bordered" style="width:100%">
+                                        <thead style="color:white; background:lightslategray">
+                                            <th style="color:white;">
+                                            Date
+                                            </th>
+                                            <th style="color:white;">
+                                            Revenue
+                                            </th>
+                                            <th style="color:white;">
+                                            Transactions No.
+                                            </th>
+                                            
+                                            
+                                                
+                                        <tbody>
+                                            
+                                            <tr>
+                                                <td>{{revs.date}}</td>
+                                                <td>{{revs.revenue}}</td>
+                                                <td>{{revs.hits}}</td>                              
+                                            </tr>
+                                        
+                                        
+        
+                                        </tbody>
+                                        </table>
+        
+                                </div>
+                            </div>
+                            </div>
+                            
+                        </div>
+                        {% endif %}
+        
+        
+                        <!-- <table id="allocations" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>City</th>
+                                    <th>Age</th>
+                                    <th>Start Date</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Tiger Nixon</td>
+                                    <td>System Architecture</td>
+                                    <td>Edinburgh</td>
+                                    <td>61</td>
+                                    <td>2011/04/25</td>
+                                    <td>$320,800</td>
+                                </tr>
+        
+                                <tr>
+                                    <td> Harold Franklin</td>
+                                    <td> Financial Advisor</td>
+                                    <td> Tuwiri Wetan</td>
+                                    <td> 43</td>
+                                    <td> 06/18/2011</td>
+                                    <td> $159671.33</td>
+                                </tr>
+        
+                            </tbody>
+                            <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>City</th>
+                                    <th>Age</th>
+                                    <th>Start Date</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </tfoot>
+                        </table> -->
+                        <!-- 
+                        <table id="revenue" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>City</th>
+                                    <th>Age</th>
+                                    <th>Start Date</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Tiger Nixon</td>
+                                    <td>System Architecture</td>
+                                    <td>Edinburgh</td>
+                                    <td>61</td>
+                                    <td>2011/04/25</td>
+                                    <td>$320,800</td>
+                                </tr>
+        
+                                <tr>
+                                    <td> Harold Franklin</td>
+                                    <td> Financial Advisor</td>
+                                    <td> Tuwiri Wetan</td>
+                                    <td> 43</td>
+                                    <td> 06/18/2011</td>
+                                    <td> $159671.33</td>
+                                </tr>
+        
+                            </tbody>
+                            <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>City</th>
+                                    <th>Age</th>
+                                    <th>Start Date</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <table id="offers" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>City</th>
+                                    <th>Age</th>
+                                    <th>Start Date</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Tiger Nixon</td>
+                                    <td>System Architecture</td>
+                                    <td>Edinburgh</td>
+                                    <td>61</td>
+                                    <td>2011/04/25</td>
+                                    <td>$320,800</td>
+                                </tr>
+        
+                                <tr>
+                                    <td> Harold Franklin</td>
+                                    <td> Financial Advisor</td>
+                                    <td> Tuwiri Wetan</td>
+                                    <td> 43</td>
+                                    <td> 06/18/2011</td>
+                                    <td> $159671.33</td>
+                                </tr>
+        
+                            </tbody>
+                            <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>City</th>
+                                    <th>Age</th>
+                                    <th>Start Date</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <table id="staff" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>City</th>
+                                    <th>Age</th>
+                                    <th>Start Date</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Tiger Nixon</td>
+                                    <td>System Architecture</td>
+                                    <td>Edinburgh</td>
+                                    <td>61</td>
+                                    <td>2011/04/25</td>
+                                    <td>$320,800</td>
+                                </tr>
+        
+                                <tr>
+                                    <td> Harold Franklin</td>
+                                    <td> Financial Advisor</td>
+                                    <td> Tuwiri Wetan</td>
+                                    <td> 43</td>
+                                    <td> 06/18/2011</td>
+                                    <td> $159671.33</td>
+                                </tr>
+        
+                            </tbody>
+                            <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>City</th>
+                                    <th>Age</th>
+                                    <th>Start Date</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        -->
+                    </main>
+
+                    <!-- Main content -->
+        
+            
+                    </div> <!-- /.content-wrapper -->
+                    <footer class="main-footer">
+                        <div class="pull-right hidden-xs"> <b>Version</b> 1.0</div>
+                        <strong>Copyright &copy; 2019 <a href="#">Intelli Africa Solutions</a>.</strong> All rights reserved.
+                    </footer>
+                </div> <!-- ./wrapper -->
+                <!-- ./wrapper -->
+                 <!-- Start Core Plugins
+                =====================================================================-->
+                <!-- jQuery -->
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/jQuery/jquery-1.12.4.min.js" type="text/javascript"></script>
+                <!-- jquery-ui --> 
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+                <!-- Bootstrap -->
+                <script src="https://timothytakudzwa.github.io/static/new/assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+                <!-- lobipanel -->
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/lobipanel/lobipanel.min.js" type="text/javascript"></script>
+                <!-- Pace js -->
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/pace/pace.min.js" type="text/javascript"></script>
+                <!-- SlimScroll -->
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+                <!-- FastClick -->
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/fastclick/fastclick.min.js" type="text/javascript"></script>
+                <!-- Hadmin frame -->
+                <script src="https://timothytakudzwa.github.io/static/new/assets/dist/js/custom1.js" type="text/javascript"></script>
+                <!-- End Core Plugins
+                =====================================================================-->
+                <!-- Start Page Lavel Plugins
+                =====================================================================-->
+                <!-- Toastr js -->
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/toastr/toastr.min.js" type="text/javascript"></script>
+                <!-- Sparkline js -->
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/sparkline/sparkline.min.js" type="text/javascript"></script>
+                <!-- Data maps js -->
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/d3.min.js" type="text/javascript"></script>
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/topojson.min.js" type="text/javascript"></script>
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/datamaps.all.min.js" type="text/javascript"></script>
+                <!-- Counter js -->
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/counterup/waypoints.js" type="text/javascript"></script>
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/counterup/jquery.counterup.min.js" type="text/javascript"></script>
+                <!-- ChartJs JavaScript -->
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/chartJs/Chart.min.js" type="text/javascript"></script>
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/emojionearea/emojionearea.min.js" type="text/javascript"></script>
+                <!-- Monthly js -->
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/monthly/monthly.js" type="text/javascript"></script>
+                <!-- Data maps -->
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/d3.min.js" type="text/javascript"></script>
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/topojson.min.js" type="text/javascript"></script>
+                <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/datamaps.all.min.js" type="text/javascript"></script>
+              
+                <!-- End Page Lavel Plugins
+                =====================================================================-->
+                <!-- Start Theme label Script
+                =====================================================================-->
+                <!-- Dashboard js -->
+                <script src="https://timothytakudzwa.github.io/static/new/assets/dist/js/custom.js" type="text/javascript"></script>
+        
+                <!-- End Theme label Script
+                =====================================================================-->
+                 <script>
+                        "use strict"; // Start of use strict
+                        // notification
+                      
+        
+                        //counter
+                        $('.count-number').counterUp({
+                            delay: 10,
+                            time: 5000
+                        });
+        
+                        //data maps
+                        var basic_choropleth = new Datamap({
+                            element: document.getElementById("map1"),
+                            projection: 'mercator',
+                            fills: {
+                                defaultFill: "#009688",
+                                authorHasTraveledTo: "#fa0fa0"
+                            },
+                            data: {
+                                USA: {fillKey: "authorHasTraveledTo"},
+                                JPN: {fillKey: "authorHasTraveledTo"},
+                                ITA: {fillKey: "authorHasTraveledTo"},
+                                CRI: {fillKey: "authorHasTraveledTo"},
+                                KOR: {fillKey: "authorHasTraveledTo"},
+                                DEU: {fillKey: "authorHasTraveledTo"}
+                            }
+                        });
+        
+                        var colors = d3.scale.category10();
+        
+                        window.setInterval(function () {
+                            basic_choropleth.updateChoropleth({
+                                USA: colors(Math.random() * 10),
+                                RUS: colors(Math.random() * 100),
+                                AUS: {fillKey: 'authorHasTraveledTo'},
+                                BRA: colors(Math.random() * 50),
+                                CAN: colors(Math.random() * 50),
+                                ZAF: colors(Math.random() * 50),
+                                IND: colors(Math.random() * 50)
+                            });
+                        }, 2000);
+        
+                //bar chart
+                        var ctx = document.getElementById("barChart");
+                        var myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                                datasets: [
+                                    {
+                                        label: "My First dataset",
+                                        data: [65, 59, 80, 81, 56, 55, 40, 25, 35, 51, 94, 16],
+                                        borderColor: "#009688",
+                                        borderWidth: "0",
+                                        backgroundColor: "#009688"
+                                    },
+                                    {
+                                        label: "My Second dataset",
+                                        data: [28, 48, 40, 19, 86, 27, 90, 91, 41, 25, 34, 47],
+                                        borderColor: "#009688",
+                                        borderWidth: "0",
+                                        backgroundColor: "#009688"
+                                    }
+                                ]
+                            },
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                }
+                            }
+                        });
+                              //radar chart
+                        var ctx = document.getElementById("radarChart");
+                        var myChart = new Chart(ctx, {
+                            type: 'radar',
+                            data: {
+                                labels: [["Eating", "Dinner"], ["Drinking", "Water"], "Sleeping", ["Designing", "Graphics"], "Coding", "Cycling", "Running"],
+                                datasets: [
+                                    {
+                                        label: "My First dataset",
+                                        data: [65, 59, 66, 45, 56, 55, 40],
+                                        borderColor: "#00968866",
+                                        borderWidth: "1",
+                                        backgroundColor: "rgba(0, 150, 136, 0.35)"
+                                    },
+                                    {
+                                        label: "My Second dataset",
+                                        data: [28, 12, 40, 19, 63, 27, 87],
+                                        borderColor: "rgba(55, 160, 0, 0.7",
+                                        borderWidth: "1",
+                                        backgroundColor: "rgba(0, 150, 136, 0.35)"
+                                    }
+                                ]
+                            },
+                            options: {
+                                legend: {
+                                    position: 'top'
+                                },
+                                scale: {
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+        
+                        // Message
+                        $('.message_inner').slimScroll({
+                            size: '3px',
+                            height: '320px'
+                        });
+        
+                        //emojionearea
+                        $(".emojionearea").emojioneArea({
+                            pickerPosition: "top",
+                            tonesStyle: "radio"
+                        });
+        
+                        //monthly calender
+                        $('#m_calendar').monthly({
+                            mode: 'event',
+                            //jsonUrl: 'events.json',
+                            //dataType: 'json'
+                            xmlUrl: 'events.xml'
+                        });
+                    
+                    
+                     //line chart
+                        var ctx = document.getElementById("lineChart");
+                        var myChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                                datasets: [
+                                    {
+                                        label: "My First dataset",
+                                        borderColor: "rgba(0,0,0,.09)",
+                                        borderWidth: "1",
+                                        backgroundColor: "rgba(0,0,0,.07)",
+                                        data: [22, 44, 67, 43, 76, 45, 12, 45, 65, 55, 42, 61, 73]
+                                    },
+                                    {
+                                        label: "My Second dataset",
+                                        borderColor: "#009688",
+                                        borderWidth: "1",
+                                        backgroundColor: "#009688",
+                                        pointHighlightStroke: "#009688",
+                                        data: [16, 32, 18, 26, 42, 33, 44, 24, 19, 16, 67, 71, 65]
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                tooltips: {
+                                    mode: 'index',
+                                    intersect: false
+                                },
+                                hover: {
+                                    mode: 'nearest',
+                                    intersect: true
+                                }
+        
+                            }
+                        });
+        
+        
+                </script>
+                <script type="text/javascript"
+                src="https://timothytakudzwa.github.io/static/datatable/js/jquery-2.2.4.min.js"></script>
+            <script type="text/javascript"
+                src="https://timothytakudzwa.github.io/static/datatable/js/jquery.dataTables.min.js"></script>
+            <script type="text/javascript"
+                src="https://timothytakudzwa.github.io/static/datatable/js/dataTables.buttons.min.js"></script>
+            <script src="{% static 'finder/assets/js/core/bootstrap-material-design.min.js' %}"></script>
+            <script src="{% static 'finder/assets/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
+            <!-- Plugin for the momentJs  -->
+            <script type="text/javascript" src="https://timothytakudzwa.github.io/static/datatable/js/jszip.min.js"></script>
+            <script type="text/javascript" src="https://timothytakudzwa.github.io/static/datatable/js/pdfmake.min.js"></script>
+            <script type="text/javascript" src="https://timothytakudzwa.github.io/static/datatable/js/vfs_fonts.js"></script>
+            <script type="text/javascript"
+                src="https://timothytakudzwa.github.io/static/datatable/js/buttons.html5.min.js"></script>
+            <script type="text/javascript"
+                src="https://timothytakudzwa.github.io/static/datatable/js/buttons.print.min.js"></script>
+            <script type="text/javascript" src="https://timothytakudzwa.github.io/static/datatable/js/app.js"></script>
+            <script type="text/javascript"
+                src="https://timothytakudzwa.github.io/static/datatable/js/jquery.mark.min.js"></script>
+            <script type="text/javascript"
+                src="https://timothytakudzwa.github.io/static/datatable/js/datatables.mark.js"></script>
+            <script type="text/javascript"
+                src="https://timothytakudzwa.github.io/static/datatable/js/buttons.colVis.min.js"></script>
+            <script>
+                var table = $('#allocations').DataTable({
+                    mark: true,
+                    dom: 'Bfrtip',
+                    lengthMenu: [
+                        [10, 25, 50, 100, -1],
+                        ['10 rows', '25 rows', '50 rows', '100 rows', 'Show All']
+                    ],
+                    buttons: [
+                        'pageLength',
+                        {
+                            extend: 'copyHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'csvHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            download: 'open',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        'colvis'
+                    ],
+                    columDefs: [{
+                        targets: -1,
+                        visible: false
+                    }]
+                });
+        
+                // 4) Search on Multiple Columns
+                $('#allocations tfoot th').each(function () {
+                    var title = $('#allocations tfoot th').eq($(this).index()).text();
+                    $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+                });
+        
+                table.columns().eq(0).each(function (colIdx) {
+                    $('input', table.column(colIdx).footer()).on('keyup change', function () {
+                        table
+                            .column(colIdx)
+                            .search(this.value)
+                            .draw();
+                    });
+                });
+        
+        
+            </script>
+            <script>
+                var table2 = $('#requests').DataTable({
+                    mark: true,
+                    dom: 'Bfrtip',
+                    lengthMenu: [
+                        [10, 25, 50, 100, -1],
+                        ['10 rows', '25 rows', '50 rows', '100 rows', 'Show All']
+                    ],
+                    buttons: [
+                        'pageLength',
+                        {
+                            extend: 'copyHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'csvHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            download: 'open',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        'colvis'
+                    ],
+                    columDefs: [{
+                        targets: -1,
+                        visible: false
+                    }]
+                });
+        
+                // 4) Search on Multiple Columns
+                $('#requests tfoot th').each(function () {
+                    var title = $('#requests tfoot th').eq($(this).index()).text();
+                    $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+                });
+        
+                table2.columns().eq(0).each(function (colIdx) {
+                    $('input', table2.column(colIdx).footer()).on('keyup change', function () {
+                        table2
+                            .column(colIdx)
+                            .search(this.value)
+                            .draw();
+                    });
+                });
+        
+        
+            </script>
+        
+            <script>
+                var table3 = $('#offers').DataTable({
+                    mark: true,
+                    dom: 'Bfrtip',
+                    lengthMenu: [
+                        [10, 25, 50, 100, -1],
+                        ['10 rows', '25 rows', '50 rows', '100 rows', 'Show All']
+                    ],
+                    buttons: [
+                        'pageLength',
+                        {
+                            extend: 'copyHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'csvHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            download: 'open',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        'colvis'
+                    ],
+                    columDefs: [{
+                        targets: -1,
+                        visible: false
+                    }]
+                });
+        
+                // 4) Search on Multiple Columns
+                $('#offers tfoot th').each(function () {
+                    var title = $('#offers tfoot th').eq($(this).index()).text();
+                    $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+                });
+        
+                table3.columns().eq(0).each(function (colIdx) {
+                    $('input', table3.column(colIdx).footer()).on('keyup change', function () {
+                        table3
+                            .column(colIdx)
+                            .search(this.value)
+                            .draw();
+                    });
+                });
+        
+        
+            </script>
+            <script>
+                var table4 = $('#revenue').DataTable({
+                    mark: true,
+                    dom: 'Bfrtip',
+                    lengthMenu: [
+                        [10, 25, 50, 100, -1],
+                        ['10 rows', '25 rows', '50 rows', '100 rows', 'Show All']
+                    ],
+                    buttons: [
+                        'pageLength',
+                        {
+                            extend: 'copyHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'csvHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            download: 'open',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        'colvis'
+                    ],
+                    columDefs: [{
+                        targets: -1,
+                        visible: false
+                    }]
+                });
+        
+                // 4) Search on Multiple Columns
+                $('#revenue tfoot th').each(function () {
+                    var title = $('#revenue tfoot th').eq($(this).index()).text();
+                    $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+                });
+        
+                table4.columns().eq(0).each(function (colIdx) {
+                    $('input', table4.column(colIdx).footer()).on('keyup change', function () {
+                        table4
+                            .column(colIdx)
+                            .search(this.value)
+                            .draw();
+                    });
+                });
+        
+        
+            </script>
+            <script>
+                var table5 = $('#stock').DataTable({
+                    mark: true,
+                    dom: 'Bfrtip',
+                    lengthMenu: [
+                        [10, 25, 50, 100, -1],
+                        ['10 rows', '25 rows', '50 rows', '100 rows', 'Show All']
+                    ],
+                    buttons: [
+                        'pageLength',
+                        {
+                            extend: 'copyHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'csvHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            download: 'open',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        'colvis'
+                    ],
+                    columDefs: [{
+                        targets: -1,
+                        visible: false
+                    }]
+                });
+        
+                // 4) Search on Multiple Columns
+                $('#stock tfoot th').each(function () {
+                    var title = $('#stock tfoot th').eq($(this).index()).text();
+                    $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+                });
+        
+                table5.columns().eq(0).each(function (colIdx) {
+                    $('input', table5.column(colIdx).footer()).on('keyup change', function () {
+                        table5
+                            .column(colIdx)
+                            .search(this.value)
+                            .draw();
+                    });
+                });
+        
+        
+            </script>
+            <script>
+                var table6 = $('#staff').DataTable({
+                    mark: true,
+                    dom: 'Bfrtip',
+                    lengthMenu: [
+                        [10, 25, 50, 100, -1],
+                        ['10 rows', '25 rows', '50 rows', '100 rows', 'Show All']
+                    ],
+                    buttons: [
+                        'pageLength',
+                        {
+                            extend: 'copyHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'csvHtml5',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            download: 'open',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        'colvis'
+                    ],
+                    columDefs: [{
+                        targets: -1,
+                        visible: false
+                    }]
+                });
+        
+                // 4) Search on Multiple Columns
+                $('#staff tfoot th').each(function () {
+                    var title = $('#staff tfoot th').eq($(this).index()).text();
+                    $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+                });
+        
+                table6.columns().eq(0).each(function (colIdx) {
+                    $('input', table6.column(colIdx).footer()).on('keyup change', function () {
+                        table6
+                            .column(colIdx)
+                            .search(this.value)
+                            .draw();
+                    });
+                });
+        
+        
+            </script>
+            <script>
+                
+                $('#report_options').change(function () {
+                    var selected = $('#report_options option:selected').text();
+                    if (selected == "Stock"){
+                        $('.report_dates').hide();
+                    }else{
+                        $('.report_dates').show();
+                    }
+                });
+        
+            </script>
+        
+            </body>
+
             <main role="main" class="content" style="margin-top: 0;padding: 0;">
                     <!-- <div class="jumbotron jumbotron-fluid" style="background: linear-gradient(to right, #fdbb2d, #b21f1f, #1a2a6c);color: white;margin-bottom: 100px;"> -->
                 <div class="jumbotron jumbotron-fluid" >
