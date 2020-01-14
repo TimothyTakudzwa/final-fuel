@@ -1,521 +1,177 @@
 {% extends "users/base.html" %}
 {% block body %}
-<div class="jumbotron col-md-12" style="background: linear-gradient(to right, #fdbb2d, #b21f1f, #1a2a6c);color: white;">
-    <h1 class="display-3">Statistics </h1>
-    
-    <hr class="my-2">
-    
 
-</div>
-<div class="container-fluid">
-<div class="row">
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats" style="height: 180px;">
-        <div class="card-header card-header-warning card-header-icon">
-          <div class="card-icon">
-            <i class="material-icons">local_gas_station</i>
-          </div>
-          <p class="card-category">Current Stock</p>
-          <h3 class="card-title" style="font-size: 1em;">Diesel : {{diesel}}
-            <small>L</small>
-          </h3>
-          <h3 class="card-title" style="font-size: 1em;">Petrol : {{petrol}}
-            <small>L</small>
-          </h3>
-        </div>
-        <div class="card-footer">
-          <div class="stats">
-          {% if not diesel and petrol %}  
-            <i class="material-icons text-danger">warning</i>
-            <a href="#pablo">Get More Diesel...</a>
-          {% elif not petrol and diesel %}  
-            <i class="material-icons text-danger">warning</i>
-            <a href="#pablo">Get More Petrol...</a>
-          {% elif not petrol and not diesel %}
-            <i class="material-icons text-danger">warning</i>
-            <a href="#pablo">Get More stock...</a>
-          {% else %}
-            <i class="material-icons text-success">alarm_on</i>
-            <a href="#pablo">Stock Levels Adequate...</a>
-          {% endif %}    
-          </div>
-        </div>
-        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#stock_report" style="position: absolute;right:    0;
-        bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
-            <i class="material-icons">calendar_today</i>
-          Generate Report
-        </button>
-      </div>
-    </div>
-    <div class="modal fade" id="stock_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content" style="max-width: 66%;">
-            <div class="modal-header" style="background-color: #731d82;">
-                <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Generate Stock Report </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form method="POST" action="{% url 'users:report_generator' %}">
-                  {% csrf_token %}
-                  
-                    <div class="form-group">
-                        
-                        <input type="hidden" name="report_type" value="Stock">   
-                    </div>
-                    <!--
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Starting Date</label>
-                        <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                        <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
-                      </div>
+<section class="content-header">
+  <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+         <div class="input-group">
+         <input type="text" name="q" class="form-control" placeholder="Search...">
+             <span class="input-group-btn">
+                 <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+             </span>
+         </div>
+     </form>   
+ <div class="header-icon">
+     <i class="fa fa-line-chart"></i>
+ </div>
+ <div class="header-title">
 
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Ending Date</label>
-                        <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                        <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
-                      </div> 
-                    -->   
-                  <button type="submit" class="btn btn-success btn-sm" style="color: whitesmoke;">
-                    Generate Report
-                  </button>
-                </form>
-            </div>
-          </div>
-        </div>
-      </div>   
+     <h1> Statistics</h1>
+     <small>Fuel Finder Zimbabwe</small>
+     <ol class="breadcrumb hidden-xs">
+         <li><a href="{% url 'users:allocate' %}"><i class="pe-7s-home"></i> Home</a></li>
+         <li class="active">Statistics</li>
+     </ol>
 
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats" style="height: 180px;">
-        <div class="card-header card-header-success card-header-icon">
-          <div class="card-icon">
-            <i class="material-icons">store</i>
-          </div>
-          <p class="card-category">Revenue</p>
-          <h3 class="card-title" style="font-size: 1em;"> {{revenue}}</h3>
-        </div>
-        <div class="card-footer">
-          <div class="stats">
-            <i class="material-icons">attach_money</i> Overall
-          </div>
+ </div>
 
-          
-        </div>
-        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#revenue_report" style="position: absolute;right:    0;
-        bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
-            <i class="material-icons">calendar_today</i>
-          Generate Report
-        </button>
-        
-      </div>
-    </div>
+</section>
 
-      
-      <div class="modal fade" id="revenue_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content" style="max-width: 66%;">
-              <div class="modal-header" style="background-color: #731d82;">
-                  <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Generate Revenue Report </h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" action="{% url 'users:report_generator' %}">
-
-                        {% csrf_token %}
-                        <div class="form-group">
-                            
-                            <input type="hidden" name="report_type" value="Revenue">   
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Starting Date</label>
-                            <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                            <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
-                          </div>
-    
-                          <div class="form-group">
-                            <label for="exampleInputEmail1">Ending Date</label>
-                            <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                            <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
-                          </div>  
-                      <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
-                        Submit
-                      </button>
-                    </form>
-              </div>
-            </div>
-          </div>
-        </div>          
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats" style="height: 180px;">
-        <div class="card-header card-header-danger card-header-icon">
-          <div class="card-icon">
-            <i class="material-icons">rate_review</i>
-          </div>
-          <p class="card-category">Average Rating</p>
-          <h3 class="card-title" style="font-size: 1em;">{{average_rating}} / 5
-            <i class="fa fa-star" style="color: khaki;"></i>
-          </h3>
-        </div>
-        <div class="card-footer">
-          <div class="stats">
-            <i class="material-icons">date_range</i> Last 24 Hours
-          </div>
-        </div>
-        <!--
-        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#complaints_report" style="position: absolute;right:    0;
-        bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
-            <i class="material-icons">calendar_today</i>
-          Generate Report
-        </button>
-        -->
-
-      </div>
-      
-      <div class="modal fade" id="complaints_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content" style="max-width: 66%;">
-              <div class="modal-header" style="background-color: #731d82;">
-                  <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Generate Complaints Report </h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form>
-                      <div class="form-group">
-                          
-                          <input type="hidden" name="report_type" value="Complaints">   
-                      </div>
-                      <div class="form-group">
-                          <label for="exampleInputEmail1">Starting Date</label>
-                          <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                          <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
-                        </div>
-
-                        <div class="form-group">
-                          <label for="exampleInputEmail1">Ending Date</label>
-                          <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                          <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
-                        </div>  
-                    <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
-                      Submit
-                    </button>
-                  </form>
-              </div>
-            </div>
-          </div>
-        </div> 
-    </div>
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats" style="height: 180px;">
-        <div class="card-header card-header-info card-header-icon">
-          <div class="card-icon">
-            <i class="fa fa-bell"></i>
-          </div>
-          <p class="card-category">New Requests</p>
-          <h3 class="card-title" style="font-size: 1em;">{{new_orders}}</h3>
-        </div>
-        <div class="card-footer">
-          <div class="stats">
-            <i class="material-icons">date_range</i> Last 24 Hours
-          </div>
-        </div>
-        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#request_report" style="position: absolute;right:    0;
-        bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
-            <i class="material-icons">calendar_today</i>
-          Generate Report
-        </button>
-      </div>
-    </div>
-    <div class="modal fade" id="request_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content" style="max-width: 66%;">
-            <div class="modal-header" style="background-color: #731d82;">
-                <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Generate Requests Report </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form  method="POST" action="{% url 'users:report_generator' %}">
-                  {% csrf_token %}
-                    <div class="form-group">
-                        
-                        <input type="hidden" name="report_type" value="Requests">   
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Starting Date</label>
-                        <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                        <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
-                      </div>
-
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Ending Date</label>
-                        <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                        <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
-                      </div>  
-                  <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
-                    Submit
-                  </button>
-                </form>
-            </div>
-          </div>
-        </div>
-      </div> 
-  </div>
+<section class="content">
   <div class="row">
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats" style="height: 180px;">
-          <div class="card-header card-header-warning card-header-icon">
-            <div class="card-icon" style="
-            background: linear-gradient(60deg, #ff2626, #b763cc);
-        ">
-              <i class="material-icons">people</i>
-            </div>
-            <p class="card-category">Current Staff</p>
-            <h3 class="card-title" style="font-size: 1em;">Depots : {{admin_staff}}
-              
-            </h3>
-            <h3 class="card-title" style="font-size: 1em;">Stations : {{other_staff}}
-              
-            </h3>
-          </div>
-          <div class="card-footer">
-            
-          </div>
-          <!--
-          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#staff_report" style="position: absolute;right:    0;
-          bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
-              <i class="material-icons">calendar_today</i>
-            Generate Report
-          </button>
-          -->
-        </div>
-      </div>
-      <div class="modal fade" id="staff_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content" style="max-width: 66%;">
-              <div class="modal-header" style="background-color: #731d82;">
-                  <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Generate Staff Report </h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form>
-                      <div class="form-group">
-                          
-                          <input type="hidden" name="report_type" value="Revenue">   
-                      </div>
-                      <div class="form-group">
-                          <label for="exampleInputEmail1">Starting Date</label>
-                          <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                          <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
-                        </div>
-  
-                        <div class="form-group">
-                          <label for="exampleInputEmail1">Ending Date</label>
-                          <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                          <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
-                        </div>  
-                    <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
-                      Submit
-                    </button>
-                  </form>
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+          <div class="panel panel-bd cardbox">
+              <div class="panel-body">
+                <div class="items pull-left">
+                  <i class="fa fa-suitcase fa-2x"></i>
+                  <h4>Current Stock</h4>
               </div>
-            </div>
-          </div>
-        </div>   
-  
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats" style="height: 180px;">
-          <div class="card-header card-header-success card-header-icon">
-            <div class="card-icon" style="background: linear-gradient(60deg, #c6f554, #20a937);">
-              <i class="material-icons">store</i>
-            </div>
-            <p class="card-category">Orders Fulfilled</p>
-            <h3 class="card-title" style="font-size: 1em;"> {{trans_complete}}</h3>
-          </div>
-          <div class="card-footer">
-            <div class="stats">
-              <i class="material-icons">attach_money</i> Overall
-            </div>
-  
-            
-          </div>
-          <!--
-          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#revenue_report" style="position: absolute;right:    0;
-          bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
-              <i class="material-icons">calendar_today</i>
-            Generate Report
-          </button>
-          -->
-        </div>
-      </div>
-  
-        
-        <div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content" style="max-width: 66%;">
-                <div class="modal-header" style="background-color: #731d82;">
-                    <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Generate Revenue Report </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
+                  <div class="statistic-box">
+                        <div class="row" style="padding-bottom: 10px;">
+                          <h2 class="card-title" style="font-size: 1em;">Diesel : 
+                            <span class="count-number">{{diesel}}</span>
+                            <small>L</small>
+                          </h2>
+                        </div> 
+                        <div class="row"> 
+                        <h2 class="card-title" style="font-size: 1em;">Petrol : 
+                          <span class="count-number">{{Petrol}}</span>
+                          <small>L</small>
+                        </h2>
+                        </div>
+                      
                   </div>
-                  <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            
-                            <input type="hidden" name="report_type" value="Revenue">   
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Starting Date</label>
-                            <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                            <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
-                          </div>
-  
-                          <div class="form-group">
-                            <label for="exampleInputEmail1">Ending Date</label>
-                            <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                            <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
-                          </div>  
-                      <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
-                        Submit
-                      </button>
-                    </form>
-                </div>
+                  
               </div>
-            </div>
-          </div>          
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats" style="height: 180px;">
-          <div class="card-header card-header-danger card-header-icon">
-            <div class="card-icon" style="background: linear-gradient(60deg, #9ccdff, #4c44da);">
-              <i class="material-icons">info_outline</i>
-            </div>
-            <p class="card-category">Our Offers</p>
-            <h3 class="card-title" style="font-size: 1em;">{{ offers }}</h3>
           </div>
-          <div class="card-footer">
-            <div class="stats">
-              <i class="material-icons">date_range</i> Last 24 Hours
-            </div>
-          </div>
-          <!--
-          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#offers_report" style="position: absolute;right:    0;
-          bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
-              <i class="material-icons">calendar_today</i>
-            Generate Report
-          </button>
-          -->
-        </div>
-        
-        <div class="modal fade" id="offers_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content" style="max-width: 66%;">
-                <div class="modal-header" style="background-color: #731d82;">
-                    <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Generate Offers Report </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+          <div class="panel panel-bd cardbox">
+              <div class="panel-body">
+                  <div class="statistic-box">
+                      <h2><span class="count-number">{{revenue}}</span>
+                      </h2>
                   </div>
-                  <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            
-                            <input type="hidden" name="report_type" value="Complaints">   
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Starting Date</label>
-                            <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                            <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
-                          </div>
-  
-                          <div class="form-group">
-                            <label for="exampleInputEmail1">Ending Date</label>
-                            <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                            <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
-                          </div>  
-                      <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
-                        Submit
-                      </button>
-                    </form>
-                </div>
+                  <div class="items pull-left">
+                      <i class="fa fa-money fa-2x"></i>
+                      <h4>Revenue</h4>
+                  </div>
               </div>
-            </div>
-          </div> 
+          </div>
       </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats" style="height: 180px;">
-          <div class="card-header card-header-info card-header-icon">
-            <div class="card-icon" style="background: linear-gradient(60deg, #ff9cee, #ca44da);">
-              <i class="fa fa-bell"></i>
-            </div>
-            <p class="card-category">Requests</p>
-            <h3 class="card-title" style="font-size: 1em;">Self Collection : {{bulk_requests}}</h3>
-            <h3 class="card-title" style="font-size: 1em;">Delivery : {{normal_requests}} </h3>
 
-          </div>
-          <div class="card-footer">
-            <div class="stats">
-             <!-- <i class="material-icons">date_range</i> Last 24 Hours -->
-            </div>
-          </div>
-          <!--
-          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#ss_request_report" style="position: absolute;right:    0;
-          bottom:   0;margin: 0 auto;display: block; color: #999999; background-color: white;">
-              <i class="material-icons">calendar_today</i>
-            Generate Report
-          </button>
-          -->
-        </div>
-      </div>
-      <div class="modal fade" id="ss_request_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content" style="max-width: 66%;">
-              <div class="modal-header" style="background-color: #731d82;">
-                  <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Generate Requests Report </h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form>
-                      <div class="form-group">
-                          <select name="report_type" class="browser-default custom-select">
-                              <option selected>Bulk</option>
-                              <option value="Requests">Regular</option>
-                              
-                          </select>
-                          
-                          <input type="hidden" name="report_type" value="Requests">   
-                      </div>
-                      <div class="form-group">
-                          <label for="exampleInputEmail1">Starting Date</label>
-                          <input name="start_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                          <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Starting Date.</small>
-                        </div>
-  
-                        <div class="form-group">
-                          <label for="exampleInputEmail1">Ending Date</label>
-                          <input name="end_date" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                          <small id="emailHelp" class="form-text text-muted" style="color: lightslategray;">Please Pick A Ending Date.</small>
-                        </div>  
-                    <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
-                      Submit
-                    </button>
-                  </form>
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+          <div class="panel panel-bd cardbox">
+              <div class="panel-body">
+                  <div class="statistic-box">
+                      <h2><span class="count-number"style="font-size: 40px;">{{average_rating}} / 5</span>
+                      </h2>
+                  </div>
+                  <div class="items pull-left">
+                      <i class="fa fa-star fa-2x"></i>
+                      <h4>Average Rating</h4>
+                  </div>
               </div>
-            </div>
           </div>
-        </div> 
-    </div>  
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+          <div class="panel panel-bd cardbox">
+              <div class="panel-body">
+                  <div class="statistic-box">
+                      <h2><span class="count-number">{{new_orders}</span>
+                      </h2>
+                  </div>
+                  <div class="items pull-left">
+                      <i class="fa fa-envelope fa-2x"></i>
+                      <h4> New Requests</h4>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+          <div class="panel panel-bd cardbox">
+              <div class="panel-body">
+                <div class="items pull-left">
+                  <i class="fa fa-users fa-2x"></i>
+                  <h4>Current Staff</h4>
+                  </div>
+                  <div class="statistic-box">
+                    <div class="row" style="padding-bottom: 10px;">
+                      <h2 class="card-title" style="font-size: 1em;">Depot : 
+                        <span class="count-number">{{admin_staff}}</span>
+                        <small>L</small>
+                      </h2>
+                    </div> 
+                    <div class="row"> 
+                    <h2 class="card-title" style="font-size: 1em;">Stations : 
+                      <span class="count-number">{{other_staff}}</span>
+                      <small>L</small>
+                    </h2>
+                    </div>
+                  
+                  </div>
+                  
+              </div>
+          </div>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+          <div class="panel panel-bd cardbox">
+              <div class="panel-body">
+                  <div class="statistic-box">
+                      <h2><span class="count-number" style="font-size: 40px;">{{trans_complete}}</span>
+                      </h2>
+                  </div>
+                  <div class="items pull-left">
+                  <i class="fa fa-users fa-2x"></i>
+                  <h4>Orders Fulfilled</h4>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+          <div class="panel panel-bd cardbox">
+              <div class="panel-body">
+                  <div class="statistic-box">
+                      <h2><span class="count-number">{{offers}}</span>
+                      </h2>
+                  </div>
+                  <div class="items pull-left">
+                  <i class="fa fa-paper-plane fa-2x"></i>
+                  <h4>Our Offers</h4>
+                  </div>
+              </div>
+          </div>
+      </div>
 
-</div>
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+          <div class="panel panel-bd cardbox">
+              <div class="panel-body">
+                  <div class="statistic-box">
+                      <h2><span class="count-number">{{new_orders}}</span>
+                      </h2>
+                  </div>
+                  <div class="items pull-left">
+                  <i class="fa fa-envelope fa-2x"></i>
+                  <h4>Requests</h4>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+<!-- /.row -->
+</section>
+
+
+
 
 
 
