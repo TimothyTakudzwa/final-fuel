@@ -1,6 +1,20 @@
 {% extends "supplier/dashboard.html" %}
-{% block body %}
 {% load humanize %}
+
+{% block icon %}
+<i class="fa fa-bank"></i>
+{%endblock%}
+
+{% block title %}
+<h1>Current Stock</h1>
+<small>Current available fuel</small>
+<ol class="breadcrumb hidden-xs">
+    <li><a href="{%url 'fuel-request'%}"><i class="pe-7s-home"></i> Home</a></li>
+    <li class="active">Stock</li>
+</ol>
+{% endblock %}
+
+{%block body%}
 
 <div class="col-md-12">
   <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">

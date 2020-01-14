@@ -82,7 +82,7 @@
                                 </div>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="{%url 'account'%}"><i class="fa fa-users"></i> User Profile</a></li>
+                                    <li><a href="{%url 'account'%}"><i class="fa fa-user-circle-o"></i> User Profile</a></li>
                                     <li><a href="{% url 'logout' %}?next=/login"><i class="fa fa-sign-out"></i> Logout</a></li>
                                 </ul>
                             </li>
@@ -102,14 +102,14 @@
                         </div>
                         <div class="info">
                             <h4>Welcome</h4>
-                            <p>Takudzwa Tarupiwa</p> 
+                            <p>{{user.first_name}} {{user.last_name}}</p> 
                         </div>
                     </div>
                    
                     <!-- sidebar menu -->
                     <ul class="sidebar-menu">
                       <li class="nav-item {% if request.path == '/fuel-request/' %} active {% endif %}  ">
-                            <a href="{%url 'fuel-request'%}"><i class="fa fa-hospital-o"></i><span>Dashboard</span>
+                            <a href="{%url 'fuel-request'%}"><i class="fa fa-bullhorn"></i><span>Requests</span>
                             </a>
                         </li>
                         <li class="nav-item {% if request.path == '/my_offers/' %} active {% endif %} ">
@@ -156,15 +156,12 @@
                             </div>
                         </form>   
                     <div class="header-icon">
-                        <i class="fa fa-tachometer"></i>
+                        {% block icon %}
+                        {% endblock %}
                     </div>
                     <div class="header-title">
-                        <h1> Dashboard</h1>
-                        <small> Dashboard features</small>
-                        <ol class="breadcrumb hidden-xs">
-                            <li><a href="index.html"><i class="pe-7s-home"></i> Home</a></li>
-                            <li class="active">Dashboard</li>
-                        </ol>
+                        {% block title %}
+                        {% endblock %}
                     </div>
                 </section>
             <!-- Main content -->

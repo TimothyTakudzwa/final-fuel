@@ -1,10 +1,21 @@
 {% extends "supplier/dashboard.html" %}
 {% load humanize %}
+
+{% block icon %}
+<i class="fa fa-book"></i>
+{%endblock%}
+
 {% block title %}
-{{title}}
+<h1>Offers</h1>
+<small>List of all offers you have made</small>
+<ol class="breadcrumb hidden-xs">
+    <li><a href="{%url 'fuel-request'%}"><i class="pe-7s-home"></i> Home</a></li>
+    <li class="active">Offers</li>
+</ol>
 {% endblock %}
+
 {% block body %}
-<script>
+<!-- <script>
     $(document).ready(function () {
         var socket = io.connect('http://159.65.66.59:5000/new_offer');
         console.log("Got to this part ")
@@ -28,7 +39,7 @@
   </button>
   <strong><i data-notify="icon" class="material-icons">add_alert</i><span
     data-notify="title"></span> <div id='new_message' ></div><a href="#" target="_blank" data-notify="url"></a></strong> 
-</div>
+</div> -->
 
 
     <div class="col-md-12">
@@ -262,6 +273,5 @@
             </div>
         </div>
     </div>
-</div>
 
 {%endblock%}
