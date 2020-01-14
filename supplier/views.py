@@ -151,10 +151,10 @@ def fuel_update(request):
             fuel_update.petrol_price = request.POST['petrol_price']
             fuel_update.diesel_quantity = request.POST['diesel_quantity']
             fuel_update.diesel_price = request.POST['diesel_price']
-            fuel_update.cash = request.POST['cash']
-            fuel_update.ecocash = request.POST['ecocash']
-            fuel_update.swipe = request.POST['swipe']
-            fuel_update.usd = request.POST['usd']
+            fuel_update.usd = True if request.POST.get('usd') == "True" else False
+            fuel_update.cash = True if request.POST.get('cash') == "True" else False
+            fuel_update.ecocash = True if request.POST.get('ecocash') == "True" else False
+            fuel_update.swipe = True if request.POST.get('swipe') == "True" else False
             fuel_update.save()
             messages.success(request, 'updated quantities successfully')
             service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()

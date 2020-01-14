@@ -16,6 +16,21 @@
 
 {%block body%}
 
+<script>
+  $('#swipe').on('change', function () {
+    $(this).val(this.checked ? "True" : "False");
+  });
+  $('#ecocash').on('change', function () {
+    $(this).val(this.checked ? "True" : "False");
+  });
+  $('#cash').on('change', function () {
+    $(this).val(this.checked ? "True" : "False");
+  });
+  $('#usd').on('change', function () {
+    $(this).val(this.checked ? "True" : "False");
+  });
+</script>
+
 <div class="col-md-12">
   <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
     <div class="panel-heading ui-sortable-handle">
@@ -145,22 +160,36 @@
                       <lable>Diesel Price</lable>
                       <input type="text" name="diesel_price" class="form-control" value="{{updates.diesel_price}}" />
                   </div>
-                  <div class="row">
-                    <div class="col-md-6">
-                      {{update_form.cash|as_crispy_field}}
+                  <div class="col-sm-12 row">
+                    <div class="togglebutton form-group col-sm-3">
+                        <label>
+                            <input type="checkbox" name="cash" id="cash">
+                            <span class="toggle"></span>
+                            Cash
+                        </label>
                     </div>
-                    <div class="col-md-6">
-                      {{update_form.usd|as_crispy_field}}
+                    <div class="togglebutton form-group col-sm-3">
+                        <label>
+                            <input type="checkbox" name="ecocash" id="ecocash">
+                            <span class="toggle" value="True"></span>
+                            Ecocash
+                        </label>
                     </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6">
-                      {{update_form.swipe|as_crispy_field}}
+                    <div class="togglebutton form-group col-3">
+                        <label>
+                            <input type="checkbox" name="swipe" id="swipe">
+                            <span class="toggle"></span>
+                            Swipe
+                        </label>
                     </div>
-                    <div class="col-md-6">
-                      {{update_form.ecocash|as_crispy_field}}
+                    <div class="togglebutton form-group col-3">
+                        <label>
+                            <input type="checkbox" name="usd" id="usd">
+                            <span class="toggle"></span>
+                            USD
+                        </label>
                     </div>
-                    </div>
+                </div>
                   </div>
                   <div class="row" style="margin-bottom: 15px;">
                   <button class="btn btn-primary" type="submit" style="max-width: 33%;display: block;margin: 0 auto;">Update</button> 
