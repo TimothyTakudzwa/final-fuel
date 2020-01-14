@@ -1,4 +1,3 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -57,7 +56,7 @@
         <!-- Site wrapper -->
         <div class="wrapper">
             <header class="main-header">
-                <a href="index.html" class="logo"> <!-- Logo -->
+                <a href="#" class="logo"> <!-- Logo -->
                     <span class="logo-mini">
                         <!--<b>A</b>H-admin-->
                        
@@ -74,16 +73,59 @@
                         <span class="fa fa-tasks"></span>
                     </a>
                     <div class="navbar-custom-menu">
-                        <ul class="nav navbar-nav"> 
+                        <ul class="nav navbar-nav">
+                      
+                            <!-- Notifications -->
+                            <li class="dropdown notifications-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="pe-7s-bell"></i>
+                                    <span class="label label-warning">8</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="header"><i class="fa fa-bell"></i> 8 Notifications</li>
+                                    <li>
+                                        <ul class="menu">
+                                            <li>
+                                            <a href="#" class="border-gray"><i class="fa fa-inbox"></i> Inbox  <span class=" label-success label label-default pull-right">9</span></a>
+                                            </li>
+                                            <li>
+                                            <a href="#" class="border-gray"><i class="fa fa-cart-plus"></i> New Order <span class=" label-success label label-default pull-right">3</span> </a>
+                                            </li>
+                                            <li>
+                                            <a href="#" class="border-gray"><i class="fa fa-money"></i> Payment Failed  <span class="label-success label label-default pull-right">6</span> </a>
+                                            </li>
+                                            <li>
+                                            <a href="#" class="border-gray"><i class="fa fa-cart-plus"></i> Order Confirmation <span class="label-success label label-default pull-right">7</span> </a>
+                                            </li>
+                                            <li>
+                                            <a href="#" class="border-gray"><i class="fa fa-cart-plus"></i> Update system status <span class=" label-success label label-default pull-right">11</span> </a>
+                                            </li>
+                                            <li>
+                                            <a href="#" class="border-gray"><i class="fa fa-cart-plus"></i> client update <span class="label-success label label-default pull-right">12</span> </a>
+                                            </li>
+                                            <li>
+                                            <a href="#" class="border-gray"><i class="fa fa-cart-plus"></i> shipment cancel 
+                                            <span class="label-success label label-default pull-right">2</span> </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                   <li class="footer">
+                                   <a href="#"> See all Notifications <i class=" fa fa-arrow-right"></i></a>
+                                    </li>
+                                </ul>
+                            </li>
+                           
                             <li class="dropdown dropdown-user admin-user">
+                                
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"> 
                                 <div class="user-image">
-                                <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar4.png" class="img-circle" height="40" width="40" alt="User Image">
+                                <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar5.png" class="img-circle" height="40" width="40" alt="User Image">
                                 </div>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="{%url 'account'%}"><i class="fa fa-user-circle-o"></i> User Profile</a></li>
-                                    <li><a href="{% url 'logout' %}?next=/login"><i class="fa fa-sign-out"></i> Logout</a></li>
+                                    <li><a class="nav-link" href="{% url 'serviceStation:myaccount' %}"><i class="fa fa-users"></i> User Profile</a></li>
+                                    <li><a class="nav-link" href="{% url 'logout' %}?next=/login/"><i class="fa fa-sign-out"></i> Logout</a></li>
+                                   
                                 </ul>
                             </li>
                         </ul>
@@ -102,76 +144,66 @@
                         </div>
                         <div class="info">
                             <h4>Welcome</h4>
-                            <p>{{user.first_name}} {{user.last_name}}</p> 
+                            <p>{{user.username}}</p> 
                         </div>
                     </div>
                    
                     <!-- sidebar menu -->
                     <ul class="sidebar-menu">
-                      <li class="nav-item {% if request.path == '/fuel-request/' %} active {% endif %}  ">
-                            <a href="{%url 'fuel-request'%}"><i class="fa fa-bullhorn"></i><span>Requests</span>
-                            </a>
-                        </li>
-                        <li class="nav-item {% if request.path == '/my_offers/' %} active {% endif %} ">
-                            <a href="{%url 'my_offers'%}"><i class="fa fa-book"></i><span>Offers</span>
-                            </a>
-                        </li>
-                        <li class="nav-item {% if request.path == '/fuel_update/' %} active {% endif %} ">
-                            <a href="{%url 'fuel_update'%}"><i class="fa fa-bank"></i><span>Current Stocks</span>
-                            </a>
-                        </li>
-                        <li class="nav-item {% if request.path == '/transaction/' %} active {% endif %} ">
-                            <a href="{%url 'transaction'%}"><i class="fa fa-exchange"></i><span>Transactions</span>
-                            </a>
-                        </li>
-                        <li class="nav-item {% if request.path == '/allocated_quantity/' %} active {% endif %} ">
-                            <a href="{% url 'allocated_quantity' %}"><i class="fa fa-th-list"></i><span>Fuel Allocations</span>
-                            </a>
-                        </li>
-                        <li class="nav-item {% if request.path == '/account/' %} active {% endif %} ">
-                            <a href="{%url 'account'%}"><i class="fa fa-user-circle-o"></i><span>User Profile</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url 'logout' %}?next=/login"><i class="fa fa-sign-out"></i><span>Logout</span>
+                        <li class="nav-item {% if request.path == '/serviceStation/' %} active {% endif %}">
+                            <a class="nav-link" href="{% url 'serviceStation:home' %}">
+                                <i class="fa fa-500px"></i><span>Dashboard</span>
                             </a>
                         </li>
                        
-    
+                        <li class="nav-item {% if request.path == '/serviceStation/allocated_quantity/' %} active {% endif %}">
+                            <a class="nav-link" href="{% url 'serviceStation:allocated_quantity' %}">
+                                <i class="fa fa-hospital-o"></i><span>Audit Trail</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {% if request.path == '/serviceStation/myaccount/' %} active {% endif %}">
+                            <a class="nav-link" href="{% url 'serviceStation:myaccount' %}">
+                                <i class="fa fa-address-card"></i><span>User Profile</span>
+                            </a>
+                        </li>
+                        <li class="">
+                            <a class="nav-link" href="{% url 'logout' %}?next=/login/">
+                                <i class="fa fa-sign-out"></i><span>Logout</span>
+                            </a>
+                        </li>
+                       
                            
             </ul>
         </div> <!-- /.sidebar -->
     </aside>
             <!-- =============================================== -->
-            <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper">
-                <!-- Content Header (Page header) -->
-                <section class="content-header">
-                     <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
-                            <div class="input-group">
-                            <input type="text" name="q" class="form-control" placeholder="Search...">
-                                <span class="input-group-btn">
-                                    <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
-                                </span>
-                            </div>
-                        </form>   
-                    <div class="header-icon">
-                        {% block icon %}
-                        {% endblock %}
-                    </div>
-                    <div class="header-title">
-                        {% block title %}
-                        {% endblock %}
-                    </div>
-                </section>
-            <!-- Main content -->
-    <div class="content">
-        {% block body %}
+     <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    {% if messages %}
 
-        {% endblock %}
-    </div>
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" style="text-align: center">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+{% endif %}
+
+      {% block body %}{% endblock %}            
+            <!-- 
+    <div class="content">
+        <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+                                   
+        <div class="panel-body">
+
+                          
+       
+        </div>
+       </div>
         
-            </div> <!-- /.content-wrapper -->
+    </div>
+    -->
+</div> <!-- /.content-wrapper -->
             <footer class="main-footer">
                 <div class="pull-right hidden-xs"> <b>Version</b> 1.0</div>
                 <strong>Copyright &copy; 2019 <a href="#">Intelli Africa Solutions</a>.</strong> All rights reserved.
