@@ -25,89 +25,102 @@
 <div class="col-md-12">
 
 
-<div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
-data-index="0">
-<div class="panel-heading ui-sortable-handle">
-    <div class="btn-group">
-        <h3 class="display-3" style="color: rgb(79, 189, 150);">Fuel Received</h3>
+  <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
+  data-index="0">
+  <div class="panel-heading ui-sortable-handle">
+      <div class="btn-group">
+          <h3 class="display-3" style="color: rgb(79, 189, 150);">{{user.first_name}}'s Profile</h3>
+  
+      </div>
+      <div class="dropdown">
+          <ul class="dropdown-menu dropdown-menu-right">
+  
+  
+          </ul>
+          <div class="dropdown-toggle" data-toggle="dropdown"><span
+                  class="panel-control-icon glyphicon glyphicon-cog"></span>
+          </div>
+      </div>
+  </div>
+  <div class="panel-body">
+  
+  
+  <!-- Main content -->
+  <section class="content">
+      <div class="row">
+          <div class="col-sm-12 col-md-4">
+              <div class="card">
+                  <div class="card-header">
+                      <div class="card-header-headshot"></div>
+                  </div>
+                  <div class="card-content">
+                      <div class="card-content-member">
+                          <h4 class="m-t-0">{{user.first_name}} {{user.last_name}} </h4>
+                          <p class="m-0"><i class="pe-7s-map-marker"></i>Harare</p>
+                      </div>
+                     
+                      <div class="card-content-summary">
+                          <p>Never take advantage of anyone's weakness to destroy his/her life, let us work on building and strengthening each other.</p>
+                      </div>
+                  </div>
+                  <div class="card-footer" style="width: 980px;">
+                      <div class="card-footer-stats">
+                          <div>
+                              <p>First Name</p><i ></i><span>{{user.first_name}}</span>
+                          </div>
+                          <div>
+                              <p>Last Name</p><i ></i><span>{{user.last_name}}</span>
+                          </div>
+                          
+                          <div>
+                              <p>Email</p><span >{{user.email}}</span>
+                          </div>
+                      </div>
+                      <div class="card-footer-message">
+                          <h4><i class="fa fa-comments"></i>Whatsapp {{user.phone_number}} <a class="btn btn-info pull-center" href="{% url 'serviceStation:edit_password' %}"><span style="color: rgb(12, 12, 12);"><b>Change Password</b></span></a></h4>  
+                         
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-sm-12 col-md-8">
+           
+              <div class="review-block">
+                  <div class="row">
+                     
+                      <div class="col-sm-9">
+                          <div class="review-block-rate">
+                              <label type="button" class="btn btn-success btn-xs" aria-label="Left Align"><h4>Company Name</h4>
+                              </label>
+                             
+                          </div>
+                          <div class="review-block-title">{{user.company.name}} </div>
+                          <div class="review-block-description"> </div>
+                      </div>
+                      <div class="col-sm-9">
+                          <div class="review-block-rate">
+                              <label type="button" class="btn btn-success btn-xs" aria-label="Left Align"><h4>Company Address</h4>
+                              </label>
+                             
+                          </div>
+                          <div class="review-block-title">{{user.company.address}}</div>
+                          <div class="review-block-description"> </div>
+                      </div>
+                      
+                  </div>
+                  <hr>
+                 
+                  <hr>
+                 
+              </div>
+          </div>
+      </div> 
+  </section> <!-- /.content -->
+  
+  
+  </div>
+  </div>
 
-    </div>
-    <div class="dropdown">
-        <ul class="dropdown-menu dropdown-menu-right">
-
-
-        </ul>
-        <div class="dropdown-toggle" data-toggle="dropdown"><span
-                class="panel-control-icon glyphicon glyphicon-cog"></span>
-        </div>
-    </div>
-</div>
-<div class="panel-body">
-
-  <form method="POST"action="#">
-    {% csrf_token %}
-  <div>
-    <div class="row">
-      <div class="col-md-5">
-        <div class="form-group">
-          <label class="bmd-label-floating">Company</label>
-          <input type="text" class="form-control" value="{{request.user.company.name}}" disabled > 
-          
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-          <label class="bmd-label-floating">Username</label>
-          <input type="text" class="form-control" value="{{request.user.username}}" disabled>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="bmd-label-floating">Email address</label>
-          <input type="email" class="form-control" value="{{request.user.email}}" disabled>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="bmd-label-floating">Fist Name</label>
-          <input type="text" class="form-control" value="{{request.user.first_name}}" disabled>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="bmd-label-floating">Last Name</label>
-          <input type="text" class="form-control" value="{{request.user.last_name}}" disabled>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="bmd-label-floating">Cell Number</label>
-          <input type="text" name="phone_number" class="form-control" value="{{request.user.phone_number}}">
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="form-group">
-          <label class="bmd-label-floating">Adress</label> 
-          <input type="text" class="form-control" value="{{request.user.company.address}}" disabled >
-        </div>
-      </div>
-    </div>
-    <div class="row">
-    <div class="col-md-12 text-center">
-      
-      <a class="btn btn-info pull-center" href="{% url 'serviceStation:edit_password' %}">Change Password</a>
-      </div>
-    </div>
-  </form>
-   
-
-
-</div>
-</div>
 
 </div>
 {% endblock %}
