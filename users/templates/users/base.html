@@ -100,11 +100,11 @@
                     <!-- sidebar menu -->
                     <ul class="sidebar-menu">
                         <li class="{% if request.path == '/users/allocate/' %} active {% endif %}">
-                            <a href="{% url 'users:allocate' %}"><i class="fa fa-hospital-o"></i><span>Fuel Allocations</span>
+                            <a href="{% url 'users:allocate' %}"><i class="fa fa-clipboard"></i><span>Fuel Allocations</span>
                             </a>
                         </li>
                         <li class="{% if request.path == '/users/suppliers/' %} active {% endif %}">
-                            <a href="{% url 'users:suppliers_list' %}"><i class="fa fa-hospital-o"></i><span>Service Stations</span>
+                            <a href="{% url 'users:suppliers_list' %}"><i class="fa fa-burn"></i><span>Service Stations</span>
                             </a>
                         </li>
                         <li class="{% if request.path == '/users/depot_staff/' %} active {% endif %}">
