@@ -32,8 +32,13 @@ def get_aggregate_stock(company):
 def get_total_revenue(user):
     revenue = 0
 
-    for transaction in Transaction.objects.filter(supplier__company=user.company, is_complete=True):
-        revenue += (transaction.offer.request.amount * transaction.offer.price)
+    trans = Transaction.objects.filter(supplier__company=user.company, is_complete=True)
+    
+    if trans:
+        for transaction in trans:
+            revenue += (transaction.offer.request.amount * transaction.offer.price)
+    else:
+        revenue = 0        
     return revenue
 
 

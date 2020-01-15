@@ -1,404 +1,420 @@
 {% extends "users/base.html" %}
 {% block body %}
 
-<section class="content-header">
-  <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
-         <div class="input-group">
-         <input type="text" name="q" class="form-control" placeholder="Search...">
-             <span class="input-group-btn">
-                 <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
-             </span>
-         </div>
-     </form>   
- <div class="header-icon">
-     <i class="fa fa-line-chart"></i>
- </div>
- <div class="header-title">
+<div class="container" style="min-height: 872px;">
+  <section class="content-header">
+    <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+          <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Search...">
+              <span class="input-group-btn">
+                  <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+              </span>
+          </div>
+      </form>   
+  <div class="header-icon">
+      <i class="fa fa-line-chart"></i>
+  </div>
+  <div class="header-title">
 
-     <h1> Statistics</h1>
-     <small>Fuel Finder Zimbabwe</small>
-     <ol class="breadcrumb hidden-xs">
-         <li><a href="{% url 'users:allocate' %}"><i class="pe-7s-home"></i> Home</a></li>
-         <li class="active">Statistics</li>
-     </ol>
+      <h1> Statistics</h1>
+      <small>Fuel Finder Zimbabwe</small>
+      <ol class="breadcrumb hidden-xs">
+          <li><a href="{% url 'users:allocate' %}"><i class="pe-7s-home"></i> Home</a></li>
+          <li class="active">Statistics</li>
+      </ol>
 
- </div>
+  </div>
 
-</section>
+  </section>
 
-<section class="content">
-  <div class="row">
-      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
-          <div class="panel panel-bd cardbox">
-              <div class="panel-body">
-                <div class="items pull-left">
-                  <i class="fa fa-suitcase fa-2x"></i>
-                  <h4>Current Stock</h4>
-              </div>
-                  <div class="statistic-box">
-                        <div class="row" style="padding-bottom: 10px;">
-                          <h2 class="card-title" style="font-size: 1em;">Diesel : 
-                            <span class="count-number">{{diesel}}</span>
+  <section class="content">
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+            <div class="panel panel-bd cardbox">
+                <div class="panel-body">
+                  <div class="items pull-left">
+                    <i class="fa fa-suitcase fa-2x"></i>
+                    <h4>Current Stock</h4>
+                </div>
+                    <div class="statistic-box">
+                          <div class="row" style="padding-bottom: 10px;">
+                            <h2 class="card-title" style="font-size: 1em;">Diesel : 
+                              <span class="count-number">{{diesel}}</span>
+                              <small>L</small>
+                            </h2>
+                          </div> 
+                          <div class="row"> 
+                          <h2 class="card-title" style="font-size: 1em;">Petrol : 
+                            <span class="count-number">{{Petrol}}</span>
                             <small>L</small>
                           </h2>
-                        </div> 
-                        <div class="row"> 
-                        <h2 class="card-title" style="font-size: 1em;">Petrol : 
-                          <span class="count-number">{{Petrol}}</span>
+                          </div>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+            <div class="panel panel-bd cardbox">
+                <div class="panel-body">
+                    <div class="statistic-box">
+                        <h2><span class=>{{revenue}}</span>
+                        </h2>
+                    </div>
+                    <div class="items pull-left">
+                        <i class="fa fa-money fa-2x"></i>
+                        <h4>Revenue</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+            <div class="panel panel-bd cardbox">
+                <div class="panel-body">
+                    <div class="statistic-box">
+                        <h2><span style="font-size: 40px;">{{average_rating}} / 5</span>
+                        </h2>
+                    </div>
+                    <div class="items pull-left">
+                        <i class="fa fa-star fa-2x"></i>
+                        <h4>Average Rating</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+            <div class="panel panel-bd cardbox">
+                <div class="panel-body">
+                    <div class="statistic-box">
+                        <h2><span>{{new_orders}}</span>
+                        </h2>
+                    </div>
+                    <div class="items pull-left">
+                        <i class="fa fa-envelope fa-2x"></i>
+                        <h4> New Requests</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+            <div class="panel panel-bd cardbox">
+                <div class="panel-body">
+                  <div class="items pull-left">
+                    <i class="fa fa-users fa-2x"></i>
+                    <h4>Current Staff</h4>
+                    </div>
+                    <div class="statistic-box">
+                      <div class="row" style="padding-bottom: 10px;">
+                        <h2 class="card-title" style="font-size: 1em;">Depot : 
+                          <span class="count-number">{{admin_staff}}</span>
                           <small>L</small>
                         </h2>
-                        </div>
-                      
-                  </div>
-                  
-              </div>
-          </div>
-      </div>
-      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
-          <div class="panel panel-bd cardbox">
-              <div class="panel-body">
-                  <div class="statistic-box">
-                      <h2><span class="count-number">{{revenue}}</span>
-                      </h2>
-                  </div>
-                  <div class="items pull-left">
-                      <i class="fa fa-money fa-2x"></i>
-                      <h4>Revenue</h4>
-                  </div>
-              </div>
-          </div>
-      </div>
-
-      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
-          <div class="panel panel-bd cardbox">
-              <div class="panel-body">
-                  <div class="statistic-box">
-                      <h2><span class="count-number"style="font-size: 40px;">{{average_rating}} / 5</span>
-                      </h2>
-                  </div>
-                  <div class="items pull-left">
-                      <i class="fa fa-star fa-2x"></i>
-                      <h4>Average Rating</h4>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
-          <div class="panel panel-bd cardbox">
-              <div class="panel-body">
-                  <div class="statistic-box">
-                      <h2><span class="count-number">{{new_orders}</span>
-                      </h2>
-                  </div>
-                  <div class="items pull-left">
-                      <i class="fa fa-envelope fa-2x"></i>
-                      <h4> New Requests</h4>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
-          <div class="panel panel-bd cardbox">
-              <div class="panel-body">
-                <div class="items pull-left">
-                  <i class="fa fa-users fa-2x"></i>
-                  <h4>Current Staff</h4>
-                  </div>
-                  <div class="statistic-box">
-                    <div class="row" style="padding-bottom: 10px;">
-                      <h2 class="card-title" style="font-size: 1em;">Depot : 
-                        <span class="count-number">{{admin_staff}}</span>
+                      </div> 
+                      <div class="row"> 
+                      <h2 class="card-title" style="font-size: 1em;">Stations : 
+                        <span class="count-number">{{other_staff}}</span>
                         <small>L</small>
                       </h2>
-                    </div> 
-                    <div class="row"> 
-                    <h2 class="card-title" style="font-size: 1em;">Stations : 
-                      <span class="count-number">{{other_staff}}</span>
-                      <small>L</small>
-                    </h2>
+                      </div>
+                    
                     </div>
-                  
-                  </div>
-                  
-              </div>
-          </div>
-      </div>
-      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
-          <div class="panel panel-bd cardbox">
-              <div class="panel-body">
-                  <div class="statistic-box">
-                      <h2><span class="count-number" style="font-size: 40px;">{{trans_complete}}</span>
-                      </h2>
-                  </div>
-                  <div class="items pull-left">
-                  <i class="fa fa-users fa-2x"></i>
-                  <h4>Orders Fulfilled</h4>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
-          <div class="panel panel-bd cardbox">
-              <div class="panel-body">
-                  <div class="statistic-box">
-                      <h2><span class="count-number">{{offers}}</span>
-                      </h2>
-                  </div>
-                  <div class="items pull-left">
-                  <i class="fa fa-paper-plane fa-2x"></i>
-                  <h4>Our Offers</h4>
-                  </div>
-              </div>
-          </div>
-      </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+            <div class="panel panel-bd cardbox">
+                <div class="panel-body">
+                    <div class="statistic-box">
+                        <h2><span style="font-size: 20px;">{{trans_complete}}</span>
+                        </h2>
+                    </div>
+                    <div class="items pull-left">
+                    <i class="fa fa-users fa-2x"></i>
+                    <h4>Orders Fulfilled</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+            <div class="panel panel-bd cardbox">
+                <div class="panel-body">
+                    <div class="statistic-box">
+                        <h2><span class="count-number">{{offers}}</span>
+                        </h2>
+                    </div>
+                    <div class="items pull-left">
+                    <i class="fa fa-paper-plane fa-2x"></i>
+                    <h4>Our Offers</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
-          <div class="panel panel-bd cardbox">
-              <div class="panel-body">
-                  <div class="statistic-box">
-                      <h2><span class="count-number">{{new_orders}}</span>
-                      </h2>
-                  </div>
-                  <div class="items pull-left">
-                  <i class="fa fa-envelope fa-2x"></i>
-                  <h4>Requests</h4>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-<!-- /.row -->
-</section>
-
-
-
-
-
-
-<!---->
-
-
-
-
-<div class="row" >
-  <!--
-  <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color:#92c9ff; text-align: center;color: gray;">
-      <div class="card-body text-success">
-        <h5 class="card-title" style="font-size: 1em;">Staff  </h5>
-        <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{staff_pop}}</p>
-      </div>
-      <div class="card-footer bg-transparent border-success"></div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+            <div class="panel panel-bd cardbox">
+                <div class="panel-body">
+                    <div class="statistic-box">
+                        <h2><span class="count-number">{{new_orders}}</span>
+                        </h2>
+                    </div>
+                    <div class="items pull-left">
+                    <i class="fa fa-envelope fa-2x"></i>
+                    <h4>Requests</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  
-    <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color: #3eeaff;text-align: center;color: gray;">
-      <div class="card-body text-success">
-        <h5 class="card-title" style="font-size: 1em;">Orders Fulfilled </h5>
-        <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{trans}}</p>
+  <!-- /.row -->
+  </section>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8  lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="Hmw8R6MoPC">  
+        <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="Hmw8R6MoPC" data-index="0">
+            <div class="panel-heading ui-sortable-handle">
+                <div class="panel-title" style="max-width: calc(100% - 180px);">
+                    <h4>Line chart</h4>
+                </div>
+            <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="editTitle" data-tooltip="Edit title" data-toggle="tooltip" data-title="Edit title" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-pencil"></i><span class="control-title">Edit title</span></a></li><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="reload" data-tooltip="Reload" data-toggle="tooltip" data-title="Reload" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-reload"></i><span class="control-title">Reload</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li><li><a data-func="close" data-tooltip="Close" data-toggle="tooltip" data-title="Close" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-close"></i><span class="control-title">Close</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
+            <div class="panel-body"><iframe class="chartjs-hidden-iframe" tabindex="-1" style="display: block; overflow: hidden; border: 0px; margin: 0px; top: 0px; left: 0px; bottom: 0px; right: 0px; height: 100%; width: 100%; position: absolute; pointer-events: none; z-index: -1;"></iframe>
+                <canvas id="lineChart" height="305" width="611" style="display: block; width: 611px; height: 305px;"></canvas>
+            </div>
+            <div class="ct-chart ct-perfect-fourth"></div> 
+        </div>
       </div>
-      <div class="card-footer bg-transparent border-success"></div>
     </div>  
+  </section>
 
-     
-  <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color: #1fc1d5;text-align: center;color: gray;">
-      <div class="card-body text-success">
-        <h5 class="card-title" style="font-size: 1em;">No. of Offers </h5>
-        <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{ offers }}</p>
-      </div>
-      <div class="card-footer bg-transparent border-success"></div>
-    </div>
 
-    <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color: #57b7c3;text-align: center;color: gray;">
-      <div class="card-body text-success">
-        <h5 class="card-title" style="font-size: 1em;">Bulk Requests</h5>
-        <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{bulk_requests}}</p>
-      </div>
-      <div class="card-footer bg-transparent border-success"></div>
-    </div>
 
-    <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color: #1fc1d5;text-align: center;color: gray;">
-      <div class="card-body text-success">
-        <h5 class="card-title" style="font-size: 1em;">Regular Reguests</h5>
-        <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{normal_requests}}</p>
-      </div>
-      <div class="card-footer bg-transparent border-success"></div>
-    </div>
+  <!---->
 
-    <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color:#81bcc3;text-align: center;color: gray;">
-      <div class="card-body text-success">
-        <h5 class="card-title" style="font-size: 1em;">Rating</h5>
-        <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{rating}} <span class="material-icons">
-          stars
-        </span></p>
-      </div>
-      <div class="card-footer bg-transparent border-success"></div>
-    </div>
-  -->
-    <div class="col-md-12">
-      <div class="card" style="background-color:white">
-          
-          <div class="card-header card-header-primary">
-          <h4 class="card-title ">Top Clients</h4>
+
+
+  <section class="content">
+    <div class="row" >
+      <!--
+      <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color:#92c9ff; text-align: center;color: gray;">
+          <div class="card-body text-success">
+            <h5 class="card-title" style="font-size: 1em;">Staff  </h5>
+            <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{staff_pop}}</p>
           </div>
-      <div class="card-body">
-          <div class="container-fluid">
-              {% if clients %}
-  
-              <table id="clients_table" class="table table-striped table-bordered" style="width:100%">
-                  <thead style="color:white; background:lightslategray">
-                      <th style="color:white;">
-                          Name
-                         </th>
-                         
-                         <th style="color:white;">
-                            Address 
-                           </th>
-                          
-                             <th style="color:white;">
-                              Industry
-                             </th>
-                           <th style="color:white;">
-                              Total Value 
-                             </th>
-                           <th style="color:white;">
-                             No Of Transactions
-                            </th>
-                            <th style="color:white;">
-                              
-                             </th>
-                            <!--
-                            <th style="color:white;">
-                            
-                          </th>
-                        -->
-                  </thead>    
-                     <tbody>
-                         {% for client in clients %}
-                         <tr>
-                             <td>
-                               {{client.company.name}}
-                              </td>
-                             
-                             <td>{{client.company.address}}</td>
-                             <td>{{client.company.industry}}</td>
-                             <td>$ {{client.total_revenue|stringformat:".2f"}}</td>
-                             <td>{{client.number_of_trans}}</td>
-                             
-                             <td style="width: 13%;">
-                                 <div>
-                                      <form method="POST" action="{% url 'users:client_history' client.id %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="report_type" value="Complete">
-                     
-
-                                        <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
-                                          View History
-                                        </button>
-                                      </form>
-                                    
-                                 </div>
-                              </td>
-                         </tr>
-                        
-                         {% endfor %}   
-
-                     </tbody>   
-              </table>         
-              {% else %}
-              <p>No Sales Yet To Report</p>    
-              {% endif %}
-          </div>
-      </div>
-      </div>
+          <div class="card-footer bg-transparent border-success"></div>
+        </div>
       
-  </div>
-
-  <div class="col-md-12">
-      <div class="card" style="background-color:white">
-          
-          <div class="card-header card-header-primary">
-          <h4 class="card-title ">Subsidiaries</h4>
+        <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color: #3eeaff;text-align: center;color: gray;">
+          <div class="card-body text-success">
+            <h5 class="card-title" style="font-size: 1em;">Orders Fulfilled </h5>
+            <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{trans}}</p>
           </div>
-      <div class="card-body">
-          <div class="container-fluid">
-              {% if sorted_subs %}
-  
-              <table id="subs_table" class="table table-striped table-bordered" style="width:100%">
-                  <thead style="color:white; background:lightslategray">
-                      <th style="color:white;">
-                          Name
-                         </th>
-                         
-                         <th style="color:white;">
-                            Address 
-                           </th>
-                          
-                           <th style="color:white;">
-                              Total Value 
-                             </th>
-                           <th style="color:white;">
-                             No Of Transactions
+          <div class="card-footer bg-transparent border-success"></div>
+        </div>  
+
+        
+      <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color: #1fc1d5;text-align: center;color: gray;">
+          <div class="card-body text-success">
+            <h5 class="card-title" style="font-size: 1em;">No. of Offers </h5>
+            <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{ offers }}</p>
+          </div>
+          <div class="card-footer bg-transparent border-success"></div>
+        </div>
+
+        <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color: #57b7c3;text-align: center;color: gray;">
+          <div class="card-body text-success">
+            <h5 class="card-title" style="font-size: 1em;">Bulk Requests</h5>
+            <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{bulk_requests}}</p>
+          </div>
+          <div class="card-footer bg-transparent border-success"></div>
+        </div>
+
+        <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color: #1fc1d5;text-align: center;color: gray;">
+          <div class="card-body text-success">
+            <h5 class="card-title" style="font-size: 1em;">Regular Reguests</h5>
+            <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{normal_requests}}</p>
+          </div>
+          <div class="card-footer bg-transparent border-success"></div>
+        </div>
+
+        <div class="card border-success mb-3" style="max-width: 10rem;/* padding-top: 30px; */height: 10rem;margin-left: 10px;background-color:#81bcc3;text-align: center;color: gray;">
+          <div class="card-body text-success">
+            <h5 class="card-title" style="font-size: 1em;">Rating</h5>
+            <p class="card-text" style="font-size: 2rem;margin-top: 53px;color: white;">{{rating}} <span class="material-icons">
+              stars
+            </span></p>
+          </div>
+          <div class="card-footer bg-transparent border-success"></div>
+        </div>
+      -->
+        <div class="col-md-12">
+          <div class="card" style="background-color:white">
+              
+              <div class="card-header card-header-primary">
+              <h4 class="card-title ">Top Clients</h4>
+              </div>
+          <div class="card-body">
+              <div class="container-fluid">
+                  {% if clients %}
+      
+                  <table id="clients_table" class="table table-striped table-bordered" style="width:100%">
+                      <thead style="color:white; background:lightslategray">
+                          <th style="color:white;">
+                              Name
                             </th>
-                            <th style="color:white;">
-                              
-                             </th>
-                            <!--
-                            <th style="color:white;">
                             
-                          </th>
-                        -->
-                  </thead>    
-                     <tbody>
-                         {% for sub in sorted_subs %}
-                          {% if sub.tran_value > 0 %}
+                            <th style="color:white;">
+                                Address 
+                              </th>
+                              
+                                <th style="color:white;">
+                                  Industry
+                                </th>
+                              <th style="color:white;">
+                                  Total Value 
+                                </th>
+                              <th style="color:white;">
+                                No Of Transactions
+                                </th>
+                                <th style="color:white;">
+                                  
+                                </th>
+                                <!--
+                                <th style="color:white;">
+                                
+                              </th>
+                            -->
+                      </thead>    
+                        <tbody>
+                            {% for client in clients %}
                             <tr>
                                 <td>
-                                  {% if forloop.counter == 1%}
-                                  <i class="fa fa-trophy" style="color: gold;" style="padding-right: 2px;"></i>
-                                  {% elif forloop.counter == 2 or forloop.counter == 3 %}
-                                  <i class="fa fa-star" style="color: gold;" style="padding-right: 2px;"></i>
-                                  {% else %}
-                                  {% endif %}
-                                  {{sub.name}}
-                                </td>
+                                  {{client.company.name}}
+                                  </td>
                                 
-                                <td>{{sub.location}}</td>
-                                <td>$ {{sub.tran_value|stringformat:".2f"}}</td>
-                                <td>{{sub.tran_count}}</td>
+                                <td>{{client.company.address}}</td>
+                                <td>{{client.company.industry}}</td>
+                                <td>$ {{client.total_revenue|stringformat:".2f"}}</td>
+                                <td>{{client.number_of_trans}}</td>
                                 
                                 <td style="width: 13%;">
                                     <div>
-                                      <form method="POST" action="{% url 'users:subsidiary_transaction_history' sub.id %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="report_type" value="Complete">
-                     
+                                          <form method="POST" action="{% url 'users:client_history' client.id %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="report_type" value="Complete">
+                        
 
-                                        <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
-                                          View History
-                                        </button>
-                                      </form> 
-                                          
-      
+                                            <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
+                                              View History
+                                            </button>
+                                          </form>
+                                        
                                     </div>
                                   </td>
                             </tr>
-                          {% endif %}  
-                        
-                         {% endfor %}   
+                            
+                            {% endfor %}   
 
-                     </tbody>   
-              </table>         
-              {% else %}
-              <p>No Sales Yet To Report</p>    
-              {% endif %}
+                        </tbody>   
+                  </table>         
+                  {% else %}
+                  <p>No Sales Yet To Report</p>    
+                  {% endif %}
+              </div>
           </div>
+          </div>
+          
       </div>
-      </div>
-      
-  </div>
-    
-</div> 
 
-  <div class="ct-chart ct-perfect-fourth"></div>
+      <div class="col-md-12">
+          <div class="card" style="background-color:white">
+              
+              <div class="card-header card-header-primary">
+              <h4 class="card-title ">Subsidiaries</h4>
+              </div>
+          <div class="card-body">
+              <div class="container-fluid">
+                  {% if sorted_subs %}
+      
+                  <table id="subs_table" class="table table-striped table-bordered" style="width:100%">
+                      <thead style="color:white; background:lightslategray">
+                          <th style="color:white;">
+                              Name
+                            </th>
+                            
+                            <th style="color:white;">
+                                Address 
+                              </th>
+                              
+                              <th style="color:white;">
+                                  Total Value 
+                                </th>
+                              <th style="color:white;">
+                                No Of Transactions
+                                </th>
+                                <th style="color:white;">
+                                  
+                                </th>
+                                <!--
+                                <th style="color:white;">
+                                
+                              </th>
+                            -->
+                      </thead>    
+                        <tbody>
+                            {% for sub in sorted_subs %}
+                              {% if sub.tran_value > 0 %}
+                                <tr>
+                                    <td>
+                                      {% if forloop.counter == 1%}
+                                      <i class="fa fa-trophy" style="color: gold;" style="padding-right: 2px;"></i>
+                                      {% elif forloop.counter == 2 or forloop.counter == 3 %}
+                                      <i class="fa fa-star" style="color: gold;" style="padding-right: 2px;"></i>
+                                      {% else %}
+                                      {% endif %}
+                                      {{sub.name}}
+                                    </td>
+                                    
+                                    <td>{{sub.location}}</td>
+                                    <td>$ {{sub.tran_value|stringformat:".2f"}}</td>
+                                    <td>{{sub.tran_count}}</td>
+                                    
+                                    <td style="width: 13%;">
+                                        <div>
+                                          <form method="POST" action="{% url 'users:subsidiary_transaction_history' sub.id %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="report_type" value="Complete">
+                        
+
+                                            <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
+                                              View History
+                                            </button>
+                                          </form> 
+                                              
+          
+                                        </div>
+                                      </td>
+                                </tr>
+                              {% endif %}  
+                            
+                            {% endfor %}   
+
+                        </tbody>   
+                  </table>         
+                  {% else %}
+                  <p>No Sales Yet To Report</p>    
+                  {% endif %}
+              </div>
+          </div>
+          </div>
+          
+      </div>
+        
+    </div> 
+  </section>
+</div>  
 
 <script>
 
@@ -421,6 +437,24 @@
         }
         });
 </script>
+
+<script>
+  var data = {
+    // A labels array that can contain any sort of values
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+    // Our series array that contains series objects or in this case series data arrays
+    series: [
+      [5, 2, 4, 2, 0]
+    ]
+  };
+
+  // Create a new line chart object where as first parameter we pass in a selector
+  // that is resolving to our chart container element. The Second parameter
+  // is the actual data object.
+  new Chartist.Line('.ct-chart', data);
+</script>
+
+
 
 
 
