@@ -31,34 +31,18 @@
   <div class="table-responsive">
     <table id="example" class="table table-striped table-bordered" style="width:100%">
                     <thead style="color:white; background:lightslategray">
-                        <th style="color:white;">
-                            Date
-                        </th>
-
-                        <th style="color:white;">
-                            Action
-                        </th>
-
-                        <th style="color:white;">
-                            Diesel 
-                        </th>
-
-                        <th style="color:white;">
-                            Price
-                        </th>
-                        <th style="color:white;">
-                               Petrol
-                            </th>
-                            <th style="color:white;">
-                                 Price
-                                </th>
-                        
-                        <th style="color:white;">
-                            Payment
-                        </th>
+                        <th style="color:white;"></th>
+                        <th style="color:white;">Date</th>
+                        <th style="color:white;">Action</th>
+                        <th style="color:white;">Diesel</th>
+                        <th style="color:white;">Price</th>
+                        <th style="color:white;">Petrol</th>
+                        <th style="color:white;">Price</th>                        
+                        <th style="color:white;">Payment</th>
                     <tbody>
                         {% for allocation in allocations %}
                         <tr>
+                            <td></td>
                             <td>{{allocation.date}}</td>
                             <td>{{allocation.action}}</td>
                             {% if allocation.diesel_quantity != 0 %}

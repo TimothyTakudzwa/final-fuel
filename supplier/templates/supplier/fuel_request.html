@@ -45,6 +45,7 @@
         <table id="example" class="table table-striped table-bordered" style="width:100%">
             <thead style="background-color: lightslategray; color:white;">
                 <tr>
+                    <th style="color: white;"></th>
                     <th style="color: white;">Date</th>
                     <th style="color: white;">Buyer</th>
                     <th style="color: white;">Quantity</th>
@@ -60,6 +61,7 @@
             <tbody>
                 {% for req in requests %}
                 <tr>
+                    <td></td>
                     <td>{{ req.date }}</td>
                     <td>{{ req.name.first_name|lower|capfirst }} {{ req.name.last_name|lower|capfirst }}</td>
                     <td>{{ req.amount|intcomma }}</td>
