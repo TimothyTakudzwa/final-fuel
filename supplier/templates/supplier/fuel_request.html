@@ -1,0 +1,378 @@
+{% extends "supplier/supplier_base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block icon %}
+<i class="fa fa-bullhorn"></i>
+{%endblock%}
+
+{% block title %}
+<h1>Fuel Requests</h1>
+<small>List of All Fuel Requests</small>
+<ol class="breadcrumb hidden-xs">
+    <li><a href="{%url 'fuel-request'%}"><i class="pe-7s-home"></i> Home</a></li>
+    <li class="active">Requests</li>
+</ol>
+{% endblock %}
+
+{% block body %}
+
+<div class="col-md-12">
+    <div class="col-md-12">
+        <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+            <div class="panel-heading ui-sortable-handle">
+                <div class="btn-group"> 
+                    <a class="btn btn-success" href="{% url 'activate_whatsapp' %}" style="background-color: #25d366;"><i class="fa fa-whatsapp" style="margin-right: 11px;"></i>
+                        {% if request.user.activated_for_whatsapp %}
+                            Deactivate Whatsapp
+                        {% else %}
+                            Activate Whatsapp
+                        {% endif %}
+                    </a>  
+                </div>
+            <div class="dropdown">
+                <ul class="dropdown-menu dropdown-menu-right">
+                   
+                  
+                </ul>
+                <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+                </div>
+                </div>
+                </div>       <div class="panel-body">
+              
+      
+      <div class="table-responsive">
+        <table id="example" class="table table-striped table-bordered" style="width:100%">
+            <thead style="background-color: lightslategray; color:white;">
+                <tr>
+                    <th style="color: white;">Date</th>
+                    <th style="color: white;">Buyer</th>
+                    <th style="color: white;">Quantity</th>
+                    <th style="color: white;">Fuel</th>
+                    <th style="color: white;">Payment</th>
+                    <th style="color: white;">Delivery</th>
+                    <th style="color: white;">Address</th>
+                    <th style="color: white;">Equipment</th>
+                    <th style="color: white;">Offer</th>
+                    <th style="color: white;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for req in requests %}
+                <tr>
+                    <td>{{ req.date }}</td>
+                    <td>{{ req.name.first_name|lower|capfirst }} {{ req.name.last_name|lower|capfirst }}</td>
+                    <td>{{ req.amount|intcomma }}</td>
+                    <td>{{ req.fuel_type|lower|capfirst }}</td>
+                    <td>{% if req.cash %}Cash &nbsp;{% endif %}{% if req.ecocash %}Ecocash&nbsp;{% endif %}{% if req.usd %}Usd &nbsp;{% endif %}{% if req.swipe %}Swipe &nbsp;{% endif %}{% if req.no_payment %}Not Specified{% endif %}</td>
+                    <td>{{ req.delivery_method|lower|capfirst }}</td>
+                    <td>{{ req.delivery_address|lower|title}}</td>                                    
+                    <td>{% if req.dipping_stick_required %}Stick &nbsp;{% endif %}{% if req.pump_required %}Pump &nbsp;{% endif %}{% if req.meter_required %}Meter&nbsp;{% endif %}{% if req.no_equipments %}No Equipment Required{% endif %}</td>
+                    <td>{{ req.my_offer }}</td>
+                    {% if req.my_offer != 'No Offer' %}
+                    <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal"
+                            data-target="#edit_offer_{{req.id}}">Edit Offer</button></td>
+                    {% else %}
+                    <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#add_offer_{{req.id}}">Make Offer</button></td>
+                    {% endif %}
+                </tr>
+                <script>
+                    $(document).ready(function () {
+                      $('#choices{{forloop.counter}}').hide();
+                      $('#choices1{{forloop.counter}}').hide();
+                  
+                      $('#delivery_method1{{forloop.counter}}').change(function () {
+                        if ($('#delivery_method1{{forloop.counter}} option:selected').text() == "Delivery") {
+                          $('#choices1{{forloop.counter}}').hide();
+                        }
+                        else {
+                          $('#choices1{{forloop.counter}}').show();
+                          $('#street_name').attr('required', '');
+                          $('#street_number').attr('required', '');
+                          $('#location').attr('required', '');                                        
+                        }
+                      });
+                      $('#delivery_method{{forloop.counter}}').change(function () {
+                        if ($('#delivery_method{{forloop.counter}} option:selected').text() == "Self Collection") {
+                          $('#choices{{forloop.counter}}').show();
+                          $('#street_name').attr('required', '');
+                          $('#street_number').attr('required', '');
+                          $('#location').attr('required', '');
+                        }
+                        else {
+                          $('#choices{{forloop.counter}}').hide();
+                        }
+                      });
+                    });
+                  
+                    $('#pump_available').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                    $('#swipe').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                    $('#ecocash').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                    $('#cash').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                    $('#usd').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                  
+                    $('#dipping_stick_available').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                  
+                    $('#meter_available').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                  </script>
+
+                <!-- make offer modal -->
+<div class="modal fade modal-success in" id="add_offer_{{req.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-notice">
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h1 class="modal-title">Make Offer</h1>
+    </div>
+<div class="modal-body">
+<form method="POST" action="{% url 'supplier:supplier' req.id %}">
+    {% csrf_token %}
+    <div class=" row col-sm-12">
+    <div class="col-sm-4">
+        <lable>Fuel Type</lable>
+        <input type="text" name="fuel_type" class="form-control" value="{{req.fuel_type}}" disabled/>
+    </div>
+
+    <div class="col-sm-4">
+        <lable>Fuel Quantity</lable>
+        <input type="text" name="quantity" class="form-control" value="{{req.amount}}" required/>
+    </div>
+    <div class="col-sm-4">
+        <lable>Fuel Price</lable>
+        <input type="text" name="price" class="form-control" value="{{req.price}}" required />
+    </div>
+    </div>
+    <p style="text-align: center;"><label class="form-group">Select Payment Method</label></p>
+    <div class="col-sm-12 col">
+        <div class="togglebutton form-group col-sm-3">
+            <label>
+                <input type="checkbox" name="cash" id="cash">
+                <span class="toggle"></span>
+                Cash
+            </label>
+        </div>
+        <div class="togglebutton form-group col-sm-3">
+            <label>
+                <input type="checkbox" name="ecocash" id="ecocash">
+                <span class="toggle" value="True"></span>
+                Ecocash
+            </label>
+        </div>
+        <div class="togglebutton form-group col-sm-3">
+            <label>
+                <input type="checkbox" name="swipe" id="swipe">
+                <span class="toggle"></span>
+                Swipe
+            </label>
+        </div>
+        <div class="togglebutton form-group col-sm-3">
+            <label>
+                <input type="checkbox" name="usd" id="usd">
+                <span class="toggle"></span>
+                USD
+            </label>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label>Pick Up Method</label>
+        <select id="delivery_method{{forloop.counter}}" name="delivery_method" class="form-control">
+                <option value='DELIVERY'>Delivery</option>
+            <option value='SELF COLLECTION'>Self Collection</option>
+        </select>
+    </div>
+
+    <div class="form-group" name='choices' id='choices{{forloop.counter}}'>                
+        <p style="text-align: center;"><label>Collection Address</label></p>
+        <div class=" row col-sm-12">                            
+            <div class="togglebutton col-sm-4">
+              <label for="">Street Number</label>
+              <input type="text" class="form-control" name="s_number" id="street_number" aria-describedby="helpId" placeholder="">
+              
+            </div>
+            <div class="togglebutton col-sm-4">
+              <label for="">Street Name</label>
+              <input type="text" class="form-control" name="s_name" id="street_name" aria-describedby="helpId" placeholder="">
+              
+            </div>
+            <div class="togglebutton col-sm-4">
+              <label for="">Location/Town</label>
+              <input type="text" class="form-control" name="s_town" id="location" aria-describedby="helpId" placeholder="">
+             
+            </div>
+            </div>
+        </div>
+        <p style="text-align: center;"><label>Available Equipments</label></p>
+        <div class="row">
+            <div class="col-sm-4">
+                <input class="form-control-md" type="checkbox" value="False" id="pump_available" name="pump_available">
+                <label for="pump_available">Pump </label>
+                
+            </div>
+            <div class="col-sm-4">
+                <input class="form-control-md" type="checkbox" value="False" id="dipping_stick_available" name="dipping_stick_available">
+                <label for="dipping_stick_available">Dipping Stick </label>
+            </div>
+
+            <div class="col-sm-4">
+                <input class="form-control-md" type="checkbox" value="False" id="meter_available" name="meter_available">
+                <label for="meter_available">Meter</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer justify-content-center">
+<p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-primary">Make Offer</button></p>
+
+</div>
+</form>
+</div>
+</div>
+</div>
+<!-- end make offer modal -->
+
+
+<!-- edit modal -->
+<div class="modal fade modal-success in" id="edit_offer_{{req.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-notice">
+<div class="modal-content">
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <h1 class="modal-title">Edit Offer</h1>
+</div>
+<div class="modal-body">
+ <form method="POST" action="{% url 'supplier:edit_offer' req.offer_id %}">
+     {% csrf_token %}
+     <div class=" row col-sm-12">
+     <div class="col-sm-4">
+         <lable>Fuel Type</lable>
+         <input type="text" name="fuel_type" class="form-control" value="{{req.fuel_type}}" disabled/>
+     </div>
+
+     <div class="col-sm-4">
+         <lable>Fuel Quantity</lable>
+         <input type="text" name="quantity" class="form-control" value="{{req.offer_quantity}}" />
+     </div>
+     <div class="col-sm-4">
+         <lable>Fuel Price</lable>
+         <input type="text" name="price" class="form-control" value="{{req.offer_price}}" />
+     </div>
+     </div>
+     <p style="text-align: center;"><label class="form-group">Select Payment Method</label></p>
+     <div class="col-sm-12 col">
+        <div class="togglebutton form-group col-sm-3">
+            <label>
+                <input type="checkbox" name="cash" id="cash">
+                <span class="toggle"></span>
+                Cash
+            </label>
+        </div>
+        <div class="togglebutton form-group col-sm-3">
+            <label>
+                <input type="checkbox" name="ecocash" id="ecocash">
+                <span class="toggle" value="True"></span>
+                Ecocash
+            </label>
+        </div>
+        <div class="togglebutton form-group col-sm-3">
+            <label>
+                <input type="checkbox" name="swipe" id="swipe">
+                <span class="toggle"></span>
+                Swipe
+            </label>
+        </div>
+        <div class="togglebutton form-group col-sm-3">
+            <label>
+                <input type="checkbox" name="usd" id="usd">
+                <span class="toggle"></span>
+                USD
+            </label>
+        </div>
+    </div>
+
+
+     <div class="form-group">
+         <label>Pick Up Method</label>
+         <select id="delivery_method1{{forloop.counter}}" name="delivery_method1" class="form-control">
+            <option value='DELIVERY'>Delivery</option>
+            <option value='SELF COLLECTION'>Self Collection</option>
+         </select>
+     </div>
+
+     <div class="form-group" name='choices1' id='choices1{{forloop.counter}}'>
+        <p style="text-align: center;"><label>Collection Address</label></p>
+         <div class=" row col-sm-12">                          
+            <div class="togglebutton col-sm-4">
+              <label for="">Street Number</label>
+              <input type="text" class="form-control" name="s_number" id="street_number" aria-describedby="helpId" placeholder="">
+              
+            </div>
+            <div class="togglebutton col-sm-4">
+              <label for="">Street Name</label>
+              <input type="text" class="form-control" name="s_name" id="street_name" aria-describedby="helpId" placeholder="">
+              
+            </div>
+            <div class="togglebutton col-sm-4">
+              <label for="">Location/Town</label>
+              <input type="text" class="form-control" name="s_town" id="location" aria-describedby="helpId" placeholder="">
+             
+            </div>
+        </div>
+        <p style="text-align: center;"><label>Available Equipments</label></p>
+         <div class="row">
+            <div class="col-sm-4">
+                <input class="form-control-md" type="checkbox" value="False" id="pump_available" name="pump_available">
+                <label for="pump_available">Pump </label>
+                
+            </div>
+            <div class="col-sm-4">
+                <input class="form-control-md" type="checkbox" value="False" id="dipping_stick_available" name="dipping_stick_available">
+                <label for="dipping_stick_available">Dipping Stick </label>
+            </div>
+
+            <div class="col-sm-4">
+                <input class="form-control-md" type="checkbox" value="False" id="meter_available" name="meter_available">
+                <label for="meter_available">Meter</label>
+            </div>
+        </div>
+     </div>
+</div>
+
+<div class="modal-footer justify-content-center">
+    <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-info btn-sm">Update Offer</button></p>
+
+</div>
+</form>
+</div>
+</div>
+</div>
+<!-- end edit modal -->
+                {%endfor%}
+            </tbody>
+            </table>
+
+</div>
+</div>
+</div>
+        </div>
+    </div>
+</div>
+    {%endblock%}
