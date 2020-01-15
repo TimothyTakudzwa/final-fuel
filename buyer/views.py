@@ -272,7 +272,7 @@ def dashboard(request):
                 fuel_request.fuel_type = fuel_type
                 fuel_request.delivery_method = delivery_method
                 fuel_request.save()
-                offer_id = recommend(fuel_request)
+                offer_id, response_message = recommend(fuel_request)
                 if not offer_id:
                     messages.error(request,response_message)                    
                 else:
