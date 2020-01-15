@@ -29,7 +29,7 @@ def recommend(fuel_request):
             
             ratings = UserReview.objects.filter(depot__id=key).all()           
             total_rating = 0          
-            if ratings is not None:
+            if len(ratings) > 0:
                 for rating in ratings:                   
                     total_rating += rating.rating
                
@@ -53,6 +53,6 @@ def recommend(fuel_request):
         offer.save()
         response_message = "Here here"
 
-        return offer.id
+        return offer.id, response_message
 
 
