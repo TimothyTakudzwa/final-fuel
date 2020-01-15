@@ -63,7 +63,7 @@
         <!-- Site wrapper -->
         <div class="wrapper">
             <header class="main-header">
-                <a href="index.html" class="logo"> <!-- Logo -->
+                <a href="#" class="logo"> <!-- Logo -->
                     <span class="logo-mini">
                         <!--<b>A</b>H-admin-->
                        
@@ -108,7 +108,7 @@
                         </div>
                         <div class="info">
                             <h4>Welcome</h4>
-                            <p>{{user.first_name}} {{user.last_name}}</p> 
+                            <p>{{user.username}}</p> 
                         </div>
                     </div>
                    
@@ -157,14 +157,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                     <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
-                            <div class="input-group">
-                            <input type="text" name="q" class="form-control" placeholder="Search...">
-                                <span class="input-group-btn">
-                                    <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
-                                </span>
-                            </div>
-                        </form>   
+                    
                     <div class="header-icon">
                         {% block icon %}
                         {% endblock %}
@@ -175,85 +168,24 @@
                         {% endblock %}
                     </div>
                 </section>
+                
             <!-- Main content -->
-    <div class="content">
-            <div class="container">
-            <script>
-              $(document).ready(function () {
-                var logged_user = {{request.user.id}};
-                var socket = io.connect('https://dreamhub.co.zw/new_offer');
-              console.log(socket)
+            <div classs="row">
+                <div class="col-md-12">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}" style="text-align: center">
+                                    {{ message }}
+                            </div>
+                        {% endfor %}
+            
 
-              socket.on('new_request', function (msg) {
-                console.log("There is a new offer on the rise", logged_user, msg.user_id)
-               
-                  $('.new_alert').hide()
-                  var txt1 = "<h4 class='alert-heading' style='text-align: center;'> <i class='material-icons' style='color: gold;line-height: 0;margin-right: 3px;'> \
-                                      add_alert</i>New Request</h4><hr><p style='text-align: center;margin-top: 13px;background-color: #707aa785;padding: 10px;border-radius: 8px;'> \
-                                      " + msg.notification + "<hr><div class='col-sm-12'><a class='text-center' href='" + msg.url + "'>Click to View</a> </small></hr>";
-                  $("#new_message").empty(txt1);
-                  $("#new_message").append(txt1);
-                  $(".new_alert").fadeTo(10000, 1000).slideUp(1000, function () {
-                    $(".new_alert").slideUp(1000);
-                  });
-               
-              });
-
-              socket.on('offer_rejected', function (msg) {
-                console.log("Your offer has been rejected", logged_user, msg.user_id)
-                if (logged_user == msg.user_id) {
-                  $('.new_alert').hide()
-                  var txt1 = "<h4 class='alert-heading' style='text-align: center;'> <i class='material-icons' style='color: gold;line-height: 0;margin-right: 3px;'> \
-                                      add_alert</i>Offer Rejected</h4><hr><p style='text-align: center;margin-top: 13px;background-color: #707aa785;padding: 10px;border-radius: 8px;'> \
-                                      " + msg.notification + "<hr><div class='col-sm-12'><a class='text-center' href='" + msg.url + "'>Click to View</a> </small></hr>";
-                  $("#new_message").empty(txt1);
-                  $("#new_message").append(txt1);
-                  $(".new_alert").fadeTo(10000, 1000).slideUp(1000, function () {
-                    $(".new_alert").slideUp(1000);
-                  });
-                }
-              });
-
-              socket.on('offer_accepted', function (msg) {
-                console.log("Your offer has been accepted", logged_user, msg.user_id)
-                if (logged_user == msg.user_id) {
-                  $('.new_alert').hide()
-                  var txt1 = "<h4 class='alert-heading' style='text-align: center;'> <i class='material-icons' style='color: gold;line-height: 0;margin-right: 3px;'> \
-                                      add_alert</i>Offer Accepted</h4><hr><p style='text-align: center;margin-top: 13px;background-color: #707aa785;padding: 10px;border-radius: 8px;'> \
-                                      " + msg.notification + "<hr><div class='col-sm-12'><a class='text-center' href='" + msg.url + "'>Click to View</a> </small></hr>";
-                  $("#new_message").empty(txt1);
-                  $("#new_message").append(txt1);
-                  $(".new_alert").fadeTo(10000, 1000).slideUp(1000, function () {
-                    $(".new_alert").slideUp(1000);
-                  });
-                }
-              });
-                        });
-            </script>
-          
-          <div class="new_alert alert alert-success alert-dismissible fade show" role="alert" style="border-radius: 5px;padding: 8px;font-size: 12px;max-width: 97%; display: none;background-color: #505577e8;margin-left: 15px;margin-top: 10px;" >
-          
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-          </button>
-          <strong><i data-notify="icon" class="material-icons">add_alert</i><span data-notify="title"></span>
-          <div id='new_message'>
-          
-          
-          </div>
-          
-          </strong>
-          
-          </div>
-
-        </div>
-
-        
-        {% block body %}
-
-        {% endblock %}
-    </div>
-        
+                        {% endif %}
+            </div>
+            </div>
+            {%block body%}
+                    
+            {%endblock%}
             </div> <!-- /.content-wrapper -->
             <footer class="main-footer">
                 <div class="pull-right hidden-xs"> <b>Version</b> 1.0</div>
@@ -269,7 +201,20 @@
 
 <script>
 $(document).ready(function() {
-    $('#example').DataTable();
+    var t = $('#example').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 1, 'asc' ]]
+    } );
+ 
+    t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
 } );
 </script>
         <!-- jquery-ui --> 
