@@ -71,27 +71,27 @@ def change_password(request):
 
 @login_required()
 def account(request):
-    context = {
-        'title': 'Fuel Finder | Account',
-        'user': UserUpdateForm(instance=request.user)
+    # context = {
+    #     'title': 'Fuel Finder | Account',
+    #     'user': UserUpdateForm(instance=request.user)
 
-    }
-    user = request.user
-    if request.method == 'POST':
-        try:
-            phone_number = int(request.POST.get('phone_number'))
-            if len(str(phone_number)) == 12 and int(str(phone_number)[:4]) == 2637:
-                user.phone_number = phone_number
-                user.save()
-                messages.success(request, "Profile updated successfully!")
-                return redirect('account')
-            else:
-                messages.warning(request, "Wrong phone number format! Please re-enter the phone number")
-                return redirect('account')
-        except:
-            messages.warning(request, 'Phone number can only contain numbers!')
-            return redirect('account')
-    return render(request, 'supplier/user_profile.html', context=context)
+    # }
+    # user = request.user
+    # if request.method == 'POST':
+    #     try:
+    #         phone_number = int(request.POST.get('phone_number'))
+    #         if len(str(phone_number)) == 12 and int(str(phone_number)[:4]) == 2637:
+    #             user.phone_number = phone_number
+    #             user.save()
+    #             messages.success(request, "Profile updated successfully!")
+    #             return redirect('account')
+    #         else:
+    #             messages.warning(request, "Wrong phone number format! Please re-enter the phone number")
+    #             return redirect('account')
+    #     except:
+    #         messages.warning(request, 'Phone number can only contain numbers!')
+    #         return redirect('account')
+    return render(request, 'supplier/user_profile.html')
 
 
 @login_required()
