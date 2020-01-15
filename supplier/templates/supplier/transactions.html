@@ -36,6 +36,7 @@
         <table id="example" class="table table-striped table-bordered" style="width:100%">
                         <thead style="background-color: lightslategray; color:white;">
                             <tr>
+                                <th style="color: white;"></th>
                                 <th style="color: white;"> Date </th>
                                 <th style="color: white;">Buyer Name</th>
                                 <th style="color: white;">Company</th>
@@ -50,6 +51,7 @@
                         <tbody>
                             {% for transaction in transactions %}
                             <tr>
+                                <td></td>
                                 <td>{{ transaction.date }}</td>
                                 <td>{{ transaction.buyer.first_name|lower|capfirst }} {{ transaction.buyer.last_name|lower|capfirst }}</td>
                                 <td>{{ transaction.buyer.company.name }}</td>

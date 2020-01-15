@@ -176,6 +176,14 @@
                     </div>
                 </section>
             <!-- Main content -->
+            <div classs="row">
+                <div class="col-md-12">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}" style="text-align: center">
+                                    {{ message }}
+                            </div>
+                        {% endfor %}
     <div class="content">
             <div class="container">
             <script>
@@ -251,8 +259,14 @@
         
         {% block body %}
 
-        {% endblock %}
-    </div>
+                        {% endif %}
+                </div>
+                <div class="content">
+                    {% block body %}
+            
+                    {% endblock %}
+                </div>
+            </div>
         
             </div> <!-- /.content-wrapper -->
             <footer class="main-footer">
@@ -269,7 +283,20 @@
 
 <script>
 $(document).ready(function() {
-    $('#example').DataTable();
+    var t = $('#example').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 1, 'asc' ]]
+    } );
+ 
+    t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
 } );
 </script>
         <!-- jquery-ui --> 
