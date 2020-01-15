@@ -91,7 +91,7 @@ def account(request):
         except:
             messages.warning(request, 'Phone number can only contain numbers!')
             return redirect('account')
-    return render(request, 'supplier/account.html', context=context)
+    return render(request, 'supplier/user_profile.html', context=context)
 
 
 @login_required()
