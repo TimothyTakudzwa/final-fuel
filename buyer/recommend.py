@@ -1,4 +1,4 @@
-from supplier.models import  SupplierRating, Offer
+from supplier.models import  UserReview, Offer
 from company.models import FuelUpdate
 from buyer.models import FuelRequest
 from supplier.models import Subsidiaries
@@ -20,22 +20,27 @@ def recommend(fuel_request):
         scoreboard = {}
         for supplier in supplies: 
             if fuel_request.fuel_type == 'Petrol':
-                scoreboard[str(supplier.relationship_id)] = round(float(supplier.petrol_price) * 0.6, 2) 
+                scoreboard[str(supplier.relationship_id)] = round(float(supplier.petrol_price) * 0.7, 2) 
             else:                
-                scoreboard[str(supplier.relationship_id)] = round(float(supplier.diesel_price) * 0.6, 2)
+                scoreboard[str(supplier.relationship_id)] = round(float(supplier.diesel_price) * 0.7, 2)
+            
         for key in scoreboard:
             supplier_profile = Subsidiaries.objects.get(id=key)
-            ratings = SupplierRating.objects.filter(id =1).first()
+            
+            ratings = UserReview.objects.filter(depot__id=key).all()           
             total_rating = 0          
             if ratings is not None:
-                for rating in ratings:
-                    total_rating += rating.rating  
-                scoreboard[key] = scoreboard[key] + (total_rating * 0.4)
-            total_rating = 0
-        max_rate_provider = min(scoreboard.items(), key=operator.itemgetter(1))[0]
+                for rating in ratings:                   
+                    total_rating += rating.rating
+               
+                scoreboard[key] = scoreboard[key] + round(float((total_rating/len(ratings))* -0.3), 2)
+            else:
+                total_rating = 0
+        max_rate_provider = max(scoreboard.items(), key=operator.itemgetter(1))[0]
         user = User.objects.filter(subsidiary_id=max_rate_provider).first()
         price_object = FuelUpdate.objects.filter(relationship_id=max_rate_provider, sub_type='Depot').first()
         selected_supply = Subsidiaries.objects.get(id=max_rate_provider)
+        print(selected_supply.id)
         if fuel_request.fuel_type == 'Petrol':
             offer = Offer.objects.create(quantity=fuel_request.amount, supplier=user, request=fuel_request, price=price_object.petrol_price)
             response_message = recommender_response.format(selected_supply.company.name, selected_supply.name, fuel_request.fuel_type, fuel_request.amount, price_object.petrol_price)

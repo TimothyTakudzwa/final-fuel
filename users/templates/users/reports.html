@@ -392,15 +392,71 @@
 
                         
                         {% if trans or revs or stock or allocations or requests %}
-                        <div style="/* padding: 25px; */background-color:rgb(14, 80, 100);border: #fafbfb 2px solid;border-radius: 10px;padding-left: 15px;padding-top: 30px;padding-bottom: 30px;margin-left: 15px;margin-top: -89px;">
-                            <h1 style="color: #fafafa;font-size: medium;">Showing results from <b>{{start}}</b> to <b>{{end}} </b> </h1>
+
+                        <div class="container" style="background-color: lightseagreen; margin-bottom: 30px">
+                            <blockquote class="quote-box">
+                              <p class="quotation-mark">
+                                “
+                              </p>
+                              {% if not stock %}
+                              <h1 style="color: #fafafa;font-size: medium;">Showing results from <b>{{start}}</b> to <b>{{end}} </b> </h1>
+                              {% else %}
+                              <h1 style="color: #fafafa;font-size: medium;">Showing Current Stock Levels  - {{ request.user.company.name|title}}'s Subsidiaries </h1>
+
+                              {% endif %}
+                              <hr>
+                              <div class="blog-post-actions">
+                                <p class="blog-post-bottom pull-left" style="padding:20px;">
+                                  {% if trans %}
+                                  Transactions
+                                  {% elif revs %}
+                                  Revenue
+                                  {% elif stock%}
+                                  Stock
+                                  {% elif allocations %}
+                                  Fuel Allocations
+                                  {% elif requests %}
+                                  Requests
+                                  {% endif %}
+                                  Report
+                                </p>
+                                
+                              </div>
+                            </blockquote>
                         </div>
                         {% else %}
                         <!--
                         <div style="/* padding: 25px; */background-color:rgb(14, 80, 100);border: #fafbfb 2px solid;border-radius: 10px;padding-left: 15px;padding-top: 30px;padding-bottom: 30px;margin-left: 15px;margin-top: -89px;">
-                            <h1 style="color: #fafafa;font-size: medium;">No Data, Generate New Report Above </h1>
                         </div>
-                    -->
+                        -->
+
+                        <div class="container" style="background-color: lightseagreen; margin-bottom: 30px">
+                            <blockquote class="quote-box">
+                              <p class="quotation-mark">
+                                “
+                              </p>
+                              <h1 style="color: #fafafa;font-size: medium;">No Data, Generate New Report Above </h1>
+
+                              <hr>
+                              <div class="blog-post-actions">
+                                <p class="blog-post-bottom pull-left" style="padding:20px;">
+                                  {% if trans %}
+                                  Transactions
+                                  {% elif revs %}
+                                  Revenue
+                                  {% elif stock%}
+                                  Stock
+                                  {% elif allocations %}
+                                  Fuel Allocations
+                                  {% elif requests %}
+                                  Requests
+                                  {% endif %}
+                                  Report
+                                </p>
+                                
+                              </div>
+                            </blockquote>
+                        </div>
                         {%endif%}  
                     
                         {%if trans%}
