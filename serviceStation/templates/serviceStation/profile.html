@@ -1,4 +1,4 @@
-{% extends "serviceStation/my_base.html" %}
+{% extends "serviceStation/new_base.html" %}
 {% load crispy_forms_tags %} 
 
 {% block body%}
@@ -63,8 +63,8 @@
                           <p>Never take advantage of anyone's weakness to destroy his/her life, let us work on building and strengthening each other.</p>
                       </div>
                   </div>
-                  <div class="card-footer" style="width: 980px;">
-                      <div class="card-footer-stats">
+                  <div class="card-footer" style="width: 900px;">
+                      <div class="card-footer-stats col-md-12">
                           <div>
                               <p>First Name</p><i ></i><span>{{user.first_name}}</span>
                           </div>
@@ -75,11 +75,11 @@
                           <div>
                               <p>Email</p><span >{{user.email}}</span>
                           </div>
+                          <div style="background-color: rgb(54, 49, 49);">
+                            <p>Whatsapp Number</p><span >{{user.phone_number}}</span>
+                        </div>
                       </div>
-                      <div class="card-footer-message">
-                          <h4><i class="fa fa-comments"></i>Whatsapp {{user.phone_number}} <a class="btn btn-info pull-center" href="{% url 'serviceStation:edit_password' %}"><span style="color: rgb(12, 12, 12);"><b>Change Password</b></span></a></h4>  
-                         
-                      </div>
+                      
                   </div>
               </div>
           </div>
@@ -88,24 +88,42 @@
               <div class="review-block">
                   <div class="row">
                      
-                      <div class="col-sm-9">
+                      <div class="col-sm-4">
                           <div class="review-block-rate">
-                              <label type="button" class="btn btn-success btn-xs" aria-label="Left Align"><h4>Company Name</h4>
+                              <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Company Name</h4>
                               </label>
                              
                           </div>
                           <div class="review-block-title">{{user.company.name}} </div>
                           <div class="review-block-description"> </div>
                       </div>
-                      <div class="col-sm-9">
+                      <div class="col-sm-4">
                           <div class="review-block-rate">
-                              <label type="button" class="btn btn-success btn-xs" aria-label="Left Align"><h4>Company Address</h4>
+                              <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Company Address</h4>
                               </label>
                              
                           </div>
                           <div class="review-block-title">{{user.company.address}}</div>
                           <div class="review-block-description"> </div>
                       </div>
+                      <div class="col-sm-4">
+                        <div class="review-block-rate">
+                            <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Company Address</h4>
+                            </label>
+                           
+                        </div>
+                        <div class="review-block-title">{{user.company.address}}</div>
+                        <div class="review-block-description"> </div>
+                    </div>
+                    <div class="col-sm-12">
+                      <div class="review-block-rate">
+                          <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Company Address</h4>
+                          </label>
+                         
+                      </div>
+                      <div class="review-block-title">{{user.company.address}}</div>
+                      <div class="review-block-description"> </div>
+                  </div>
                       
                   </div>
                   <hr>

@@ -152,13 +152,13 @@
                     <ul class="sidebar-menu">
                         <li class="nav-item {% if request.path == '/serviceStation/' %} active {% endif %}">
                             <a class="nav-link" href="{% url 'serviceStation:home' %}">
-                                <i class="fa fa-500px"></i><span>Dashboard</span>
+                                <i class="fa fa-binoculars"></i><span>Dashboard</span>
                             </a>
                         </li>
                        
                         <li class="nav-item {% if request.path == '/serviceStation/allocated_quantity/' %} active {% endif %}">
                             <a class="nav-link" href="{% url 'serviceStation:allocated_quantity' %}">
-                                <i class="fa fa-hospital-o"></i><span>Audit Trail</span>
+                                <i class="fa fa-book"></i><span>Audit Trail</span>
                             </a>
                         </li>
                         <li class="nav-item {% if request.path == '/serviceStation/myaccount/' %} active {% endif %}">
