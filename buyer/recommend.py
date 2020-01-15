@@ -53,6 +53,6 @@ def recommend(fuel_request):
         offer.save()
         response_message = "Here here"
 
-        return offer.id
+        return offer.id, response_message
 
 
