@@ -1,0 +1,91 @@
+{% extends "supplier/supplier_base.html" %}
+
+{% block icon %}
+<i class="fa fa-th-list"></i>
+{%endblock%}
+
+{% block title %}
+<h1>Fuel Allocations</h1>
+<small>Fuel allocations history</small>
+<ol class="breadcrumb hidden-xs">
+    <li><a href="{%url 'fuel-request'%}"><i class="pe-7s-home"></i> Home</a></li>
+    <li class="active">allocations</li>
+</ol>
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+        <div class="panel-heading ui-sortable-handle">
+        <div class="dropdown">
+            <ul class="dropdown-menu dropdown-menu-right">
+               
+              
+            </ul>
+            <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+            </div>
+            </div>
+            </div>       <div class="panel-body">
+          
+  
+  <div class="table-responsive">
+    <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead style="color:white; background:lightslategray">
+                        <th style="color:white;">
+                            Date
+                        </th>
+
+                        <th style="color:white;">
+                            Action
+                        </th>
+
+                        <th style="color:white;">
+                            Diesel 
+                        </th>
+
+                        <th style="color:white;">
+                            Price
+                        </th>
+                        <th style="color:white;">
+                               Petrol
+                            </th>
+                            <th style="color:white;">
+                                 Price
+                                </th>
+                        
+                        <th style="color:white;">
+                            Payment
+                        </th>
+                    <tbody>
+                        {% for allocation in allocations %}
+                        <tr>
+                            <td>{{allocation.date}}</td>
+                            <td>{{allocation.action}}</td>
+                            {% if allocation.diesel_quantity != 0 %}
+                            <td>{{allocation.diesel_quantity}}</td>
+                            <td>{{allocation.diesel_price}}</td>
+                            {% else %}
+                            <td>N/A</td>
+                            <td>N/A</td>
+                            {% endif %}
+                            {% if allocation.petrol_quantity != 0 %}
+                            <td>{{allocation.petrol_quantity}}</td>
+                            <td>{{allocation.petrol_price}}</td>
+                            {% else %}
+                            <td>N/A</td>
+                            <td>N/A</td>
+                            {%endif%}
+                            <td>{%if allocation.cash%}Cash &nbsp;{%endif%} {%if allocation.usd%}USD &nbsp;{%endif%} {%if allocation.ecocash%}Ecocash &nbsp;{%endif%} {%if allocation.swipe%}Swipe &nbsp;{%endif%}</td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
