@@ -198,6 +198,7 @@ def requests_handler(user, message):
                 response_message = 'Oops!!! Could not get best supplier for you, please type *1* to wait for offers'
             else:
                 offer = Offer.objects.filter(id=response).first()
+                depot = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
                 response_message = suggested_choice.format(offer.supplier.company.name, offer.request.fuel_type, offer.quantity, offer.price, offer.id)
                 user.position = 71
                 user.save()
@@ -272,14 +273,17 @@ def follow_up(user, message):
         requests = FuelRequest.objects.filter(name=user).filter(wait=True).all()
         req = requests[int(message) - 1]
         offers = Offer.objects.filter(request=req).all()
-        response_message = 'Which offer do you want to accept? \n\n'
-        i = 1
-        for offer in offers:
-            response_message = response_message + str(i) + ". " + str(offer.quantity) + "L" + " " + "@" + " " + str(offer.price) + '\n'
-            i += 1        
-        user.position = 22
-        user.fuel_request = req.id
-        user.save()
+        if offers is not None:
+            response_message = 'Which offer do you want to accept? \n\n'
+            i = 1
+            for offer in offers:
+                response_message = response_message + str(i) + ". " + str(offer.quantity) + "L" + " " + "@" + " " + str(offer.price) + '\n'
+                i += 1        
+            user.position = 22
+            user.fuel_request = req.id
+            user.save()
+        else:
+            response_message = 'No offers yet, Please try after some time or type *menu* to go back to main menu.'
     elif user.position == 22:
         req = FuelRequest.objects.filter(id = user.fuel_request).first()
         offers = Offer.objects.filter(request=req).all()
@@ -537,15 +541,18 @@ def view_offers_handler(user, message):
     if user.position == 0:
         response_message = "Reply with the offer number to change the initial offer available\n\n"
         offers = Offer.objects.filter(supplier=user).order_by('-id')
-        i = 1
-        for offer in offers:
-            fuel = offer.request.fuel_type.capitalize()
-            response_message = response_message + f'*{i}.* {fuel} *{offer.quantity}* litres at {offer.price} made on {offer.date}\n'
-            user.fuel_updates_ids = user.fuel_updates_ids + str(offer.id) + " "
+        if offers is not None:
+            i = 1
+            for offer in offers:
+                fuel = offer.request.fuel_type.capitalize()
+                response_message = response_message + f'*{i}.* {fuel} *{offer.quantity}* litres at {offer.price} made on {offer.date}\n'
+                user.fuel_updates_ids = user.fuel_updates_ids + str(offer.id) + " "
+                user.save()
+                i += 1
+            user.position = 1
             user.save()
-            i += 1
-        user.position = 1
-        user.save()
+        else:
+            response_message = 'ooops!!! no offers found, please type *menu* to go back and select *fuel* requests to make offers.'
     elif user.position == 1:
         offer_list = list(user.fuel_updates_ids.split(" "))
         try:
@@ -949,7 +956,7 @@ def registration_handler(request, user, message):
                     username = initial_username + str(i)  
                 user.username = username.lower()          
                 if token_is_send(request, user):
-                    response_message = "We have sent a verification email to your supplied email, Please visit the link to complete the registration process"
+                    response_message = "We have sent a verification email to your supplied email, Please visit the link to complete the registration process. After completing registration please come back to WhatsApp and type *menu*"
                     user.is_active = True
                     user.save()
                 else:
