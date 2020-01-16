@@ -169,6 +169,14 @@
         
         <div class="content-wrapper">
             {% block header %} {% endblock %}
+            <script>
+                $("document").ready(function(){
+                setTimeout(function(){
+                    $("div.alert").remove();
+                }, 3000 ); // 5 secs
+
+                });
+            </script>
             {% if messages %}
         
             {% for message in messages %}
