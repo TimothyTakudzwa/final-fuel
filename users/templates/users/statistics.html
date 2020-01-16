@@ -26,7 +26,15 @@
   </div>
 
   </section>
-
+<!--
+<div class="container" >
+  <button id="slidetop" class="btn btn-black btn-sm progress-button pull-right">
+      <span class="">Run example</span>
+      <span class="progress"></span>
+  </button>
+ 
+</div>
+-->
   <section class="content">
     <div class="row">
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
@@ -171,6 +179,7 @@
   <!-- /.row -->
   </section>
 
+<!--  
   <section class="content">
     <div class="container-fluid">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8  lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="Hmw8R6MoPC">  
@@ -188,10 +197,7 @@
       </div>
     </div>  
   </section>
-
-
-
-  <!---->
+  -->
 
 
 
@@ -414,7 +420,15 @@
         
     </div> 
   </section>
-</div>  
+</div>>  
+<!--
+<div class="ns-box ns-bar ns-effect-slidetop ns-type-notice ns-show">
+  <div class="ns-box-inner"><span class="icon icon-megaphone"></span>
+    <p>You have some interesting news in your inbox. Go <a href="#">check it out</a> now.
+    </p>
+  </div><span class="ns-close"></span>
+</div>
+-->
 
 <script>
 
@@ -453,10 +467,699 @@
   // is the actual data object.
   new Chartist.Line('.ct-chart', data);
 </script>
+<script>
+  "use strict"; // Start of use strict
+  // notification
+  setTimeout(function () {
+      toastr.options = {
+          closeButton: true,
+          progressBar: true,
+          showMethod: 'slideDown',
+          timeOut: 1000000
+      };
+      toastr.success('Fuel Finder Admin', 'You Have Received A New Notifation Health Admin');
+
+  }, 1300);
+
+  //counter
+  $('.count-number').counterUp({
+      delay: 10,
+      time: 5000
+  });
+
+  //data maps
+  var basic_choropleth = new Datamap({
+      element: document.getElementById("map1"),
+      projection: 'mercator',
+      fills: {
+          defaultFill: "#009688",
+          authorHasTraveledTo: "#fa0fa0"
+      },
+      data: {
+          USA: {fillKey: "authorHasTraveledTo"},
+          JPN: {fillKey: "authorHasTraveledTo"},
+          ITA: {fillKey: "authorHasTraveledTo"},
+          CRI: {fillKey: "authorHasTraveledTo"},
+          KOR: {fillKey: "authorHasTraveledTo"},
+          DEU: {fillKey: "authorHasTraveledTo"}
+      }
+  });
+
+  var colors = d3.scale.category10();
+
+  window.setInterval(function () {
+      basic_choropleth.updateChoropleth({
+          USA: colors(Math.random() * 10),
+          RUS: colors(Math.random() * 100),
+          AUS: {fillKey: 'authorHasTraveledTo'},
+          BRA: colors(Math.random() * 50),
+          CAN: colors(Math.random() * 50),
+          ZAF: colors(Math.random() * 50),
+          IND: colors(Math.random() * 50)
+      });
+  }, 2000);
+
+//bar chart
+  var ctx = document.getElementById("barChart");
+  var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+          datasets: [
+              {
+                  label: "My First dataset",
+                  data: [65, 59, 80, 81, 56, 55, 40, 25, 35, 51, 94, 16],
+                  borderColor: "#009688",
+                  borderWidth: "0",
+                  backgroundColor: "#009688"
+              },
+              {
+                  label: "My Second dataset",
+                  data: [28, 48, 40, 19, 86, 27, 90, 91, 41, 25, 34, 47],
+                  borderColor: "#009688",
+                  borderWidth: "0",
+                  backgroundColor: "#009688"
+              }
+          ]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+          }
+      }
+  });
+        //radar chart
+  var ctx = document.getElementById("radarChart");
+  var myChart = new Chart(ctx, {
+      type: 'radar',
+      data: {
+          labels: [["Eating", "Dinner"], ["Drinking", "Water"], "Sleeping", ["Designing", "Graphics"], "Coding", "Cycling", "Running"],
+          datasets: [
+              {
+                  label: "My First dataset",
+                  data: [65, 59, 66, 45, 56, 55, 40],
+                  borderColor: "#00968866",
+                  borderWidth: "1",
+                  backgroundColor: "rgba(0, 150, 136, 0.35)"
+              },
+              {
+                  label: "My Second dataset",
+                  data: [28, 12, 40, 19, 63, 27, 87],
+                  borderColor: "rgba(55, 160, 0, 0.7",
+                  borderWidth: "1",
+                  backgroundColor: "rgba(0, 150, 136, 0.35)"
+              }
+          ]
+      },
+      options: {
+          legend: {
+              position: 'top'
+          },
+          scale: {
+              ticks: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+
+  // Message
+  $('.message_inner').slimScroll({
+      size: '3px',
+      height: '320px'
+  });
+
+  //emojionearea
+  $(".emojionearea").emojioneArea({
+      pickerPosition: "top",
+      tonesStyle: "radio"
+  });
+
+  //monthly calender
+  $('#m_calendar').monthly({
+      mode: 'event',
+      //jsonUrl: 'events.json',
+      //dataType: 'json'
+      xmlUrl: 'events.xml'
+  });
+
+
+//line chart
+  var ctx = document.getElementById("lineChart");
+  var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+          labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+          datasets: [
+              {
+                  label: "My First dataset",
+                  borderColor: "rgba(0,0,0,.09)",
+                  borderWidth: "1",
+                  backgroundColor: "rgba(0,0,0,.07)",
+                  data: [22, 44, 67, 43, 76, 45, 12, 45, 65, 55, 42, 61, 73]
+              },
+              {
+                  label: "My Second dataset",
+                  borderColor: "#009688",
+                  borderWidth: "1",
+                  backgroundColor: "#009688",
+                  pointHighlightStroke: "#009688",
+                  data: [16, 32, 18, 26, 42, 33, 44, 24, 19, 16, 67, 71, 65]
+              }
+          ]
+      },
+      options: {
+          responsive: true,
+          tooltips: {
+              mode: 'index',
+              intersect: false
+          },
+          hover: {
+              mode: 'nearest',
+              intersect: true
+          }
+
+      }
+  });
+
+
+</script>
+
+<script>
+  
+
+</script>
 
 
 
+<script>
+  "use strict"; // Start of use strict
+  
+  (function () {
+      function1();
+      function2();
+      function3();
+      function4();
+      function5();
+      function6();
+      function7();
+      function8();
+      function9();
+      function10();
+      function11();
+      function12();
+      function13();
+      function14();
+      function15();
+      function16();
+  })();
+
+  function function1() {
+      var bttn = document.getElementById('scale');
+
+      // make sure..
+      bttn.disabled = false;
+
+      bttn.addEventListener('click', function () {
+          // simulate loading (for demo purposes only)
+          classie.add(bttn, 'active');
+          setTimeout(function () {
+
+              classie.remove(bttn, 'active');
+
+              // create the notification
+              var notification = new NotificationFx({
+                  message: '<p>This is just a simple notice. Everything is in order and this is a <a href="#">simple link</a>.</p>',
+                  layout: 'growl',
+                  effect: 'scale',
+                  type: 'notice', // notice, warning, error or success
+                  onClose: function () {
+                      bttn.disabled = false;
+                  }
+              });
+
+              // show the notification
+              notification.show();
+
+          }, 1200);
+
+          // disable the button (for demo purposes only)
+          this.disabled = true;
+      });
+  }
+  function function2() {
+      var bttn = document.getElementById('jelly');
+
+      // make sure..
+      bttn.disabled = false;
+
+      bttn.addEventListener('click', function () {
+          // simulate loading (for demo purposes only)
+          classie.add(bttn, 'active');
+          setTimeout(function () {
+
+              classie.remove(bttn, 'active');
+
+              // create the notification
+              var notification = new NotificationFx({
+                  message: '<p>Hello there! I\'m a classic notification but I have some elastic jelliness thanks to <a href="http://bouncejs.com/">bounce.js</a>. </p>',
+                  layout: 'growl',
+                  effect: 'jelly',
+                  type: 'notice', // notice, warning, error or success
+                  onClose: function () {
+                      bttn.disabled = false;
+                  }
+              });
+
+              // show the notification
+              notification.show();
+
+          }, 1200);
+
+          // disable the button (for demo purposes only)
+          this.disabled = true;
+      });
+  }
+  function function3() {
+      var bttn = document.getElementById('slideIn');
+
+      // make sure..
+      bttn.disabled = false;
+
+      bttn.addEventListener('click', function () {
+          // simulate loading (for demo purposes only)
+          classie.add(bttn, 'active');
+          setTimeout(function () {
+
+              classie.remove(bttn, 'active');
+
+              // create the notification
+              var notification = new NotificationFx({
+                  message: '<p>This notification has slight elasticity to it thanks to <a href="http://bouncejs.com/">bounce.js</a>.</p>',
+                  layout: 'growl',
+                  effect: 'slide',
+                  type: 'notice', // notice, warning or error
+                  onClose: function () {
+                      bttn.disabled = false;
+                  }
+              });
+
+              // show the notification
+              notification.show();
+
+          }, 1200);
+
+          // disable the button (for demo purposes only)
+          this.disabled = true;
+      });
+  }
+  function function4() {
+      var bttn = document.getElementById('genie');
+
+      // make sure..
+      bttn.disabled = false;
+
+      bttn.addEventListener('click', function () {
+          // simulate loading (for demo purposes only)
+          classie.add(bttn, 'active');
+          setTimeout(function () {
+
+              classie.remove(bttn, 'active');
+
+              // create the notification
+              var notification = new NotificationFx({
+                  message: '<p>Your preferences have been saved successfully. See all your settings in your <a href="#">profile overview</a>.</p>',
+                  layout: 'growl',
+                  effect: 'genie',
+                  type: 'notice', // notice, warning or error
+                  onClose: function () {
+                      bttn.disabled = false;
+                  }
+              });
+
+              // show the notification
+              notification.show();
+
+          }, 1200);
+
+          // disable the button (for demo purposes only)
+          this.disabled = true;
+      });
+  }
+  function function5() {
+      var bttn = document.getElementById('flip');
+
+      // make sure..
+      bttn.disabled = false;
+
+      bttn.addEventListener('click', function () {
+          // simulate loading (for demo purposes only)
+          classie.add(bttn, 'active');
+          setTimeout(function () {
+
+              classie.remove(bttn, 'active');
+
+              // create the notification
+              var notification = new NotificationFx({
+                  message: '<p>Your preferences have been saved successfully. See all your settings in your <a href="#">profile overview</a>.</p>',
+                  layout: 'attached',
+                  effect: 'flip',
+                  type: 'notice', // notice, warning or error
+                  onClose: function () {
+                      bttn.disabled = false;
+                  }
+              });
+
+              // show the notification
+              notification.show();
+
+          }, 1200);
+
+          // disable the button (for demo purposes only)
+          this.disabled = true;
+      });
+  }
+  function function6() {
+
+      var bttn = document.getElementById('bouncyFlip');
+
+      // make sure..
+      bttn.disabled = false;
+
+      bttn.addEventListener('click', function () {
+          // simulate loading (for demo purposes only)
+          classie.add(bttn, 'active');
+          setTimeout(function () {
+
+              classie.remove(bttn, 'active');
+
+              // create the notification
+              var notification = new NotificationFx({
+                  message: '<span class="icon icon-calendar"></span><p>The event was added to your calendar. Check out all your events in your <a href="#">event overview</a>.</p>',
+                  layout: 'attached',
+                  effect: 'bouncyflip',
+                  type: 'notice', // notice, warning or error
+                  onClose: function () {
+                      bttn.disabled = false;
+                  }
+              });
+
+              // show the notification
+              notification.show();
+
+          }, 1200);
+
+          // disable the button (for demo purposes only)
+          this.disabled = true;
+      });
+  }
+  function function7() {
+      var bttn = document.getElementById('slidetop');
+
+      // make sure..
+      bttn.disabled = false;
+
+      bttn.addEventListener('click', function () {
+          // simulate loading (for demo purposes only)
+          classie.add(bttn, 'active');
+          setTimeout(function () {
+
+              classie.remove(bttn, 'active');
+
+              // create the notification
+              var notification = new NotificationFx({
+                  message: '<span class="icon icon-megaphone"></span><p>You have some interesting news in your inbox. Go <a href="#">check it out</a> now.</p>',
+                  layout: 'bar',
+                  effect: 'slidetop',
+                  type: 'notice', // notice, warning or error
+                  onClose: function () {
+                      bttn.disabled = false;
+                  }
+              });
+
+              // show the notification
+              notification.show();
+
+          }, 1200);
+
+          // disable the button (for demo purposes only)
+          this.disabled = true;
+      });
+
+  }
 
 
+  function function8() {
+
+      var bttn = document.getElementById('exploader');
+
+      // make sure..
+      bttn.disabled = false;
+
+      bttn.addEventListener('click', function () {
+
+          // create the notification
+          var notification = new NotificationFx({
+              message: '<span class="icon icon-settings"></span><p>Your preferences have been saved successfully. See all your settings in your <a href="#">profile overview</a>.</p>',
+              layout: 'bar',
+              effect: 'exploader',
+              type: 'notice', // notice, warning or error
+              onClose: function () {
+                  bttn.disabled = false;
+              }
+          });
+
+          // show the notification
+          notification.show();
+
+          // disable the button (for demo purposes only)
+          this.disabled = true;
+      });
+  }
+
+  function function9() {
+      var svgshape = document.getElementById('notification-shape'),
+      s = Snap(svgshape.querySelector('svg')),
+      path = s.select('path'),
+      pathConfig = {
+          from: path.attr('d'),
+          to: svgshape.getAttribute('data-path-to')
+      },
+      bttn = document.getElementById('cornerExpand');
+
+      // make sure..
+      bttn.disabled = false;
+
+      bttn.addEventListener('click', function () {
+          // simulate loading (for demo purposes only)
+          classie.add(bttn, 'active');
+          setTimeout(function () {
+
+              path.animate({'path': pathConfig.to}, 300, mina.easeinout);
+
+              classie.remove(bttn, 'active');
+
+              // create the notification
+              var notification = new NotificationFx({
+                  wrapper: svgshape,
+                  message: '<p><span class="icon icon-bulb"></span> I\'m appaering in a morphed shape thanks to <a href="http://snapsvg.io/">Snap.svg</a></p>',
+                  layout: 'other',
+                  effect: 'cornerexpand',
+                  type: 'notice', // notice, warning or error
+                  onClose: function () {
+                      bttn.disabled = false;
+                      setTimeout(function () {
+                          path.animate({'path': pathConfig.from}, 300, mina.easeinout);
+                      }, 200);
+                  }
+              });
+
+              // show the notification
+              notification.show();
+
+          }, 1200);
+
+          // disable the button (for demo purposes only)
+          this.disabled = true;
+      });
+
+  }
+  function function10() {
+      var svgshape = document.getElementById('notification-shape2'),
+      bttn = document.getElementById('loadingcircle');
+
+      // make sure..
+      bttn.disabled = false;
+
+      bttn.addEventListener('click', function () {
+          // create the notification
+          var notification = new NotificationFx({
+              wrapper: svgshape,
+              message: '<p>Whatever you did, it was successful!</p>',
+              layout: 'other',
+              effect: 'loadingcircle',
+              ttl: 9000,
+              type: 'notice', // notice, warning or error
+              onClose: function () {
+                  bttn.disabled = false;
+              }
+          });
+
+          // show the notification
+          notification.show();
+
+          // disable the button (for demo purposes only)
+          this.disabled = true;
+      });
+  }
+  function function11() {
+      var bttn = document.getElementById('boxspinner');
+
+      // make sure..
+      bttn.disabled = false;
+
+      bttn.addEventListener('click', function () {
+          // create the notification
+          var notification = new NotificationFx({
+              message: '<p>I am using a beautiful spinner from <a href="http://tobiasahlin.com/spinkit/">SpinKit</a></p>',
+              layout: 'other',
+              effect: 'boxspinner',
+              ttl: 9000,
+              type: 'notice', // notice, warning or error
+              onClose: function () {
+                  bttn.disabled = false;
+              }
+          });
+
+          // show the notification
+          notification.show();
+
+          // disable the button (for demo purposes only)
+          this.disabled = true;
+      });
+
+  }
+  function function12() {
+      var bttn = document.getElementById('thumbslider');
+      // make sure..
+      bttn.disabled = false;
+
+      bttn.addEventListener('click', function () {
+          // simulate loading (for demo purposes only)
+          classie.add(bttn, 'active');
+          setTimeout(function () {
+
+              classie.remove(bttn, 'active');
+
+              // create the notification
+              var notification = new NotificationFx({
+                  message: '<div class="ns-thumb"><img src="assets/dist/img/user1.jpg"/></div><div class="ns-content"><p><a href="#">Zoe Moulder</a> accepted your invitation.</p></div>',
+                  layout: 'other',
+                  ttl: 6000,
+                  effect: 'thumbslider',
+                  type: 'notice', // notice, warning, error or success
+                  onClose: function () {
+                      bttn.disabled = false;
+                  }
+              });
+
+              // show the notification
+              notification.show();
+
+          }, 1200);
+
+          // disable the button (for demo purposes only)
+          this.disabled = true;
+      });
+
+  }
+
+  function function13() {
+      $('.demo1').on("click", function () {
+          swal({
+              title: "Welcome in Alerts",
+              text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+          });
+      });
+  }
+
+  function function14() {
+      $('.demo2').on("click", function () {
+          swal({
+              title: "Good job!",
+              text: "You clicked the button!",
+              type: "success"
+          });
+      });
+  }
+
+  function function15() {
+      $('.demo3').on("click", function () {
+          swal({
+              title: "Are you sure?",
+              text: "Your will not be able to recover this imaginary file!",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#DD6B55",
+              confirmButtonText: "Yes, delete it!"
+          },
+          function () {
+              swal("Booyah!");
+          });
+      });
+  }
+
+  function function16() {
+      $('.demo4').on("click", function () {
+          swal({
+              title: "Are you sure?",
+              text: "Your will not be able to recover this imaginary file!",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#DD6B55",
+              confirmButtonText: "Yes, delete it!",
+              cancelButtonText: "No, cancel plx!",
+              closeOnConfirm: false,
+              closeOnCancel: false},
+              function (isConfirm) {
+                  if (isConfirm) {
+                      swal("Deleted!", "Your imaginary file has been deleted.", "success");
+                  } else {
+                      swal("Cancelled", "Your imaginary file is safe :)", "error");
+                  }
+              });
+      });
+  }
+
+  // Toastr options
+  toastr.options = {
+      "debug": false,
+      "newestOnTop": false,
+      "positionClass": "toast-top-center",
+      "closeButton": true,
+      "toastClass": "animated fadeInDown"
+  };
+
+  $('.toastr1').on("click", function () {
+      toastr.info('Info - This is a custom Homer info notification');
+  });
+
+  $('.toastr2').on("click", function () {
+      toastr.success('Success - This is a Homer success notification');
+  });
+
+  $('.toastr3').on("click", function () {
+      toastr.warning('Warning - This is a Homer warning notification');
+  });
+
+  $('.toastr4').on("click", function () {
+      toastr.error('Error - This is a Homer error notification');
+  });
+
+</script>
 
 {% endblock %}
