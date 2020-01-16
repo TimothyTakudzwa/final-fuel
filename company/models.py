@@ -7,7 +7,7 @@ from buyer.constants2 import COMPANY_CHOICES, INDUSTRY_CHOICES
 # Create your models here.
 class FuelUpdate(models.Model):
     sub_type = models.CharField(max_length=255, choices=(('Company', 'Company'), ('Service Station', 'Service Station'), ('Depot', 'Depot'), ('Suballocation', 'Suballocation')))
-    entry_type = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS'), ('Both', 'Both'), ('USD Flexible', 'USD Flexible'), ('RTGS Flexible', 'RTGS Flexible')))
+    entry_type = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS'), ('USD & RTGS', 'USD & RTGS')))
     diesel_quantity = models.IntegerField(default=0)
     petrol_quantity = models.IntegerField(default=0)
     last_updated = models.DateField(auto_now_add=True)
