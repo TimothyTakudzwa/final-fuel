@@ -1,7 +1,7 @@
 {% extends "supplier/supplier_base.html" %}
 {% load humanize %}
 
-{% block body %}
+{% block header %}
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
@@ -25,6 +25,9 @@
     </ol>
   </div>
 </section>
+{%endblock%}
+
+{% block body %}
 <!-- Main content -->
 <div class="content">
   <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
