@@ -1,4 +1,4 @@
-{% extends "serviceStation/new_base.html" %}
+{% extends "supplier/supplier_base.html" %}
 {% load crispy_forms_tags %} 
 
 {% block body%}
@@ -16,8 +16,12 @@
      <i class="fa fa-address-book"></i>
  </div>
  <div class="header-title">
-     <h1> Service Station Portal</h1>
+     <h1> Depot Portal</h1>
      <small>{{user.company.name}}</small>
+     <ol class="breadcrumb hidden-xs">
+        <li><a href="{%url 'fuel-request'%}"><i class="pe-7s-home"></i> Home</a></li>
+        <li class="active">Profile</li>
+    </ol>
      
  </div>
 </section>
@@ -99,11 +103,11 @@
                       </div>
                       <div class="col-sm-4">
                           <div class="review-block-rate">
-                              <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Company Type</h4>
+                              <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Company Address</h4>
                               </label>
                              
                           </div>
-                          <div class="review-block-title">{{user.company.company_type}}</div>
+                          <div class="review-block-title">{{user.company.address}}</div>
                           <div class="review-block-description"> </div>
                       </div>
                       <div class="col-sm-4">
@@ -117,11 +121,11 @@
                     </div>
                     <div class="col-sm-12">
                       <div class="review-block-rate">
-                          <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Company Bank</h4>
+                          <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Company Address</h4>
                           </label>
                          
                       </div>
-                      <div class="review-block-title">{{user.company.destination_bank}} - {{user.company.account_number}}</div>
+                      <div class="review-block-title">{{user.company.address}}</div>
                       <div class="review-block-description"> </div>
                   </div>
                       

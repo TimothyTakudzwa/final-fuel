@@ -71,27 +71,7 @@ def change_password(request):
 
 @login_required()
 def account(request):
-    context = {
-        'title': 'Fuel Finder | Account',
-        'user': UserUpdateForm(instance=request.user)
-
-    }
-    user = request.user
-    if request.method == 'POST':
-        try:
-            phone_number = int(request.POST.get('phone_number'))
-            if len(str(phone_number)) == 12 and int(str(phone_number)[:4]) == 2637:
-                user.phone_number = phone_number
-                user.save()
-                messages.success(request, "Profile updated successfully!")
-                return redirect('account')
-            else:
-                messages.warning(request, "Wrong phone number format! Please re-enter the phone number")
-                return redirect('account')
-        except:
-            messages.warning(request, 'Phone number can only contain numbers!')
-            return redirect('account')
-    return render(request, 'supplier/account.html', context=context)
+    return render(request, 'supplier/user_profile.html')
 
 
 @login_required()
@@ -264,13 +244,13 @@ def edit_offer(request, id):
                 messages.success(request, 'Offer successfully updated')
                 message = f'You have an updated offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {offer.request.amount}L'
                 Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
-                return redirect('fuel-request')
+                return redirect('my_offers')
             else:
                 messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
-                return redirect('fuel-request')
+                return redirect('my_offers')
         else:
             messages.warning(request, 'You can not offer fuel more than the available fuel stock')
-            return redirect('fuel-request')
+            return redirect('my_offers')
     return render(request, 'supplier/fuel_request.html', {'offer': offer})
 
 
