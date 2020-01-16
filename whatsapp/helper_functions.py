@@ -440,7 +440,7 @@ def view_requests_handler(user, message):
         if fuel_request.fuel_type.lower() == 'petrol':
             available_fuel = fuel.petrol_quantity
         elif fuel_request.fuel_type.lower() == 'diesel':
-            available_fuel = fuel_request.diesel_quantity
+            available_fuel = fuel.diesel_quantity
         try:
             offer_quantity = float(message)
             if offer_quantity <= available_fuel:
