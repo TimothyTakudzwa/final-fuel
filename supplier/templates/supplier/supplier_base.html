@@ -65,6 +65,7 @@
     <!--<link href="https://timothytakudzwa.github.io/static/new/assets/dist/css/stylehealth-rtl.css" rel="stylesheet" type="text/css"/>-->
     <!-- End Theme Layout Style
         =====================================================================-->
+
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -349,6 +350,23 @@
 
     <!-- End Theme label Script
         =====================================================================-->
+    <script>
+        "use strict"; // Start of use strict
+        // notification
+        function MyFunction(){
+            setTimeout(function () {
+                toastr.options = {
+                    closeButton: true,
+                    progressBar: true,
+                    showMethod: 'slideDown',
+                    timeOut: 1000000
+                };
+                toastr.success('Fuel Finder Admin', 'You Have Received A New Notifation Health Admin');
+
+            }, 1300);
+            console.log("Tapinda")
+        }    
+    </script>    
 
 
 </body>
