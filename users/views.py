@@ -57,6 +57,24 @@ class Render:
             return HttpResponse("Error Rendering PDF", status=400)
 
 
+
+def allocated_fuel(request):
+    allocates = F_Update.objects.filter(relationship_id=1).filter(~Q(sub_type='Company')).all()
+   
+    if allocates is not None: 
+        for allocate in allocates:
+            subsidiary = Subsidiaries.objects.filter(id=allocate.relationship_id).first()
+            if subsidiary is not None:
+                allocate.subsidiary_name = subsidiary.name
+                allocate.diesel_quantity= '{:,}'.format(allocate.diesel_quantity)
+                allocate.petrol_quantity= '{:,}'.format(allocate.petrol_quantity)
+            else:
+                allocates = allocates    
+        else:
+            allocates = allocates
+    
+    
+    return render(request, 'users/fuel_allocations.html', {'allocates': allocates})
     
 def get_pdf(request):
     trans = Transaction.objects.all()
