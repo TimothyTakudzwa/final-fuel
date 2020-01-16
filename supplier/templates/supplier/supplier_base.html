@@ -285,14 +285,14 @@
         "use strict"; // Start of use strict
         // notification
         function MyFunction(){
-            setTimeout(function () {
+            setTimeout(function (msg) {
                 toastr.options = {
                     closeButton: true,
                     progressBar: true,
                     showMethod: 'slideDown',
                     timeOut: 1000000
                 };
-                toastr.success('Fuel Finder Admin', 'You Have Received A New Notifation Health Admin');
+                toastr.success(<a class='text-center' href='" + msg.url + "'>Click to View</a>, msg.notification);
 
             }, 1300);
             console.log("Tapinda")
