@@ -199,7 +199,7 @@ def requests_handler(user, message):
             else:
                 offer = Offer.objects.filter(id=response).first()
                 depot = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
-                response_message = suggested_choice.format(offer.supplier.company.name, offer.request.fuel_type, offer.quantity, offer.price, offer.id)
+                response_message = suggested_choice.format(offer.supplier.company.name, depot.name, depot.location, offer.request.fuel_type, offer.quantity, offer.price, offer.id)
                 user.position = 71
                 user.save()
         
