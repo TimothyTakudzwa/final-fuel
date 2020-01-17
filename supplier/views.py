@@ -106,6 +106,20 @@ def fuel_request(request):
             buyer_request.price = 0
     return render(request, 'supplier/fuel_request.html', {'requests':requests})
 
+def new_fuel_request(request, id):
+    requests = FuelRequest.objects.filter(id = id,wait=True).all()
+    print(requests)
+    return render(request, 'supplier/new_fuel_request.html', {'requests':requests})
+
+def accepted_offer(request, id):
+    transactions = Transaction.objects.filter(id=id).all()
+    return render(request, 'supplier/new_transaction.html', {'transactions':transactions})
+
+def rejected_offer(request, id):
+    offers = Offer.objects.filter(id=id).all()
+    return render(request, 'supplier/my_offer.html', {'offers':offers})
+
+
 
 @login_required
 def fuel_update(request):
