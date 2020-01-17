@@ -103,7 +103,7 @@
                             <td style="width: 25%;">
                                 <div class="btn-group">
                                   
-                                    <button class="btn btn-info btn-sm" data-toggle="modal"
+                                    <button class="btn btn-danger btn-sm" data-toggle="modal"
                                         data-target="#edit_{{station.id}}">Edit</button>
                                     <button class="btn btn-primary btn-sm" data-toggle="modal"
                                         data-target="#delete_{{station.id}}">Delete</button>
@@ -244,11 +244,12 @@
     </div> 
   </section>   
 
-  <div class="modal fade" id="new_sub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade modal-success in" id="new_sub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header" style="background-color: #374767;color: white;">
-                <h3 class="modal-title" id="exampleModalLabel" style="color:white;">Add Subsidiary </h3>
+            <div class="modal-header" style="width: 100%;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h2 class="modal-title" id="exampleModalLabel" style="color:white;">Add Subsidiary </h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -387,12 +388,14 @@
 
 
             
-            <div class="modal-footer row col-md-12">
-                <button class="btn btn-secondary" style="width:40%"
-                    data-dismiss="modal">Close</button><button style="width: 50%;" class="btn btn-primary"
-                    type="submit">Add</button>
+                   
                 </form>
-            </div>
+                <div class="modal-footer row col-md-12">
+                    <button type="button" class="btn" style="background-color: lightgray; color: #333;width: 35%;" data-dismiss="modal">Close</button>
+    
+                    <button style="width: 50%;" class="btn btn-primary"
+                        type="submit">Add</button>
+                </div> 
 
         </div>
     </div>

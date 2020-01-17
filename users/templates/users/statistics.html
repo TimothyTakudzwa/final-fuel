@@ -44,6 +44,7 @@
                     <i class="fa fa-suitcase fa-2x"></i>
                     <h4>Current Stock</h4>
                 </div>
+                
                     <div class="statistic-box">
                           <div class="row" style="padding-bottom: 10px;">
                             <h2 class="card-title" style="font-size: 1em;">Diesel : 
@@ -61,8 +62,13 @@
                     </div>
                     
                 </div>
+
+                
             </div>
+            
+            
         </div>
+        
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
@@ -288,7 +294,7 @@
         <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
           <div class="panel-heading ui-sortable-handle">
               <div class="btn-group"> 
-                  <h4>Subsidiaries</h4> 
+                  <h4>Subsidiaries - {{ request.user.company.name|title}}</h4> 
               </div>
           <div class="dropdown">
               <ul class="dropdown-menu dropdown-menu-right">
@@ -327,7 +333,7 @@
                             </thead>
                             <tbody>
                               {% for sub in sorted_subs %}
-                              {% if sub.tran_value > 0 %}
+                              {% if not sub.tran_value > 0 %}
                                 <tr>
                                     <td>
                                       {% if forloop.counter == 1%}
@@ -359,6 +365,10 @@
                                         </div>
                                       </td>
                                 </tr>
+                              {% else %}
+                              <p  style="padding-bottom: 10px; color: #4c59a7;">
+                                Non Cash Transaction
+                              </p>    
                               {% endif %}  
                             
                             {% endfor %}  
@@ -371,7 +381,7 @@
     
     
               </div>
-            </div>    
+        </div>    
     
   </section>
 </div>  
