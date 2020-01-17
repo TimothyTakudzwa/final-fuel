@@ -77,9 +77,8 @@
                                 <!-- <td>{%if allocate.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL">{% else%} {%endif%} {%if allocate.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if allocate.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if allocate.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td> -->
                                 <td>
                                     <div class = "btn-group">
-                                        <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#petrol{{allocate.id}}">Add Petrol</button>
-                                        <button class="btn btn-warning btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#diesel{{allocate.id}}">Add Diesel</button>
-                                        <button class="btn btn-danger btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#edit_{{allocate.id}}">Edit</button>
+                                        <button class="btn btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#addfuel{{allocate.id}}">Add USD Fuel</button>
+                                         <button class="btn btn-danger btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#edit_{{allocate.id}}">Edit</button>
                                     </div>
                                 </td>
                             </tr>
@@ -143,13 +142,35 @@
                                 </div>
                             </div>
 
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                <script>
+                        $(document).ready(function () {
+                          $('#bank{{forloop.counter}}').hide();
+    
+                         
+                          $('#payment{{forloop.counter}}').change(function () {
+                            if ($('#payment{{forloop.counter}} option:selected').text() == "FCA") {
+                              $('#bank{{forloop.counter}}').show();
+                              
+                            }
+                        
+                            else {
+                              $('#bank{{forloop.counter}}').hide();
+                              $('#bank{{forloop.counter}} :input').prop('disabled',true);
+                            }
+                          });
+                        });
+                    
+                       
+                      </script>
                             <!--update fuel-->
-                            <div class="modal fade" id="petrol{{allocate.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                            <div class="modal fade" id="addfuel{{allocate.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                                  aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
-                                        <div class="modal-header" style="background-color: #9c27b0;color: white;">
-                                            <h5 class="modal-title" id="exampleModalLabel">Update Petrol Quantity</h5>
+                                        <div class="modal-header" style="background-color: #2f8f87;color: white;">
+                                            <p><i>please note that the fuel you are adding is USD</i></p>
+                                            <h3 class="modal-title" id="exampleModalLabel" style="color: blanchedalmond;">Update Fuel Quantity</h3>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -160,76 +181,59 @@
                                             <form action="{% url 'users:allocation_update' allocate.id %}" method="POST">
                                                 {% csrf_token %}
                                                 <div class="form-group">
-                                                    <lable>Petrol Capacitdy</lable>
-                                                    <input type="text" name="petrol_quantity" class="form-control" value=" " required/>
+                                                    <label><b>Fuel Type</b></label>
+                                                    <select class="form-control" name="fuel_type">
+                                                
+                                                        <option >Petrol</option>
+                                                        <option >Diesel</option>
+                                             
+                                                        
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <lable>Quantity</lable>
+                                                    <input type="text" name="quantity" class="form-control" value=" " />
                                                 </div>
 
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        {{update_form.cash|as_crispy_field}}
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        {{update_form.usd|as_crispy_field}}
-                                                    </div>
+                                                <div class="form-group">
+                                                    <lable>Price</lable>
+                                                    <input type="text" name="price" class="form-control" value=" " />
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        {{update_form.swipe|as_crispy_field}}
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        {{update_form.ecocash|as_crispy_field}}
-                                                    </div>
+                                                <div class="form-group" name="payment" id="payment{{forloop.counter}}">
+                                                    <label><b>Payment Method</b></label>
+                                                    <select class="form-control" name="fuel_type">
+                                                
+                                                        <option >Cash</option>
+                                                        <option >FCA</option>
+                                             
+                                                        
+                                                    </select>
                                                 </div>
-
+                                                <div class="form-group" name="bank" id="bank{{forloop.counter}}">
+                                                    <label><b>Bank</b></label>
+                                                    <select class="form-control" name="destination_bank">
+                                                
+                                                        <option >CBZ</option>
+                                                        <option >BancABC</option>
+                                                        <option >First Capital</option>
+                                                        <option >Agribank</option>
+                                                        <option >Ecobank</option>
+                                                        <option >FBC</option>
+                                                        <option >Nedbank</option>
+                                                        <option >Metbank</option>
+                                                        <option >NMB</option>
+                                                        <option >Standard Chatered</option>
+                                                        <option >Steward Bank</option>
+                                                        <option >ZB Bank</option>
+                                                        <option >CABS</option>
+                                                        <option >POSB</option>
+                                             
+                                                        
+                                                    </select>
+                                                </div>
+                                                
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">Close</button>
-                                                    <button class="btn btn-primary" type="submit">Update</button>
-                                                </div>
-                                            </form>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="modal fade" id="diesel{{allocate.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                                 aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header" style="background-color: #9c27b0;color: white;">
-                                            <h5 class="modal-title" id="exampleModalLabel">Update Diesel Quantity</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-
-                                            {% load crispy_forms_tags %}
-                                            <form action="{% url 'users:allocate_diesel' allocate.id %}" method="POST">
-                                                {% csrf_token %}
-                                                <div class="form-group">
-                                                    <lable>Diesel Capacity</lable>
-                                                    <input type="text" name="diesel_quantity" class="form-control" value=" " />
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        {{update_form.cash|as_crispy_field}}
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        {{update_form.usd|as_crispy_field}}
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        {{update_form.swipe|as_crispy_field}}
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        {{update_form.ecocash|as_crispy_field}}
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn" style="background-color: lightgray; color: #000;" data-dismiss="modal">Close</button>
                                                     <button class="btn btn-primary" type="submit">Update</button>
                                                 </div>
                                             </form>

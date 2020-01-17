@@ -58,8 +58,8 @@ class Render:
 
 
 
-def allocated_fuel(request):
-    allocates = F_Update.objects.filter(relationship_id=1).filter(~Q(sub_type='Company')).all()
+def allocated_fuel(request,sid):
+    allocates = F_Update.objects.filter(id=sid).filter(~Q(sub_type='Company')).all()
    
     if allocates is not None: 
         for allocate in allocates:
@@ -142,7 +142,13 @@ def allocation_update(request,id):
     if request.method == 'POST':
         if F_Update.objects.filter(id=id).exists():
             fuel_update = F_Update.objects.filter(id=id).first()
-            fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['petrol_quantity'])
+            if request.POST['fuel_type'] == 'Petrol':
+                fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['quantity'])
+                fuel_update.petrol_usd_price = request.POST['price']
+            else:
+                fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['quantity'])
+                fuel_update.diesel_usd_price = request.POST['price']
+
             fuel_update.cash = request.POST['cash']
             fuel_update.usd = request.POST['usd']
             fuel_update.swipe = request.POST['swipe']

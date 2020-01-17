@@ -7,7 +7,7 @@ from . import views
 urlpatterns = [
     # path('', views.allocate, name="home"),
     path('audit_trail/', views.audit_trail, name="audit_trail"),
-    path('allocated_fuel/', views.allocated_fuel, name="allocatedfuel"),
+    path('allocated_fuel/<int:sid>', views.allocated_fuel, name="allocatedfuel"),
     path('suppliers/', views.suppliers_list, name="suppliers_list"),
     path('stations/', views.stations, name="stations"),
     path('allocate/', views.allocate, name="allocate"),
