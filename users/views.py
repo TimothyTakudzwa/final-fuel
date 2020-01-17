@@ -59,8 +59,7 @@ class Render:
 
 
 def allocated_fuel(request,sid):
-    allocates = F_Update.objects.filter(id=sid).filter(~Q(sub_type='Company')).all()
-   
+    allocates = F_Update.objects.filter(relationship_id=sid).filter(sub_type='Suballocation').all()   
     if allocates is not None: 
         for allocate in allocates:
             subsidiary = Subsidiaries.objects.filter(id=allocate.relationship_id).first()
