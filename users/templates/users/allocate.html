@@ -248,7 +248,7 @@
                                     <div class = "btn-group">
                                         <!-- <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#petrol{{allocate.id}}">Add Petrol</button>
                                         <button class="btn btn-warning btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#diesel{{allocate.id}}">Add Diesel</button> -->
-                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'users:allocatedfuel'%}">View Fuel Allocations</a>
+                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'users:allocatedfuel' allocate.id %}">View Fuel Allocations</a>
                                     </div>
                                 </td>
                             </tr>
