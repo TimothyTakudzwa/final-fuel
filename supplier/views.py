@@ -113,20 +113,20 @@ def fuel_update(request):
     updates = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     if request.method == 'POST':
-        petrol_update = float(request.POST['petrol_quantity'])
-        diesel_update = float(request.POST['diesel_quantity'])
+        petrol_update = float(request.POST.get('petrol_quantity'))
+        diesel_update = float(request.POST.get('diesel_quantity'))
         fuel_update = FuelUpdate.objects.get(relationship_id=request.user.subsidiary_id)
         petrol_available = fuel_update.petrol_quantity
         diesel_available = fuel_update.diesel_quantity
-        if petrol_update < petrol_available and diesel_update < diesel_available:
-            fuel_update.petrol_quantity = request.POST['petrol_quantity']
-            fuel_update.petrol_price = request.POST['petrol_price']
-            fuel_update.diesel_quantity = request.POST['diesel_quantity']
-            fuel_update.diesel_price = request.POST['diesel_price']
-            fuel_update.usd = True if request.POST.get('usd') == "True" else False
-            fuel_update.cash = True if request.POST.get('cash') == "True" else False
-            fuel_update.ecocash = True if request.POST.get('ecocash') == "True" else False
-            fuel_update.swipe = True if request.POST.get('swipe') == "True" else False
+        if petrol_update <= petrol_available and diesel_update <= diesel_available:
+            fuel_update.petrol_quantity = request.POST.get('petrol_quantity')
+            fuel_update.petrol_price = request.POST.get('petrol_price')
+            fuel_update.diesel_quantity = request.POST.get('diesel_quantity')
+            fuel_update.diesel_price = request.POST.get('diesel_price')
+            fuel_update.usd = True if request.POST.get('usd') == "on" else False
+            fuel_update.cash = True if request.POST.get('cash') == "on" else False
+            fuel_update.ecocash = True if request.POST.get('ecocash') == "on" else False
+            fuel_update.swipe = True if request.POST.get('swipe') == "on" else False
             fuel_update.save()
             messages.success(request, 'updated quantities successfully')
             service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()

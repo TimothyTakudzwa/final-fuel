@@ -1,5 +1,6 @@
 {% extends "finder/buyer_base.html" %}
 {% load crispy_forms_tags %}
+{% load humanize %}
 
 {% block body%}
 {% if messages %}
@@ -144,10 +145,10 @@
                                 {{data.diesel_price}}
                             </td>
                             <td>
-                                {{data.petrol_quantity}}
+                                {{data.petrol_quantity|intcomma}}
                             </td>
                             <td>
-                                {{data.diesel_quantity}}
+                                {{data.diesel_quantity|intcomma}}
                             </td>
                             <td>
                                 {{data.last_updated}}
