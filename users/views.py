@@ -96,7 +96,7 @@ def index(request):
 
 @login_required()
 def allocate(request):
-    allocates = F_Update.objects.filter(company_id=request.user.company.id).filter(~Q(sub_type='Company')).all()
+    allocates = F_Update.objects.filter(company_id=request.user.company.id).filter(sub_type='Depot').all()
     allocations = FuelAllocation.objects.filter(company=request.user.company).all()
     company_capacity = F_Update.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()
 
@@ -105,8 +105,6 @@ def allocate(request):
         company_capacity.petrol_quantity= '{:,}'.format(company_capacity.petrol_quantity)
     else:
         company_capacity = company_capacity
-
-
     if allocations is not None: 
         for alloc in allocations:
             

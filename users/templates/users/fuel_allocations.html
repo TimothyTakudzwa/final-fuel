@@ -67,12 +67,13 @@
                             <tr>
 
                                 <td>{{allocate.entry_type}}</td>
-                                <td>{{allocate.petrol_quantity}} {% if allocate.petrol_quantity < 1000 %} <i class="material-icons text-danger" >warning</i>{% endif %}</td>
+                                <td>{{allocate.petrol_quantity}} Litres {% if allocate.petrol_quantity < 1000 %} <i class="material-icons text-danger" >warning</i>{% endif %}</td>
 
-                                <td>{{allocate.petrol_price}}</td>
+                                <td> {% if allocate.entry_type == 'USD & RTGS' %} RTGS  {{allocate.diesel_price}} &  USD  {{allocate.diesel_usd_price}}{%else%} {{allocate.entry_type}}   {{allocate.diesel_price}}{% endif %}</td>
 
-                                <td>{{allocate.diesel_quantity}} {% if allocate.diesel_quantity < 1000 %} <i class="material-icons text-danger" >warning</i>{% endif %}</td>
-                                <td>{{allocate.diesel_price}}</td>
+
+                                <td>{{allocate.diesel_quantity}} Litres {% if allocate.diesel_quantity < 1000 %} <i class="material-icons text-danger" >warning</i>{% endif %}</td>
+                                <td> {% if allocate.entry_type == 'USD & RTGS' %} RTGS  {{allocate.diesel_price}} &  USD  {{allocate.diesel_usd_price}}{%else%} {{allocate.entry_type}}   {{allocate.diesel_price}}{% endif %}</td>
                                 <td>{{allocate.rate}}</td>
                                 <!-- <td>{%if allocate.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL">{% else%} {%endif%} {%if allocate.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if allocate.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if allocate.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td> -->
                                 <td>
