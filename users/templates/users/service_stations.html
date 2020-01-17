@@ -114,16 +114,14 @@
 
                             
                                 <!-- Supplier Delete Modal -->
-                                <div class="modal fade" id="delete_{{station.id}}" tabindex="-1" role="dialog"
+                                <div class="modal fade modal-success in" id="delete_{{station.id}}" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
-                                        <div class="modal-header" style="background-color: #2a3f54;color: white;">
-                                            <h5 class="modal-title" id="exampleModalLabel">Delete {{station.name|title}}
-                                            </h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
+                                        
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                            <h2 class="modal-title">Delete {{station.name|title}}</h2>
                                         </div>
                                         <div class="modal-body">
                                             {% load crispy_forms_tags %}
@@ -147,17 +145,15 @@
                                 </div>
                             </div>
                              <!-- Supplier Edit Modal -->
-                             <div class="modal fade" id="edit_{{station.id}}" tabindex="-1" role="dialog"
+                             <div class="modal fade modal-success in" id="edit_{{station.id}}" tabindex="-1" role="dialog"
                              aria-labelledby="exampleModalLabel" aria-hidden="true">
                              <div class="modal-dialog" role="document">
                                  <div class="modal-content">
-                                     <div class="modal-header" style="background-color: #2a3f54;color: white;">
-
-                                         <h5 class="modal-title" id="exampleModalLabel">Edit {{station.name}} <i class="fa fa-edit" style="padding-left: 3px;"></i></h5>
-                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                             <span aria-hidden="true">&times;</span>
-                                         </button>
-                                     </div>
+                                     
+                                     <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        <h2 class="modal-title">Edit00 {{station.name}} <i class="fa fa-edit" style="padding-left: 3px;"></i></h2>
+                                    </div>
                                      <div class="modal-body">
                                          <form action="{% url 'users:edit_subsidiary' station.id %}"
                                              method="POST">
