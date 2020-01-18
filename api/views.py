@@ -193,7 +193,7 @@ def view_updates_user(request):
         updates = FuelUpdate.objects.filter(~Q(sub_type='Company')).all()
         for update in updates:
             details = Subsidiaries.objects.get(id=update.relationship_id)
-            if update.diesel_quantity == 0 and update.petrol_quantity == 0:
+                if update.diesel_quantity == 0 and update.petrol_quantity == 0:
                     pass
                 else:
                     station_update = {
