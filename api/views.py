@@ -168,15 +168,18 @@ def view_station_updates(request):
             updates = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id)
             for update in updates:
                 company = Subsidiaries.objects.get(id=update.relationship_id)
-                station_update = {
-                    'name': company.name, 'diesel_quantity': update.diesel_quantity,
-                    'diesel_price': update.diesel_price, 'petrol_quantity': update.petrol_quantity,
-                    'petrol_price': update.petrol_price, 'cash': update.cash, 'ecocash': update.ecocash,
-                    'swipe': update.swipe, 'usd': update.usd, 'queue': update.queue_length, 'limit': update.limit,
-                    'status': update.status, 'currency_check': update.entry_type, 'diesel_usd': update.diesel_usd_price,
-                    'petrol_usd': update.petrol_usd_price
-                }
-                data.append(station_update)
+                if update.diesel_quantity == 0 and update.petrol_quantity == 0:
+                    pass
+                else:
+                    station_update = {
+                        'name': company.name, 'diesel_quantity': update.diesel_quantity,
+                        'diesel_price': update.diesel_price, 'petrol_quantity': update.petrol_quantity,
+                        'petrol_price': update.petrol_price, 'cash': update.cash, 'ecocash': update.ecocash,
+                        'swipe': update.swipe, 'usd': update.usd, 'queue': update.queue_length, 'limit': update.limit,
+                        'status': update.status, 'currency_check': update.entry_type, 'diesel_usd': update.diesel_usd_price,
+                        'petrol_usd': update.petrol_usd_price
+                    }
+                    data.append(station_update)
             return JsonResponse(list(data), status=200, safe=False)
         else:
             return HttpResponse(status=403)
