@@ -1,6 +1,29 @@
 from supplier.models import Subsidiaries, Transaction, UserReview
 from company.models import Company, FuelUpdate
 from buyer.models import User
+from datetime import datetime
+
+
+def get_monthly_sales(company, year):
+
+    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    monthly_data = {}
+    counter = 1
+    for month in months:
+        months_revenue = 0
+        months_trans = Transaction.objects.filter(date__year=year, date__month=counter, supplier__company=company)
+        if months_trans:
+            for tran in months_trans :
+                months_revenue += (tran.offer.request.amount * tran.offer.price)
+        else:
+            months_revenue = 0
+
+        counter += 1    
+                     
+        monthly_data[month] = months_revenue
+    return monthly_data    
+
+    
 
 def get_average_rating(company):
     average_rating = 0
