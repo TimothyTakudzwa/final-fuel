@@ -296,6 +296,9 @@ def offers(request, id):
    
     return render(request, 'buyer/offer.html', {'offers': offers })
 
+def new_offer(request, id):
+    offers = Offer.objects.filter(id=id).all()
+    return render(request, 'buyer/new_offer.html', {'offers': offers })
 
 def accept_offer(request, id):    
     offer = Offer.objects.filter(id=id).first()
