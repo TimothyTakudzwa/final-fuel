@@ -52,12 +52,9 @@
                     <th style="color: white;">Date</th>
                     <th style="color: white;">Buyer</th>
                     <th style="color: white;">Fuel</th>
-                    <th style="color: white;">Requested</th>
                     <th style="color: white;">Offered</th>
                     <th style="color: white;">Price</th>
                     <th style="color: white;">Payment</th>
-                    <th style="color: white;">Delivery</th>                                            
-                    <th style="color: white;">Address</th>
                     <th style="color: white;">Equipment</th>
                     <th style="color: white;">Action</th>
                 </tr>
@@ -69,12 +66,9 @@
                     <td>{{ offer.date }}</td>
                     <td>{{ offer.request.name.first_name|lower|capfirst }} {{ offer.request.name.last_name|lower|capfirst }}</td>
                     <td>{{ offer.request.fuel_type|lower|capfirst }}</td>
-                    <td>{{ offer.request.amount|intcomma }}</td>
                     <td>{{ offer.quantity|intcomma }}</td>
                     <td>{{ offer.price|intcomma }}</td>                                
                     <td>{% if offer.cash %}Cash &nbsp;{%endif%} {% if offer.ecocash %}Ecocash &nbsp;{%endif%} {% if offer.usd %}Usd &nbsp; {%endif%} {% if offer.swipe %}Swipe{% endif %}{% if offer.no_payment %}Not Specified{%endif%}</td>
-                    <td>{{ offer.delivery_method|lower|title}}</td>
-                    <td>{{ offer.collection_address|lower|title }}</td>
                     <td>{% if offer.pump_available %}Pump &nbsp; {%endif%} {% if offer.dipping_stick_available %}Stick &nbsp; {%endif%} {% if offer.meter_available %}Meter&nbsp;{% endif %}{% if offer.no_equipments %}No Equipment{%endif%}</td>
                     {%if offer.declined %}
                     <td>Declined</td>
@@ -174,21 +168,21 @@ aria-hidden="true">
         </div>
         <div class="togglebutton form-group col-sm-3">
             <label>
-                <input type="checkbox" name="ecocash" id="ecocash">
+                <input type="checkbox" name="ecocash" >
                 <span class="toggle" value="True"></span>
                 Ecocash
             </label>
         </div>
         <div class="togglebutton form-group col-sm-3">
             <label>
-                <input type="checkbox" name="swipe" id="swipe">
+                <input type="checkbox" name="swipe" >
                 <span class="toggle"></span>
                 Swipe
             </label>
         </div>
         <div class="togglebutton form-group col-sm-3">
             <label>
-                <input type="checkbox" name="usd" id="usd">
+                <input type="checkbox" name="usd" >
                 <span class="toggle"></span>
                 USD
             </label>
@@ -225,20 +219,29 @@ aria-hidden="true">
         </div>
         <p style="text-align: center;"><label>Available Equipments</label></p>
          <div class="row">
-            <div class="col-sm-4">
-                <input class="form-control-md" type="checkbox" value="False" id="pump_available" name="pump_available">
-                <label for="pump_available">Pump </label>
-                
-            </div>
-            <div class="col-sm-4">
-                <input class="form-control-md" type="checkbox" value="False" id="dipping_stick_available" name="dipping_stick_available">
-                <label for="dipping_stick_available">Dipping Stick </label>
-            </div>
+            <div class="togglebutton form-group col-sm-4">
+              <label>
+                  <input type="checkbox" name="pump_available" >
+                  <span class="toggle"></span>
+                  Pump
+              </label>
+          </div>
 
-            <div class="col-sm-4">
-                <input class="form-control-md" type="checkbox" value="False" id="meter_available" name="meter_available">
-                <label for="meter_available">Meter</label>
-            </div>
+            <div class="togglebutton form-group col-sm-4">
+              <label>
+                  <input type="checkbox" name="dipping_stick_available" >
+                  <span class="toggle"></span>
+                  Dipping Stick
+              </label>
+          </div>
+
+            <div class="togglebutton form-group col-sm-4">
+              <label>
+                  <input type="checkbox" name="meter_available" >
+                  <span class="toggle"></span>
+                  Meter
+              </label>
+          </div>
         </div>
 </div>
 

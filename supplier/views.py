@@ -192,6 +192,7 @@ def offer(request, id):
                     offer.collection_address = subsidiary.location
                 else:
                     offer.collection_address = collection_address
+                print(f"----------------{{request.POST.get('pump_available')}}------offer pumb")
                 offer.pump_available = True if request.POST.get('pump_available') == "on" else False
                 offer.dipping_stick_available = True if request.POST.get('dipping_stick_available') == "on" else False
                 offer.meter_available = True if request.POST.get('meter_available') == "on" else False
@@ -232,7 +233,6 @@ def edit_offer(request, id):
             available_fuel = fuel.diesel_quantity
         new_offer = int(request.POST.get('quantity'))
         request_quantity = offer.request.amount
-
         if new_offer <= available_fuel:
             if new_offer <= request_quantity:
                 offer.price = request.POST.get('price')      
@@ -251,7 +251,7 @@ def edit_offer(request, id):
                     offer.collection_address = subsidiary.location
                 else:
                     offer.collection_address = collection_address
-                offer.pump_available = True if request.POST.get('pump_required') == "on" else False
+                offer.pump_available = True if request.POST.get('pump_available') == "on" else False
                 offer.dipping_stick_available = True if request.POST.get('dipping_stick_available') == "on" else False
                 offer.meter_available = True if request.POST.get('meter_available') == "on" else False
                 offer.save()
