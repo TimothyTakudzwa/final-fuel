@@ -57,12 +57,11 @@ class Render:
             return HttpResponse("Error Rendering PDF", status=400)
 
 
-
 def allocated_fuel(request,sid):
     allocates = F_Update.objects.filter(relationship_id=sid).filter(sub_type='Suballocation').all()   
     if allocates is not None: 
         for allocate in allocates:
-            subsidiary = Subsidiaries.objects.filter(id=allocate.relationship_id).first()
+            subsidiarghghbhbby = Subsidiaries.objects.filter(id=allocate.relationship_id).first()
             if subsidiary is not None:
                 allocate.subsidiary_name = subsidiary.name
                 allocate.diesel_quantity= '{:,}'.format(allocate.diesel_quantity)
