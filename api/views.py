@@ -190,11 +190,11 @@ def view_updates_user(request):
 
         data = []
 
-        updates = FuelUpdate.objects.filter(sub_type='Service Station').all()
+        sub_updates = FuelUpdate.objects.filter(sub_type='Service Station').all()
         
-        for update in updates:
-            sub_allocations = FuelUpdate.objects.filter(sub_type='Suballocation').filter(relationship_id=update.relationship_id).all()
-            for sub_allocation in sub_allocations:
+        for sub_update in sub_updates:
+            updates = FuelUpdate.objects.filter(sub_type='Suballocation').filter(relationship_id=sub_update.relationship_id).all()
+            for update in updates:
                 details = Subsidiaries.objects.get(id=update.relationship_id)
                 if update.diesel_quantity == 0 and update.petrol_quantity == 0:
                     pass
