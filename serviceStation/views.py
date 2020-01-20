@@ -120,7 +120,7 @@ def activate_whatsapp(request):
         return redirect('serviceStation:home')
 
 def allocated_quantity(request):
-    allocations = FuelAllocation.objects.filter(assigned_staff_id= request.user.subsidiary_id).all()
+    allocations = FuelAllocation.objects.filter(allocated_subsidiary_id= request.user.subsidiary_id).all()
     return render(request, 'serviceStation/allocated_quantity.html', {'allocations': allocations})
 
 
