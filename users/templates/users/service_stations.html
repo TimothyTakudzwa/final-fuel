@@ -421,5 +421,85 @@
         </div>
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+$(document).ready(function () {
+$('#harare{{forloop.counter}}').show();
+$('#bulawayo{{forloop.counter}}').hide();
+$('#mutare{{forloop.counter}}').hide();
+$('#gweru{{forloop.counter}}').hide();
+$('#default_location').hide();
 
+
+$('#city{{forloop.counter}}').change(function () {
+if ($('#city{{forloop.counter}} option:selected').text() == "Harare") {
+$('#harare{{forloop.counter}}').show();
+$('#bulawayo{{forloop.counter}}').hide();
+$('#mutare{{forloop.counter}}').hide();
+$('#gweru{{forloop.counter}}').hide();
+$('#default_location').hide();
+$('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
+$('#mutare{{forloop.counter}} :input').prop('disabled',true);
+$('#gweru{{forloop.counter}} :input').prop('disabled',true);
+$('#default_location :input').prop('disabled',true);
+$('#harare{{forloop.counter}} :input').prop('disabled',false);
+
+}
+else if ($('#city{{forloop.counter}} option:selected').text() == "Bulawayo") {
+$('#harare{{forloop.counter}}').hide();
+$('#mutare{{forloop.counter}}').hide();
+$('#gweru{{forloop.counter}}').hide();
+$('#default_location').hide();
+$('#bulawayo{{forloop.counter}}').show();
+$('#harare{{forloop.counter}} :input').prop('disabled',true);
+$('#mutare{{forloop.counter}} :input').prop('disabled',true);
+$('#gweru{{forloop.counter}} :input').prop('disabled',true);
+$('#default_location :input').prop('disabled',true);
+$('#bulawayo{{forloop.counter}} :input').prop('disabled',false);
+
+}
+else if ($('#city{{forloop.counter}} option:selected').text() == "Mutare") {
+$('#harare{{forloop.counter}}').hide();
+$('#mutare{{forloop.counter}}').show();
+$('#gweru{{forloop.counter}}').hide();
+$('#default_location').hide();
+$('#bulawayo{{forloop.counter}}').hide();
+$('#harare{{forloop.counter}} :input').prop('disabled',true);
+$('#mutare{{forloop.counter}} :input').prop('disabled',false);
+$('#gweru{{forloop.counter}} :input').prop('disabled',true);
+$('#default_location :input').prop('disabled',true);
+$('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
+
+}
+else if ($('#city{{forloop.counter}} option:selected').text() == "Gweru") {
+$('#harare{{forloop.counter}}').hide();
+$('#mutare{{forloop.counter}}').hide();
+$('#gweru{{forloop.counter}}').show();
+$('#default_location').hide();
+$('#bulawayo{{forloop.counter}}').hide();
+$('#harare{{forloop.counter}} :input').prop('disabled',true);
+$('#mutare{{forloop.counter}} :input').prop('disabled',true);
+$('#gweru{{forloop.counter}} :input').prop('disabled',false);
+$('#default_location :input').prop('disabled',true);
+$('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
+
+}
+else {
+$('#harare{{forloop.counter}}').hide();
+$('#bulawayo{{forloop.counter}}').hide();
+$('#mutare{{forloop.counter}}').hide();
+$('#gweru{{forloop.counter}}').hide();
+$('#default_location').show();
+$('#harare{{forloop.counter}} :input').prop('disabled',true);
+$('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
+$('#mutare{{forloop.counter}} :input').prop('disabled',true);
+$('#gweru{{forloop.counter}} :input').prop('disabled',true);
+$('#default_location :input').prop('disabled',false);
+
+}
+});
+});
+
+
+</script>
 {% endblock %}

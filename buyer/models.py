@@ -20,6 +20,8 @@ class User(AbstractUser):
     subsidiary_id = models.IntegerField(default=0)
     fuel_updates_ids = models.CharField(max_length=2000, default=0)
     password_reset = models.BooleanField(default=False)
+    paying_method = models.CharField(max_length=2000, default=0)
+
 
 
     def __str__(self):
@@ -54,6 +56,7 @@ class FuelRequest(models.Model):
     wait = models.BooleanField(default=False)
     last_deal = models.IntegerField(default=0)
     is_complete = models.BooleanField(default=False)
+    payment_method = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS'), ('USD & RTGS', 'USD & RTGS')))
     cash = models.BooleanField(default=False)
     ecocash = models.BooleanField(default=False)
     swipe = models.BooleanField(default=False)
