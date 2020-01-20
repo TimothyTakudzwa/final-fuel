@@ -124,7 +124,7 @@ def rejected_offer(request, id):
 @login_required
 def fuel_update(request):
 
-    updates = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
+    updates = FuelUpdate.objects.filter(sub_type='Depot', relationship_id=request.user.subsidiary_id)
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     if request.method == 'POST':
         petrol_update = float(request.POST.get('petrol_quantity'))
@@ -192,7 +192,6 @@ def offer(request, id):
                     offer.collection_address = subsidiary.location
                 else:
                     offer.collection_address = collection_address
-                print(f"----------------{{request.POST.get('pump_available')}}------offer pumb")
                 offer.pump_available = True if request.POST.get('pump_available') == "on" else False
                 offer.dipping_stick_available = True if request.POST.get('dipping_stick_available') == "on" else False
                 offer.meter_available = True if request.POST.get('meter_available') == "on" else False
