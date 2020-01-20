@@ -305,7 +305,7 @@ def follow_up(user, message):
 
 def view_fuel_updates(user, message):
     if user.position == 1:
-       response_message = 'What is your payment method?\n\n1. USD\n2. RTGS\n3. USD & RTGS\n' 
+       response_message = 'What is your payment method?\n\n1. USD\n2. RTGS\n' 
        user.position = 2
        user.save()
 
@@ -380,7 +380,7 @@ def view_fuel_updates(user, message):
     elif user.position == 33:
         my_request = FuelRequest.objects.get(id=user.fuel_request)
         my_request.amount = message
-        my_request.paying_method = user.paying_method
+        my_request.payment_method = user.paying_method
         my_request.save()
         user.position = 35
         user.save()
