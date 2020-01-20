@@ -200,7 +200,7 @@ def view_updates_user(request):
                 if update.diesel_quantity == 0 and update.petrol_quantity == 0:
                     pass
                 else:
-                    image = f'{address}/{details.company.logo.url}/'
+                    image = f'https://{address}/{details.company.logo.url}/'
                     station_update = {
                         'station': details.name, 'company': details.company.name, 'queue':
                             update.queue_length, 'petrol': update.petrol_price, 'diesel': update.diesel_price,
