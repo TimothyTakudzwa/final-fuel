@@ -10,9 +10,9 @@ from buyer.models import User
 def recommend(fuel_request):
     status = False
     if fuel_request.fuel_type == "Petrol":
-        supplies = FuelUpdate.objects.filter(petrol_quantity__gte=fuel_request.amount, sub_type='Depot').filter(~Q(petrol_price=0.00)).order_by('-petrol_price').all()      
+        supplies = FuelUpdate.objects.filter(petrol_quantity__gte=fuel_request.amount, sub_type='Depot').filter(entry_type=fuel_request.payment_method).filter(~Q(petrol_price=0.00)).order_by('-petrol_price').all()      
     else:
-        supplies = FuelUpdate.objects.filter(diesel_quantity__gte=fuel_request.amount, sub_type='Depot').filter(~Q(diesel_price=0.00)).order_by('-diesel_price').all()    
+        supplies = FuelUpdate.objects.filter(diesel_quantity__gte=fuel_request.amount, sub_type='Depot').filter(entry_type=fuel_request.payment_method).filter(~Q(diesel_price=0.00)).order_by('-diesel_price').all()    
     
     if supplies.count() == 0:        
         return status, "Nothing Found"
