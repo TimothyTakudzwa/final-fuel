@@ -106,6 +106,20 @@ def fuel_request(request):
             buyer_request.price = 0
     return render(request, 'supplier/fuel_request.html', {'requests':requests})
 
+def new_fuel_request(request, id):
+    requests = FuelRequest.objects.filter(id = id,wait=True).all()
+    print(requests)
+    return render(request, 'supplier/new_fuel_request.html', {'requests':requests})
+
+def accepted_offer(request, id):
+    transactions = Transaction.objects.filter(id=id).all()
+    return render(request, 'supplier/new_transaction.html', {'transactions':transactions})
+
+def rejected_offer(request, id):
+    offers = Offer.objects.filter(id=id).all()
+    return render(request, 'supplier/my_offer.html', {'offers':offers})
+
+
 
 @login_required
 def fuel_update(request):
@@ -113,20 +127,20 @@ def fuel_update(request):
     updates = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     if request.method == 'POST':
-        petrol_update = float(request.POST['petrol_quantity'])
-        diesel_update = float(request.POST['diesel_quantity'])
+        petrol_update = float(request.POST.get('petrol_quantity'))
+        diesel_update = float(request.POST.get('diesel_quantity'))
         fuel_update = FuelUpdate.objects.get(relationship_id=request.user.subsidiary_id)
         petrol_available = fuel_update.petrol_quantity
         diesel_available = fuel_update.diesel_quantity
-        if petrol_update < petrol_available and diesel_update < diesel_available:
-            fuel_update.petrol_quantity = request.POST['petrol_quantity']
-            fuel_update.petrol_price = request.POST['petrol_price']
-            fuel_update.diesel_quantity = request.POST['diesel_quantity']
-            fuel_update.diesel_price = request.POST['diesel_price']
-            fuel_update.usd = True if request.POST.get('usd') == "True" else False
-            fuel_update.cash = True if request.POST.get('cash') == "True" else False
-            fuel_update.ecocash = True if request.POST.get('ecocash') == "True" else False
-            fuel_update.swipe = True if request.POST.get('swipe') == "True" else False
+        if petrol_update <= petrol_available and diesel_update <= diesel_available:
+            fuel_update.petrol_quantity = request.POST.get('petrol_quantity')
+            fuel_update.petrol_price = request.POST.get('petrol_price')
+            fuel_update.diesel_quantity = request.POST.get('diesel_quantity')
+            fuel_update.diesel_price = request.POST.get('diesel_price')
+            fuel_update.usd = True if request.POST.get('usd') == "on" else False
+            fuel_update.cash = True if request.POST.get('cash') == "on" else False
+            fuel_update.ecocash = True if request.POST.get('ecocash') == "on" else False
+            fuel_update.swipe = True if request.POST.get('swipe') == "on" else False
             fuel_update.save()
             messages.success(request, 'updated quantities successfully')
             service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
@@ -164,10 +178,10 @@ def offer(request, id):
                 offer.price = request.POST.get('price')    
                 offer.quantity = request.POST.get('quantity')
                 offer.fuel_type = request.POST.get('fuel_type')
-                offer.usd = True if request.POST.get('usd') == "True" else False
-                offer.cash = True if request.POST.get('cash') == "True" else False
-                offer.ecocash = True if request.POST.get('ecocash') == "True" else False
-                offer.swipe = True if request.POST.get('swipe') == "True" else False
+                offer.usd = True if request.POST.get('usd') == "on" else False
+                offer.cash = True if request.POST.get('cash') == "on" else False
+                offer.ecocash = True if request.POST.get('ecocash') == "on" else False
+                offer.swipe = True if request.POST.get('swipe') == "on" else False
                 delivery_method = request.POST.get('delivery_method')
                 if not delivery_method.strip():
                     offer.delivery_method = 'Delivery'
@@ -178,9 +192,10 @@ def offer(request, id):
                     offer.collection_address = subsidiary.location
                 else:
                     offer.collection_address = collection_address
-                offer.pump_available = True if request.POST.get('pump_required') == "True" else False
-                offer.dipping_stick_available = True if request.POST.get('usd') == "True" else False
-                offer.meter_available = True if request.POST.get('usd') == "True" else False
+                print(f"----------------{{request.POST.get('pump_available')}}------offer pumb")
+                offer.pump_available = True if request.POST.get('pump_available') == "on" else False
+                offer.dipping_stick_available = True if request.POST.get('dipping_stick_available') == "on" else False
+                offer.meter_available = True if request.POST.get('meter_available') == "on" else False
                 offer.save()
                 
                 messages.success(request, 'Offer uploaded successfully')
@@ -218,15 +233,14 @@ def edit_offer(request, id):
             available_fuel = fuel.diesel_quantity
         new_offer = int(request.POST.get('quantity'))
         request_quantity = offer.request.amount
-
         if new_offer <= available_fuel:
             if new_offer <= request_quantity:
                 offer.price = request.POST.get('price')      
                 offer.quantity = request.POST.get('quantity')
-                offer.usd = True if request.POST.get('usd') == "True" else False
-                offer.cash = True if request.POST.get('cash') == "True" else False
-                offer.ecocash = True if request.POST.get('ecocash') == "True" else False
-                offer.swipe = True if request.POST.get('swipe') == "True" else False
+                offer.usd = True if request.POST.get('usd') == "on" else False
+                offer.cash = True if request.POST.get('cash') == "on" else False
+                offer.ecocash = True if request.POST.get('ecocash') == "on" else False
+                offer.swipe = True if request.POST.get('swipe') == "on" else False
                 delivery_method = request.POST.get('delivery_method1')
                 if not delivery_method.strip():
                     offer.delivery_method = 'Delivery'
@@ -237,9 +251,9 @@ def edit_offer(request, id):
                     offer.collection_address = subsidiary.location
                 else:
                     offer.collection_address = collection_address
-                offer.pump_available = True if request.POST.get('pump_required') == "True" else False
-                offer.dipping_stick_available = True if request.POST.get('usd') == "True" else False
-                offer.meter_available = True if request.POST.get('usd') == "True" else False
+                offer.pump_available = True if request.POST.get('pump_available') == "on" else False
+                offer.dipping_stick_available = True if request.POST.get('dipping_stick_available') == "on" else False
+                offer.meter_available = True if request.POST.get('meter_available') == "on" else False
                 offer.save()
                 messages.success(request, 'Offer successfully updated')
                 message = f'You have an updated offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {offer.request.amount}L'

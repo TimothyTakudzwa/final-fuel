@@ -36,13 +36,13 @@
         <div class="panel-heading ui-sortable-handle">
             <div class="btn-group">
                 {%if 'RTGS' not in type_list %}
-                <button class="btn btn-success md-trigger m-b-5 m-r-2" data-toggle="modal" data-target="#add_rtgs_fuel">Allocate RTGS Fuel</button>
+                <button class="btn btn-success md-trigger m-b-5 m-r-2" data-toggle="modal" data-target="#add_rtgs_fuel"><span class="btn-label"><i class="glyphicon glyphicon-plus"></i></span>Allocate RTGS Fuel</button>
                 {%else%} {%endif%}
                 {%if 'USD' not in type_list %}
-                <button class="btn btn-inverse md-trigger m-b-5 m-r-2" data-toggle="modal"  data-target="#add_usd_fuel">Allocate USD Fuel</button>
+                <button class="btn btn-inverse md-trigger m-b-5 m-r-2" data-toggle="modal"  data-target="#add_usd_fuel"><span class="btn-label"><i class="glyphicon glyphicon-plus"></i></span>Allocate USD Fuel</button>
                 {%else%}  {%endif%}
                 {%if 'USD & RTGS' not in type_list %}
-                <button class="btn btn-danger md-trigger m-b-5 m-r-2" data-toggle="modal" data-target="#add_fuel">Allocate Both Fuel</button>
+                <button class="btn btn-danger md-trigger m-b-5 m-r-2" data-toggle="modal" data-target="#add_fuel"><span class="btn-label"><i class="glyphicon glyphicon-plus"></i></span>Allocate Both Fuel</button>
                 {%else%}  <h4>Fuel Availability - <small><i>Click on corresponding Fuel Payment Type To allocate more
                     fuel</i></small></h4>
                 {%endif%}
@@ -99,20 +99,20 @@
                                 <div class="btn-group">
                                     {% if allocate.entry_type == 'USD'%}
                                     <button class="btn btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal"
-                                        data-target="#add_usd_fuel{{allocate.id}}">Add USD Fuel</button>
+                                        data-target="#add_usd_fuel{{allocate.id}}"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp; | Add USD Fuel</button>&nbsp;&nbsp;
                                     <button class="btn btn-danger btn-sm" style="font-size: 12px;" data-toggle="modal"
-                                        data-target="#edit_{{allocate.id}}">Edit</button>
+                                        data-target="#edit_{{allocate.id}}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp; | Edit</button>
                                     {%else%}
                                     {% if allocate.entry_type == 'RTGS'%}
                                     <button class="btn btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal"
-                                        data-target="#add_rtgs_fuel{{allocate.id}}">Add RTGS Fuel</button>
+                                        data-target="#add_rtgs_fuel{{allocate.id}}"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp; | Add RTGS Fuel</button>&nbsp;&nbsp;
                                     <button class="btn btn-danger btn-sm" style="font-size: 12px;" data-toggle="modal"
-                                        data-target="#edit_{{allocate.id}}">Edit</button>
+                                        data-target="#edit_{{allocate.id}}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp; | Edit</button>
                                     {%else%}
                                     <button class="btn btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal"
-                                        data-target="#add_fuel{{allocate.id}}">Add Both Fuel</button>
+                                        data-target="#add_fuel{{allocate.id}}"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp; | Add Both Fuel</button>&nbsp;&nbsp;
                                     <button class="btn btn-danger btn-sm" style="font-size: 12px;" data-toggle="modal"
-                                        data-target="#edit_{{allocate.id}}">Edit</button>
+                                        data-target="#edit_{{allocate.id}}" ><i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp; | Edit</button>
                                     {%endif%}
                                     {%endif%}
                                 </div>
@@ -121,13 +121,13 @@
 
 
                         <!-- Supplier Edit Modal -->
-                        <div class="modal fade" id="edit_{{allocate.id}}" tabindex="-1" role="dialog"
+                        <div class="modal fade modal-xl" id="edit_{{allocate.id}}" tabindex="-1" role="dialog"
                             aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
+                            <div class="modal-dialog" role="document" style="margin: 0;"> 
                                 <div class="modal-content">
-                                    <div class="modal-header" style="background-color: #9c27b0;color: white;">
+                                    <div class="modal-header" >
 
-                                        <h5 class="modal-title" id="exampleModalLabel">Edit Prices</h5>
+                                        <span class="modal-title" id="exampleModalLabel" > Edit Prices</span>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -180,11 +180,11 @@
                                 </div>
                             </div>
                         </div>
-                        
+                          
 
                         <div class="modal fade modal-xl" id="add_usd_fuel{{allocate.id}}" tabindex="-1" role="dialog"
                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                            <div class=" modal-dialog-centered" role="document">
+                            <div class=" modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <span class="modal-title" id="exampleModalLongTitle">Add USD Fuel- <i
@@ -486,7 +486,7 @@
 
 
                         </script>
-                        <!--update fuel-->
+                       
                         <div class="modal fade" id="addfuel{{allocate.id}}" tabindex="-1" role="dialog"
                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">

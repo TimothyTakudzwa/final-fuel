@@ -31,23 +31,24 @@
     <div class="container">
 
 
-        <div class="text-center">
+        <div>
 
             <div class="" style="margin-top: 5px; margin-bottom: 5px">
-
+<div class="text-center">
                 <button class="btn btn-info btn-md" data-toggle="modal" data-target="#new_user">
                     Add User
                 </button>
-
-                <div class="modal fade" id="new_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+</div>
+                <div class="modal fade modal-success in" id="new_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
-                            <div class="modal-header" style="background-color: rgb(55, 71, 103);color: white;">
-                                <h5 class="modal-title" id="exampleModalLabel">Add User </h5>
+                            <div class="modal-header">
+                                <h2 class="modal-title" id="exampleModalLabel">Add User </h2>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
+                            
                             <div class="modal-body">
 
                                 {% load crispy_forms_tags %}
@@ -107,11 +108,11 @@
                                 <td>{{supplier.subsidiary_name}}</td>
                                 <td>{{supplier.phone_number}}</td>
                                 <td>{{supplier.email}}</td>
-                                <td style="width: 33%;">
+                                <td style="width: 25%;">
                                     <div class="btn-group">
                                         <!-- <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#{{supplier.id}}">View Details</button> -->
                                         <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_{{supplier.id}}">Edit</button>
-                                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#delete_{{supplier.id}}">Delete</button>
+                                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete_{{supplier.id}}">Delete</button>
                                         <!--<a href="{% url 'users:supplier_user_create' supplier.id %}" class="btn btn-info btn-sm">More Details</a>-->
 
                                     </div>
@@ -139,19 +140,21 @@
 
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                
+                                                <button type="button" class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">Close</button>
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Supplier Edit Modal -->
-                                <div class="modal fade" id="edit_{{supplier.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade modal-success in" id="edit_{{supplier.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
-                                            <div class="modal-header" style="background-color: #9c27b0;color: white;">
+                                            <div class="modal-header">
 
-                                                <h5 class="modal-title" id="exampleModalLabel">Edit {{supplier.company}} <i class="fa fa-edit" style="padding-left: 3px;"></i></h5>
+                                                <h2 class="modal-title" id="exampleModalLabel">Edit {{supplier.company}} <i class="fa fa-edit" style="padding-left: 3px;"></i></h2>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -179,7 +182,9 @@
 
 
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        
+                                                        <button type="button" class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">Close</button>
+
                                                         <button type="submit" class="btn btn-primary ">Submit</button>
 
                                                     </div>
@@ -192,11 +197,11 @@
                                 </div>
 
                                 <!-- Supplier Delete Modal -->
-                                <div class="modal fade" id="delete_{{supplier.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade modal-success in" id="delete_{{supplier.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
-                                            <div class="modal-header" style="background-color: #9c27b0;color: white;">
-                                                <h5 class="modal-title" id="exampleModalLabel">Delete {{supplier.username|title}} <i class="fa fa-trash" style="padding-left: 3px;"></i></h5>
+                                            <div class="modal-header">
+                                                <h2 class="modal-title" id="exampleModalLabel">Delete {{supplier.username|title}} <i class="fa fa-trash" style="padding-left: 3px;"></i></h2>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -209,9 +214,12 @@
                                                     <p style="padding: 44px;"> Are You Sure You Want To Delete {{ supplier.username|title }}?</p>
 
                                                     <div class="modal-footer">
-                                                        <div class="btn-group">
+                                                        <div>
 
-                                                            <button class="btn btn-default" data-dismiss="modal">No</button> <button class="btn btn-primary" type="submit">Yes</button>
+                                                            
+                                        <button type="button" class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">No</button>
+                                                            
+                                                            <button class="btn btn-primary" type="submit">Yes</button>
                                                         </div>
                                                     </div>
                                                 </form>

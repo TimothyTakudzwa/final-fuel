@@ -102,11 +102,13 @@ suggested_choice = '''
 Please find the below available supplier for you 
 
 *Company Name*: {0}
-*Fuel Type*: {1}
-*Quantity*: {2}
-*Price*: {3}
+*Depot Name*: {1}
+*Depot Location*: {2}
+*Fuel Type*: {3}
+*Quantity*: {4}
+*Price*: {5}
 
-To Accept this Offer Type *Accept {4}*
+To Accept this Offer Type *Accept {6}*
 
 To Wait for offers type *Wait*
 
