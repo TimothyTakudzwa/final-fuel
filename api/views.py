@@ -189,6 +189,7 @@ def view_updates_user(request):
     if request.method == 'POST':
 
         data = []
+        address = request.get_host()
 
         sub_updates = FuelUpdate.objects.filter(sub_type='Service Station').all()
         
@@ -199,13 +200,14 @@ def view_updates_user(request):
                 if update.diesel_quantity == 0 and update.petrol_quantity == 0:
                     pass
                 else:
+                    image = f'{address}/{details.company.logo.url}/'
                     station_update = {
                         'station': details.name, 'company': details.company.name, 'queue':
                             update.queue_length, 'petrol': update.petrol_price, 'diesel': update.diesel_price,
                         'open': details.opening_time, 'close': details.closing_time, 'limit': update.limit, 'cash': update.cash,
                         'ecocash': update.ecocash, 'swipe': update.swipe, 'usd': update.usd, 'status': update.status,
                         'currency_check': update.entry_type, 'diesel_usd': update.diesel_usd_price,
-                        'petrol_usd': update.petrol_usd_price
+                        'petrol_usd': update.petrol_usd_price, 'image': image
                         }
                     data.append(station_update)
         return JsonResponse(list(data), status=200, safe=False)
