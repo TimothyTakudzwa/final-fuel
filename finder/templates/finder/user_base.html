@@ -116,6 +116,23 @@
       <div class="">
         <div class="container-fluid">
           <!-- your content here -->
+          <script>
+            $("document").ready(function(){
+            setTimeout(function(){
+                $("div.alert").remove();
+            }, 3000 ); // 3 secs
+
+            });
+        </script>
+        {% if messages %}
+    
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" style="text-align: center">
+                {{ message }}
+            </div>
+        {% endfor %}
+    
+    {% endif %}
           
           {% block body %}{% endblock %}
         </div>

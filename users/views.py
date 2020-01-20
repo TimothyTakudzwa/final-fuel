@@ -235,6 +235,10 @@ def allocation_update(request,id):
 def statistics(request):
     company = request.user.company
     yesterday = date.today() - timedelta(days=1)
+    monthly_rev = get_monthly_sales(request.user.company, datetime.now().year)
+    weekly_rev = get_weekly_sales(request.user.company, True)
+    last_week_rev = get_weekly_sales(request.user.company, False)
+    last_year_rev = get_monthly_sales(request.user.company, (datetime.now().year-1))
     offers = Offer.objects.filter(supplier__company=request.user.company).count()
     bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
     normal_requests = FuelRequest.objects.filter(delivery_method="DELIVERY").count() # Change these 2 items
@@ -312,7 +316,8 @@ def statistics(request):
     return render(request, 'users/statistics.html', {'offers': offers,
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
      'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'admin_staff': admin_staff,
-       'other_staff': other_staff, 'trans_complete':trans_complete, 'sorted_subs':sorted_subs, 'average_rating': average_rating })
+       'other_staff': other_staff, 'trans_complete':trans_complete, 'sorted_subs':sorted_subs, 'average_rating': average_rating,
+       'monthly_rev': monthly_rev, 'weekly_rev':weekly_rev })
 
 
 @login_required()
