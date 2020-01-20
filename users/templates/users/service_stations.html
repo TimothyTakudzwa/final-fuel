@@ -152,7 +152,7 @@
                                      
                                      <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                        <h2 class="modal-title">Edit00 {{station.name}} <i class="fa fa-edit" style="padding-left: 3px;"></i></h2>
+                                        <h2 class="modal-title">Edit {{station.name}} <i class="fa fa-edit" style="padding-left: 3px;"></i></h2>
                                     </div>
                                      <div class="modal-body">
                                          <form action="{% url 'users:edit_subsidiary' station.id %}"
@@ -245,7 +245,7 @@
   </section>   
 
   <div class="modal fade modal-success in" id="new_sub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog" role="document" style="margin: 0;">
         <div class="modal-content">
             <div class="modal-header" style="width: 100%;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
@@ -389,16 +389,97 @@
 
             
                    
-                </form>
-                <div class="modal-footer row col-md-12">
-                    <button type="button" class="btn" style="background-color: lightgray; color: #333;width: 35%;" data-dismiss="modal">Close</button>
+              
+               
+                    <button type="button" class="btn" style="background-color: lightgray; color: #333;width: 49%;" data-dismiss="modal">Close</button>
     
                     <button style="width: 50%;" class="btn btn-primary"
                         type="submit">Add</button>
-                </div> 
+                    </form>
+                
 
         </div>
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+$(document).ready(function () {
+$('#harare{{forloop.counter}}').show();
+$('#bulawayo{{forloop.counter}}').hide();
+$('#mutare{{forloop.counter}}').hide();
+$('#gweru{{forloop.counter}}').hide();
+$('#default_location').hide();
 
+
+$('#city{{forloop.counter}}').change(function () {
+if ($('#city{{forloop.counter}} option:selected').text() == "Harare") {
+$('#harare{{forloop.counter}}').show();
+$('#bulawayo{{forloop.counter}}').hide();
+$('#mutare{{forloop.counter}}').hide();
+$('#gweru{{forloop.counter}}').hide();
+$('#default_location').hide();
+$('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
+$('#mutare{{forloop.counter}} :input').prop('disabled',true);
+$('#gweru{{forloop.counter}} :input').prop('disabled',true);
+$('#default_location :input').prop('disabled',true);
+$('#harare{{forloop.counter}} :input').prop('disabled',false);
+
+}
+else if ($('#city{{forloop.counter}} option:selected').text() == "Bulawayo") {
+$('#harare{{forloop.counter}}').hide();
+$('#mutare{{forloop.counter}}').hide();
+$('#gweru{{forloop.counter}}').hide();
+$('#default_location').hide();
+$('#bulawayo{{forloop.counter}}').show();
+$('#harare{{forloop.counter}} :input').prop('disabled',true);
+$('#mutare{{forloop.counter}} :input').prop('disabled',true);
+$('#gweru{{forloop.counter}} :input').prop('disabled',true);
+$('#default_location :input').prop('disabled',true);
+$('#bulawayo{{forloop.counter}} :input').prop('disabled',false);
+
+}
+else if ($('#city{{forloop.counter}} option:selected').text() == "Mutare") {
+$('#harare{{forloop.counter}}').hide();
+$('#mutare{{forloop.counter}}').show();
+$('#gweru{{forloop.counter}}').hide();
+$('#default_location').hide();
+$('#bulawayo{{forloop.counter}}').hide();
+$('#harare{{forloop.counter}} :input').prop('disabled',true);
+$('#mutare{{forloop.counter}} :input').prop('disabled',false);
+$('#gweru{{forloop.counter}} :input').prop('disabled',true);
+$('#default_location :input').prop('disabled',true);
+$('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
+
+}
+else if ($('#city{{forloop.counter}} option:selected').text() == "Gweru") {
+$('#harare{{forloop.counter}}').hide();
+$('#mutare{{forloop.counter}}').hide();
+$('#gweru{{forloop.counter}}').show();
+$('#default_location').hide();
+$('#bulawayo{{forloop.counter}}').hide();
+$('#harare{{forloop.counter}} :input').prop('disabled',true);
+$('#mutare{{forloop.counter}} :input').prop('disabled',true);
+$('#gweru{{forloop.counter}} :input').prop('disabled',false);
+$('#default_location :input').prop('disabled',true);
+$('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
+
+}
+else {
+$('#harare{{forloop.counter}}').hide();
+$('#bulawayo{{forloop.counter}}').hide();
+$('#mutare{{forloop.counter}}').hide();
+$('#gweru{{forloop.counter}}').hide();
+$('#default_location').show();
+$('#harare{{forloop.counter}} :input').prop('disabled',true);
+$('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
+$('#mutare{{forloop.counter}} :input').prop('disabled',true);
+$('#gweru{{forloop.counter}} :input').prop('disabled',true);
+$('#default_location :input').prop('disabled',false);
+
+}
+});
+});
+
+
+</script>
 {% endblock %}

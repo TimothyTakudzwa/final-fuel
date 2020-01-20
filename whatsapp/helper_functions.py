@@ -1158,7 +1158,7 @@ def update_diesel(user, message):
 
 def view_allocations(user, message):
     if user.position == 1:
-        allocations = FuelAllocation.objects.filter(assigned_staff_id=user.subsidiary_id).all()
+        allocations = FuelAllocation.objects.filter(allocated_subsidiary_id=user.subsidiary_id).all()
         response_message = 'The following are quantities of the fuel you received. Please type *menu* to go back to main menu. \n\n'
         i = 1
         for allocation in allocations:
