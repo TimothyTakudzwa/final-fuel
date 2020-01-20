@@ -134,126 +134,6 @@
                                   $(this).val(this.checked ? "True" : "False");
                                 });
                               </script>
-
-     <!-- edit modal -->
-     <!-- <div class="modal fade modal-xl" id="edit_{{offer.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
-     <div class="modal-dialog modal-notice">
-         <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h1 class="modal-title">Edit Offer</h1>
-        </div>
-             <div class="modal-body">
-                 <form method="POST" action="{% url 'supplier:edit_offer' offer.id %}">
-                     {% csrf_token %}
-                     <div class="col-md-12">
-                     <div class="col-md-4">
-                        <lable>Fuel Type</lable>
-                        <input type="text" name="fuel_type" class="form-control" value="{{offer.request.fuel_type}}" disabled/>
-                    </div>
-    
-                    <div class="col-md-4">
-                        <lable>Fuel Quantity</lable>
-                        <input type="text" name="quantity" class="form-control" value="{{offer.quantity}}" />
-                    </div>
-                    <div class="col-md-4">
-                        <lable>Fuel Price</lable>
-                        <input type="text" name="price" class="form-control" value="{{offer.price}}" />
-                    </div>
-                     </div>
-                     <p style="text-align: center;"><label class="form-group">Select Payment Method</label></p>
-                     <div class="col-sm-12 col">
-                      <div class="togglebutton form-group col-sm-3">
-                          <label>
-                              <input type="checkbox" name="cash" id="cash">
-                              <span class="toggle"></span>
-                              Cash
-                          </label>
-                      </div>
-                      <div class="togglebutton form-group col-sm-3">
-                          <label>
-                              <input type="checkbox" name="ecocash" id="ecocash">
-                              <span class="toggle" value="True"></span>
-                              Ecocash
-                          </label>
-                      </div>
-                      <div class="togglebutton form-group col-sm-3">
-                          <label>
-                              <input type="checkbox" name="swipe" id="swipe">
-                              <span class="toggle"></span>
-                              Swipe
-                          </label>
-                      </div>
-                      <div class="togglebutton form-group col-sm-3">
-                          <label>
-                              <input type="checkbox" name="usd" id="usd">
-                              <span class="toggle"></span>
-                              USD
-                          </label>
-                      </div>
-                  </div>
-     
-     
-                     <div class="form-group">
-                         <label>Pick Up Method</label>
-                         <select id="delivery_method1{{forloop.counter}}" name="delivery_method1" class="form-control">
-                            <option value='DELIVERY'>Delivery</option>
-                            <option value='SELF COLLECTION'>Self Collection</option>
-                         </select>
-                     </div>
-     
-                     <div class="form-group" name='choices1' id='choices1{{forloop.counter}}'>
-                      <p style="text-align: center;"><label>Collection Address</label></p>
-                      <div class="col-md-12">                           
-                          <div class="togglebutton col-md-4">
-                            <label for="">Street Number</label>
-                            <input type="text" class="form-control" name="s_number" id="street_number" aria-describedby="helpId" placeholder="">
-                            
-                          </div>
-                          <div class="togglebutton col-md-4">
-                            <label for="">Street Name</label>
-                            <input type="text" class="form-control" name="s_name" id="street_name" aria-describedby="helpId" placeholder="">
-                            
-                          </div>
-                          <div class="togglebutton col-md-4">
-                            <label for="">Location/Town</label>
-                            <input type="text" class="form-control" name="s_town" id="location" aria-describedby="helpId" placeholder="">
-                           
-                          </div>
-                        </div>
-                        </div>
-                        <p style="text-align: center;"><label>Available Equipments</label></p>
-                         <div class="row">
-                          <div class="col-sm-4">
-                              <input class="form-control-md" type="checkbox" value="False" id="pump_available" name="pump_available">
-                              <label for="pump_available">Pump </label>
-                              
-                          </div>
-                          <div class="col-sm-4">
-                              <input class="form-control-md" type="checkbox" value="False" id="dipping_stick_available" name="dipping_stick_available">
-                              <label for="dipping_stick_available">Dipping Stick </label>
-                          </div>
-              
-                          <div class="col-sm-4">
-                              <input class="form-control-md" type="checkbox" value="False" id="meter_available" name="meter_available">
-                              <label for="meter_available">Meter</label>
-                          </div>
-                      </div>
-                     </div>
-             </div>
-     
-             <div class="modal-footer justify-content-center">
-              <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-info btn-sm">Update Offer</button></p>
-     
-             </div>
-             </form>
-         </div>
-     </div>
-     </div> -->
-     <!-- end edit modal -->
-
-     <!-- edit modal -->
 <div class="modal fade modal-success in" id="edit_{{offer.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
 aria-hidden="true">
 <div class="modal-dialog modal-notice">
@@ -337,7 +217,7 @@ aria-hidden="true">
             <div class="togglebutton col-sm-4">
               <label for="">Location/Town</label>
               <input type="text" class="form-control" name="s_town" id="location" aria-describedby="helpId" placeholder="">
-             
+            </div>
             </div>
         </div>
         <p style="text-align: center;"><label>Available Equipments</label></p>
@@ -357,7 +237,6 @@ aria-hidden="true">
                 <label for="meter_available">Meter</label>
             </div>
         </div>
-     </div>
 </div>
 
 <div class="modal-footer justify-content-center">
