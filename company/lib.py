@@ -1,7 +1,55 @@
 from supplier.models import Subsidiaries, Transaction, UserReview
 from company.models import Company, FuelUpdate
 from buyer.models import User
-from datetime import datetime
+from datetime import datetime, timedelta
+
+
+
+def top_branches(count,company):
+    branches = Subsidiaries.objects.filter(is_depot=True).filter(company=company)
+    subs = []
+
+    for sub in branches:
+        tran_amount = 0
+        sub_trans = Transaction.objects.filter(supplier__company=company,supplier__subsidiary_id=sub.id, is_complete=True)
+        for sub_tran in sub_trans:
+            tran_amount += (sub_tran.offer.request.amount * sub_tran.offer.price)
+        sub.tran_count = sub_trans.count()
+        sub.tran_value = tran_amount
+        subs.append(sub)
+
+    # sort subsidiaries by transaction value
+    sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True) 
+    sorted_subs = sorted_subs[:count]
+    return sorted_subs
+
+
+def top_contributors(user):
+    top_subs = top_branches(5,user.company)
+    trans = get_total_revenue(user.company)
+
+
+def get_week_days(date):
+    return [date + timedelta(days=i) for i in range(0 - date.weekday(), 7 - date.weekday())]
+
+
+def get_weekly_sales(company, this_week):
+    if this_week == True:
+        date = datetime.now().date()
+    else:
+        date = datetime.now().date() - timedelta(days=7)    
+    week_days = get_week_days(date)
+    weekly_data = {}
+    for day in week_days:
+        weeks_revenue = 0
+        day_trans = Transaction.objects.filter(date=day, supplier__company=company, is_complete=True)
+        if day_trans:
+            for tran in day_trans:
+                weeks_revenue += (tran.offer.request.amount * tran.offer.price)
+        else:
+            weeks_revenue = 0
+        weekly_data[day.strftime("%a")] = int(weeks_revenue)
+    return weekly_data               
 
 
 def get_monthly_sales(company, year):

@@ -135,9 +135,9 @@ def requests_handler(user, message):
         if message == "1":
             fuel_request.delivery_method = "SELF COLLECTION"
             fuel_request.save()
-            user.position = 6 
+            user.position = 55 
             user.save()
-            response_message = 'What do you want to use for payment.\n\n1. ZWL(Cash) Only\n2. Ecocash Only\n3. RTGS(Swipe)/Transfer Only\n4. USD Only\n5. Cash or Ecocash\n6. Cash or Swipe\n7. Ecocash or Swipe\n'
+            response_message = 'What is your payment method?\n\n1. USD\n2. RTGS\n3. USD & RTGS\n'
             
         elif message == "2":
             fuel_request.delivery_method = "DELIVERY"
@@ -147,41 +147,27 @@ def requests_handler(user, message):
             user.save()
         
         else:
-            return "Incorrect Choice"   
+            return "Incorrect Choice"  
+
+    elif user.position == 55:
+        fuel_request = FuelRequest.objects.get(id=user.fuel_request)
+        if message == "1":
+            fuel_request.payment_method = "USD"
+        elif message == "2":
+            fuel_request.payment_method = "RTGS"
+        
+        fuel_request.save()
+        response_message = 'Please choose between the following:? \n\n1. Wait for Offers\n2. Get System Generated'
+        user.position = 7
+        user.save()
 
     elif user.position == 70:
         fuel_request = FuelRequest.objects.get(id=user.fuel_request)
         fuel_request.delivery_address = message
         fuel_request.save()
-        user.position = 6 
+        user.position = 55 
         user.save()
-        response_message = 'What do you want to use for payment.\n\n1. ZWL(Cash) Only\n2. Ecocash Only\n3. RTGS(Swipe)/Transfer Only\n4. USD Only\n5. Cash or Ecocash\n6. Cash or Swipe\n7. Ecocash or Swipe\n'
-          
-    elif user.position == 6:
-        my_request = FuelRequest.objects.get(id=user.fuel_request)
-        if message == "1":
-            my_request.cash = True 
-        elif message == "2":
-            my_request.ecocash = True
-        elif message == "3":
-            my_request.swipe = True
-        elif message == "4":
-            my_request.usd = True
-        elif message == "5":
-            my_request.ecocash = True
-            my_request.cash = True
-        elif message == "6":
-            my_request.swipe = True
-            my_request.cash = True
-        elif message == "7":
-            my_request.ecocash = True
-            my_request.swipe = True
-        else:
-            return "Incorrect Choice"       
-        my_request.save()
-        user.position = 7
-        user.save()
-        response_message = 'Please choose between the following:? \n\n1. Wait for Offers\n2. Get System Generated'
+        response_message = 'What is your payment method?\n\n1. USD\n2. RTGS\n3. USD & RTGS\n'
 
     elif user.position == 7:
         fuel_request = FuelRequest.objects.get(id=user.fuel_request)
@@ -198,8 +184,7 @@ def requests_handler(user, message):
                 response_message = 'Oops!!! Could not get best supplier for you, please type *1* to wait for offers'
             else:
                 offer = Offer.objects.filter(id=response).first()
-                depot = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
-                response_message = suggested_choice.format(offer.supplier.company.name, depot.name, depot.location, offer.request.fuel_type, offer.quantity, offer.price, offer.id)
+                response_message = suggested_choice.format(offer.supplier.company.name, offer.request.fuel_type, offer.quantity, offer.price, offer.id)
                 user.position = 71
                 user.save()
         
@@ -274,6 +259,7 @@ def follow_up(user, message):
         req = requests[int(message) - 1]
         offers = Offer.objects.filter(request=req).all()
         if offers is not None:
+            print("offfers are", offers)
             response_message = 'Which offer do you want to accept? \n\n'
             i = 1
             for offer in offers:
@@ -283,7 +269,7 @@ def follow_up(user, message):
             user.fuel_request = req.id
             user.save()
         else:
-            response_message = 'No offers yet, Please try after some time or type *menu* to go back to main menu.'
+            response_message = "No offers yet, please try again later or type *menu* to go back to main menu"
     elif user.position == 22:
         req = FuelRequest.objects.filter(id = user.fuel_request).first()
         offers = Offer.objects.filter(request=req).all()
@@ -319,15 +305,55 @@ def follow_up(user, message):
 
 def view_fuel_updates(user, message):
     if user.position == 1:
-        updates = FuelUpdate.objects.filter(~Q(sub_type='Company')).all()
+       response_message = 'What is your payment method?\n\n1. USD\n2. RTGS\n' 
+       user.position = 2
+       user.save()
+
+    elif user.position == 2:
+        if message == "1":
+            user.paying_method = "USD"
+            user.save()
+        elif message == "2":
+            user.paying_method = "RTGS"
+            user.save()
+
+        updates = FuelUpdate.objects.filter(sub_type="Depot").all()
         response_message = 'Which fuel update do you want? \n\n'
         i = 1
+        print("My updates", updates)
         for update in updates:
+            print(updates)
             sub = Subsidiaries.objects.filter(id = update.relationship_id).first()
-            response_message = response_message + f'{i} *{sub.name}*\nPetrol: {update.petrol_quantity} Litres\nPrice: {update.petrol_price} \nDiesel:{update.diesel_quantity} Litres \nPrice: {update.diesel_price} \n\n'
-            user.fuel_updates_ids = user.fuel_updates_ids + str(update.id) + " "
-            user.save()
-            i += 1        
+            print("uPDATE id", update.relationship_id)
+            sub_fuel_updates = FuelUpdate.objects.filter(sub_type="Suballocation").filter(relationship_id=update.relationship_id).filter(entry_type=user.paying_method).exists()
+            sub_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(relationship_id=update.relationship_id).filter(entry_type="USD & RTGS").exists()
+            if sub_fuel_updates:
+                sub_fuel_updates = FuelUpdate.objects.filter(sub_type="Suballocation").filter(relationship_id=update.relationship_id).filter(entry_type=user.paying_method).first()
+                response_message = response_message + f'{i} *{sub.name}*\nPetrol: {sub_fuel_updates.petrol_quantity} Litres\nPrice: {sub_fuel_updates.petrol_price} \nDiesel:{sub_fuel_updates.diesel_quantity} Litres \nPrice: {sub_fuel_updates.diesel_price} \n\n'
+                user.fuel_updates_ids = user.fuel_updates_ids + str(sub_fuel_updates.id) + " "
+                user.save()
+
+                i += 1 
+            else:
+                pass 
+            if sub_update:
+                if user.paying_method == "USD":
+                    sub_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(relationship_id=update.relationship_id).filter(entry_type="USD & RTGS").first()
+                    response_message = response_message + f'{i} *{sub.name}*\nPetrol: {sub_update.petrol_quantity} Litres\nPrice: {sub_update.petrol_usd_price} \nDiesel:{sub_update.diesel_quantity} Litres \nPrice: {sub_update.diesel_usd_price} \n\n'
+                    user.fuel_updates_ids = user.fuel_updates_ids + str(sub_fuel_updates.id) + " "
+                    user.save()
+
+                    i += 1 
+                else:
+                    sub_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(relationship_id=update.relationship_id).filter(entry_type="USD & RTGS").first()
+                    response_message = response_message + f'{i} *{sub.name}*\nPetrol: {sub_update.petrol_quantity} Litres\nPrice: {sub_update.petrol_price} \nDiesel:{sub_update.diesel_quantity} Litres \nPrice: {sub_update.diesel_price} \n\n'
+                    user.fuel_updates_ids = user.fuel_updates_ids + str(sub_fuel_updates.id) + " "
+                    user.save()
+
+                    i += 1 
+            else:
+                pass 
+
         user.position = 31 
         user.save()
     elif user.position == 31:
@@ -354,35 +380,12 @@ def view_fuel_updates(user, message):
     elif user.position == 33:
         my_request = FuelRequest.objects.get(id=user.fuel_request)
         my_request.amount = message
-        my_request.save()
-        user.position = 34
-        user.save()
-        response_message = 'What do you want to use for payment.\n\n1. ZWL(Cash) Only\n2. Ecocash Only\n3. RTGS(Swipe)/Transfer Only\n4. USD Only\n5. Cash or Ecocash\n6. Cash or Swipe\n7. Ecocash or Swipe\n'
-    elif user.position == 34:
-        my_request = FuelRequest.objects.get(id=user.fuel_request)
-        if message == "1":
-            my_request.cash = True 
-        elif message == "2":
-            my_request.ecocash = True
-        elif message == "3":
-            my_request.swipe = True
-        elif message == "4":
-            my_request.usd = True
-        elif message == "5":
-            my_request.ecocash = True
-            my_request.cash = True
-        elif message == "6":
-            my_request.swipe = True
-            my_request.cash = True
-        elif message == "7":
-            my_request.ecocash = True
-            my_request.swipe = True
-        else:
-            return "Incorrect Choice"       
+        my_request.payment_method = user.paying_method
         my_request.save()
         user.position = 35
         user.save()
-        response_message = "*Please select delivery method*\n\n1. Pick Up\n2. Delivery"
+        response_message = "*Please select delivery method*\n\n1. Pick Up\n2. Delivery*"
+
     elif user.position == 35:
         my_request = FuelRequest.objects.get(id=user.fuel_request)
         if message == "1":
@@ -444,7 +447,7 @@ def view_requests_handler(user, message):
         if fuel_request.fuel_type.lower() == 'petrol':
             available_fuel = fuel.petrol_quantity
         elif fuel_request.fuel_type.lower() == 'diesel':
-            available_fuel = fuel.diesel_quantity
+            available_fuel = fuel_request.diesel_quantity
         try:
             offer_quantity = float(message)
             if offer_quantity <= available_fuel:
@@ -541,18 +544,15 @@ def view_offers_handler(user, message):
     if user.position == 0:
         response_message = "Reply with the offer number to change the initial offer available\n\n"
         offers = Offer.objects.filter(supplier=user).order_by('-id')
-        if offers is not None:
-            i = 1
-            for offer in offers:
-                fuel = offer.request.fuel_type.capitalize()
-                response_message = response_message + f'*{i}.* {fuel} *{offer.quantity}* litres at {offer.price} made on {offer.date}\n'
-                user.fuel_updates_ids = user.fuel_updates_ids + str(offer.id) + " "
-                user.save()
-                i += 1
-            user.position = 1
+        i = 1
+        for offer in offers:
+            fuel = offer.request.fuel_type.capitalize()
+            response_message = response_message + f'*{i}.* {fuel} *{offer.quantity}* litres at {offer.price} made on {offer.date}\n'
+            user.fuel_updates_ids = user.fuel_updates_ids + str(offer.id) + " "
             user.save()
-        else:
-            response_message = 'ooops!!! no offers found, please type *menu* to go back and select *fuel* requests to make offers.'
+            i += 1
+        user.position = 1
+        user.save()
     elif user.position == 1:
         offer_list = list(user.fuel_updates_ids.split(" "))
         try:
@@ -956,7 +956,7 @@ def registration_handler(request, user, message):
                     username = initial_username + str(i)  
                 user.username = username.lower()          
                 if token_is_send(request, user):
-                    response_message = "We have sent a verification email to your supplied email, Please visit the link to complete the registration process. After completing registration please come back to WhatsApp and type *menu*"
+                    response_message = "We have sent a verification email to your supplied email, Please visit the link to complete the registration process"
                     user.is_active = True
                     user.save()
                 else:
@@ -1015,54 +1015,128 @@ def service_station_handler(request,user,message):
 
 def update_petrol(user, message):
     if user.position == 1:
-        update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
-        response_message = "The last update of Petrol quantity is" + " " + str(update.petrol_quantity) + "L" + "." + " " + "How many litres of petrol left?"
-        user.position = 40
-        user.save()
-    elif user.position == 40:
-        update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
-        update.petrol_quantity = message
-        user.position = 41
-        user.save()
-        update.save()
-        response_message = 'What is the queue size?\n\n1. Short\n2. Medium Long\n3. Long'
-    elif user.position == 41:
-        update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
+       response_message = 'What type of fuel do you want to update?\n\n1. USD Fuel\n2. RTGS Fuel\n3. USD & RTGS Fuel\n' 
+       user.position = 2
+       user.save()
+    elif user.position == 2:
         if message == "1":
-            update.queue_length = "Short"
+            user.position = 10
+            user.save()
         elif message == "2":
-            update.queue_length = "Medium Long"
+            user.position = 20
+            user.save()
         elif message == "3":
-            update.queue_length = "Long"
+            user.position = 30
+            user.save()
+    elif user.position == 10:
+        #update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD").filter(relationship_id=user.subsidiary_id).first()
+        response_message = "The last update of USD Petrol quantity is" + " " + str(sub_fuel_update.petrol_quantity) + "L" + "." + " " + "How many litres of petrol left?"
+        user.position = 11
+        user.save()
+    elif user.position == 11:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD").filter(relationship_id=user.subsidiary_id).first()
+        sub_fuel_update.petrol_quantity = message
+        user.position = 12
+        user.save()
+        sub_fuel_update.save()
+        response_message = 'What is the queue size?\n\n1. Short\n2. Medium Long\n3. Long'
+    elif user.position == 12:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD").filter(relationship_id=user.subsidiary_id).first()
+        if message == "1":
+            sub_fuel_update.queue_length = "Short"
+        elif message == "2":
+            sub_fuel_update.queue_length = "Medium Long"
+        elif message == "3":
+            sub_fuel_update.queue_length = "Long"
         else:
             response_message = 'wrong choice'
-        update.save()
-        user.position = 42
+        sub_fuel_update.save()
+        user.position = 13
         user.save()
         response_message = "What is the status?\n\n1. Pumping\n2. Expecting More Fuel\n3. Empty\n4. Offloading"
-    elif user.position == 42:
-        update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
+    elif user.position == 13:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD").filter(relationship_id=user.subsidiary_id).first()
         if message == "1":
-            update.status = "Pumping"
-            update.save()
+            sub_fuel_update.status = "Pumping"
+            sub_fuel_update.save()
         elif message == "2":
-            update.status = "Expecting More Fuel"
-            update.save()
+            sub_fuel_update.status = "Expecting More Fuel"
+            sub_fuel_update.save()
         elif message == "3":
-            update.status = "Empty"
-            update.save()
+            sub_fuel_update.status = "Empty"
+            sub_fuel_update.save()
         elif message == "4":
-            update.status = "Offloading"
-            update.save()
+            sub_fuel_update.status = "Offloading"
+            sub_fuel_update.save()
         else:
             response_message = 'wrong choice'
-        user.position = 43
-        user.fuel_request = update.id
+        user.position = 14
+        user.save()
+        response_message = 'What do you want to use for payment.\n\n1. Cash Only\n2. FCA Only\n3. Cash or FCA\n'
+          
+    elif user.position == 14:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD").filter(relationship_id=user.subsidiary_id).first()
+        if message == "1":
+            sub_fuel_update.cash = True 
+        elif message == "2":
+            sub_fuel_update.fca = True
+        elif message == "3":
+            sub_fuel_update.cash = True
+            sub_fuel_update.fca = True
+        else:
+            return "Incorrect Choice"  
+        response_message = "made an update successfully" 
+
+    elif user.position == 20:
+        #update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="RTGS").filter(relationship_id=user.subsidiary_id).first()
+        response_message = "The last update of RTGS Petrol quantity is" + " " + str(sub_fuel_update.petrol_quantity) + "L" + "." + " " + "How many litres of petrol left?"
+        user.position = 21
+        user.save()
+    elif user.position == 21:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="RTGS").filter(relationship_id=user.subsidiary_id).first()
+        sub_fuel_update.petrol_quantity = message
+        user.position = 22
+        user.save()
+        sub_fuel_update.save()
+        response_message = 'What is the queue size?\n\n1. Short\n2. Medium Long\n3. Long'
+    elif user.position == 22:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="RTGS").filter(relationship_id=user.subsidiary_id).first()
+        if message == "1":
+            sub_fuel_update.queue_length = "Short"
+        elif message == "2":
+            sub_fuel_update.queue_length = "Medium Long"
+        elif message == "3":
+            sub_fuel_update.queue_length = "Long"
+        else:
+            response_message = 'wrong choice'
+        sub_fuel_update.save()
+        user.position = 23
+        user.save()
+        response_message = "What is the status?\n\n1. Pumping\n2. Expecting More Fuel\n3. Empty\n4. Offloading"
+    elif user.position == 23:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="RTGS").filter(relationship_id=user.subsidiary_id).first()
+        if message == "1":
+            sub_fuel_update.status = "Pumping"
+            sub_fuel_update.save()
+        elif message == "2":
+            sub_fuel_update.status = "Expecting More Fuel"
+            sub_fuel_update.save()
+        elif message == "3":
+            sub_fuel_update.status = "Empty"
+            sub_fuel_update.save()
+        elif message == "4":
+            sub_fuel_update.status = "Offloading"
+            sub_fuel_update.save()
+        else:
+            response_message = 'wrong choice'
+        user.position = 24
         user.save()
         response_message = 'What do you want to use for payment.\n\n1. ZWL(Cash) Only\n2. Ecocash Only\n3. RTGS(Swipe)/Transfer Only\n4. USD Only\n5. Cash or Ecocash\n6. Cash or Swipe\n7. Ecocash or Swipe\n'
           
-    elif user.position == 43:
-        update = FuelUpdate.objects.filter(id=user.fuel_request).first()
+    elif user.position == 24:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="RTGS").filter(relationship_id=user.subsidiary_id).first()
         if message == "1":
             update.cash = True 
         elif message == "2":
@@ -1082,57 +1156,195 @@ def update_petrol(user, message):
             update.swipe = True
         else:
             return "Incorrect Choice"  
-        response_message = "made an update successfully"     
+        response_message = "made an update successfully"
+
+    elif user.position == 30:
+        #update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD & RTGS").filter(relationship_id=user.subsidiary_id).first()
+        response_message = "The last update of USD & RTGS Petrol quantity is" + " " + str(sub_fuel_update.petrol_quantity) + "L" + "." + " " + "How many litres of petrol left?"
+        user.position = 31
+        user.save()
+    elif user.position == 31:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD & RTGS").filter(relationship_id=user.subsidiary_id).first()
+        sub_fuel_update.petrol_quantity = message
+        user.position = 32
+        user.save()
+        sub_fuel_update.save()
+        response_message = 'What is the queue size?\n\n1. Short\n2. Medium Long\n3. Long'
+    elif user.position == 32:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD & RTGS").filter(relationship_id=user.subsidiary_id).first()
+        if message == "1":
+            sub_fuel_update.queue_length = "Short"
+        elif message == "2":
+            sub_fuel_update.queue_length = "Medium Long"
+        elif message == "3":
+            sub_fuel_update.queue_length = "Long"
+        else:
+            response_message = 'wrong choice'
+        sub_fuel_update.save()
+        user.position = 33
+        user.save()
+        response_message = "What is the status?\n\n1. Pumping\n2. Expecting More Fuel\n3. Empty\n4. Offloading"
+    elif user.position == 33:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD & RTGS").filter(relationship_id=user.subsidiary_id).first()
+        if message == "1":
+            sub_fuel_update.status = "Pumping"
+            sub_fuel_update.save()
+        elif message == "2":
+            sub_fuel_update.status = "Expecting More Fuel"
+            sub_fuel_update.save()
+        elif message == "3":
+            sub_fuel_update.status = "Empty"
+            sub_fuel_update.save()
+        elif message == "4":
+            sub_fuel_update.status = "Offloading"
+            sub_fuel_update.save()
+        else:
+            response_message = 'wrong choice'
+        user.position = 34
+        user.save()
+        response_message = 'What do you want to use for payment.\n\n1. Cash Only\n2. FCA Only\n3. Cash or FCA\n'
+          
+    elif user.position == 34:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD & RTGS").filter(relationship_id=user.subsidiary_id).first()
+        if message == "1":
+            sub_fuel_update.cash = True 
+        elif message == "2":
+            sub_fuel_update.fca = True
+        elif message == "3":
+            sub_fuel_update.cash = True
+            sub_fuel_update.fca = True
+        else:
+            return "Incorrect Choice"  
+        response_message = "made an update successfully"
+
         
     return response_message
 
 def update_diesel(user, message):
     if user.position == 1:
-        update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
-        response_message = "The last update of Diesel quantity is" + " " + str(update.diesel_quantity) + "L" + "." + " " + "How many litres of diesel left?"
-        user.position = 50
+       response_message = 'What type of fuel do you want to update?\n\n1. USD Fuel\n2. RTGS Fuel\n3. USD & RTGS Fuel\n' 
+       user.position = 2
+       user.save()
+    elif user.position == 2:
+        if message == "1":
+            user.position = 10
+            user.save()
+        elif message == "2":
+            user.position = 20
+            user.save()
+        elif message == "3":
+            user.position = 30
+            user.save()
+    elif user.position == 10:
+        #update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD").filter(relationship_id=user.subsidiary_id).first()
+        response_message = "The last update of USD Diesel quantity is" + " " + str(sub_fuel_update.diesel_quantity) + "L" + "." + " " + "How many litres of Diesel left?"
+        user.position = 11
         user.save()
-    elif user.position == 50:
-        update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
-        update.diesel_quantity = message
-        user.position = 51
+    elif user.position == 11:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD").filter(relationship_id=user.subsidiary_id).first()
+        sub_fuel_update.diesel_quantity = message
+        user.position = 12
         user.save()
-        update.save()
+        sub_fuel_update.save()
         response_message = 'What is the queue size?\n\n1. Short\n2. Medium Long\n3. Long'
-    elif user.position == 51:
-        update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
+    elif user.position == 12:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD").filter(relationship_id=user.subsidiary_id).first()
+        if message == "1":
+            sub_fuel_update.queue_length = "Short"
+        elif message == "2":
+            sub_fuel_update.queue_length = "Medium Long"
+        elif message == "3":
+            sub_fuel_update.queue_length = "Long"
+        else:
+            response_message = 'wrong choice'
+        sub_fuel_update.save()
+        user.position = 13
+        user.save()
         response_message = "What is the status?\n\n1. Pumping\n2. Expecting More Fuel\n3. Empty\n4. Offloading"
+    elif user.position == 13:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD").filter(relationship_id=user.subsidiary_id).first()
         if message == "1":
-            update.queue_length = "Short"
+            sub_fuel_update.status = "Pumping"
+            sub_fuel_update.save()
         elif message == "2":
-            update.queue_length = "Medium Long"
+            sub_fuel_update.status = "Expecting More Fuel"
+            sub_fuel_update.save()
         elif message == "3":
-            update.queue_length = "Long"
-        else:
-            response_message = 'wrong choice'
-        update.save()
-        user.position = 52
-        user.save()    
-    elif user.position == 52:
-        update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
-        if message == "1":
-            update.status = "Pumping"
-        elif message == "2":
-            update.status = "Expecting More Fuel"
-        elif message == "3":
-            update.status = "Empty"
+            sub_fuel_update.status = "Empty"
+            sub_fuel_update.save()
         elif message == "4":
-            update.status = "Offloading"
+            sub_fuel_update.status = "Offloading"
+            sub_fuel_update.save()
         else:
             response_message = 'wrong choice'
-        update.save()
-        user.position = 53
-        user.fuel_request = update.id
+        user.position = 14
+        user.save()
+        response_message = 'What do you want to use for payment.\n\n1. Cash Only\n2. FCA Only\n3. Cash or FCA\n'
+          
+    elif user.position == 14:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD").filter(relationship_id=user.subsidiary_id).first()
+        if message == "1":
+            sub_fuel_update.cash = True 
+        elif message == "2":
+            sub_fuel_update.fca = True
+        elif message == "3":
+            sub_fuel_update.cash = True
+            sub_fuel_update.fca = True
+        else:
+            return "Incorrect Choice"  
+        response_message = "made an update successfully" 
+
+    elif user.position == 20:
+        #update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="RTGS").filter(relationship_id=user.subsidiary_id).first()
+        response_message = "The last update of RTGS Diesel quantity is" + " " + str(sub_fuel_update.diesel_quantity) + "L" + "." + " " + "How many litres of diesel left?"
+        user.position = 21
+        user.save()
+    elif user.position == 21:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="RTGS").filter(relationship_id=user.subsidiary_id).first()
+        sub_fuel_update.diesel_quantity = message
+        user.position = 22
+        user.save()
+        sub_fuel_update.save()
+        response_message = 'What is the queue size?\n\n1. Short\n2. Medium Long\n3. Long'
+    elif user.position == 22:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="RTGS").filter(relationship_id=user.subsidiary_id).first()
+        if message == "1":
+            sub_fuel_update.queue_length = "Short"
+        elif message == "2":
+            sub_fuel_update.queue_length = "Medium Long"
+        elif message == "3":
+            sub_fuel_update.queue_length = "Long"
+        else:
+            response_message = 'wrong choice'
+        sub_fuel_update.save()
+        user.position = 23
+        user.save()
+        response_message = "What is the status?\n\n1. Pumping\n2. Expecting More Fuel\n3. Empty\n4. Offloading"
+    elif user.position == 23:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="RTGS").filter(relationship_id=user.subsidiary_id).first()
+        if message == "1":
+            sub_fuel_update.status = "Pumping"
+            sub_fuel_update.save()
+        elif message == "2":
+            sub_fuel_update.status = "Expecting More Fuel"
+            sub_fuel_update.save()
+        elif message == "3":
+            sub_fuel_update.status = "Empty"
+            sub_fuel_update.save()
+        elif message == "4":
+            sub_fuel_update.status = "Offloading"
+            sub_fuel_update.save()
+        else:
+            response_message = 'wrong choice'
+        user.position = 24
         user.save()
         response_message = 'What do you want to use for payment.\n\n1. ZWL(Cash) Only\n2. Ecocash Only\n3. RTGS(Swipe)/Transfer Only\n4. USD Only\n5. Cash or Ecocash\n6. Cash or Swipe\n7. Ecocash or Swipe\n'
           
-    elif user.position == 53:
-        update = FuelUpdate.objects.filter(id=user.fuel_request).first()
+    elif user.position == 24:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="RTGS").filter(relationship_id=user.subsidiary_id).first()
         if message == "1":
             update.cash = True 
         elif message == "2":
@@ -1152,9 +1364,71 @@ def update_diesel(user, message):
             update.swipe = True
         else:
             return "Incorrect Choice"  
-        response_message = "made an update successfully" 
-    
+        response_message = "made an update successfully"
+
+    elif user.position == 30:
+        #update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD & RTGS").filter(relationship_id=user.subsidiary_id).first()
+        response_message = "The last update of USD & RTGS Diesel quantity is" + " " + str(sub_fuel_update.diesel_quantity) + "L" + "." + " " + "How many litres of diesel left?"
+        user.position = 31
+        user.save()
+    elif user.position == 31:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD & RTGS").filter(relationship_id=user.subsidiary_id).first()
+        sub_fuel_update.diesel_quantity = message
+        user.position = 32
+        user.save()
+        sub_fuel_update.save()
+        response_message = 'What is the queue size?\n\n1. Short\n2. Medium Long\n3. Long'
+    elif user.position == 32:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD & RTGS").filter(relationship_id=user.subsidiary_id).first()
+        if message == "1":
+            sub_fuel_update.queue_length = "Short"
+        elif message == "2":
+            sub_fuel_update.queue_length = "Medium Long"
+        elif message == "3":
+            sub_fuel_update.queue_length = "Long"
+        else:
+            response_message = 'wrong choice'
+        sub_fuel_update.save()
+        user.position = 33
+        user.save()
+        response_message = "What is the status?\n\n1. Pumping\n2. Expecting More Fuel\n3. Empty\n4. Offloading"
+    elif user.position == 33:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD & RTGS").filter(relationship_id=user.subsidiary_id).first()
+        if message == "1":
+            sub_fuel_update.status = "Pumping"
+            sub_fuel_update.save()
+        elif message == "2":
+            sub_fuel_update.status = "Expecting More Fuel"
+            sub_fuel_update.save()
+        elif message == "3":
+            sub_fuel_update.status = "Empty"
+            sub_fuel_update.save()
+        elif message == "4":
+            sub_fuel_update.status = "Offloading"
+            sub_fuel_update.save()
+        else:
+            response_message = 'wrong choice'
+        user.position = 34
+        user.save()
+        response_message = 'What do you want to use for payment.\n\n1. Cash Only\n2. FCA Only\n3. Cash or FCA\n'
+          
+    elif user.position == 34:
+        sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD & RTGS").filter(relationship_id=user.subsidiary_id).first()
+        if message == "1":
+            sub_fuel_update.cash = True 
+        elif message == "2":
+            sub_fuel_update.fca = True
+        elif message == "3":
+            sub_fuel_update.cash = True
+            sub_fuel_update.fca = True
+        else:
+            return "Incorrect Choice"  
+        response_message = "made an update successfully"
+
+        
     return response_message
+
 
 def view_allocations(user, message):
     if user.position == 1:
@@ -1186,6 +1460,20 @@ def transacting_handler(user, message):
 
 def requesting(user, message):
     if user.position == 1:
+       response_message = 'What is your payment method?\n\n1. USD\n2. RTGS\n3. USD & RTGS\n' 
+       user.position = 10
+       user.save()
+    elif user.position == 10:
+        if message == "1":
+            user.paying_method = "USD"
+            user.save()
+        elif message == "2":
+            user.paying_method = "RTGS"
+            user.save()
+        elif message == "3":
+            user.paying_method = "USD & RTGS"
+            user.save()
+        
         cities = ["Harare","Bulawayo","Beitbridge","Bindura","Chinhoyi","Chirundu","Gweru","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Mutare","Mutoko","Nyanga","Victoria Falls"]
         response_message = "Which City are you in?\n\n"
         i = 1
@@ -1223,7 +1511,8 @@ def requesting(user, message):
             i = 1
             for station in stations:
                 fuel_update = FuelUpdate.objects.filter(relationship_id=station.id).first()
-                response_message = response_message + f'{i}. *{station.name}*\nPetrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nDiesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n' 
+                sub_fuel_updates = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type=user.paying_method).filter(relationship_id=fuel_update.relationship_id).first()
+                response_message = response_message + f'{i}. *{station.name}*\nPetrol: {sub_fuel_updates.petrol_quantity} Litres\nPrice: {sub_fuel_updates.petrol_price}\nDiesel: {sub_fuel_updates.diesel_quantity} Litres\nPrice: {sub_fuel_updates.diesel_price}\nQueue Length: {sub_fuel_updates.queue_length}\nStatus: {sub_fuel_updates.status}\n\n' 
                 i += 1
             
     elif user.position == 12:
@@ -1234,7 +1523,8 @@ def requesting(user, message):
         i = 1
         for station in stations:
             fuel_update = FuelUpdate.objects.filter(relationship_id=station.id).first()
-            response_message = response_message + f'{i}. *{station.name}*\nPetrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nDiesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n' 
+            sub_fuel_updates = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type=user.paying_method).filter(relationship_id=fuel_update.relationship_id).first()
+            response_message = response_message + f'{i}. *{station.name}*\nPetrol: {sub_fuel_updates.petrol_quantity} Litres\nPrice: {sub_fuel_updates.petrol_price}\nDiesel: {sub_fuel_updates.diesel_quantity} Litres\nPrice: {sub_fuel_updates.diesel_price}\nQueue Length: {sub_fuel_updates.queue_length}\nStatus: {sub_fuel_updates.status}\n\n' 
             i += 1
     
     elif user.position == 13:
@@ -1245,7 +1535,8 @@ def requesting(user, message):
         i = 1
         for station in stations:
             fuel_update = FuelUpdate.objects.filter(relationship_id=station.id).first()
-            response_message = response_message + f'{i}. *{station.name}*\nPetrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nDiesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n' 
+            sub_fuel_updates = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type=user.paying_method).filter(relationship_id=fuel_update.relationship_id).first()
+            response_message = response_message + f'{i}. *{station.name}*\nPetrol: {sub_fuel_updates.petrol_quantity} Litres\nPrice: {sub_fuel_updates.petrol_price}\nDiesel: {sub_fuel_updates.diesel_quantity} Litres\nPrice: {sub_fuel_updates.diesel_price}\nQueue Length: {sub_fuel_updates.queue_length}\nStatus: {sub_fuel_updates.status}\n\n' 
             i += 1
 
     
@@ -1253,12 +1544,26 @@ def requesting(user, message):
 
 def station_updates(user, message):
     if user.position == 1:
+       response_message = 'What is your payment method?\n\n1. USD\n2. RTGS\n3. USD & RTGS\n' 
+       user.position = 2
+       user.save()
+    elif user.position == 2:
+        if message == "1":
+            user.paying_method = "USD"
+            user.save()
+        elif message == "2":
+            user.paying_method = "RTGS"
+            user.save()
+        elif message == "3":
+            user.paying_method = "USD & RTGS"
+            user.save()
         updates = FuelUpdate.objects.filter(sub_type='Service Station').all()
-        response_message = 'The following are the current updates of fuel availability in different stations. Please type *menu* to go back to menu and look for fuel\n\n'
+        response_message = 'The following are the current updates of fuel available for your payment method in different stations. Please type *menu* to go back to menu and look for fuel\n\n'
         i = 1
         for update in updates:
             station = Subsidiaries.objects.filter(id = update.relationship_id).first()
-            response_message = response_message + f'{i}. *{station.name}*\nPetrol: {update.petrol_quantity} Litres\nPrice: {update.petrol_price}\nDiesel: {update.diesel_quantity} Litres\nPrice: {update.diesel_price}\nQueue Length: {update.queue_length}\nStatus: {update.status}\n\n'
+            sub_fuel_updates = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type=user.paying_method).filter(relationship_id=update.relationship_id).first()
+            response_message = response_message + f'{i}. *{station.name}*\nPetrol: {sub_fuel_updates.petrol_quantity} Litres\nPrice: {sub_fuel_updates.petrol_price}\nDiesel: {sub_fuel_updates.diesel_quantity} Litres\nPrice: {sub_fuel_updates.diesel_price}\nQueue Length: {sub_fuel_updates.queue_length}\nStatus: {sub_fuel_updates.status}\n\n'
             i += 1
 
     return response_message

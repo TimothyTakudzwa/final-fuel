@@ -6,7 +6,7 @@ from supplier.models import Offer
 from buyer.models import FuelRequest
 
 @receiver(post_save, sender=Notification)
-def distribute(request, sender, instance, created, **kwargs):
+def distribute(sender, instance, created, **kwargs):
     if created:
         messages = Notification.objects.filter(id=instance.id).first()
         
