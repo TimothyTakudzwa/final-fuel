@@ -6,7 +6,7 @@ from supplier.models import Offer
 from buyer.models import FuelRequest
 
 @receiver(post_save, sender=Notification)
-def distribute(sender, instance, created, **kwargs):
+def distribute(request, sender, instance, created, **kwargs):
     if created:
         messages = Notification.objects.filter(id=instance.id).first()
         
@@ -35,7 +35,4 @@ def distribute(sender, instance, created, **kwargs):
             values = dict(user_id=messages.user.id, notification=messages.message, action=messages.action,url = click_url)
             return requests.post(url=url, json=values)
 
-        url = 'https://dreamhub.co.zw/notify'
-        values = dict(user_id=messages.user.id, notification=messages.message, action=messages.action,url = 'https://dreamhub.co.zw/notify')
-        return requests.post(url=url, json=values)
-
+       

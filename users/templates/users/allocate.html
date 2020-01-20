@@ -56,7 +56,7 @@
                             <th>Diesel Price</th>
                             <th>Petrol Quantity</th>
                             <th>Petrol Price</th>
-                            <th>Payment Methods</th>
+                            <!-- <th>Payment Methods</th> -->
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -69,10 +69,10 @@
                             <td>{{company_capacity.diesel_price}}</td>
                             <td>{{company_capacity.petrol_quantity}}</td>
                             <td>{{company_capacity.petrol_price}}</td>
-                            <td>{%if company_capacity.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL"> {% else%} {%endif%} {%if company_capacity.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if company_capacity.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if company_capacity.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
+                            <!-- <td>{%if company_capacity.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL"> {% else%} {%endif%} {%if company_capacity.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if company_capacity.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if company_capacity.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td> -->
                             <td>
-                                <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#company_petrol{{company_capacity.id}}">Update Company Unallocated Petrol</button>
-                                <button class="btn btn-warning btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#company_diesel{{company_capacity.id}}">Update Company Unallocated Diesel</button>
+                                <button class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#company_petrol{{company_capacity.id}}">Update Company Unallocated Petrol</button>
+                                <button class="btn btn-warning btn-sm"  data-toggle="modal" data-target="#company_diesel{{company_capacity.id}}">Update Company Unallocated Diesel</button>
                             </td>
                         </tr>
                         <!-- Supplier Edit Modal -->
@@ -206,7 +206,7 @@
             <div class="mt-2 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
                 <div class="panel-heading ui-sortable-handle">
                     <div class="btn-group">
-                        <h4>Fuel Allocations & Updates</h4>
+                        <h4>Depots - <small><i>Click on Depot to view fuel allocations and allocate fuel</i></small></h4>
                     </div>
                     <div class="dropdown">
                         <ul class="dropdown-menu dropdown-menu-right">
@@ -220,16 +220,16 @@
 
 
                 <div class="table-responsive">
-                    <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <table id="fuel_allocations" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                         <tr>
                             <th>Name</th>
                             <th>Type</th>
                             <th>Diesel</th>
-                            <th>Price</th>
+                            <!-- <th>Price</th> -->
                             <th>Petrol</th>
-                            <th>Price</th>
-                            <th>Payment</th>
+                            <!-- <th>Price</th> -->
+                            
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -240,15 +240,15 @@
                                 <td>{{allocate.subsidiary_name}}</td>
                                 <td>{{allocate.sub_type}}</td>
                                 <td>{{allocate.diesel_quantity}} {% if allocate.diesel_quantity < 1000 %} <i class="material-icons text-danger" >warning</i>{% endif %}</td>
-                                <td>{{allocate.diesel_price}}</td>
+                                <!-- <td>{{allocate.diesel_price}}</td> -->
                                 <td>{{allocate.petrol_quantity}} {% if allocate.petrol_quantity < 1000 %} <i class="material-icons text-danger" >warning</i>{% endif %}</td>
-                                <td>{{allocate.petrol_price}}</td>
-                                <td>{%if allocate.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL">{% else%} {%endif%} {%if allocate.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if allocate.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if allocate.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td>
+                                <!-- <td>{{allocate.petrol_price}}</td> -->
+                                <!-- <td>{%if allocate.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL">{% else%} {%endif%} {%if allocate.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if allocate.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if allocate.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td> -->
                                 <td>
                                     <div class = "btn-group">
-                                        <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#petrol{{allocate.id}}">Add Petrol</button>
-                                        <button class="btn btn-warning btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#diesel{{allocate.id}}">Add Diesel</button>
-                                        <button class="btn btn-success btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#edit_{{allocate.id}}">Edit Prices</button>
+                                        <!-- <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#petrol{{allocate.id}}">Add Petrol</button>
+                                        <button class="btn btn-warning btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#diesel{{allocate.id}}">Add Diesel</button> -->
+                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'users:allocatedfuel' allocate.relationship_id %}">View Fuel Allocations</a>
                                     </div>
                                 </td>
                             </tr>
