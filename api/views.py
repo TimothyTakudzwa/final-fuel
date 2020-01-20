@@ -189,7 +189,6 @@ def view_updates_user(request):
     if request.method == 'POST':
 
         data = []
-        address = request.get_host()
 
         sub_updates = FuelUpdate.objects.filter(sub_type='Service Station').all()
         
@@ -200,7 +199,7 @@ def view_updates_user(request):
                 if update.diesel_quantity == 0 and update.petrol_quantity == 0:
                     pass
                 else:
-                    image = f'https://{address}/{details.company.logo.url}/'
+                    image = f'https://{request.get_host()}{details.company.logo.url}/'
                     station_update = {
                         'station': details.name, 'company': details.company.name, 'queue':
                             update.queue_length, 'petrol': update.petrol_price, 'diesel': update.diesel_price,
