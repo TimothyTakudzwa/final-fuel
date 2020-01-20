@@ -1,0 +1,144 @@
+{% extends "finder/buyer_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block body%}
+
+
+<div class="card">
+    <div class="card-header card-header-primary">
+        <h4 class="card-title "> New Offer </h4>
+        <p class="card-category"></p>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped" id="fuel_updates">
+                <thead style="background-color: lightslategray; color: white;">
+                    <tr>
+                        
+                        <th>
+                            <h6>Supplier Company</h6>
+                        </th>
+                        <th>
+                                <h6>Depot Name</h6>
+                            </th>
+                        <th>
+                            <h6>Supplier Address</h6>
+                        </th>
+                        <th>
+                            <h6>Fuel Requested </h6>
+                        </th>
+                        <th>
+                            <h6>Fuel Offer </h6>
+                        </th>
+                  
+                        <th>
+                            <h6>Price per Litre </h6>
+                        </th>
+                        <th>
+                            <h6>Requested On </h6>
+                        </th>
+                        <th>
+                            <h6>Action</h6>
+                        </th>
+                        <th>
+                            <h6>Action</h6>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for offer in offers %}
+                    <tr>
+                        
+                        <td>
+                            {{offer.supplier.company}}
+                        </td>
+                        <td>
+                                {{offer.depot_name}}
+                            </td>
+                        <td>
+                            {{offer.supplier.company.address}}
+                        </td>
+                        <td>
+                            {{offer.request.amount}} Litres
+                        </td>
+                        <td class="">
+                            {{offer.quantity}} Litres
+                        </td>
+                        <td class="">
+                            RTGS {{offer.price}}
+                        </td>
+                        <td class="">
+                             {{offer.date}} -- {{offer.time}}
+                        </td>
+                        <td class="text-primary">    
+                            <a class="btn btn-primary btn-sm" href="#"  data-toggle="modal" data-target="#complete_{{offer.id}}" >
+                                <i class="material-icons"></i>Accept Offer 
+                            </a>
+                        </td>
+                        <td class="text-primary">
+                         <a class="btn btn-primary btn-sm" href="{% url 'reject-offer' offer.id %}" >
+                                <i class="material-icons"></i>Reject Offer 
+                            </a>
+                        </td>
+                    </tr>=
+
+                    <!--Modal to complete transaction-->
+                    <div class="modal fade" id="complete_{{offer.id}}" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header" style= "background:#402d57e0">
+                                        <h4 class="modal-title" style= "color:whitesmoke" >Accept the Offer</h4>   
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <div class="modal-body" style= "background:#402d57e0">
+                                        <h4 style="color: white;">By clicking <strong>YES</strong> you are confirming to accepting an offer from {{offer.supplier.company}}, 
+                                        {{offer.depot_name}} Depot
+                                        </h4>
+                                        <div class="btn-group">
+                                            <a href="{% url 'accept-offer' offer.id %}" class="btn btn-warning">
+                                                Yes
+                                            </a>    
+                                            
+                                            <a class="btn btn-success"   data-dismiss="modal">
+                                                    No
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+{% for offer in offers %}
+    <tr>
+        <td class="name truncate">{{offer.id}}</a></td> 
+        <td class="name truncate">{{offer.supplier.company}}</a></td> 
+        <td class="name truncate">{{offer.supplier.company.address}}</a></td> 
+        <td class="name truncate">{{offer.request.amount}}</a></td>
+        <td class="name truncate">{{offer.quantity}}</a></td>
+        <td class="name truncate">{{offer.price}}</a></td>
+        <td class="name truncate">{{offer.date}}</a></td>  
+        <td class="name truncate">{{offer.time}}</a></td>
+        <td class="text-primary">    
+            <a class="btn btn-facebook btn-sm" href="" >
+                <i class="material-icons"></i>Accept Offer 
+            </a>
+        </td>
+    </tr>
+{%endfor%}

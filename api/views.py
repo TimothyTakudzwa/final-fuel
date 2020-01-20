@@ -110,27 +110,39 @@ def update_station(request):
         if status.exists():
             update = FuelUpdate.objects.get(relationship_id=user.subsidiary_id)
 
-
             p_quantity = request.POST.get('petrol_quantity')
             d_quantity = request.POST.get('diesel_quantity')
             queue = request.POST.get('queue')
 
-
-            usd = request.POST.get('usd')
-            swipe = request.POST.get('swipe')
-            ecocash = request.POST.get('ecocash')
-            cash = request.POST.get('cash')
             s_status = request.POST.get('status')
             limit = request.POST.get('limit')
+
+            if update.sub_type == 'USD':
+                cash = request.POST.get('cash')
+                swipe = request.POST.get('swipe')
+
+                update.cash = cash
+                update.swipe = swipe
+            elif update.sub_type == 'RTGS':
+                swipe = request.POST.get('swipe')
+                ecocash = request.POST.get('ecocash')
+                cash = request.POST.get('cash')
+
+                update.swipe = swipe
+                update.ecocash = ecocash
+                update.cash = cash
+            elif update.sub_type == 'USD & RTGS':
+                swipe = request.POST.get('swipe')
+                ecocash = request.POST.get('ecocash')
+                cash = request.POST.get('cash')
+
+                update.swipe = swipe
+                update.ecocash = ecocash
+                update.cash = cash
 
             update.petrol_quantity = p_quantity
             update.diesel_quantity = d_quantity
             update.queue_length = queue
-
-            update.usd = usd
-            update.swipe = swipe
-            update.ecocash = ecocash
-            update.cash = cash
             update.status = s_status
             update.limit = limit
 
@@ -156,12 +168,14 @@ def view_station_updates(request):
             updates = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id)
             for update in updates:
                 company = Subsidiaries.objects.get(id=update.relationship_id)
+                
                 station_update = {
                     'name': company.name, 'diesel_quantity': update.diesel_quantity,
                     'diesel_price': update.diesel_price, 'petrol_quantity': update.petrol_quantity,
                     'petrol_price': update.petrol_price, 'cash': update.cash, 'ecocash': update.ecocash,
                     'swipe': update.swipe, 'usd': update.usd, 'queue': update.queue_length, 'limit': update.limit,
-                    'status': update.status
+                    'status': update.status, 'currency_check': update.entry_type, 'diesel_usd': update.diesel_usd_price,
+                    'petrol_usd': update.petrol_usd_price
                 }
                 data.append(station_update)
             return JsonResponse(list(data), status=200, safe=False)
@@ -175,18 +189,27 @@ def view_updates_user(request):
     if request.method == 'POST':
 
         data = []
+        address = request.get_host()
 
-        updates = FuelUpdate.objects.filter(~Q(sub_type='Company')).all()
-        for update in updates:
-            details = Subsidiaries.objects.get(id=update.relationship_id)
-            station_update = {
-                'station': details.name, 'company': details.company.name, 'queue':
-                    update.queue_length, 'petrol': update.petrol_price, 'diesel': update.diesel_price,
-                'open': details.opening_time, 'close': details.closing_time, 'limit': update.limit, 'cash': update.cash,
-                'ecocash': update.ecocash, 'swipe': update.swipe, 'usd': update.usd, 'status': update.status,
-            }
-            data.append(station_update)
-
+        sub_updates = FuelUpdate.objects.filter(sub_type='Service Station').all()
+        
+        for sub_update in sub_updates:
+            updates = FuelUpdate.objects.filter(sub_type='Suballocation').filter(relationship_id=sub_update.relationship_id).all()
+            for update in updates:
+                details = Subsidiaries.objects.get(id=update.relationship_id)
+                if update.diesel_quantity == 0 and update.petrol_quantity == 0:
+                    pass
+                else:
+                    image = f'{address}/{details.company.logo.url}/'
+                    station_update = {
+                        'station': details.name, 'company': details.company.name, 'queue':
+                            update.queue_length, 'petrol': update.petrol_price, 'diesel': update.diesel_price,
+                        'open': details.opening_time, 'close': details.closing_time, 'limit': update.limit, 'cash': update.cash,
+                        'ecocash': update.ecocash, 'swipe': update.swipe, 'usd': update.usd, 'status': update.status,
+                        'currency_check': update.entry_type, 'diesel_usd': update.diesel_usd_price,
+                        'petrol_usd': update.petrol_usd_price, 'image': image
+                        }
+                    data.append(station_update)
         return JsonResponse(list(data), status=200, safe=False)
 
 

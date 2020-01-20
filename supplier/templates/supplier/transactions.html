@@ -1,30 +1,52 @@
-{% extends "supplier/dashboard.html" %}
+{% extends "supplier/supplier_base.html" %}
 {% load humanize %}
 {% load mathfilters %}
-{% block title %}
-{{title}}
-{% endblock %}
+
 {% block body %}
-
-<div class="jumbotron jumbotron-fluid" style="padding: 1rem 1rem;">
-    <div class="container">
-        <h1 class="display-3">{{request.user.company|title}}'s Transactions</h1>
-        
-        <hr class="my-2">
-        
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search...">
+            <span class="input-group-btn">
+                <button type="submit" name="search" id="search-btn" class="btn"><i
+                        class="fa fa-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="header-icon">
+      <i class="fa fa-exchange"></i>
     </div>
-  </div>
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="card mt-5" style="background-color:white">
-            <div class="card-header card-header-primary">
-                <h4 class="card-title">Transactions</h4>
-                <p class="card-category"> List Of All Transactions</p>
+    <div class="header-title">
+        <h1>Transactions</h1>
+        <small>List of all your transactions</small>
+        <ol class="breadcrumb hidden-xs">
+            <li><a href="{%url 'fuel-request'%}"><i class="pe-7s-home"></i> Home</a></li>
+            <li class="active">Transactions</li>
+        </ol>
+    </div>
+  </section>
+  <!-- Main content -->
+  <div class="content">
+    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
+        data-index="0">
+        <div class="panel-heading ui-sortable-handle">
+            
+            <div class="dropdown">
+                <ul class="dropdown-menu dropdown-menu-right">
+  
+  
+                </ul>
+                <div class="dropdown-toggle" data-toggle="dropdown"><span
+                        class="panel-control-icon glyphicon glyphicon-cog"></span>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="container-fluid">
-                    <table id="example" class="table table-striped table-bordered" style="width:100%">
+        </div>
+        <div class="panel-body">
+              
+      
+      <div class="table-responsive">
+        <table id="example" class="table table-striped table-bordered" style="width:100%">
                         <thead style="background-color: lightslategray; color:white;">
                             <tr>
                                 <th style="color: white;"></th>
@@ -59,6 +81,5 @@
             </div>
         </div>
     </div>
-</div>
     
 {%endblock%}

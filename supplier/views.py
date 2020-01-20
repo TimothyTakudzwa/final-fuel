@@ -66,32 +66,12 @@ def change_password(request):
         else:
             messages.warning(request, 'Wrong Old Password, Please Try Again')
             return redirect('change-password')
-    return render(request, 'supplier/accounts/change_password.html', context=context)
+    return render(request, 'supplier/change_password.html', context=context)
 
 
 @login_required()
 def account(request):
-    context = {
-        'title': 'Fuel Finder | Account',
-        'user': UserUpdateForm(instance=request.user)
-
-    }
-    user = request.user
-    if request.method == 'POST':
-        try:
-            phone_number = int(request.POST.get('phone_number'))
-            if len(str(phone_number)) == 12 and int(str(phone_number)[:4]) == 2637:
-                user.phone_number = phone_number
-                user.save()
-                messages.success(request, "Profile updated successfully!")
-                return redirect('account')
-            else:
-                messages.warning(request, "Wrong phone number format! Please re-enter the phone number")
-                return redirect('account')
-        except:
-            messages.warning(request, 'Phone number can only contain numbers!')
-            return redirect('account')
-    return render(request, 'supplier/accounts/account.html', context=context)
+    return render(request, 'supplier/user_profile.html')
 
 
 @login_required()
@@ -124,37 +104,43 @@ def fuel_request(request):
                 buyer_request.price = fuel.diesel_price
         else:
             buyer_request.price = 0
-    return render(request, 'supplier/accounts/fuel_request.html', {'requests':requests})
+    return render(request, 'supplier/fuel_request.html', {'requests':requests})
 
+def new_fuel_request(request, id):
+    requests = FuelRequest.objects.filter(id = id,wait=True).all()
+    print(requests)
+    return render(request, 'supplier/new_fuel_request.html', {'requests':requests})
 
-@login_required()
-def rate_supplier(request):
-    context = {
-        'title': 'Fuel Finder | Rate Supplier',
-    }
-    return render(request, 'supplier/accounts/ratings.html', context=context)
+def accepted_offer(request, id):
+    transactions = Transaction.objects.filter(id=id).all()
+    return render(request, 'supplier/new_transaction.html', {'transactions':transactions})
+
+def rejected_offer(request, id):
+    offers = Offer.objects.filter(id=id).all()
+    return render(request, 'supplier/my_offer.html', {'offers':offers})
+
 
 
 @login_required
 def fuel_update(request):
 
-    updates = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
+    updates = FuelUpdate.objects.filter(sub_type='Depot', relationship_id=request.user.subsidiary_id)
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     if request.method == 'POST':
-        petrol_update = float(request.POST['petrol_quantity'])
-        diesel_update = float(request.POST['diesel_quantity'])
+        petrol_update = float(request.POST.get('petrol_quantity'))
+        diesel_update = float(request.POST.get('diesel_quantity'))
         fuel_update = FuelUpdate.objects.get(relationship_id=request.user.subsidiary_id)
         petrol_available = fuel_update.petrol_quantity
         diesel_available = fuel_update.diesel_quantity
-        if petrol_update < petrol_available and diesel_update < diesel_available:
-            fuel_update.petrol_quantity = request.POST['petrol_quantity']
-            fuel_update.petrol_price = request.POST['petrol_price']
-            fuel_update.diesel_quantity = request.POST['diesel_quantity']
-            fuel_update.diesel_price = request.POST['diesel_price']
-            fuel_update.cash = request.POST['cash']
-            fuel_update.ecocash = request.POST['ecocash']
-            fuel_update.swipe = request.POST['swipe']
-            fuel_update.usd = request.POST['usd']
+        if petrol_update <= petrol_available and diesel_update <= diesel_available:
+            fuel_update.petrol_quantity = request.POST.get('petrol_quantity')
+            fuel_update.petrol_price = request.POST.get('petrol_price')
+            fuel_update.diesel_quantity = request.POST.get('diesel_quantity')
+            fuel_update.diesel_price = request.POST.get('diesel_price')
+            fuel_update.usd = True if request.POST.get('usd') == "on" else False
+            fuel_update.cash = True if request.POST.get('cash') == "on" else False
+            fuel_update.ecocash = True if request.POST.get('ecocash') == "on" else False
+            fuel_update.swipe = True if request.POST.get('swipe') == "on" else False
             fuel_update.save()
             messages.success(request, 'updated quantities successfully')
             service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
@@ -167,7 +153,7 @@ def fuel_update(request):
             messages.warning(request, 'You can only reduce your current stocks not increase')
             return redirect('fuel_update')
 
-    return render(request, 'supplier/accounts/stock.html', {'updates': updates, 'subsidiary': subsidiary_name.name})
+    return render(request, 'supplier/stock.html', {'updates': updates, 'subsidiary': subsidiary_name.name})
 
 
 def offer(request, id):
@@ -192,10 +178,10 @@ def offer(request, id):
                 offer.price = request.POST.get('price')    
                 offer.quantity = request.POST.get('quantity')
                 offer.fuel_type = request.POST.get('fuel_type')
-                offer.usd = True if request.POST.get('usd') == "True" else False
-                offer.cash = True if request.POST.get('cash') == "True" else False
-                offer.ecocash = True if request.POST.get('ecocash') == "True" else False
-                offer.swipe = True if request.POST.get('swipe') == "True" else False
+                offer.usd = True if request.POST.get('usd') == "on" else False
+                offer.cash = True if request.POST.get('cash') == "on" else False
+                offer.ecocash = True if request.POST.get('ecocash') == "on" else False
+                offer.swipe = True if request.POST.get('swipe') == "on" else False
                 delivery_method = request.POST.get('delivery_method')
                 if not delivery_method.strip():
                     offer.delivery_method = 'Delivery'
@@ -206,9 +192,9 @@ def offer(request, id):
                     offer.collection_address = subsidiary.location
                 else:
                     offer.collection_address = collection_address
-                offer.pump_available = True if request.POST.get('pump_required') == "True" else False
-                offer.dipping_stick_available = True if request.POST.get('usd') == "True" else False
-                offer.meter_available = True if request.POST.get('usd') == "True" else False
+                offer.pump_available = True if request.POST.get('pump_available') == "on" else False
+                offer.dipping_stick_available = True if request.POST.get('dipping_stick_available') == "on" else False
+                offer.meter_available = True if request.POST.get('meter_available') == "on" else False
                 offer.save()
                 
                 messages.success(request, 'Offer uploaded successfully')
@@ -231,7 +217,7 @@ def offer(request, id):
     else:
         messages.warning(request, "Please fill all required fields to complete an offer")
         return redirect('fuel-request')
-    return render(request, 'supplier/accounts/fuel_request.html')
+    return render(request, 'supplier/fuel_request.html')
 
 @login_required
 def edit_offer(request, id):
@@ -246,15 +232,14 @@ def edit_offer(request, id):
             available_fuel = fuel.diesel_quantity
         new_offer = int(request.POST.get('quantity'))
         request_quantity = offer.request.amount
-
         if new_offer <= available_fuel:
             if new_offer <= request_quantity:
                 offer.price = request.POST.get('price')      
                 offer.quantity = request.POST.get('quantity')
-                offer.usd = True if request.POST.get('usd') == "True" else False
-                offer.cash = True if request.POST.get('cash') == "True" else False
-                offer.ecocash = True if request.POST.get('ecocash') == "True" else False
-                offer.swipe = True if request.POST.get('swipe') == "True" else False
+                offer.usd = True if request.POST.get('usd') == "on" else False
+                offer.cash = True if request.POST.get('cash') == "on" else False
+                offer.ecocash = True if request.POST.get('ecocash') == "on" else False
+                offer.swipe = True if request.POST.get('swipe') == "on" else False
                 delivery_method = request.POST.get('delivery_method1')
                 if not delivery_method.strip():
                     offer.delivery_method = 'Delivery'
@@ -265,21 +250,21 @@ def edit_offer(request, id):
                     offer.collection_address = subsidiary.location
                 else:
                     offer.collection_address = collection_address
-                offer.pump_available = True if request.POST.get('pump_required') == "True" else False
-                offer.dipping_stick_available = True if request.POST.get('usd') == "True" else False
-                offer.meter_available = True if request.POST.get('usd') == "True" else False
+                offer.pump_available = True if request.POST.get('pump_available') == "on" else False
+                offer.dipping_stick_available = True if request.POST.get('dipping_stick_available') == "on" else False
+                offer.meter_available = True if request.POST.get('meter_available') == "on" else False
                 offer.save()
                 messages.success(request, 'Offer successfully updated')
                 message = f'You have an updated offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {offer.request.amount}L'
                 Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
-                return redirect('fuel-request')
+                return redirect('my_offers')
             else:
                 messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
-                return redirect('fuel-request')
+                return redirect('my_offers')
         else:
             messages.warning(request, 'You can not offer fuel more than the available fuel stock')
-            return redirect('fuel-request')
-    return render(request, 'supplier/accounts/fuel_request.html', {'offer': offer})
+            return redirect('my_offers')
+    return render(request, 'supplier/fuel_request.html', {'offer': offer})
 
 
 @login_required
@@ -287,20 +272,12 @@ def transaction(request):
     context= { 
        'transactions' : Transaction.objects.filter(supplier=request.user).all()
         }
-    return render(request, 'supplier/accounts/transactions.html',context=context)
-
-@login_required
-def complete_transaction(request, id):
-    transaction = Transaction.objects.get(id=id)
-    transaction.complete == True
-    transaction.save()
-    messages.success(request, 'Transaction completed successfully')
-    return redirect('transaction')
+    return render(request, 'supplier/transactions.html',context=context)
 
 
 def allocated_quantity(request):
-    allocations = FuelAllocation.objects.filter(assigned_staff_id= request.user.subsidiary_id).all()
-    return render(request, 'supplier/accounts/allocated_quantity.html', {'allocations': allocations})
+    allocations = FuelAllocation.objects.filter(allocated_subsidiary_id= request.user.subsidiary_id).all()
+    return render(request, 'supplier/allocated_quantity.html', {'allocations': allocations})
 
 
 def activate_whatsapp(request):
@@ -382,7 +359,7 @@ def verification(request, token, user_id):
         messages.warning(request, 'Wrong verification token, kindly follow the link send in the email')
         return redirect('login')
     
-    return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
+    return render(request, 'supplier/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
 
 def create_company(request, id):
     print(id)
@@ -415,13 +392,13 @@ def create_company(request, id):
                 address = address, logo = logo, iban_number = iban_number, license_number = license_number)
                 return render(request,'supplier/final_reg.html')
             
-    return render(request, 'supplier/accounts/create_company.html', {'form': form, 'user_type':user_type })
+    return render(request, 'supplier/create_company.html', {'form': form, 'user_type':user_type })
 
     
 def company(request):
     subsidiary = Subsidiaries.objects.filter(id = request.user.subsidiary_id).first()
     num_of_suppliers = User.objects.filter(subsidiary_id=request.user.subsidiary_id).count() 
-    return render(request, 'supplier/accounts/company.html', {'subsidiary': subsidiary, 'num_of_suppliers': num_of_suppliers})
+    return render(request, 'supplier/company.html', {'subsidiary': subsidiary, 'num_of_suppliers': num_of_suppliers})
 
 
 def my_offers(request):
@@ -433,7 +410,7 @@ def my_offers(request):
             offer_temp.no_equipments = True
         if not offer_temp.collection_address.strip():
             offer_temp.collection_address = f'N/A'
-    return render(request, 'supplier/accounts/my_offers.html', {'offers':offers})
+    return render(request, 'supplier/my_offers.html', {'offers':offers})
 
 
 def invoice(request, id):
@@ -463,9 +440,4 @@ def view_invoice(request, id):
         'total': total,
         'g_total': g_total
     }
-    return render(request, 'supplier/accounts/invoice2.html', context)
-
-
-def subsidiary_name(request):
-    subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-    return render(request, 'supplier/dashboard.html', {'subsidiary':subsidiary})
+    return render(request, 'supplier/invoice2.html', context)

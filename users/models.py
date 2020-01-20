@@ -13,7 +13,7 @@ from django.contrib import messages
 
 
 class AuditTrail(models.Model):
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     service_station = models.ForeignKey(Subsidiaries, on_delete=models.DO_NOTHING, null=True)
     date = models.DateTimeField(auto_now_add=True)
     action = models.CharField(max_length=700, blank=True)
@@ -22,7 +22,7 @@ class AuditTrail(models.Model):
 
 class Audit_Trail(models.Model):
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING)
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     service_station = models.ForeignKey(Subsidiaries, on_delete=models.DO_NOTHING, null=True)
     date = models.DateTimeField(auto_now_add=True)
     action = models.CharField(max_length=700, blank=True)

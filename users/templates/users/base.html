@@ -1,412 +1,502 @@
- {% load static %}
- <!DOCTYPE html>
- <html lang="en">
- 
- <head>
-   <meta charset="utf-8" />
-   <!--     ChartistJS CDNS     -->
-   <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
-   <link rel="icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png"
-        sizes="32x32" />
-    <link rel="icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png"
-        sizes="192x192" />
-    <link rel="apple-touch-icon-precomposed" href="wp-content\themes\oppi\assets\img\logo-color.png" />
-    <meta name="msapplication-TileImage"
-        content="https://droitthemes.com/wp/oppi/wp-content/uploads/2019/10/favicon.png" />
-   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-   <title>
-     Fuel Finder 
-   </title>
-   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
-   <!--     Fonts and icons     -->
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
-   <!-- CSS Files -->
-   <link href="{% static 'finder/assets/css/material-dashboard.css' %}" rel="stylesheet" />
-   <!-- CSS Just for demo purpose, don't include it in your project -->
-   <link href="{% static 'finder/assets/demo/demo.css' %}" rel="stylesheet" />
-   <link href="{% static 'finder/assets/css/datatables.css' %}" rel="stylesheet" />
-   <link href="{% static 'finder/assets/css/datatables.min.css' %}" rel="stylesheet" />
- </head>
- 
- <body class="">
-   <div class="wrapper ">
-     <div class="sidebar" data-color="purple" data-background-color="black" data-image="{% static 'finder/assets/img/my_bar.jpg' %}">
-       <!--
-         Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
- 
-         Tip 2: you can also add an image using data-image tag
-     -->
-       <div class="logo">
-         <a href="{% url 'users:company_profile' %}" class="simple-text logo-normal">
-           <strong>{{request.user.company.name}}</strong>
-         </a>
-       </div>
-       <div class="sidebar-wrapper">
-         <ul class="nav">          
-            <li class="nav-item {% if request.path == '/users/allocate/' %} active {% endif %}">
-              
-              <a class="nav-link " href="{% url 'users:allocate' %}">
-                <i class="material-icons">confirmation_number</i>
-                <p>Fuel Allocations</p>
-              </a>
-            </li>
-           <li class="nav-item {% if request.path == '/users/suppliers/' %} active {% endif %}">
-             <a class="nav-link" href="{% url 'users:suppliers_list' %}">
-               <i class="material-icons">people</i>
-               <p>Service Station Staff</p>
-             </a>
-           </li> 
-           
-           <li class="nav-item {% if request.path == '/users/depot_staff/' %} active {% endif %}">
-            <a class="nav-link" href="{% url 'users:depot_staff' %}">
-              <i class="material-icons">people</i>
-              <p>Depot Staff</p>
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="dns-prefetch" href="//s3.envato.com" />
+
+
+    <script>window.NREUM || (NREUM = {}); NREUM.info = { "beacon": "bam.nr-data.net", "errorBeacon": "bam.nr-data.net", "licenseKey": "fcf8d519de", "applicationID": "13909", "transactionName": "NTU0DRQNDwshOmIZBRM3dR8TDg84Nys/FRQYBSoLAxQKAjM=", "queueTime": 0, "applicationTime": 23, "agent": "", "atts": "DXgvW1wZQRQtPChSS1QOMhwLByUINi0+BFNaeCgcEAsQDismb0pTQGppSgABB0U5NQ==" }</script>
+    <script>(window.NREUM || (NREUM = {})).loader_config = { licenseKey: "fcf8d519de", applicationID: "13909" }; window.NREUM || (NREUM = {}), __nr_require = function (n, e, t) { function r(t) { if (!e[t]) { var i = e[t] = { exports: {} }; n[t][0].call(i.exports, function (e) { var i = n[t][1][e]; return r(i || e) }, i, i.exports) } return e[t].exports } if ("function" == typeof __nr_require) return __nr_require; for (var i = 0; i < t.length; i++)r(t[i]); return r }({ 1: [function (n, e, t) { function r() { } function i(n, e, t) { return function () { return o(n, [u.now()].concat(f(arguments)), e ? null : this, t), e ? void 0 : this } } var o = n("handle"), a = n(4), f = n(5), c = n("ee").get("tracer"), u = n("loader"), s = NREUM; "undefined" == typeof window.newrelic && (newrelic = s); var p = ["setPageViewName", "setCustomAttribute", "setErrorHandler", "finished", "addToTrace", "inlineHit", "addRelease"], d = "api-", l = d + "ixn-"; a(p, function (n, e) { s[e] = i(d + e, !0, "api") }), s.addPageAction = i(d + "addPageAction", !0), s.setCurrentRouteName = i(d + "routeName", !0), e.exports = newrelic, s.interaction = function () { return (new r).get() }; var m = r.prototype = { createTracer: function (n, e) { var t = {}, r = this, i = "function" == typeof e; return o(l + "tracer", [u.now(), n, t], r), function () { if (c.emit((i ? "" : "no-") + "fn-start", [u.now(), r, i], t), i) try { return e.apply(this, arguments) } catch (n) { throw c.emit("fn-err", [arguments, this, n], t), n } finally { c.emit("fn-end", [u.now()], t) } } } }; a("actionText,setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","), function (n, e) { m[e] = i(l + e) }), newrelic.noticeError = function (n, e) { "string" == typeof n && (n = new Error(n)), o("err", [n, u.now(), !1, e]) } }, {}], 2: [function (n, e, t) { function r(n, e) { var t = n.getEntries(); t.forEach(function (n) { "first-paint" === n.name ? a("timing", ["fp", Math.floor(n.startTime)]) : "first-contentful-paint" === n.name && a("timing", ["fcp", Math.floor(n.startTime)]) }) } function i(n) { if (n instanceof c && !s) { var e, t = Math.round(n.timeStamp); e = t > 1e12 ? Date.now() - t : f.now() - t, s = !0, a("timing", ["fi", t, { type: n.type, fid: e }]) } } if (!("init" in NREUM && "page_view_timing" in NREUM.init && "enabled" in NREUM.init.page_view_timing && NREUM.init.page_view_timing.enabled === !1)) { var o, a = n("handle"), f = n("loader"), c = NREUM.o.EV; if ("PerformanceObserver" in window && "function" == typeof window.PerformanceObserver) { o = new PerformanceObserver(r); try { o.observe({ entryTypes: ["paint"] }) } catch (u) { } } if ("addEventListener" in document) { var s = !1, p = ["click", "keydown", "mousedown", "pointerdown", "touchstart"]; p.forEach(function (n) { document.addEventListener(n, i, !1) }) } } }, {}], 3: [function (n, e, t) { function r(n, e) { if (!i) return !1; if (n !== i) return !1; if (!e) return !0; if (!o) return !1; for (var t = o.split("."), r = e.split("."), a = 0; a < r.length; a++)if (r[a] !== t[a]) return !1; return !0 } var i = null, o = null, a = /Version\/(\S+)\s+Safari/; if (navigator.userAgent) { var f = navigator.userAgent, c = f.match(a); c && f.indexOf("Chrome") === -1 && f.indexOf("Chromium") === -1 && (i = "Safari", o = c[1]) } e.exports = { agent: i, version: o, match: r } }, {}], 4: [function (n, e, t) { function r(n, e) { var t = [], r = "", o = 0; for (r in n) i.call(n, r) && (t[o] = e(r, n[r]), o += 1); return t } var i = Object.prototype.hasOwnProperty; e.exports = r }, {}], 5: [function (n, e, t) { function r(n, e, t) { e || (e = 0), "undefined" == typeof t && (t = n ? n.length : 0); for (var r = -1, i = t - e || 0, o = Array(i < 0 ? 0 : i); ++r < i;)o[r] = n[e + r]; return o } e.exports = r }, {}], 6: [function (n, e, t) { e.exports = { exists: "undefined" != typeof window.performance && window.performance.timing && "undefined" != typeof window.performance.timing.navigationStart } }, {}], ee: [function (n, e, t) { function r() { } function i(n) { function e(n) { return n && n instanceof r ? n : n ? c(n, f, o) : o() } function t(t, r, i, o) { if (!d.aborted || o) { n && n(t, r, i); for (var a = e(i), f = v(t), c = f.length, u = 0; u < c; u++)f[u].apply(a, r); var p = s[y[t]]; return p && p.push([b, t, r, a]), a } } function l(n, e) { h[n] = v(n).concat(e) } function m(n, e) { var t = h[n]; if (t) for (var r = 0; r < t.length; r++)t[r] === e && t.splice(r, 1) } function v(n) { return h[n] || [] } function g(n) { return p[n] = p[n] || i(t) } function w(n, e) { u(n, function (n, t) { e = e || "feature", y[t] = e, e in s || (s[e] = []) }) } var h = {}, y = {}, b = { on: l, addEventListener: l, removeEventListener: m, emit: t, get: g, listeners: v, context: e, buffer: w, abort: a, aborted: !1 }; return b } function o() { return new r } function a() { (s.api || s.feature) && (d.aborted = !0, s = d.backlog = {}) } var f = "nr@context", c = n("gos"), u = n(4), s = {}, p = {}, d = e.exports = i(); d.backlog = s }, {}], gos: [function (n, e, t) { function r(n, e, t) { if (i.call(n, e)) return n[e]; var r = t(); if (Object.defineProperty && Object.keys) try { return Object.defineProperty(n, e, { value: r, writable: !0, enumerable: !1 }), r } catch (o) { } return n[e] = r, r } var i = Object.prototype.hasOwnProperty; e.exports = r }, {}], handle: [function (n, e, t) { function r(n, e, t, r) { i.buffer([n], r), i.emit(n, e, t) } var i = n("ee").get("handle"); e.exports = r, r.ee = i }, {}], id: [function (n, e, t) { function r(n) { var e = typeof n; return !n || "object" !== e && "function" !== e ? -1 : n === window ? 0 : a(n, o, function () { return i++ }) } var i = 1, o = "nr@id", a = n("gos"); e.exports = r }, {}], loader: [function (n, e, t) { function r() { if (!x++) { var n = E.info = NREUM.info, e = l.getElementsByTagName("script")[0]; if (setTimeout(s.abort, 3e4), !(n && n.licenseKey && n.applicationID && e)) return s.abort(); u(y, function (e, t) { n[e] || (n[e] = t) }), c("mark", ["onload", a() + E.offset], null, "api"); var t = l.createElement("script"); t.src = "https://" + n.agent, e.parentNode.insertBefore(t, e) } } function i() { "complete" === l.readyState && o() } function o() { c("mark", ["domContent", a() + E.offset], null, "api") } function a() { return O.exists && performance.now ? Math.round(performance.now()) : (f = Math.max((new Date).getTime(), f)) - E.offset } var f = (new Date).getTime(), c = n("handle"), u = n(4), s = n("ee"), p = n(3), d = window, l = d.document, m = "addEventListener", v = "attachEvent", g = d.XMLHttpRequest, w = g && g.prototype; NREUM.o = { ST: setTimeout, SI: d.setImmediate, CT: clearTimeout, XHR: g, REQ: d.Request, EV: d.Event, PR: d.Promise, MO: d.MutationObserver }; var h = "" + location, y = { beacon: "bam.nr-data.net", errorBeacon: "bam.nr-data.net", agent: "js-agent.newrelic.com/nr-1158.min.js" }, b = g && w && w[m] && !/CriOS/.test(navigator.userAgent), E = e.exports = { offset: f, now: a, origin: h, features: {}, xhrWrappable: b, userAgent: p }; n(1), n(2), l[m] ? (l[m]("DOMContentLoaded", o, !1), d[m]("load", r, !1)) : (l[v]("onreadystatechange", i), d[v]("onload", r)), c("mark", ["firstbyte", f], null, "api"); var x = 0, O = n(6) }, {}], "wrap-function": [function (n, e, t) { function r(n) { return !(n && n instanceof Function && n.apply && !n[a]) } var i = n("ee"), o = n(5), a = "nr@original", f = Object.prototype.hasOwnProperty, c = !1; e.exports = function (n, e) { function t(n, e, t, i) { function nrWrapper() { var r, a, f, c; try { a = this, r = o(arguments), f = "function" == typeof t ? t(r, a) : t || {} } catch (u) { d([u, "", [r, a, i], f]) } s(e + "start", [r, a, i], f); try { return c = n.apply(a, r) } catch (p) { throw s(e + "err", [r, a, p], f), p } finally { s(e + "end", [r, a, c], f) } } return r(n) ? n : (e || (e = ""), nrWrapper[a] = n, p(n, nrWrapper), nrWrapper) } function u(n, e, i, o) { i || (i = ""); var a, f, c, u = "-" === i.charAt(0); for (c = 0; c < e.length; c++)f = e[c], a = n[f], r(a) || (n[f] = t(a, u ? f + i : i, o, f)) } function s(t, r, i) { if (!c || e) { var o = c; c = !0; try { n.emit(t, r, i, e) } catch (a) { d([a, t, r, i]) } c = o } } function p(n, e) { if (Object.defineProperty && Object.keys) try { var t = Object.keys(n); return t.forEach(function (t) { Object.defineProperty(e, t, { get: function () { return n[t] }, set: function (e) { return n[t] = e, e } }) }), e } catch (r) { d([r]) } for (var i in n) f.call(n, i) && (e[i] = n[i]); return e } function d(e) { try { n.emit("internal-error", e) } catch (t) { } } return n || (n = i), t.inPlace = u, t.flag = a, t } }, {}] }, {}, ["loader"]);</script>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Fuel Finder</title>
+    <meta name="description"
+        content="&amp;lt;p&amp;gt;Health Admin is a full functional HTML Template designed  for Health, medical, doctor an...">
+    <meta name="robots" content="noindex, follow" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1" />
+
+    <link rel="stylesheet" media="all"
+        href="https://public-assets.envato-static.com/assets/market/core/index-9053762da6b2d4d3aa5e4cbfc07ad24a15a4547e7a4f57e03b173204e694bc0a.css" />
+    <link rel="stylesheet" media="all"
+        href="https://public-assets.envato-static.com/assets/market/pages/preview/index-004d35cdd5d555cdd3e956d1b916825642de06529f0fe91fd9f390813761d2fc.css" />
+    <link rel="stylesheet" media="all" href="https://cookiebot-assets.envato-static.com/cookiebot.css" />
+
+      <link rel="apple-touch-icon-precomposed" type="image/x-icon" href="https://public-assets.envato-static.com/icons/themeforest.net/apple-touch-icon-72x72-precomposed.png" sizes="72x72" />
+  <link rel="apple-touch-icon-precomposed" type="image/x-icon" href="https://public-assets.envato-static.com/icons/themeforest.net/apple-touch-icon-114x114-precomposed.png" sizes="114x114" />
+  <link rel="apple-touch-icon-precomposed" type="image/x-icon" href="https://public-assets.envato-static.com/icons/themeforest.net/apple-touch-icon-144x144-precomposed.png" sizes="144x144" />
+<link rel="apple-touch-icon-precomposed" type="image/x-icon" href="https://public-assets.envato-static.com/icons/themeforest.net/apple-touch-icon-precomposed.png" />
+
+    <script src="https://public-assets.envato-static.com/assets/market/pages/full_screen_preview/index-1cc9e02a5e4e48ac2ba5b45a45c05b32584f9580c2fa432bcd2e40dd0b2a2ec2.js"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/chartJs/Chart.min.js" type="text/javascript"></script>
+
+    <script>
+        //function to fix height of iframe!
+        var calcHeight = function () {
+            var headerDimensions = $('.preview__header').height();
+            $('.full-screen-preview__frame').height($(window).height() - headerDimensions);
+        }
+
+        $(document).ready(function () {
+            calcHeight();
+        });
+
+        $(window).resize(function () {
+            calcHeight();
+        }).load(function () {
+            calcHeight();
+        });
+    </script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Fuel Finder</title>
+
+    <link rel="shortcut icon" href="https://timothytakudzwa.github.io/static/new/assets/dist/img/ico/favicon.png"
+        type="image/x-icon">
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/jquery-ui-1.12.1/jquery-ui.min.css"
+        rel="stylesheet" type="text/css" />
+    <link href="https://timothytakudzwa.github.io/static/new/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+        type="text/css" />
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/lobipanel/lobipanel.min.css"
+        rel="stylesheet" type="text/css" />
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/pace/flash.css" rel="stylesheet"
+        type="text/css" />
+    <link href="https://timothytakudzwa.github.io/static/new/assets/font-awesome/css/font-awesome.min.css"
+        rel="stylesheet" type="text/css" />
+    <link href="https://timothytakudzwa.github.io/static/new/assets/pe-icon-7-stroke/css/pe-icon-7-stroke.css"
+        rel="stylesheet" type="text/css" />
+    <link rel="stylesheet"
+        href="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/css/demo.css">
+    <link rel="stylesheet"
+        href="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/css/ns-default.css">
+    <link rel="stylesheet"
+        href="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/css/ns-style-growl.css">
+    <link rel="stylesheet"
+        href="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/css/ns-style-attached.css">
+    <link rel="stylesheet"
+        href="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/css/ns-style-bar.css">
+    <link rel="stylesheet"
+        href="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/css/ns-style-other.css">
+    <link rel="stylesheet" href="https://timothytakudzwa.github.io/static/new/assets/plugins/sweetalert/sweetalert.css">
+    <link href="https://timothytakudzwa.github.io/static/new/assets/themify-icons/themify-icons.css" rel="stylesheet"
+        type="text/css" />
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/toastr/toastr.css" rel="stylesheet"
+        type="text/css" />
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/emojionearea/emojionearea.min.css"
+        rel="stylesheet" type="text/css" />
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/monthly/monthly.css" rel="stylesheet"
+        type="text/css" />
+    <link href="https://timothytakudzwa.github.io/static/new/assets/dist/css/stylehealth.min.css" rel="stylesheet"
+        type="text/css" />
+        <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet"
+        type="text/css" />
+    <script>
+        new Chartist.Line('.ct-chart', {
+            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+            series: [
+                [12, 9, 7, 8, 5],
+                [2, 1, 3.5, 7, 3],
+                [1, 3, 4, 5, 6]
+            ]
+        }, {
+            fullWidth: true,
+            chartPadding: {
+                right: 40
+            }
+        });
+    </script>
+</head>
+
+<body class="hold-transition sidebar-mini">
+    
+    <!-- Site wrapper -->
+    <div class="wrapper">
+        <header class="main-header">
+            <a href="{% url 'users:company_profile' %}" class="logo">
+                <!-- Logo -->
+                <span class="logo-mini"> </span>
+                <span class="logo-lg">
+
+                    <h3>Fuel Finder Zim</h3>
+
+                </span>
             </a>
-          </li>
-      
-        
-
-           <li class="nav-item {% if request.path == '/users/audit_trail/' %} active {% endif %}">
-            <a class="nav-link" href="{% url 'users:audit_trail' %}">
-              <i class="material-icons">account_balance</i>
-              <p>Audit Trail</p>
-            </a>
-          </li>  
-
-          <li class="nav-item {% if request.path == '/users/stations/' %} active {% endif %}">
-              
-            <a class="nav-link " href="{% url 'users:stations' %}">
-              <i class="material-icons">local_gas_station</i>
-              <p>Subsidiaries</p>
-            </a>
-          </li>
-
-          <li class="nav-item {% if request.path == '/users/statistics/' %} active {% endif %}">
-            <a class="nav-link" href="{% url 'users:statistics' %}">
-              <i class="material-icons">show_chart</i>
-              <p>Statistics</p>
-            </a>
-          </li>
-
-          <li class="nav-item">
-              <a class="nav-link" href=" {% url 'users:report_generator' %}">
-                <i class="material-icons">calendar_today</i>
-                <p>Report Generator</p>
-              </a>
-            </li>
-
-            <li class="nav-item {% if request.path == '/users/waiting_for_approval/' %} active {% endif %}">
-                <a class="nav-link" href="{% url 'users:waiting_for_approval' %}">
-                  <i class="material-icons">people</i>
-                  <p>Staff Applications</p>
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top ">
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <!-- Sidebar toggle button-->
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="fa fa-tasks"></span>
                 </a>
-              </li>
-           
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'logout' %}?next=/login">
-                  <i class="material-icons">close</i>
-                  <p>Logout</p>
-                </a>
-              </li>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
 
-           
-          
-         </ul>
-       </div>
-     </div>
-     <div class="main-panel" style="margin-top: 0;">
+                        <!-- Notifications -->
+                        <li class="dropdown notifications-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="pe-7s-bell"></i>
+                                <span class="label label-warning">0</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="header"><i class="fa fa-bell"></i>0 Notifications</li>
+                                <li>
+                                    <ul class="menu">
+                                        <li>
+                                            <a href="#" class="border-gray"><i class="fa fa-inbox"></i> Inbox <span
+                                                    class=" label-success label label-default pull-right">0</span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="footer">
+                                    <a href="#"> See all Notifications <i class=" fa fa-arrow-right"></i></a>
+                                </li>
+                            </ul>
+                        </li>
 
+                        <li class="dropdown dropdown-user admin-user">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <div class="user-image">
+                                    <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar4.png"
+                                        class="img-circle" height="40" width="40" alt="User Image">
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{% url 'users:company_profile' %}"><i class="fa fa-users"></i> User
+                                        Profile</a></li>
+                                <li><a href="{% url 'logout' %}?next=/login"><i class="fa fa-sign-out"></i> Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
 
-      <main role="main" class="content" style="margin-top: 0;padding: 0;">
-        <div class="row">
-      
-          <div class="col-md-12">
-      
-            {% if messages %}
-      
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}" style="text-align: center">
-              {{ message }}
+        <!-- Left side column. contains the sidebar -->
+        <aside class="main-sidebar">
+            <!-- sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user panel -->
+                <div class="user-panel">
+                    <div class="image pull-left">
+                        <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar5.png"
+                            class="img-circle" alt="User Image">
+                    </div>
+                    <div class="info">
+                        <p class="mt-2 mb-2">{{request.user.company.name}}</p>
+                    </div>
+                </div>
+
+                <!-- sidebar menu -->
+                <ul class="sidebar-menu">
+                    <li class="{% if request.path == '/users/allocate/' %} active {% endif %}">
+                        <a href="{% url 'users:allocate' %}"><i class="fa fa-clipboard"></i><span>Fuel
+                                Allocations</span>
+                        </a>
+                    </li>
+                    <li class="{% if request.path == '/users/suppliers/' %} active {% endif %}">
+                        <a href="{% url 'users:suppliers_list' %}"><i class="fa fa-sitemap"></i><span>Service
+                                Stations</span>
+                        </a>
+                    </li>
+                    <li class="{% if request.path == '/users/depot_staff/' %} active {% endif %}">
+                        <a href="{% url 'users:depot_staff' %}"><i class="fa fa-address-card"></i><span>Depot
+                                Staff</span>
+                        </a>
+                    </li>
+                    <li class="{% if request.path == '/users/audit_trail/' %} active {% endif %}">
+                        <a href="{% url 'users:audit_trail' %}"><i class="fa fa-money"></i><span>Audit Trail</span>
+                        </a>
+                    </li>
+                    <li class="{% if request.path == '/users/stations/' %} active {% endif %}">
+                        <a href="{% url 'users:stations' %}"><i class="fa fa-book"></i><span>Subsidiaries</span>
+                        </a>
+                    </li>
+                    <li class="{% if request.path == '/users/statistics/' %} active {% endif %}">
+                        <a href="{% url 'users:statistics' %}"><i class="fa fa-line-chart"></i><span>Statistics</span>
+                        </a>
+                    </li>
+                    <li class="{% if request.path == '/users/report_generator/' %} active {% endif %}">
+                        <a href="{% url 'users:report_generator' %}"><i class="fa fa-pie-chart"></i><span>Report
+                                Generator</span>
+                        </a>
+                    </li>
+                    <li class="{% if request.path == '/users/waiting_for_approval/' %} active {% endif %}">
+                        <a href="{% url 'users:waiting_for_approval' %}"><i class="fa fa-users"></i><span>Staff
+                                Applications</span>
+                        </a>
+                    </li>
+
+                </ul>
             </div>
-            {% endfor %}
-      
-            {% endif %}
-      
-      
-      
-          </div>
-      
-      
-      
-        </div>
+        </aside>
 
+        <div class="content-wrapper">
+            <script>
+                $("document").ready(function(){
+                setTimeout(function(){
+                    $("div.alert").remove();
+                }, 3000 ); // 3 secs
+
+                });
+            </script>
+            {% if messages %}
         
-        {% block body %}{% endblock %}
-      </main>
- 
-     </div>
-   </div>
-  
-   <!--   Core JS Files   -->
-   <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" style="text-align: center">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        
+        {% endif %}
+        
+              {% block body %}{% endblock %}
+        </div> <!-- /.content-wrapper -->
 
-   <script src="{% static 'finder/assets/js/core/jquery.min.js' %}"></script>
-   <script src="{% static 'finder/assets/js/core/popper.min.js' %}"></script>
-   <script src="{% static 'finder/assets/js/core/bootstrap-material-design.min.js' %}"></script>
-   <script src="{% static 'finder/assets/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
-   <!-- Plugin for the momentJs  -->
-   <script src="{% static 'finder/assets/js/plugins/moment.min.js' %}"></script>
-   <!--  Plugin for Sweet Alert -->
-   <script src="{% static 'finder/assets/js/plugins/sweetalert2.js' %}"></script>
-   <!-- Forms Validations Plugin -->
-   <script src="{% static 'finder/assets/js/plugins/jquery.validate.min.js' %}"></script>
-   <!-- Plugin for the Wizard, full documentation here: https://github.com/VinceG/twitter-bootstrap-wizard -->
-   <script src="{% static 'finder/assets/js/plugins/jquery.bootstrap-wizard.js' %}"></script>
-   <!-- Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
-   <script src="{% static 'finder/assets/js/plugins/bootstrap-selectpicker.js' %}"></script>
-   <!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
-   <script src="{% static 'finder/assets/js/plugins/bootstrap-datetimepicker.min.js' %}"></script>
-   <!--  DataTables.net Plugin, full documentation here: https://datatables.net/  -->
-   <script src="{% static 'finder/assets/js/plugins/jquery.dataTables.min.js' %}"></script>
-   <!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
-   <script src="{% static 'finder/assets/js/plugins/bootstrap-tagsinput.js' %}"></script>
-   <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
-   <script src="{% static 'finder/assets/js/plugins/jasny-bootstrap.min.js' %}"></script>
-   <!--  Full Calendar Plugin, full documentation here: https://github.com/fullcalendar/fullcalendar    -->
-   <script src="{% static 'finder/assets/js/plugins/fullcalendar.min.js' %}"></script>
-   <!-- Vector Map plugin, full documentation here: http://jvectormap.com/documentation/ -->
-   <script src="{% static 'finder/assets/js/plugins/jquery-jvectormap.js' %}"></script>
-   <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
-   <script src="{% static 'finder/assets/js/plugins/nouislider.min.js' %}"></script>
-   <!-- Include a polyfill for ES6 Promises (optional) for IE11, UC Browser and Android browser support SweetAlert -->
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
-   <!-- Library for adding dinamically elements -->
-   <script src="{% static 'finder/assets/js/plugins/arrive.min.js' %}"></script>
-   <!--  Google Maps Plugin    -->
-   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
-   <!-- Chartist JS -->
-   <script src="{% static 'finder/assets/js/plugins/chartist.min.js' %}"></script>
-   <!--  Notifications Plugin    -->
-   <script src="{% static 'finder/assets/js/datatables.js' %}"></script>
-   <script src="{% static 'finder/assets/js/datatables.min.js' %}"></script>
-   <script src="{% static 'finder/assets/js/plugins/bootstrap-notify.js' %}"></script>
-   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-   <script src="{% static 'finder/assets/js/material-dashboard.js' %}" type="text/javascript"></script>
-   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
-   <script src="{% static 'finder/assets/demo/demo.js' %}"></script>
+        <!--footer-->
 
-   <script>
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs"> <b>Version</b> 1.0</div>
+            <strong>Copyright &copy; 2019 <a href="#">Intelli Africa Solutions</a>.</strong> All rights reserved.
+        </footer>
 
+    </div>
+    <script src=" https://code.jquery.com/jquery-3.3.1.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" type="text/javascript"></script>
+    <script>
+        $(document).ready(function () {
+            $('#fuel_allocations').DataTable();
+        });
+    </script>
 
-    $(document).ready(function() {
-      $('#example').DataTable({"order": [[ 0, "desc" ]]});
-    } );
+    
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/jquery-ui-1.12.1/jquery-ui.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/bootstrap/js/bootstrap.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/lobipanel/lobipanel.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/pace/pace.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/slimScroll/jquery.slimscroll.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/fastclick/fastclick.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/dist/js/custom1.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/toastr/toastr.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/sparkline/sparkline.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/d3.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/topojson.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/datamaps.all.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/counterup/waypoints.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/counterup/jquery.counterup.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/chartJs/Chart.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/emojionearea/emojionearea.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/monthly/monthly.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/d3.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/topojson.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/datamaps.all.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/js/notificationFx.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/js/snap.svg-min.js"
+        type="text/javascripy"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/sweetalert/sweetalert.min.js"></script>
+    <script
+        src="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/js/modernizr.custom.js"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/js/classie.js"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/dist/js/custom.js" type="text/javascript"></script>
 
-    $(document).ready(function() {
-      $('#subs_table').DataTable({"order": [[ 2, "desc" ]]});
-    } );
-
-    $(document).ready(function() {
-      $('#clients_table').DataTable({"order": [[ 3, "desc" ]]});
-    } );
-
-    $(document).ready(function() {
-      $('#myexample').DataTable({"order": [[ 0, "desc" ]]});
-    } );
-
-    $(document).ready(function() {
-      $('#myexample2').DataTable({"order": [[ 0, "desc" ]]});
-    } );
-
-
-    $(document).ready(function() {
-      $('#myexample1').DataTable({"order": [[ 0, "desc" ]]});
-    } );
-  
-     $(document).ready(function() {
-       $().ready(function() {
-         $sidebar = $('.sidebar');
- 
-         $sidebar_img_container = $sidebar.find('.sidebar-background');
- 
-         $full_page = $('.full-page');
- 
-         $sidebar_responsive = $('body > .navbar-collapse');
- 
-         window_width = $(window).width();
- 
-         fixed_plugin_open = $('.sidebar .sidebar-wrapper .nav li.active a p').html();
- 
-         if (window_width > 767 && fixed_plugin_open == 'Dashboard') {
-           if ($('.fixed-plugin .dropdown').hasClass('show-dropdown')) {
-             $('.fixed-plugin .dropdown').addClass('open');
-           }
- 
-         }
- 
-         $('.fixed-plugin a').click(function(event) {
-           // Alex if we click on switch, stop propagation of the event, so the dropdown will not be hide, otherwise we set the  section active
-           if ($(this).hasClass('switch-trigger')) {
-             if (event.stopPropagation) {
-               event.stopPropagation();
-             } else if (window.event) {
-               window.event.cancelBubble = true;
-             }
-           }
-         });
- 
-         $('.fixed-plugin .active-color span').click(function() {
-           $full_page_background = $('.full-page-background');
- 
-           $(this).siblings().removeClass('active');
-           $(this).addClass('active');
- 
-           var new_color = $(this).data('color');
- 
-           if ($sidebar.length != 0) {
-             $sidebar.attr('data-color', new_color);
-           }
- 
-           if ($full_page.length != 0) {
-             $full_page.attr('filter-color', new_color);
-           }
- 
-           if ($sidebar_responsive.length != 0) {
-             $sidebar_responsive.attr('data-color', new_color);
-           }
-         });
- 
-         $('.fixed-plugin .background-color .badge').click(function() {
-           $(this).siblings().removeClass('active');
-           $(this).addClass('active');
- 
-           var new_color = $(this).data('background-color');
- 
-           if ($sidebar.length != 0) {
-             $sidebar.attr('data-background-color', new_color);
-           }
-         });
- 
-         $('.fixed-plugin .img-holder').click(function() {
-           $full_page_background = $('.full-page-background');
- 
-           $(this).parent('li').siblings().removeClass('active');
-           $(this).parent('li').addClass('active');
- 
- 
-           var new_image = $(this).find("img").attr('src');
- 
-           if ($sidebar_img_container.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
-             $sidebar_img_container.fadeOut('fast', function() {
-               $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
-               $sidebar_img_container.fadeIn('fast');
-             });
-           }
- 
-           if ($full_page_background.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
-             var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
- 
-             $full_page_background.fadeOut('fast', function() {
-               $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
-               $full_page_background.fadeIn('fast');
-             });
-           }
- 
-           if ($('.switch-sidebar-image input:checked').length == 0) {
-             var new_image = $('.fixed-plugin li.active .img-holder').find("img").attr('src');
-             var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
- 
-             $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
-             $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
-           }
- 
-           if ($sidebar_responsive.length != 0) {
-             $sidebar_responsive.css('background-image', 'url("' + new_image + '")');
-           }
-         });
- 
-         $('.switch-sidebar-image input').change(function() {
-           $full_page_background = $('.full-page-background');
- 
-           $input = $(this);
- 
-           if ($input.is(':checked')) {
-             if ($sidebar_img_container.length != 0) {
-               $sidebar_img_container.fadeIn('fast');
-               $sidebar.attr('data-image', '#');
-             }
- 
-             if ($full_page_background.length != 0) {
-               $full_page_background.fadeIn('fast');
-               $full_page.attr('data-image', '#');
-             }
- 
-             background_image = true;
-           } else {
-             if ($sidebar_img_container.length != 0) {
-               $sidebar.removeAttr('data-image');
-               $sidebar_img_container.fadeOut('fast');
-             }
- 
-             if ($full_page_background.length != 0) {
-               $full_page.removeAttr('data-image', '#');
-               $full_page_background.fadeOut('fast');
-             }
- 
-             background_image = false;
-           }
-         });
- 
-         $('.switch-sidebar-mini input').change(function() {
-           $body = $('body');
- 
-           $input = $(this);
- 
-           if (md.misc.sidebar_mini_active == true) {
-             $('body').removeClass('sidebar-mini');
-             md.misc.sidebar_mini_active = false;
- 
-             $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
- 
-           } else {
- 
-             $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar('destroy');
- 
-             setTimeout(function() {
-               $('body').addClass('sidebar-mini');
- 
-               md.misc.sidebar_mini_active = true;
-             }, 300);
-           }
- 
-           // we simulate the window Resize so the charts will get updated in realtime.
-           var simulateWindowResize = setInterval(function() {
-             window.dispatchEvent(new Event('resize'));
-           }, 180);
- 
-           // we stop the simulation of Window Resize after the animations are completed
-           setTimeout(function() {
-             clearInterval(simulateWindowResize);
-           }, 1000);
- 
-         });
-       });
-     });
-   </script>
-   <script>
-     $(document).ready(function() {
-       // Javascript method's body can be found in assets/js/demos.js
-       md.initDashboardPageCharts();
- 
-     });
-   </script>
-   
+    <script>
+        "use strict"; // Start of use strict
+        // notification
 
 
-   
- </body>
- 
- </html>
- 
+        //counter
+        $('.count-number').counterUp({
+            delay: 10,
+            time: 5000
+        });
+
+        //data maps
+        var basic_choropleth = new Datamap({
+            element: document.getElementById("map1"),
+            projection: 'mercator',
+            fills: {
+                defaultFill: "#009688",
+                authorHasTraveledTo: "#fa0fa0"
+            },
+            data: {
+                USA: { fillKey: "authorHasTraveledTo" },
+                JPN: { fillKey: "authorHasTraveledTo" },
+                ITA: { fillKey: "authorHasTraveledTo" },
+                CRI: { fillKey: "authorHasTraveledTo" },
+                KOR: { fillKey: "authorHasTraveledTo" },
+                DEU: { fillKey: "authorHasTraveledTo" }
+            }
+        });
+
+        var colors = d3.scale.category10();
+
+        window.setInterval(function () {
+            basic_choropleth.updateChoropleth({
+                USA: colors(Math.random() * 10),
+                RUS: colors(Math.random() * 100),
+                AUS: { fillKey: 'authorHasTraveledTo' },
+                BRA: colors(Math.random() * 50),
+                CAN: colors(Math.random() * 50),
+                ZAF: colors(Math.random() * 50),
+                IND: colors(Math.random() * 50)
+            });
+        }, 2000);
+
+        //bar chart
+        var ctx = document.getElementById("barChart");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                datasets: [
+                    {
+                        label: "My First dataset",
+                        data: [65, 59, 80, 81, 56, 55, 40, 25, 35, 51, 94, 16],
+                        borderColor: "#009688",
+                        borderWidth: "0",
+                        backgroundColor: "#009688"
+                    },
+                    {
+                        label: "My Second dataset",
+                        data: [28, 48, 40, 19, 86, 27, 90, 91, 41, 25, 34, 47],
+                        borderColor: "#009688",
+                        borderWidth: "0",
+                        backgroundColor: "#009688"
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+        //radar chart
+        var ctx = document.getElementById("radarChart");
+        var myChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: [["Eating", "Dinner"], ["Drinking", "Water"], "Sleeping", ["Designing", "Graphics"], "Coding", "Cycling", "Running"],
+                datasets: [
+                    {
+                        label: "My First dataset",
+                        data: [65, 59, 66, 45, 56, 55, 40],
+                        borderColor: "#00968866",
+                        borderWidth: "1",
+                        backgroundColor: "rgba(0, 150, 136, 0.35)"
+                    },
+                    {
+                        label: "My Second dataset",
+                        data: [28, 12, 40, 19, 63, 27, 87],
+                        borderColor: "rgba(55, 160, 0, 0.7",
+                        borderWidth: "1",
+                        backgroundColor: "rgba(0, 150, 136, 0.35)"
+                    }
+                ]
+            },
+            options: {
+                legend: {
+                    position: 'top'
+                },
+                scale: {
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Message
+        $('.message_inner').slimScroll({
+            size: '3px',
+            height: '320px'
+        });
+
+        //emojionearea
+        $(".emojionearea").emojioneArea({
+            pickerPosition: "top",
+            tonesStyle: "radio"
+        });
+
+        //monthly calender
+        $('#m_calendar').monthly({
+            mode: 'event',
+            //jsonUrl: 'events.json',
+            //dataType: 'json'
+            xmlUrl: 'events.xml'
+        });
+
+
+        //line chart
+        var ctx = document.getElementById("lineChart");
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                datasets: [
+                    {
+                        label: "My First dataset",
+                        borderColor: "rgba(0,0,0,.09)",
+                        borderWidth: "1",
+                        backgroundColor: "rgba(0,0,0,.07)",
+                        data: [22, 44, 67, 43, 76, 45, 12, 45, 65, 55, 42, 61, 73]
+                    },
+                    {
+                        label: "My Second dataset",
+                        borderColor: "#009688",
+                        borderWidth: "1",
+                        backgroundColor: "#009688",
+                        pointHighlightStroke: "#009688",
+                        data: [16, 32, 18, 26, 42, 33, 44, 24, 19, 16, 67, 71, 65]
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                tooltips: {
+                    mode: 'index',
+                    intersect: false
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                }
+
+            }
+        });
+
+
+    </script>
+
+</body>
+
+</html>
