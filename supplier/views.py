@@ -349,7 +349,7 @@ def transaction(request):
 
 
 def allocated_quantity(request):
-    allocations = FuelAllocation.objects.filter(assigned_staff_id= request.user.subsidiary_id).all()
+    allocations = FuelAllocation.objects.filter(allocated_subsidiary_id= request.user.subsidiary_id).all()
     return render(request, 'supplier/allocated_quantity.html', {'allocations': allocations})
 
 
