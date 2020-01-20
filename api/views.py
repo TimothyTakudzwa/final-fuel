@@ -168,6 +168,7 @@ def view_station_updates(request):
             updates = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id)
             for update in updates:
                 company = Subsidiaries.objects.get(id=update.relationship_id)
+                
                 station_update = {
                     'name': company.name, 'diesel_quantity': update.diesel_quantity,
                     'diesel_price': update.diesel_price, 'petrol_quantity': update.petrol_quantity,
@@ -189,19 +190,24 @@ def view_updates_user(request):
 
         data = []
 
-        updates = FuelUpdate.objects.filter(~Q(sub_type='Company')).all()
-        for update in updates:
-            details = Subsidiaries.objects.get(id=update.relationship_id)
-            station_update = {
-                'station': details.name, 'company': details.company.name, 'queue':
-                    update.queue_length, 'petrol': update.petrol_price, 'diesel': update.diesel_price,
-                'open': details.opening_time, 'close': details.closing_time, 'limit': update.limit, 'cash': update.cash,
-                'ecocash': update.ecocash, 'swipe': update.swipe, 'usd': update.usd, 'status': update.status,
-                'currency_check': update.sub_type, 'diesel_usd': update.diesel_usd_price,
-                'petrol_usd': update.petrol_usd_price
-            }
-            data.append(station_update)
-
+        sub_updates = FuelUpdate.objects.filter(sub_type='Service Station').all()
+        
+        for sub_update in sub_updates:
+            updates = FuelUpdate.objects.filter(sub_type='Suballocation').filter(relationship_id=sub_update.relationship_id).all()
+            for update in updates:
+                details = Subsidiaries.objects.get(id=update.relationship_id)
+                if update.diesel_quantity == 0 and update.petrol_quantity == 0:
+                    pass
+                else:
+                    station_update = {
+                        'station': details.name, 'company': details.company.name, 'queue':
+                            update.queue_length, 'petrol': update.petrol_price, 'diesel': update.diesel_price,
+                        'open': details.opening_time, 'close': details.closing_time, 'limit': update.limit, 'cash': update.cash,
+                        'ecocash': update.ecocash, 'swipe': update.swipe, 'usd': update.usd, 'status': update.status,
+                        'currency_check': update.entry_type, 'diesel_usd': update.diesel_usd_price,
+                        'petrol_usd': update.petrol_usd_price
+                        }
+                    data.append(station_update)
         return JsonResponse(list(data), status=200, safe=False)
 
 
