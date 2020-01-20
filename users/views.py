@@ -445,7 +445,10 @@ def stations(request):
         location = request.POST['location']
         destination_bank = request.POST['destination_bank']
         account_number = request.POST['account_number']
-        is_depot = request.POST['is_depot']
+        if request.POST['is_depot'] == "Service Station":
+            is_depot = False
+        else:
+            is_depot = True    
         opening_time = request.POST['opening_time']
         closing_time = request.POST['closing_time']
         cash = request.POST['cash']

@@ -116,19 +116,19 @@
                                 <!-- Supplier Delete Modal -->
                                 <div class="modal fade modal-success in" id="delete_{{station.id}}" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
+                                <div class="modal-dialog" role="document" style="margin: 0;">
                                     <div class="modal-content">
                                         
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                            <h2 class="modal-title">Delete {{station.name|title}}</h2>
+                                            <span class="modal-title" style="font-size: 20px;">Delete {{station.name|title}}</span>
                                         </div>
                                         <div class="modal-body">
                                             {% load crispy_forms_tags %}
                                             <form action="{% url 'users:delete_subsidiary' station.id %}" method="POST">
                                                 {{ delete_form }}
                                                 {% csrf_token %}
-                                                <p style="padding: 50px;">Are You Sure You Want To Delete {{ station.name }} </p>
+                                                <p style="padding: 50px;">Are You Sure You Want To Delete {{ station.name }} ?</p>
 
                                                 <div class="modal-footer">
                                                     <div >
@@ -147,41 +147,47 @@
                              <!-- Supplier Edit Modal -->
                              <div class="modal fade modal-success in" id="edit_{{station.id}}" tabindex="-1" role="dialog"
                              aria-labelledby="exampleModalLabel" aria-hidden="true">
-                             <div class="modal-dialog" role="document">
+                             <div class="modal-dialog" role="document" style="margin: 0;">
                                  <div class="modal-content">
                                      
                                      <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                        <h2 class="modal-title">Edit00 {{station.name}} <i class="fa fa-edit" style="padding-left: 3px;"></i></h2>
+                                        <span class="modal-title">Edit {{station.name}} <i class="fa fa-edit" style="padding-left: 3px;font-size: 20px;"></i></span>
                                     </div>
                                      <div class="modal-body">
                                          <form action="{% url 'users:edit_subsidiary' station.id %}"
                                              method="POST">
                                              {% csrf_token %}
-                                             <div class="form-group">
-                                                 <lable>Name</lable>
-                                                 <input type="text" name="name" class="form-control" value="{{station.name}}" required/>
-                                             </div>
-                                            
-                                             <div class="form-group">
-                                                 <lable>Location</lable>
-                                                 <input type="text" name="address" class="form-control" value="{{station.address}}" required/>
-                                             </div>
+                                             <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label>Name</label>
+                                                    <input type="text" name="name" class="form-control" value="{{station.name}}" required/>
+                                                </div>
+                                                
+                                                <div class="form-group col-md-6">
+                                                    <label>Location</label>
+                                                    <input type="text" name="address" class="form-control" value="{{station.address}}" required/>
+                                                </div>
+                                            </div>    
+                                            <div class="row">
 
-                                             <div class="form-group">
-                                                 <lable>Is Depot</lable>
+                                             <div class="form-group col-md-6">
+                                                 <label>Is Depot</label>
                                                  <input type="text" name="is_depot" class="form-control" value="{{station.is_depot}}" required/>
                                              </div>
                                              
-                                             <div class="form-group">
-                                                 <lable>Opening Time</lable>
+                                             <div class="form-group col-md-6">
+                                                 <label>Opening Time</label>
                                                  <input type="time"  name="opening_time"  value="{{station.opening_time}}" class="form-control" required/>
                                              </div>
-
-                                             <div class="form-group">
-                                                 <lable>Closing Time</lable>
+                                            </div>
+                                            <div class="row">
+                                            
+                                             <div class="form-group col-md-6">
+                                                 <label>Closing Time</label>
                                                  <input type="time" name="closing_time" value="{{station.closing_time}}" class="form-control" required/>
                                              </div>
+                                            </div>
 
                                             
                                        
@@ -236,7 +242,7 @@
                       </table>
                 </div>
                 {% else %}
-                <p>No Data Available</p>
+                <p>No Data Availabel</p>
                 {% endif %}
 
 
@@ -245,14 +251,12 @@
   </section>   
 
   <div class="modal fade modal-success in" id="new_sub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog" role="document" style="margin: 0;">
         <div class="modal-content">
             <div class="modal-header" style="width: 100%;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                <h2 class="modal-title" id="exampleModalLabel" style="color:white;">Add Subsidiary </h2>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <span class="modal-title" id="exampleModalLabel" style="color:white;">Add Subsidiary </span>
+                
             </div>
             <div class="modal-body">
 
@@ -261,13 +265,22 @@
                     {% csrf_token %}
                     <div class="row">
                     <div class="form-group col-md-6">
-                            <lable>Name</lable>
+                            <label>Name</label>
                             <input type="text" name="name" class="form-control" value=" " />
                         </div>
 
                         <div class="form-group col-md-6">
-                            <lable>Is Depot</lable>
-                            <input type="text" name="is_depot" class="form-control" value="False" />
+                            <label>Service Station Type</label>
+                            <select name="is_depot" id="" class="form-control">
+                                <option>
+                                    Service Station
+                                </option>
+                                <option>
+                                    Depot
+                                </option>
+
+                            </select>
+                            <!-- <input type="text" name="is_depot" class="form-control" value="False" /> -->
                         </div>
                     </div>
                        
@@ -318,7 +331,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-6" id="default_location">
-                                    <lable>Location</lable>
+                                    <label>Location</label>
                                     <input type="text" name="location" class="form-control" value=" " />
                                 </div>
                             </div>
@@ -350,7 +363,7 @@
                        
                            
                             <div class="form-group col-md-6">
-                                <lable>Account</lable>
+                                <label>Account</label>
                                 <input type="text" name="account_number" class="form-control" value=" " />
                             </div>
                         </div>
@@ -376,13 +389,21 @@
 
                      <div class="row">
                     <div class="form-group col-md-6">
-                        <lable>Opening Time</lable>
+                        <label>Opening Time</label>
                         <input type="time" name="opening_time" class="form-control" />
                     </div>
                     <div class="form-group col-md-6">
-                        <lable>Closing Time</lable>
+                        <label>Closing Time</label>
                         <input type="time" name="closing_time" class="form-control" />
                     </div>
+                    </div>
+
+                    <div class="modal-footer">
+                                                        
+                        <button type="button" class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">Close</button>
+
+                        <button type="submit" class="btn btn-primary ">Submit</button>
+
                     </div>
 
 
@@ -390,12 +411,12 @@
             
                    
                 </form>
-                <div class="modal-footer row col-md-12">
+                <!-- <div class="modal-footer row col-md-12">
                     <button type="button" class="btn" style="background-color: lightgray; color: #333;width: 35%;" data-dismiss="modal">Close</button>
     
                     <button style="width: 50%;" class="btn btn-primary"
                         type="submit">Add</button>
-                </div> 
+                </div>  -->
 
         </div>
     </div>
