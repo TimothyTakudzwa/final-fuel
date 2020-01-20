@@ -22,6 +22,7 @@ class FuelUpdate(models.Model):
     ecocash = models.BooleanField(default=False)
     swipe = models.BooleanField(default=False)
     usd = models.BooleanField(default=False)
+    fca = models.BooleanField(default=False)
     relationship_id = models.IntegerField()
     company_id = models.IntegerField()
     status = models.CharField(max_length=1000)
