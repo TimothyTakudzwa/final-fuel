@@ -176,7 +176,7 @@ def allocation_update(request,id):
         if F_Update.objects.filter(id=id).exists():
             fuel_update = F_Update.objects.filter(id=id).first()
             company_quantity = F_Update.objects.filter(company_id = request.user.company.id).filter(sub_type='Company').first()
-            depot = F_Update.objects.filter(relationship_id=fuel_update.relationship_id).filter(~Q(sub_type='Company'))(~Q(sub_type='Suballocation')).first()
+            depot = F_Update.objects.filter(relationship_id=fuel_update.relationship_id).filter(~Q(sub_type='Company')).filter(~Q(sub_type='Suballocation')).first()
             print(depot)
             if request.POST['fuel_type'] == 'Petrol':
                 if int(request.POST['quantity']) > company_quantity.petrol_quantity:
