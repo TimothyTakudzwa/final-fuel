@@ -332,7 +332,6 @@ def view_fuel_updates(user, message):
                 response_message = response_message + f'{i} *{sub.name}*\nPetrol: {sub_fuel_updates.petrol_quantity} Litres\nPrice: {sub_fuel_updates.petrol_price} \nDiesel:{sub_fuel_updates.diesel_quantity} Litres \nPrice: {sub_fuel_updates.diesel_price} \n\n'
                 user.fuel_updates_ids = user.fuel_updates_ids + str(sub_fuel_updates.id) + " "
                 user.save()
-
                 i += 1 
             else:
                 pass 
