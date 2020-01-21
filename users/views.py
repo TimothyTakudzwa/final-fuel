@@ -192,7 +192,7 @@ def allocation_update(request,id):
                 company_quantity.save()
             else:
                 if int(request.POST['quantity']) > company_quantity.diesel_quantity:
-                    messages.warning(request, f'You can not allocate fuel above your company petrol capacity of {company_quantity.diesel_quantity}')
+                    messages.warning(request, f'You can not allocate fuel above your company diesel capacity of {company_quantity.diesel_quantity}')
                     return redirect('users:allocate')
                 fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['quantity'])
                 depot.diesel_quantity = depot.diesel_quantity + int(request.POST['quantity'])
