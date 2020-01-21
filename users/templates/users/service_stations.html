@@ -121,14 +121,14 @@
                                         
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                            <span class="modal-title" style="font-size: 20px;">Delete {{station.name|title}}</span>
+                                            <span class="modal-title" style="">Delete {{station.name|title}}</span>
                                         </div>
                                         <div class="modal-body">
                                             {% load crispy_forms_tags %}
                                             <form action="{% url 'users:delete_subsidiary' station.id %}" method="POST">
                                                 {{ delete_form }}
                                                 {% csrf_token %}
-                                                <p style="padding: 50px;">Are You Sure You Want To Delete {{ station.name }} ?</p>
+                                                <p>Are You Sure You Want To Delete {{ station.name }} ?</p>
 
                                                 <div class="modal-footer">
                                                     <div >
@@ -152,7 +152,7 @@
                                      
                                      <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                        <span class="modal-title">Edit {{station.name}} <i class="fa fa-edit" style="padding-left: 3px;font-size: 20px;"></i></span>
+                                        <span class="modal-title">Edit {{station.name}} </span>
                                     </div>
                                      <div class="modal-body">
                                          <form action="{% url 'users:edit_subsidiary' station.id %}"
