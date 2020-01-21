@@ -160,10 +160,9 @@ def view_station_updates(request):
         username = request.POST.get('username')
 
         data = []
-        print(username)
+
         user = User.objects.get(username=username)
         status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id)
-        print(status)
 
         if status.exists():
             updates = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id)
