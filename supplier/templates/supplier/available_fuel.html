@@ -102,8 +102,8 @@
                         {%else%}
                         <button class="btn btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal"
                             data-target="#add_fuel{{update.id}}"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp; | Update Both Fuel</button>&nbsp;&nbsp;
-                        <button class="btn btn-danger btn-sm" style="font-size: 12px;" data-toggle="modal"
-                            data-target="#edit_{{update.id}}" ><i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp; | Edit</button>
+                        <!-- <button class="btn btn-danger btn-sm" style="font-size: 12px;" data-toggle="modal"
+                            data-target="#edit_{{update.id}}" ><i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp; | Edit</button> -->
                         {%endif%}
                         {%endif%}
                     </div>
@@ -171,23 +171,93 @@
                     </div>
                 </div>
             </div>
-              
 
-            <div class="modal fade modal-xl" id="add_usd_fuel{{update.id}}" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class=" modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <span class="modal-title" id="exampleModalLongTitle">Add USD Fuel- <i
-                                    style="color:red"><small>Please Note the fuel you are entering is to be
-                                        sold in United States Dollars</small></i></span>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+
+            <div class="modal fade modal-success in" id="add_rtgs_fuel{{update.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                  <h1 class="modal-title">Add RTGS Fuel-</h1> <i
+                  style="color:red"><small>Please Note the fuel you are entering is to be
+                      sold in Zimbabwean Local Currency</small></i>
+              </div>
+                <div class="modal-body">
+            
+                  {% load crispy_forms_tags %}
+                  <form action="{% url 'supplier:stock_update' update.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" value="RTGS" name="fuel_payment_type" />
+                    <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                        <div class="col-sm-6">
+
+                            <label><b style='color:#009688'>Fuel Type</b></label>
+                            <select class="form-control" name="fuel_type">
+
+                                <option>Petrol</option>
+                                <option>Diesel</option>
+
+
+                            </select>
                         </div>
-                        <div>
-                            {% load crispy_forms_tags %}
-                            <form action="{% url 'users:allocation_update' update.id %}" method="POST">
+                        <div class="col-sm-6">
+                            <label><b style='color:#009688'>Quantity</b></label>
+                            <input type="text" name="quantity" class="form-control"
+                                placeholder="In Litres" required />
+                        </div>
+                    </div>
+                    <div class=" form-group row col-sm-12">
+                        <div class="col-sm-6">
+                            <label><b style='color:#009688'>Price</b></label>
+                            <input type="text" name="price" class="form-control"
+                                placeholder="In Zimbabwean Dollars" required />
+                        </div>
+                        <input type="hidden" name="cash" value="0" />
+                        <input type="hidden" name="swipe" value="0">
+                        <input type="hidden" name="ecocash" value="0">
+                        <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
+                            <label><b style='color:#009688'>Payment Method</b></label>
+                            <div class="col-sm-12 row">
+                                <input type="checkbox" class=" col-sm-6" name="cash" value="1"> Cash<br>
+                                <input type="checkbox" class="col-sm-6" value="1" name="swipe">Swipe<br>
+                                <input type="checkbox" class="col-sm-6" value="1" name="ecocash">Ecocash<br>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+            </div>
+            <div class="form-group row"
+                style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                <button type="button" class="btn btn-secondary col-sm-6"
+                    data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
+            </div>
+            </form>
+                </div>
+                
+              </div>
+            </div>
+          
+       
+
+            <div class="modal fade modal-success in" id="add_usd_fuel{{update.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+      <h1 class="modal-title">Add USD Fuel-</h1> <i
+      style="color:red"><small>Please Note the fuel you are entering is to be
+          sold in United States Dollars</small></i>
+  </div>
+    <div class="modal-body">
+
+      {% load crispy_forms_tags %}
+      <form action="{% url 'supplier:stock_update' update.id %}" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" value="USD" name="fuel_payment_type" />
                                 <div class="form-group row col-sm-12" style="margin-top: 5%;">
@@ -224,25 +294,6 @@
                                             <input type="checkbox" id="fca{{forloop.counter}}"
                                                 class="col-sm-6" value="1" name="swipe">FCA<br>
                                         </div>
-
-
-
-                                        <!-- <input type="hidden" name="cash" value="0" />
-                                        <input type="hidden" id="fca{{forloop.counter}}"  name="swipe" value="0">
-                                    <div class="col-sm-12 row">
-                                    
-                                        <input type="checkbox" name="cash" value="1" class="col-sm-6" />  Cash                                                  
-                                        <input type="checkbox" id="fca{{forloop.counter}}" name="swipe" value="1" class="col-sm-6">FCA<br> -->
-
-
-
-                                        <!-- <select class="form-control" name="fuel_type">
-
-                                            <option>Cash</option>
-                                            <option>FCA</option>
-
-
-                                        </select> -->
                                     </div>
                                 </div>
                                 <div class="col-sm-12 form-group" name="bank" id="bank{{forloop.counter}}">
@@ -278,166 +329,10 @@
                             <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
                         </div>
                         </form>
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade modal-xl" id="add_fuel{{update.id}}" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class=" modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <span class="modal-title" id="exampleModalLongTitle">Add USD and RTGS Fuel- <i
-                                style="color:red"><small>Please Note the fuel you are entering is to be
-                                    sold in United States Dollars</small></i></span>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div>
-                        {% load crispy_forms_tags %}
-                        <form action="{% url 'users:allocation_update' update.id %}" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" value="USD" name="fuel_payment_type" />
-                            <div class="form-group row col-sm-12" style="margin-top: 5%;">
-                                <div class="col-sm-6">
-
-                                    <label><b style='color:#009688'>Fuel Type</b></label>
-                                    <select class="form-control" name="fuel_type">
-
-                                        <option>Petrol</option>
-                                        <option>Diesel</option>
-
-
-                                    </select>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label><b style='color:#009688'>Quantity</b></label>
-                                    <input type="text" name="quantity" class="form-control"
-                                        placeholder="In Litres" required />
-                                </div>
-                            </div>
-                            <div class=" form-group row col-sm-12">
-                                <div class="col-sm-6">
-                                    <label><b style='color:#009688'>RTGS Price</b></label>
-                                    <input type="text" name="price" class="form-control"
-                                        placeholder="In RTGS Dollars" required />
-                                </div>
-                                <input type="hidden" name="cash" value="0" />
-                                <input type="hidden" name="swipe" value="0">
-                                <input type="hidden" name="ecocash" value="0">
-                                <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
-                                    <label><b style='color:#009688'>Payment Method</b></label>
-                                    <div class="col-sm-12 row">
-                                        <input type="checkbox" class=" col-sm-6" name="cash" value="1">
-                                        Cash<br>
-                                        <input type="checkbox" 
-                                            class="col-sm-6" value="1" name="swipe">Swipe<br>
-                                        <input type="checkbox" 
-                                            class="col-sm-6" value="1" name="ecocash">Ecocash<br>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class=" form-group row col-sm-12">
-                                <div class="col-sm-6">
-                                    <label><b style='color:#009688'>USD Price</b></label>
-                                    <input type="text" name="usd_price" class="form-control"
-                                        placeholder="In United States Dollars" required />
-                                </div>
-                                <input type="hidden" name="cash" value="0" />
-                                <input type="hidden" name="swipe" value="0">
-                                <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
-                                    <label><b style='color:#009688'>Payment Method</b></label>
-                                    <div class="col-sm-12 row">
-                                        <input type="checkbox" class=" col-sm-6" name="cash" value="1">
-                                        Cash<br>
-                                        <input type="checkbox" 
-                                            class="col-sm-6" value="1" name="swipe">FCA<br>
-                                    </div>
-
-
-                                </div>
-                            </div>
-                                                         </div>
-                    <div class="form-group row"
-                        style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                        <button type="button" class="btn btn-secondary col-sm-6"
-                            data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
-                    </div>
-                    </form>
-                </div>
-            </div>
-            </div>
-            <div class="modal fade modal-xl" id="add_rtgs_fuel{{update.id}}" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class=" modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <span class="modal-title" id="exampleModalLongTitle">Add RTGS Fuel- <i
-                                    style="color:red"><small>Please Note the fuel you are entering is to be
-                                        sold in Zimbabwean Dollars</small></i></span>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div>
-                            {% load crispy_forms_tags %}
-                            <form action="{% url 'users:allocation_update' update.id %}" method="POST">
-                                {% csrf_token %}
-                                <input type="hidden" value="RTGS" name="fuel_payment_type" />
-                                <div class="form-group row col-sm-12" style="margin-top: 5%;">
-                                    <div class="col-sm-6">
-
-                                        <label><b style='color:#009688'>Fuel Type</b></label>
-                                        <select class="form-control" name="fuel_type">
-
-                                            <option>Petrol</option>
-                                            <option>Diesel</option>
-
-
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label><b style='color:#009688'>Quantity</b></label>
-                                        <input type="text" name="quantity" class="form-control"
-                                            placeholder="In Litres" required />
-                                    </div>
-                                </div>
-                                <div class=" form-group row col-sm-12">
-                                    <div class="col-sm-6">
-                                        <label><b style='color:#009688'>Price</b></label>
-                                        <input type="text" name="price" class="form-control"
-                                            placeholder="In Zimbabwean Dollars" required />
-                                    </div>
-                                    <input type="hidden" name="cash" value="0" />
-                                    <input type="hidden" name="swipe" value="0">
-                                    <input type="hidden" name="ecocash" value="0">
-                                    <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
-                                        <label><b style='color:#009688'>Payment Method</b></label>
-                                        <div class="col-sm-12 row">
-                                            <input type="checkbox" class=" col-sm-6" name="cash" value="1"> Cash<br>
-                                            <input type="checkbox" class="col-sm-6" value="1" name="swipe">Swipe<br>
-                                            <input type="checkbox" class="col-sm-6" value="1" name="ecocash">Ecocash<br>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-
-                        </div>
-                        <div class="form-group row"
-                            style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                            <button type="button" class="btn btn-secondary col-sm-6"
-                                data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
-                        </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-          
-       
+    </div>
+    
+  </div>
+</div>
            
             
 
@@ -477,8 +372,95 @@
 
 
             </script>
+
+<div class="modal fade modal-success in" id="add_fuel{{update.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+      <h1 class="modal-title">Update Fuel Quantity</h1>
+  </div>
+    <div class="modal-body">
+
+      {% load crispy_forms_tags %}
+      <form action="{% url 'supplier:stock_update' update.id %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" value="USD" name="fuel_payment_type" />
+        <div class="form-group row col-sm-12" style="margin-top: 5%;">
+            <div class="col-sm-6">
+
+                <label><b style='color:#009688'>Fuel Type</b></label>
+                <select class="form-control" name="fuel_type">
+
+                    <option>Petrol</option>
+                    <option>Diesel</option>
+
+
+                </select>
+            </div>
+            <div class="col-sm-6">
+                <label><b style='color:#009688'>Quantity</b></label>
+                <input type="text" name="quantity" class="form-control"
+                    placeholder="In Litres" required />
+            </div>
+        </div>
+        <div class=" form-group row col-sm-12">
+            <div class="col-sm-6">
+                <label><b style='color:#009688'>RTGS Price</b></label>
+                <input type="text" name="price" class="form-control"
+                    placeholder="In RTGS Dollars" required />
+            </div>
+            <input type="hidden" name="cash" value="0" />
+            <input type="hidden" name="swipe" value="0">
+            <input type="hidden" name="ecocash" value="0">
+            <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
+                <label><b style='color:#009688'>Payment Method</b></label>
+                <div class="col-sm-12 row">
+                    <input type="checkbox" class=" col-sm-6" name="cash" value="1">
+                    Cash<br>
+                    <input type="checkbox" 
+                        class="col-sm-6" value="1" name="swipe">Swipe<br>
+                    <input type="checkbox" 
+                        class="col-sm-6" value="1" name="ecocash">Ecocash<br>
+                </div>
+            </div>
+        </div>
+        <div class=" form-group row col-sm-12">
+            <div class="col-sm-6">
+                <label><b style='color:#009688'>USD Price</b></label>
+                <input type="text" name="usd_price" class="form-control"
+                    placeholder="In United States Dollars" required />
+            </div>
+            <input type="hidden" name="cash" value="0" />
+            <input type="hidden" name="swipe" value="0">
+            <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
+                <label><b style='color:#009688'>Payment Method</b></label>
+                <div class="col-sm-12 row">
+                    <input type="checkbox" class=" col-sm-6" name="cash" value="1">
+                    Cash<br>
+                    <input type="checkbox" 
+                        class="col-sm-6" value="1" name="swipe">FCA<br>
+                </div>
+
+
+            </div>
+        </div>
+                                     </div>
+<div class="form-group row"
+    style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+    <button type="button" class="btn btn-secondary col-sm-6"
+        data-dismiss="modal">Close</button>
+    <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
+</div>
+</form>
+    </div>
+    
+  </div>
+</div>
+</div>
            
-            <div class="modal fade" id="addfuel{{update.id}}" tabindex="-1" role="dialog"
+            <div class="modal fade modal-success in" id="addfuel{{update.id}}" tabindex="-1" role="dialog"
                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -493,7 +475,7 @@
                         <div class="modal-body">
 
                             {% load crispy_forms_tags %}
-                            <form action="{% url 'users:allocation_update' update.id %}" method="POST">
+                            <form action="{% url 'supplier:stock_update' update.id %}" method="POST">
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <label><b style='color:#009688'>Fuel Type</b></label>
