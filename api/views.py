@@ -108,7 +108,7 @@ def update_station(request):
         status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Service Station')
 
         if status.exists():
-            update = FuelUpdate.objects.get(relationship_id=user.subsidiary_id).filter(sub_type='Service Station')
+            update = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Service Station')
 
             p_quantity = request.POST.get('petrol_quantity')
             d_quantity = request.POST.get('diesel_quantity')
