@@ -717,7 +717,7 @@ def view_transactions_handler(user, message):
         if message.lower() != 'menu':
             response_message = "Invalid response! Please type *menu* to go back to the main menu"
     return response_message
-    
+
 def update_fuel(user, message):
     if user.position == 0:
        response_message = 'What type of fuel do you want to update?\n\n1. USD Fuel\n2. RTGS Fuel\n3. USD & RTGS Fuel\n' 
@@ -1122,29 +1122,6 @@ def update_petrol(user, message):
         user.position = 24
         user.save()
         response_message = "made an update successfully"
-          
-    # elif user.position == 24:
-    #     sub_fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="RTGS").filter(relationship_id=user.subsidiary_id).first()
-    #     if message == "1":
-    #         update.cash = True 
-    #     elif message == "2":
-    #         update.ecocash = True
-    #     elif message == "3":
-    #         update.swipe = True
-    #     elif message == "4":
-    #         update.usd = True
-    #     elif message == "5":
-    #         update.ecocash = True
-    #         update.cash = True
-    #     elif message == "6":
-    #         update.swipe = True
-    #         update.cash = True
-    #     elif message == "7":
-    #         update.ecocash = True
-    #         update.swipe = True
-    #     else:
-    #         return "Incorrect Choice"  
-    #     response_message = "made an update successfully"
 
     elif user.position == 30:
         #update = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=user.subsidiary_id).first()
