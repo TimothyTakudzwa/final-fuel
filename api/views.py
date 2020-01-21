@@ -165,7 +165,7 @@ def view_station_updates(request):
         status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id)
 
         if status.exists():
-            updates = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id)
+            updates = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Suballocation')
             for update in updates:
                 company = Subsidiaries.objects.get(id=update.relationship_id)
                 
