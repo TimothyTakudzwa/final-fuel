@@ -105,10 +105,10 @@ def update_station(request):
         username = request.POST.get('username')
 
         user = User.objects.get(username=username)
-        status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Suballocation').filter(entry_type='RTGS')
+        status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Service Station').filter(entry_type='RTGS')
 
         if status.exists():
-            update = FuelUpdate.objects.get(relationship_id=user.subsidiary_id).filter(sub_type='Suballocation').filter(entry_type='RTGS')
+            update = FuelUpdate.objects.get(relationship_id=user.subsidiary_id).filter(sub_type='Service Station').filter(entry_type='RTGS')
 
             p_quantity = request.POST.get('petrol_quantity')
             d_quantity = request.POST.get('diesel_quantity')
@@ -150,7 +150,7 @@ def view_station_updates(request):
         status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id)
 
         if status.exists():
-            updates = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Suballocation')
+            updates = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Service Station')
             for update in updates:
                 company = Subsidiaries.objects.get(id=update.relationship_id)
                 
