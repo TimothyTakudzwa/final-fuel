@@ -35,7 +35,7 @@
             <div class="mt-3 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
                 <div class="panel-heading ui-sortable-handle">
                     <div class="btn-group">
-                        <h4>{{request.user.company}} Audit Trails</h4>
+                        <h4>{{request.user.company.name|title}} Audit Trails</h4>
                     </div>
                     <div class="dropdown">
                         <ul class="dropdown-menu dropdown-menu-right">
@@ -66,7 +66,7 @@
                             <tr>
                                 <td>{{trail.date}}</td>
                                 <td>{{trail.user}}</td>
-                                <td>{{trail.company}}</td>
+                                <td>{{trail.company.name|title}}</td>
                                 <td>{{trail.service_station.name}}</td>
                                 <td>{{trail.action}}</td>
                                 <td>{{trail.reference}}</td>

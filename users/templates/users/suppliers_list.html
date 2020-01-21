@@ -179,7 +179,7 @@
                                         <div class="modal-content">
                                             
                                             <div class="modal-header">
-                                                <span class="modal-title" id="exampleModalLabel">Edit {{supplier.company}} <i class="fa fa-edit" style="padding-left: 3px; font-size: 20px;"></i></span>
+                                                <span class="modal-title" id="exampleModalLabel">Edit {{supplier.company}}</span>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -238,7 +238,7 @@
                                                 <form action="{% url 'users:suppliers_delete' supplier.id %}" method="POST">
                                                     {{ delete_form }}
                                                     {% csrf_token %}
-                                                    <p style="padding: 50px;">Are You Sure You Want To Delete {{ supplier.username|title }} ?</p>
+                                                    <p>Are You Sure You Want To Delete {{ supplier.username|title }} ?</p>
                                                     <div class="modal-footer">
 
                                                         <button class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">No</button> <button class="btn btn-primary" type="submit">Yes</button>
