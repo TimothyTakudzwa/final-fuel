@@ -105,10 +105,10 @@ def update_station(request):
         username = request.POST.get('username')
 
         user = User.objects.get(username=username)
-        status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id)
+        status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Suballocation', entry_type='RTGS')
 
         if status.exists():
-            update = FuelUpdate.objects.get(relationship_id=user.subsidiary_id)
+            update = FuelUpdate.objects.get(relationship_id=user.subsidiary_id).filter(sub_type='Suballocation', entry_type='RTGS')
 
             p_quantity = request.POST.get('petrol_quantity')
             d_quantity = request.POST.get('diesel_quantity')
@@ -117,28 +117,13 @@ def update_station(request):
             s_status = request.POST.get('status')
             limit = request.POST.get('limit')
 
-            if update.sub_type == 'USD':
-                cash = request.POST.get('cash')
-                swipe = request.POST.get('swipe')
+            swipe = request.POST.get('swipe')
+            ecocash = request.POST.get('ecocash')
+            cash = request.POST.get('cash')
 
-                update.cash = cash
-                update.swipe = swipe
-            elif update.sub_type == 'RTGS':
-                swipe = request.POST.get('swipe')
-                ecocash = request.POST.get('ecocash')
-                cash = request.POST.get('cash')
-
-                update.swipe = swipe
-                update.ecocash = ecocash
-                update.cash = cash
-            elif update.sub_type == 'USD & RTGS':
-                swipe = request.POST.get('swipe')
-                ecocash = request.POST.get('ecocash')
-                cash = request.POST.get('cash')
-
-                update.swipe = swipe
-                update.ecocash = ecocash
-                update.cash = cash
+            update.swipe = swipe
+            update.ecocash = ecocash
+            update.cash = cash
 
             update.petrol_quantity = p_quantity
             update.diesel_quantity = d_quantity
@@ -165,7 +150,7 @@ def view_station_updates(request):
         status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id)
 
         if status.exists():
-            updates = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id)
+            updates = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Suballocation')
             for update in updates:
                 company = Subsidiaries.objects.get(id=update.relationship_id)
                 
