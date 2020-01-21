@@ -40,6 +40,7 @@ class Subsidiaries(models.Model):
 class FuelAllocation(models.Model):
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, null=True)
     date = models.DateField(auto_now_add=True)
+    fuel_payment_type = models.CharField(max_length = 100, default = "")
     diesel_quantity = models.IntegerField(default=0)
     petrol_quantity = models.IntegerField(default=0)
     sub_type = models.CharField(max_length=255)
