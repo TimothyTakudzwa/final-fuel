@@ -176,7 +176,7 @@ def allocation_update(request,id):
         if F_Update.objects.filter(id=id).exists():
             fuel_update = F_Update.objects.filter(id=id).first()
             company_quantity = F_Update.objects.filter(company_id = request.user.company.id).filter(sub_type='Company').first()
-            depot = F_Update.objects.filter(relationship_id=fuel_update.relationship_id).filter(sub_type='Depot').first()
+            depot = F_Update.objects.filter(relationship_id=fuel_update.relationship_id).filter(~Q(sub_type='Company')).filter(~Q(sub_type='Suballocation')).first()
             print(depot)
             if request.POST['fuel_type'] == 'Petrol':
                 if int(request.POST['quantity']) > company_quantity.petrol_quantity:
@@ -192,7 +192,7 @@ def allocation_update(request,id):
                 company_quantity.save()
             else:
                 if int(request.POST['quantity']) > company_quantity.diesel_quantity:
-                    messages.warning(request, f'You can not allocate fuel above your company petrol capacity of {company_quantity.diesel_quantity}')
+                    messages.warning(request, f'You can not allocate fuel above your company diesel capacity of {company_quantity.diesel_quantity}')
                     return redirect('users:allocate')
                 fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['quantity'])
                 depot.diesel_quantity = depot.diesel_quantity + int(request.POST['quantity'])
@@ -211,9 +211,9 @@ def allocation_update(request,id):
             
             action = 'Allocation of ' + request.POST['fuel_type']
             if request.POST['price'] == 'Petrol':
-                FuelAllocation.objects.create(company=request.user.company, fuel_payment_type= fuel_update.entry_type, action = action,petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['petrol_quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],allocated_subsidiary_id=fuel_update.relationship_id)
+                FuelAllocation.objects.create(company=request.user.company, fuel_payment_type= fuel_update.entry_type, action = action,petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'],swipe=request.POST['swipe'],allocated_subsidiary_id=fuel_update.relationship_id)
             else:
-                FuelAllocation.objects.create(company=request.user.company, fuel_payment_type= fuel_update.entry_type, action = action,diesel_price=fuel_update.diesel_price,diesel_quantity=request.POST['diesel_quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],allocated_subsidiary_id=fuel_update.relationship_id)
+                FuelAllocation.objects.create(company=request.user.company, fuel_payment_type= fuel_update.entry_type, action = action,diesel_price=fuel_update.diesel_price,diesel_quantity=request.POST['quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'],swipe=request.POST['swipe'],allocated_subsidiary_id=fuel_update.relationship_id)
 
             messages.success(request, 'Fuel Allocation SUccesful')
             service_station = Subsidiaries.objects.filter(id=fuel_update.relationship_id).first()
@@ -221,8 +221,7 @@ def allocation_update(request,id):
             reference_id = fuel_update.id
             action = f"You have allocated { request.POST['fuel_type']} quantity of {int(request.POST['quantity'])}L @ {fuel_update.petrol_price} "
             Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
-            return redirect('users:allocate')
-            
+            return redirect('users:allocate')            
            
         else:
             messages.success(request, 'Subsidiary does not exists')
