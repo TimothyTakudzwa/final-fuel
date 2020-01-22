@@ -188,7 +188,7 @@ def view_updates_user(request):
                         'station': details.name, 'queue': update.queue_length, 'petrol': update.petrol_price,
                         'diesel': update.diesel_price, 'open': details.opening_time, 'close': details.closing_time,
                         'limit': update.limit, 'cash': update.cash, 'ecocash': update.ecocash, 'swipe': update.swipe,
-                        'status': update.status, 'image': image
+                        'status': update.status, 'image': image, 'company': details.company.name,
                     }
                     data.append(station_update)
         return JsonResponse(list(data), status=200, safe=False)

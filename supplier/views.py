@@ -123,13 +123,13 @@ def rejected_offer(request, id):
 
 @login_required
 def available_stock(request):
-    updates = FuelUpdate.objects.filter(sub_type='Depot', relationship_id=request.user.subsidiary_id)
+    updates = FuelUpdate.objects.filter(sub_type='Suballocation', relationship_id=request.user.subsidiary_id).all()
 
     return render(request, 'supplier/available_fuel.html', {'updates': updates})
 
 @login_required()
 def stock_update(request,id):
-    updates = FuelUpdate.objects.filter(sub_type='Depot', relationship_id=request.user.subsidiary_id).first()
+    updates = FuelUpdate.objects.filter(sub_type='Suballocation', relationship_id=request.user.subsidiary_id).all()
     available_petrol = updates.petrol_quantity
     available_diesel = updates.diesel_quantity
     if request.method == 'POST':
