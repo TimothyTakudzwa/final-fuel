@@ -126,9 +126,9 @@
                         <tbody>
                         {% for supplier in suppliers %}
                             <tr>
-                                <td>{{supplier.first_name}}</td>
-                                <td>{{supplier.last_name}}</td>
+                                <td>{{supplier.first_name}} {{supplier.last_name}}</td>
                                 <td>{{supplier.username}}</td>
+                                <td>{{supplier.subsidiary_name}}</td>
                                
                                 <td>{{supplier.phone_number}}</td>
                                 <td>{{supplier.email}}</td>

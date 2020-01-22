@@ -7,6 +7,7 @@ from django.conf.urls.static import static
 urlpatterns = [  
     path('logout', auth_views.LogoutView.as_view(template_name='buyer/signin.html'), name='buyer-logout'),
     path('profile', views.profile, name='buyer-profile'),
+    path('change_password', views.change_password, name='bchange-password'),
     path('', views.dashboard, name='buyer-dashboard'),
     path('fuel', views.fuel_request, name='buyer-fuel-request'),
     path('offers/<int:id>', views.offers, name='fuel-offers'),
