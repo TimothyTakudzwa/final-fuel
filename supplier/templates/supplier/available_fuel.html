@@ -63,7 +63,7 @@
 
                 <td><b style='color:#009688'>{{update.entry_type}} </b></td>
                 <td>{{update.petrol_quantity}} Litres {% if update.petrol_quantity < 1000 %} <i
-                        class="material-icons text-danger">warning</i>{% endif %}</td>
+                        class="material-icons text-danger">Petrol quantity too low</i>{% endif %}</td>
 
                 <td> {% if update.entry_type == 'USD & RTGS' %} <b style='color:#009688'>RTGS</b>
                     {{update.petrol_price}} | <b style='color:#009688'>USD</b>
@@ -73,7 +73,7 @@
 
 
                 <td>{{update.diesel_quantity}} Litres {% if update.diesel_quantity < 1000 %} <i
-                        class="material-icons text-danger">warning</i>{% endif %}</td>
+                        class="material-icons text-danger">Diesel quantity too low</i>{% endif %}</td>
                 <td> {% if update.entry_type == 'USD & RTGS' %} <b style='color:#009688'>RTGS</b>
                     {{update.diesel_price}} | <b style='color:#009688'>USD</b>
                     {{update.diesel_usd_price}}{%else%} <b
