@@ -348,7 +348,7 @@ def verification(request, token, user_id):
                         return redirect('supplier:create_company', id=user.id)
                     
             else:
-                return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
+                return render(request, 'supplier/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
         else:
             messages.warning(request, 'This link has been used before')
             return redirect('buyer-register')
@@ -419,7 +419,7 @@ def invoice(request, id):
     context = {
         'transactions': transactions
     }
-    pdf = render_to_pdf('supplier/accounts/invoice.html',context)
+    pdf = render_to_pdf('supplier/invoice.html',context)
     return HttpResponse(pdf, content_type='application/pdf')
 
 
