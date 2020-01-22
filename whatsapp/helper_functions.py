@@ -1223,52 +1223,20 @@ def requesting(user, message):
 
 def station_updates(user, message):
     if user.position == 1:
-       response_message = 'What is your payment method?\n\n1. USD\n2. RTGS\n' 
-       user.position = 2
-       user.save()
-    elif user.position == 2:
-        if message == "1":
-            user.paying_method = "USD"
-            user.save()
-        elif message == "2":
-            user.paying_method = "RTGS"
-            user.save()
-        
         updates = FuelUpdate.objects.filter(sub_type='Service Station').all()
-        response_message = 'The following are the current updates of fuel available for your payment method in different stations. Please type *menu* to go back to menu and look for fuel\n\n'
+        response_message = 'The following are the current updates of fuel available in different stations. Please type *menu* to go back to menu and look for fuel\n\n'
         i = 1
         for update in updates:
             station = Subsidiaries.objects.filter(id = update.relationship_id).first()
-            sub_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD & RTGS").filter(relationship_id=update.relationship_id).exists()
-            sub_fuel_updates = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type=user.paying_method).filter(relationship_id=update.relationship_id).exists()
+            sub_fuel_updates = FuelUpdate.objects.filter(sub_type="Service Station").filter(relationship_id=update.relationship_id).exists()
             if sub_fuel_updates:
-                sub_fuel_updates = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type=user.paying_method).filter(relationship_id=update.relationship_id).first()
+                sub_fuel_updates = FuelUpdate.objects.filter(sub_type="Service Station").filter(relationship_id=update.relationship_id).first()
                 response_message = response_message + f'{i}. *{station.name}*\nPetrol: {sub_fuel_updates.petrol_quantity} Litres\nPrice: {sub_fuel_updates.petrol_price}\nDiesel: {sub_fuel_updates.diesel_quantity} Litres\nPrice: {sub_fuel_updates.diesel_price}\nQueue Length: {sub_fuel_updates.queue_length}\nStatus: {sub_fuel_updates.status}\n\n' 
                 i += 1
             else:
                 pass
 
-            if sub_update:
-                if user.paying_method == "USD":
-                    sub_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(relationship_id=update.relationship_id).filter(entry_type="USD & RTGS").first()
-                    response_message = response_message + f'{i} *{station.name}*\nPetrol: {sub_update.petrol_quantity} Litres\nPrice: {sub_update.petrol_usd_price} \nDiesel:{sub_update.diesel_quantity} Litres \nPrice: {sub_update.diesel_usd_price} \n\n'
-                    user.fuel_updates_ids = user.fuel_updates_ids + str(sub_fuel_updates.id) + " "
-                    user.save()
-
-                    i += 1 
-                else:
-                    sub_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(relationship_id=update.relationship_id).filter(entry_type="USD & RTGS").first()
-                    response_message = response_message + f'{i} *{sub.name}*\nPetrol: {sub_update.petrol_quantity} Litres\nPrice: {sub_update.petrol_price} \nDiesel:{sub_update.diesel_quantity} Litres \nPrice: {sub_update.diesel_price} \n\n'
-                    user.fuel_updates_ids = user.fuel_updates_ids + str(sub_fuel_updates.id) + " "
-                    user.save()
-
-                    i += 1 
-            else:
-                pass
-
     return response_message
-
-
 
 
 def fuel_finder():
