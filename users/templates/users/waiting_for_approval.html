@@ -114,7 +114,7 @@
                                                     <label><b>Depots</b></label>
                                                     <select class="form-control" name="subsidiary">
                                                         {% for depot in depots %}
-                                                        <option >{{depot.name}}</option>
+                                                        <option value="{{depot.id}}">{{depot.name}}</option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>
@@ -125,7 +125,7 @@
                                                 <label><b>Service Stations</b></label>
                                                 <select class="form-control" name="subsidiary">
                                                     {% for station in stations %}
-                                                    <option >{{station.name}}</option>
+                                                    <option value="{{station.id}}">{{station.name}}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
