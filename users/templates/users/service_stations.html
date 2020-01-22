@@ -292,10 +292,10 @@
                         }
                         else if ($('#city{{forloop.counter}} option:selected').text() == "Gweru") {
                         $('#harare{{forloop.counter}}').hide();
+                        $('#bulawayo{{forloop.counter}}').hide();
                         $('#mutare{{forloop.counter}}').hide();
                         $('#gweru{{forloop.counter}}').show();
                         $('#default_location').hide();
-                        $('#bulawayo{{forloop.counter}}').hide();
                         $('#harare{{forloop.counter}} :input').prop('disabled',true);
                         $('#mutare{{forloop.counter}} :input').prop('disabled',true);
                         $('#gweru{{forloop.counter}} :input').prop('disabled',false);
@@ -397,7 +397,7 @@
                        <div class="form-group col-md-6" name="gweru" id="gweru{{forloop.counter}}">
                                <label><b>Location</b></label>
                                <select class="form-control" name="location">
-                                   {% for locationy in Bulawayo %}
+                                   {% for locationy in Gweru %}
                                    <option >{{locationy}}</option>
                                    {% endfor %}
                                </select>
