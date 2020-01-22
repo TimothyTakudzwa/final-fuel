@@ -736,7 +736,6 @@ def approval(request, id):
             applicant.is_waiting = False
             applicant.is_active = True
             selected_id =  request.POST['subsidiary']
-            print(selected)
             selected_subsidiary = Subsidiaries.objects.filter(id=selected_id).first()
             print(selected_subsidiary)
             applicant.subsidiary_id = selected_subsidiary.id
