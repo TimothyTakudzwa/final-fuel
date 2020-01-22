@@ -181,12 +181,14 @@ def offer(request, id):
                 offer.ecocash = True if request.POST.get('ecocash') == "on" else False
                 offer.swipe = True if request.POST.get('swipe') == "on" else False
                 delivery_method = request.POST.get('delivery_method')
-                if delivery_method != 'Delivery' or delivery_method.lower() != 'self collection':
+                if not delivery_method.strip():
                     offer.delivery_method = 'Delivery'
                 else:
-                     offer.delivery_method = delivery_method
-                if delivery_method.lower() == 'self collection':      
-                    collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+                     offer.delivery_method = delivery_method      
+                collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+                if not collection_address.strip() and delivery_method.lower() == 'self collection':
+                    offer.collection_address = subsidiary.location
+                else:
                     offer.collection_address = collection_address
                 offer.pump_available = True if request.POST.get('pump_available') == "on" else False
                 offer.dipping_stick_available = True if request.POST.get('dipping_stick_available') == "on" else False
