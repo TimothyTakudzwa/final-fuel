@@ -218,8 +218,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <div class="modal-body">
-                                            <form method="POST">
+                                            <di/div method="POST">
                                                 {% csrf_token %}
                                                 <div class=" row col-sm-12">
                                                     <div class="col-sm-6">
@@ -230,42 +229,18 @@
                                                         {{ form.amount|as_crispy_field }}
                                                     </div>
                                                 </div>
-                                                <label class="form-group">Select Payment Method</label>
-                                                <div class="col-sm-12 row">
-                                                    <div class="togglebutton form-group col-sm-3">
-                                                        <label>
-
-                                                            <input type="checkbox" name="cash" id="cash">
-
-                                                            <span class="toggle"></span>
-                                                            Cash
-                                                        </label>
+                                                <div class="row">
+                                                    <div class="col-sm-6 form-group">
+                                                        <label class="form-group">Select Payment Method</label>
+                                                        <select class="form-control" name="fuel_payment_method">
+                                                            <option value="USD">USD</option>
+                                                            <option value="RTGS">RTGS</option>
+                                                            <option value="USD & RTGS">Either</option>
+                                                        </select>
                                                     </div>
-                                                    <div class="togglebutton form-group col-sm-3">
-                                                        <label>
-                                                            <input type="checkbox" name="ecocash" id="ecocash">
-                                                            <span class="toggle"></span>
-                                                            Ecocash
-                                                        </label>
-                                                    </div>
-                                                    <div class="togglebutton form-group col-sm-3">
-                                                        <label>
-                                                            <input type="checkbox" name="swipe" id="swipe">
-                                                            <span class="toggle"></span>
-                                                            Swipe
-                                                        </label>
-                                                    </div>
-                                                    <div class="togglebutton form-group col-sm-3">
-                                                        <label>
-                                                            <input type="checkbox" name="usd" id="usd">
-                                                            <span class="toggle"></span>
-                                                            USD
-                                                        </label>
-                                                    </div>
-                                                </div>
 
 
-                                                <div class="form-group">
+                                                <div class="col-sm-6 form-group">
                                                     <label>Pick Up Method</label>
                                                     <select id="delivery_method1{{forloop.counter}}"
                                                         name="delivery_method" class="form-control">
@@ -273,6 +248,7 @@
                                                         </option>
                                                         <option value='DELIVERY'>Direct Delivery</option>
                                                     </select>
+                                                </div>
                                                 </div>
 
                                                 <div class="form-group" name='choices' id='choices1{{forloop.counter}}'>
@@ -331,7 +307,6 @@
                                                 Request</button>
                                             </form>
                                         </div>
-                                    </div>
 
                                 </div>
                             </div>
