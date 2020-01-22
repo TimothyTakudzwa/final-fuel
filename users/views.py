@@ -453,16 +453,21 @@ def stations(request):
         swipe = request.POST['swipe']
         ecocash = request.POST['ecocash']
         sub = Subsidiaries.objects.create(account_number=account_number,destination_bank=destination_bank,city=city,location=location,company=request.user.company,name=name,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)    
-        if is_depot == "True":
-            sub_type = 'Depot'  
+        if request.POST['is_depot'] == "Service Station":
+            fuel_updated = F_Update.objects.create(sub_type="Service Station",relationship_id=sub.id,company_id = request.user.company.id, cash=cash, usd=usd, swipe=swipe, ecocash=ecocash,limit=2000)
+            fuel_updated.save()
+            sub.fuel_capacity = fuel_updated
+            sub.save()
+            messages.success(request, 'Subsidiary Created Successfully')
+            return redirect('users:stations')  
         else:
-            sub_type = 'Service Station'
-        fuel_updated = F_Update.objects.create(sub_type=sub_type,relationship_id=sub.id,company_id = request.user.company.id, cash=cash, usd=usd, swipe=swipe, ecocash=ecocash,limit=2000)
-        fuel_updated.save()
-        sub.fuel_capacity = fuel_updated
-        sub.save()
-        messages.success(request, 'Subsidiary Created Successfully')
-        return redirect('users:stations')
+            fuel_updated = F_Update.objects.create(sub_type="Depot",relationship_id=sub.id,company_id = request.user.company.id, cash=cash, usd=usd, swipe=swipe, ecocash=ecocash,limit=2000)
+            fuel_updated.save()
+            sub.fuel_capacity = fuel_updated
+            sub.save()
+            messages.success(request, 'Subsidiary Created Successfully')
+            return redirect('users:stations') 
+        
 
     return render(request, 'users/service_stations.html', {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns, 'Mutare': Mutare, 'Gweru': Gweru})
 
