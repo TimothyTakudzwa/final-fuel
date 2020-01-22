@@ -181,7 +181,7 @@ def offer(request, id):
                 offer.ecocash = True if request.POST.get('ecocash') == "on" else False
                 offer.swipe = True if request.POST.get('swipe') == "on" else False
                 delivery_method = request.POST.get('delivery_method')
-                if not delivery_method.strip():
+                if not delivery_method:
                     offer.delivery_method = 'Delivery'
                 else:
                      offer.delivery_method = delivery_method      
