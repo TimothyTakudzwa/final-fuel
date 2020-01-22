@@ -168,7 +168,7 @@ aria-hidden="true">
     </div>
     <div class="col-sm-4">
         <lable>Fuel Price</lable>
-        <input type="text" name="price" class="form-control" value="{{req.price}}" disabled/>
+        <input type="text" name="price" class="form-control" value="{{req.price}}"/>
     </div>
     </div>
     <!-- <p style="text-align: center;"><label class="form-group">Select Payment Method</label></p>
@@ -204,7 +204,7 @@ aria-hidden="true">
     </div> -->
 
 
-    <div class="form-group">
+    <div class="row col-sm-12 form-group" style="margin-top: 5;">
         <label>Pick Up Method</label>
         <select id="delivery_method{{forloop.counter}}" name="delivery_method" class="form-control">
                 <option value='DELIVERY'>Delivery</option>
@@ -286,7 +286,7 @@ aria-hidden="true">
      </div>
      <div class="col-sm-4">
          <lable>Fuel Price</lable>
-         <input type="text" name="price" class="form-control" value="{{req.offer_price}}" disabled/>
+         <input type="text" name="price" class="form-control" value="{{req.offer_price}}"/>
      </div>
      </div>
      <!-- <p style="text-align: center;"><label class="form-group">Select Payment Method</label></p>
@@ -322,7 +322,7 @@ aria-hidden="true">
     </div> -->
 
 
-     <div class="form-group" style="margin-top: 5;">
+    <div class="row col-sm-12 form-group" style="margin-top: 5;">
          <label>Pick Up Method</label>
          <select id="delivery_method1{{forloop.counter}}" name="delivery_method1" class="form-control">
             <option value='DELIVERY'>Delivery</option>

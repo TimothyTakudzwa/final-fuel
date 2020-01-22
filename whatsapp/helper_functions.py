@@ -717,26 +717,15 @@ def update_fuel(user, message):
         if petrol_update < petrol_available:
             fuel_update.petrol_quantity = petrol_update
             fuel_update.save()
-            user.position = 3
+            user.position = 4
             user.save()
-            response_message = "How much is the petrol price per litre?"
+            response_message = "How much diesel do you have in stock?"
         else:
             response_message = f"You can only reduce your stock. To increase it contact you admin to update your fuel allocations! You currently have *{diesel_availabe}* litre, please enter available stock if it is less."
             user.position = 2
             user.save()
         
-    elif user.position == 3:
-        fuel_update = FuelUpdate.objects.filter(id=user.fuel_request).first()
-        try:
-            fuel_update.petrol_price = float(message)
-            fuel_update.save()
-            user.position = 4
-            user.save()
-            response_message = "How much diesel do you have in stock?"
-        except:
-            response_message = "Please provide a valid petrol price"
-            user.position = 3
-            user.save()
+    # 
     elif user.position == 4:
         fuel_update = FuelUpdate.objects.filter(id=user.fuel_request).first()
         #try:
@@ -745,26 +734,14 @@ def update_fuel(user, message):
         if diesel_update < diesel_available:
             fuel_update.diesel_quantity = float(message)
             fuel_update.save()
-            user.position = 5
+            user.position = 6
             user.save()
-            response_message = "What is the diesel price per litre?"
+            response_message = "You have successfully updated you fuel stocks. Send *menu* to go back to main menu"
         else:
             response_message = f"You can only reduce your stock. To increase it contact you admin to update your fuel allocations! You currently have *{diesel_availabe}* litres, update if you have less stock."
             user.position = 4
             user.save()
         
-    elif user.position == 5:
-        fuel_update = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).first()
-        try:
-            fuel_update.diesel_quantity = float(message)
-            fuel_update.save()
-            user.position = 6
-            user.save()
-            response_message = "You have successfully updated you fuel stocks. Send *menu* to go back to main menu"
-        except:
-            response_message = "Please provide a valid diesel quantity"
-            user.position = 5
-            user.save()
    
     elif user.position == 6:
         if message.lower != 'menu':
@@ -1236,11 +1213,7 @@ def station_updates(user, message):
             else:
                 pass
 
-           
-
     return response_message
-
-
 
 
 def fuel_finder():
