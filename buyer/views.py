@@ -243,7 +243,7 @@ def fuel_finder(request):
 
 
 def dashboard(request):
-    updates = FuelUpdate.objects.filter(~Q(sub_type="Company")).filter(~Q(sub_type="Service Station")).filter(~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
+    updates = FuelUpdate.objects.filter(~Q(sub_type="Depot")).filter(~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
     for update in updates:
         subsidiary = Subsidiaries.objects.filter(id = update.relationship_id).first()
         company = Company.objects.filter(id=update.company_id).first()
