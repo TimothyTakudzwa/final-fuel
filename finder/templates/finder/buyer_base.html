@@ -151,9 +151,9 @@
                                 </div>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="profile.html"><i class="fa fa-users"></i> User Profile</a></li>
-                                <li><a href="#"><i class="fa fa-gear"></i> Settings</a></li>
-                                <li><a href="login.html"><i class="fa fa-sign-out"></i> Logout</a></li>
+                                <li><a href="{%url 'buyer-profile'%}"><i class="fa fa-users"></i> User Profile</a></li>
+                                <li><a href="{%url 'change_password'%}"><i class="fa fa-gear"></i> Change Password</a></li>
+                                <li><a href="{%url 'buyer-logout'%}?next=/login"><i class="fa fa-sign-out"></i> Logout</a></li>
                             </ul>
                         </li>
                     </ul>
