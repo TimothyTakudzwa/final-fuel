@@ -243,7 +243,7 @@ def fuel_finder(request):
 
 
 def dashboard(request):
-    updates = FuelUpdate.objects.filter(sub_type="Depot").filter(~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
+    updates = FuelUpdate.objects.filter(sub_type="Suballocation").filter(~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
     for update in updates:
         subsidiary = Subsidiaries.objects.filter(id = update.relationship_id).first()
         company = Company.objects.filter(id=update.company_id).first()
@@ -259,16 +259,14 @@ def dashboard(request):
                 fuel_request.name = request.user       
                 fuel_request.amount = form.cleaned_data['amount']
                 fuel_request.fuel_type = form.cleaned_data['fuel_type']
-                fuel_request.usd = True if request.POST.get('usd') == "True" else False
-                fuel_request.cash = True if request.POST.get('cash') == "True" else False
-                fuel_request.ecocash = True if request.POST.get('ecocash') == "True" else False
+                fuel_request.payment_method =  request.POST.get('fuel_payment_type')  
                 fuel_request.swipe = True if request.POST.get('swipe') == "True" else False
                 fuel_request.delivery_method = form.cleaned_data['delivery_method']
                 fuel_request.delivery_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
-                fuel_request.storage_tanks = True if request.POST.get('storage_tanks') == "on" else False
-                fuel_request.pump_required = True if request.POST.get('pump_required') == "on" else False
-                fuel_request.dipping_stick_required = True if request.POST.get('usd') == "on" else False
-                fuel_request.meter_required = True if request.POST.get('usd') == "on" else False
+                fuel_request.storage_tanks = request.POST.get('storage_tanks') 
+                fuel_request.pump_required = request.POST.get('pump_required') 
+                fuel_request.dipping_stick_required = request.POST.get('dipping_stick_required')
+                fuel_request.meter_required =  request.POST.get('meter_required') 
                 fuel_request.is_direct_deal = True
                 fuel_request.last_deal = request.POST.get('company_id')
                 print(fuel_request.last_deal)
@@ -276,7 +274,7 @@ def dashboard(request):
                 user = User.objects.filter(subsidiary_id = fuel_request.last_deal).first()
             messages.success(request, f'kindly note your request has been made ')
             message = f'{request.user.first_name} {request.user.last_name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
-            Notification.objects.create(message = message, user = user, reference_id = fuel_request.id, action = "new_request")
+            Notification.objects.create(message = message, user = user, reference_id = fuel_request.id, action = "new_request", user_id=request.user.id)
 
         if 'WaitForOffer' in request.POST:
             if form.is_valid():
