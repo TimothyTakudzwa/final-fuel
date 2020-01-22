@@ -137,7 +137,7 @@ def requests_handler(user, message):
             fuel_request.save()
             user.position = 55 
             user.save()
-            response_message = 'What is your payment method?\n\n1. USD\n2. RTGS\n3. USD & RTGS\n'
+            response_message = 'What is your payment method?\n\n1. USD\n2. RTGS\n'
             
         elif message == "2":
             fuel_request.delivery_method = "DELIVERY"

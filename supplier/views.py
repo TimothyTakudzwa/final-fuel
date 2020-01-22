@@ -129,7 +129,7 @@ def available_stock(request):
 
 @login_required()
 def stock_update(request,id):
-    updates = FuelUpdate.objects.filter(sub_type='Suballocation', relationship_id=request.user.subsidiary_id).all()
+    updates = FuelUpdate.objects.filter(sub_type='Suballocation', id=id).first()
     available_petrol = updates.petrol_quantity
     available_diesel = updates.diesel_quantity
     if request.method == 'POST':
@@ -184,8 +184,8 @@ def offer(request, id):
                 if not delivery_method.strip():
                     offer.delivery_method = 'Delivery'
                 else:
-                     offer.delivery_method = delivery_method      
-                collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+                    offer.delivery_method = delivery_method
+                collection_address = request.POST.get('street_number') + " " + request.POST.get('street_name') + " " + request.POST.get('location')
                 if not collection_address.strip() and delivery_method.lower() == 'self collection':
                     offer.collection_address = subsidiary.location
                 else:
@@ -213,7 +213,7 @@ def offer(request, id):
             messages.warning(request, 'You can not offer fuel more than the available fuel stock')
             return redirect('fuel-request')
     else:
-        messages.warning(request, "Please fill all required fields to complete an offer")
+        messages.warning(request, "Please provide a price to complete an offer")
         return redirect('fuel-request')
     return render(request, 'supplier/fuel_request.html')
 
@@ -243,7 +243,7 @@ def edit_offer(request, id):
                     offer.delivery_method = 'Delivery'
                 else:
                     offer.delivery_method = delivery_method
-                collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+                collection_address = request.POST.get('street_number') + " " + request.POST.get('street_name') + " " + request.POST.get('location')
                 if not collection_address.strip() and delivery_method.lower() == 'self collection':
                     offer.collection_address = subsidiary.location
                 else:
@@ -419,7 +419,7 @@ def invoice(request, id):
     context = {
         'transactions': transactions
     }
-    pdf = render_to_pdf('supplier/accounts/invoice.html',context)
+    pdf = render_to_pdf('supplier/invoice.html',context)
     return HttpResponse(pdf, content_type='application/pdf')
 
 
