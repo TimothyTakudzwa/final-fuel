@@ -112,7 +112,7 @@ def fuel_request(request):
             else:
                 buyer_request.price = fuel.diesel_price
         else:
-            buyer_request.price = 0
+            buyer_request.price = 0.00
     return render(request, 'supplier/fuel_request.html', {'requests':requests})
 
 def new_fuel_request(request, id):
@@ -165,65 +165,67 @@ def stock_update(request,id):
 
 def offer(request, id):
     form = OfferForm(request.POST)
-    if request.method == "POST" and float(request.POST.get('price')) != 0 and float(request.POST.get('quantity')) != 0:
-        fuel_request = FuelRequest.objects.get(id=id)
-        fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
-        subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-        
-        if fuel_request.fuel_type.lower() == 'petrol':
-            available_fuel = fuel.petrol_quantity
-        elif fuel_request.fuel_type.lower() == 'diesel':
-            available_fuel = fuel.diesel_quantity
-        offer_quantity = int(request.POST.get('quantity'))
-        amount = fuel_request.amount
+    if request.method == "POST":
+        print(f"---------price : {request.POST.get('price')}------------")
+        if float(request.POST.get('price')) != 0 and float(request.POST.get('quantity')) != 0:
+            fuel_request = FuelRequest.objects.get(id=id)
+            fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
+            subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+            
+            if fuel_request.fuel_type.lower() == 'petrol':
+                available_fuel = fuel.petrol_quantity
+            elif fuel_request.fuel_type.lower() == 'diesel':
+                available_fuel = fuel.diesel_quantity
+            offer_quantity = int(request.POST.get('quantity'))
+            amount = fuel_request.amount
 
-        if offer_quantity <= available_fuel:
-            if offer_quantity <= amount:
-                offer = Offer()
-                offer.supplier = request.user
-                offer.request = fuel_request
-                offer.price = request.POST.get('price')    
-                offer.quantity = request.POST.get('quantity')
-                offer.fuel_type = request.POST.get('fuel_type')
-                offer.usd = True if request.POST.get('usd') == "on" else False
-                offer.cash = True if request.POST.get('cash') == "on" else False
-                offer.ecocash = True if request.POST.get('ecocash') == "on" else False
-                offer.swipe = True if request.POST.get('swipe') == "on" else False
-                delivery_method = request.POST.get('delivery_method')
-                if not delivery_method.strip():
-                    offer.delivery_method = 'Delivery'
+            if offer_quantity <= available_fuel:
+                if offer_quantity <= amount:
+                    offer = Offer()
+                    offer.supplier = request.user
+                    offer.request = fuel_request
+                    offer.price = request.POST.get('price')    
+                    offer.quantity = request.POST.get('quantity')
+                    offer.fuel_type = request.POST.get('fuel_type')
+                    offer.usd = True if request.POST.get('usd') == "on" else False
+                    offer.cash = True if request.POST.get('cash') == "on" else False
+                    offer.ecocash = True if request.POST.get('ecocash') == "on" else False
+                    offer.swipe = True if request.POST.get('swipe') == "on" else False
+                    delivery_method = request.POST.get('delivery_method')
+                    if not delivery_method.strip():
+                        offer.delivery_method = 'Delivery'
+                    else:
+                        offer.delivery_method = delivery_method
+                    collection_address = request.POST.get('street_number') + " " + request.POST.get('street_name') + " " + request.POST.get('location')
+                    if not collection_address.strip() and delivery_method.lower() == 'self collection':
+                        offer.collection_address = subsidiary.location
+                    else:
+                        offer.collection_address = collection_address
+                    offer.pump_available = True if request.POST.get('pump_available') == "on" else False
+                    offer.dipping_stick_available = True if request.POST.get('dipping_stick_available') == "on" else False
+                    offer.meter_available = True if request.POST.get('meter_available') == "on" else False
+                    offer.save()
+                    
+                    messages.success(request, 'Offer uploaded successfully')
+
+                    message = f'You have a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {fuel_request.amount}L'
+                    Notification.objects.create(message = message, user = fuel_request.name, reference_id = offer.id, action = "new_offer")
+
+                    action = f"{request.user}  made an offer of {offer_quantity}L @ {request.POST.get('price')} to a request made by {fuel_request.name.username}"
+                    service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+                    reference = 'offers'
+                    reference_id = fuel_request.id
+                    Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
+                    return redirect('fuel-request')
                 else:
-                    offer.delivery_method = delivery_method
-                collection_address = request.POST.get('street_number') + " " + request.POST.get('street_name') + " " + request.POST.get('location')
-                if not collection_address.strip() and delivery_method.lower() == 'self collection':
-                    offer.collection_address = subsidiary.location
-                else:
-                    offer.collection_address = collection_address
-                offer.pump_available = True if request.POST.get('pump_available') == "on" else False
-                offer.dipping_stick_available = True if request.POST.get('dipping_stick_available') == "on" else False
-                offer.meter_available = True if request.POST.get('meter_available') == "on" else False
-                offer.save()
-                
-                messages.success(request, 'Offer uploaded successfully')
-
-                message = f'You have a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {fuel_request.amount}L'
-                Notification.objects.create(message = message, user = fuel_request.name, reference_id = offer.id, action = "new_offer")
-
-                action = f"{request.user}  made an offer of {offer_quantity}L @ {request.POST.get('price')} to a request made by {fuel_request.name.username}"
-                service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-                reference = 'offers'
-                reference_id = fuel_request.id
-                Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
-                return redirect('fuel-request')
+                    messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
+                    return redirect('fuel-request')
             else:
-                messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
+                messages.warning(request, 'You can not offer fuel more than the available fuel stock')
                 return redirect('fuel-request')
         else:
-            messages.warning(request, 'You can not offer fuel more than the available fuel stock')
+            messages.warning(request, "Please provide a price to complete an offer")
             return redirect('fuel-request')
-    else:
-        messages.warning(request, "Please provide a price to complete an offer")
-        return redirect('fuel-request')
     return render(request, 'supplier/fuel_request.html')
 
 @login_required

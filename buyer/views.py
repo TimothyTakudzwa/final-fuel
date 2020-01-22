@@ -282,7 +282,7 @@ def dashboard(request):
                 fuel_request.name = request.user       
                 fuel_request.amount = form.cleaned_data['amount']
                 fuel_request.fuel_type = form.cleaned_data['fuel_type']
-                fuel_request.payment_method =  request.POST.get('fuel_payment_type')             
+                fuel_request.payment_method =  request.POST.get('fuel_payment_method')             
                 fuel_request.delivery_method = form.cleaned_data['delivery_method']
                 fuel_request.delivery_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
                 fuel_request.storage_tanks =  request.POST.get('storage_tanks') 
@@ -302,6 +302,8 @@ def dashboard(request):
                 fuel_type = form.cleaned_data['fuel_type']
                 fuel_request = FuelRequest()
                 fuel_request.name = request.user       
+                fuel_request.payment_method =  request.POST.get('fuel_payment_method') 
+                print(fuel_request.payment_method)
                 fuel_request.amount = amount
                 fuel_request.fuel_type = fuel_type
                 fuel_request.delivery_method = delivery_method
