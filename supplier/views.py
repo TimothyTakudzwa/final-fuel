@@ -180,13 +180,16 @@ def offer(request, id):
                 offer.cash = True if request.POST.get('cash') == "on" else False
                 offer.ecocash = True if request.POST.get('ecocash') == "on" else False
                 offer.swipe = True if request.POST.get('swipe') == "on" else False
-                offer.delivery_method = request.POST.get('delivery_method')
-                print(f'-----------------------------------{offer.delivery_method}---------------')
-                if offer.delivery_method.lower() == 'delivery':
-                    collection_address = ''
-                else:  
-                    collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
-                offer.collection_address = collection_address
+                delivery_method = request.POST.get('delivery_method')
+                if not delivery_method.strip():
+                    offer.delivery_method = 'Delivery'
+                else:
+                    offer.delivery_method = delivery_method
+                collection_address = request.POST.get('street_number') + " " + request.POST.get('street_name') + " " + request.POST.get('location')
+                if not collection_address.strip() and delivery_method.lower() == 'self collection':
+                    offer.collection_address = subsidiary.location
+                else:
+                    offer.collection_address = collection_address
                 offer.pump_available = True if request.POST.get('pump_available') == "on" else False
                 offer.dipping_stick_available = True if request.POST.get('dipping_stick_available') == "on" else False
                 offer.meter_available = True if request.POST.get('meter_available') == "on" else False
@@ -210,7 +213,7 @@ def offer(request, id):
             messages.warning(request, 'You can not offer fuel more than the available fuel stock')
             return redirect('fuel-request')
     else:
-        messages.warning(request, "Please fill all required fields to complete an offer")
+        messages.warning(request, "Please provide a price to complete an offer")
         return redirect('fuel-request')
     return render(request, 'supplier/fuel_request.html')
 
@@ -240,7 +243,7 @@ def edit_offer(request, id):
                     offer.delivery_method = 'Delivery'
                 else:
                     offer.delivery_method = delivery_method
-                collection_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+                collection_address = request.POST.get('street_number') + " " + request.POST.get('street_name') + " " + request.POST.get('location')
                 if not collection_address.strip() and delivery_method.lower() == 'self collection':
                     offer.collection_address = subsidiary.location
                 else:
