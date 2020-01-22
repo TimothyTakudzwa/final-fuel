@@ -70,6 +70,7 @@
                             <td>{{company_capacity.petrol_quantity}}</td>
                             <td>{{company_capacity.petrol_price}}</td>
                             <!-- <td>{%if company_capacity.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL"> {% else%} {%endif%} {%if company_capacity.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if company_capacity.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if company_capacity.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td> -->
+                           
                             <td>
                                 <button class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#company_petrol{{company_capacity.id}}">Update Company Unallocated Petrol</button>
                                 <button class="btn btn-warning btn-sm"  data-toggle="modal" data-target="#company_diesel{{company_capacity.id}}">Update Company Unallocated Diesel</button>
@@ -245,9 +246,15 @@
                                 <!-- <td>{%if allocate.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL">{% else%} {%endif%} {%if allocate.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if allocate.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if allocate.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td> -->
                                 <td>
                                     <div class = "btn-group">
+                                        {% if allocate.sub_type == 'Depot'%}
                                         <!-- <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#petrol{{allocate.id}}">Add Petrol</button>
                                         <button class="btn btn-warning btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#diesel{{allocate.id}}">Add Diesel</button> -->
                                         <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'users:allocatedfuel' allocate.relationship_id %}">View Fuel Allocations</a>
+                                            {%else%}
+                                            <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'users:allocatedfuel' allocate.relationship_id %}">Petrol</a>
+                                            <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'users:allocatedfuel' allocate.relationship_id %}">View Fuel Allocations</a>
+                                            <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'users:allocatedfuel' allocate.relationship_id %}">View Fuel Allocations</a>
+{%endif%}
                                     </div>
                                 </td>
                             </tr>

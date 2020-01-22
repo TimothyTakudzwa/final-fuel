@@ -20,7 +20,7 @@ user = get_user_model()
 
 @login_required()
 def fuel_updates(request):
-    updates = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=request.user.subsidiary_id).first()
+    updates = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).filter(sub_type='Suballocation').order_by('-entry_type').all()
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     if request.method == 'POST':
         #fuel_update = FuelUpdate.objects.filter(sub_type=request.POST['sub_type']).first()
@@ -30,10 +30,7 @@ def fuel_updates(request):
         updates.petrol_quantity = request.POST['petrol_quantity'] 
         updates.queue_length = request.POST['queue_length']
         updates.status = request.POST['status']
-        updates.cash = request.POST['cash']
-        updates.ecocash = request.POST['ecocash']
-        updates.swipe = request.POST['swipe']
-        updates.usd = request.POST['usd']
+        
         if int(updates.petrol_quantity) < 1000:
             updates.status = 'Expecting Fuel'
             updates.save()
@@ -51,6 +48,32 @@ def fuel_updates(request):
 
     return render(request, 'serviceStation/fuel_updates.html', {'updates': updates, 'subsidiary': subsidiary_name.name})
 
+
+def station_fuel_update(request,id):
+    if request.method == 'POST':
+        if FuelUpdate.objects.filter(id=id).exists():
+            fuel_update = FuelUpdate.objects.filter(id=id).first()
+            if request.POST['fuel_type'] == 'Petrol':
+                if int(request.POST['quantity']) > fuel_update.petrol_quantity:
+                    messages.warning(request, f'You can not update fuel to an amount above your current petrol quantity of {fuel_update.petrol_quantity}')
+                    return redirect('serviceStation:home')
+                fuel_update.petrol_quantity = int(request.POST['quantity']) 
+                fuel_update.queue_length = request.POST['queue_length']
+                fuel_update.status = request.POST['status']
+                fuel_update.save()
+                messages.success(request, 'Fuel update made successfully')
+                return redirect('serviceStation:home')
+            else:
+                if int(request.POST['quantity']) > fuel_update.diesel_quantity:
+                    messages.warning(request, f'You can not update fuel to an amount above your current diesel quantity of {fuel_update.diesel_quantity}')
+                    return redirect('serviceStation:home')
+                fuel_update.diesel_quantity = int(request.POST['quantity']) 
+                fuel_update.queue_length = request.POST['queue_length']
+                fuel_update.status = request.POST['status']
+                fuel_update.save()
+                messages.success(request, 'Fuel update made successfully')
+                return redirect('serviceStation:home')
+
 @login_required()
 def update_diesel(request, id):
     if request.method == 'POST':
@@ -61,10 +84,7 @@ def update_diesel(request, id):
         diesel_update.diesel_quantity = request.POST['diesel_quantity']
         diesel_update.queue_length = request.POST['queue_length']
         diesel_update.status = request.POST['status']
-        diesel_update.cash = request.POST['cash']
-        diesel_update.ecocash = request.POST['ecocash']
-        diesel_update.swipe = request.POST['swipe']
-        diesel_update.usd = request.POST['usd']
+       
         if int(diesel_update.diesel_quantity) < 1000:
             diesel_update.status = 'Expecting Fuel'
             diesel_update.save()
