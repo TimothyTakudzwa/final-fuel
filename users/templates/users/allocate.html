@@ -77,7 +77,7 @@
                             </td>
                         </tr>
                         <!-- Supplier Edit Modal -->
-                        <div class="modal fade" id="company_petrol{{company_capacity.id}}" tabindex="-1" role="dialog"
+                        <div class="modal fade modal-success in" id="company_petrol{{company_capacity.id}}" tabindex="-1" role="dialog"
                              aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" style="margin: 0;" role="document">
                                 <div class="modal-content">
@@ -122,10 +122,11 @@
                                             </div>
 
                                     </div>
-                                    <div class="modal-footer">
-                                        <div >
-                                            <button class="btn" style="background-color: lightgray; color: #333333;" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button>
-                                        </div>
+                                    <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                        <button type="button" class="btn btn-secondary col-sm-6"
+                                            data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary col-sm-6">Update</button>
+                                    </div>
                                         </form>
                                         </form>
                                     </div>
@@ -134,7 +135,7 @@
                         </div>
 
                         <!-- Supplier Edit Modal -->
-                        <div class="modal fade" id="company_diesel{{company_capacity.id}}" tabindex="-1" role="dialog"
+                        <div class="modal fade modal-success in" id="company_diesel{{company_capacity.id}}" tabindex="-1" role="dialog"
                              aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" style="margin: 0;" role="document">
                                 <div class="modal-content">
@@ -178,10 +179,11 @@
                                             </div>
 
                                     </div>
-                                    <div class="modal-footer">
-                                        <div >
-                                            <button class="btn" style="background-color: lightgray; color: #333333;" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button>
-                                        </div>
+                                    <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                        <button type="button" class="btn btn-secondary col-sm-6"
+                                            data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary col-sm-6">Update</button>
+                                    </div>
                                         </form>
                                         </form>
                                     </div>
@@ -239,12 +241,13 @@
 
                                 <td>{{allocate.subsidiary_name}}</td>
                                 <td>{{allocate.sub_type}}</td>
-                                <td>{{allocate.diesel_quantity}} {% if allocate.diesel_quantity < 1000 %} <i class="material-icons text-danger" >warning</i>{% endif %}</td>
+                                <td>{{allocate.diesel_quantity}} {% if allocate.diesel_quantity < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 2.5px;color: #ff5722;"></i>{% endif %}</td>
                                 <!-- <td>{{allocate.diesel_price}}</td> -->
-                                <td>{{allocate.petrol_quantity}} {% if allocate.petrol_quantity < 1000 %} <i class="material-icons text-danger" >warning</i>{% endif %}</td>
+                                <td>{{allocate.petrol_quantity}} {% if allocate.petrol_quantity < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 2.5px;color: #ff5722;"></i>{% endif %}</td>
                                 <!-- <td>{{allocate.petrol_price}}</td> -->
                                 <!-- <td>{%if allocate.cash%}<i class="fa fa-dollar"></i> <img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL">{% else%} {%endif%} {%if allocate.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {% else%} {%endif%} {%if allocate.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH">{% else%} {%endif%} {%if allocate.swipe%}<i class="fa fa-cc-visa"></i> {% else%} {%endif%}</td> -->
                                 <td>
+                                    {% if allocate.is_depot == True%}
                                     <div class = "btn-group">
                                         {% if allocate.sub_type == 'Depot'%}
                                         <!-- <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal" data-target="#petrol{{allocate.id}}">Add Petrol</button>
@@ -256,8 +259,282 @@
                                             <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'users:allocatedfuel' allocate.relationship_id %}">View Fuel Allocations</a>
 {%endif%}
                                     </div>
+                                    {% else %}
+                                    <div class="btn-group">
+
+                                        <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#add_petrol_fuel{{allocate.id}}">Add Petrol {{allocate.is_depot}}</a>
+                                        <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#add_diesel_fuel{{allocate.id}}">Add Diesel</a>
+                                        <!-- <a class="btn btn-default btn-sm" style="background-color: steelblue; color: white;border: 1px solid transparent;" data-toggle="modal" data-target="#add_fuel{{allocate.id}}">Edit Allocation</a> -->
+                                    </div>
+                                    {% endif %}
                                 </td>
                             </tr>
+                            <!--Add Petrol fuel-->
+                            <div class="modal fade modal-success in" id="add_petrol_fuel{{allocate.id}}" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class=" modal-dialog-centered" role="document" style="margin: 0;">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <span class="modal-title" id="exampleModalLongTitle">Add Fuel - Petrol <i
+                                                style="color:red"><small>Please Note the fuel you are entering is to be
+                                                    sold in Zimbabwean Dollars</small></i></span>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div>
+                                        {% load crispy_forms_tags %}
+                                        <form action="{% url 'users:allocation_update' allocate.id %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" value="RTGS" name="fuel_payment_type" />
+                                            <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                                                <div class="col-sm-6">
+
+                                                    <label><b style='color:#009688'>Fuel Type</b></label>
+                                                    <select class="form-control" name="fuel_type">
+
+                                                        <option>Petrol</option>
+                                                        <option>Diesel</option>
+
+
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label><b style='color:#009688'>Quantity</b></label>
+                                                    <input type="text" name="quantity" class="form-control"
+                                                        placeholder="In Litres" required />
+                                                </div>
+                                            </div>
+                                            <div class=" form-group row col-sm-12">
+                                                <div class="col-sm-6">
+                                                    <label><b style='color:#009688'>Price</b></label>
+                                                    <input type="text" name="price" class="form-control"
+                                                        placeholder="In Zimbabwean Dollars" required />
+                                                </div>
+                                                <input type="hidden" name="cash" value="0" />
+                                                <input type="hidden" name="swipe" value="0">
+                                                <input type="hidden" name="ecocash" value="0">
+                                                <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
+                                                    <label><b style='color:#009688'>Payment Method</b></label>
+                                                    <div class="col-sm-12 row">
+                                                        <input type="checkbox" class=" col-sm-6" name="cash" value="1"> Cash<br>
+                                                        <input type="checkbox" class="col-sm-6" value="1" name="swipe">Swipe<br>
+                                                        <input type="checkbox" class="col-sm-6" value="1" name="ecocash">Ecocash<br>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+                                    </div>
+                                    <div class="form-group row"
+                                        style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                        <button type="button" class="btn btn-secondary col-sm-6"
+                                            data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                            </div>
+                            <!--Add Diesel fuel-->
+                            <div class="modal fade modal-success in" id="add_diesel_fuel{{allocate.id}}" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class=" modal-dialog" role="document" style="margin: 0;">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <span class="modal-title" id="exampleModalLongTitle">Add Fuel - Diesel <i
+                                                style="color:red"><small>Please Note the fuel you are entering is to be
+                                                    sold in United States Dollars</small></i></span>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div>
+                                        {% load crispy_forms_tags %}
+                                        <form action="{% url 'users:allocation_update' allocate.id %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" value="USD" name="fuel_payment_type" />
+                                            <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                                                <div class="col-sm-6">
+
+                                                    <label><b style='color:#009688'>Fuel Type</b></label>
+                                                    <select class="form-control" name="fuel_type">
+                                                        <option>Diesel</option>
+
+                                                        <option>Petrol</option>
+
+
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label><b style='color:#009688'>Quantity</b></label>
+                                                    <input type="text" name="quantity" class="form-control"
+                                                        placeholder="In Litres" required />
+                                                </div>
+                                            </div>
+                                            <div class=" form-group row col-sm-12">
+                                                <div class="col-sm-6">
+                                                    <label><b style='color:#009688'>Price</b></label>
+                                                    <input type="text" name="price" class="form-control"
+                                                        placeholder="In United States Dollars" required />
+                                                </div>
+                                                <input type="hidden" name="cash" value="0" />
+                                                <input type="hidden" name="swipe" value="0">
+                                                <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
+                                                    <label><b style='color:#009688'>Payment Method</b></label>
+                                                    <div class="col-sm-12 row">
+                                                        <input type="checkbox" class=" col-sm-6" name="cash" value="1">
+                                                        Cash<br>
+                                                        <input type="checkbox" id="fca{{forloop.counter}}"
+                                                            class="col-sm-6" value="1" name="swipe">FCA<br>
+                                                    </div>
+
+
+
+                                                    <!-- <input type="hidden" name="cash" value="0" />
+                                                    <input type="hidden" id="fca{{forloop.counter}}"  name="swipe" value="0">
+                                                <div class="col-sm-12 row">
+                                                
+                                                    <input type="checkbox" name="cash" value="1" class="col-sm-6" />  Cash                                                  
+                                                    <input type="checkbox" id="fca{{forloop.counter}}" name="swipe" value="1" class="col-sm-6">FCA<br> -->
+
+
+
+                                                    <!-- <select class="form-control" name="fuel_type">
+
+                                                        <option>Cash</option>
+                                                        <option>FCA</option>
+
+
+                                                    </select> -->
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 form-group" name="bank" id="bank{{forloop.counter}}">
+                                                <label><b style='color:#009688'>Bank</b></label>
+                                                <select class="form-control" name="destination_bank">
+
+                                                    <option>CBZ</option>
+                                                    <option>BancABC</option>
+                                                    <option>First Capital</option>
+                                                    <option>Agribank</option>
+                                                    <option>Ecobank</option>
+                                                    <option>FBC</option>
+                                                    <option>Nedbank</option>
+                                                    <option>Metbank</option>
+                                                    <option>NMB</option>
+                                                    <option>Standard Chatered</option>
+                                                    <option>Steward Bank</option>
+                                                    <option>ZB Bank</option>
+                                                    <option>CABS</option>
+                                                    <option>POSB</option>
+
+
+                                                </select>
+                                            </div>
+
+
+
+                                    </div>
+                                    <div class="form-group row"
+                                        style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                        <button type="button" class="btn btn-secondary col-sm-6"
+                                            data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                            </div>
+                            <!--Edit Allocation-->
+                            <div class="modal fade modal-success in" id="add_fuel{{allocate.id}}" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class=" modal-dialog-centered" role="document" style="margin: 0;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <span class="modal-title" id="exampleModalLongTitle">Add Fuel <i
+                                            style="color:red"><small>Please Note the fuel you are entering is to be
+                                                sold in ZWL</small></i></span>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    {% load crispy_forms_tags %}
+                                    <form action="{% url 'users:allocation_update' allocate.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" value="USD" name="fuel_payment_type" />
+                                        <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                                            <div class="col-sm-6">
+
+                                                <label><b style='color:#009688'>Fuel Type</b></label>
+                                                <select class="form-control" name="fuel_type">
+
+                                                    <option>Petrol</option>
+                                                    <option>Diesel</option>
+
+
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label><b style='color:#009688'>Quantity</b></label>
+                                                <input type="text" name="quantity" class="form-control"
+                                                    placeholder="In Litres" required />
+                                            </div>
+                                        </div>
+                                        <div class=" form-group row col-sm-12">
+                                            <div class="col-sm-6">
+                                                <label><b style='color:#009688'>RTGS Price</b></label>
+                                                <input type="text" name="price" class="form-control"
+                                                    placeholder="In RTGS Dollars" required />
+                                            </div>
+                                            <input type="hidden" name="cash" value="0" />
+                                            <input type="hidden" name="swipe" value="0">
+                                            <input type="hidden" name="ecocash" value="0">
+                                            <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
+                                                <label><b style='color:#009688'>Payment Method</b></label>
+                                                <div class="col-sm-12 row">
+                                                    <input type="checkbox" class=" col-sm-6" name="cash" value="1">
+                                                    Cash<br>
+                                                    <input type="checkbox" 
+                                                        class="col-sm-6" value="1" name="swipe">Swipe<br>
+                                                    <input type="checkbox" 
+                                                        class="col-sm-6" value="1" name="ecocash">Ecocash<br>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class=" form-group row col-sm-12">
+                                            <div class="col-sm-6">
+                                                <label><b style='color:#009688'>USD Price</b></label>
+                                                <input type="text" name="usd_price" class="form-control"
+                                                    placeholder="In United States Dollars" required />
+                                            </div>
+                                            <input type="hidden" name="cash" value="0" />
+                                            <input type="hidden" name="swipe" value="0">
+                                            <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
+                                                <label><b style='color:#009688'>Payment Method</b></label>
+                                                <div class="col-sm-12 row">
+                                                    <input type="checkbox" class=" col-sm-6" name="cash" value="1">
+                                                    Cash<br>
+                                                    <input type="checkbox" 
+                                                        class="col-sm-6" value="1" name="swipe">FCA<br>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                                                     </div>
+                                <div class="form-group row"
+                                    style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                    <button type="button" class="btn btn-secondary col-sm-6"
+                                        data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                            </div>
 
 
                             <!-- Supplier Edit Modal -->
@@ -317,7 +594,7 @@
                             </div>
 
                             <!--update fuel-->
-                            <div class="modal fade modal-success" id="petrol{{allocate.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                            <div class="modal fade modal-success in" id="petrol{{allocate.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                                  aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -352,9 +629,10 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">Close</button>
-                                                    <button class="btn btn-primary" type="submit">Update</button>
+                                                <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                                    <button type="button" class="btn btn-secondary col-sm-6"
+                                                        data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary col-sm-6">Update</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -396,9 +674,10 @@ aria-hidden="true">
                                                         {{update_form.ecocash|as_crispy_field}}
                                                     </div>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn" style="background-color: lightgray; color: #000;" data-dismiss="modal">Close</button>
-                                                    <button class="btn btn-primary" type="submit">Update</button>
+                                                <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                                    <button type="button" class="btn btn-secondary col-sm-6"
+                                                        data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary col-sm-6">Update</button>
                                                 </div>
                                             </form>
 </div>
@@ -481,12 +760,12 @@ aria-hidden="true">
                             </tr>
 
 
-                            <div class="modal fade" id="change_{{alloc.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                            <div class="modal fade modal-success in" id="change_{{alloc.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                                  aria-hidden="true">
-                                <div class="modal-dialog" role="document">
+                                <div class="modal-dialog" role="document" style="margin: 0">
                                     <div class="modal-content">
-                                        <div class="modal-header" style="background-color: #9c27b0;color: white;">
-                                            <h5 class="modal-title" id="exampleModalLabel">Edit Previous Allocation</h5>
+                                        <div class="modal-header">
+                                            <span class="modal-title" id="exampleModalLabel" style="size: 20px;">Edit Previous Allocation</span>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -497,39 +776,47 @@ aria-hidden="true">
                                             <form action="{% url 'users:edit_allocation' alloc.id %}" method="POST">
                                                 {% csrf_token %}
                                                 {% if alloc.diesel_quantity > 0 %}
-                                                    <div class="form-group">
-                                                        <lable>Diesel User Input</lable>
-                                                        <input type="text" class="form-control" value="{{alloc.diesel_quantity}}" />
-                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <lable>Diesel User Input</lable>
+                                                            <input type="text" class="form-control" value="{{alloc.diesel_quantity}}" />
+                                                        </div>
 
-                                                    <div class="form-group">
-                                                        <lable>Actual Diesel Quantity</lable>
-                                                        <input type="text" name="diesel_quantity" class="form-control" value="" />
-                                                    </div>
-                                                    <div class="form-group">
+                                                        <div class="form-group col-md-6">
+                                                            <lable>Actual Diesel Quantity</lable>
+                                                            <input type="text" name="diesel_quantity" class="form-control" value="" />
+                                                        </div>
+                                                    </div>   
+                                                    <div class="row">
+
+                                                    <div class="form-group col-md-6">
                                                         <lable></lable>
                                                         <input type="hidden" name="petrol_quantity" class="form-control" value="0" />
+                                                    </div>
                                                     </div>
                                                 {% endif %}
 
                                                 {% if alloc.petrol_quantity > 0 %}
-                                                    <div class="form-group">
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
                                                         <lable>Petrol User Input</lable>
                                                         <input type="text" class="form-control" value="{{alloc.petrol_quantity}}" />
                                                     </div>
 
-                                                    <div class="form-group">
+                                                    <div class="form-group col-md-6">
                                                         <lable>Actual Petrol Quantity</lable>
                                                         <input type="text" name="petrol_quantity" class="form-control" value="" />
                                                     </div>
+                                                </div>    
                                                     <div class="form-group">
                                                         <lable></lable>
                                                         <input  type="hidden" name="diesel_quantity" class="form-control" value="0" />
                                                     </div>
                                                 {% endif %}
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn" style="background-color: lightgray; color: #000;" data-dismiss="modal">Close</button>
-                                                    <button class="btn btn-primary" type="submit">Update</button>
+                                                <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                                    <button type="button" class="btn btn-secondary col-sm-6"
+                                                        data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary col-sm-6">Update</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -567,7 +854,8 @@ aria-hidden="true">
                             <th>Date</th>
                             <th>Subsidiary Name</th>
                             <th>Allocated By</th>
-                            <th>Price</th>
+                            <th>Diesel Price</th>
+                            <th>Petrol Price</th>
                             
                         </tr>
                         </thead>
@@ -578,13 +866,14 @@ aria-hidden="true">
                                 <td>{{alloc.date}}</td>
                                 <td>{{alloc.subsidiary_name}}</td>
                                 <td>{{alloc.sub_type}}</td>
-                                <td>{{alloc.action}}</td>
-                            <td>{{alloc.price}}</td>
+                                <td>{{alloc.diesel_price}}</td>
+                                <td>{{alloc.petrol_price}}</td>
+
                                
                             </tr>
 
 
-                            <div class="modal fade" id="change_{{alloc.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                            <div class="modal fade modal-success in" id="change_{{alloc.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                                  aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -600,39 +889,49 @@ aria-hidden="true">
                                             <form action="{% url 'users:edit_allocation' alloc.id %}" method="POST">
                                                 {% csrf_token %}
                                                 {% if alloc.diesel_quantity > 0 %}
-                                                    <div class="form-group">
+                                                <div class="row">
+
+                                                    <div class="form-group col-md-6">
                                                         <lable>Diesel User Input</lable>
                                                         <input type="text" class="form-control" value="{{alloc.diesel_quantity}}" />
                                                     </div>
 
-                                                    <div class="form-group">
+                                                    <div class="form-group col-md-6">
                                                         <lable>Actual Diesel Quantity</lable>
                                                         <input type="text" name="diesel_quantity" class="form-control" value="" />
                                                     </div>
-                                                    <div class="form-group">
+                                                </div>    
+                                                <div class="row">
+
+                                                    <div class="form-group col-md-6">
                                                         <lable></lable>
                                                         <input type="hidden" name="petrol_quantity" class="form-control" value="0" />
                                                     </div>
+                                                </div>    
                                                 {% endif %}
 
                                                 {% if alloc.petrol_quantity > 0 %}
-                                                    <div class="form-group">
+                                                <div class="row">
+
+                                                    <div class="form-group col-md-6">
                                                         <lable>Petrol User Input</lable>
                                                         <input type="text" class="form-control" value="{{alloc.petrol_quantity}}" />
                                                     </div>
 
-                                                    <div class="form-group">
+                                                    <div class="form-group col-md-6">
                                                         <lable>Actual Petrol Quantity</lable>
                                                         <input type="text" name="petrol_quantity" class="form-control" value="" />
                                                     </div>
+                                                </div>    
                                                     <div class="form-group">
                                                         <lable></lable>
                                                         <input  type="hidden" name="diesel_quantity" class="form-control" value="0" />
                                                     </div>
                                                 {% endif %}
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn" style="background-color: lightgray; color: #000;" data-dismiss="modal">Close</button>
-                                                    <button class="btn btn-primary" type="submit">Update</button>
+                                                <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                                    <button type="button" class="btn btn-secondary col-sm-6"
+                                                        data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary col-sm-6">Update</button>
                                                 </div>
                                             </form>
                                         </div>
