@@ -1236,11 +1236,7 @@ def station_updates(user, message):
             else:
                 pass
 
-           
-
     return response_message
-
-
 
 
 def fuel_finder():
