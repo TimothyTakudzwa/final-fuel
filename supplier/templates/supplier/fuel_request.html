@@ -78,7 +78,7 @@
                     <td>{{ req.name.first_name|lower|capfirst }} {{ req.name.last_name|lower|capfirst }}</td>
                     <td>{{ req.amount|intcomma }}</td>
                     <td>{{ req.fuel_type|lower|capfirst }}</td>
-                    <td>{% if req.cash %}Cash &nbsp;{% endif %}{% if req.ecocash %}Ecocash&nbsp;{% endif %}{% if req.usd %}Usd &nbsp;{% endif %}{% if req.swipe %}Swipe &nbsp;{% endif %}{% if req.no_payment %}Not Specified{% endif %}</td>
+                    <td>{{req.payment_method}}</td>                    
                     <td>{{ req.delivery_method|lower|capfirst }}</td>
                     <td>{{ req.delivery_address|lower|title}}</td>                                    
                     <td>{% if req.dipping_stick_required %}Stick &nbsp;{% endif %}{% if req.pump_required %}Pump &nbsp;{% endif %}{% if req.meter_required %}Meter&nbsp;{% endif %}{% if req.no_equipments %}No Equipment Required{% endif %}</td>
@@ -168,10 +168,10 @@ aria-hidden="true">
     </div>
     <div class="col-sm-4">
         <lable>Fuel Price</lable>
-        <input type="text" name="price" class="form-control" value="{{req.price}}" required />
+        <input type="text" name="price" class="form-control" value="{{req.price}}" disabled/>
     </div>
     </div>
-    <p style="text-align: center;"><label class="form-group">Select Payment Method</label></p>
+    <!-- <p style="text-align: center;"><label class="form-group">Select Payment Method</label></p>
     <div class="col-sm-12 col">
         <div class="togglebutton form-group col-sm-3">
             <label>
@@ -201,7 +201,7 @@ aria-hidden="true">
                 USD
             </label>
         </div>
-    </div>
+    </div> -->
 
 
     <div class="form-group">
@@ -286,10 +286,10 @@ aria-hidden="true">
      </div>
      <div class="col-sm-4">
          <lable>Fuel Price</lable>
-         <input type="text" name="price" class="form-control" value="{{req.offer_price}}" />
+         <input type="text" name="price" class="form-control" value="{{req.offer_price}}" disabled/>
      </div>
      </div>
-     <p style="text-align: center;"><label class="form-group">Select Payment Method</label></p>
+     <!-- <p style="text-align: center;"><label class="form-group">Select Payment Method</label></p>
      <div class="col-sm-12 col">
         <div class="togglebutton form-group col-sm-3">
             <label>
@@ -319,10 +319,10 @@ aria-hidden="true">
                 USD
             </label>
         </div>
-    </div>
+    </div> -->
 
 
-     <div class="form-group">
+     <div class="form-group" style="margin-top: 5;">
          <label>Pick Up Method</label>
          <select id="delivery_method1{{forloop.counter}}" name="delivery_method1" class="form-control">
             <option value='DELIVERY'>Delivery</option>
