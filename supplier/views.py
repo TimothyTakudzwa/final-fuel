@@ -80,8 +80,16 @@ def fuel_request(request):
     direct_requests =  FuelRequest.objects.filter(is_deleted=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
     requests = list(chain(requests, direct_requests))
     requests.sort(key = attrgetter('date', 'time'), reverse = True)
-    fuel = FuelUpdate.objects.filter(relationship_id=request.user.id).first()
+
     for buyer_request in requests:
+        if buyer_request.payment_method == 'USD':
+            fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).filter(entry_type='USD').first()
+        elif buyer_request.payment_method == 'RTGS':
+            fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).filter(entry_type='RTGS').first()
+        elif buyer_request.payment_method == 'USD & RTGS':
+            fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).filter(entry_type='USD & RTGS').first()
+        else:
+            fuel = None
         if buyer_request.dipping_stick_required==buyer_request.meter_required==buyer_request.pump_required==False:
             buyer_request.no_equipments = True
         if buyer_request.cash==buyer_request.ecocash==buyer_request.swipe==buyer_request.usd==False:
@@ -99,6 +107,7 @@ def fuel_request(request):
             buyer_request.offer_id = 0
         if fuel:
             if buyer_request.fuel_type.lower() == 'petrol':
+
                 buyer_request.price = fuel.petrol_price
             else:
                 buyer_request.price = fuel.diesel_price
