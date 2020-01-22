@@ -332,7 +332,7 @@
                                                 <div class="row col-sm-12">
                                                     <div class="col-sm-6 form-group">
                                                         <label class="form-group">Payment Method</label>
-                                                        <input type="text" name="fuel_payment_method" class="form-control" value=" {{data.entry_type}}" disabled/> 
+                                                        <input type="text" name="fuel_payment_method" class="form-control" value="{{data.entry_type}}" /> 
                                                     </div>
 
 
@@ -376,13 +376,18 @@
                                                     <label>Required Equipments</label>
                                                     <div class="row">
                                                         <div class="col-sm-4">
-                                                            <input class="form-control-md" type="checkbox" value='False'
+                                                            <input class="form-control-md" type="hidden" value='False'
+                                                                id="pump_required" name="pump_required">
+                                                            <input class="form-control-md" type="checkbox" 
                                                                 id="pump_required" name="pump_required">
                                                             <label for="pump_required">Pump </label>
 
                                                         </div>
                                                         <div class="col-sm-4">
-                                                            <input class="form-control-md" type="checkbox" value="False"
+                                                            <input class="form-control-md" type="hidden" value="False"
+                                                                id="dipping_stick_required"
+                                                                name="dipping_stick_required">
+                                                            <input class="form-control-md" type="checkbox" 
                                                                 id="dipping_stick_required"
                                                                 name="dipping_stick_required">
                                                             <label for="dipping_stick_required">Dipping
@@ -390,7 +395,9 @@
                                                         </div>
 
                                                         <div class="col-sm-4">
-                                                            <input class="form-control-md" type="checkbox" value="False"
+                                                            <input class="form-control-md" type="hidden" value='False'
+                                                                id="meter_required" name="meter_required">
+                                                            <input class="form-control-md" type="checkbox" 
                                                                 id="meter_required" name="meter_required">
                                                             <label for="meter_required">Meter</label>
                                                         </div>
