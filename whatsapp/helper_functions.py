@@ -872,7 +872,8 @@ def registration_handler(request, user, message):
         if user_exists is not None:
             response_message = "There is an existing user with the same email, please user a different email"   
         else:          
-            is_valid = validate_email(message, verify=True)        
+            is_valid = validate_email(message, verify=True)   
+            print(" is this valid-------------????", is_valid)     
             if is_valid is not None:           
                 pass
             else: 
