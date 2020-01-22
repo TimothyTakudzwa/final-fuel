@@ -18,6 +18,28 @@
     <link rel="stylesheet" media="all" href="https://public-assets.envato-static.com/assets/market/core/index-9053762da6b2d4d3aa5e4cbfc07ad24a15a4547e7a4f57e03b173204e694bc0a.css" />
     <link rel="stylesheet" media="all" href="https://public-assets.envato-static.com/assets/market/pages/preview/index-004d35cdd5d555cdd3e956d1b916825642de06529f0fe91fd9f390813761d2fc.css" />
     <link rel="stylesheet" media="all" href="https://cookiebot-assets.envato-static.com/cookiebot.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://timothytakudzwa.github.io/static/datatable/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://timothytakudzwa.github.io/static/datatable/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://timothytakudzwa.github.io/static/datatable/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://timothytakudzwa.github.io/static/datatable/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://timothytakudzwa.github.io/static/datatable/css/style.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+    <link rel="icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png"
+    sizes="32x32" />
+    <link rel="icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png"
+        sizes="192x192" />
+    <link rel="apple-touch-icon-precomposed" href="wp-content\themes\oppi\assets\img\logo-color.png" />
+    <meta name="msapplication-TileImage"
+        content="https://droitthemes.com/wp/oppi/wp-content/uploads/2019/10/favicon.png" />
+
+    <link href="{% static 'finder/assets/css/material-dashboard.css' %}" rel="stylesheet" />
+
 
       <link rel="apple-touch-icon-precomposed" type="image/x-icon" href="https://public-assets.envato-static.com/icons/themeforest.net/apple-touch-icon-72x72-precomposed.png" sizes="72x72" />
   <link rel="apple-touch-icon-precomposed" type="image/x-icon" href="https://public-assets.envato-static.com/icons/themeforest.net/apple-touch-icon-114x114-precomposed.png" sizes="114x114" />
@@ -957,6 +979,165 @@
         <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/sweetalert/sweetalert.min.js"></script>
         <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/js/classie.js"></script>
         <script src="https://timothytakudzwa.github.io/static/new/assets/dist/js/custom.js" type="text/javascript"></script>
+        <script type="text/javascript"
+        src="https://timothytakudzwa.github.io/static/datatable/js/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript"
+        src="https://timothytakudzwa.github.io/static/datatable/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript"
+        src="https://timothytakudzwa.github.io/static/datatable/js/dataTables.buttons.min.js"></script>
+    <script src="{% static 'finder/assets/js/core/bootstrap-material-design.min.js' %}"></script>
+    <script src="{% static 'finder/assets/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
+    <!-- Plugin for the momentJs  -->
+    <script type="text/javascript" src="https://timothytakudzwa.github.io/static/datatable/js/jszip.min.js"></script>
+    <script type="text/javascript" src="https://timothytakudzwa.github.io/static/datatable/js/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://timothytakudzwa.github.io/static/datatable/js/vfs_fonts.js"></script>
+    <script type="text/javascript"
+        src="https://timothytakudzwa.github.io/static/datatable/js/buttons.html5.min.js"></script>
+    <script type="text/javascript"
+        src="https://timothytakudzwa.github.io/static/datatable/js/buttons.print.min.js"></script>
+    <script type="text/javascript" src="https://timothytakudzwa.github.io/static/datatable/js/app.js"></script>
+    <script type="text/javascript"
+        src="https://timothytakudzwa.github.io/static/datatable/js/jquery.mark.min.js"></script>
+    <script type="text/javascript"
+        src="https://timothytakudzwa.github.io/static/datatable/js/datatables.mark.js"></script>
+    <script type="text/javascript"
+        src="https://timothytakudzwa.github.io/static/datatable/js/buttons.colVis.min.js"></script>
+
+        <script>
+            var table = $('#allocations').DataTable({
+                mark: true,
+                dom: 'Bfrtip',
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 rows', '25 rows', '50 rows', '100 rows', 'Show All']
+                ],
+                buttons: [
+                    'pageLength',
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'csvHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    'colvis'
+                ],
+                columDefs: [{
+                    targets: -1,
+                    visible: false
+                }]
+            });
+    
+            // 4) Search on Multiple Columns
+            $('#allocations tfoot th').each(function () {
+                var title = $('#allocations tfoot th').eq($(this).index()).text();
+                $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+            });
+    
+            table.columns().eq(0).each(function (colIdx) {
+                $('input', table.column(colIdx).footer()).on('keyup change', function () {
+                    table
+                        .column(colIdx)
+                        .search(this.value)
+                        .draw();
+                });
+            });
+    
+    
+        </script>
+        <script>
+            var table2 = $('#requests').DataTable({
+                mark: true,
+                dom: 'Bfrtip',
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 rows', '25 rows', '50 rows', '100 rows', 'Show All']
+                ],
+                buttons: [
+                    'pageLength',
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'csvHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    'colvis'
+                ],
+                columDefs: [{
+                    targets: -1,
+                    visible: false
+                }]
+            });
+    
+            // 4) Search on Multiple Columns
+            $('#requests tfoot th').each(function () {
+                var title = $('#requests tfoot th').eq($(this).index()).text();
+                $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+            });
+    
+            table2.columns().eq(0).each(function (colIdx) {
+                $('input', table2.column(colIdx).footer()).on('keyup change', function () {
+                    table2
+                        .column(colIdx)
+                        .search(this.value)
+                        .draw();
+                });
+            });
+    
+    
+        </script>
+    
+        
+
 
          <script>
                 "use strict"; // Start of use strict
@@ -1132,6 +1313,273 @@
 
 
         </script>
+
+<script>
+    var table3 = $('#offers').DataTable({
+        mark: true,
+        dom: 'Bfrtip',
+        lengthMenu: [
+            [10, 25, 50, 100, -1],
+            ['10 rows', '25 rows', '50 rows', '100 rows', 'Show All']
+        ],
+        buttons: [
+            'pageLength',
+            {
+                extend: 'copyHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'pdfHtml5',
+                download: 'open',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            'colvis'
+        ],
+        columDefs: [{
+            targets: -1,
+            visible: false
+        }]
+    });
+
+    // 4) Search on Multiple Columns
+    $('#offers tfoot th').each(function () {
+        var title = $('#offers tfoot th').eq($(this).index()).text();
+        $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+    });
+
+    table3.columns().eq(0).each(function (colIdx) {
+        $('input', table3.column(colIdx).footer()).on('keyup change', function () {
+            table3
+                .column(colIdx)
+                .search(this.value)
+                .draw();
+        });
+    });
+
+
+</script>
+<script>
+    var table4 = $('#revenue').DataTable({
+        mark: true,
+        dom: 'Bfrtip',
+        lengthMenu: [
+            [10, 25, 50, 100, -1],
+            ['10 rows', '25 rows', '50 rows', '100 rows', 'Show All']
+        ],
+        buttons: [
+            'pageLength',
+            {
+                extend: 'copyHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'pdfHtml5',
+                download: 'open',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            'colvis'
+        ],
+        columDefs: [{
+            targets: -1,
+            visible: false
+        }]
+    });
+
+    // 4) Search on Multiple Columns
+    $('#revenue tfoot th').each(function () {
+        var title = $('#revenue tfoot th').eq($(this).index()).text();
+        $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+    });
+
+    table4.columns().eq(0).each(function (colIdx) {
+        $('input', table4.column(colIdx).footer()).on('keyup change', function () {
+            table4
+                .column(colIdx)
+                .search(this.value)
+                .draw();
+        });
+    });
+
+
+</script>
+<script>
+    var table5 = $('#stock').DataTable({
+        mark: true,
+        dom: 'Bfrtip',
+        lengthMenu: [
+            [10, 25, 50, 100, -1],
+            ['10 rows', '25 rows', '50 rows', '100 rows', 'Show All']
+        ],
+        buttons: [
+            'pageLength',
+            {
+                extend: 'copyHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'pdfHtml5',
+                download: 'open',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            'colvis'
+        ],
+        columDefs: [{
+            targets: -1,
+            visible: false
+        }]
+    });
+
+    // 4) Search on Multiple Columns
+    $('#stock tfoot th').each(function () {
+        var title = $('#stock tfoot th').eq($(this).index()).text();
+        $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+    });
+
+    table5.columns().eq(0).each(function (colIdx) {
+        $('input', table5.column(colIdx).footer()).on('keyup change', function () {
+            table5
+                .column(colIdx)
+                .search(this.value)
+                .draw();
+        });
+    });
+
+
+</script>
+<script>
+    var table6 = $('#staff').DataTable({
+        mark: true,
+        dom: 'Bfrtip',
+        lengthMenu: [
+            [10, 25, 50, 100, -1],
+            ['10 rows', '25 rows', '50 rows', '100 rows', 'Show All']
+        ],
+        buttons: [
+            'pageLength',
+            {
+                extend: 'copyHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'pdfHtml5',
+                download: 'open',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            'colvis'
+        ],
+        columDefs: [{
+            targets: -1,
+            visible: false
+        }]
+    });
+
+    // 4) Search on Multiple Columns
+    $('#staff tfoot th').each(function () {
+        var title = $('#staff tfoot th').eq($(this).index()).text();
+        $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+    });
+
+    table6.columns().eq(0).each(function (colIdx) {
+        $('input', table6.column(colIdx).footer()).on('keyup change', function () {
+            table6
+                .column(colIdx)
+                .search(this.value)
+                .draw();
+        });
+    });
+
+
+</script>
+
+
 
 <script>
         
