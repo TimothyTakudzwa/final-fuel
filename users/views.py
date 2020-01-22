@@ -791,15 +791,15 @@ def suppliers_list(request):
         user = User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username.lower(), first_name=first_name, last_name=last_name, user_type = 'SS_SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
         if message_is_send(request, user):   
             if user.is_active:
-                messages.success(request, "You have been registered succesfully")
+                #messages.success(request, "You have been registered succesfully")
                 user.stage = 'menu'
                 user.save()  
                                  
-                return render(request, 'buyer/email_send.html')
+                #return render(request, 'buyer/email_send.html')
             else:
-                # messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
-                return render(request, 'buyer/email_send.html')
-        messages.success(request, f"{username.lower()} succesfully registered as service station rep")
+                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+                #return render(request, 'buyer/email_send.html')
+        #messages.success(request, f"{username.lower()} succesfully registered as service station rep")
         return redirect('users:suppliers_list')
     
     return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1})
@@ -940,15 +940,15 @@ def depot_staff(request):
         user = User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username.lower(), first_name=first_name, last_name=last_name, user_type = 'SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
         if message_is_send(request, user):   
             if user.is_active:
-                messages.success(request, "You have been registered succesfully")
+                #messages.success(request, "You have been registered succesfully")
                 user.stage = 'menu'
                 user.save()  
                                  
-                return render(request, 'buyer/email_send.html')
+                #return render(request, 'buyer/email_send.html')
             else:
-                # messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
-                return render(request, 'buyer/email_send.html')
-        messages.success(request, f"{username.lower()} Registered as Depot Rep Successfully")
+                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+                #return render(request, 'buyer/email_send.html')
+        #messages.success(request, f"{username.lower()} Registered as Depot Rep Successfully")
         return redirect('users:depot_staff')
     '''
     else:
