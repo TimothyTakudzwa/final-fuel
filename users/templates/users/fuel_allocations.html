@@ -180,6 +180,94 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="modal fade modal-success in" id="add_fuel" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class=" modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" id="exampleModalLongTitle">Add USD and RTGS Fuel- <i
+                        style="color:azure"><small>Please Note the fuel you are entering is to be
+                            sold in United States Dollars</small></i></span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div>
+                {% load crispy_forms_tags %}
+                <form action="#" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" value="USD & RTGS" name="fuel_payment_type" />
+                    <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                        <div class="col-sm-6">
+
+                            <label><b style='color:#009688'>Fuel Type</b></label>
+                            <select class="form-control" name="fuel_type">
+
+                                <option>Petrol</option>
+                                <option>Diesel</option>
+
+
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label><b style='color:#009688'>Quantity</b></label>
+                            <input type="text" name="quantity" class="form-control"
+                                placeholder="In Litres" required />
+                        </div>
+                    </div>
+                    <div class=" form-group row col-sm-12">
+                        <div class="col-sm-6">
+                            <label><b style='color:#009688'>RTGS Price</b></label>
+                            <input type="text" name="price" class="form-control"
+                                placeholder="In RTGS Dollars" required />
+                        </div>
+                        <input type="hidden" name="cash" value="0" />
+                        <input type="hidden" name="swipe" value="0">
+                        <input type="hidden" name="ecocash" value="0">
+                        <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
+                            <label><b style='color:#009688'>Payment Method</b></label>
+                            <div class="col-sm-12 row">
+                                <input type="checkbox" class=" col-sm-6" name="cash" value="1">
+                                Cash<br>
+                                <input type="checkbox" 
+                                    class="col-sm-6" value="1" name="swipe">Swipe<br>
+                                <input type="checkbox" 
+                                    class="col-sm-6" value="1" name="ecocash">Ecocash<br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" form-group row col-sm-12">
+                        <div class="col-sm-6">
+                            <label><b style='color:#009688'>USD Price</b></label>
+                            <input type="text" name="usd_price" class="form-control"
+                                placeholder="In United States Dollars" required />
+                        </div>
+                        <input type="hidden" name="cash" value="0" />
+                        <input type="hidden" name="swipe" value="0">
+                        <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
+                            <label><b style='color:#009688'>Payment Method</b></label>
+                            <div class="col-sm-12 row">
+                                <input type="checkbox" class=" col-sm-6" name="cash" value="1">
+                                Cash<br>
+                                <input type="checkbox" id="fca{{forloop.counter}}" 
+                                    class="col-sm-6" value="1" name="swipe">FCA<br>
+                            </div>
+
+
+                        </div>
+                    </div>
+                                                </div>
+            <div class="form-group row"
+                style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                <button type="button" class="btn btn-secondary col-sm-6"
+                    data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
+            </div>
+            </form>
+        </div>
+    </div>
+                        </div>
                           
 
                         <div class="modal fade modal-success in" id="add_usd_fuel{{allocate.id}}" tabindex="-1" role="dialog"
@@ -272,117 +360,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal fade modal-success in" id="add_fuel{{allocate.id}}" tabindex="-1" role="dialog"
-                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class=" modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <span class="modal-title" id="exampleModalLongTitle">Add USD and RTGS Fuel- <i
-                                            style="color:azure"><small>Please Note the fuel you are entering is to be
-                                                sold in United States Dollars</small></i></span>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div>
-                                    {% load crispy_forms_tags %}
-                                    <form action="{% url 'users:allocation_update' allocate.id %}" method="POST">
-                                        {% csrf_token %}
-                                        <input type="hidden" value="USD" name="fuel_payment_type" />
-                                        <div class="form-group row col-sm-12" style="margin-top: 5%;">
-                                            <div class="col-sm-6">
-
-                                                <label><b style='color:#009688'>Fuel Type</b></label>
-                                                <select class="form-control" name="fuel_type">
-
-                                                    <option>Petrol</option>
-                                                    <option>Diesel</option>
-
-
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label><b style='color:#009688'>Quantity</b></label>
-                                                <input type="text" name="quantity" class="form-control"
-                                                    placeholder="In Litres" required />
-                                            </div>
-                                        </div>
-                                        <div class=" form-group row col-sm-12">
-                                            <div class="col-sm-6">
-                                                <label><b style='color:#009688'>RTGS Price</b></label>
-                                                <input type="text" name="price" class="form-control"
-                                                    placeholder="In RTGS Dollars" required />
-                                            </div>
-                                            <input type="hidden" name="cash" value="0" />
-                                            <input type="hidden" name="swipe" value="0">
-                                            <input type="hidden" name="ecocash" value="0">
-                                            <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
-                                                <label><b style='color:#009688'>Payment Method</b></label>
-                                                <div class="col-sm-12 row">
-                                                    <input type="checkbox" class=" col-sm-6" name="cash" value="1">
-                                                    Cash<br>
-                                                    <input type="checkbox" 
-                                                        class="col-sm-6" value="1" name="swipe">Swipe<br>
-                                                    <input type="checkbox" 
-                                                        class="col-sm-6" value="1" name="ecocash">Ecocash<br>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class=" form-group row col-sm-12">
-                                            <div class="col-sm-6">
-                                                <label><b style='color:#009688'>USD Price</b></label>
-                                                <input type="text" name="usd_price" class="form-control"
-                                                    placeholder="In United States Dollars" required />
-                                            </div>
-                                            <input type="hidden" name="cash" value="0" />
-                                            <input type="hidden" name="swipe" value="0">
-                                            <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
-                                                <label><b style='color:#009688'>Payment Method</b></label>
-                                                <div class="col-sm-12 row">
-                                                    <input type="checkbox" class=" col-sm-6" name="cash" value="1">
-                                                    Cash<br>
-                                                    <input type="checkbox" id="fca{{forloop.counter}}"
-                                                        class="col-sm-6" value="1" name="swipe">FCA<br>
-                                                </div>
-
-
-                                            </div>
-                                        </div>
-
-                                        
-                                        <div class="form-group" name="bank" id="bank{{forloop.counter}}">
-                                            <label><b style='color:#009688'>Bank</b></label>
-                                            <select class="form-control" name="destination_bank">
-
-                                                <option>CBZ</option>
-                                                <option>BancABC</option>
-                                                <option>First Capital</option>
-                                                <option>Agribank</option>
-                                                <option>Ecobank</option>
-                                                <option>FBC</option>
-                                                <option>Nedbank</option>
-                                                <option>Metbank</option>
-                                                <option>NMB</option>
-                                                <option>Standard Chatered</option>
-                                                <option>Steward Bank</option>
-                                                <option>ZB Bank</option>
-                                                <option>CABS</option>
-                                                <option>POSB</option>
-
-
-                                            </select>
-                                        </div>
-                                     </div>
-                                <div class="form-group row"
-                                    style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                                    <button type="button" class="btn btn-secondary col-sm-6"
-                                        data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
-                                </div>
-                                </form>
-                            </div>
-                        </div>
-                        </div>
+                        
                         <div class="modal fade modal-success in" id="add_rtgs_fuel{{allocate.id}}" tabindex="-1" role="dialog"
                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class=" modal-dialog-centered" role="document">
@@ -591,175 +569,8 @@
     </div>
     {% endif %}
 
-    <div class="modal fade modal-success in" id="add_usd_fuel" tabindex="-1" role="dialog"
-    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class=" modal-dialog-centered" role="document" style="margin: 0;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title" id="exampleModalLongTitle">Add USD Fuel- <i
-                        style="color:azure"><small>Please Note the fuel you are entering is to be
-                            sold in United States Dollars</small></i></span>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div>
-                {% load crispy_forms_tags %}
-                <form action="#" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" value="USD" name="fuel_payment_type" />
-                    <div class="form-group row col-sm-12" style="margin-top: 5%;">
-                        <div class="col-sm-6">
-                            <label><b style='color:#009688'>Fuel Type</b></label>
-                            <select class="form-control" name="fuel_type">
-                                <option>Petrol</option>
-                                <option>Diesel</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-6">
-                            <label><b style='color:#009688'>Quantity</b></label>
-                            <input type="text" name="quantity" class="form-control"
-                                placeholder="In Litres" required />
-                        </div>
-                    </div>
-                    <div class=" form-group row col-sm-12">
-                        <div class="col-sm-6">
-                            <label><b style='color:#009688'>Price</b></label>
-                            <input type="text" name="price" class="form-control"
-                                placeholder="In United States Dollars" required />
-                        </div>
-                        <input type="hidden" name="cash" value="0" />
-                        <input type="hidden" name="swipe" value="0">
-                        <div class="col-sm-6" name="payment" id="payments{{forloop.counter}}">
-                            <label><b style='color:#009688'>Payment Method</b></label>
-                            <div class="col-sm-12 row">
-                                <input type="checkbox" class=" col-sm-6" name="cash" value="1">
-                                Cash<br>
-                                <input type="checkbox" id="fcas{{forloop.counter}}"
-                                    class="col-sm-6" value="1" name="swipe">FCA<br>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group" name="bank" id="bank{{forloop.counter}}">
-                        <label><b style='color:#009688'>Bank</b></label>
-                        <select class="form-control" name="destination_bank">
-
-                            <option>CBZ</option>
-                            <option>BancABC</option>
-                            <option>First Capital</option>
-                            <option>Agribank</option>
-                            <option>Ecobank</option>
-                            <option>FBC</option>
-                            <option>Nedbank</option>
-                            <option>Metbank</option>
-                            <option>NMB</option>
-                            <option>Standard Chatered</option>
-                            <option>Steward Bank</option>
-                            <option>ZB Bank</option>
-                            <option>CABS</option>
-                            <option>POSB</option>
-
-
-                        </select>
-                    </div>
-            </div>
-            <div class="form-group row"
-                style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                <button type="button" class="btn btn-secondary col-sm-6"
-                    data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
-            </div>
-            </form>
-        </div>
-    </div>
-    </div>
-    <div class="modal fade modal-success in" id="add_fuel" tabindex="-1" role="dialog"
-    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class=" modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title" id="exampleModalLongTitle">Add USD and RTGS Fuel- <i
-                        style="color:azure"><small>Please Note the fuel you are entering is to be
-                            sold in United States Dollars</small></i></span>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div>
-                {% load crispy_forms_tags %}
-                <form action="#" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" value="USD & RTGS" name="fuel_payment_type" />
-                    <div class="form-group row col-sm-12" style="margin-top: 5%;">
-                        <div class="col-sm-6">
-
-                            <label><b style='color:#009688'>Fuel Type</b></label>
-                            <select class="form-control" name="fuel_type">
-
-                                <option>Petrol</option>
-                                <option>Diesel</option>
-
-
-                            </select>
-                        </div>
-                        <div class="col-sm-6">
-                            <label><b style='color:#009688'>Quantity</b></label>
-                            <input type="text" name="quantity" class="form-control"
-                                placeholder="In Litres" required />
-                        </div>
-                    </div>
-                    <div class=" form-group row col-sm-12">
-                        <div class="col-sm-6">
-                            <label><b style='color:#009688'>RTGS Price</b></label>
-                            <input type="text" name="price" class="form-control"
-                                placeholder="In RTGS Dollars" required />
-                        </div>
-                        <input type="hidden" name="cash" value="0" />
-                        <input type="hidden" name="swipe" value="0">
-                        <input type="hidden" name="ecocash" value="0">
-                        <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
-                            <label><b style='color:#009688'>Payment Method</b></label>
-                            <div class="col-sm-12 row">
-                                <input type="checkbox" class=" col-sm-6" name="cash" value="1">
-                                Cash<br>
-                                <input type="checkbox" 
-                                    class="col-sm-6" value="1" name="swipe">Swipe<br>
-                                <input type="checkbox" 
-                                    class="col-sm-6" value="1" name="ecocash">Ecocash<br>
-                            </div>
-                        </div>
-                    </div>
-                    <div class=" form-group row col-sm-12">
-                        <div class="col-sm-6">
-                            <label><b style='color:#009688'>USD Price</b></label>
-                            <input type="text" name="usd_price" class="form-control"
-                                placeholder="In United States Dollars" required />
-                        </div>
-                        <input type="hidden" name="cash" value="0" />
-                        <input type="hidden" name="swipe" value="0">
-                        <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
-                            <label><b style='color:#009688'>Payment Method</b></label>
-                            <div class="col-sm-12 row">
-                                <input type="checkbox" class=" col-sm-6" name="cash" value="1">
-                                Cash<br>
-                                <input type="checkbox" id="fca{{forloop.counter}}" 
-                                    class="col-sm-6" value="1" name="swipe">FCA<br>
-                            </div>
-
-
-                        </div>
-                    </div>
-                                                </div>
-            <div class="form-group row"
-                style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                <button type="button" class="btn btn-secondary col-sm-6"
-                    data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
-            </div>
-            </form>
-        </div>
-    </div>
-    </div>
+    
+    
     <div class="modal fade modal-success in" id="add_rtgs_fuel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document" style="margin: 0;">
               <div class="modal-content">
