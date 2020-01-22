@@ -184,7 +184,7 @@
 
                         <div class="modal fade modal-success in" id="add_usd_fuel{{allocate.id}}" tabindex="-1" role="dialog"
                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                            <div class=" modal-dialog" role="document" style="">
+                            <div class=" modal-dialog" role="document" style="margin: 0;">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <span class="modal-title" id="exampleModalLongTitle">Add USD Fuel- <i
@@ -274,7 +274,7 @@
                         </div>
                         <div class="modal fade modal-success in" id="add_fuel{{allocate.id}}" tabindex="-1" role="dialog"
                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class=" modal-dialog-centered" role="document">
+                        <div class=" modal-dialog-centered" role="document" style="margin: 0;">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <span class="modal-title" id="exampleModalLongTitle">Add USD and RTGS Fuel- <i
@@ -350,7 +350,8 @@
                                         </div>
 
                                         
-                                        <div class="form-group" name="bank" id="bank{{forloop.counter}}">
+                                        <div class="col-sm-12 form-group" name="bank" id="bank{{forloop.counter}}">
+                                        
                                             <label><b style='color:#009688'>Bank</b></label>
                                             <select class="form-control" name="destination_bank">
 
@@ -641,6 +642,7 @@
                         </div>
                     </div>
                     <div class="col-sm-12 form-group" name="bank" id="bank{{forloop.counter}}">
+
                         <label><b style='color:#009688'>Bank</b></label>
                         <select class="form-control" name="destination_bank">
                             <option>CBZ</option>
