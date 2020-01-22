@@ -129,7 +129,7 @@ def available_stock(request):
 
 @login_required()
 def stock_update(request,id):
-    updates = FuelUpdate.objects.filter(sub_type='Suballocation', relationship_id=request.user.subsidiary_id).all()
+    updates = FuelUpdate.objects.filter(sub_type='Suballocation', id=id).first()
     available_petrol = updates.petrol_quantity
     available_diesel = updates.diesel_quantity
     if request.method == 'POST':
