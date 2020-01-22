@@ -453,16 +453,21 @@ def stations(request):
         swipe = request.POST['swipe']
         ecocash = request.POST['ecocash']
         sub = Subsidiaries.objects.create(account_number=account_number,destination_bank=destination_bank,city=city,location=location,company=request.user.company,name=name,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)    
-        if is_depot == "True":
-            sub_type = 'Depot'  
+        if request.POST['is_depot'] == "Service Station":
+            fuel_updated = F_Update.objects.create(sub_type="Service Station",relationship_id=sub.id,company_id = request.user.company.id, cash=cash, usd=usd, swipe=swipe, ecocash=ecocash,limit=2000)
+            fuel_updated.save()
+            sub.fuel_capacity = fuel_updated
+            sub.save()
+            messages.success(request, 'Subsidiary Created Successfully')
+            return redirect('users:stations')  
         else:
-            sub_type = 'Service Station'
-        fuel_updated = F_Update.objects.create(sub_type=sub_type,relationship_id=sub.id,company_id = request.user.company.id, cash=cash, usd=usd, swipe=swipe, ecocash=ecocash,limit=2000)
-        fuel_updated.save()
-        sub.fuel_capacity = fuel_updated
-        sub.save()
-        messages.success(request, 'Subsidiary Created Successfully')
-        return redirect('users:stations')
+            fuel_updated = F_Update.objects.create(sub_type="Depot",relationship_id=sub.id,company_id = request.user.company.id, cash=cash, usd=usd, swipe=swipe, ecocash=ecocash,limit=2000)
+            fuel_updated.save()
+            sub.fuel_capacity = fuel_updated
+            sub.save()
+            messages.success(request, 'Subsidiary Created Successfully')
+            return redirect('users:stations') 
+        
 
     return render(request, 'users/service_stations.html', {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns, 'Mutare': Mutare, 'Gweru': Gweru})
 
@@ -791,15 +796,15 @@ def suppliers_list(request):
         user = User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username.lower(), first_name=first_name, last_name=last_name, user_type = 'SS_SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
         if message_is_send(request, user):   
             if user.is_active:
-                messages.success(request, "You have been registered succesfully")
+                #messages.success(request, "You have been registered succesfully")
                 user.stage = 'menu'
                 user.save()  
                                  
-                return render(request, 'buyer/email_send.html')
+                #return render(request, 'buyer/email_send.html')
             else:
-                # messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
-                return render(request, 'buyer/email_send.html')
-        messages.success(request, f"{username.lower()} succesfully registered as service station rep")
+                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+                #return render(request, 'buyer/email_send.html')
+        #messages.success(request, f"{username.lower()} succesfully registered as service station rep")
         return redirect('users:suppliers_list')
     
     return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1})
@@ -940,15 +945,15 @@ def depot_staff(request):
         user = User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username.lower(), first_name=first_name, last_name=last_name, user_type = 'SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
         if message_is_send(request, user):   
             if user.is_active:
-                messages.success(request, "You have been registered succesfully")
+                #messages.success(request, "You have been registered succesfully")
                 user.stage = 'menu'
                 user.save()  
                                  
-                return render(request, 'buyer/email_send.html')
+                #return render(request, 'buyer/email_send.html')
             else:
-                # messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
-                return render(request, 'buyer/email_send.html')
-        messages.success(request, f"{username.lower()} Registered as Depot Rep Successfully")
+                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+                #return render(request, 'buyer/email_send.html')
+        #messages.success(request, f"{username.lower()} Registered as Depot Rep Successfully")
         return redirect('users:depot_staff')
     '''
     else:
@@ -1006,6 +1011,7 @@ def edit_fuel_prices(request, id):
             reference_id = prices_update.id
             action = f"You have changed petrol price to {request.POST['petrol_price']} and diesel price to {request.POST['diesel_price']} "
             Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
+            print(prices_update.petrol_price,prices_update.diesel_price)
             return redirect('users:allocate')
 
         else:

@@ -133,7 +133,7 @@
                             <li class="dropdown dropdown-user admin-user">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"> 
                                 <div class="user-image">
-                                <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar4.png" class="img-circle" height="40" width="40" alt="User Image">
+                                <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar5.png" class="img-circle" height="40" width="40" alt="User Image">
                                 </div>
                                 </a>
                                 <ul class="dropdown-menu">
@@ -167,7 +167,7 @@
                             </a>
                         </li>
                         <li class="{% if request.path == '/users/suppliers/' %} active {% endif %}">
-                            <a href="{% url 'users:suppliers_list' %}"><i class="fa fa-sitemap"></i><span>Service Stations</span>
+                            <a href="{% url 'users:suppliers_list' %}"><i class="fa fa-sitemap"></i><span>Station Staff</span>
                             </a>
                         </li>
                         <li class="{% if request.path == '/users/depot_staff/' %} active {% endif %}">
@@ -219,19 +219,20 @@
                     <div class="row">
                         <div class="col-md-12">
 
-                            {% if messages %}
-
-                                {% for message in messages %}
-                                    <div class="alert alert-{{ message.tags }}" style="text-align: center">
-                                        {{ message }}
-                                    </div>
-                                {% endfor %}
-
-                            {% endif %}
 
 
 
                         </div>
+                        
+                        {% if messages %}
+
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}" style="text-align: center">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+
+                        {% endif %}
 
                         {% block body %}{% endblock %}
 

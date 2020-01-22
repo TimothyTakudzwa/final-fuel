@@ -16,7 +16,7 @@ from company.models import Company, FuelUpdate
 from supplier.models import Offer, Subsidiaries, Transaction, TokenAuthentication
 
 from .constants import sample_data
-from .forms import (BuyerRegisterForm, BuyerUpdateForm, FuelRequestForm,
+from .forms import (BuyerRegisterForm, PasswordChange, BuyerUpdateForm, FuelRequestForm,
                     PasswordChangeForm)
 from supplier.forms import CreateCompany
 from .models import FuelRequest
@@ -118,6 +118,46 @@ def send_message(phone_number, message):
     r = requests.post(url=url, data=payload)
     print(r)
     return r.status_code
+
+
+@login_required()
+def change_password(request):
+    context = {
+        'title': 'Fuel Finder | Change Password',
+        'password_change': PasswordChange(user=request.user)
+    }
+    if request.method == 'POST':
+        old = request.POST.get('old_password')
+        new1 = request.POST.get('new_password1')
+        new2 = request.POST.get('new_password2')
+
+        if authenticate(request, username=request.user.username, password=old):
+            if new1 != new2:
+                messages.warning(request, "Passwords Don't Match")
+                return redirect('bchange-password')
+            elif new1 == old:
+                messages.warning(request, "New password can not be similar to the old one")
+                return redirect('bchange-password')
+            elif len(new1) < 8:
+                messages.warning(request, "Password is too short")
+                return redirect('bchange-password')
+            elif new1.isnumeric():
+                messages.warning(request, "Password can not be entirely numeric!")
+            elif not new1.isalnum():
+                messages.warning(request, "Password should be alphanumeric")
+                return redirect('bchange-password')
+            else:
+                user = request.user
+                user.set_password(new1)
+                user.save()
+                update_session_auth_hash(request, user)
+
+                messages.success(request, 'Password Successfully Changed')
+                return redirect('buyer-profile')
+        else:
+            messages.warning(request, 'Wrong Old Password, Please Try Again')
+            return redirect('bchange-password')
+    return render(request, 'buyer/change_password.html', context=context)
 
 @login_required
 #for loading user profile, editing profile and changing password 

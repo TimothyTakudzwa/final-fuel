@@ -126,9 +126,9 @@
                         <tbody>
                         {% for supplier in suppliers %}
                             <tr>
-                                <td>{{supplier.first_name}}</td>
-                                <td>{{supplier.last_name}}</td>
+                                <td>{{supplier.first_name}} {{supplier.last_name}}</td>
                                 <td>{{supplier.username}}</td>
+                                <td>{{supplier.subsidiary_name}}</td>
                                
                                 <td>{{supplier.phone_number}}</td>
                                 <td>{{supplier.email}}</td>
@@ -148,7 +148,7 @@
                                         
                                         <div class="modal-content">
                                             <div class="modal-header" style="background-color: #9c27b0;color: white;">
-                                                <h5 class="modal-title" id="exampleModalLabel">Editi {{supplier.username}}</h5>
+                                                <h5 class="modal-title" id="exampleModalLabel">Edit {{supplier.username}}</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -179,7 +179,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
 
-                                                <span class="modal-title" id="exampleModalLabel">Edit {{supplier.company}} </span>
+                                                <span class="modal-title" id="exampleModalLabel">Edit {{supplier.company.name|title}} </span>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
