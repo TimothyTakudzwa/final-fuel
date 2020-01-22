@@ -229,19 +229,15 @@
                                                         {{ form.amount|as_crispy_field }}
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row col-sm-12">
                                                     <div class="col-sm-6 form-group">
-                                                        <label class="form-group">Select Payment Method</label>
-                                                        <select class="form-control" name="fuel_payment_method">
-                                                            <option value="USD">USD</option>
-                                                            <option value="RTGS">RTGS</option>
-                                                            <option value="USD & RTGS">Either</option>
-                                                        </select>
+                                                        <label class="form-group">Payment Method</label>
+                                                        <input type="text" class="form-control" value=" {{data.entry_type}}" disabled/> 
                                                     </div>
 
 
                                                 <div class="col-sm-6 form-group">
-                                                    <label>Pick Up Method</label>
+                                                    <label class="form-group">Pick Up Method</label>
                                                     <select id="delivery_method1{{forloop.counter}}"
                                                         name="delivery_method" class="form-control">
                                                         <option value='SELF_COLLECTION'>Self Collection
