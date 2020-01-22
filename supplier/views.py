@@ -123,13 +123,13 @@ def rejected_offer(request, id):
 
 @login_required
 def available_stock(request):
-    updates = FuelUpdate.objects.filter(sub_type='Depot', relationship_id=request.user.subsidiary_id)
+    updates = FuelUpdate.objects.filter(sub_type='Suballocation', relationship_id=request.user.subsidiary_id).all()
 
     return render(request, 'supplier/available_fuel.html', {'updates': updates})
 
 @login_required()
 def stock_update(request,id):
-    updates = FuelUpdate.objects.filter(sub_type='Depot', relationship_id=request.user.subsidiary_id).first()
+    updates = FuelUpdate.objects.filter(sub_type='Suballocation', relationship_id=request.user.subsidiary_id).all()
     available_petrol = updates.petrol_quantity
     available_diesel = updates.diesel_quantity
     if request.method == 'POST':
@@ -140,93 +140,18 @@ def stock_update(request,id):
                     messages.warning(request, 'You can only reduce your petrol quantity')
                     return redirect('available_stock')
                 fuel_update.petrol_quantity = int(request.POST['quantity'])
-
-                fuel_update.petrol_price = float(request.POST['price'])
-                if fuel_update.entry_type == 'USD & RTGS':
-                    fuel_update.petrol_usd_price = float(request.POST['usd_price'])
             else:
                 if int(request.POST['quantity']) > available_diesel:
                     messages.warning(request, 'You can only reduce your petrol quantity')
                     return redirect('available_stock')
                 fuel_update.diesel_quantity = int(request.POST['quantity'])
-
-                fuel_update.petrol_price = float(request.POST['price'])
-                if fuel_update.entry_type == 'USD & RTGS':
-                    fuel_update.diesel_usd_price = float(request.POST['usd_price'])
             fuel_update.cash = request.POST['cash']
             fuel_update.swipe = request.POST['swipe']
             if fuel_update.entry_type != 'USD':
-                fuel_update.ecocash = request.POST['ecocash']         
-           
+                fuel_update.ecocash = request.POST['ecocash']
             fuel_update.save()
             messages.success(request, 'Fuel successfully updated')
     return redirect('available_stock')
-
-
-# @login_required()
-# def allocation_update(request,id):
-#     if request.method == 'POST':
-#         if F_Update.objects.filter(id=id).exists():
-#             fuel_update = F_Update.objects.filter(id=id).first()
-#             company_quantity = F_Update.objects.filter(company_id = request.user.company.id).filter(sub_type='Company').first()
-#             depot = F_Update.objects.filter(relationship_id=fuel_update.relationship_id).filter(sub_type='Depot').first()
-#             print(depot)
-#             if request.POST['fuel_type'] == 'Petrol':
-#                 if int(request.POST['quantity']) > company_quantity.petrol_quantity:
-#                     messages.warning(request, f'You can not allocate fuel above your company petrol capacity of {company_quantity.petrol_quantity}')
-#                     return redirect('users:allocate')
-#                 fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['quantity']) 
-#                 depot.petrol_quantity = depot.petrol_quantity + int(request.POST['quantity']) 
-                                          
-#                 fuel_update.petrol_price = float(request.POST['price'])   
-#                 if fuel_update.entry_type == 'USD & RTGS':
-#                     fuel_update.petrol_usd_price = float(request.POST['usd_price'])            
-#                 company_quantity.petrol_quantity = company_quantity.petrol_quantity - int(request.POST['quantity'])
-#                 company_quantity.save()
-#             else:
-#                 if int(request.POST['quantity']) > company_quantity.diesel_quantity:
-#                     messages.warning(request, f'You can not allocate fuel above your company petrol capacity of {company_quantity.diesel_quantity}')
-#                     return redirect('users:allocate')
-#                 fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['quantity'])
-#                 depot.diesel_quantity = depot.diesel_quantity + int(request.POST['quantity'])
-#                 fuel_update.diesel_price = request.POST['price']    
-#                 if fuel_update.entry_type == 'USD & RTGS':
-#                     fuel_update.diesel_usd_price = float(request.POST['usd_price']) 
-#                 company_quantity.diesel_quantity = company_quantity.diesel_quantity - int(request.POST['quantity'])
-#                 company_quantity.save()   
-#             fuel_update.cash = request.POST['cash']
-#             fuel_update.swipe = request.POST['swipe']
-#             if fuel_update.entry_type != 'USD':
-#                 fuel_update.ecocash = request.POST['ecocash']         
-           
-#             fuel_update.save()
-#             depot.save()
-#             assigned_staff = user.objects.filter(subsidiary_id =fuel_update.relationship_id).first()
-#             if assigned_staff is not None:
-#                 # action = 'Allocation of Petrol'
-#                 # FuelAllocation.objects.create(company=request.user.company,action = action,petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['petrol_quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=assigned_staff.subsidiary_id)
-#                 # messages.success(request, 'updated petrol quantity successfully')
-#                 # service_station = Subsidiaries.objects.filter(id=fuel_update.relationship_id).first()
-#                 # reference = 'fuel allocation'
-#                 # reference_id = fuel_update.id
-#                 # action = f"You have allocated petrol quantity of {int(request.POST['petrol_quantity'])}L @ {fuel_update.petrol_price} "
-#                 # Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
-#                 return redirect('users:allocate')
-#             else:
-#                 # action = 'Allocation of Petrol'
-#                 # FuelAllocation.objects.create(company=request.user.company,action=action,petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['petrol_quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],assigned_staff_id=fuel_update.relationship_id)
-#                 # service_station = Subsidiaries.objects.filter(id=fuel_update.relationship_id).first()
-#                 # reference = 'fuel allocation'
-#                 # reference_id = fuel_update.id
-#                 # action = f"You have allocated petrol quantity of {int(request.POST['petrol_quantity'])}L @ {fuel_update.petrol_price} "
-#                 # Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
-#                 # messages.warning(request, 'Please go to Depot or Station staff to assign a station representative before you allocate fuel again')
-#                 return redirect('users:allocate')
-           
-#         else:
-#             messages.success(request, 'Subsidiary does not exists')
-#             return redirect('users:allocate')
-#     return render(request, 'users/allocate.html')
 
 
 def offer(request, id):
