@@ -874,7 +874,7 @@ def registration_handler(request, user, message):
         else:          
             is_valid = validate_email(message, verify=True)   
             print(" is this valid-------------????", is_valid)     
-            if not is_valid:           
+            if is_valid:           
                 pass
             else: 
                 return "*_Couldn't verify the email_*.\n\nPlease enter the a valid email address"  
