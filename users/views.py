@@ -1006,6 +1006,7 @@ def edit_fuel_prices(request, id):
             reference_id = prices_update.id
             action = f"You have changed petrol price to {request.POST['petrol_price']} and diesel price to {request.POST['diesel_price']} "
             Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
+            print(prices_update.petrol_price,prices_update.diesel_price)
             return redirect('users:allocate')
 
         else:
