@@ -176,7 +176,7 @@ def view_updates_user(request):
         sub_updates = FuelUpdate.objects.filter(sub_type='Service Station').all()
 
         for sub_update in sub_updates:
-            updates = FuelUpdate.objects.filter(sub_type='Suballocation').filter(
+            updates = FuelUpdate.objects.filter(sub_type='Service Station').filter(
                 relationship_id=sub_update.relationship_id).all()
             for update in updates:
                 details = Subsidiaries.objects.get(id=update.relationship_id)
