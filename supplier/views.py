@@ -348,7 +348,7 @@ def verification(request, token, user_id):
                         return redirect('supplier:create_company', id=user.id)
                     
             else:
-                return render(request, 'supplier/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
+                return render(request, 'supplier/accounts/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
         else:
             messages.warning(request, 'This link has been used before')
             return redirect('buyer-register')
