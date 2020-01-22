@@ -85,7 +85,7 @@
                                 <td>
                                     {% if fuel_request.has_offers == True%}
                                    
-                                        <button type="button" class="btn btn-labeled btn-success m-b-5"  href="{% url 'fuel-offers' fuel_request.id %}">
+                                        <button type="button" class="btn btn-labeled btn-success m-b-5"  href="{% url 'buyer:fuel-offers' fuel_request.id %}">
                                             <span class="btn-label"><i
                                                     class="glyphicon glyphicon-info-sign"></i></span>View Offers
                                         </button>
