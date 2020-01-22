@@ -184,11 +184,11 @@
 
                         <div class="modal fade modal-success in" id="add_usd_fuel{{allocate.id}}" tabindex="-1" role="dialog"
                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                            <div class=" modal-dialog" role="document">
+                            <div class=" modal-dialog" role="document" style="margin: 0;">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <span class="modal-title" id="exampleModalLongTitle">Add USD Fuel- <i
-                                                style="color:red"><small>Please Note the fuel you are entering is to be
+                                                style="color:azure"><small>Please Note the fuel you are entering is to be
                                                     sold in United States Dollars</small></i></span>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -456,7 +456,42 @@
                        
                         
 
-                        
+                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                        <script>
+                            $(document).ready(function () {
+                                $('#bank{{forloop.counter}}').hide();
+
+
+                                $('#payments{{forloop.counter}}').change(function () {
+                                    console.log(('#banks{{forloop.counter}}'))
+                                    if ($('#fcas{{forloop.counter}}').is(':checked')) {
+                                        $('#banks{{forloop.counter}}').show();
+
+                                        $('#banks{{forloop.counter}} :input').prop('disabled', false);
+                                    }
+
+                                    else {
+                                        $('#banks{{forloop.counter}}').hide();
+                                        $('#banks{{forloop.counter}} :input').prop('disabled', true);
+                                    }
+                                });
+                                $('#payment{{forloop.counter}}').change(function () {
+                                    console.log(('#bank{{forloop.counter}}'))
+                                    if ($('#fca{{forloop.counter}}').is(':checked')) {
+                                        $('#bank{{forloop.counter}}').show();
+
+                                        $('#bank{{forloop.counter}} :input').prop('disabled', false);
+                                    }
+
+                                    else {
+                                        $('#bank{{forloop.counter}}').hide();
+                                        $('#bank{{forloop.counter}} :input').prop('disabled', true);
+                                    }
+                                });
+                            });
+
+
+                        </script>
                        
                         <div class="modal fade modal-success in" id="addfuel{{allocate.id}}" tabindex="-1" role="dialog"
                             aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -792,42 +827,5 @@
 
 
 </div>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-                        <script>
-                            $(document).ready(function () {
-                                $('#bank{{forloop.counter}}').hide();
-
-
-                                $('#payments{{forloop.counter}}').change(function () {
-                                    console.log(('#banks{{forloop.counter}}'))
-                                    if ($('#fcas{{forloop.counter}}').is(':checked')) {
-                                        $('#banks{{forloop.counter}}').show();
-
-                                        $('#banks{{forloop.counter}} :input').prop('disabled', false);
-                                    }
-
-                                    else {
-                                        $('#banks{{forloop.counter}}').hide();
-                                        $('#banks{{forloop.counter}} :input').prop('disabled', true);
-                                    }
-                                });
-                                $('#payment{{forloop.counter}}').change(function () {
-                                    console.log(('#bank{{forloop.counter}}'))
-                                    if ($('#fca{{forloop.counter}}').is(':checked')) {
-                                        $('#bank{{forloop.counter}}').show();
-
-                                        $('#bank{{forloop.counter}} :input').prop('disabled', false);
-                                    }
-
-                                    else {
-                                        $('#bank{{forloop.counter}}').hide();
-                                        $('#bank{{forloop.counter}} :input').prop('disabled', true);
-                                    }
-                                });
-                            });
-
-
-                        </script>
 
 {% endblock %}
