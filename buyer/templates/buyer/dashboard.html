@@ -1,6 +1,5 @@
 {% extends "finder/buyer_base.html" %}
 {% load crispy_forms_tags %}
-{% load humanize %}
 
 {% block body%}
 {% if messages %}
@@ -145,10 +144,10 @@
                                 {{data.diesel_price}}
                             </td>
                             <td>
-                                {{data.petrol_quantity|intcomma}}
+                                {{data.petrol_quantity}}
                             </td>
                             <td>
-                                {{data.diesel_quantity|intcomma}}
+                                {{data.diesel_quantity}}
                             </td>
                             <td>
                                 {{data.last_updated}}
@@ -219,8 +218,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <div class="modal-body">
-                                            <form method="POST">
+                                            <di/div method="POST">
                                                 {% csrf_token %}
                                                 <div class=" row col-sm-12">
                                                     <div class="col-sm-6">
@@ -231,42 +229,18 @@
                                                         {{ form.amount|as_crispy_field }}
                                                     </div>
                                                 </div>
-                                                <label class="form-group">Select Payment Method</label>
-                                                <div class="col-sm-12 row">
-                                                    <div class="togglebutton form-group col-sm-3">
-                                                        <label>
-
-                                                            <input type="checkbox" name="cash" id="cash">
-
-                                                            <span class="toggle"></span>
-                                                            Cash
-                                                        </label>
+                                                <div class="row">
+                                                    <div class="col-sm-6 form-group">
+                                                        <label class="form-group">Select Payment Method</label>
+                                                        <select class="form-control" name="fuel_payment_method">
+                                                            <option value="USD">USD</option>
+                                                            <option value="RTGS">RTGS</option>
+                                                            <option value="USD & RTGS">Either</option>
+                                                        </select>
                                                     </div>
-                                                    <div class="togglebutton form-group col-sm-3">
-                                                        <label>
-                                                            <input type="checkbox" name="ecocash" id="ecocash">
-                                                            <span class="toggle"></span>
-                                                            Ecocash
-                                                        </label>
-                                                    </div>
-                                                    <div class="togglebutton form-group col-sm-3">
-                                                        <label>
-                                                            <input type="checkbox" name="swipe" id="swipe">
-                                                            <span class="toggle"></span>
-                                                            Swipe
-                                                        </label>
-                                                    </div>
-                                                    <div class="togglebutton form-group col-sm-3">
-                                                        <label>
-                                                            <input type="checkbox" name="usd" id="usd">
-                                                            <span class="toggle"></span>
-                                                            USD
-                                                        </label>
-                                                    </div>
-                                                </div>
 
 
-                                                <div class="form-group">
+                                                <div class="col-sm-6 form-group">
                                                     <label>Pick Up Method</label>
                                                     <select id="delivery_method1{{forloop.counter}}"
                                                         name="delivery_method" class="form-control">
@@ -274,6 +248,7 @@
                                                         </option>
                                                         <option value='DELIVERY'>Direct Delivery</option>
                                                     </select>
+                                                </div>
                                                 </div>
 
                                                 <div class="form-group" name='choices' id='choices1{{forloop.counter}}'>
@@ -332,7 +307,6 @@
                                                 Request</button>
                                             </form>
                                         </div>
-                                    </div>
 
                                 </div>
                             </div>
@@ -342,133 +316,102 @@
                         <!-- end notice modal -->
                         <div class="modal fade modal-xl" id="generic_request" tabindex="-1" role="dialog"
                             aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-notice">
+                            <div class="modal-dialog" role="document">
                                 <div class="modal-content">
-                                    <div class="modal-header" style="background-color: rgb(55, 71, 103);color: white;">
-                                        <span class="modal-title" id="exampleModalLongTitle">Create New Request</span>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form method="POST" action="{% url 'buyer-dashboard' %}">
-                                            {% csrf_token %}
-                                            <div class="row col-sm-12">
-                                                <div class="col-sm-6">
-                                                    {{ form.fuel_type|as_crispy_field }}
-                                                </div>
-
-                                                <div class=" col-sm-6">
-                                                    {{ form.amount|as_crispy_field }}
-                                                </div>
+                                  <div class="modal-header">
+                                    <span class="modal-title">Find Fuel</span>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <form method="POST" action="{% url 'buyer-dashboard' %}">
+                                        {% csrf_token %}
+                                       <div class="row form-group">
+                                            <div class="col-sm-6">
+                                                {{ form.fuel_type|as_crispy_field }}
                                             </div>
-                                            <label class="form-group">Select Payment Method</label>
-                                            <div class="col-sm-12 row">
-                                                <div class="togglebutton form-group col-sm-3">
-                                                    <label>
-
-                                                        <input type="checkbox" name="cash" id="cash">
-
-                                                        <span class="toggle"></span>
-                                                        Cash
-                                                    </label>
-                                                </div>
-                                                <div class="togglebutton form-group col-sm-3">
-                                                    <label>
-                                                        <input type="checkbox" name="ecocash" id="ecocash">
-                                                        <span class="toggle"></span>
-                                                        Ecocash
-                                                    </label>
-                                                </div>
-                                                <div class="togglebutton form-group col-sm-3">
-                                                    <label>
-                                                        <input type="checkbox" name="swipe" id="swipe">
-                                                        <span class="toggle"></span>
-                                                        Swipe
-                                                    </label>
-                                                </div>
-                                                <div class="togglebutton form-group col-sm-3">
-                                                    <label>
-                                                        <input type="checkbox" name="usd" id="usd">
-                                                        <span class="toggle"></span>
-                                                        USD
-                                                    </label>
-                                                </div>
+                        
+                                        <div class="col-sm-6">
+                                                {{ form.amount|as_crispy_field }}
                                             </div>
-
-
-                                            <div class="form-group">
-                                                <label>Pick Up Method</label>
-                                                <select id="delivery_method{{forloop.counter}}" name="delivery_method"
-                                                    class="form-control">
-                                                    <option value='SELF COLLECTION'>Self Collection</option>
-                                                    <option value='DELIVERY'>Delivery</option>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-sm-6">
+                                                <label class="form-group">Select Payment Method</label>
+                                                <select class="form-control" name="fuel_payment_method">
+                                                    <option value="USD">USD</option>
+                                                    <option value="RTGS">RTGS</option>
+                                                    <option value="USD & RTGS">Either</option>
                                                 </select>
                                             </div>
-
-                                            <div class="form-group" name='choices' id='choices{{forloop.counter}}'>
-                                                <label>Delivery Address</label>
-                                                <div class="row form-group">
-                                                    <div class="togglebutton form-group col-sm-4">
-                                                        <label for="">Street Number</label>
-                                                        <input type="text" class="form-control" name="s_number" id=""
-                                                            aria-describedby="helpId" placeholder="">
-
-                                                    </div>
-                                                    <div class="togglebutton form-group col-sm-4">
-                                                        <label for="">Street Name</label>
-                                                        <input type="text" class="form-control" name="s_name" id=""
-                                                            aria-describedby="helpId" placeholder="">
-
-                                                    </div>
-                                                    <div class="togglebutton form-group col-sm-4">
-                                                        <label for="">Location/Town</label>
-                                                        <input type="text" class="form-control" name="s_town" id=""
-                                                            aria-describedby="helpId" placeholder="">
-
-                                                    </div>
-
+                        
+                                        <div class="col-sm-6">
+                                            <label class="form-group">Pick Up Method</label>
+                                            <select id="delivery_method{{forloop.counter}}"
+                                                name="delivery_method" class="form-control">
+                                                <option value='SELF COLLECTION'>Self Collection</option>
+                                                <option value='DELIVERY'>Delivery</option>
+                                            </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" name='choices' id='choices{{forloop.counter}}'>
+                                            <label>Delivery Address</label>
+                                            <div class="row form-group">
+                                                <div class="togglebutton form-group col-sm-4">
+                                                    <label for="">Street Number</label>
+                                                    <input type="text" class="form-control" name="s_number" id=""
+                                                        aria-describedby="helpId" placeholder="">
+                        
                                                 </div>
-
-                                                {{ form.storage_tanks|as_crispy_field }}
-                                                <br>
-                                                <label>Required Equipments</label>
-                                                <div class="row">
-                                                    <div class="col-sm-4">
-                                                        <input class="form-control-md" type="checkbox" value='False'
-                                                            id="pump_required" name="pump_required">
-                                                        <label for="pump_required">Pump </label>
-
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                        <input class="form-control-md" type="checkbox" value="False"
-                                                            id="dipping_stick_required" name="dipping_stick_required">
-                                                        <label for="dipping_stick_required">Dipping Stick </label>
-                                                    </div>
-
-                                                    <div class="col-sm-4">
-                                                        <input class="form-control-md" type="checkbox" value="False"
-                                                            id="meter_required" name="meter_required">
-                                                        <label for="meter_required">Meter</label>
-                                                    </div>
+                                                <div class="togglebutton form-group col-sm-4">
+                                                    <label for="">Street Name</label>
+                                                    <input type="text" class="form-control" name="s_name" id=""
+                                                        aria-describedby="helpId" placeholder="">
+                        
+                                                </div>
+                                                <div class="togglebutton form-group col-sm-4">
+                                                    <label for="">Location/Town</label>
+                                                    <input type="text" class="form-control" name="s_town" id=""
+                                                        aria-describedby="helpId" placeholder="">
+                        
+                                                </div>
+                        
+                                            </div>
+                        
+                                            {{ form.storage_tanks|as_crispy_field }}
+                                            <br>
+                                            <label>Required Equipments</label>
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    <input class="form-control-md" type="checkbox" 
+                                                        id="pump_required" name="pump_required">
+                                                    <label for="pump_required">Pump </label>
+                        
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control-md" type="checkbox" 
+                                                        id="dipping_stick_required" name="dipping_stick_required">
+                                                    <label for="dipping_stick_required">Dipping Stick </label>
+                                                </div>
+                        
+                                                <div class="col-sm-4">
+                                                    <input class="form-control-md" type="checkbox"
+                                                        id="meter_required" name="meter_required">
+                                                    <label for="meter_required">Meter</label>
                                                 </div>
                                             </div>
-                                            <!--<input type="hidden" value="{{data.company_id}}" name="company_id" /> -->
-                                    </div>
-
-                                    <div class="modal-footer justify-content-left">
-                                        <div>
-                                            <button type="submit" name="WaitForOffer" class="btn btn-info btn-sm">Wait
-                                                for
-                                                Offer</button>
-                                            <button type="submit" name='Recommender'
-                                                class="btn btn-primary btn-sm">System
-                                                Generated</button>
                                         </div>
-                                    </div>
-                                    </form>
+                                     
+                                  
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="submit" name="WaitForOffer" class="btn btn-info btn-sm">Wait for Offer</button>
+                                    <button type="submit" name='Recommender' class="btn btn-primary btn-sm">System Generated</button>
+                                  </div>
+                                </form>
                                 </div>
-                            </div>
+                              </div>
                         </div>
                         {% endfor %}
 
