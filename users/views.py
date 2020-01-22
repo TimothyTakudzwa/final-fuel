@@ -735,11 +735,11 @@ def approval(request, id):
             applicant = user.objects.filter(id = id).first()
             applicant.is_waiting = False
             applicant.is_active = True
-            selected =  request.POST['subsidiary']
+            selected_id =  request.POST['subsidiary']
             print(selected)
-            subsidiari = Subsidiaries.objects.filter(name=selected).first()
-            print(subsidiari)
-            applicant.subsidiary_id = subsidiari.id
+            selected_subsidiary = Subsidiaries.objects.filter(id=selected_id).first()
+            print(selected_subsidiary)
+            applicant.subsidiary_id = selected_subsidiary.id
             print(applicant.subsidiary_id)
             applicant.save()
             messages.success(request, f'Approval for {applicant.first_name} made successfully')
