@@ -31,13 +31,7 @@
 <div class="content">
   <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
       data-index="0">
-      <div class="panel-heading ui-sortable-handle">
-        <div class="btn-group"> 
-          <a class="btn btn-success" data-toggle="modal" data-target="#add_fuel"><i class="fa fa-plus" style="margin-right: 11px;"></i>
-              Update Stock
-          </a>  
-      </div>
-          
+      <div class="panel-heading ui-sortable-handle">          
           <div class="dropdown">
               <ul class="dropdown-menu dropdown-menu-right">
 
@@ -110,78 +104,14 @@
                 </td>
             </tr>
 
-
-            <!-- Supplier Edit Modal -->
-            <div class="modal fade modal-xl" id="edit_{{update.id}}" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document" style="margin: 0;"> 
-                    <div class="modal-content">
-                        <div class="modal-header" >
-
-                            <span class="modal-title" id="exampleModalLabel" > Edit Prices</span>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            {% load crispy_forms_tags %}
-                            <form action="{% url 'users:edit_fuel_prices' update.id %}" method="POST">
-                                {% csrf_token %}
-
-
-                                <div class="form-group">
-                                    <lable>Petrol Price</lable>
-                                    <input type="text" name="petrol_price" class="form-control"
-                                        value="{{update.petrol_price}}" />
-                                </div>
-
-                                <div class="form-group">
-                                    <lable>Diesel Price</lable>
-                                    <input type="text" name="diesel_price" value="{{update.diesel_price}}"
-                                        class="form-control" />
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        {{update_form.cash|as_crispy_field}}
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{update_form.usd|as_crispy_field}}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        {{update_form.swipe|as_crispy_field}}
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{update_form.ecocash|as_crispy_field}}
-                                    </div>
-                                </div>
-
-                        </div>
-                        <div class="modal-footer">
-                            <div>
-                                <button class="btn" style="background-color: lightgray; color: #333;"
-                                    data-dismiss="modal">No</button> <button type="submit"
-                                    class="btn btn-primary ">Submit</button>
-                            </div>
-                            </form>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
             <div class="modal fade modal-success in" id="add_rtgs_fuel{{update.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                  <h1 class="modal-title">Add RTGS Fuel-</h1> <i
-                  style="color:red"><small>Please Note the fuel you are entering is to be
-                      sold in Zimbabwean Local Currency</small></i>
+                  <div class="modal-title">Add RTGS Fuel- <i style="color:red"><small>Please Note the fuel you are entering is to be
+                      sold in Zimbabwean Local Currency</small></i></div>
               </div>
                 <div class="modal-body">
             
@@ -208,20 +138,15 @@
                         </div>
                     </div>
                     <div class=" form-group row col-sm-12">
-                        <div class="col-sm-6">
-                            <label><b style='color:#009688'>Price</b></label>
-                            <input type="text" name="price" class="form-control"
-                                placeholder="In Zimbabwean Dollars" required />
-                        </div>
-                        <input type="hidden" name="cash" value="0" />
-                        <input type="hidden" name="swipe" value="0">
-                        <input type="hidden" name="ecocash" value="0">
-                        <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
+                        <input type="hidden" class=" col-sm-4" name="cash" value="0" />
+                        <input type="hidden" class=" col-sm-4" name="swipe" value="0">
+                        <input type="hidden" class=" col-sm-4" name="ecocash" value="0">
+                        <div class="col-sm-12" name="payment" id="payment{{forloop.counter}}">
                             <label><b style='color:#009688'>Payment Method</b></label>
                             <div class="col-sm-12 row">
-                                <input type="checkbox" class=" col-sm-6" name="cash" value="1"> Cash<br>
-                                <input type="checkbox" class="col-sm-6" value="1" name="swipe">Swipe<br>
-                                <input type="checkbox" class="col-sm-6" value="1" name="ecocash">Ecocash<br>
+                                <div class=" col-sm-4"><input type="checkbox" name="cash" value="1"> Cash<br></div>
+                                <div class="col-sm-4"><input type="checkbox" value="1" name="swipe">Swipe<br></div>
+                                <div class="col-sm-4"><input type="checkbox" class="col-sm-4" value="1" name="ecocash">Ecocash<br></div>
                             </div>
                         </div>
                     </div>
@@ -246,9 +171,8 @@ aria-hidden="true">
   <div class="modal-content">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-      <h1 class="modal-title">Add USD Fuel-</h1> <i
-      style="color:red"><small>Please Note the fuel you are entering is to be
-          sold in United States Dollars</small></i>
+      <div class="modal-title">Add USD Fuel-<i style="color:red"><small>Please Note the fuel you are entering is to be
+          sold in United States Dollars</small></i></div>
   </div>
     <div class="modal-body">
 
@@ -275,20 +199,13 @@ aria-hidden="true">
                                     </div>
                                 </div>
                                 <div class=" form-group row col-sm-12">
-                                    <div class="col-sm-6">
-                                        <label><b style='color:#009688'>Price</b></label>
-                                        <input type="text" name="price" class="form-control"
-                                            placeholder="In United States Dollars" required />
-                                    </div>
                                     <input type="hidden" name="cash" value="0" />
                                     <input type="hidden" name="swipe" value="0">
-                                    <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
+                                    <div class="col-sm-12" name="payment" id="payment{{forloop.counter}}">
                                         <label><b style='color:#009688'>Payment Method</b></label>
-                                        <div class="col-sm-12 row">
-                                            <input type="checkbox" class=" col-sm-6" name="cash" value="1">
-                                            Cash<br>
-                                            <input type="checkbox" id="fca{{forloop.counter}}"
-                                                class="col-sm-6" value="1" name="swipe">FCA<br>
+                                        <div class="col-sm-12">
+                                            <div class="col-sm-6"><input type="checkbox" name="cash" value="1">&nbsp; Cash<br></div>
+                                            <div class="col-sm-6"><input type="checkbox" id="fca{{forloop.counter}}" value="1" name="swipe">&nbsp; FCA<br></div>
                                         </div>
                                     </div>
                                 </div>
@@ -402,41 +319,26 @@ aria-hidden="true">
             </div>
         </div>
         <div class=" form-group row col-sm-12">
-            <div class="col-sm-6">
-                <label><b style='color:#009688'>RTGS Price</b></label>
-                <input type="text" name="price" class="form-control"
-                    placeholder="In RTGS Dollars" required />
-            </div>
             <input type="hidden" name="cash" value="0" />
             <input type="hidden" name="swipe" value="0">
             <input type="hidden" name="ecocash" value="0">
-            <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
-                <label><b style='color:#009688'>Payment Method</b></label>
+            <div class="col-sm-12" name="payment" id="payment{{forloop.counter}}">
+                <label><b style='color:#009688'>Payment Method (RTGS)</b></label>
                 <div class="col-sm-12 row">
-                    <input type="checkbox" class=" col-sm-6" name="cash" value="1">
-                    Cash<br>
-                    <input type="checkbox" 
-                        class="col-sm-6" value="1" name="swipe">Swipe<br>
-                    <input type="checkbox" 
-                        class="col-sm-6" value="1" name="ecocash">Ecocash<br>
+                    <div class="col-sm-4"><input type="checkbox" name="cash" value="1">&nbsp; Cash</div>
+                    <div class="col-sm-4"><input type="checkbox" value="1" name="swipe">&nbsp; Swipe</div>
+                    <div class="col-sm-4"><input type="checkbox" value="1" name="ecocash">&nbsp; Ecocash</div>
                 </div>
             </div>
         </div>
         <div class=" form-group row col-sm-12">
-            <div class="col-sm-6">
-                <label><b style='color:#009688'>USD Price</b></label>
-                <input type="text" name="usd_price" class="form-control"
-                    placeholder="In United States Dollars" required />
-            </div>
             <input type="hidden" name="cash" value="0" />
             <input type="hidden" name="swipe" value="0">
-            <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
-                <label><b style='color:#009688'>Payment Method</b></label>
+            <div class="col-sm-12" name="payment" id="payment{{forloop.counter}}">
+                <label><b style='color:#009688'>Payment Method (USD)</b></label>
                 <div class="col-sm-12 row">
-                    <input type="checkbox" class=" col-sm-6" name="cash" value="1">
-                    Cash<br>
-                    <input type="checkbox" 
-                        class="col-sm-6" value="1" name="swipe">FCA<br>
+                    <div class="col-sm-6"><input type="checkbox" class=" col-sm-6" name="cash" value="1">&nbsp; Cash</div>
+                    <div class="col-sm-6"><input type="checkbox" class="col-sm-6" value="1" name="swipe">&nbsp; FCA</div>
                 </div>
 
 
