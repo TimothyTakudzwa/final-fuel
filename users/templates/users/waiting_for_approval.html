@@ -114,7 +114,7 @@
                                                     <label><b>Depots</b></label>
                                                     <select class="form-control" name="subsidiary">
                                                         {% for depot in depots %}
-                                                        <option >{{depot.name}}</option>
+                                                        <option value="{{depot.id}}">{{depot.name}}</option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>
@@ -125,7 +125,7 @@
                                                 <label><b>Service Stations</b></label>
                                                 <select class="form-control" name="subsidiary">
                                                     {% for station in stations %}
-                                                    <option >{{station.name}}</option>
+                                                    <option value="{{station.id}}">{{station.name}}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
@@ -156,6 +156,7 @@
                                             if ($('#category{{forloop.counter}} option:selected').text() == "Depot") {
                                             $('#depot{{forloop.counter}}').show();
                                             $('#service_station{{forloop.counter}} :input').prop('disabled',true);
+                                            $('#dedepot{{forloop.counter}} :input').prop('disabled',false);
                                             
                                             $('#service_station{{forloop.counter}}').hide();
                                             
@@ -164,6 +165,7 @@
                                             else {
                                             $('#service_station{{forloop.counter}}').show();
                                             $('#dedepot{{forloop.counter}} :input').prop('disabled',true);
+                                            $('#service_station{{forloop.counter}} :input').prop('disabled',false);
                                             
                                             $('#depot{{forloop.counter}}').hide();
                                             
