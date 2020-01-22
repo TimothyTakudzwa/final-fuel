@@ -156,6 +156,7 @@
                                             if ($('#category{{forloop.counter}} option:selected').text() == "Depot") {
                                             $('#depot{{forloop.counter}}').show();
                                             $('#service_station{{forloop.counter}} :input').prop('disabled',true);
+                                            $('#dedepot{{forloop.counter}} :input').prop('disabled',false);
                                             
                                             $('#service_station{{forloop.counter}}').hide();
                                             
@@ -164,6 +165,7 @@
                                             else {
                                             $('#service_station{{forloop.counter}}').show();
                                             $('#dedepot{{forloop.counter}} :input').prop('disabled',true);
+                                            $('#service_station{{forloop.counter}} :input').prop('disabled',false);
                                             
                                             $('#depot{{forloop.counter}}').hide();
                                             
