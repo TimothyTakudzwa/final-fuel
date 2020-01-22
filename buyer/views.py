@@ -259,16 +259,14 @@ def dashboard(request):
                 fuel_request.name = request.user       
                 fuel_request.amount = form.cleaned_data['amount']
                 fuel_request.fuel_type = form.cleaned_data['fuel_type']
-                fuel_request.usd = True if request.POST.get('usd') == "True" else False
-                fuel_request.cash = True if request.POST.get('cash') == "True" else False
-                fuel_request.ecocash = True if request.POST.get('ecocash') == "True" else False
+                fuel_request.payment_method =  request.POST.get('fuel_payment_type')  
                 fuel_request.swipe = True if request.POST.get('swipe') == "True" else False
                 fuel_request.delivery_method = form.cleaned_data['delivery_method']
                 fuel_request.delivery_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
-                fuel_request.storage_tanks = True if request.POST.get('storage_tanks') == "on" else False
-                fuel_request.pump_required = True if request.POST.get('pump_required') == "on" else False
-                fuel_request.dipping_stick_required = True if request.POST.get('usd') == "on" else False
-                fuel_request.meter_required = True if request.POST.get('usd') == "on" else False
+                fuel_request.storage_tanks = request.POST.get('storage_tanks') 
+                fuel_request.pump_required = request.POST.get('pump_required') 
+                fuel_request.dipping_stick_required = request.POST.get('dipping_stick_required')
+                fuel_request.meter_required =  request.POST.get('meter_required') 
                 fuel_request.is_direct_deal = True
                 fuel_request.last_deal = request.POST.get('company_id')
                 print(fuel_request.last_deal)
