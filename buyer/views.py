@@ -243,7 +243,7 @@ def fuel_finder(request):
 
 
 def dashboard(request):
-    updates = FuelUpdate.objects.filter(sub_type="Depot").filter(~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
+    updates = FuelUpdate.objects.filter(sub_type="Suballocation").filter(~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
     for update in updates:
         subsidiary = Subsidiaries.objects.filter(id = update.relationship_id).first()
         company = Company.objects.filter(id=update.company_id).first()
@@ -276,7 +276,7 @@ def dashboard(request):
                 user = User.objects.filter(subsidiary_id = fuel_request.last_deal).first()
             messages.success(request, f'kindly note your request has been made ')
             message = f'{request.user.first_name} {request.user.last_name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
-            Notification.objects.create(message = message, user = user, reference_id = fuel_request.id, action = "new_request")
+            Notification.objects.create(message = message, user = user, reference_id = fuel_request.id, action = "new_request", user_id=request.user.id)
 
         if 'WaitForOffer' in request.POST:
             if form.is_valid():

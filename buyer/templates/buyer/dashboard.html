@@ -115,7 +115,7 @@
                         <tr>
                             <th>Company Name</th>
                             <th>Depot</th>
-                            <th>Address</th>
+                            <th>Payment Type</th>
                             <th>Petrol Price</th>
                             <th>Diesel Price</th>
                             <th>Petrol Quantity</th>
@@ -135,7 +135,7 @@
                                 {{data.depot}}
                             </td>
                             <td>
-                                {{data.address}}
+                                {{data.entry_type}}
                             </td>
                             <td>
                                 {{data.petrol_price}}
@@ -207,6 +207,105 @@
                                 $(this).val(this.checked ? "True" : "False");
                             });
                         </script>
+                        <div class="modal fade modal-xl" id="generic_request" tabindex="-1" role="dialog"
+                        aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <span class="modal-title">Find Fuel</span>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <form method="POST" action="{% url 'buyer-dashboard' %}">
+                                    {% csrf_token %}
+                                   <div class="row form-group">
+                                        <div class="col-sm-6">
+                                            {{ form.fuel_type|as_crispy_field }}
+                                        </div>
+                    
+                                    <div class="col-sm-6">
+                                            {{ form.amount|as_crispy_field }}
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-sm-6">
+                                            <label class="form-group">Select Payment Method</label>
+                                            <select class="form-control" name="fuel_payment_method">
+                                                <option value="USD">USD</option>
+                                                <option value="RTGS">RTGS</option>
+                                                <option value="USD & RTGS">Either</option>
+                                            </select>
+                                        </div>
+                    
+                                    <div class="col-sm-6">
+                                        <label class="form-group">Pick Up Method</label>
+                                        <select id="delivery_method{{forloop.counter}}"
+                                            name="delivery_method" class="form-control">
+                                            <option value='SELF COLLECTION'>Self Collection</option>
+                                            <option value='DELIVERY'>Delivery</option>
+                                        </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" name='choices' id='choices{{forloop.counter}}'>
+                                        <label>Delivery Address</label>
+                                        <div class="row form-group">
+                                            <div class="togglebutton form-group col-sm-4">
+                                                <label for="">Street Number</label>
+                                                <input type="text" class="form-control" name="s_number" id=""
+                                                    aria-describedby="helpId" placeholder="">
+                    
+                                            </div>
+                                            <div class="togglebutton form-group col-sm-4">
+                                                <label for="">Street Name</label>
+                                                <input type="text" class="form-control" name="s_name" id=""
+                                                    aria-describedby="helpId" placeholder="">
+                    
+                                            </div>
+                                            <div class="togglebutton form-group col-sm-4">
+                                                <label for="">Location/Town</label>
+                                                <input type="text" class="form-control" name="s_town" id=""
+                                                    aria-describedby="helpId" placeholder="">
+                    
+                                            </div>
+                    
+                                        </div>
+                    
+                                        {{ form.storage_tanks|as_crispy_field }}
+                                        <br>
+                                        <label>Required Equipments</label>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <input class="form-control-md" type="checkbox" 
+                                                    id="pump_required" name="pump_required">
+                                                <label for="pump_required">Pump </label>
+                    
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <input class="form-control-md" type="checkbox" 
+                                                    id="dipping_stick_required" name="dipping_stick_required">
+                                                <label for="dipping_stick_required">Dipping Stick </label>
+                                            </div>
+                    
+                                            <div class="col-sm-4">
+                                                <input class="form-control-md" type="checkbox"
+                                                    id="meter_required" name="meter_required">
+                                                <label for="meter_required">Meter</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                 
+                              
+                              </div>
+                              <div class="modal-footer">
+                                <button type="submit" name="WaitForOffer" class="btn btn-info btn-sm">Wait for Offer</button>
+                                <button type="submit" name='Recommender' class="btn btn-primary btn-sm">System Generated</button>
+                              </div>
+                            </form>
+                            </div>
+                          </div>
+                    </div>
                         <div class="modal fade" id="make_deal{{data.id}}" tabindex="-1" role="dialog"
                             aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-notice">
@@ -218,7 +317,8 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                            <di/div method="POST">
+                                            <div method="POST">
+                                                <form method="POST">
                                                 {% csrf_token %}
                                                 <div class=" row col-sm-12">
                                                     <div class="col-sm-6">
@@ -229,19 +329,15 @@
                                                         {{ form.amount|as_crispy_field }}
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row col-sm-12">
                                                     <div class="col-sm-6 form-group">
-                                                        <label class="form-group">Select Payment Method</label>
-                                                        <select class="form-control" name="fuel_payment_method">
-                                                            <option value="USD">USD</option>
-                                                            <option value="RTGS">RTGS</option>
-                                                            <option value="USD & RTGS">Either</option>
-                                                        </select>
+                                                        <label class="form-group">Payment Method</label>
+                                                        <input type="text" class="form-control" value=" {{data.entry_type}}" disabled/> 
                                                     </div>
 
 
                                                 <div class="col-sm-6 form-group">
-                                                    <label>Pick Up Method</label>
+                                                    <label class="form-group">Pick Up Method</label>
                                                     <select id="delivery_method1{{forloop.counter}}"
                                                         name="delivery_method" class="form-control">
                                                         <option value='SELF_COLLECTION'>Self Collection
@@ -314,105 +410,7 @@
 
 
                         <!-- end notice modal -->
-                        <div class="modal fade modal-xl" id="generic_request" tabindex="-1" role="dialog"
-                            aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <span class="modal-title">Find Fuel</span>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                      <span aria-hidden="true">&times;</span>
-                                    </button>
-                                  </div>
-                                  <div class="modal-body">
-                                    <form method="POST" action="{% url 'buyer-dashboard' %}">
-                                        {% csrf_token %}
-                                       <div class="row form-group">
-                                            <div class="col-sm-6">
-                                                {{ form.fuel_type|as_crispy_field }}
-                                            </div>
                         
-                                        <div class="col-sm-6">
-                                                {{ form.amount|as_crispy_field }}
-                                            </div>
-                                        </div>
-                                        <div class="row form-group">
-                                            <div class="col-sm-6">
-                                                <label class="form-group">Select Payment Method</label>
-                                                <select class="form-control" name="fuel_payment_method">
-                                                    <option value="USD">USD</option>
-                                                    <option value="RTGS">RTGS</option>
-                                                    <option value="USD & RTGS">Either</option>
-                                                </select>
-                                            </div>
-                        
-                                        <div class="col-sm-6">
-                                            <label class="form-group">Pick Up Method</label>
-                                            <select id="delivery_method{{forloop.counter}}"
-                                                name="delivery_method" class="form-control">
-                                                <option value='SELF COLLECTION'>Self Collection</option>
-                                                <option value='DELIVERY'>Delivery</option>
-                                            </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group" name='choices' id='choices{{forloop.counter}}'>
-                                            <label>Delivery Address</label>
-                                            <div class="row form-group">
-                                                <div class="togglebutton form-group col-sm-4">
-                                                    <label for="">Street Number</label>
-                                                    <input type="text" class="form-control" name="s_number" id=""
-                                                        aria-describedby="helpId" placeholder="">
-                        
-                                                </div>
-                                                <div class="togglebutton form-group col-sm-4">
-                                                    <label for="">Street Name</label>
-                                                    <input type="text" class="form-control" name="s_name" id=""
-                                                        aria-describedby="helpId" placeholder="">
-                        
-                                                </div>
-                                                <div class="togglebutton form-group col-sm-4">
-                                                    <label for="">Location/Town</label>
-                                                    <input type="text" class="form-control" name="s_town" id=""
-                                                        aria-describedby="helpId" placeholder="">
-                        
-                                                </div>
-                        
-                                            </div>
-                        
-                                            {{ form.storage_tanks|as_crispy_field }}
-                                            <br>
-                                            <label>Required Equipments</label>
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                    <input class="form-control-md" type="checkbox" 
-                                                        id="pump_required" name="pump_required">
-                                                    <label for="pump_required">Pump </label>
-                        
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <input class="form-control-md" type="checkbox" 
-                                                        id="dipping_stick_required" name="dipping_stick_required">
-                                                    <label for="dipping_stick_required">Dipping Stick </label>
-                                                </div>
-                        
-                                                <div class="col-sm-4">
-                                                    <input class="form-control-md" type="checkbox"
-                                                        id="meter_required" name="meter_required">
-                                                    <label for="meter_required">Meter</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                     
-                                  
-                                  </div>
-                                  <div class="modal-footer">
-                                    <button type="submit" name="WaitForOffer" class="btn btn-info btn-sm">Wait for Offer</button>
-                                    <button type="submit" name='Recommender' class="btn btn-primary btn-sm">System Generated</button>
-                                  </div>
-                                </form>
-                                </div>
-                              </div>
-                        </div>
                         {% endfor %}
 
                     </tbody>
