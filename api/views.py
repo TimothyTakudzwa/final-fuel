@@ -1,17 +1,14 @@
-from django.contrib import messages
 from django.contrib.auth import authenticate, update_session_auth_hash
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail.message import BadHeaderError
 from django.http.response import JsonResponse, HttpResponse
-from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from django.contrib.auth import get_user_model
-from django.db.models import Q
 
 from buyer.models import User
 from company.models import FuelUpdate
-from supplier.models import Subsidiaries, TokenAuthentication
+from supplier.models import Subsidiaries
 
 import secrets
 from fuelfinder import settings
@@ -108,7 +105,8 @@ def update_station(request):
         status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Service Station')
 
         if status.exists():
-            update = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Service Station').first()
+            update = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(
+                sub_type='Service Station').first()
 
             p_quantity = request.POST.get('petrol_quantity')
             d_quantity = request.POST.get('diesel_quantity')
@@ -153,14 +151,14 @@ def view_station_updates(request):
             updates = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Service Station')
             for update in updates:
                 company = Subsidiaries.objects.get(id=update.relationship_id)
-                
+                image = f'https://{request.get_host()}{company.logo.url}/'
+
                 station_update = {
                     'name': company.name, 'diesel_quantity': update.diesel_quantity,
                     'diesel_price': update.diesel_price, 'petrol_quantity': update.petrol_quantity,
                     'petrol_price': update.petrol_price, 'cash': update.cash, 'ecocash': update.ecocash,
-                    'swipe': update.swipe, 'usd': update.usd, 'queue': update.queue_length, 'limit': update.limit,
-                    'status': update.status, 'currency_check': update.entry_type, 'diesel_usd': update.diesel_usd_price,
-                    'petrol_usd': update.petrol_usd_price
+                    'swipe': update.swipe, 'queue': update.queue_length, 'limit': update.limit,
+                    'status': update.status, 'image': image
                 }
                 data.append(station_update)
             return JsonResponse(list(data), status=200, safe=False)
@@ -176,9 +174,10 @@ def view_updates_user(request):
         data = []
 
         sub_updates = FuelUpdate.objects.filter(sub_type='Service Station').all()
-        
+
         for sub_update in sub_updates:
-            updates = FuelUpdate.objects.filter(sub_type='Suballocation').filter(relationship_id=sub_update.relationship_id).all()
+            updates = FuelUpdate.objects.filter(sub_type='Service Station').filter(
+                relationship_id=sub_update.relationship_id).all()
             for update in updates:
                 details = Subsidiaries.objects.get(id=update.relationship_id)
                 if update.diesel_quantity == 0 and update.petrol_quantity == 0:
@@ -186,13 +185,11 @@ def view_updates_user(request):
                 else:
                     image = f'https://{request.get_host()}{details.company.logo.url}/'
                     station_update = {
-                        'station': details.name, 'company': details.company.name, 'queue':
-                            update.queue_length, 'petrol': update.petrol_price, 'diesel': update.diesel_price,
-                        'open': details.opening_time, 'close': details.closing_time, 'limit': update.limit, 'cash': update.cash,
-                        'ecocash': update.ecocash, 'swipe': update.swipe, 'usd': update.usd, 'status': update.status,
-                        'currency_check': update.entry_type, 'diesel_usd': update.diesel_usd_price,
-                        'petrol_usd': update.petrol_usd_price, 'image': image
-                        }
+                        'station': details.name, 'queue': update.queue_length, 'petrol': update.petrol_price,
+                        'diesel': update.diesel_price, 'open': details.opening_time, 'close': details.closing_time,
+                        'limit': update.limit, 'cash': update.cash, 'ecocash': update.ecocash, 'swipe': update.swipe,
+                        'status': update.status, 'image': image
+                    }
                     data.append(station_update)
         return JsonResponse(list(data), status=200, safe=False)
 
@@ -300,4 +297,3 @@ def password_reset(request):
 
         else:
             return HttpResponse(status=404)
-
