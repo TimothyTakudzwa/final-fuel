@@ -5,14 +5,52 @@
 {% endblock %}
 {% block body %}
 
-
-<div class="col-md-12">
-    <div class="card" style="background-color:rgb(241, 239, 243); background-image: url('finder/static/assets/img/sidebar-1.jpg')">
-        
-        <div class="card-header card-header-primary"> 
-        <h3 class="card-title ">{{request.user.company.name}} Profile</h3>
-        </div>
-        <div class="card-avatar" style="margin-top: 30px;display: block;text-align: center;">
+        <section class="content-header">
+            <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+                   <div class="input-group">
+                   <input type="text" name="q" class="form-control" placeholder="Search...">
+                       <span class="input-group-btn">
+                           <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+                       </span>
+                   </div>
+               </form>   
+           <div class="header-icon">
+               <i class="fa fa-address-book"></i>
+           </div>
+           <div class="header-title">
+               <h1> Company Profile</h1>
+               <small>{{user.company.name}}</small>
+               <ol class="breadcrumb hidden-xs">
+                  <li><a href="#"><i class="pe-7s-home"></i> Home</a></li>
+                  <li class="active">Profile</li>
+              </ol>
+               
+           </div>
+          </section>
+          
+          <div class="content">
+          
+          
+            <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
+            data-index="0">
+            <div class="panel-heading ui-sortable-handle">
+                <div class="btn-group">
+                    <h3 class="display-3" style="color: rgb(79, 189, 150);">{{request.user.company.name}} Profile</h3>
+            
+                </div>
+                <div class="dropdown">
+                    <ul class="dropdown-menu dropdown-menu-right">
+            
+            
+                    </ul>
+                    <div class="dropdown-toggle" data-toggle="dropdown"><span
+                            class="panel-control-icon glyphicon glyphicon-cog"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+        <div class="container-fluid">
+            <div class="card-avatar" style="margin-top: 30px;display: block;text-align: center;">
                 <div class="img-rounded">
                     <a href="#">
                     <img class="img" src="/media/{{compan.logo}}" height="250px" width="250px" />
@@ -20,8 +58,6 @@
                     </a>
                 </div>    
               </div>
-    <div class="card-body">
-        <div class="container-fluid">
             
             {% load crispy_forms_tags %}
             <form action="{% url 'users:company_profile'%}" method="POST">
