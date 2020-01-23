@@ -59,7 +59,8 @@
       <tr>
           <td height="50">Petrol Quantity</td>
           <td height="50">
-          {{updates.petrol_quantity}} {% if updates.petrol_quantity < 1000 %} <i class="material-icons text-danger" style="margin-left: 10px;">warning</i><a href="#pablo" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
+          {{updates.petrol_quantity}} {% if updates.petrol_quantity < 1000 %} 
+          <i class="fa fa-exclamation-triangle" style="margin-left: 10px; color:#cc3300;" aria-hidden="true"></i><a href="#pablo" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
         </td>
         </tr>
         <tr>
@@ -70,7 +71,7 @@
               <td height="50">Diesel Quantity</td>
               
               <td height="50">
-                 {{updates.diesel_quantity}} {% if updates.diesel_quantity < 1000 %} <i class="material-icons text-danger" style="margin-left: 10px;">warning</i><a href="#pablo" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
+                 {{updates.diesel_quantity}} {% if updates.diesel_quantity < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 10px; color:#cc3300;" aria-hidden="true"></i><a href="#pablo" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
               </td>
             </tr>
             <tr>
