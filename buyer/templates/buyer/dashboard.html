@@ -121,8 +121,8 @@
                             <th>Petrol Quantity</th>
                             <th>Diesel Quantity</th>
                             <th>Updated on</th>
-                            <th>Action</th>
                             <th>Rating</th>
+                            <th>Action</th>                            
                         </tr>
                     </thead>
                     <tbody>
@@ -154,15 +154,15 @@
                                 {{data.last_updated}}
                             </td>
                             <td>
+                                {{data.rating}}
+                            </td>
+                            <td>
 
                                 <button class="btn btn-primary btn-sm" data-toggle="modal"
                                     data-target="#make_deal{{data.id}}"> <i class="fa fa-handshake-o"
                                         aria-hidden="true"></i> Deal
                                 </button>
-                            </td>
-                            <td>
-                                {{data.rating}}
-                            </td>
+                            </td>                            
                         </tr>
                         <script>
                             $(document).ready(function () {
