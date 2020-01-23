@@ -121,7 +121,8 @@
                             <th>Petrol Quantity</th>
                             <th>Diesel Quantity</th>
                             <th>Updated on</th>
-                            <th>Action</th>
+                            <th>Rating/5</th>
+                            <th>Action</th>                            
                         </tr>
                     </thead>
                     <tbody>
@@ -153,12 +154,15 @@
                                 {{data.last_updated}}
                             </td>
                             <td>
+                                {{data.rating}}
+                            </td>
+                            <td>
 
                                 <button class="btn btn-primary btn-sm" data-toggle="modal"
                                     data-target="#make_deal{{data.id}}"> <i class="fa fa-handshake-o"
                                         aria-hidden="true"></i> Deal
                                 </button>
-                            </td>
+                            </td>                            
                         </tr>
                         <script>
                             $(document).ready(function () {
@@ -212,7 +216,7 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
-                                <span class="modal-title">Find Fuel</span>
+                                <span class="modal-title" id="myModalLabel">Find Fuel</span>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">&times;</span>
                                 </button>
@@ -306,9 +310,9 @@
                             </div>
                           </div>
                     </div>
-                        <div class="modal fade" id="make_deal{{data.id}}" tabindex="-1" role="dialog"
+                        <div class="modal fade modal-success in" id="make_deal{{data.id}}" tabindex="-1" role="dialog"
                             aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-notice">
+                            <div class="modal-dialog" style="margin: 0;">
                                 <div class="modal-content" style="max-width: 100%;">
                                     <div class="modal-header">
                                         <span class="modal-title" id="myModalLabel">Make a deal</span>
@@ -403,7 +407,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <input type="hidden" value="{{data.id}}" name="company_id" />
+                                                <input type="hidden" value="{{data.relationship_id}}" name="company_id" />
                                         </div>
                                         <div class="modal-footer justify-content-center">
                                             <button type="submit" name="MakeDeal" class="btn btn-primary ">Submit

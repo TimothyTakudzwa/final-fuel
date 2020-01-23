@@ -13,7 +13,7 @@ from django.http import HttpResponse
 from buyer.models import User
 from buyer.recommend import recommend
 from company.models import Company, FuelUpdate
-from supplier.models import Offer, Subsidiaries, Transaction, TokenAuthentication
+from supplier.models import Offer, Subsidiaries, Transaction, TokenAuthentication, UserReview
 
 from .constants import sample_data
 from .forms import (BuyerRegisterForm, PasswordChange, BuyerUpdateForm, FuelRequestForm,
@@ -197,7 +197,7 @@ def fuel_request(request):
     fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).all()
     for fuel_request in fuel_requests:
         if fuel_request.is_direct_deal:
-            search_company = FuelUpdate.objects.filter(id= fuel_request.last_deal).first()
+            search_company = FuelUpdate.objects.filter(relationship_id = fuel_request.last_deal).first()
             depot = Subsidiaries.objects.filter(id=search_company.relationship_id).first()
             company = Company.objects.filter(id= search_company.company_id).first()
             fuel_request.request_company = company.name
@@ -246,6 +246,17 @@ def dashboard(request):
     updates = FuelUpdate.objects.filter(sub_type="Suballocation").filter(~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
     for update in updates:
         subsidiary = Subsidiaries.objects.filter(id = update.relationship_id).first()
+        if UserReview.objects.filter(depot = subsidiary).exists():
+            ratings = UserReview.objects.filter(depot = subsidiary).all()
+            sum_rate = 0
+            rate_count = 0
+            for rate in ratings:
+                sum_rate = sum_rate + rate.rating
+                rate_count += 1
+            update.rating = round(sum_rate / rate_count)
+        else:
+            update.rating = '-'
+
         company = Company.objects.filter(id=update.company_id).first()
         if company is not None:
             update.company = company.name
@@ -342,9 +353,10 @@ def new_fuel_offer(request, id):
 
 def accept_offer(request, id):    
     offer = Offer.objects.filter(id=id).first()
-    print(offer.supplier)  
     Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier,is_complete=True) 
     FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
+    offer.is_accepted = True
+    offer.save()
     
     message = f'{offer.request.name.first_name} {offer.request.name.last_name} accepted your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
     Notification.objects.create(message = message, user = offer.supplier, reference_id = offer.id, action = "ofer_accepted")
