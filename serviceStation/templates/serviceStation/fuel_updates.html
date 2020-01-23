@@ -59,7 +59,8 @@
       <tr>
           <td height="50">Petrol Quantity</td>
           <td height="50">
-          {{updates.petrol_quantity}} {% if updates.petrol_quantity < 1000 %} <i class="material-icons text-danger" style="margin-left: 10px;">warning</i><a href="#pablo" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
+          {{updates.petrol_quantity}} {% if updates.petrol_quantity < 1000 %} 
+          <i class="fa fa-exclamation-triangle" style="margin-left: 10px; color:#cc3300;" aria-hidden="true"></i><a href="#pablo" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
         </td>
         </tr>
         <tr>
@@ -70,7 +71,7 @@
               <td height="50">Diesel Quantity</td>
               
               <td height="50">
-                 {{updates.diesel_quantity}} {% if updates.diesel_quantity < 1000 %} <i class="material-icons text-danger" style="margin-left: 10px;">warning</i><a href="#pablo" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
+                 {{updates.diesel_quantity}} {% if updates.diesel_quantity < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 10px; color:#cc3300;" aria-hidden="true"></i><a href="#pablo" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
               </td>
             </tr>
             <tr>
@@ -242,8 +243,11 @@
         </div>
       </div>
     </div>
-    <div style="background-color:rgb(49, 60, 112);margin-left:auto;margin-right:auto;display:block;">
-      <button class="btn btn-primary " style="margin-left:400px;margin-right:auto;" data-toggle="modal" data-target="#add_fuel">Update Petrol Quantity</button> <button class="btn btn-success " data-toggle="modal" data-target="#add_diesel{{updates.id}}">Update Diesel Quantity</button> 
+    <div style="background-color:rgb(49, 60, 112);margin-left:auto;margin-right:auto;display:block;padding: 20px;">
+      <div class="row">
+      <button class="btn btn-primary col-md-4 pull-left"  style="margin-left: 150px;" data-toggle="modal" data-target="#add_fuel">Update Petrol Quantity</button> 
+      <button class="btn btn-primary col-md-4 pull-right" style="margin-right: 150px;"  data-toggle="modal" data-target="#add_diesel{{updates.id}}">Update Diesel Quantity</button> 
+      </div>
     </div>
 
   </div>
