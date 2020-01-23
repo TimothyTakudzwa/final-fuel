@@ -93,6 +93,8 @@
     <body class="hold-transition sidebar-mini">
         <!-- Site wrapper -->
         <div class="wrapper">
+
+            
             <header class="main-header">
                 <a href="{% url 'users:company_profile' %}" class="logo"> <!-- Logo -->
                     <span class="logo-mini"> </span>
@@ -203,7 +205,7 @@
 
             </ul>
         </div>
-    </aside>
+          </aside>
 
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
@@ -216,29 +218,33 @@
                     });
                 </script>            
                 <!--MainContent-->
+                
 
                 <main role="main">
+                    
                     <div class="row">
                         <div class="col-md-12">
 
-                            {% if messages %}
-
+                            
+            
+            
+                        </div>
+                        {% if messages %}
+            
                                 {% for message in messages %}
                                     <div class="alert alert-{{ message.tags }}" style="text-align: center">
                                         {{ message }}
                                     </div>
                                 {% endfor %}
-
+            
                             {% endif %}
-
-
-
-                        </div>
+            
 
                         {% block body %}{% endblock %}
 
 
                     </div>
+                    
                 </main>
 
 
@@ -297,9 +303,9 @@
         <script>
 
 
-            $(document).ready(function() {
-              $('#example').DataTable({"order": [[ 0, "desc" ]]});
-            } );
+            // $(document).ready(function() {
+            //   $('#example').DataTable({"order": [[ 0, "desc" ]]});
+            // } );
         
             $(document).ready(function() {
               $('#subs_table').DataTable({"order": [[ 2, "desc" ]]});

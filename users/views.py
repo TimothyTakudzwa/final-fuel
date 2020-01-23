@@ -210,7 +210,7 @@ def allocation_update(request,id):
             depot.save()
             
             action = 'Allocation of ' + request.POST['fuel_type']
-            if request.POST['fuel_type'] == 'Petrol':
+            if request.POST['fuel_type'].lower() == 'petrol':
                 FuelAllocation.objects.create(company=request.user.company, fuel_payment_type= fuel_update.entry_type, action = action,petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'],swipe=request.POST['swipe'],allocated_subsidiary_id=fuel_update.relationship_id)
             else:
                 FuelAllocation.objects.create(company=request.user.company, fuel_payment_type= fuel_update.entry_type, action = action,diesel_price=fuel_update.diesel_price,diesel_quantity=request.POST['quantity'],sub_type=fuel_update.sub_type,cash=request.POST['cash'],swipe=request.POST['swipe'],allocated_subsidiary_id=fuel_update.relationship_id)
