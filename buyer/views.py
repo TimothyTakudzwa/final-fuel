@@ -253,7 +253,7 @@ def dashboard(request):
             for rate in ratings:
                 sum_rate = sum_rate + rate.rating
                 rate_count += 1
-            update.rating = sum_rate / rate_count
+            update.rating = int(sum_rate / rate_count)
         else:
             update.rating = '-'
 
