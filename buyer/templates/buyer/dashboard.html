@@ -122,6 +122,7 @@
                             <th>Diesel Quantity</th>
                             <th>Updated on</th>
                             <th>Action</th>
+                            <th>Rating</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -158,6 +159,9 @@
                                     data-target="#make_deal{{data.id}}"> <i class="fa fa-handshake-o"
                                         aria-hidden="true"></i> Deal
                                 </button>
+                            </td>
+                            <td>
+                                {{data.rating}}
                             </td>
                         </tr>
                         <script>
@@ -306,9 +310,9 @@
                             </div>
                           </div>
                     </div>
-                        <div class="modal fade" id="make_deal{{data.id}}" tabindex="-1" role="dialog"
+                        <div class="modal fade modal-success in" id="make_deal{{data.id}}" tabindex="-1" role="dialog"
                             aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-notice">
+                            <div class="modal-dialog" style="margin: 0;">
                                 <div class="modal-content" style="max-width: 100%;">
                                     <div class="modal-header">
                                         <span class="modal-title" id="myModalLabel">Make a deal</span>

@@ -75,6 +75,7 @@ class Offer(models.Model):
     dipping_stick_available = models.BooleanField(default=False,  blank=True, null=True)
     meter_available = models.BooleanField(default=False,  blank=True, null=True)
     declined = models.BooleanField(default=False,  blank=True, null=True)
+    is_accepted = models.BooleanField(default=False,  blank=True, null=True)
 
     class Meta:
         ordering = ['-date', '-time']
