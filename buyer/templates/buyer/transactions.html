@@ -59,7 +59,7 @@
                     <tbody>
                         {% for transaction in transactions %}
                         <tr>
-                            <td class="name truncate">{{transaction.id}}</td>
+                            <td class="name truncate">{{transaction.offer.supplier.company.name}}</td>
                             <td class="name truncate">{{transaction.offer.supplier.company}}</td>
                             <td class="name truncate">{{transaction.offer.supplier.company.address}}</td>
                             <td class="name truncate">{{transaction.offer.request.fuel_type}}</td>
