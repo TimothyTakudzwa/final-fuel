@@ -22,6 +22,7 @@ urlpatterns = [
     path('account/', supplier_views.account, name='account'),
     path('fuel-request/', supplier_views.fuel_request, name='fuel-request'),
     path('new_fuel_request/<id>', supplier_views.new_fuel_request, name='new_fuel_request'),
+    path('new_fuel_offer/<id>', buyer_views.new_fuel_offer, name='new_fuel_offer'),
     path('accepted_offer/<id>', supplier_views.accepted_offer, name='accepted_offer'),
     path('stock_update/<int:id>', supplier_views.stock_update, name='stock_update'),
     path('rejected_offer/<id>', supplier_views.rejected_offer, name='rejected_offer'),
