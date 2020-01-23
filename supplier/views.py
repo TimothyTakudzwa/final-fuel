@@ -151,7 +151,7 @@ def stock_update(request,id):
                 fuel_update.petrol_quantity = int(request.POST['quantity'])
             else:
                 if int(request.POST['quantity']) > available_diesel:
-                    messages.warning(request, 'You can only reduce your petrol quantity')
+                    messages.warning(request, 'You can only reduce your diesel quantity')
                     return redirect('available_stock')
                 fuel_update.diesel_quantity = int(request.POST['quantity'])
             fuel_update.cash = request.POST['cash']
