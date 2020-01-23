@@ -253,7 +253,7 @@ def dashboard(request):
             for rate in ratings:
                 sum_rate = sum_rate + rate.rating
                 rate_count += 1
-            update.rating = sum_rate / rate_count
+            update.rating = round(sum_rate / rate_count)
         else:
             update.rating = '-'
 
@@ -361,7 +361,7 @@ def accept_offer(request, id):
     message = f'{offer.request.name.first_name} {offer.request.name.last_name} accepted your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
     Notification.objects.create(message = message, user = offer.supplier, reference_id = offer.id, action = "ofer_accepted")
 
-    messages.success(request, "You have accepted offer successfully") 
+    messages.warning(request, "Your request has been saved successfully") 
     return redirect("buyer-transactions")
 
 def reject_offer(request, id):    
