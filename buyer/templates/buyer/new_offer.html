@@ -3,13 +3,47 @@
 
 {% block body%}
 
-
-<div class="card">
-    <div class="card-header card-header-primary">
-        <h4 class="card-title "> New Offer </h4>
-        <p class="card-category"></p>
+<section class="content-header">
+    <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search...">
+            <span class="input-group-btn">
+             <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+         </span>
+        </div>
+    </form>
+    <div class="header-icon">
+        <i class="fa fa-clipboard"></i>
     </div>
-    <div class="card-body">
+    <div class="header-title">
+
+        <h1>New Fuel Offer</h1>
+        <small>Fuel Finder Zimbabwe</small>
+        <ol class="breadcrumb hidden-xs">
+            <li><a href="#"><i class="pe-7s-home"></i> Home</a></li>
+            <li class="active">Offer</li>
+        </ol>
+
+    </div>
+
+</section>
+
+<div class="mt-2 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+    <div class="panel-heading ui-sortable-handle">
+        <div class="btn-group">
+        <h4> New Offer - <small><i>On {{request.user.company.name|title}}'s Requests</i></small></h4>
+        </div>
+        <div class="dropdown">
+            <ul class="dropdown-menu dropdown-menu-right">
+
+
+            </ul>
+            <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+            </div>
+        </div>
+    </div>      
+     <div class="panel-body">
+
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped" id="fuel_updates">
                 <thead style="background-color: lightslategray; color: white;">
@@ -112,8 +146,7 @@
                 </tbody>
             </table>
         </div>
-    </div>
-</div>
+
 </div>
 
 </div>
