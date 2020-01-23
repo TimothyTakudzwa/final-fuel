@@ -169,12 +169,22 @@
 
                 });
             </script>
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
             {% if messages %}
         
             {% for message in messages %}
+                {%if message.tags == 'warning' %}
+                <script>
+                    $(document).ready(function () {
+                        swal("Success!", "You transaction has been created, someone from Intelli Africa Sollutions will contact you", "success");
+                    });
+                </script>
+                
                 <div class="alert alert-{{ message.tags }}" style="text-align: center">
                     {{ message }}
                 </div>
+                {%else%}
+                {%endif%}
             {% endfor %}
         
         {% endif %}
