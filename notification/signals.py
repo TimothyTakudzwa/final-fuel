@@ -24,13 +24,13 @@ def distribute(sender, instance, created, **kwargs):
             return requests.post(url=url, json=values)
         elif messages.action == "ofer_accepted":
             #domain = request.get_host()
-            click_url = f'https://fuelfinderzim.com/offer_accepted/{messages.reference_id}'
+            click_url = f'https://fuelfinderzim.com/accepted_offer/{messages.reference_id}'
             url = 'https://dreamhub.co.zw/notify'
             values = dict(user_id=messages.user.id, notification=messages.message, action=messages.action,url = click_url)
             return requests.post(url=url, json=values)
         elif messages.action == "offer_rejected":
             #domain = request.get_host()
-            click_url = f'https://fuelfinderzim.com/offer_rejected/{messages.reference_id}'
+            click_url = f'https://fuelfinderzim.com/rejected_offer/{messages.reference_id}'
             url = 'https://dreamhub.co.zw/notify'
             values = dict(user_id=messages.user.id, notification=messages.message, action=messages.action,url = click_url)
             return requests.post(url=url, json=values)
