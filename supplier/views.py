@@ -76,8 +76,8 @@ def account(request):
 
 @login_required()
 def fuel_request(request):
-    requests = FuelRequest.objects.filter(is_deleted=False ,wait=True).all()
-    direct_requests =  FuelRequest.objects.filter(is_deleted=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
+    requests = FuelRequest.objects.filter(is_deleted=False ,wait=True, is_complete=False).all()
+    direct_requests =  FuelRequest.objects.filter(is_deleted=False, is_complete=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
     requests = list(chain(requests, direct_requests))
     requests.sort(key = attrgetter('date', 'time'), reverse = True)
 
@@ -411,7 +411,7 @@ def company(request):
 
 
 def my_offers(request):
-    offers = Offer.objects.filter(supplier=request.user).all()
+    offers = Offer.objects.filter(supplier=request.user, is_accepted=False).all()
     for offer_temp in offers:
         if offer_temp.cash==offer_temp.ecocash==offer_temp.swipe==offer_temp.usd==False:
             offer_temp.no_payment = True
