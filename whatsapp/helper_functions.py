@@ -1,3 +1,5 @@
+from itertools import chain
+
 from django.shortcuts import render
 import requests
 from validate_email import validate_email
