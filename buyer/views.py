@@ -336,6 +336,10 @@ def new_offer(request, id):
     offers = Offer.objects.filter(id=id).all()
     return render(request, 'buyer/new_offer.html', {'offers': offers })
 
+def new_fuel_offer(request, id):
+    offers = Offer.objects.filter(id=id).all()
+    return render(request, 'buyer/new_offer.html', {'offers': offers })
+
 def accept_offer(request, id):    
     offer = Offer.objects.filter(id=id).first()
     print(offer.supplier)  
