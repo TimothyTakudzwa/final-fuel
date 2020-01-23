@@ -280,7 +280,7 @@
                                     </div>
                                     <div>
                                         {% load crispy_forms_tags %}
-                                        <form action="{% url 'users:allocation_update' allocate.id %}" method="POST">
+                                        <form action="{% url 'users:allocation_update_main' allocate.id %}" method="POST">
                                             {% csrf_token %}
                                             <input type="hidden" value="RTGS" name="fuel_payment_type" />
                                             <div class="form-group row col-sm-12" style="margin-top: 5%;">
@@ -352,7 +352,7 @@
                                     </div>
                                     <div>
                                         {% load crispy_forms_tags %}
-                                        <form action="{% url 'users:allocation_update' allocate.id %}" method="POST">
+                                        <form action="{% url 'users:allocation_update_main' allocate.id %}" method="POST">
                                             {% csrf_token %}
                                             <input type="hidden" value="USD" name="fuel_payment_type" />
                                             <div class="form-group row col-sm-12" style="margin-top: 5%;">

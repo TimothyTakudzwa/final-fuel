@@ -12,6 +12,7 @@ urlpatterns = [
     path('stations/', views.stations, name="stations"),
     path('allocate/', views.allocate, name="allocate"),
     path('allocation_update/<int:id>', views.allocation_update, name="allocation_update"),
+    path('allocation_update_main/<int:id>', views.allocation_update_main, name="allocation_update_main"),
     path('depots/', views.depots, name="depots"),
     path('myaccount/', views.myaccount, name="myaccount"),
     path('depot_staff/', views.depot_staff, name="depot_staff"),
