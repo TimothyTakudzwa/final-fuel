@@ -431,7 +431,7 @@ def myaccount(request):
 @login_required()
 def stations(request):
     stations = Subsidiaries.objects.filter(company=request.user.company).all()
-    zimbabwean_towns = ["Harare","Bulawayo","Gweru","Mutare","Chirundu","Bindura","Beitbridge","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Chinhoyi","Mutoko","Nyanga","Victoria Falls"]
+    zimbabwean_towns = ["Select City ---","Harare","Bulawayo","Gweru","Mutare","Chirundu","Bindura","Beitbridge","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Chinhoyi","Mutoko","Nyanga","Victoria Falls"]
     Harare = ['Avenues', 'Budiriro','Dzivaresekwa',  'Kuwadzana', 'Warren Park','Glen Norah', 'Glen View',  'Avondale',  'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park','Borrowdale',  'Chisipiti',  'Glen Lorne', 'Greendale', 'Greystone Park', 'Helensvale', 'Highlands',   'Mandara', 'Manresa','Msasa','Newlands',  'The Grange',  'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft', 'Hatcliffe', 'Mabelreign', 'Marlborough',  'Meyrick Park', 'Mount Pleasant',  'Pomona',   'Tynwald',  'Vainona', 'Arcadia','Braeside', 'CBD',  'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale', 'Sunningdale', 'Epworth','Highfield' 'Kambuzuma',  'Southerton', 'Warren Park', 'Southerton',  'Mabvuku', 'Tafara',  'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park',  'Marimba Park', 'Mufakose']
     Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane', 'North End', 'Northvale', 'North Lynne', 'Northlea','North Trenance', 'Ntaba Moyo', 'Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont', 'Bradfield']
     Mutare = ['Murambi', 'Hillside', 'Fairbridge Park', 'Morningside', 'Tigers Kloof', 'Yeovil', 'Westlea', 'Florida', 'Chikanga', 'Garikai', 'Sakubva', 'Dangamvura','Weirmouth', 'Fern Valley', 'Palmerstone', 'Avenues', 'Utopia','Darlington', 'Greeside', 'Greenside Extension', 'Toronto', 'Bordervale', 'Natview Park','Mai Maria', 'Gimboki', 'Musha Mukadzi']
@@ -769,7 +769,7 @@ def suppliers_list(request):
         suppliers = None
 
     form1 = SupplierContactForm()         
-    subsidiaries = Subsidiaries.objects.filter(is_depot=False).all()
+    subsidiaries = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
     form1.fields['service_station'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in subsidiaries] 
 
     if request.method == 'POST':
@@ -917,7 +917,7 @@ def depot_staff(request):
             supplier.subsidiary_name = subsidiary.name
     #suppliers = [sup for sup in suppliers if not sup == request.user]   
     form1 = DepotContactForm()         
-    subsidiaries = Subsidiaries.objects.filter(is_depot=True).all()
+    subsidiaries = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company).all()
     form1.fields['depot'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in subsidiaries] 
 
     if request.method == 'POST':
@@ -967,7 +967,7 @@ def edit_subsidiary(request, id):
         if Subsidiaries.objects.filter(id=id).exists():
             subsidiary_update = Subsidiaries.objects.filter(id=id).first()
             subsidiary_update.name = request.POST['name']
-            subsidiary_update.address = request.POST['address']
+            subsidiary_update.location = request.POST['address']
             subsidiary_update.is_depot = request.POST['is_depot']
             subsidiary_update.opening_time = request.POST['opening_time']
             subsidiary_update.closing_time = request.POST['closing_time']
