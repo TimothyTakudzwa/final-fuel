@@ -22,6 +22,7 @@ from .models import FuelRequest, Transaction, TokenAuthentication, Offer, Subsid
 from company.models import Company, FuelUpdate
 from notification.models import Notification
 from django.contrib.auth import get_user_model
+from whatsapp.helper_functions import send_message
 
 User = get_user_model()
 
@@ -71,7 +72,12 @@ def change_password(request):
 
 @login_required()
 def account(request):
-    return render(request, 'supplier/user_profile.html')
+    subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+    if subsidiary is not None:
+        subsidiary_name = subsidiary.name
+    else:
+        subsidiary_name = "Not Set"
+    return render(request, 'supplier/user_profile.html', {'subsidiary_name':subsidiary_name})
 
 
 @login_required()
@@ -211,9 +217,12 @@ def offer(request, id):
                     
                     messages.success(request, 'Offer uploaded successfully')
 
+
                     message = f'You have a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {fuel_request.amount}L'
                     Notification.objects.create(message = message, user = fuel_request.name, reference_id = offer.id, action = "new_offer")
-
+                    click_url = f'https://fuelfinderzim.com/new_fuel_offer/{offer.id}'
+                    if offer.request.name.activated_for_whatsapp:
+                        send_message(offer.request.name.phone_number,f'Your have received a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {fuel_request.amount}L click {click_url} to view details')
                     action = f"{request.user}  made an offer of {offer_quantity}L @ {request.POST.get('price')} to a request made by {fuel_request.name.username}"
                     service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
                     reference = 'offers'
@@ -270,7 +279,7 @@ def edit_offer(request, id):
                 offer.meter_available = True if request.POST.get('meter_available') == "on" else False
                 offer.save()
                 messages.success(request, 'Offer successfully updated')
-                message = f'You have an updated offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {offer.request.amount}L'
+                message = f'You have an updated offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.company.name.title()} {request.user.last_name} for your request of {offer.request.amount}L'
                 Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
                 return redirect('my_offers')
             else:

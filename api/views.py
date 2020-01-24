@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 from buyer.models import User
 from company.models import FuelUpdate
 from supplier.models import Subsidiaries
+from users.models import Audit_Trail
 
 import secrets
 from fuelfinder import settings
@@ -103,6 +104,7 @@ def update_station(request):
 
         user = User.objects.get(username=username)
         status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Service Station')
+        station = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
 
         if status.exists():
             update = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(
@@ -130,6 +132,15 @@ def update_station(request):
             update.limit = limit
 
             update.save()
+
+            Audit_Trail.objects.create(
+                user=user,
+                company=user.company,
+                service_station=station,
+                action='Updating fuel quantities and station status via mobile app',
+                reference='Fuel update',
+                reference_id=update.id,
+            )
 
             return HttpResponse(status=200)
         else:
@@ -176,21 +187,25 @@ def view_updates_user(request):
         sub_updates = FuelUpdate.objects.filter(sub_type='Service Station').all()
 
         for sub_update in sub_updates:
-            updates = FuelUpdate.objects.filter(sub_type='Service Station').filter(
-                relationship_id=sub_update.relationship_id).all()
-            for update in updates:
-                details = Subsidiaries.objects.get(id=update.relationship_id)
-                if update.diesel_quantity == 0 and update.petrol_quantity == 0:
-                    pass
-                else:
-                    image = f'https://{request.get_host()}{details.company.logo.url}/'
-                    station_update = {
-                        'station': details.name, 'queue': update.queue_length, 'petrol': update.petrol_price,
-                        'diesel': update.diesel_price, 'open': details.opening_time, 'close': details.closing_time,
-                        'limit': update.limit, 'cash': update.cash, 'ecocash': update.ecocash, 'swipe': update.swipe,
-                        'status': update.status, 'image': image, 'company': details.company.name,
-                    }
-                    data.append(station_update)
+            try:
+                updates = FuelUpdate.objects.filter(sub_type='Service Station').filter(
+                    relationship_id=sub_update.relationship_id).all()
+                for update in updates:
+                    details = Subsidiaries.objects.get(id=update.relationship_id)
+                    if update.diesel_quantity == 0 and update.petrol_quantity == 0:
+                        pass
+                    else:
+                        image = f'https://{request.get_host()}{details.company.logo.url}/'
+                        station_update = {
+                            'station': details.name, 'queue': update.queue_length, 'petrol': update.petrol_price,
+                            'diesel': update.diesel_price, 'open': details.opening_time, 'close': details.closing_time,
+                            'limit': update.limit, 'cash': update.cash, 'ecocash': update.ecocash,
+                            'swipe': update.swipe,
+                            'status': update.status, 'image': image, 'company': details.company.name,
+                        }
+                        data.append(station_update)
+            except:
+                pass
         return JsonResponse(list(data), status=200, safe=False)
 
 

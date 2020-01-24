@@ -12,8 +12,13 @@ admin.site.index_title = 'FuelFinder Admin'
 
 # admin.site.register(Profile)
 
+class FuelUpdatetAdmin(admin.ModelAdmin):
+    list_per_page = 10
+    list_display = ( 'id',  'sub_type', 'entry_type', 'diesel_quantity', 'petrol_quantity', 'petrol_price', 'diesel_price',  'company_id','relationship_id')
+
 admin.site.register(Transaction)
-admin.site.register(TokenAuthentication)
+# admin.site.register(FuelUpdate, FuelUpdatetAdmin)
+admin.site.register(TokenAuthentication) 
 admin.site.register(SupplierRating)
 admin.site.register(Offer)
 admin.site.register(FuelAllocation)

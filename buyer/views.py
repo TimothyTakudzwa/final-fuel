@@ -17,7 +17,7 @@ from supplier.models import Offer, Subsidiaries, Transaction, TokenAuthenticatio
 
 from .constants import sample_data
 from .forms import (BuyerRegisterForm, PasswordChange, BuyerUpdateForm, FuelRequestForm,
-                    PasswordChangeForm)
+                    PasswordChangeForm, LoginForm)
 from supplier.forms import CreateCompany
 from .models import FuelRequest
 from buyer.utils import render_to_pdf
@@ -27,6 +27,40 @@ user = get_user_model()
 
 #The login in functions, it handles how users are authenticated into the system
 #Users are redirected to their landing page based on whether they are in which group
+
+
+def login_user(request):
+    context = {
+        'form': LoginForm()
+    }
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        status = authenticate(username=username, password=password)
+        if status:
+            current_user = User.objects.get(username=username)
+            if current_user.is_active:
+                login(request, current_user)
+                if current_user.user_type == "BUYER":
+                    return redirect("buyer-dashboard")
+                elif current_user.user_type == 'SS_SUPPLIER':
+                    return redirect("serviceStation:home")
+                elif current_user.user_type == 'SUPPLIER':
+                    return redirect("fuel-request")
+                elif current_user.user_type == 'S_ADMIN':
+                    return redirect("users:allocate")
+                else:
+                    return redirect("users:suppliers_list")
+            else:
+                messages.info(request, 'Please complete your registration first')
+                return redirect('login')
+        else:
+            messages.info(request, 'Wrong username or password')
+            return redirect('login')
+    return render(request, 'buyer/signin.html', context=context)
+
+
 def login_success(request):
     user_type  = request.user.user_type
     if not user.is_active:
@@ -36,7 +70,7 @@ def login_success(request):
     elif user_type == 'SS_SUPPLIER':
         return redirect("serviceStation:home")
     elif user_type == 'SUPPLIER':
-        return redirect("fuel-request")    
+        return redirect("fuel-request")
     elif user_type == 'S_ADMIN':
         return redirect("users:allocate")
     else:
@@ -52,12 +86,12 @@ def token_is_send(request, user):
     token_auth.token = token
     token_auth.user= token_id
     token_auth.save()
-    domain = request.get_host()            
+    domain = request.get_host()
     url = f'https://{domain}/verification/{token}/{user.id}'
     print(url)
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
-    message = f"Dear {user.first_name}  {user.last_name}. \nYour username is: {user.username}\n\nPlease complete signup here : \n {url} \n. "            
+    message = f"Dear {user.first_name}  {user.last_name}. \nYour username is: {user.username}\n\nPlease complete signup here : \n {url} \n. "
     try:
         print(message)
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
@@ -67,7 +101,7 @@ def token_is_send(request, user):
     except Exception as e:
         print(e)
         messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
-        return False              
+        return False
     messages.success(request, ('Your profile was successfully updated!'))
     return render(request, 'buyer/send_email.html')
 
@@ -85,27 +119,27 @@ def register(request):
             i = 0
             username = initial_username = first_name[0] + last_name
             while  User.objects.filter(username=username.lower()).exists():
-                username = initial_username + str(i) 
+                username = initial_username + str(i)
                 i+=1
-            user = User.objects.create(email=email, username=username.lower(), user_type=user_type,  phone_number=phone_number.replace(" ", ""), first_name=first_name, last_name=last_name, is_active=False)        
-            if token_is_send(request, user):   
+            user = User.objects.create(email=email, username=username.lower(), user_type=user_type,  phone_number=phone_number.replace(" ", ""), first_name=first_name, last_name=last_name, is_active=False)
+            if token_is_send(request, user):
                 if user.is_active:
                     messages.success(user.phone_number, "You have been registered succesfully")
                     user.stage = 'requesting'
-                    user.save()  
-                                 
+                    user.save()
+
                 return render(request, 'buyer/email_send.html')
             else:
                 # messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
                 return render(request, 'buyer/email_send.html')
-        
-        else:            
+
+        else:
             msg = "Error!!! We have a user with this user email-id"
-            messages.error(request, msg)            
+            messages.error(request, msg)
             return redirect('buyer-register')
     else:
         form = BuyerRegisterForm
-    
+
     return render(request, 'buyer/signup.html', {'form': form})
 
 #function repsonsible for sending token to whatsapp 
@@ -173,7 +207,7 @@ def profile(request):
                 return redirect('buyer-profile')
             else:
                 user = request.user
-                user.set_password(new1)         
+                user.set_password(new1)
                 user.save()
                 update_session_auth_hash(request, user)
 
@@ -213,7 +247,7 @@ def fuel_request(request):
 
     context = {
         'fuel_requests' : fuel_requests
-        } 
+    }
 
     return render(request, 'buyer/fuel_request.html', context=context)
 
@@ -226,16 +260,16 @@ def fuel_finder(request):
             fuel_type = form.cleaned_data['fuel_type']
             print(f"===================={request.POST.get('company_id')}--------------------  ")
             fuel_request = FuelRequest()
-            fuel_request.name = request.user       
+            fuel_request.name = request.user
             fuel_request.amount = amount
             fuel_request.fuel_type = fuel_type
             #fuel_request.payment_method = payment_method
             fuel_request.delivery_method = delivery_method
             fuel_request.wait = True
-            fuel_request.save()            
+            fuel_request.save()
             messages.success(request, f'kindly note your request has been made ')
 
-            message = f'{request.user.name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
+            message = f'{request.user.company.name.title()} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
             Notification.objects.create(message = message, reference_id = fuel_request.id, action = "new_request")
     else:
         form = FuelRequestForm
@@ -265,17 +299,17 @@ def dashboard(request):
     if request.method == 'POST':
         form = FuelRequestForm(request.POST)
         if 'MakeDeal' in request.POST:
-            if form.is_valid():     
+            if form.is_valid():
                 fuel_request = FuelRequest()
-                fuel_request.name = request.user       
+                fuel_request.name = request.user
                 fuel_request.amount = form.cleaned_data['amount']
                 fuel_request.fuel_type = form.cleaned_data['fuel_type']
-                fuel_request.payment_method =  request.POST.get('fuel_payment_method')  
-               
+                fuel_request.payment_method =  request.POST.get('fuel_payment_method')
+
                 fuel_request.delivery_method = form.cleaned_data['delivery_method']
                 fuel_request.delivery_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
-                fuel_request.storage_tanks = request.POST.get('storage_tanks') 
-                fuel_request.pump_required =True if request.POST.get('pump_required') == "on" else False 
+                fuel_request.storage_tanks = request.POST.get('storage_tanks')
+                fuel_request.pump_required =True if request.POST.get('pump_required') == "on" else False
                 fuel_request.dipping_stick_required = True if request.POST.get('dipping_stick_required') == "on" else False
                 fuel_request.meter_required =  True if request.POST.get('meter_required') == "on" else False
                 fuel_request.is_direct_deal = True
@@ -290,13 +324,13 @@ def dashboard(request):
         if 'WaitForOffer' in request.POST:
             if form.is_valid():
                 fuel_request = FuelRequest()
-                fuel_request.name = request.user       
+                fuel_request.name = request.user
                 fuel_request.amount = form.cleaned_data['amount']
                 fuel_request.fuel_type = form.cleaned_data['fuel_type']
-                fuel_request.payment_method =  request.POST.get('fuel_payment_method')             
+                fuel_request.payment_method =  request.POST.get('fuel_payment_method')
                 fuel_request.delivery_method = form.cleaned_data['delivery_method']
                 fuel_request.delivery_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
-                fuel_request.storage_tanks =  request.POST.get('storage_tanks') 
+                fuel_request.storage_tanks =  request.POST.get('storage_tanks')
                 fuel_request.pump_required = True if request.POST.get('pump_required') == "True" else False
                 fuel_request.dipping_stick_required = True if request.POST.get('usd') == "True" else False
                 fuel_request.meter_required = True if request.POST.get('usd') == "True" else False
@@ -312,8 +346,8 @@ def dashboard(request):
                 delivery_method = form.cleaned_data['delivery_method']
                 fuel_type = form.cleaned_data['fuel_type']
                 fuel_request = FuelRequest()
-                fuel_request.name = request.user       
-                fuel_request.payment_method =  request.POST.get('fuel_payment_method') 
+                fuel_request.name = request.user
+                fuel_request.payment_method =  request.POST.get('fuel_payment_method')
                 print(fuel_request.payment_method)
                 fuel_request.amount = amount
                 fuel_request.fuel_type = fuel_type
@@ -321,13 +355,13 @@ def dashboard(request):
                 fuel_request.save()
                 offer_id, response_message = recommend(fuel_request)
                 if not offer_id:
-                    messages.error(request,response_message)                    
+                    messages.error(request,response_message)
                 else:
                     offer = Offer.objects.filter(id=offer_id).first()
                     messages.info(request, "Match Found")
-                    return render(request, 'buyer/dashboard.html',{'form':form, 'updates': updates, 'offer': offer})                
+                    return render(request, 'buyer/dashboard.html',{'form':form, 'updates': updates, 'offer': offer})
     else:
-        form = FuelRequestForm     
+        form = FuelRequestForm
     return render(request, 'buyer/dashboard.html',{'form':form, 'updates': updates})
 
 
@@ -335,12 +369,12 @@ def dashboard(request):
 def offers(request, id):
     selected_request = FuelRequest.objects.filter(id=id).first()
     offers = Offer.objects.filter(request=selected_request).filter(declined=False).all()
-    buyer = request.user 
+    buyer = request.user
     for offer in offers:
         depot = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
         if depot:
-            offer.depot_name = depot.name            
-   
+            offer.depot_name = depot.name
+
     return render(request, 'buyer/offer.html', {'offers': offers })
 
 def new_offer(request, id):
@@ -351,20 +385,20 @@ def new_fuel_offer(request, id):
     offers = Offer.objects.filter(id=id).all()
     return render(request, 'buyer/new_offer.html', {'offers': offers })
 
-def accept_offer(request, id):    
+def accept_offer(request, id):
     offer = Offer.objects.filter(id=id).first()
-    Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier,is_complete=True) 
+    Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier,is_complete=True)
     FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
     offer.is_accepted = True
     offer.save()
-    
+
     message = f'{offer.request.name.first_name} {offer.request.name.last_name} accepted your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
     Notification.objects.create(message = message, user = offer.supplier, reference_id = offer.id, action = "ofer_accepted")
 
-    messages.warning(request, "Your request has been saved successfully") 
+    messages.warning(request, "Your request has been saved successfully")
     return redirect("buyer-transactions")
 
-def reject_offer(request, id):    
+def reject_offer(request, id):
     offer = Offer.objects.filter(id=id).first()
     offer.declined = True
     offer.save()
@@ -399,7 +433,7 @@ def transactions(request):
         )
         messages.success(request, 'Transaction Successfully Reviewed')
 
-        
+
     buyer = request.user
     transactions = Transaction.objects.filter(buyer=buyer).all()
     for transaction in transactions:
@@ -407,8 +441,8 @@ def transactions(request):
         if subsidiary is not None:
             transaction.depot = subsidiary.name
             transaction.address = subsidiary.address
-        from supplier.models import UserReview    
-        transaction.review = UserReview.objects.filter(transaction=transaction).first()    
+        from supplier.models import UserReview
+        transaction.review = UserReview.objects.filter(transaction=transaction).first()
 
     context = {
         'transactions': transactions
@@ -433,14 +467,14 @@ def transaction_review_edit(request,id):
         review.comment = request.POST.get('comment')
         review.save()
         messages.success(request, 'Review Successfully Edited')
-    return redirect("buyer-transactions")    
+    return redirect("buyer-transactions")
 
 
 def invoice(request, id):
-    
+
     buyer = request.user
     transactions = Transaction.objects.filter(buyer=buyer, id=id).first()
-    
+
     context = {
         'transactions': transactions
     }
@@ -462,7 +496,7 @@ def view_invoice(request, id):
     total = transaction.offer.quantity * transaction.offer.price
     print(total)
     g_total = total + 25
-    
+
     context = {
         'transaction': transaction,
         'total': total,

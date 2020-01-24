@@ -37,9 +37,13 @@ class FuelRequestAdmin(admin.ModelAdmin):
                     'pump_required', 'dipping_stick_required', 'meter_required', 'is_direct_deal', 'wait',
                     'is_complete', 'usd', 'cash', 'ecocash', 'swipe')
 
+class SubsidiariesAdmin(admin.ModelAdmin):
+    list_per_page = 10
+    list_display = ( 'id', 'name')
+
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Company)
 admin.site.register(FuelRequest, FuelRequestAdmin)
-admin.site.register(Subsidiaries)
+admin.site.register(Subsidiaries, SubsidiariesAdmin)
 admin.site.unregister(Group)
