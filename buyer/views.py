@@ -55,7 +55,7 @@ def login_user(request):
         else:
             messages.info(request, 'Wrong username or password')
             return redirect('login')
-    return render(request, 'buyer/login.html')
+    return render(request, 'buyer/signin.html')
 
 
 def login_success(request):
