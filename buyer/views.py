@@ -59,8 +59,8 @@ def login_user(request):
                     messages.info(request, 'Wrong password')
                     return redirect('login')
             else:
-                messages.info(request, 'Your account is waiting for approval.Please check your email '
-                                       'or contact you company administrator')
+                messages.info(request, 'Your account is waiting for approval. Please check your email '
+                                       'or contact your company administrator')
                 return redirect('login')
         else:
             messages.info(request, 'Please register first')
