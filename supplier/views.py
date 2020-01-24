@@ -22,6 +22,7 @@ from .models import FuelRequest, Transaction, TokenAuthentication, Offer, Subsid
 from company.models import Company, FuelUpdate
 from notification.models import Notification
 from django.contrib.auth import get_user_model
+from whatsapp.helper_functions import send_message
 
 User = get_user_model()
 
@@ -216,7 +217,9 @@ def offer(request, id):
 
                     message = f'You have a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {fuel_request.amount}L'
                     Notification.objects.create(message = message, user = fuel_request.name, reference_id = offer.id, action = "new_offer")
-
+                    click_url = f'https://fuelfinderzim.com/new_fuel_offer/{offer.id}'
+                    if offer.request.name.activated_for_whatsapp:
+                        send_message(offer.request.name.phone_number,f'Your have received a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {fuel_request.amount}L click {click_url} to view details')
                     action = f"{request.user}  made an offer of {offer_quantity}L @ {request.POST.get('price')} to a request made by {fuel_request.name.username}"
                     service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
                     reference = 'offers'
