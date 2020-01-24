@@ -169,7 +169,10 @@ def offer(request, id):
         print(f"---------price : {request.POST.get('price')}------------")
         if float(request.POST.get('price')) != 0 and float(request.POST.get('quantity')) != 0:
             fuel_request = FuelRequest.objects.get(id=id)
-            fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
+            if fuel_request.payment_method == 'USD':
+                fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'USD').first()
+            elif fuel_request.payment_method == 'RTGS':
+                 fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'RTGS').first()
             subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
             
             if fuel_request.fuel_type.lower() == 'petrol':
@@ -232,7 +235,10 @@ def offer(request, id):
 def edit_offer(request, id):
     offer = Offer.objects.get(id=id)
     if request.method == 'POST':
-        fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).first()
+        if offer.request.payment_method == 'USD':
+            fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'USD').first()
+        elif offer.request.payment_method == 'RTGS':
+            fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'RTGS').first()
         subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         
         if offer.request.fuel_type.lower() == 'petrol':
@@ -420,6 +426,43 @@ def my_offers(request):
         if not offer_temp.collection_address.strip():
             offer_temp.collection_address = f'N/A'
     return render(request, 'supplier/my_offers.html', {'offers':offers})
+
+
+@login_required
+def complete_transaction(request, id):
+    transaction = Transaction.objects.filter(id = id)
+    if transaction.offer.request.payment_method == 'USD':
+        fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'USD').first()
+    elif transaction.offer.request.payment_method == 'RTGS':
+        fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'RTGS').first()
+    fuel_type = transaction.offer.request.fuel_type.lower()
+    if request.method == 'POST':
+        if fuel_type == 'petrol':
+            transaction_quantity = transaction.offer.amount        
+            available_fuel = fuel.petrol_quantity
+            if transaction_quantity <= available_fuel:
+                transaction.is_complete = True
+                transaction.save()
+                fuel.petrol_quantity = available_fuel - transaction_quantity
+                fuel.save()
+                messages.success(request, "Transaction completed successfully!")
+                return redirect('transaction')
+            else:
+                messages.warning(request, "There is not enough petrol in stock to complete the transaction.")
+                return redirect('transaction')
+        else:
+            transaction_quantity = transaction.offer.amount
+            available_fuel = fuel.diesel_quantity
+            if transaction_quantity <= available_fuel:
+                transaction.is_complete = True
+                transaction.save()
+                fuel.petrol_quantity = available_fuel - transaction_quantity
+                fuel.save()
+                messages.success(request, "Transaction completed successfully!")
+                return redirect('transaction')
+            else:
+                messages.warning(request, "There is not enough diesel in stock to complete the transaction")
+                return redirect('transaction')
 
 
 def invoice(request, id):
