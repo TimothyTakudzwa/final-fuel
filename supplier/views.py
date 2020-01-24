@@ -72,7 +72,12 @@ def change_password(request):
 
 @login_required()
 def account(request):
-    return render(request, 'supplier/user_profile.html')
+    subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+    if subsidiary is not None:
+        subsidiary_name = subsidiary.name
+    else:
+        subsidiary_name = "Not Set"
+    return render(request, 'supplier/user_profile.html', {'subsidiary_name':subsidiary_name})
 
 
 @login_required()
@@ -208,6 +213,7 @@ def offer(request, id):
                     offer.save()
                     
                     messages.success(request, 'Offer uploaded successfully')
+
 
                     message = f'You have a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {fuel_request.amount}L'
                     Notification.objects.create(message = message, user = fuel_request.name, reference_id = offer.id, action = "new_offer")

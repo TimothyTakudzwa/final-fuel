@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 from buyer.models import User
 from company.models import FuelUpdate
 from supplier.models import Subsidiaries
+from users.models import Audit_Trail
 
 import secrets
 from fuelfinder import settings
@@ -103,6 +104,7 @@ def update_station(request):
 
         user = User.objects.get(username=username)
         status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Service Station')
+        station = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
 
         if status.exists():
             update = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(
@@ -130,6 +132,15 @@ def update_station(request):
             update.limit = limit
 
             update.save()
+
+            Audit_Trail.objects.create(
+                user=user,
+                company=user.company,
+                service_station=station,
+                action='Updating fuel quantities and station status via mobile app',
+                reference='Fuel update',
+                reference_id=update.id,
+            )
 
             return HttpResponse(status=200)
         else:

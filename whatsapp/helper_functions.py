@@ -150,7 +150,7 @@ def requests_handler(user, message):
             user.save()
         
         else:
-            return "Incorrect Choice" z 
+            return "Incorrect Choice"
 
     elif user.position == 55:
         fuel_request = FuelRequest.objects.get(id=user.fuel_request)
@@ -312,26 +312,25 @@ def follow_up(user, message):
 
 def view_fuel_updates(user, message):
     if user.position == 1:
-       response_message = 'What is your payment method?\n\n1. USD\n2. RTGS\n' 
+       response_message = 'You want fuel of which currency?\n\n1. USD\n2. RTGS\n' 
        user.position = 2
        user.save()
-
     elif user.position == 2:
-        if message == "1":
+        if message == "1" or message.lower() == 'usd':
             user.paying_method = "USD"
             user.save()
-        elif message == "2":
+        elif message == "2" or message.lower() == 'rtgs':
             user.paying_method = "RTGS"
             user.save()
-
         updates = FuelUpdate.objects.filter(sub_type="Depot").all()
-        response_message = 'Which fuel update do you want? \n\n'
-        i = 1
-        print("My updates", updates)
+        if len(updates) == 0:
+            response_message = "Unfortunately, there is no fuel at the moment. Please Try again later"
+            return response_message
+        print(updates)
+        i = 1        
         for update in updates:
-            print(updates)
+            response_message = 'Select Fuel Update? \n\n'
             sub = Subsidiaries.objects.filter(id = update.relationship_id).first()
-            print("uPDATE id", update.relationship_id)
             sub_fuel_updates = FuelUpdate.objects.filter(sub_type="Suballocation").filter(relationship_id=update.relationship_id).filter(entry_type=user.paying_method).exists()
             sub_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(relationship_id=update.relationship_id).filter(entry_type="USD & RTGS").exists()
             if sub_fuel_updates:
@@ -359,6 +358,8 @@ def view_fuel_updates(user, message):
                     i += 1 
             else:
                 pass 
+            if not sub_fuel_updates and not sub_update:
+                response_message = 'We could not find ' + user.paying_method + ' fuel updates for you. Please Try again Later'
 
         user.position = 31 
         user.save()
