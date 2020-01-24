@@ -43,6 +43,7 @@ urlpatterns = [
          name='password_reset_complete'),
     path('users/', include(('users.urls','users'), namespace='users')),
     path('buyer/', include(('buyer.urls','buyer'), namespace='buyer')),
+    path('complete-transaction/', supplier_views.complete_transaction, name='complete-transaction'),
     path('supplier/', include(('supplier.urls','supplier'), namespace='supplier')),
     path('serviceStation/', include(('serviceStation.urls','serviceStation'), namespace='serviceStation')),
     path('available_stock/', supplier_views.available_stock, name='available_stock'),
