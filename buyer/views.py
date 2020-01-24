@@ -59,28 +59,14 @@ def login_user(request):
                     messages.info(request, 'Wrong password')
                     return redirect('login')
             else:
-                messages.info(request, 'Please complete your registration first')
+                messages.info(request, 'Your account is waiting for approval.Please check your email '
+                                       'or contact you company administrator')
                 return redirect('login')
         else:
             messages.info(request, 'Please register first')
             return redirect('login')
     return render(request, 'buyer/signin.html', context=context)
 
-
-def login_success(request):
-    user_type  = request.user.user_type
-    if not user.is_active:
-        messages.danger(request, "This account is waiting activation")
-    if user_type == "BUYER":
-        return redirect("buyer-dashboard")
-    elif user_type == 'SS_SUPPLIER':
-        return redirect("serviceStation:home")
-    elif user_type == 'SUPPLIER':
-        return redirect("fuel-request")
-    elif user_type == 'S_ADMIN':
-        return redirect("users:allocate")
-    else:
-        return redirect("users:suppliers_list")
 
 #The function is responsible for sending emails after successful completions of stage one registration
 #The function generates the authentication token 
