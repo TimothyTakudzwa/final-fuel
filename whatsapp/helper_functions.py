@@ -1212,10 +1212,13 @@ def station_updates(user, message):
         for update in updates:
             station = Subsidiaries.objects.filter(id = update.relationship_id).first()
             sub_fuel_updates = FuelUpdate.objects.filter(sub_type="Service Station").filter(relationship_id=update.relationship_id).exists()
-            if sub_fuel_updates:
-                sub_fuel_updates = FuelUpdate.objects.filter(sub_type="Service Station").filter(relationship_id=update.relationship_id).first()
-                response_message = response_message + f'{i}. *{station.name}*\nPetrol: {sub_fuel_updates.petrol_quantity} Litres\nPrice: {sub_fuel_updates.petrol_price}\nDiesel: {sub_fuel_updates.diesel_quantity} Litres\nPrice: {sub_fuel_updates.diesel_price}\nQueue Length: {sub_fuel_updates.queue_length}\nStatus: {sub_fuel_updates.status}\n\n' 
-                i += 1
+            if station is not None:
+                if sub_fuel_updates:
+                    sub_fuel_updates = FuelUpdate.objects.filter(sub_type="Service Station").filter(relationship_id=update.relationship_id).first()
+                    response_message = response_message + f'{i}. *{station.name}*\nPetrol: {sub_fuel_updates.petrol_quantity} Litres\nPrice: {sub_fuel_updates.petrol_price}\nDiesel: {sub_fuel_updates.diesel_quantity} Litres\nPrice: {sub_fuel_updates.diesel_price}\nQueue Length: {sub_fuel_updates.queue_length}\nStatus: {sub_fuel_updates.status}\n\n' 
+                    i += 1
+                else:
+                    pass
             else:
                 pass
 
