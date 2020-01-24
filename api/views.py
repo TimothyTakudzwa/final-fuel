@@ -176,21 +176,25 @@ def view_updates_user(request):
         sub_updates = FuelUpdate.objects.filter(sub_type='Service Station').all()
 
         for sub_update in sub_updates:
-            updates = FuelUpdate.objects.filter(sub_type='Service Station').filter(
-                relationship_id=sub_update.relationship_id).all()
-            for update in updates:
-                details = Subsidiaries.objects.get(id=update.relationship_id)
-                if update.diesel_quantity == 0 and update.petrol_quantity == 0:
-                    pass
-                else:
-                    image = f'https://{request.get_host()}{details.company.logo.url}/'
-                    station_update = {
-                        'station': details.name, 'queue': update.queue_length, 'petrol': update.petrol_price,
-                        'diesel': update.diesel_price, 'open': details.opening_time, 'close': details.closing_time,
-                        'limit': update.limit, 'cash': update.cash, 'ecocash': update.ecocash, 'swipe': update.swipe,
-                        'status': update.status, 'image': image, 'company': details.company.name,
-                    }
-                    data.append(station_update)
+            try:
+                updates = FuelUpdate.objects.filter(sub_type='Service Station').filter(
+                    relationship_id=sub_update.relationship_id).all()
+                for update in updates:
+                    details = Subsidiaries.objects.get(id=update.relationship_id)
+                    if update.diesel_quantity == 0 and update.petrol_quantity == 0:
+                        pass
+                    else:
+                        image = f'https://{request.get_host()}{details.company.logo.url}/'
+                        station_update = {
+                            'station': details.name, 'queue': update.queue_length, 'petrol': update.petrol_price,
+                            'diesel': update.diesel_price, 'open': details.opening_time, 'close': details.closing_time,
+                            'limit': update.limit, 'cash': update.cash, 'ecocash': update.ecocash,
+                            'swipe': update.swipe,
+                            'status': update.status, 'image': image, 'company': details.company.name,
+                        }
+                        data.append(station_update)
+            except:
+                pass
         return JsonResponse(list(data), status=200, safe=False)
 
 
