@@ -323,15 +323,14 @@ def view_fuel_updates(user, message):
             user.paying_method = "RTGS"
             user.save()
         updates = FuelUpdate.objects.filter(sub_type="Depot").all()
-        if updates is None:
+        if len(updates) == 0:
             response_message = "Unfortunately, there is no fuel at the moment. Please Try again later"
             return response_message
-        response_message = 'Select Fuel Update? \n\n'
+        print(updates)
         i = 1        
         for update in updates:
-            print(updates)
+            response_message = 'Select Fuel Update? \n\n'
             sub = Subsidiaries.objects.filter(id = update.relationship_id).first()
-            print("uPDATE id", update.relationship_id)
             sub_fuel_updates = FuelUpdate.objects.filter(sub_type="Suballocation").filter(relationship_id=update.relationship_id).filter(entry_type=user.paying_method).exists()
             sub_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(relationship_id=update.relationship_id).filter(entry_type="USD & RTGS").exists()
             if sub_fuel_updates:
@@ -359,6 +358,8 @@ def view_fuel_updates(user, message):
                     i += 1 
             else:
                 pass 
+            if not sub_fuel_updates and not sub_update:
+                response_message = 'We could not find ' + user.paying_method + ' fuel updates for you. Please Try again Later'
 
         user.position = 31 
         user.save()
