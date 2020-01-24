@@ -312,22 +312,22 @@ def follow_up(user, message):
 
 def view_fuel_updates(user, message):
     if user.position == 1:
-       response_message = 'What is your payment method?\n\n1. USD\n2. RTGS\n' 
+       response_message = 'You want fuel of which currency?\n\n1. USD\n2. RTGS\n' 
        user.position = 2
        user.save()
-
     elif user.position == 2:
-        if message == "1":
+        if message == "1" or message.lower() == 'usd':
             user.paying_method = "USD"
             user.save()
-        elif message == "2":
+        elif message == "2" or message.lower() == 'rtgs':
             user.paying_method = "RTGS"
             user.save()
-
         updates = FuelUpdate.objects.filter(sub_type="Depot").all()
-        response_message = 'Which fuel update do you want? \n\n'
-        i = 1
-        print("My updates", updates)
+        if updates is None:
+            response_message = "Unfortunately, there is no fuel at the moment. Please Try again later"
+            return response_message
+        response_message = 'Select Fuel Update? \n\n'
+        i = 1        
         for update in updates:
             print(updates)
             sub = Subsidiaries.objects.filter(id = update.relationship_id).first()
