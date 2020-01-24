@@ -235,7 +235,7 @@ def fuel_finder(request):
             fuel_request.save()            
             messages.success(request, f'kindly note your request has been made ')
 
-            message = f'{request.user.name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
+            message = f'{request.user.company.name.title()} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
             Notification.objects.create(message = message, reference_id = fuel_request.id, action = "new_request")
     else:
         form = FuelRequestForm
