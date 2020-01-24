@@ -166,7 +166,7 @@
                                                 
                                                 <div class="form-group col-md-6">
                                                     <label>Location</label>
-                                                    <input type="text" name="address" class="form-control" value="{{station.address}}" required/>
+                                                    <input type="text" name="address" class="form-control" value="{{station.location}}" required/>
                                                 </div>
                                             </div>    
                                             <div class="row">
@@ -256,11 +256,11 @@
                 <script>
                     $(document).ready(function () {
                     $('#harare').show();
+                    $('#harare :input').prop('disabled',false);
                     $('#bulawayo').hide();
                     $('#mutare').hide();
                     $('#gweru').hide();
                     $('#default_location').hide();
-                    
                     
                     $('#city').change(function () {
                     if ($('#city option:selected').text() == "Harare") {
@@ -269,11 +269,12 @@
                     $('#mutare').hide();
                     $('#gweru').hide();
                     $('#default_location').hide();
+                    $('#harare :input').prop('disabled',false);
                     $('#bulawayo :input').prop('disabled',true);
                     $('#mutare :input').prop('disabled',true);
                     $('#gweru :input').prop('disabled',true);
                     $('#default_location :input').prop('disabled',true);
-                    $('#harare :input').prop('disabled',false);
+                    
                     
                     }
                     else if ($('#city option:selected').text() == "Bulawayo") {
@@ -282,11 +283,12 @@
                     $('#gweru').hide();
                     $('#default_location').hide();
                     $('#bulawayo').show();
+                    $('#bulawayo :input').prop('disabled',false);
                     $('#harare :input').prop('disabled',true);
                     $('#mutare :input').prop('disabled',true);
                     $('#gweru :input').prop('disabled',true);
                     $('#default_location :input').prop('disabled',true);
-                    $('#bulawayo :input').prop('disabled',false);
+                    
                     
                     }
                     else if ($('#city option:selected').text() == "Mutare") {
@@ -295,8 +297,8 @@
                     $('#gweru').hide();
                     $('#default_location').hide();
                     $('#bulawayo').hide();
-                    $('#harare :input').prop('disabled',true);
                     $('#mutare :input').prop('disabled',false);
+                    $('#harare :input').prop('disabled',true);
                     $('#gweru :input').prop('disabled',true);
                     $('#default_location :input').prop('disabled',true);
                     $('#bulawayo :input').prop('disabled',true);
@@ -308,9 +310,9 @@
                     $('#mutare').hide();
                     $('#gweru').show();
                     $('#default_location').hide();
+                    $('#gweru :input').prop('disabled',false);
                     $('#harare :input').prop('disabled',true);
                     $('#mutare :input').prop('disabled',true);
-                    $('#gweru :input').prop('disabled',false);
                     $('#default_location :input').prop('disabled',true);
                     $('#bulawayo :input').prop('disabled',true);
                     
@@ -321,11 +323,12 @@
                     $('#mutare').hide();
                     $('#gweru').hide();
                     $('#default_location').show();
+                    $('#default_location :input').prop('disabled',false);
+                    $('#harare :input').prop('disabled',false);
                     $('#harare :input').prop('disabled',true);
                     $('#bulawayo :input').prop('disabled',true);
                     $('#mutare :input').prop('disabled',true);
                     $('#gweru :input').prop('disabled',true);
-                    $('#default_location :input').prop('disabled',false);
                     
                     }
                     });
@@ -353,7 +356,7 @@
                        </div>
 
                        <div class="form-group col-md-6">
-                           <label>Service Station Type</label>
+                           <label>Subsidiary Type</label>
                            <select name="is_depot" id="" class="form-control">
                                <option>
                                    Service Station
