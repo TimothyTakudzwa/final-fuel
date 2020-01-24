@@ -137,8 +137,8 @@ def update_station(request):
                 user=user,
                 company=user.company,
                 service_station=station,
-                action='Updating Fuel Quantities and Station Status via Mobile App',
-                reference='Fuel UPdate',
+                action='Updating fuel quantities and station status via mobile app',
+                reference='Fuel update',
                 reference_id=update.id,
             )
 
