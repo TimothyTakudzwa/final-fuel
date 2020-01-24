@@ -17,7 +17,7 @@ from supplier.models import Offer, Subsidiaries, Transaction, TokenAuthenticatio
 
 from .constants import sample_data
 from .forms import (BuyerRegisterForm, PasswordChange, BuyerUpdateForm, FuelRequestForm,
-                    PasswordChangeForm)
+                    PasswordChangeForm, LoginForm)
 from supplier.forms import CreateCompany
 from .models import FuelRequest
 from buyer.utils import render_to_pdf
@@ -30,6 +30,9 @@ user = get_user_model()
 
 
 def login_user(request):
+    context = {
+        'form': LoginForm()
+    }
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -55,7 +58,7 @@ def login_user(request):
         else:
             messages.info(request, 'Wrong username or password')
             return redirect('login')
-    return render(request, 'buyer/signin.html')
+    return render(request, 'buyer/signin.html', context=context)
 
 
 def login_success(request):
