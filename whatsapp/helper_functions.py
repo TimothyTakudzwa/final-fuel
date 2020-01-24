@@ -150,7 +150,7 @@ def requests_handler(user, message):
             user.save()
         
         else:
-            return "Incorrect Choice" z 
+            return "Incorrect Choice"
 
     elif user.position == 55:
         fuel_request = FuelRequest.objects.get(id=user.fuel_request)
