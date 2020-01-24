@@ -227,6 +227,7 @@
                                                                                         {%endfor%}
                                                                                 </datalist>
                                                                             </div>
+                                                                            {%if user.user_type == 'BUYER' %}
                                                                             <div class="form-group">
 
                                                                                 <label>Company Industry</label>
@@ -238,7 +239,9 @@
                                                                                     <option value="{{industry}}">
                                                                                         {%endfor%}
                                                                                 </datalist>
-
+                                                                            {%else%}
+                                                                            <input type="hidden" class="form-control" value="FUEL" name="industry">
+                                                                            {%endif%}
                                                                             </div>
 
 
