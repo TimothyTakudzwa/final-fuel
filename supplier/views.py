@@ -256,7 +256,7 @@ def edit_offer(request, id):
             fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'RTGS').first()
         subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         
-        if fuel_request.fuel_type.lower() == 'petrol':
+        if offer.request.fuel_type.lower() == 'petrol':
             if fuel_reserve is not None:
                 available_fuel = fuel.petrol_quantity + fuel_reserve.petrol_quantity
             else:

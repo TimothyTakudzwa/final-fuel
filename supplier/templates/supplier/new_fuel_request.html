@@ -57,7 +57,6 @@
                     <th style="color: white;">Delivery</th>
                     <th style="color: white;">Address</th>
                     <th style="color: white;">Equipment</th>
-                    <th style="color: white;">Offer</th>
                     <th style="color: white;">Action</th>
                 </tr>
             </thead>
@@ -73,7 +72,7 @@
                     <td>{{ req.delivery_method|lower|capfirst }}</td>
                     <td>{{ req.delivery_address|lower|title}}</td>                                    
                     <td>{% if req.dipping_stick_required %}Stick &nbsp;{% endif %}{% if req.pump_required %}Pump &nbsp;{% endif %}{% if req.meter_required %}Meter&nbsp;{% endif %}{% if req.no_equipments %}No Equipment Required{% endif %}</td>
-                    <td>{{ req.my_offer }}</td>
+                   
                     <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#add_offer_{{req.id}}">Make Offer</button></td>
                 </tr>
                 <script>
