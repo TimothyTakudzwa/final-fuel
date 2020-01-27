@@ -1,14 +1,9 @@
 
 cairocffi==1.1.0
 CairoSVG==2.4.2
-
 astroid==2.3.3
-<<<<<<< HEAD
-
-=======
 cairocffi==1.1.0
 CairoSVG==2.4.2
->>>>>>> 66d4e7ab27d5395e10e21bee5a2021e13aa47cb2
 certifi==2019.9.11
 cffi==1.13.2
 chardet==3.0.4
