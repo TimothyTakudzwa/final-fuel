@@ -306,8 +306,8 @@ def statistics(request):
         rating = 0  
    
     admin_staff = User.objects.filter(company=company).filter(user_type='SUPPLIER').count()
-    all_staff = User.objects.filter(company=company).count()
-    other_staff = all_staff - admin_staff
+    # all_staff = User.objects.filter(company=company).count()
+    other_staff = User.objects.filter(company=company).filter(user_type='SS_SUPPLIER').count()
     clients = []
     stock = get_aggregate_stock(request.user.company)
     diesel = stock['diesel']; petrol = stock['petrol']
