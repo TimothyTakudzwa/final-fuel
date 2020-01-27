@@ -223,7 +223,7 @@ def offer(request, id):
                     messages.success(request, 'Offer uploaded successfully')
 
 
-                    message = f'You have a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {fuel_request.amount}L'
+                    message = f'You have a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.company.name.title()}  for your request of {fuel_request.amount}L'
                     Notification.objects.create(message = message, user = fuel_request.name, reference_id = offer.id, action = "new_offer")
                     click_url = f'https://fuelfinderzim.com/new_fuel_offer/{offer.id}'
                     if offer.request.name.activated_for_whatsapp:
@@ -291,7 +291,7 @@ def edit_offer(request, id):
                 offer.meter_available = True if request.POST.get('meter_available') == "on" else False
                 offer.save()
                 messages.success(request, 'Offer successfully updated')
-                message = f'You have an updated offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.company.name.title()} {request.user.last_name} for your request of {offer.request.amount}L'
+                message = f'You have an updated offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.company.name.title()} for your request of {offer.request.amount}L'
                 Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
                 return redirect('my_offers')
             else:
