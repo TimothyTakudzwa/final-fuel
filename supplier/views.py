@@ -375,7 +375,7 @@ def verification(request, token, user_id):
                         selected_company =Company.objects.create(name=request.POST.get('company'))
                         user.is_active = False
                         user.is_waiting = True
-                        if user.user_type = 'SUPPLIER':
+                        if user.user_type == 'SUPPLIER':
                             user.user_type = 'S_ADMIN'
                         # selected_company = Company.objects.create(name=request.POST.get('company'))
                         selected_company.save()
