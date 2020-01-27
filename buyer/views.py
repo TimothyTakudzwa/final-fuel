@@ -33,7 +33,17 @@ def login_user(request):
     context = {
         'form': LoginForm()
     }
-    if request.method == 'POST':
+    if request.user.is_authenticated:
+        current_user = User.objects.get(username=request.user.username)
+        if current_user.user_type == "BUYER":
+            return redirect("buyer-dashboard")
+        elif current_user.user_type == 'SS_SUPPLIER':
+            return redirect("serviceStation:home")
+        elif current_user.user_type == 'SUPPLIER':
+            return redirect("fuel-request")
+        elif current_user.user_type == 'S_ADMIN':
+            return redirect("users:allocate")
+    else:
         username = request.POST.get('username')
         password = request.POST.get('password')
 
