@@ -416,7 +416,7 @@ def new_fuel_offer(request, id):
 
 def accept_offer(request, id):
     offer = Offer.objects.filter(id=id).first()
-    Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier, is_complete=True)
+    Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier, is_complete=False)
     FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
     offer.is_accepted = True
     offer.save()
