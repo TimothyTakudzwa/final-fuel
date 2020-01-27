@@ -175,6 +175,7 @@ def offer(request, id):
         print(f"---------price : {request.POST.get('price')}------------")
         if float(request.POST.get('price')) != 0 and float(request.POST.get('quantity')) != 0:
             fuel_request = FuelRequest.objects.get(id=id)
+            fuel_reserve = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'USD & RTGS').first()
             if fuel_request.payment_method == 'USD':
                 fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'USD').first()
             elif fuel_request.payment_method == 'RTGS':
@@ -182,9 +183,15 @@ def offer(request, id):
             subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
             
             if fuel_request.fuel_type.lower() == 'petrol':
-                available_fuel = fuel.petrol_quantity
+                if fuel_reserve is not None:
+                    available_fuel = fuel.petrol_quantity + fuel_reserve.petrol_quantity
+                else:
+                    available_fuel = fuel.petrol_quantity
             elif fuel_request.fuel_type.lower() == 'diesel':
-                available_fuel = fuel.diesel_quantity
+                if fuel_reserve is not None:
+                    available_fuel = fuel.diesel_quantity + fuel_reserve.diesel_quantity
+                else:
+                    available_fuel = fuel.diesel_quantity
             offer_quantity = int(request.POST.get('quantity'))
             amount = fuel_request.amount
 
@@ -243,6 +250,7 @@ def offer(request, id):
 @login_required
 def edit_offer(request, id):
     offer = Offer.objects.get(id=id)
+    fuel_reserve =FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'RTGS & USD').first()
     if request.method == 'POST':
         if offer.request.payment_method == 'USD':
             fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'USD').first()
@@ -250,10 +258,16 @@ def edit_offer(request, id):
             fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'RTGS').first()
         subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         
-        if offer.request.fuel_type.lower() == 'petrol':
-            available_fuel = fuel.petrol_quantity
-        elif offer.request.fuel_type.lower() == 'diesel':
-            available_fuel = fuel.diesel_quantity
+        if fuel_request.fuel_type.lower() == 'petrol':
+            if fuel_reserve is not None:
+                available_fuel = fuel.petrol_quantity + fuel_reserve.petrol_quantity
+            else:
+                available_fuel = fuel.petrol_quantity
+        elif fuel_request.fuel_type.lower() == 'diesel':
+            if fuel_reserve is not None:
+                available_fuel = fuel.diesel_quantity + fuel_reserve.diesel_quantity
+            else:
+                available_fuel = fuel.diesel_quantity
         new_offer = int(request.POST.get('quantity'))
         request_quantity = offer.request.amount
         if new_offer <= available_fuel:
@@ -439,7 +453,9 @@ def my_offers(request):
 
 @login_required
 def complete_transaction(request, id):
-    transaction = Transaction.objects.filter(id = id)
+    transaction = Transaction.objects.filter(id = id).first()
+    print(transaction.offer)
+    fuel_reserve = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'USD').first()
     if transaction.offer.request.payment_method == 'USD':
         fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'USD').first()
     elif transaction.offer.request.payment_method == 'RTGS':
@@ -447,13 +463,23 @@ def complete_transaction(request, id):
     fuel_type = transaction.offer.request.fuel_type.lower()
     if request.method == 'POST':
         if fuel_type == 'petrol':
-            transaction_quantity = transaction.offer.amount        
-            available_fuel = fuel.petrol_quantity
+            transaction_quantity = transaction.offer.amount
+            if fuel_reserve is not None:        
+                available_fuel = fuel.petrol_quantity + fuel_reserve.petrol_quantity
+            else:
+                available_fuel = fuel.petrol_quantity
             if transaction_quantity <= available_fuel:
                 transaction.is_complete = True
                 transaction.save()
-                fuel.petrol_quantity = available_fuel - transaction_quantity
-                fuel.save()
+                if transaction_quantity > fuel.petrol_quantity:
+                    fuel_remainder = transaction_quantity - fuel.petrol_quantity
+                    fuel.petrol_quantity = 0
+                    fuel.save()
+                    fuel_reserve.petrol_quantity = fuel_reserve.petrol_quantity - fuel_remainder
+                    fuel_request.save()
+                else:
+                    fuel.diesel_quantity = fuel.diesel_quantity - transaction_quantity
+                    fuel.save()
                 messages.success(request, "Transaction completed successfully!")
                 return redirect('transaction')
             else:
@@ -461,12 +487,22 @@ def complete_transaction(request, id):
                 return redirect('transaction')
         else:
             transaction_quantity = transaction.offer.amount
-            available_fuel = fuel.diesel_quantity
+            if fuel_reserve is not None:
+                available_fuel = fuel.diesel_quantity + fuel_reserve.diesel_quantity
+            else:
+                available_fuel = fuel.diesel_quantity
             if transaction_quantity <= available_fuel:
                 transaction.is_complete = True
                 transaction.save()
-                fuel.petrol_quantity = available_fuel - transaction_quantity
-                fuel.save()
+                if transaction_quantity > fuel.diesel_quantity:
+                    fuel_remainder = transaction_quantity - fuel.diesel_quantity
+                    fuel.diesel_quantity = 0
+                    fuel.save()
+                    fuel_reserve.diesel_quantity = fuel_reserve.diesel_quantity - fuel_remainder
+                    fuel_request.save()
+                else:
+                    fuel.diesel_quantity = fuel.diesel_quantity - transaction_quantity
+                    fuel.save()
                 messages.success(request, "Transaction completed successfully!")
                 return redirect('transaction')
             else:
