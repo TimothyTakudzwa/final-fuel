@@ -44,37 +44,38 @@ def login_user(request):
         elif current_user.user_type == 'S_ADMIN':
             return redirect("users:allocate")
     else:
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
 
-        user_check = User.objects.filter(username=username).exists()
-        if user_check:
-            auth_user = User.objects.get(username=username)
-            if auth_user.is_active:
-                auth_status = authenticate(username=username, password=password)
-                if auth_status:
-                    current_user = User.objects.get(username=username)
-                    login(request, current_user)
-                    if current_user.user_type == "BUYER":
-                        return redirect("buyer-dashboard")
-                    elif current_user.user_type == 'SS_SUPPLIER':
-                        return redirect("serviceStation:home")
-                    elif current_user.user_type == 'SUPPLIER':
-                        return redirect("fuel-request")
-                    elif current_user.user_type == 'S_ADMIN':
-                        return redirect("users:allocate")
+            user_check = User.objects.filter(username=username).exists()
+            if user_check:
+                auth_user = User.objects.get(username=username)
+                if auth_user.is_active:
+                    auth_status = authenticate(username=username, password=password)
+                    if auth_status:
+                        current_user = User.objects.get(username=username)
+                        login(request, current_user)
+                        if current_user.user_type == "BUYER":
+                            return redirect("buyer-dashboard")
+                        elif current_user.user_type == 'SS_SUPPLIER':
+                            return redirect("serviceStation:home")
+                        elif current_user.user_type == 'SUPPLIER':
+                            return redirect("fuel-request")
+                        elif current_user.user_type == 'S_ADMIN':
+                            return redirect("users:allocate")
+                        else:
+                            return redirect("users:suppliers_list")
                     else:
-                        return redirect("users:suppliers_list")
+                        messages.info(request, 'Wrong password')
+                        return redirect('login')
                 else:
-                    messages.info(request, 'Wrong password')
+                    messages.info(request, 'Your account is waiting for approval. Please check your email '
+                                           'or contact your company administrator')
                     return redirect('login')
             else:
-                messages.info(request, 'Your account is waiting for approval. Please check your email '
-                                       'or contact your company administrator')
+                messages.info(request, 'Please register first')
                 return redirect('login')
-        else:
-            messages.info(request, 'Please register first')
-            return redirect('login')
     return render(request, 'buyer/signin.html', context=context)
 
 
