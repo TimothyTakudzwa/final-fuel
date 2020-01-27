@@ -191,10 +191,10 @@ def offer(request, id):
                 else:
                     available_fuel = fuel.diesel_quantity
             offer_quantity = int(request.POST.get('quantity'))
-            amount = fuel_request.amount
+            quantity = fuel_request.quantity
 
             if offer_quantity <= available_fuel:
-                if offer_quantity <= amount:
+                if offer_quantity <= quantity:
                     offer = Offer()
                     offer.supplier = request.user
                     offer.request = fuel_request
@@ -223,11 +223,11 @@ def offer(request, id):
                     messages.success(request, 'Offer uploaded successfully')
 
 
-                    message = f'You have a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {fuel_request.amount}L'
+                    message = f'You have a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.first_name} {request.user.last_name} for your request of {fuel_request.quantity}L'
                     Notification.objects.create(message = message, user = fuel_request.name, reference_id = offer.id, action = "new_offer")
                     click_url = f'https://fuelfinderzim.com/new_fuel_offer/{offer.id}'
                     if offer.request.name.activated_for_whatsapp:
-                        send_message(offer.request.name.phone_number,f'Your have received a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.company.name} {request.user.last_name} for your request of {fuel_request.amount}L click {click_url} to view details')
+                        send_message(offer.request.name.phone_number,f'Your have received a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.company.name} {request.user.last_name} for your request of {fuel_request.quantity}L click {click_url} to view details')
                     action = f"{request.user}  made an offer of {offer_quantity}L @ {request.POST.get('price')} to a request made by {fuel_request.name.username}"
                     service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
                     reference = 'offers'
@@ -248,7 +248,7 @@ def offer(request, id):
 @login_required
 def edit_offer(request, id):
     offer = Offer.objects.get(id=id)
-    fuel_reserve =FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'RTGS & USD').first()
+    fuel_reserve =FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'USD & RTGS').first()
     if request.method == 'POST':
         if offer.request.payment_method == 'USD':
             fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'USD').first()
@@ -267,7 +267,7 @@ def edit_offer(request, id):
             else:
                 available_fuel = fuel.diesel_quantity
         new_offer = int(request.POST.get('quantity'))
-        request_quantity = offer.request.amount
+        request_quantity = offer.request.quantity
         if new_offer <= available_fuel:
             if new_offer <= request_quantity:
                 offer.price = request.POST.get('price')      
@@ -291,7 +291,7 @@ def edit_offer(request, id):
                 offer.meter_available = True if request.POST.get('meter_available') == "on" else False
                 offer.save()
                 messages.success(request, 'Offer successfully updated')
-                message = f'You have an updated offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.company.name.title()} {request.user.last_name} for your request of {offer.request.amount}L'
+                message = f'You have an updated offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.company.name.title()} {request.user.last_name} for your request of {offer.request.quantity}L'
                 Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
                 return redirect('my_offers')
             else:
