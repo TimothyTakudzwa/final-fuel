@@ -360,15 +360,12 @@
                         
                         {% if trans or revs or stock or allocations or requests %}
 
-                        <div class="container" style="background-color: lightseagreen; margin-bottom: 30px">
+                        <div class="container" style="margin-bottom: 30px">
                             <blockquote class="quote-box">
-                              <p class="quotation-mark">
-                                “
-                              </p>
                               {% if not stock %}
-                              <h1 style="color: #fafafa;font-size: medium;">Showing results from <b>{{start}}</b> to <b>{{end}} </b> </h1>
+                              <h1 style="color: #374767;font-size: 22px;">Showing results from <b>{{start}}</b> to <b>{{end}} </b> </h1>
                               {% else %}
-                              <h1 style="color: #fafafa;font-size: medium;">Showing Current Stock Levels  - {{ request.user.company.name|title}}'s Subsidiaries </h1>
+                              <h1 style="color: #374767;font-size: 22px;">Showing Current Stock Levels  - {{ request.user.company.name|title}}'s Subsidiaries </h1>
 
                               {% endif %}
                               <hr>
@@ -397,12 +394,10 @@
                         </div>
                         -->
 
-                        <div class="container" style="background-color: lightseagreen; margin-bottom: 30px">
+                        <div class="container col-md-12" style="margin-bottom: 30px">
                             <blockquote class="quote-box">
-                              <p class="quotation-mark">
-                                “
-                              </p>
-                              <h1 style="color: #fafafa;font-size: medium;">No Data, Generate New Report Above </h1>
+                              
+                              <h1 style="color: #374767;font-size: 22px; font-weight: 400;">No Data, Generate New Report Above </h1>
 
                               <hr>
                               <div class="blog-post-actions">
