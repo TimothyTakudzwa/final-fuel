@@ -8,7 +8,7 @@
     <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
         <div class="input-group">
             <input type="text" name="q" class="form-control" placeholder="Search...">
-            <span class="input-group-btn">
+            <span class="input-group-btn">4
                 <button type="submit" name="search" id="search-btn" class="btn"><i
                         class="fa fa-search"></i></button>
             </span>
@@ -72,7 +72,14 @@
                                 <td>{{ transaction.offer.quantity |intcomma}}</td>
                                 <td>{{ transaction.offer.price }}</td>
                                 <td>{{ transaction.offer.quantity| mul:transaction.offer.price |intcomma}}</td>
+                                {% if transaction.is_complete %}
                                 <td><a class="btn btn-primary btn-sm" href="{% url 'view_invoice' transaction.id %}" >Download</a></td>
+                                {% else %}
+                                <td>
+                                <a class="btn btn-primary btn-sm" href="{% url 'view_invoice' transaction.id %}" >Download</a>
+                                <a class="btn btn-primary btn-sm" href="{% url 'complete-transaction' transaction.id %}" >Complete</a>
+                                </td>
+                                {% endif %}
                             </tr>
                             {%endfor%}
                         </tbody>
