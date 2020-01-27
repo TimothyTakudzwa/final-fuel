@@ -21,6 +21,3 @@ urlpatterns = [
     path('view_invoice/<int:id>', views.view_invoice, name='view-invoice'),
 ]
 
-if settings.DEBUG: 
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
