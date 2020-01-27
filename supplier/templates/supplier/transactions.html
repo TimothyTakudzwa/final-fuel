@@ -79,6 +79,7 @@
                                 <a class="btn btn-primary btn-sm" href="{% url 'view_invoice' transaction.id %}" >Download</a>
                                 <a class="btn btn-primary btn-sm" href="{% url 'complete-transaction' transaction.id %}" >Complete</a>
                                 </td>
+                                {% endif %}
                             </tr>
                             {%endfor%}
                         </tbody>
