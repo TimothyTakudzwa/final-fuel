@@ -76,8 +76,7 @@
                                 <td><a class="btn btn-primary btn-sm" href="{% url 'view_invoice' transaction.id %}" >Download</a></td>
                                 {% else %}
                                 <td>
-                                <a class="btn btn-primary btn-sm" href="{% url 'view_invoice' transaction.id %}" >Download</a>
-                                <a class="btn btn-primary btn-sm" href="{% url 'complete-transaction' transaction.id %}" >Complete</a>
+                                <a class="btn btn-sm" style="background-color: #428bca; color: whitesmoke;" href="{% url 'complete-transaction' transaction.id %}" >Complete</a>
                                 </td>
                                 {% endif %}
                             </tr>
