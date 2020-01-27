@@ -469,15 +469,15 @@ def complete_transaction(request, id):
                 fuel_reserve.petrol_quantity = fuel_reserve.petrol_quantity - fuel_remainder
                 fuel_reserve.save()
             else:
-                fuel.diesel_quantity = fuel.diesel_quantity - transaction_quantity
+                fuel.petrol_quantity = fuel.petrol_quantity - transaction_quantity
                 fuel.save()
             messages.success(request, "Transaction completed successfully!")
             return redirect('transaction')
         else:
             messages.warning(request, "There is not enough petrol in stock to complete the transaction.")
             return redirect('transaction')
-    else:
-        transaction_quantity = transaction.offer.amount
+    elif fuel_type == 'diesel':
+        transaction_quantity = transaction.offer.quantity
         if fuel_reserve is not None:
             available_fuel = fuel.diesel_quantity + fuel_reserve.diesel_quantity
         else:
