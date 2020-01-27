@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ['a477cc88.ngrok.io', '127.0.0.1', '159.65.66.59', 'fuelfinderzi
 INTERNAL_IPS = [
     # ...
     '127.0.0.1',
+    '159.65.66.59',
     # ...
 ]
 
