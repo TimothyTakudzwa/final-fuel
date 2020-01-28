@@ -16,12 +16,17 @@ urlpatterns = [
     path('register', buyer_views.register, name='buyer-register'),
     path('admin/', admin.site.urls), 
     path('', finder_views.landing_page, name='home'), 
-    path('logout/', auth_views.LogoutView.as_view(template_name='supplier/accounts/logout.html'), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='supplier/logout.html'), name='logout'),
     path('password-change/', supplier_views.change_password, name='change-password'),
-    path('login/',  auth_views.LoginView.as_view(template_name='buyer/signin.html'), name='login'),
+    path('login/',  buyer_views.login_user, name='login'),
     path('account/', supplier_views.account, name='account'),
     path('fuel-request/', supplier_views.fuel_request, name='fuel-request'),
-    path('rate-supplier/', supplier_views.rate_supplier, name='rate-supplier'),
+    path('new_fuel_request/<id>', supplier_views.new_fuel_request, name='new_fuel_request'),
+    path('new_fuel_offer/<id>', buyer_views.new_fuel_offer, name='new_fuel_offer'),
+    path('accepted_offer/<id>', supplier_views.accepted_offer, name='accepted_offer'),
+    path('stock_update/<int:id>', supplier_views.stock_update, name='stock_update'),
+    path('rejected_offer/<id>', supplier_views.rejected_offer, name='rejected_offer'),
+    path('new_offer/<id>', buyer_views.new_offer, name='new_offer'),
     path('verification/<token>/<user_id>', supplier_views.verification, name='verification'),
     path('index', whatsapp_views.index, name='index'),
     path('password-reset/',
@@ -37,9 +42,11 @@ urlpatterns = [
          auth_views.PasswordResetCompleteView.as_view(template_name='supplier/password/password_reset_complete.html'),
          name='password_reset_complete'),
     path('users/', include(('users.urls','users'), namespace='users')),
+    path('buyer/', include(('buyer.urls','buyer'), namespace='buyer')),
+    path('complete-transaction/<int:id>', supplier_views.complete_transaction, name='complete-transaction'),
     path('supplier/', include(('supplier.urls','supplier'), namespace='supplier')),
     path('serviceStation/', include(('serviceStation.urls','serviceStation'), namespace='serviceStation')),
-    path('fuel_update/', supplier_views.fuel_update, name='fuel_update'),
+    path('available_stock/', supplier_views.available_stock, name='available_stock'),
     path('transaction/', supplier_views.transaction, name='transaction'),
     path('allocated_quantity/', supplier_views.allocated_quantity, name='allocated_quantity'),
     path('my_offers/', supplier_views.my_offers, name='my_offers'),
@@ -54,4 +61,8 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
+    import debug_toolbar
+    urlpatterns = [ path('__debug__/', include(debug_toolbar.urls)),] + urlpatterns
+
+                      
 

@@ -6,13 +6,14 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
-    path('fuel_update/', views.fuel_update, name='fuel_update'),
+    path('available_stock/', views.available_stock, name='available_stock'),
     path('supplier/<int:id>', views.offer, name='supplier'),
+    path('stock_update/<int:id>', views.stock_update, name='stock_update'),
     path('edit_offer/<int:id>', views.edit_offer, name="edit_offer"),
     path('account/', views.account, name='account'),
-    path('fuel_update/', views.fuel_update, name='fuel_update'),
     path('my_offers/', views.my_offers, name='my_offers'),
     path('transaction/', views.transaction, name='transaction'),
+    path('complete-transaction/<int:id>', views.complete_transaction, name='complete-transaction'),
     path('allocated_quantity/', views.allocated_quantity, name='allocated_quantity'),
     path('activate_whatsapp/', views.activate_whatsapp, name='activate_whatsapp'),
     path('company/', views.company, name='company'),

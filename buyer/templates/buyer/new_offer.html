@@ -1,0 +1,177 @@
+{% extends "finder/buyer_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block body%}
+
+<section class="content-header">
+    <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search...">
+            <span class="input-group-btn">
+             <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+         </span>
+        </div>
+    </form>
+    <div class="header-icon">
+        <i class="fa fa-clipboard"></i>
+    </div>
+    <div class="header-title">
+
+        <h1>New Fuel Offer</h1>
+        <small>Fuel Finder Zimbabwe</small>
+        <ol class="breadcrumb hidden-xs">
+            <li><a href="#"><i class="pe-7s-home"></i> Home</a></li>
+            <li class="active">Offer</li>
+        </ol>
+
+    </div>
+
+</section>
+
+<div class="mt-2 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+    <div class="panel-heading ui-sortable-handle">
+        <div class="btn-group">
+        <h4> New Offer - <small><i>On {{request.user.company.name|title}}'s Requests</i></small></h4>
+        </div>
+        <div class="dropdown">
+            <ul class="dropdown-menu dropdown-menu-right">
+
+
+            </ul>
+            <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+            </div>
+        </div>
+    </div>      
+     <div class="panel-body">
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped" id="fuel_updates">
+                <thead style="background-color: lightslategray; color: white;">
+                    <tr>
+                        
+                        <th>
+                            <h6>Supplier Company</h6>
+                        </th>
+                        <th>
+                                <h6>Depot Name</h6>
+                            </th>
+                        <th>
+                            <h6>Supplier Address</h6>
+                        </th>
+                        <th>
+                            <h6>Fuel Requested </h6>
+                        </th>
+                        <th>
+                            <h6>Fuel Offer </h6>
+                        </th>
+                  
+                        <th>
+                            <h6>Price per Litre </h6>
+                        </th>
+                        <th>
+                            <h6>Requested On </h6>
+                        </th>
+                        <th>
+                            <h6>Action</h6>
+                        </th>
+                        <th>
+                            <h6>Action</h6>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for offer in offers %}
+                    <tr>
+                        
+                        <td>
+                            {{offer.supplier.company}}
+                        </td>
+                        <td>
+                                {{offer.depot_name}}
+                            </td>
+                        <td>
+                            {{offer.supplier.company.address}}
+                        </td>
+                        <td>
+                            {{offer.request.amount}} Litres
+                        </td>
+                        <td class="">
+                            {{offer.quantity}} Litres
+                        </td>
+                        <td class="">
+                            RTGS {{offer.price}}
+                        </td>
+                        <td class="">
+                             {{offer.date}} -- {{offer.time}}
+                        </td>
+                        <td class="text-primary">    
+                            <a class="btn btn-primary btn-sm" href="#"  data-toggle="modal" data-target="#complete_{{offer.id}}" >
+                                <i class="material-icons"></i>Accept Offer 
+                            </a>
+                        </td>
+                        <td class="text-primary">
+                         <a class="btn btn-primary btn-sm" href="{% url 'reject-offer' offer.id %}" >
+                                <i class="material-icons"></i>Reject Offer 
+                            </a>
+                        </td>
+                    </tr>=
+
+                    <!--Modal to complete transaction-->
+                    <div class="modal fade modal-success in" id="complete_{{offer.id}}" role="dialog">
+                            <div class="modal-dialog" style="margin: 0">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <span class="modal-title" style= "color:whitesmoke" >Accept the Offer</span>   
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4>By clicking <strong>YES</strong> you are confirming to accepting an offer from {{offer.supplier.company}}, 
+                                        {{offer.depot_name}} Depot
+                                        </h4>
+                                        <div class="btn-group">
+                                            <a href="{% url 'accept-offer' offer.id %}" class="btn btn-warning">
+                                                Yes
+                                            </a>    
+                                            
+                                            <a class="btn btn-success"   data-dismiss="modal">
+                                                    No
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+</div>
+
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+{% for offer in offers %}
+    <tr>
+        <td class="name truncate">{{offer.id}}</a></td> 
+        <td class="name truncate">{{offer.supplier.company}}</a></td> 
+        <td class="name truncate">{{offer.supplier.company.address}}</a></td> 
+        <td class="name truncate">{{offer.request.amount}}</a></td>
+        <td class="name truncate">{{offer.quantity}}</a></td>
+        <td class="name truncate">{{offer.price}}</a></td>
+        <td class="name truncate">{{offer.date}}</a></td>  
+        <td class="name truncate">{{offer.time}}</a></td>
+        <td class="text-primary">    
+            <a class="btn btn-facebook btn-sm" href="" >
+                <i class="material-icons"></i>Accept Offer 
+            </a>
+        </td>
+    </tr>
+{%endfor%}

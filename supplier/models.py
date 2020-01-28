@@ -39,6 +39,7 @@ class Subsidiaries(models.Model):
 class FuelAllocation(models.Model):
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, null=True)
     date = models.DateField(auto_now_add=True)
+    fuel_payment_type = models.CharField(max_length = 100, default = "", blank=True, null=True)
     diesel_quantity = models.IntegerField(default=0)
     petrol_quantity = models.IntegerField(default=0)
     sub_type = models.CharField(max_length=255)
@@ -48,7 +49,7 @@ class FuelAllocation(models.Model):
     usd = models.BooleanField(default=False)
     petrol_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     diesel_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    assigned_staff_id = models.IntegerField(default=0)
+    allocated_subsidiary_id = models.IntegerField(default=0)
     action = models.CharField(max_length=255, default='')
 
     class Meta:
@@ -61,7 +62,7 @@ class Offer(models.Model):
     time = models.TimeField(auto_now_add=True)
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    supplier = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='offer')
+    supplier = models.ForeignKey(User, on_delete=models.CASCADE, related_name='offer')
     request = models.ForeignKey(FuelRequest, on_delete=models.DO_NOTHING, related_name='request')
     cash = models.BooleanField(default=False, blank=True, null=True)
     ecocash = models.BooleanField(default=False,  blank=True, null=True)
@@ -73,6 +74,7 @@ class Offer(models.Model):
     dipping_stick_available = models.BooleanField(default=False,  blank=True, null=True)
     meter_available = models.BooleanField(default=False,  blank=True, null=True)
     declined = models.BooleanField(default=False,  blank=True, null=True)
+    is_accepted = models.BooleanField(default=False,  blank=True, null=True)
 
     class Meta:
         ordering = ['-date', '-time']
@@ -102,9 +104,9 @@ class SupplierRating(models.Model):
 
 
 class Transaction(models.Model):
-    supplier = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='supplier')
+    supplier = models.ForeignKey(User, on_delete=models.CASCADE, related_name='supplier')
     offer = models.ForeignKey(Offer, on_delete=models.DO_NOTHING, related_name='offer')
-    buyer = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='buyer')
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='buyer')
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)
@@ -120,7 +122,7 @@ class UserReview(models.Model):
     company_type = models.CharField(max_length=255, default= '')
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, related_name='company_rating')
     transaction = models.ForeignKey(Transaction, on_delete=models.DO_NOTHING, related_name='transaction')
-    rater = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='rater')
+    rater = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rater')
     depot = models.ForeignKey(Subsidiaries, on_delete=models.DO_NOTHING, related_name='subsidiary_rating')
     comment = models.CharField(max_length=500, default='')
 

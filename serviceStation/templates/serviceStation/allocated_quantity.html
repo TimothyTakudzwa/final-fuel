@@ -1,33 +1,49 @@
-{% extends "serviceStation/base.html" %}
+{% extends "serviceStation/new_base.html" %}
 {% block body %}
 
-<div class="jumbotron jumbotron-fluid">
-        <div class="container">
-            <h1 class="display-3">Fuel Inventory</h1>
-            <p class="lead">
-                <a class="btn btn-outline-primary" href="{% url 'serviceStation:activate_whatsapp' %}" style="margin-top: 23px;margin-bottom: 0;margin-left: 30px;background-color: #25d366;color: white;border: none;">
-                    <i class="fa fa-whatsapp" style="margin-right: 11px;"></i>
-                    {% if request.user.activated_for_whatsapp %}
-                        Deactivate Whatsapp
-                    {% else %}
-                        Activate Whatsapp
-                    {% endif %}
-                </a>
-            </p>
-    
-        </div>
-    </div>
 
-<div class="col-md-12">
-    <div class="card" style="background-color:white">
+<section class="content-header">
+    <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+           <div class="input-group">
+           <input type="text" name="q" class="form-control" placeholder="Search...">
+               <span class="input-group-btn">
+                   <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+               </span>
+           </div>
+       </form>   
+   <div class="header-icon">
+       <i class="fa fa-book"></i>
+   </div>
+   <div class="header-title">
+       <h1> Service Station Portal</h1>
+       <small>{{user.company.name}}</small>
+       
+   </div>
+  </section>
 
-        <div class="card-header card-header-primary">
-            <h4 class="card-title ">Fuel Quantities Received </h4>
-        </div>
-        <div class="card-body">
-        
-            <div class="container-fluid">
-                {% if allocations %}
+  <div class="col-md-12">
+
+  <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
+  data-index="0">
+  <div class="panel-heading ui-sortable-handle">
+      <div class="btn-group">
+          <h3 class="display-3" style="color: rgb(79, 189, 150);">Fuel Received</h3>
+
+      </div>
+      <div class="dropdown">
+          <ul class="dropdown-menu dropdown-menu-right">
+
+
+          </ul>
+          <div class="dropdown-toggle" data-toggle="dropdown"><span
+                  class="panel-control-icon glyphicon glyphicon-cog"></span>
+          </div>
+      </div>
+  </div>
+  <div class="panel-body">
+
+
+    {% if allocations %}
 
                 <table id="example" class="table table-striped" style="width:100%">
                     <thead style="color:white; background:lightslategray">
@@ -85,11 +101,11 @@
                 </table>
                 {% else %}
                 <p>Nothing To Show</p>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+                {% endif %} 
 
+
+  </div>
+</div>
 </div>
 
 {% endblock %}

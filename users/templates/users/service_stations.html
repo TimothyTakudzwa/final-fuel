@@ -1,60 +1,91 @@
 {% extends "users/base.html" %}
 {% block body %}
 
-<div class="jumbotron jumbotron-fluid" style="margin-left: 30px;">
-        <h1 class="display-4">Subsidiaries</h1>
-      
-      </div>
+<section class="content-header">
+    <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+           <div class="input-group">
+           <input type="text" name="q" class="form-control" placeholder="Search...">
+               <span class="input-group-btn">
+                   <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+               </span>
+           </div>
+       </form>   
+   <div class="header-icon">
+       <i class="fa fa-book"></i>
+   </div>
+   <div class="header-title">
+  
+       <h1> Subsidiaries</h1>
+       <small>Fuel Finder Zimbabwe</small>
+       <ol class="breadcrumb hidden-xs">
+           <li><a href="{% url 'users:allocate' %}"><i class="pe-7s-home"></i> Home</a></li>
+           <li class="active">Subsidiaries</li>
+       </ol>
+  
+   </div>
+  
+  </section>
 
-<div class="col-md-12">
-    <div class="card" style="background-color:white">
+  <section class="content">
+    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+    <div class="panel-heading ui-sortable-handle">
+        <div class="btn-group"> 
+            <h4>{{request.user.company.name}}'s Subsidiaries</h4> 
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_sub" style="margin-bottom: 10px; margin-top: 10px;">Add Subsidiary </button>
 
-        <div class="card-header card-header-primary">
-            <h4 class="card-title ">{{request.user.company}} Subsidiaries </h4>
         </div>
-        <div class="card-body">
-            <div id="container" align="center">
-
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_sub">Add Subsidiary </button>
-
-            </div>
-            
+        
+    <div class="dropdown">
+        <ul class="dropdown-menu dropdown-menu-right">
            
-            <div class="container-fluid">
+          
+        </ul>
+        <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+        </div>
+        </div>
+        </div>       
+        <div class="panel-body">
+      
                 {% if stations %}
-
-                <table id="example" class="table table-striped" style="width:100%">
-                    <thead style="color:white; background:lightslategray">
-                        <th style="color:white;">
-                            Name
-                        </th>
-
-                        <th style="color:white;">
-                            Type
-                        </th>
-                        <th style="color:white;">
-                             City
+                <div class="table-responsive">
+                  <table id="example" class="table table-striped table-bordered" style="width:100%">
+                      <thead>
+                          <tr>
+                            <th>
+                                Name
                             </th>
-                        <th style="color:white;">
-                            Location
-                        </th>
-                        <th style="color:white;">
-                                Bank
+    
+                            <th>
+                                Type
                             </th>
-                            <th style="color:white;">
-                                 Account
+                            <th>
+                                 City
                                 </th>
-                        <th style="color:white;">
-                            Opens
-                        </th>
-                        <th style="color:white;">
-                            Closes
-                        </th>
-                        <th style="color:white;">
-                            Action
-                        </th>
-                    <tbody>
-                        {% for station in stations %}
+                            <th>
+                                Location
+                            </th>
+                            <th>
+                                    Bank
+                                </th>
+                                <th>
+                                     Account
+                                    </th>
+                            <th>
+                                Opens
+                            </th>
+                            <th>
+                                Closes
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                                <th>
+                                  
+                                </th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                        {% for station in stations %}  
                         <tr>
                             <td>{{station.name}}</td>
                             {% if station.is_depot == False %}
@@ -69,10 +100,10 @@
                             <td>{{station.opening_time}}</td>
                             <td>{{station.closing_time}}</td>
 
-                            <td style="width: 33%;">
+                            <td style="width: 25%;">
                                 <div class="btn-group">
                                   
-                                    <button class="btn btn-info btn-sm" data-toggle="modal"
+                                    <button class="btn btn-danger btn-sm" data-toggle="modal"
                                         data-target="#edit_{{station.id}}">Edit</button>
                                     <button class="btn btn-primary btn-sm" data-toggle="modal"
                                         data-target="#delete_{{station.id}}">Delete</button>
@@ -83,23 +114,21 @@
 
                             
                                 <!-- Supplier Delete Modal -->
-                                <div class="modal fade" id="delete_{{station.id}}" tabindex="-1" role="dialog"
+                                <div class="modal fade modal-success in" id="delete_{{station.id}}" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
+                                <div class="modal-dialog" role="document" style="margin: 0;">
                                     <div class="modal-content">
-                                        <div class="modal-header" style="background-color: #9c27b0;color: white;">
-                                            <h5 class="modal-title" id="exampleModalLabel">Delete {{station.name|title}}
-                                            </h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
+                                        
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                            <span class="modal-title" style="">Delete {{station.name|title}}</span>
                                         </div>
                                         <div class="modal-body">
                                             {% load crispy_forms_tags %}
                                             <form action="{% url 'users:delete_subsidiary' station.id %}" method="POST">
                                                 {{ delete_form }}
                                                 {% csrf_token %}
-                                                <p style="padding: 50px;">Are You Sure You Want To Delete {{ station.name }} </p>
+                                                <p>Are You Sure You Want To Delete {{ station.name }} ?</p>
 
                                                 <div class="modal-footer">
                                                     <div >
@@ -116,56 +145,61 @@
                                 </div>
                             </div>
                              <!-- Supplier Edit Modal -->
-                             <div class="modal fade" id="edit_{{station.id}}" tabindex="-1" role="dialog"
+                             <div class="modal fade modal-success in" id="edit_{{station.id}}" tabindex="-1" role="dialog"
                              aria-labelledby="exampleModalLabel" aria-hidden="true">
-                             <div class="modal-dialog" role="document">
+                             <div class="modal-dialog" role="document" style="margin: 0;">
                                  <div class="modal-content">
-                                     <div class="modal-header" style="background-color: #9c27b0;color: white;">
-
-                                         <h5 class="modal-title" id="exampleModalLabel">Edit {{station.name}} <i class="fa fa-edit" style="padding-left: 3px;"></i></h5>
-                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                             <span aria-hidden="true">&times;</span>
-                                         </button>
-                                     </div>
+                                     
+                                     <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        <span class="modal-title">Edit {{station.name}} </span>
+                                    </div>
                                      <div class="modal-body">
                                          <form action="{% url 'users:edit_subsidiary' station.id %}"
                                              method="POST">
                                              {% csrf_token %}
-                                             <div class="form-group">
-                                                 <lable>Name</lable>
-                                                 <input type="text" name="name" class="form-control" value="{{station.name}}" required/>
-                                             </div>
-                                            
-                                             <div class="form-group">
-                                                 <lable>Location</lable>
-                                                 <input type="text" name="address" class="form-control" value="{{station.address}}" required/>
-                                             </div>
+                                             <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label>Name</label>
+                                                    <input type="text" name="name" class="form-control" value="{{station.name}}" required/>
+                                                </div>
+                                                
+                                                <div class="form-group col-md-6">
+                                                    <label>Location</label>
+                                                    <input type="text" name="address" class="form-control" value="{{station.location}}" required/>
+                                                </div>
+                                            </div>    
+                                            <div class="row">
 
-                                             <div class="form-group">
-                                                 <lable>Is Depot</lable>
+                                             <div class="form-group col-md-12">
+                                                 <label>Is Depot</label>
                                                  <input type="text" name="is_depot" class="form-control" value="{{station.is_depot}}" required/>
                                              </div>
                                              
-                                             <div class="form-group">
-                                                 <lable>Opening Time</lable>
-                                                 <input type="time"  name="opening_time"  value="{{station.opening_time}}" class="form-control" required/>
-                                             </div>
+                                             
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label>Opening Time</label>
+                                                    <input type="time"  name="opening_time"  value="{{station.opening_time}}" class="form-control" required/>
+                                                </div>
 
-                                             <div class="form-group">
-                                                 <lable>Closing Time</lable>
+                                             <div class="form-group col-md-6">
+                                                 <label>Closing Time</label>
                                                  <input type="time" name="closing_time" value="{{station.closing_time}}" class="form-control" required/>
                                              </div>
+                                            </div>
 
                                             
                                        
                                      </div>
-                                     <div class="modal-footer">
-                                             <div >
-                                                 <button class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">No</button> <button type="submit" class="btn btn-primary ">Submit</button> 
-                                                 </div>
+                                        <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                            <button type="button" class="btn btn-secondary col-sm-6"
+                                                data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                                        </div>
                                              </form>
                                          </form>
-                                     </div>
                                  </div>
                              </div>
                          </div>
@@ -205,251 +239,272 @@
                         
                         </tr>
 
-                        {% endfor %}
-                       
-                    </tbody>
-                </table>
-                {% else %}
-                <p>Nothing To Show</p>
-                {% endif %}
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-                <script>
-                        $(document).ready(function () {
-                          $('#harare{{forloop.counter}}').show();
-                          $('#bulawayo{{forloop.counter}}').hide();
-                          $('#mutare{{forloop.counter}}').hide();
-                          $('#gweru{{forloop.counter}}').hide();
-                          $('#default_location').hide();
-    
-                         
-                          $('#city{{forloop.counter}}').change(function () {
-                            if ($('#city{{forloop.counter}} option:selected').text() == "Harare") {
-                              $('#harare{{forloop.counter}}').show();
-                              $('#bulawayo{{forloop.counter}}').hide();
-                              $('#mutare{{forloop.counter}}').hide();
-                              $('#gweru{{forloop.counter}}').hide();
-                              $('#default_location').hide();
-                              $('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
-                              $('#mutare{{forloop.counter}} :input').prop('disabled',true);
-                              $('#gweru{{forloop.counter}} :input').prop('disabled',true);
-                              $('#default_location :input').prop('disabled',true);
-                              $('#harare{{forloop.counter}} :input').prop('disabled',false);
-                              
-                            }
-                            else if ($('#city{{forloop.counter}} option:selected').text() == "Bulawayo") {
-                              $('#harare{{forloop.counter}}').hide();
-                              $('#mutare{{forloop.counter}}').hide();
-                              $('#gweru{{forloop.counter}}').hide();
-                              $('#default_location').hide();
-                              $('#bulawayo{{forloop.counter}}').show();
-                              $('#harare{{forloop.counter}} :input').prop('disabled',true);
-                              $('#mutare{{forloop.counter}} :input').prop('disabled',true);
-                              $('#gweru{{forloop.counter}} :input').prop('disabled',true);
-                              $('#default_location :input').prop('disabled',true);
-                              $('#bulawayo{{forloop.counter}} :input').prop('disabled',false);
-                              
-                            }
-                            else if ($('#city{{forloop.counter}} option:selected').text() == "Mutare") {
-                              $('#harare{{forloop.counter}}').hide();
-                              $('#mutare{{forloop.counter}}').show();
-                              $('#gweru{{forloop.counter}}').hide();
-                              $('#default_location').hide();
-                              $('#bulawayo{{forloop.counter}}').hide();
-                              $('#harare{{forloop.counter}} :input').prop('disabled',true);
-                              $('#mutare{{forloop.counter}} :input').prop('disabled',false);
-                              $('#gweru{{forloop.counter}} :input').prop('disabled',true);
-                              $('#default_location :input').prop('disabled',true);
-                              $('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
-                              
-                            }
-                            else if ($('#city{{forloop.counter}} option:selected').text() == "Gweru") {
-                              $('#harare{{forloop.counter}}').hide();
-                              $('#mutare{{forloop.counter}}').hide();
-                              $('#gweru{{forloop.counter}}').show();
-                              $('#default_location').hide();
-                              $('#bulawayo{{forloop.counter}}').hide();
-                              $('#harare{{forloop.counter}} :input').prop('disabled',true);
-                              $('#mutare{{forloop.counter}} :input').prop('disabled',true);
-                              $('#gweru{{forloop.counter}} :input').prop('disabled',false);
-                              $('#default_location :input').prop('disabled',true);
-                              $('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
-                              
-                            }
-                            else {
-                              $('#harare{{forloop.counter}}').hide();
-                              $('#bulawayo{{forloop.counter}}').hide();
-                              $('#mutare{{forloop.counter}}').hide();
-                              $('#gweru{{forloop.counter}}').hide();
-                              $('#default_location').show();
-                              $('#harare{{forloop.counter}} :input').prop('disabled',true);
-                              $('#bulawayo{{forloop.counter}} :input').prop('disabled',true);
-                              $('#mutare{{forloop.counter}} :input').prop('disabled',true);
-                              $('#gweru{{forloop.counter}} :input').prop('disabled',true);
-                              $('#default_location :input').prop('disabled',false);
-                              
-                            }
-                          });
-                        });
-                    
-                       
-                      </script>
-                <div class="modal fade" id="new_sub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header" style="background-color: #9c27b0;color: white;">
-                                <h5 class="modal-title" id="exampleModalLabel">Add Subsidiary </h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-    
-                                {% load crispy_forms_tags %}
-                                <form action="{% url 'users:stations' %}" method="POST">
-                                    {% csrf_token %}
-                                    <div class="row">
-                                    <div class="form-group col-md-6">
-                                            <lable>Name</lable>
-                                            <input type="text" name="name" class="form-control" value=" " />
-                                        </div>
-    
-                                        <div class="form-group col-md-6">
-                                            <lable>Is Depot</lable>
-                                            <input type="text" name="is_depot" class="form-control" value="False" />
-                                        </div>
-                                    </div>
-                                       
-                                        <div class="row">
-                                        <div class="form-group col-md-6" name="city" id="city{{forloop.counter}}">
-                                                <label><b>City</b></label>
-                                                <select class="form-control" name="city">
-                                                    {% for citi in zimbabwean_towns %}
-                                                    <option >{{citi}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-        
-    
-                                    <div class="form-group col-md-6" name="harare" id="harare{{forloop.counter}}">
-                                            <label><b>Location</b></label>
-                                            <select class="form-control" name="location">
-                                                {% for location in Harare %}
-                                                <option >{{location}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-    
-                                <div class="form-group col-md-6" name="bulawayo" id="bulawayo{{forloop.counter}}">
-                                        <label><b>Location</b></label>
-                                        <select class="form-control" name="location">
-                                            {% for locationn in Bulawayo %}
-                                            <option >{{locationn}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-    
-                                    <div class="form-group col-md-6" name="mutare" id="mutare{{forloop.counter}}">
-                                            <label><b>Location</b></label>
-                                            <select class="form-control" name="location">
-                                                {% for loc in Mutare %}
-                                                <option >{{loc}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-    
-                                        <div class="form-group col-md-6" name="gweru" id="gweru{{forloop.counter}}">
-                                                <label><b>Location</b></label>
-                                                <select class="form-control" name="location">
-                                                    {% for locationy in Bulawayo %}
-                                                    <option >{{locationy}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                            <div class="form-group col-md-6" id="default_location">
-                                                    <lable>Location</lable>
-                                                    <input type="text" name="location" class="form-control" value=" " />
-                                                </div>
-                                            </div>
-    
-                                        <div class="row">
-                                           
-                                                <div class="form-group col-md-6">
-                                                    <label><b>Bank</b></label>
-                                                    <select class="form-control" name="destination_bank">
-                                                
-                                                        <option >CBZ</option>
-                                                        <option >BancABC</option>
-                                                        <option >First Capital</option>
-                                                        <option >Agribank</option>
-                                                        <option >Ecobank</option>
-                                                        <option >FBC</option>
-                                                        <option >Nedbank</option>
-                                                        <option >Metbank</option>
-                                                        <option >NMB</option>
-                                                        <option >Standard Chatered</option>
-                                                        <option >Steward Bank</option>
-                                                        <option >ZB Bank</option>
-                                                        <option >CABS</option>
-                                                        <option >POSB</option>
-                                             
-                                                        
-                                                    </select>
-                                                </div>
-                                       
-                                           
-                                            <div class="form-group col-md-6">
-                                                <lable>Account</lable>
-                                                <input type="text" name="account_number" class="form-control" value=" " />
-                                            </div>
-                                        </div>
-    
-                                        
-                                        
-                                    <div class="row">
-                                            <div class="col-md-6">
-                                              {{sub_create_form.cash|as_crispy_field}}
-                                            </div>
-                                            <div class="col-md-6">
-                                              {{sub_create_form.usd|as_crispy_field}}
-                                            </div>
-                                          </div>
-                                          <div class="row">
-                                            <div class="col-md-6">
-                                              {{sub_create_form.swipe|as_crispy_field}}
-                                            </div>
-                                            <div class="col-md-6">
-                                              {{sub_create_form.ecocash|as_crispy_field}}
-                                            </div>
-                                            </div>
-    
-                                     <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <lable>Opening Time</lable>
-                                        <input type="time" name="opening_time" class="form-control" />
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <lable>Closing Time</lable>
-                                        <input type="time" name="closing_time" class="form-control" />
-                                    </div>
-                                    </div>
-    
-    
-    
-                            
-                            <div class="modal-footer row col-md-12">
-                                <button class="btn btn-secondary" style="width:40%"
-                                    data-dismiss="modal">Close</button><button style="width: 50%;" class="btn btn-primary"
-                                    type="submit">Add</button>
-                                </form>
-                            </div>
-    
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
+                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                       
+                        
+ 
+                        {% endfor %}
+
+
+                      </tbody>
+                      </table>
+                </div>
+                {% else %}
+                <p>No Data Availabel</p>
+                {% endif %}
+                <script>
+                    $(document).ready(function () {
+                    $('#harare').show();
+                    $('#harare :input').prop('disabled',false);
+                    $('#bulawayo').hide();
+                    $('#mutare').hide();
+                    $('#gweru').hide();
+                    $('#default_location').hide();
+                    
+                    $('#city').change(function () {
+                    if ($('#city option:selected').text() == "Harare") {
+                    $('#harare').show();
+                    $('#bulawayo').hide();
+                    $('#mutare').hide();
+                    $('#gweru').hide();
+                    $('#default_location').hide();
+                    $('#harare :input').prop('disabled',false);
+                    $('#bulawayo :input').prop('disabled',true);
+                    $('#mutare :input').prop('disabled',true);
+                    $('#gweru :input').prop('disabled',true);
+                    $('#default_location :input').prop('disabled',true);
+                    
+                    
+                    }
+                    else if ($('#city option:selected').text() == "Bulawayo") {
+                    $('#harare').hide();
+                    $('#mutare').hide();
+                    $('#gweru').hide();
+                    $('#default_location').hide();
+                    $('#bulawayo').show();
+                    $('#bulawayo :input').prop('disabled',false);
+                    $('#harare :input').prop('disabled',true);
+                    $('#mutare :input').prop('disabled',true);
+                    $('#gweru :input').prop('disabled',true);
+                    $('#default_location :input').prop('disabled',true);
+                    
+                    
+                    }
+                    else if ($('#city option:selected').text() == "Mutare") {
+                    $('#harare').hide();
+                    $('#mutare').show();
+                    $('#gweru').hide();
+                    $('#default_location').hide();
+                    $('#bulawayo').hide();
+                    $('#mutare :input').prop('disabled',false);
+                    $('#harare :input').prop('disabled',true);
+                    $('#gweru :input').prop('disabled',true);
+                    $('#default_location :input').prop('disabled',true);
+                    $('#bulawayo :input').prop('disabled',true);
+                    
+                    }
+                    else if ($('#city option:selected').text() == "Gweru") {
+                    $('#harare').hide();
+                    $('#bulawayo').hide();
+                    $('#mutare').hide();
+                    $('#gweru').show();
+                    $('#default_location').hide();
+                    $('#gweru :input').prop('disabled',false);
+                    $('#harare :input').prop('disabled',true);
+                    $('#mutare :input').prop('disabled',true);
+                    $('#default_location :input').prop('disabled',true);
+                    $('#bulawayo :input').prop('disabled',true);
+                    
+                    }
+                    else {
+                    $('#harare').hide();
+                    $('#bulawayo').hide();
+                    $('#mutare').hide();
+                    $('#gweru').hide();
+                    $('#default_location').show();
+                    $('#default_location :input').prop('disabled',false);
+                    $('#harare :input').prop('disabled',false);
+                    $('#harare :input').prop('disabled',true);
+                    $('#bulawayo :input').prop('disabled',true);
+                    $('#mutare :input').prop('disabled',true);
+                    $('#gweru :input').prop('disabled',true);
+                    
+                    }
+                    });
+                    });
+                    
+                    
+                    </script>
+ <div class="modal fade modal-success in" id="new_sub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="margin: 0;">
+       <div class="modal-content">
+           <div class="modal-header" style="width: 100%;">
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+               <span class="modal-title" id="exampleModalLabel" style="color:white;">Add Subsidiary </span>
+               
+           </div>
+           <div class="modal-body">
+
+               {% load crispy_forms_tags %}
+               <form action="{% url 'users:stations' %}" method="POST">
+                   {% csrf_token %}
+                   <div class="row">
+                   <div class="form-group col-md-6">
+                           <label>Name</label>
+                           <input type="text" name="name" class="form-control" value=" " />
+                       </div>
+
+                       <div class="form-group col-md-6">
+                           <label>Subsidiary Type</label>
+                           <select name="is_depot" id="" class="form-control">
+                               <option>
+                                   Service Station
+                               </option>
+                               <option>
+                                   Depot
+                               </option>
+
+                           </select>
+                           <!-- <input type="text" name="is_depot" class="form-control" value="False" /> -->
+                       </div>
+                   </div>
+                      
+                       <div class="row">
+                       <div class="form-group col-md-6" name="city" id="city">
+                               <label><b>City</b></label>
+                               <select class="form-control" name="city">
+                                   {% for citi in zimbabwean_towns %}
+                                   <option >{{citi}}</option>
+                                   {% endfor %}
+                               </select>
+                           </div>
+
+
+                   <div class="form-group col-md-6" name="harare" id="harare">
+                           <label><b>Location</b></label>
+                           <select class="form-control" name="location">
+                               {% for location in Harare %}
+                               <option >{{location}}</option>
+                               {% endfor %}
+                           </select>
+                       </div>
+
+               <div class="form-group col-md-6" name="bulawayo" id="bulawayo">
+                       <label><b>Location</b></label>
+                       <select class="form-control" name="location">
+                           {% for locationn in Bulawayo %}
+                           <option >{{locationn}}</option>
+                           {% endfor %}
+                       </select>
+                   </div>
+
+                   <div class="form-group col-md-6" name="mutare" id="mutare">
+                           <label><b>Location</b></label>
+                           <select class="form-control" name="location">
+                               {% for loc in Mutare %}
+                               <option >{{loc}}</option>
+                               {% endfor %}
+                           </select>
+                       </div>
+
+                       <div class="form-group col-md-6" name="gweru" id="gweru">
+                               <label><b>Location</b></label>
+                               <select class="form-control" name="location">
+                                   {% for locationy in Gweru %}
+                                   <option >{{locationy}}</option>
+                                   {% endfor %}
+                               </select>
+                           </div>
+                           <div class="form-group col-md-6" id="default_location">
+                                   <label>Location</label>
+                                   <input type="text" name="location" class="form-control" value=" " />
+                               </div>
+                           </div>
+
+                       <div class="row">
+                          
+                               <div class="form-group col-md-6">
+                                   <label><b>Bank</b></label>
+                                   <select class="form-control" name="destination_bank">
+                               
+                                       <option >CBZ</option>
+                                       <option >BancABC</option>
+                                       <option >First Capital</option>
+                                       <option >Agribank</option>
+                                       <option >Ecobank</option>
+                                       <option >FBC</option>
+                                       <option >Nedbank</option>
+                                       <option >Metbank</option>
+                                       <option >NMB</option>
+                                       <option >Standard Chatered</option>
+                                       <option >Steward Bank</option>
+                                       <option >ZB Bank</option>
+                                       <option >CABS</option>
+                                       <option >POSB</option>
+                            
+                                       
+                                   </select>
+                               </div>
+                      
+                          
+                           <div class="form-group col-md-6">
+                               <label>Account</label>
+                               <input type="text" name="account_number" class="form-control" value=" " />
+                           </div>
+                       </div>
+
+                       
+                       
+                   <div class="row">
+                           <div class="col-md-6">
+                             {{sub_create_form.cash|as_crispy_field}}
+                           </div>
+                           <div class="col-md-6">
+                             {{sub_create_form.usd|as_crispy_field}}
+                           </div>
+                         </div>
+                         <div class="row">
+                           <div class="col-md-6">
+                             {{sub_create_form.swipe|as_crispy_field}}
+                           </div>
+                           <div class="col-md-6">
+                             {{sub_create_form.ecocash|as_crispy_field}}
+                           </div>
+                           </div>
+
+                    <div class="row">
+                   <div class="form-group col-md-6">
+                       <label>Opening Time</label>
+                       <input type="time" name="opening_time" class="form-control" />
+                   </div>
+                   <div class="form-group col-md-6">
+                       <label>Closing Time</label>
+                       <input type="time" name="closing_time" class="form-control" />
+                   </div>
+                   </div>                                                        
+                       <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                           <button type="button" class="btn btn-secondary col-sm-6"
+                               data-dismiss="modal">Close</button>
+                           <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                       </div>
+               </form>
+               <!-- <div class="modal-footer row col-md-12">
+                   <button type="button" class="btn" style="background-color: lightgray; color: #333;width: 35%;" data-dismiss="modal">Close</button>
+   
+                   <button style="width: 50%;" class="btn btn-primary"
+                       type="submit">Add</button>
+               </div>  -->
+
+       </div>
+   </div>
 </div>
+</div>
+
+        </div>
+    </div> 
+  </section>   
+
+
 
 {% endblock %}

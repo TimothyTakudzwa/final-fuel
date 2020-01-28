@@ -27,6 +27,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['a477cc88.ngrok.io', '127.0.0.1', '159.65.66.59', 'fuelfinderzim.com', '192.168.137.53']
 
+INTERNAL_IPS = [
+    # ...
+    '127.0.0.1',
+    '159.65.66.59',
+    # ...
+]
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -69,6 +76,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'mathfilters',
+    'debug_toolbar',
 
 ]
 
@@ -90,6 +98,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'fuelfinder.urls'
@@ -188,5 +197,5 @@ MEDIA_URL = '/media/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-LOGIN_REDIRECT_URL = 'login_success'
+# LOGIN_REDIRECT_URL = 'login_success'
 LOGIN_URL = 'login'

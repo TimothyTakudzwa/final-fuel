@@ -1,17 +1,15 @@
-from django.contrib import messages
 from django.contrib.auth import authenticate, update_session_auth_hash
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail.message import BadHeaderError
 from django.http.response import JsonResponse, HttpResponse
-from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from django.contrib.auth import get_user_model
-from django.db.models import Q
 
 from buyer.models import User
 from company.models import FuelUpdate
-from supplier.models import Subsidiaries, TokenAuthentication
+from supplier.models import Subsidiaries
+from users.models import Audit_Trail
 
 import secrets
 from fuelfinder import settings
@@ -105,36 +103,44 @@ def update_station(request):
         username = request.POST.get('username')
 
         user = User.objects.get(username=username)
-        status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id)
+        status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Service Station')
+        station = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
 
         if status.exists():
-            update = FuelUpdate.objects.get(relationship_id=user.subsidiary_id)
-
+            update = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(
+                sub_type='Service Station').first()
 
             p_quantity = request.POST.get('petrol_quantity')
             d_quantity = request.POST.get('diesel_quantity')
             queue = request.POST.get('queue')
 
+            s_status = request.POST.get('status')
+            limit = request.POST.get('limit')
 
-            usd = request.POST.get('usd')
             swipe = request.POST.get('swipe')
             ecocash = request.POST.get('ecocash')
             cash = request.POST.get('cash')
-            s_status = request.POST.get('status')
-            limit = request.POST.get('limit')
+
+            update.swipe = swipe
+            update.ecocash = ecocash
+            update.cash = cash
 
             update.petrol_quantity = p_quantity
             update.diesel_quantity = d_quantity
             update.queue_length = queue
-
-            update.usd = usd
-            update.swipe = swipe
-            update.ecocash = ecocash
-            update.cash = cash
             update.status = s_status
             update.limit = limit
 
             update.save()
+
+            Audit_Trail.objects.create(
+                user=user,
+                company=user.company,
+                service_station=station,
+                action='Updating fuel quantities and station status via mobile app',
+                reference='Fuel update',
+                reference_id=update.id,
+            )
 
             return HttpResponse(status=200)
         else:
@@ -153,15 +159,17 @@ def view_station_updates(request):
         status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id)
 
         if status.exists():
-            updates = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id)
+            updates = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Service Station')
             for update in updates:
                 company = Subsidiaries.objects.get(id=update.relationship_id)
+                image = f'https://{request.get_host()}{company.logo.url}/'
+
                 station_update = {
                     'name': company.name, 'diesel_quantity': update.diesel_quantity,
                     'diesel_price': update.diesel_price, 'petrol_quantity': update.petrol_quantity,
                     'petrol_price': update.petrol_price, 'cash': update.cash, 'ecocash': update.ecocash,
-                    'swipe': update.swipe, 'usd': update.usd, 'queue': update.queue_length, 'limit': update.limit,
-                    'status': update.status
+                    'swipe': update.swipe, 'queue': update.queue_length, 'limit': update.limit,
+                    'status': update.status, 'image': image
                 }
                 data.append(station_update)
             return JsonResponse(list(data), status=200, safe=False)
@@ -176,17 +184,28 @@ def view_updates_user(request):
 
         data = []
 
-        updates = FuelUpdate.objects.filter(~Q(sub_type='Company')).all()
-        for update in updates:
-            details = Subsidiaries.objects.get(id=update.relationship_id)
-            station_update = {
-                'station': details.name, 'company': details.company.name, 'queue':
-                    update.queue_length, 'petrol': update.petrol_price, 'diesel': update.diesel_price,
-                'open': details.opening_time, 'close': details.closing_time, 'limit': update.limit, 'cash': update.cash,
-                'ecocash': update.ecocash, 'swipe': update.swipe, 'usd': update.usd, 'status': update.status,
-            }
-            data.append(station_update)
+        sub_updates = FuelUpdate.objects.filter(sub_type='Service Station').all()
 
+        for sub_update in sub_updates:
+            try:
+                updates = FuelUpdate.objects.filter(sub_type='Service Station').filter(
+                    relationship_id=sub_update.relationship_id).all()
+                for update in updates:
+                    details = Subsidiaries.objects.get(id=update.relationship_id)
+                    if update.diesel_quantity == 0 and update.petrol_quantity == 0:
+                        pass
+                    else:
+                        image = f'https://{request.get_host()}{details.company.logo.url}/'
+                        station_update = {
+                            'station': details.name, 'queue': update.queue_length, 'petrol': update.petrol_price,
+                            'diesel': update.diesel_price, 'open': details.opening_time, 'close': details.closing_time,
+                            'limit': update.limit, 'cash': update.cash, 'ecocash': update.ecocash,
+                            'swipe': update.swipe,
+                            'status': update.status, 'image': image, 'company': details.company.name,
+                        }
+                        data.append(station_update)
+            except:
+                pass
         return JsonResponse(list(data), status=200, safe=False)
 
 
@@ -293,4 +312,3 @@ def password_reset(request):
 
         else:
             return HttpResponse(status=404)
-

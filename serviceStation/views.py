@@ -61,10 +61,7 @@ def update_diesel(request, id):
         diesel_update.diesel_quantity = request.POST['diesel_quantity']
         diesel_update.queue_length = request.POST['queue_length']
         diesel_update.status = request.POST['status']
-        diesel_update.cash = request.POST['cash']
-        diesel_update.ecocash = request.POST['ecocash']
-        diesel_update.swipe = request.POST['swipe']
-        diesel_update.usd = request.POST['usd']
+       
         if int(diesel_update.diesel_quantity) < 1000:
             diesel_update.status = 'Expecting Fuel'
             diesel_update.save()
@@ -120,7 +117,7 @@ def activate_whatsapp(request):
         return redirect('serviceStation:home')
 
 def allocated_quantity(request):
-    allocations = FuelAllocation.objects.filter(assigned_staff_id= request.user.subsidiary_id).all()
+    allocations = FuelAllocation.objects.filter(allocated_subsidiary_id= request.user.subsidiary_id).all()
     return render(request, 'serviceStation/allocated_quantity.html', {'allocations': allocations})
 
 
