@@ -9,7 +9,7 @@ from .constants import *
 User = get_user_model()
 from .models import  FuelRequest, Offer
 from .constants import Harare
-from company.models import Company, FuelUpdate
+# from company.models import Company, FuelUpdate
 from buyer.constants2 import *
 from buyer.constants import *
 

@@ -14,12 +14,12 @@ from users.models import Audit_Trail
 from datetime import date, time
 from buyer.constants2 import industries, job_titles
 from buyer.forms import BuyerUpdateForm
-from buyer.models import Company
+# from buyer.models import Company
 from users.models import AuditTrail
 from .forms import PasswordChange, RegistrationForm, \
     RegistrationEmailForm, UserUpdateForm, FuelRequestForm, CreateCompany, OfferForm
 from .models import FuelRequest, Transaction, TokenAuthentication, Offer, Subsidiaries, FuelAllocation
-from company.models import Company, FuelUpdate
+# from company.models import Company, FuelUpdate
 from notification.models import Notification
 from django.contrib.auth import get_user_model
 from whatsapp.helper_functions import send_message

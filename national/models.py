@@ -26,9 +26,9 @@ class SordNationalAuditTrail(models.Model):
     initial_quantity = models.FloatField(default=0.0)
     quantity_allocated = models.FloatField(default=0.0)
     end_quantity = models.FloatField(default=0.0)
-    allocated_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    allocated_to = models.ForeignKey(Company, on_delete=models.DO_NOTHING)
-    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING)
+    allocated_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='allocated_by_national')
+    allocated_to = models.ForeignKey(Company, on_delete=models.DO_NOTHING, related_name='allocated_to_national')
+    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, related_name='company_allocation_national')
 
     def __str__(self):
         return f'{self.id} -- SordNationalAuditTrail'

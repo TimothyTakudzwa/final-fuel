@@ -9,7 +9,6 @@ from buyer.constants2 import *
 STATUS_CHOICES = (('Open','OPEN'),('Closed','CLOSED'),('Offloading','Offloading'))
 
 class Subsidiaries(models.Model):
-    from fuelUpdates.models import SubsidiaryFuelUpdate
     company = models.ForeignKey(Company,on_delete=models.CASCADE)
     name = models.CharField(max_length=200, default='')
     address = models.CharField(max_length=200, help_text='Harare, Livingstone Street')   
@@ -19,7 +18,7 @@ class Subsidiaries(models.Model):
     is_depot = models.BooleanField(default=False)    
     opening_time = models.CharField(max_length=100, default='08:00')
     closing_time = models.CharField(max_length=100, default='22:00')
-    fuel_capacity = models.ForeignKey(SubsidiaryFuelUpdate, on_delete=models.CASCADE, null=True)
+    # fuel_capacity = models.ForeignKey(SubsidiaryFuelUpdate, on_delete=models.CASCADE, null=True)
     destination_bank = models.CharField(max_length=100, default="")
     account_number = models.CharField(max_length=100, default="")
     amount = models.FloatField(default=0.00)
@@ -29,11 +28,45 @@ class Subsidiaries(models.Model):
     def __str__(self):
         return f"{self.name}"
 
-    def get_capacity(self):
-        return self.fuel_capacity
+    # def get_capacity(self):
+    #     return self.fuel_capacity
 
     def fuel_available(self):
         return self.has_fuel        
+
+
+class SuballocationFuelUpdate(models.Model):
+    subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE, related_name='suballocation_fuel_update')
+    payment_type = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS'), ('USD & RTGS', 'USD & RTGS')))
+    queue_length = models.CharField(max_length=255,choices=(('short', 'Short'), ('medium', 'Medium Long'), ('long', 'Long')))
+    deliver = models.BooleanField(default=False)
+    cash = models.BooleanField(default=False)
+    ecocash = models.BooleanField(default=False)
+    swipe = models.BooleanField(default=False)
+    usd = models.BooleanField(default=False)
+    fca = models.BooleanField(default=False)
+    last_updated = models.DateField()
+    petrol_price = models.FloatField()
+    diesel_price = models.FloatField()
+    petrol_usd_price = models.FloatField()
+    diesel_usd_price = models.FloatField()
+    status = models.CharField(max_length=1000)
+    limit = models.FloatField()
+
+    def __str__(self):
+        return f'{self.id}, SubAllocation '
+
+
+class SubsidiaryFuelUpdate(models.Model):
+    from fuelUpdates.models import CompanyFuelUpdate
+    subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE)
+    petrol_quantity = models.FloatField(default=0.0)
+    diesel_quantity = models.FloatField(default=0.0)
+    company_update = models.ForeignKey(CompanyFuelUpdate, on_delete=models.CASCADE)
+    last_updated = models.DateField()
+
+    def __str__(self):
+        return f'{self.id} -- SubsidiaryFuelUpdate '
 
 
 class FuelAllocation(models.Model):

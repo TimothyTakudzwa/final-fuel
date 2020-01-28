@@ -8,8 +8,8 @@ from .constants import *
 from buyer.views import token_is_send
 from users.views import message_is_sent
 from supplier.models import Offer, Transaction, FuelAllocation, Subsidiaries, UserReview
-from buyer.models import User, FuelRequest
-from company.models import FuelUpdate
+# from buyer.models import User, FuelRequest
+# from company.models import FuelUpdate
 from django.db.models import Q
 from buyer.recommend import recommend
 from notification.models import Notification

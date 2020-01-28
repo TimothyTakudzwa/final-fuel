@@ -1,5 +1,5 @@
 from supplier.models import  UserReview, Offer
-from company.models import FuelUpdate
+# from company.models import FuelUpdate
 from buyer.models import FuelRequest
 from supplier.models import Subsidiaries
 from django.db.models import Q

@@ -5,13 +5,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
 from datetime import datetime
 from django.contrib import messages
-from buyer.models import User, Company
+# from buyer.models import User, Company
 from django.contrib.auth import authenticate
 from supplier.forms import UserUpdateForm, PostForm
 from .forms import ProfileUdateForm
 from supplier.forms import *
 from supplier.models import *
-from company.models import FuelUpdate
+# from company.models import FuelUpdate
 from buyer.models import User
 from users.models import Audit_Trail
 from django.contrib.auth.models import User

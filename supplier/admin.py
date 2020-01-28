@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-
-from company.models import FuelUpdate
+#
+# from company.models import FuelUpdate
 
 from supplier.models import *
 

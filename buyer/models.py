@@ -38,6 +38,21 @@ class User(AbstractUser):
             img.save(self.image.path) 
 
 
+class SordSubsidiaryAuditTrail(models.Model):
+    from company.models import Company
+    sord_no =  models.CharField(max_length=100)
+    action_no = models.PositiveIntegerField()
+    action = models.CharField(max_length=150)
+    initial_quantity = models.FloatField(default=0.0)
+    quantity_sold = models.FloatField(default=0.0)
+    end_quantity = models.FloatField(default=0.0)
+    received_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING)
+
+    def __str__(self):
+        return f'{self.id} -- SordSubsidiaryAuditTrail'
+
+
 class FuelRequest(models.Model):
     name = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     amount = models.IntegerField(default=0)

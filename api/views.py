@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 from django.contrib.auth import get_user_model
 
 from buyer.models import User
-from company.models import FuelUpdate
+# from company.models import FuelUpdate
 from supplier.models import Subsidiaries
 from users.models import Audit_Trail
 

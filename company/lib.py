@@ -1,5 +1,5 @@
 from supplier.models import Subsidiaries, Transaction, UserReview
-from company.models import Company, FuelUpdate
+# from company.models import Company, FuelUpdate
 from buyer.models import User
 from datetime import datetime, timedelta
 

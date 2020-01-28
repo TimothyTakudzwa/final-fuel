@@ -10,7 +10,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from buyer.models import User
 from buyer.recommend import recommend
-from company.models import Company, FuelUpdate
+# from company.models import Company, FuelUpdate
 from supplier.models import Offer, Subsidiaries, Transaction, TokenAuthentication, UserReview
 
 from .constants import sample_data

@@ -38,7 +38,7 @@ from company.lib import *
 from django.contrib.auth import authenticate
 from django.db.models import Q
 from .forms import AllocationForm
-from company.models import FuelUpdate as F_Update
+# from company.models import FuelUpdate as F_Update
 from django.contrib.auth import get_user_model
 user = get_user_model()
 

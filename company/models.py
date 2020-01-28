@@ -2,8 +2,6 @@ from django.db import models
 from buyer.constants2 import COMPANY_CHOICES, INDUSTRY_CHOICES
 
 
-
-
 class Company(models.Model):
     name = models.CharField(max_length=255, default='')
     address = models.CharField(max_length=255, default='')
@@ -26,7 +24,7 @@ class Company(models.Model):
 
    
 class CompanyFuelUpdate(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='company_fuel_update')
     allocated_petrol = models.FloatField(default=0.00)
     allocated_diesel = models.FloatField(default=0.00)
     unallocated_petrol = models.FloatField(default=0.00)
@@ -45,7 +43,7 @@ class CompanyFuelUpdate(models.Model):
 
 class SuballocationFuelUpdate(models.Model):
     from supplier.models import Subsidiaries
-    subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE)
+    subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE, related_name='subsidiary_suballocation')
     payment_type = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS'), ('USD & RTGS', 'USD & RTGS')))
     queue_length = models.CharField(max_length=255,choices=(('short', 'Short'), ('medium', 'Medium Long'), ('long', 'Long')))
     deliver = models.BooleanField(default=False)
@@ -64,17 +62,3 @@ class SuballocationFuelUpdate(models.Model):
 
     def __str__(self):
         return f'{self.id} -- SubAllocation '
-
-
-class SordSubsidiaryAuditTrail(models.Model):
-    sord_no =  models.CharField(max_length=100)
-    action_no = models.PositiveIntegerField()
-    action = models.CharField(max_length=150)
-    initial_quantity = models.FloatField(default=0.0)
-    quantity_sold = models.FloatField(default=0.0)
-    end_quantity = models.FloatField(default=0.0)
-    received_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING)
-
-    def __str__(self):
-        return f'{self.id} -- SordSubsidiaryAuditTrail'        
