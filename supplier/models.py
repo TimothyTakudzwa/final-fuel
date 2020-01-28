@@ -1,16 +1,15 @@
 from django.db import models
 from PIL import Image
 from buyer.models import FuelRequest, User
-from company.models import Company, FuelUpdate
+from company.models import Company
 from buyer.constants import *
 from .constants import *
 from buyer.constants2 import *
-#from supplier.models import UserReview
 
 STATUS_CHOICES = (('Open','OPEN'),('Closed','CLOSED'),('Offloading','Offloading'))
 
 class Subsidiaries(models.Model):
-    # ADD CLOSING TIME, PAYMENT METHOD 
+    from fuelUpdates.models import SubsidiaryFuelUpdate
     company = models.ForeignKey(Company,on_delete=models.CASCADE)
     name = models.CharField(max_length=200, default='')
     address = models.CharField(max_length=200, help_text='Harare, Livingstone Street')   
@@ -20,7 +19,7 @@ class Subsidiaries(models.Model):
     is_depot = models.BooleanField(default=False)    
     opening_time = models.CharField(max_length=100, default='08:00')
     closing_time = models.CharField(max_length=100, default='22:00')
-    fuel_capacity = models.ForeignKey(FuelUpdate, on_delete=models.CASCADE, null=True)
+    fuel_capacity = models.ForeignKey(SubsidiaryFuelUpdate, on_delete=models.CASCADE, null=True)
     destination_bank = models.CharField(max_length=100, default="")
     account_number = models.CharField(max_length=100, default="")
     amount = models.FloatField(default=0.00)

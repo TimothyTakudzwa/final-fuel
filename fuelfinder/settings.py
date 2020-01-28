@@ -49,6 +49,8 @@ LOGGING = {
 # Application definition
 
 INSTALLED_APPS = [
+    'national.apps.NationalConfig',
+    'fuelUpdates.apps.FuelupdatesConfig',
     'buyer.apps.BuyerConfig',
     'company.apps.CompanyConfig',
     'serviceStation.apps.ServicestationConfig',
