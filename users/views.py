@@ -549,14 +549,8 @@ def report_generator(request):
             end_date = datetime.strptime(end_date, '%Y-%m-%d')
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
-            stock = FuelUpdate.objects.filter(company_id=request.user.company.id).all()
-            for my_stock in stock:
-                if my_stock.sub_type == 'Company':
-                    my_stock.subsidiary_name = request.user.company.name
-                else:
-                    sub = Subsidiaries.objects.filter(id=my_stock.relationship_id).first()
-                    if sub:
-                        my_stock.subsidiary_name = sub.name
+            stock = CompanyFuelUpdate.objects.filter(company=request.user.company).all()
+            
             
             requests = None; allocations = None; trans = None; revs=None
         if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':
