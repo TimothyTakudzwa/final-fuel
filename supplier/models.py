@@ -161,3 +161,22 @@ class UserReview(models.Model):
 
     def __str__(self):
         return f'{self.rating} - {self.rater}'
+
+
+class SordSubsidiaryAuditTrail(models.Model):
+    from company.models import Company
+    sord_no =  models.CharField(max_length=100)
+    action_no = models.PositiveIntegerField()
+    action = models.CharField(max_length=150)
+    initial_quantity = models.FloatField(default=0.0)
+    quantity_sold = models.FloatField(default=0.0)
+    end_quantity = models.FloatField(default=0.0)
+    received_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.DO_NOTHING, related_name='subsidiary_sord')
+    last_updated = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.id} -- SordSubsidiaryAuditTrail'
+    
+    class Meta:
+        ordering = ['last_updated']
