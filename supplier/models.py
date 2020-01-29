@@ -63,8 +63,6 @@ class SubsidiaryFuelUpdate(models.Model):
     petrol_quantity = models.FloatField(default=0.0)
     diesel_quantity = models.FloatField(default=0.0)
     company_update = models.ForeignKey(CompanyFuelUpdate, on_delete=models.CASCADE)
-    queue_length = models.CharField(max_length=255,
-                                    choices=(('short', 'Short'), ('medium', 'Medium Long'), ('long', 'Long')))
     last_updated = models.DateField()
     cash = models.BooleanField(default=False)
     ecocash = models.BooleanField(default=False)
