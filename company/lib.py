@@ -2,6 +2,7 @@ from supplier.models import Subsidiaries, Transaction, UserReview
 # from company.models import Company, FuelUpdate
 from buyer.models import User
 from datetime import datetime, timedelta
+from fuelUpdates.models import CompanyFuelUpdate
 
 
 
@@ -94,10 +95,15 @@ def get_all_subsidiaries(company):
 
 
 def get_aggregate_stock(company): 
-    fuel_update = FuelUpdate.objects.filter(sub_type="Company", company_id=company.id).first()
+    fuel_update = CompanyFuelUpdate.objects.filter(company=company.id).first()
     if fuel_update:
-        return {'diesel': fuel_update.diesel_quantity, 'petrol': fuel_update.petrol_quantity}
-    return {'diesel': 0, 'petrol': 0}
+        allocated_diesel = fuel_update.allocated_diesel
+        unallocated_diesel = fuel_update.unallocated_diesel
+        allocated_petrol = fuel_update.allocated_petrol
+        unallocated_petrol = fuel_update.unallocated_petrol
+        return {'diesel': (allocated_diesel + unallocated_diesel), 'petrol': (allocated_petrol + unallocated_petrol), 'allocated_diesel': allocated_diesel, 'unallocated_diesel': unallocated_diesel,
+        'allocated_petrol': allocated_petrol, 'unallocated_petrol':unallocated_petrol }
+    return {'diesel': 0, 'petrol': 0, 'allocated_diesel':0, 'unallocated_diesel': 0, 'allocated_petrol': 0, 'unallocated_petrol':0}
     
 
 def get_total_revenue(user):

@@ -22,6 +22,11 @@ class Company(models.Model):
     def get_model_by_id(cls, id):
         return cls.objects.filter(id=id).first()
 
+    @classmethod
+    def get_all_subsidiaries(cls, id):
+        from supplier.models import Subsidiaries
+        return Subsidiaries.objects.filter(company=self)
+
    
 class CompanyFuelUpdate(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='company_fuel_update')
@@ -62,3 +67,10 @@ class SuballocationFuelUpdate(models.Model):
 
     def __str__(self):
         return f'{self.id} -- SubAllocation '
+
+
+class CompanyStatsCard(models.Model):
+    '''
+    Table to hold all relevant statistics
+    '''
+    pass
