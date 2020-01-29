@@ -473,8 +473,8 @@ def complete_transaction(request, id):
                 fuel.petrol_quantity = fuel.petrol_quantity - transaction_quantity
                 fuel.save()
 
-            end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, end_quantity = 0).all()
-            initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id).all()
+            end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type='Petrol', end_quantity = 0).all()
+            initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type='Petrol').all()
             sord_quantity_zero = []
             sord_quantity = []
             for sord in end_quantity_zero:
@@ -484,7 +484,7 @@ def complete_transaction(request, id):
                     pass
                 else:
                     sord_quantity.append(x)
-            sord_quantity.sort(key = attrgetter('last_updated'), reverse = False)
+            sord_quantity.sort(key = attrgetter('last_updated'), reverse = True)
             changing_quantity = transaction_quantity
             for entry in sord_quantity:
                 if changing_quantity != 0:
@@ -497,6 +497,7 @@ def complete_transaction(request, id):
                         new_sord_entry.quantity_sold = entry.end_quantity
                         new_sord_entry.end_quantity = 0
                         new_sord_entry.received_by = transaction.offer.request.name
+                        new_sord_entry.fuel_type = entry.fuel_type
                         new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
                         new_sord_entry.save()
                         changing_quantity = changing_quantity - entry.end_quantity
@@ -509,6 +510,7 @@ def complete_transaction(request, id):
                         new_sord_entry.quantity_sold = changing_quantity
                         new_sord_entry.end_quantity = entry.end_quantity - changing_quantity
                         new_sord_entry.received_by = transaction.offer.request.name
+                        new_sord_entry.fuel_type = entry.fuel_type
                         new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
                         new_sord_entry.save()
                         changing_quantity = 0
@@ -536,8 +538,8 @@ def complete_transaction(request, id):
                 fuel.diesel_quantity = fuel.diesel_quantity - transaction_quantity
                 fuel.save()
 
-            end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, end_quantity = 0).all()
-            initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id).all()
+            end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type='Diesel', end_quantity = 0).all()
+            initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type = 'Diesel').all()
             sord_quantity_zero = []
             sord_quantity = []
             for sord in end_quantity_zero:
@@ -560,6 +562,7 @@ def complete_transaction(request, id):
                         new_sord_entry.quantity_sold = entry.end_quantity
                         new_sord_entry.end_quantity = 0
                         new_sord_entry.received_by = transaction.offer.request.name
+                        new_sord_entry.fuel_type = entry.fuel_type
                         new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
                         new_sord_entry.save()
                         changing_quantity = changing_quantity - entry.end_quantity
@@ -572,6 +575,7 @@ def complete_transaction(request, id):
                         new_sord_entry.quantity_sold = changing_quantity
                         new_sord_entry.end_quantity = entry.end_quantity - changing_quantity
                         new_sord_entry.received_by = transaction.offer.request.name
+                        new_sord_entry.fuel_type = entry.fuel_type
                         new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
                         new_sord_entry.save()
                         changing_quantity = 0
