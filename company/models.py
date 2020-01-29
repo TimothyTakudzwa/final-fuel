@@ -1,7 +1,5 @@
 from django.db import models
 from buyer.constants2 import COMPANY_CHOICES, INDUSTRY_CHOICES
-
-
 class Company(models.Model):
     name = models.CharField(max_length=255, default='')
     address = models.CharField(max_length=255, default='')
@@ -9,6 +7,7 @@ class Company(models.Model):
     logo = models.ImageField(blank=True, null=True,default='default.png', upload_to='company_profile_logo')
     is_verified = models.BooleanField(default=False)
     company_type = models.CharField(max_length=255, default='',choices=COMPANY_CHOICES, blank=True, null=True)
+    #fuel_capacity = models.ForeignKey(CompanyFuelUpdate, on_delete=models.DO_NOTHING,blank=True, null=True)
     iban_number = models.CharField(max_length=100, default='', blank=True, null=True)
     license_number = models.CharField(max_length=100, default='', blank=True, null=True)
     destination_bank = models.CharField(max_length=100, default='', blank=True, null=True)
