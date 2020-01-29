@@ -18,7 +18,7 @@ from buyer.models import FuelRequest
 from users.models import AuditTrail
 from .forms import PasswordChange, RegistrationForm, \
     RegistrationEmailForm, UserUpdateForm, FuelRequestForm, CreateCompany, OfferForm
-from .models import Transaction, TokenAuthentication, SordSubsidiaryAuditTrail, Offer, Subsidiaries, SuballocationFuelUpdate, SubsidiaryFuelUpdate
+from .models import Transaction, FuelAllocation, TokenAuthentication, SordSubsidiaryAuditTrail, Offer, Subsidiaries, SuballocationFuelUpdate, SubsidiaryFuelUpdate
 from notification.models import Notification
 from django.contrib.auth import get_user_model
 from whatsapp.helper_functions import send_message
@@ -88,11 +88,11 @@ def fuel_request(request):
 
     for buyer_request in requests:
         if buyer_request.payment_method == 'USD':
-            fuel = SuballocationFuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).filter(entry_type='USD').first()
+            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='USD').first()
         elif buyer_request.payment_method == 'RTGS':
-            fuel = SuballocationFuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).filter(entry_type='RTGS').first()
+            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='RTGS').first()
         elif buyer_request.payment_method == 'USD & RTGS':
-            fuel = SuballocationFuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).filter(entry_type='USD & RTGS').first()
+            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='USD & RTGS').first()
         else:
             fuel = None
         if buyer_request.dipping_stick_required==buyer_request.meter_required==buyer_request.pump_required==False:
@@ -160,7 +160,7 @@ def stock_update(request,id):
                 fuel_update.diesel_quantity = int(request.POST['quantity'])
             fuel_update.cash = request.POST['cash']
             fuel_update.swipe = request.POST['swipe']
-            if fuel_update.entry_type != 'USD':
+            if fuel_update.payment_type != 'USD':
                 fuel_update.ecocash = request.POST['ecocash']
             fuel_update.save()
             messages.success(request, 'Fuel successfully updated')
@@ -172,11 +172,11 @@ def offer(request, id):
     if request.method == "POST":
         if float(request.POST.get('price')) != 0 and float(request.POST.get('quantity')) != 0:
             fuel_request = FuelRequest.objects.get(id=id)
-            fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, entry_type = 'USD & RTGS').first()
+            fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD & RTGS').first()
             if fuel_request.payment_method == 'USD':
-                fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, entry_type = 'USD').first()
+                fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD').first()
             elif fuel_request.payment_method == 'RTGS':
-                 fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, entry_type = 'RTGS').first()
+                 fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'RTGS').first()
             subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
             
             if fuel_request.fuel_type.lower() == 'petrol':
@@ -247,12 +247,12 @@ def offer(request, id):
 @login_required
 def edit_offer(request, id):
     offer = Offer.objects.get(id=id)
-    fuel_reserve =SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, entry_type = 'USD & RTGS').first()
+    fuel_reserve =SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD & RTGS').first()
     if request.method == 'POST':
         if offer.request.payment_method == 'USD':
-            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, entry_type = 'USD').first()
+            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD').first()
         elif offer.request.payment_method == 'RTGS':
-            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, entry_type = 'RTGS').first()
+            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'RTGS').first()
         subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         
         if offer.request.fuel_type.lower() == 'petrol':
@@ -448,11 +448,11 @@ def my_offers(request):
 @login_required
 def complete_transaction(request, id):
     transaction = Transaction.objects.filter(id = id).first()
-    fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, entry_type = 'USD & RTGS').first()
+    fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD & RTGS').first()
     if transaction.offer.request.payment_method == 'USD':
-        fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, entry_type = 'USD').first()
+        fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD').first()
     elif transaction.offer.request.payment_method == 'RTGS':
-        fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, entry_type = 'RTGS').first()
+        fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'RTGS').first()
     fuel_type = transaction.offer.request.fuel_type.lower()
     if fuel_type == 'petrol':
         transaction_quantity = transaction.offer.quantity
@@ -480,7 +480,7 @@ def complete_transaction(request, id):
             for sord in end_quantity_zero:
                 sord_quantity_zero.append(sord.sord_no)
             for x in initial_sord:
-                if x.sord_no in sord_numbers:
+                if x.sord_no in sord_quantity_zero:
                     pass
                 else:
                     sord_quantity.append(x)
