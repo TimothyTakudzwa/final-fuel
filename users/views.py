@@ -33,7 +33,7 @@ from buyer.models import *
 from supplier.forms import *
 from supplier.models import *
 from users.models import *
-from company.models import Company
+from company.models import Company, CompanyFuelUpdate
 from company.lib import *
 from django.contrib.auth import authenticate
 from django.db.models import Q
@@ -133,13 +133,16 @@ def index(request):
 
 @login_required()
 def allocate(request):
-    allocates = F_Update.objects.filter(company_id=request.user.company.id).filter(~Q(sub_type='Company')).filter(~Q(sub_type='Suballocation')).all()
+    allocates=[]
+    subs = Subsidiaries.objects.filter(company=request.user.company).all()
+    for sub in subs:
+        allocates = SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first()
     allocations = FuelAllocation.objects.filter(company=request.user.company).all()
-    company_capacity = F_Update.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()
+    company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
 
     if company_capacity is not None:
-        company_capacity.diesel_quantity= '{:,}'.format(company_capacity.diesel_quantity)
-        company_capacity.petrol_quantity= '{:,}'.format(company_capacity.petrol_quantity)
+        company_capacity.unallocated_diesel= '{:,}'.format(company_capacity.unallocated_diesel)
+        company_capacity.unallocated_petrol= '{:,}'.format(company_capacity.unallocated_petrol)
     else:
         company_capacity = company_capacity
     if allocations is not None: 
@@ -511,19 +514,16 @@ def stations(request):
         usd = request.POST['usd']
         swipe = request.POST['swipe']
         ecocash = request.POST['ecocash']
-        sub = Subsidiaries.objects.create(account_number=account_number,destination_bank=destination_bank,city=city,location=location,company=request.user.company,name=name,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)    
+        sub = Subsidiaries.objects.create(account_number=account_number,destination_bank=destination_bank,city=city,location=location,company=request.user.company,name=name,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time) 
+        sub.save()   
         if request.POST['is_depot'] == "Service Station":
-            fuel_updated = F_Update.objects.create(sub_type="Service Station",relationship_id=sub.id,company_id = request.user.company.id, cash=cash, usd=usd, swipe=swipe, ecocash=ecocash,limit=2000)
-            fuel_updated.save()
-            sub.fuel_capacity = fuel_updated
-            sub.save()
+            fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=sub, cash=cash,company_update=company_fuel_update, swipe=swipe, ecocash=ecocash,limit=2000)
+            fuel_update.save()
             messages.success(request, 'Subsidiary Created Successfully')
             return redirect('users:stations')  
         else:
-            fuel_updated = F_Update.objects.create(sub_type="Depot",relationship_id=sub.id,company_id = request.user.company.id, cash=cash, usd=usd, swipe=swipe, ecocash=ecocash,limit=2000)
-            fuel_updated.save()
-            sub.fuel_capacity = fuel_updated
-            sub.save()
+            fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=sub, cash=cash, swipe=swipe, ecocash=ecocash,limit=2000)
+            fuel_update.save()
             messages.success(request, 'Subsidiary Created Successfully')
             return redirect('users:stations') 
         
@@ -549,14 +549,8 @@ def report_generator(request):
             end_date = datetime.strptime(end_date, '%Y-%m-%d')
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
-            stock = FuelUpdate.objects.filter(company_id=request.user.company.id).all()
-            for my_stock in stock:
-                if my_stock.sub_type == 'Company':
-                    my_stock.subsidiary_name = request.user.company.name
-                else:
-                    sub = Subsidiaries.objects.filter(id=my_stock.relationship_id).first()
-                    if sub:
-                        my_stock.subsidiary_name = sub.name
+            stock = CompanyFuelUpdate.objects.filter(company=request.user.company).all()
+            
             
             requests = None; allocations = None; trans = None; revs=None
         if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':

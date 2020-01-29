@@ -7,34 +7,41 @@ from rest_framework.decorators import api_view
 from django.contrib.auth import get_user_model
 
 from buyer.models import User
-# from company.models import FuelUpdate
-from supplier.models import Subsidiaries
+from supplier.models import Subsidiaries, SubsidiaryFuelUpdate
 from users.models import Audit_Trail
 
 import secrets
+from datetime import date
 from fuelfinder import settings
 
 user = get_user_model()
+today = date.today()
 
 
 @csrf_exempt
 @api_view(['POST'])
 def login(request):
     if request.method == 'POST':
+        # fetch details
         username = request.POST.get('username')
         password = request.POST.get('password')
-
+        # authenticate user
         status = authenticate(username=username, password=password)
         if status:
+            # auth success
             user = User.objects.get(username=username)
+            # service station admin and must reset password
             if user.user_type == 'SS_SUPPLIER' and user.password_reset:
                 data = {'username': user.username}
                 return JsonResponse(status=201, data=data)
+            # service station admin
             elif user.user_type == 'SS_SUPPLIER':
                 data = {'username': user.username}
                 return JsonResponse(status=200, data=data)
+            # wrong details
             else:
                 return HttpResponse(status=403)
+        # no account
         else:
             return HttpResponse(status=401)
 
@@ -43,22 +50,28 @@ def login(request):
 @api_view(['POST'])
 def login_user(request):
     if request.method == 'POST':
+        # user details
         username = request.POST.get('username')
         password = request.POST.get('password')
-
+        # authenticating
         check = User.objects.filter(username=username)
         if check.exists():
             status = authenticate(username=username, password=password)
+            # auth success
             if status:
                 user = User.objects.get(username=username)
+                # user must reset password
                 if user.password_reset:
                     data = {'username': user.username}
                     return JsonResponse(status=201, data=data)
+                # login
                 else:
                     data = {'username': user.username}
                     return JsonResponse(status=200, data=data)
+            # wrong details
             else:
                 return HttpResponse(status=401)
+        # no account
         else:
             return HttpResponse(status=403)
 
@@ -67,22 +80,25 @@ def login_user(request):
 @api_view(['POST'])
 def register(request):
     if request.method == 'POST':
+        # fetch details
         username = request.POST.get('username')
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
         phone = request.POST.get('phone')
         password = request.POST.get('password')
-
+        # checking for existing details
         email_check = User.objects.filter(email=email)
         username_check = User.objects.filter(username=username)
-
+        # username check
         if username_check.exists():
             return HttpResponse(status=409)
+        # email check
         elif email_check.exists():
             return HttpResponse(status=406)
         else:
             try:
+                # creating account
                 client = user.objects.create_user(username=username, email=email, password=password)
                 client.phone_number = phone
                 client.user_type = 'INDIVIDUAL'
@@ -92,6 +108,7 @@ def register(request):
 
                 data = {'username': client.username}
                 return JsonResponse(status=200, data=data)
+            # password not meeting standards
             except:
                 return HttpResponse(status=403)
 
@@ -101,48 +118,49 @@ def register(request):
 def update_station(request):
     if request.method == 'POST':
         username = request.POST.get('username')
-
+        # fetch user data
         user = User.objects.get(username=username)
-        status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Service Station')
-        station = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
-
+        # check for fuel station
+        status = SubsidiaryFuelUpdate.objects.filter(subsidiary=Subsidiaries.objects.
+                                                     filter(id=user.subsidiary_id).first())
+        # station exists
         if status.exists():
-            update = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(
-                sub_type='Service Station').first()
-
+            update = SubsidiaryFuelUpdate.objects.filter(subsidiary=Subsidiaries.objects.
+                                                         filter(id=user.subsidiary_id).first())
+            # fetch details
             p_quantity = request.POST.get('petrol_quantity')
             d_quantity = request.POST.get('diesel_quantity')
             queue = request.POST.get('queue')
-
             s_status = request.POST.get('status')
             limit = request.POST.get('limit')
-
             swipe = request.POST.get('swipe')
             ecocash = request.POST.get('ecocash')
             cash = request.POST.get('cash')
-
+            # payment method
             update.swipe = swipe
             update.ecocash = ecocash
             update.cash = cash
-
+            # update other quanties
             update.petrol_quantity = p_quantity
             update.diesel_quantity = d_quantity
             update.queue_length = queue
             update.status = s_status
             update.limit = limit
-
+            update.last_updated = today
+            # save update
             update.save()
-
+            # add audit trail
             Audit_Trail.objects.create(
                 user=user,
                 company=user.company,
-                service_station=station,
+                service_station=Subsidiaries.objects.filter(id=user.subsidiary_id).first(),
                 action='Updating fuel quantities and station status via mobile app',
                 reference='Fuel update',
                 reference_id=update.id,
             )
-
+            # success response
             return HttpResponse(status=200)
+        # no station
         else:
             return HttpResponse(status=404)
 
@@ -151,19 +169,24 @@ def update_station(request):
 @api_view(['POST'])
 def view_station_updates(request):
     if request.method == 'POST':
+        # fetch username
         username = request.POST.get('username')
-
+        # data to be returned
         data = []
-
+        # get user data
         user = User.objects.get(username=username)
-        status = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id)
-
+        # check if user has update object
+        status = SubsidiaryFuelUpdate.objects.filter(subsidiary=Subsidiaries.objects.
+                                                     filter(id=user.subsidiary_id).first())
+        # if update object exists
         if status.exists():
-            updates = FuelUpdate.objects.filter(relationship_id=user.subsidiary_id).filter(sub_type='Service Station')
+            updates = SubsidiaryFuelUpdate.objects.filter(subsidiary=Subsidiaries.objects.
+                                                          filter(id=user.subsidiary_id).first())
+            # fetching data
             for update in updates:
                 company = Subsidiaries.objects.get(id=update.relationship_id)
                 image = f'https://{request.get_host()}{company.logo.url}/'
-
+                # end fetch
                 station_update = {
                     'name': company.name, 'diesel_quantity': update.diesel_quantity,
                     'diesel_price': update.diesel_price, 'petrol_quantity': update.petrol_quantity,
@@ -171,8 +194,10 @@ def view_station_updates(request):
                     'swipe': update.swipe, 'queue': update.queue_length, 'limit': update.limit,
                     'status': update.status, 'image': image
                 }
+                # add to dictionary
                 data.append(station_update)
             return JsonResponse(list(data), status=200, safe=False)
+        # error response
         else:
             return HttpResponse(status=403)
 
@@ -181,42 +206,41 @@ def view_station_updates(request):
 @api_view(['POST'])
 def view_updates_user(request):
     if request.method == 'POST':
-
+        # data container
         data = []
-
-        sub_updates = FuelUpdate.objects.filter(sub_type='Service Station').all()
-
-        for sub_update in sub_updates:
-            try:
-                updates = FuelUpdate.objects.filter(sub_type='Service Station').filter(
-                    relationship_id=sub_update.relationship_id).all()
-                for update in updates:
-                    details = Subsidiaries.objects.get(id=update.relationship_id)
-                    if update.diesel_quantity == 0 and update.petrol_quantity == 0:
-                        pass
-                    else:
-                        image = f'https://{request.get_host()}{details.company.logo.url}/'
-                        station_update = {
-                            'station': details.name, 'queue': update.queue_length, 'petrol': update.petrol_price,
-                            'diesel': update.diesel_price, 'open': details.opening_time, 'close': details.closing_time,
-                            'limit': update.limit, 'cash': update.cash, 'ecocash': update.ecocash,
-                            'swipe': update.swipe,
-                            'status': update.status, 'image': image, 'company': details.company.name,
-                        }
-                        data.append(station_update)
-            except:
-                pass
-        return JsonResponse(list(data), status=200, safe=False)
+        # fetch updates
+        try:
+            updates = SubsidiaryFuelUpdate.objects.filter(subsidiary=Subsidiaries.objects.filter(is_depot=False).all())
+            for update in updates:
+                image = f'https://{request.get_host()}{update.subsidiary.logo.url}/'
+                if update.diesel_quantity == 0 and update.petrol_quantity == 0:
+                    pass
+                else:
+                    station_update = {
+                        'station': update.subsidiary.name, 'queue': update.queue_length, 'petrol': update.petrol_price,
+                        'diesel': update.diesel_price, 'open': update.subsidiary.opening_time,
+                        'close': update.subsidiary.closing_time, 'limit': update.limit, 'cash': update.cash,
+                        'ecocash': update.ecocash, 'swipe': update.swipe, 'status': update.status,
+                        'image': image, 'company': update.subsidiary.company.name,
+                    }
+                    data.append(station_update)
+        # if error, skip object
+        except:
+            pass
+        # after fetching data, return data
+        finally:
+            return JsonResponse(list(data), status=200, safe=False)
 
 
 @csrf_exempt
 @api_view(['POST'])
 def get_profile(request):
     if request.method == 'POST':
+        # fetch username
         username = request.POST.get('username')
-
+        # profile data
         data = []
-
+        # check if user exists
         check = User.objects.filter(username=username)
         if check.exists():
             client = User.objects.get(username=username)
@@ -224,6 +248,7 @@ def get_profile(request):
                          'lastName': client.last_name, 'phone': client.phone_number, 'email': client.email}
             data.append(user_data)
             return JsonResponse(list(data), status=200, safe=False)
+        # error response
         else:
             return HttpResponse(status=403)
 
@@ -232,13 +257,15 @@ def get_profile(request):
 @api_view(['POST'])
 def force_password_change(request):
     if request.method == 'POST':
+        # fetch data
         username = request.POST.get('username')
-
+        # get user
         check = User.objects.filter(username=username)
+        # user exists
         if check.exists():
             new1 = request.POST.get('new1')
             new2 = request.POST.get('new2')
-
+            # validation
             if new1 == new2:
                 client = User.objects.get(username=username)
                 client.set_password(new1)
@@ -247,8 +274,10 @@ def force_password_change(request):
                 update_session_auth_hash(request, client)
                 values = dict(user=client.username)
                 return JsonResponse(status=200, data=values)
+            # validation error
             else:
                 return HttpResponse(status=401)
+        # user doesn't exist
         else:
             return HttpResponse(status=403)
 
@@ -257,17 +286,18 @@ def force_password_change(request):
 @api_view(['POST'])
 def change_password(request):
     if request.method == 'POST':
+        # fetch username
         username = request.POST.get('username')
-
+        # check if a user exists
         check = User.objects.filter(username=username)
-
+        # user exists
         if check.exists():
             old = request.POST.get('old')
             new1 = request.POST.get('new1')
             new2 = request.POST.get('new2')
-
+            # validation
             auth = authenticate(username=username, password=old)
-
+            # validation too
             if auth and (new1 == new2):
                 client = User.objects.get(username=username)
                 client.set_password(new1)
@@ -275,8 +305,10 @@ def change_password(request):
                 update_session_auth_hash(request, client)
                 values = dict(user=client.username)
                 return JsonResponse(status=200, data=values)
+            # validation error
             else:
                 return HttpResponse(status=401)
+        # no validation
         else:
             return HttpResponse(status=403)
 
@@ -285,30 +317,34 @@ def change_password(request):
 @api_view(['POST'])
 def password_reset(request):
     if request.method == 'POST':
+        # fetch email
         email = request.POST.get('email')
-
+        # check if email exists
         check = User.objects.filter(email=email)
         if check.exists():
             client = User.objects.get(email=email)
+            # generate temporary password
             password = secrets.token_hex(3)
             client.set_password(password)
+            # force password reset
             client.password_reset = True
             client.save()
+            # update session incase user is logged on somewhere
             update_session_auth_hash(request, client)
-
+            # set details for sending email
             sender = f'Fuel Finder Accounts<{settings.EMAIL_HOST_USER}>'
             title = 'Password Reset'
             message = f"Your account password was reset.Please use this password when signing in : \n" \
                       f"{password}\n" \
                       f"Remember to change the password when you sign in."
-
+            # send email
             try:
                 msg = EmailMultiAlternatives(title, message, sender, [email])
                 msg.send()
                 return HttpResponse(200)
-
+            # if error occures
             except BadHeaderError:
                 return HttpResponse(400)
-
+        # user doesn't exist
         else:
             return HttpResponse(status=404)

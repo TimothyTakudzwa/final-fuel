@@ -18,7 +18,7 @@ class Subsidiaries(models.Model):
     is_depot = models.BooleanField(default=False)    
     opening_time = models.CharField(max_length=100, default='08:00')
     closing_time = models.CharField(max_length=100, default='22:00')
-    # fuel_capacity = models.ForeignKey(SubsidiaryFuelUpdate, on_delete=models.CASCADE, null=True)
+    #fuel_capacity = models.ForeignKey(SubsidiaryFuelUpdate, on_delete=models.CASCADE, null=True)
     destination_bank = models.CharField(max_length=100, default="")
     account_number = models.CharField(max_length=100, default="")
     amount = models.FloatField(default=0.00)
@@ -64,6 +64,13 @@ class SubsidiaryFuelUpdate(models.Model):
     diesel_quantity = models.FloatField(default=0.0)
     company_update = models.ForeignKey(CompanyFuelUpdate, on_delete=models.CASCADE)
     last_updated = models.DateField()
+    cash = models.BooleanField(default=False)
+    ecocash = models.BooleanField(default=False)
+    swipe = models.BooleanField(default=False)
+    petrol_price = models.FloatField()
+    diesel_price = models.FloatField()
+    status = models.CharField(max_length=1000)
+    limit = models.FloatField()
 
     def __str__(self):
         return f'{self.id} -- SubsidiaryFuelUpdate '
