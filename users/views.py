@@ -58,14 +58,9 @@ class Render:
 
 
 def allocated_fuel(request,sid): 
-    subs = Subsidiaries.objects.filter(company=request.user.company).all()
-    allocates = []
-    
-    for sub in subs:
-        allocates = SuballocationFuelUpdate.objects.filter(subsidiary=sub).first() 
-    print(allocates)
-    company_quantity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
     sub = Subsidiaries.objects.filter(id = sid).first()
+    allocates = SuballocationFuelUpdate.objects.filter(subsidiary=sub).all()
+    company_quantity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
     depot = SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first()
 
     if request.method == 'POST':
@@ -74,7 +69,6 @@ def allocated_fuel(request,sid):
                 messages.warning(request, f'You can not allocate fuel above your company petrol capacity of {company_quantity.unallocated_petrol}')
                 return redirect('users:allocate')
             fuel_updated = SuballocationFuelUpdate.objects.create(subsidiary=sub, payment_type=request.POST['fuel_payment_type'], cash=request.POST['cash'], swipe=request.POST['swipe'], petrol_quantity=request.POST['quantity'], petrol_price=request.POST['price'])
-            fuel_updated.save()
             if request.POST['fuel_payment_type'] == 'USD & RTGS':
                 fuel_updated.petrol_usd_price = request.POST['usd_price']
                 fuel_updated.ecocash = request.POST['ecocash']
@@ -85,7 +79,6 @@ def allocated_fuel(request,sid):
             depot.petrol_quantity = depot.petrol_quantity + int(request.POST['quantity']) 
             company_quantity.unallocated_petrol = company_quantity.unallocated_petrol - int(request.POST['quantity'])
             company_quantity.save()
-            fuel_updated.save()
         else:
             if int(request.POST['quantity']) > company_quantity.unallocated_diesel:
                 messages.warning(request, f'You can not allocate fuel above your company diesel capacity of {company_quantity.unallocated_diesel}')
@@ -105,7 +98,7 @@ def allocated_fuel(request,sid):
         depot.save()
     type_list = []  
     if allocates is not None: 
-        print(allocates)
+        
         for allocate in allocates:
             
             subsidiary = Subsidiaries.objects.filter(id=allocate.subsidiary.id).first()
@@ -143,10 +136,12 @@ def index(request):
 def allocate(request):
     allocates=[]
     company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
+    print(request.user.company)
+    print(company_capacity)
     subs = Subsidiaries.objects.filter(company=request.user.company).all()
     for sub in subs:
         allocates.append(SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first())
-    
+    print(allocates)
 
     allocations = FuelAllocation.objects.filter(company=request.user.company).all()
     if company_capacity is not None:

@@ -60,7 +60,7 @@ class SuballocationFuelUpdate(models.Model):
 
 
 class SubsidiaryFuelUpdate(models.Model):
-    from fuelUpdates.models import CompanyFuelUpdate
+    from company.models import CompanyFuelUpdate
     subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE)
     petrol_quantity = models.FloatField(default=0.0)
     diesel_quantity = models.FloatField(default=0.0)
@@ -176,6 +176,7 @@ class SordSubsidiaryAuditTrail(models.Model):
     sord_no =  models.CharField(max_length=100)
     action_no = models.PositiveIntegerField()
     action = models.CharField(max_length=150)
+    fuel_type = models.CharField(max_length=150)
     initial_quantity = models.FloatField(default=0.0)
     quantity_sold = models.FloatField(default=0.0)
     end_quantity = models.FloatField(default=0.0)
