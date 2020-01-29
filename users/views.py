@@ -133,12 +133,15 @@ def index(request):
 
 @login_required()
 def allocate(request):
+    updates = CompanyFuelUpdate.objects.all()
+    print(updates)
     allocates=[]
     subs = Subsidiaries.objects.filter(company=request.user.company).all()
     for sub in subs:
         allocates = SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first()
     allocations = FuelAllocation.objects.filter(company=request.user.company).all()
     company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
+    print(company_capacity)
 
     if company_capacity is not None:
         company_capacity.unallocated_diesel= '{:,}'.format(company_capacity.unallocated_diesel)

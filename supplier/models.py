@@ -58,7 +58,7 @@ class SuballocationFuelUpdate(models.Model):
 
 
 class SubsidiaryFuelUpdate(models.Model):
-    from fuelUpdates.models import CompanyFuelUpdate
+    from company.models import CompanyFuelUpdate
     subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE)
     petrol_quantity = models.FloatField(default=0.0)
     diesel_quantity = models.FloatField(default=0.0)
