@@ -63,8 +63,11 @@ def allocated_fuel(request,sid):
     
     for sub in subs:
         allocates = SuballocationFuelUpdate.objects.filter(subsidiary=sub).first() 
-    print(allocates)
+    print(request.user.company)
     company_quantity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
+    company_qua = CompanyFuelUpdate.objects.all()
+    print(company_quantity)
+    print("Company Updates",company_qua)
     sub = Subsidiaries.objects.filter(id = sid).first()
     depot = SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first()
 
@@ -105,7 +108,7 @@ def allocated_fuel(request,sid):
         depot.save()
     type_list = []  
     if allocates is not None: 
-        print(allocates)
+        #print(allocates)
         for allocate in allocates:
             
             subsidiary = Subsidiaries.objects.filter(id=allocate.subsidiary.id).first()

@@ -44,7 +44,6 @@ class CompanyFuelUpdate(models.Model):
         ordering = ['company']
 
 
-
 class SuballocationFuelUpdate(models.Model):
     from supplier.models import Subsidiaries
     subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE, related_name='subsidiary_suballocation')
