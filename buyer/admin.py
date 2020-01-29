@@ -1,5 +1,5 @@
 from django.contrib import admin
-from buyer.models import User, FuelRequest, SordSubsidiaryAuditTrail
+from buyer.models import User, FuelRequest
 from company.models import Company
 from supplier.models import Subsidiaries
 from django.contrib.auth import get_user_model
@@ -47,5 +47,4 @@ admin.site.register(Company)
 admin.site.register(FuelRequest, FuelRequestAdmin)
 admin.site.register(Subsidiaries, SubsidiariesAdmin)
 admin.site.unregister(Group)
-admin.site.register(SordSubsidiaryAuditTrail)
 
