@@ -62,7 +62,6 @@ class SubsidiaryFuelUpdate(models.Model):
     subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE)
     petrol_quantity = models.FloatField(default=0.0)
     diesel_quantity = models.FloatField(default=0.0)
-    company_update = models.ForeignKey(CompanyFuelUpdate, on_delete=models.CASCADE)
     last_updated = models.DateField()
     cash = models.BooleanField(default=False)
     ecocash = models.BooleanField(default=False)
