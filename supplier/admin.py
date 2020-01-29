@@ -17,12 +17,12 @@ class FuelUpdatetAdmin(admin.ModelAdmin):
     list_display = ( 'id',  'sub_type', 'entry_type', 'diesel_quantity', 'petrol_quantity', 'petrol_price', 'diesel_price',  'company_id','relationship_id')
 
 admin.site.register(Transaction)
-# admin.site.register(FuelUpdate, FuelUpdatetAdmin)
+admin.site.register(SubsidiaryFuelUpdate)
 admin.site.register(TokenAuthentication) 
 admin.site.register(SupplierRating)
 admin.site.register(Offer)
 admin.site.register(FuelAllocation)
 admin.site.register(UserReview)
-# admin.site.register(Depot)
+admin.site.register(SuballocationFuelUpdate)
 
 

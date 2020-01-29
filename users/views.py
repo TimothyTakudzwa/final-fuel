@@ -33,7 +33,7 @@ from buyer.models import *
 from supplier.forms import *
 from supplier.models import *
 from users.models import *
-from company.models import Company
+from company.models import Company, CompanyFuelUpdate
 from company.lib import *
 from django.contrib.auth import authenticate
 from django.db.models import Q
@@ -133,13 +133,16 @@ def index(request):
 
 @login_required()
 def allocate(request):
-    allocates = F_Update.objects.filter(company_id=request.user.company.id).filter(~Q(sub_type='Company')).filter(~Q(sub_type='Suballocation')).all()
+    allocates=[]
+    subs = Subsidiaries.objects.filter(company=request.user.company).all()
+    for sub in subs:
+        allocates = SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first()
     allocations = FuelAllocation.objects.filter(company=request.user.company).all()
-    company_capacity = F_Update.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()
+    company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
 
     if company_capacity is not None:
-        company_capacity.diesel_quantity= '{:,}'.format(company_capacity.diesel_quantity)
-        company_capacity.petrol_quantity= '{:,}'.format(company_capacity.petrol_quantity)
+        company_capacity.unallocated_diesel= '{:,}'.format(company_capacity.unallocated_diesel)
+        company_capacity.unallocated_petrol= '{:,}'.format(company_capacity.unallocated_petrol)
     else:
         company_capacity = company_capacity
     if allocations is not None: 
