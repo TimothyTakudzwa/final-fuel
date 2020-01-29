@@ -133,6 +133,7 @@ def index(request):
 
 @login_required()
 def allocate(request):
+    allocates=[]
     subs = Subsidiaries.objects.filter(company=request.user.company).all()
     for sub in subs:
         allocates = SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first()
