@@ -4,6 +4,7 @@ from buyer.models import User
 
 
 class SordCompanyAuditTrail(models.Model):
+    date = models.DateField(auto_now_add=True)
     sord_no =  models.CharField(max_length=100)
     action_no = models.PositiveIntegerField()
     action = models.CharField(max_length=150)
@@ -17,5 +18,8 @@ class SordCompanyAuditTrail(models.Model):
 
     def __str__(self):
         return f'{self.id} -- SordCompanyAuditTrail'
+
+   class Meta:
+        ordering = ['date']
      
 

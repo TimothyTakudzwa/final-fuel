@@ -1,6 +1,7 @@
 import random
 import locale
 import tempfile
+import uuid
 
 
 from fpdf import FPDF
@@ -40,6 +41,7 @@ from django.db.models import Q
 from .forms import AllocationForm
 # from company.models import FuelUpdate as F_Update
 from django.contrib.auth import get_user_model
+from fuelUpdates.models import SordCompanyAuditTrail
 user = get_user_model()
 
 
@@ -267,6 +269,27 @@ def allocation_update_main(request,id):
                 FuelAllocation.objects.create(company=request.user.company, fuel_payment_type= "RTGS", action = action,petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['quantity'],sub_type="Service Station",cash=request.POST['cash'],swipe=request.POST['swipe'],allocated_subsidiary_id=fuel_update.subsidiary.id)
             else:
                 FuelAllocation.objects.create(company=request.user.company, fuel_payment_type= "RTGS", action = action,diesel_price=fuel_update.diesel_price,diesel_quantity=request.POST['quantity'],sub_type="Service Station",cash=request.POST['cash'],swipe=request.POST['swipe'],allocated_subsidiary_id=fuel_update.subsidiary.id)
+            
+            proceed = True
+            amount_cf = request.POST['quantity']
+
+            while proceed:
+                sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company, end_quantity__gte=0).first()
+                if sord_allocation.end_quantity >= amount_cf:
+                    sord_allocation.allocated_quantity = amount_cf
+                    sord_allocation.end_quantity -= amount_cf
+                    sord_allocation.action_no += 1
+                    sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
+                    sord_allocation.save()
+                    proceed = False
+                else:
+                    amount_cf -= sord_allocation.end_quantity
+                    sord_allocation.end_quantity = 0
+                    sord_allocation.save()
+                    # execute filter
+                    #adjust_qty(new_sod)
+
+                    
 
             messages.success(request, 'Fuel Allocation SUccesful')
             service_station = Subsidiaries.objects.filter(id=fuel_update.subsidiary.id).first()
