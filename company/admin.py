@@ -1,5 +1,4 @@
 from django.contrib import admin
-from .models import CompanyFuelUpdate, SuballocationFuelUpdate
+from .models import CompanyFuelUpdate
 
 admin.site.register(CompanyFuelUpdate)
-admin.site.register(SuballocationFuelUpdate)

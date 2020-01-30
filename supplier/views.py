@@ -10,6 +10,9 @@ from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.contrib import messages
 
 import secrets
+
+from buyer.utils import render_to_pdf
+from company.models import Company
 from users.models import Audit_Trail
 from datetime import date, time
 from buyer.constants2 import industries, job_titles
