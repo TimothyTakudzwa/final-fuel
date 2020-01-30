@@ -76,34 +76,34 @@
                         {% for allocate in allocates %}
                         <tr>
 
-                            <td><b style='color:#009688'>{{allocate.entry_type}} </b></td>
+                            <td><b style='color:#009688'>{{allocate.payment_type}} </b></td>
                             <td>{{allocate.petrol_quantity}} Litres {% if allocate.petrol_quantity < 1000 %} <i
                                     class="material-icons text-danger">warning</i>{% endif %}</td>
 
-                            <td> {% if allocate.entry_type == 'USD & RTGS' %} <b style='color:#009688'>RTGS</b>
+                            <td> {% if allocate.payment_type == 'USD & RTGS' %} <b style='color:#009688'>RTGS</b>
                                 {{allocate.petrol_price}} | <b style='color:#009688'>USD</b>
                                 {{allocate.petrol_usd_price}}{%else%}<b style='color:#009688'>
-                                    {{allocate.entry_type}}</b>
+                                    {{allocate.entrpayment_typey_type}}</b>
                                 {{allocate.petrol_price}}{% endif %}</td>
 
 
                             <td>{{allocate.diesel_quantity}} Litres {% if allocate.diesel_quantity < 1000 %} <i
                                     class="material-icons text-danger">warning</i>{% endif %}</td>
-                            <td> {% if allocate.entry_type == 'USD & RTGS' %} <b style='color:#009688'>RTGS</b>
+                            <td> {% if allocate.payment_type == 'USD & RTGS' %} <b style='color:#009688'>RTGS</b>
                                 {{allocate.diesel_price}} | <b style='color:#009688'>USD</b>
                                 {{allocate.diesel_usd_price}}{%else%} <b
-                                    style='color:#009688'>{{allocate.entry_type}}</b>
+                                    style='color:#009688'>{{allocate.payment_type}}</b>
                                 {{allocate.diesel_price}}{% endif %}</td>
 
                             <td>
                                 <div class="btn-group">
-                                    {% if allocate.entry_type == 'USD'%}
+                                    {% if allocate.payment_type == 'USD'%}
                                     <button class="btn btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal"
                                         data-target="#add_usd_fuel{{allocate.id}}"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp; | Add USD Fuel</button>&nbsp;&nbsp;
                                     <button class="btn btn-danger btn-sm" style="font-size: 12px;" data-toggle="modal"
                                         data-target="#edit_{{allocate.id}}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp; | Edit</button>
                                     {%else%}
-                                    {% if allocate.entry_type == 'RTGS'%}
+                                    {% if allocate.payment_type == 'RTGS'%}
                                     <button class="btn btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal"
                                         data-target="#add_rtgs_fuel{{allocate.id}}"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp; | Add RTGS Fuel</button>&nbsp;&nbsp;
                                     <button class="btn btn-danger btn-sm" style="font-size: 12px;" data-toggle="modal"

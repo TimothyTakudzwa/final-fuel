@@ -11,7 +11,8 @@ from django.http import HttpResponse
 from buyer.models import User
 from buyer.recommend import recommend
 # from company.models import Company, FuelUpdate
-from supplier.models import Offer, Subsidiaries, Transaction, TokenAuthentication, UserReview
+from company.models import Company
+from supplier.models import Offer, Subsidiaries, Transaction, TokenAuthentication, UserReview, SuballocationFuelUpdate
 
 from .constants import sample_data
 from .forms import BuyerRegisterForm, PasswordChange, FuelRequestForm, PasswordChangeForm, LoginForm
@@ -251,9 +252,10 @@ def fuel_request(request):
     fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).all()
     for fuel_request in fuel_requests:
         if fuel_request.is_direct_deal:
-            search_company = FuelUpdate.objects.filter(relationship_id=fuel_request.last_deal).first()
-            depot = Subsidiaries.objects.filter(id=search_company.relationship_id).first()
-            company = Company.objects.filter(id=search_company.company_id).first()
+            sub = Subsidiaries.objects.filter(id=fuel_request.last_deal).first()
+            search_company = SuballocationFuelUpdate.objects.filter(subsidiary=sub).first()
+            depot = Subsidiaries.objects.filter(id=search_company.subsidiary).first()
+            company = Company.objects.filter(id=depot.company.id).first()
             fuel_request.request_company = company.name
             fuel_request.depot = depot.name
         else:
@@ -298,7 +300,7 @@ def fuel_finder(request):
 
 
 def dashboard(request):
-    updates = FuelUpdate.objects.filter(sub_type="Suballocation").filter(~Q(diesel_quantity=0.00)).filter(
+    updates = SuballocationFuelUpdate.objects.filter(sub_type="Suballocation").filter(~Q(diesel_quantity=0.00)).filter(
         ~Q(petrol_quantity=0.00))
     for update in updates:
         subsidiary = Subsidiaries.objects.filter(id=update.relationship_id).first()
@@ -313,7 +315,8 @@ def dashboard(request):
         else:
             update.rating = '-'
 
-        company = Company.objects.filter(id=update.company_id).first()
+        sub = Subsidiaries.objects.filter(id=update.subsidiary.id)
+        company = Company.objects.filter(id=sub.company.id).first()
         if company is not None:
             update.company = company.name
             update.depot = subsidiary.name
