@@ -138,12 +138,23 @@ def index(request):
 def allocate(request):
     allocates=[]
     company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
-    print(request.user.company)
-    print(company_capacity)
+    subs_total_diesel_capacity = 0
+    subs_total_petrol_capacity = 0
+
+    subsidiaries_fuel = SubsidiaryFuelUpdate.objects.all()
+    for sub_fuel in subsidiaries_fuel:
+        subs_total_diesel_capacity += sub_fuel.diesel_quantity
+        subs_total_petrol_capacity += sub_fuel.petrol_quantity
+
+    company_total_diesel_capacity = subs_total_diesel_capacity + company_capacity.unallocated_diesel
+    company_total_petrol_capacity = subs_total_petrol_capacity + company_capacity.unallocated_petrol
+
+    company_total_diesel_capacity= '{:,}'.format(company_total_diesel_capacity)
+    company_total_petrol_capacity= '{:,}'.format(company_total_petrol_capacity)
+    
     subs = Subsidiaries.objects.filter(company=request.user.company).all()
     for sub in subs:
         allocates.append(SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first())
-    print(allocates)
 
     allocations = FuelAllocation.objects.filter(company=request.user.company).all()
     if company_capacity is not None:
@@ -164,7 +175,7 @@ def allocate(request):
         allocations = allocations
 
     
-    return render(request, 'users/allocate.html', {'allocates': allocates, 'allocations':allocations, 'company_capacity': company_capacity})
+    return render(request, 'users/allocate.html', {'allocates': allocates, 'allocations':allocations, 'company_capacity': company_capacity, 'company_total_diesel_capacity': company_total_diesel_capacity, 'company_total_petrol_capacity':company_total_petrol_capacity})
 
 @login_required()
 def allocation_update(request,id):
@@ -1225,27 +1236,29 @@ def edit_allocation(request, id):
     if request.method == 'POST':
         if FuelAllocation.objects.filter(id=id).exists():
             correction = FuelAllocation.objects.filter(id=id).first()
-            if int(request.POST['diesel_quantity']) > 0:   
-                updated = F_Update.objects.filter(relationship_id=correction.allocated_subsidiary_id).first()
+            if int(request.POST['diesel_quantity']) > 0: 
+                sub = Subsidiaries.objects.filter(id =correction.allocated_subsidiary_id).first() 
+                updated = SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first()
                 updated.diesel_quantity = int(updated.diesel_quantity) - int(int(correction.diesel_quantity) - int(request.POST['diesel_quantity']))
                 updated.save()
-                company_fuel = F_Update.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()
-                if int(request.POST['diesel_quantity']) > int(company_fuel.diesel_quantity):
+                company_fuel = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
+                if int(request.POST['diesel_quantity']) > int(company_fuel.unallocated_diesel):
                     messages.warning(request, 'You can not edit an allocation to an amount greater than the company unallocated diesel quantity ')
                     return redirect('users:allocate')
-                company_fuel.diesel_quantity = int(company_fuel.diesel_quantity) + int(int(correction.diesel_quantity) - int(request.POST['diesel_quantity'])) 
+                company_fuel.unallocated_diesel = int(company_fuel.unallocated_diesel) + int(int(correction.diesel_quantity) - int(request.POST['diesel_quantity'])) 
                 company_fuel.save()
                 correction.diesel_quantity = request.POST['diesel_quantity']
                 correction.save()
             else:
-                updated = F_Update.objects.filter(relationship_id=correction.allocated_subsidiary_id).first()
+                sub = Subsidiaries.objects.filter(id =correction.allocated_subsidiary_id).first()
+                updated = SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first()
                 updated.petrol_quantity = int(updated.petrol_quantity) - int(int(correction.petrol_quantity) - int(request.POST['petrol_quantity']))
                 updated.save()
-                company_fuel = F_Update.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()
-                if int(request.POST['petrol_quantity']) > int(company_fuel.petrol_quantity):
+                company_fuel = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
+                if int(request.POST['petrol_quantity']) > int(company_fuel.unallocated_petrol):
                     messages.warning(request, 'You can not edit an allocation to an amount greater than the company unallocated petrol quantity ')
                     return redirect('users:allocate')
-                company_fuel.petrol_quantity = int(company_fuel.petrol_quantity) + int(int(correction.petrol_quantity) - int(request.POST['petrol_quantity'])) 
+                company_fuel.unallocated_petrol = int(company_fuel.unallocated_petrol) + int(int(correction.petrol_quantity) - int(request.POST['petrol_quantity'])) 
                 company_fuel.save()
                 correction.petrol_quantity = request.POST['petrol_quantity']
                 correction.save()
