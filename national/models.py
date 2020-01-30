@@ -3,6 +3,7 @@ from company.models import Company
 from buyer.models import User
 
 class NationalFuelUpdate(models.Model):
+    date = models.DateField(auto_now_add=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     allocated_petrol = models.FloatField(default=0.00)
     allocated_diesel = models.FloatField(default=0.00)
@@ -20,6 +21,7 @@ class NationalFuelUpdate(models.Model):
 
 
 class SordNationalAuditTrail(models.Model):
+    date = models.DateField(auto_now_add=True)
     sord_no =  models.CharField(max_length=100)
     action_no = models.PositiveIntegerField()
     action = models.CharField(max_length=150)
