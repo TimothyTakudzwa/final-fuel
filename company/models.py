@@ -68,8 +68,8 @@ class SuballocationFuelUpdate(models.Model):
         return f'{self.id} -- SubAllocation '
 
 
-class CompanyStatsCard(models.Model):
-    '''
-    Table to hold all relevant statistics
-    '''
-    pass
+# class CompanyStatsCard(models.Model):
+#     '''
+#     Table to hold all relevant statistics
+#     '''
+#     pass

@@ -3,10 +3,10 @@ from django.db import models
 from .constants2 import * 
 from PIL import Image
 from django.contrib.auth.models import AbstractUser
+from company.models import Company
 
 
 class User(AbstractUser):
-    from company.models import Company
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, null=True)
     fuel_request = models.PositiveIntegerField(default=0)
     phone_number = models.CharField(max_length=20, default='263')

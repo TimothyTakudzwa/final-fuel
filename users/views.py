@@ -376,7 +376,7 @@ def statistics(request):
      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients, 'normal_requests': normal_requests,
      'diesel':diesel, 'petrol':petrol, 'revenue':revenue, 'new_orders': new_orders, 'rating':rating, 'admin_staff': admin_staff,
        'other_staff': other_staff, 'trans_complete':trans_complete, 'sorted_subs':sorted_subs, 'average_rating': average_rating,
-       'monthly_rev': monthly_rev, 'weekly_rev':weekly_rev })
+       'monthly_rev': monthly_rev, 'weekly_rev':weekly_rev,'last_week_rev':last_week_rev  })
 
 
 @login_required()
