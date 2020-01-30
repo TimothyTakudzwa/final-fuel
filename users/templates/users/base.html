@@ -417,6 +417,15 @@
             
             
              //line chart
+                //line chart
+
+                var monday = {{weekly_rev.Mon}};
+                var tuesday = {{weekly_rev.Tue}};
+                var wednesday = {{weekly_rev.Wed}};
+                var thursday = {{weekly_rev.Thu}};
+                var friday = {{weekly_rev.Fri}};
+                var saturday = {{weekly_rev.Sat}};
+                var sunday = {{weekly_rev.Sun}};
                 var ctx = document.getElementById("lineChart");
                 var myChart = new Chart(ctx, {
                     type: 'line',
@@ -428,7 +437,8 @@
                                 borderColor: "rgba(0,0,0,.09)",
                                 borderWidth: "1",
                                 backgroundColor: "rgba(0,0,0,.07)",
-                                data: [{{weekly_rev.Mon}}, {{weekly_rev.Tue}}, {{weekly_rev.Wed}}, {{weekly_rev.Thu}}, {{weekly_rev.Fri}}, {{weekly_rev.Sat}}, {{weekly_rev.Sun}}]
+                                data: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
+    
                             },
                             {
                                 label: "Last Week",
@@ -437,7 +447,6 @@
                                 backgroundColor: "#009688",
                                 pointHighlightStroke: "#009688",
                                 data: [{{last_week_rev.Mon}}, {{last_week_rev.Tue}}, {{last_week_rev.Wed}}, {{last_week_rev.Thu}}, {{last_week_rev.Fri}}, {{last_week_rev.Sat}}, {{last_week_rev.Sun}}]
-
                             }
                         ]
                     },
@@ -457,6 +466,7 @@
 
 
         </script>
+
 
     </body>
 </html>
