@@ -61,32 +61,32 @@
             {% for update in updates %}
             <tr>
 
-                <td><b style='color:#009688'>{{update.entry_type}} </b></td>
+                <td><b style='color:#009688'>{{update.payment_type}} </b></td>
                 <td>{{update.petrol_quantity}} Litres {% if update.petrol_quantity < 1000 %} <i
                         class="material-icons text-danger">Petrol quantity too low</i>{% endif %}</td>
 
-                <td> {% if update.entry_type == 'USD & RTGS' %} <b style='color:#009688'>RTGS</b>
+                <td> {% if update.payment_type == 'USD & RTGS' %} <b style='color:#009688'>RTGS</b>
                     {{update.petrol_price}} | <b style='color:#009688'>USD</b>
                     {{update.petrol_usd_price}}{%else%}<b style='color:#009688'>
-                        {{update.entry_type}}</b>
+                        {{update.payment_type}}</b>
                     {{update.petrol_price}}{% endif %}</td>
 
 
                 <td>{{update.diesel_quantity}} Litres {% if update.diesel_quantity < 1000 %} <i
                         class="material-icons text-danger">Diesel quantity too low</i>{% endif %}</td>
-                <td> {% if update.entry_type == 'USD & RTGS' %} <b style='color:#009688'>RTGS</b>
+                <td> {% if update.payment_type == 'USD & RTGS' %} <b style='color:#009688'>RTGS</b>
                     {{update.diesel_price}} | <b style='color:#009688'>USD</b>
                     {{update.diesel_usd_price}}{%else%} <b
-                        style='color:#009688'>{{update.entry_type}}</b>
+                        style='color:#009688'>{{update.payment_type}}</b>
                     {{update.diesel_price}}{% endif %}</td>
 
                 <td>
                     <div class="btn-group">
-                        {% if update.entry_type == 'USD'%}
+                        {% if update.payment_type == 'USD'%}
                         <button class="btn btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal"
                             data-target="#add_usd_fuel{{update.id}}"><i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; | Update USD Fuel</button>&nbsp;&nbsp;
                         {%else%}
-                        {% if update.entry_type == 'RTGS'%}
+                        {% if update.payment_type == 'RTGS'%}
                         <button class="btn btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal"
                             data-target="#add_rtgs_fuel{{update.id}}"><i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; | Update RTGS Fuel</button>&nbsp;&nbsp;
                         {%else%}

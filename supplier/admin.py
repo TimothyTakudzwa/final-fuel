@@ -24,5 +24,6 @@ admin.site.register(Offer)
 admin.site.register(FuelAllocation)
 admin.site.register(UserReview)
 admin.site.register(SuballocationFuelUpdate)
+admin.site.register(SordSubsidiaryAuditTrail)
 
 

@@ -14,12 +14,11 @@ from users.models import Audit_Trail
 from datetime import date, time
 from buyer.constants2 import industries, job_titles
 from buyer.forms import BuyerUpdateForm
-# from buyer.models import Company
+from buyer.models import FuelRequest
 from users.models import AuditTrail
 from .forms import PasswordChange, RegistrationForm, \
     RegistrationEmailForm, UserUpdateForm, FuelRequestForm, CreateCompany, OfferForm
-from .models import FuelRequest, Transaction, TokenAuthentication, Offer, Subsidiaries, FuelAllocation
-# from company.models import Company, FuelUpdate
+from .models import Transaction, FuelAllocation, TokenAuthentication, SordSubsidiaryAuditTrail, Offer, Subsidiaries, SuballocationFuelUpdate, SubsidiaryFuelUpdate
 from notification.models import Notification
 from django.contrib.auth import get_user_model
 from whatsapp.helper_functions import send_message
@@ -89,11 +88,11 @@ def fuel_request(request):
 
     for buyer_request in requests:
         if buyer_request.payment_method == 'USD':
-            fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).filter(entry_type='USD').first()
+            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='USD').first()
         elif buyer_request.payment_method == 'RTGS':
-            fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).filter(entry_type='RTGS').first()
+            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='RTGS').first()
         elif buyer_request.payment_method == 'USD & RTGS':
-            fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id).filter(entry_type='USD & RTGS').first()
+            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='USD & RTGS').first()
         else:
             fuel = None
         if buyer_request.dipping_stick_required==buyer_request.meter_required==buyer_request.pump_required==False:
@@ -137,18 +136,18 @@ def rejected_offer(request, id):
 
 @login_required
 def available_stock(request):
-    updates = FuelUpdate.objects.filter(sub_type='Suballocation', relationship_id=request.user.subsidiary_id).all()
+    updates = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).all()
 
     return render(request, 'supplier/available_fuel.html', {'updates': updates})
 
 @login_required()
 def stock_update(request,id):
-    updates = FuelUpdate.objects.filter(sub_type='Suballocation', id=id).first()
+    updates = SuballocationFuelUpdate.objects.filter(id=id).first()
     available_petrol = updates.petrol_quantity
     available_diesel = updates.diesel_quantity
     if request.method == 'POST':
-        if FuelUpdate.objects.filter(id=id).exists():
-            fuel_update = FuelUpdate.objects.filter(id=id).first()
+        if SuballocationFuelUpdate.objects.filter(id=id).exists():
+            fuel_update = SuballocationFuelUpdate.objects.filter(id=id).first()
             if request.POST['fuel_type'] == 'Petrol':
                 if int(request.POST['quantity']) > available_petrol:
                     messages.warning(request, 'You can only reduce your petrol quantity')
@@ -161,7 +160,7 @@ def stock_update(request,id):
                 fuel_update.diesel_quantity = int(request.POST['quantity'])
             fuel_update.cash = request.POST['cash']
             fuel_update.swipe = request.POST['swipe']
-            if fuel_update.entry_type != 'USD':
+            if fuel_update.payment_type != 'USD':
                 fuel_update.ecocash = request.POST['ecocash']
             fuel_update.save()
             messages.success(request, 'Fuel successfully updated')
@@ -173,11 +172,11 @@ def offer(request, id):
     if request.method == "POST":
         if float(request.POST.get('price')) != 0 and float(request.POST.get('quantity')) != 0:
             fuel_request = FuelRequest.objects.get(id=id)
-            fuel_reserve = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'USD & RTGS').first()
+            fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD & RTGS').first()
             if fuel_request.payment_method == 'USD':
-                fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'USD').first()
+                fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD').first()
             elif fuel_request.payment_method == 'RTGS':
-                 fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'RTGS').first()
+                 fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'RTGS').first()
             subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
             
             if fuel_request.fuel_type.lower() == 'petrol':
@@ -248,12 +247,12 @@ def offer(request, id):
 @login_required
 def edit_offer(request, id):
     offer = Offer.objects.get(id=id)
-    fuel_reserve =FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'USD & RTGS').first()
+    fuel_reserve =SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD & RTGS').first()
     if request.method == 'POST':
         if offer.request.payment_method == 'USD':
-            fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'USD').first()
+            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD').first()
         elif offer.request.payment_method == 'RTGS':
-            fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'RTGS').first()
+            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'RTGS').first()
         subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         
         if offer.request.fuel_type.lower() == 'petrol':
@@ -449,11 +448,11 @@ def my_offers(request):
 @login_required
 def complete_transaction(request, id):
     transaction = Transaction.objects.filter(id = id).first()
-    fuel_reserve = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'USD & RTGS').first()
+    fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD & RTGS').first()
     if transaction.offer.request.payment_method == 'USD':
-        fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'USD').first()
+        fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD').first()
     elif transaction.offer.request.payment_method == 'RTGS':
-        fuel = FuelUpdate.objects.filter(relationship_id=request.user.subsidiary_id, entry_type = 'RTGS').first()
+        fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'RTGS').first()
     fuel_type = transaction.offer.request.fuel_type.lower()
     if fuel_type == 'petrol':
         transaction_quantity = transaction.offer.quantity
@@ -473,6 +472,48 @@ def complete_transaction(request, id):
             else:
                 fuel.petrol_quantity = fuel.petrol_quantity - transaction_quantity
                 fuel.save()
+
+            end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type='Petrol', end_quantity = 0).all()
+            initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type='Petrol').all()
+            sord_quantity_zero = []
+            sord_quantity = []
+            for sord in end_quantity_zero:
+                sord_quantity_zero.append(sord.sord_no)
+            for x in initial_sord:
+                if x.sord_no in sord_quantity_zero:
+                    pass
+                else:
+                    sord_quantity.append(x)
+            sord_quantity.sort(key = attrgetter('last_updated'), reverse = True)
+            changing_quantity = transaction_quantity
+            for entry in sord_quantity:
+                if changing_quantity != 0:
+                    if entry.end_quantity < changing_quantity:
+                        new_sord_entry = SordSubsidiaryAuditTrail()
+                        new_sord_entry.sord_no = entry.sord_no
+                        new_sord_entry.action_no = entry.action_no + 1
+                        new_sord_entry.action = 'SALE'
+                        new_sord_entry.initial_quantity = entry.end_quantity
+                        new_sord_entry.quantity_sold = entry.end_quantity
+                        new_sord_entry.end_quantity = 0
+                        new_sord_entry.received_by = transaction.offer.request.name
+                        new_sord_entry.fuel_type = entry.fuel_type
+                        new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+                        new_sord_entry.save()
+                        changing_quantity = changing_quantity - entry.end_quantity
+                    else:
+                        new_sord_entry = SordSubsidiaryAuditTrail()
+                        new_sord_entry.sord_no = entry.sord_no
+                        new_sord_entry.action_no = entry.action_no + 1
+                        new_sord_entry.action = 'SALE'
+                        new_sord_entry.initial_quantity = entry.end_quantity
+                        new_sord_entry.quantity_sold = changing_quantity
+                        new_sord_entry.end_quantity = entry.end_quantity - changing_quantity
+                        new_sord_entry.received_by = transaction.offer.request.name
+                        new_sord_entry.fuel_type = entry.fuel_type
+                        new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+                        new_sord_entry.save()
+                        changing_quantity = 0
             messages.success(request, "Transaction completed successfully!")
             return redirect('transaction')
         else:
@@ -496,6 +537,48 @@ def complete_transaction(request, id):
             else:
                 fuel.diesel_quantity = fuel.diesel_quantity - transaction_quantity
                 fuel.save()
+
+            end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type='Diesel', end_quantity = 0).all()
+            initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type = 'Diesel').all()
+            sord_quantity_zero = []
+            sord_quantity = []
+            for sord in end_quantity_zero:
+                sord_quantity_zero.append(sord.sord_no)
+            for x in initial_sord:
+                if x.sord_no in sord_quantity_zero:
+                    pass
+                else:
+                    sord_quantity.append(x)
+            sord_quantity.sort(key = attrgetter('last_updated'), reverse = False)
+            changing_quantity = transaction_quantity
+            for entry in sord_quantity:
+                if changing_quantity != 0:
+                    if entry.end_quantity < changing_quantity:
+                        new_sord_entry = SordSubsidiaryAuditTrail()
+                        new_sord_entry.sord_no = entry.sord_no
+                        new_sord_entry.action_no = entry.action_no + 1
+                        new_sord_entry.action = 'SALE'
+                        new_sord_entry.initial_quantity = entry.end_quantity
+                        new_sord_entry.quantity_sold = entry.end_quantity
+                        new_sord_entry.end_quantity = 0
+                        new_sord_entry.received_by = transaction.offer.request.name
+                        new_sord_entry.fuel_type = entry.fuel_type
+                        new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+                        new_sord_entry.save()
+                        changing_quantity = changing_quantity - entry.end_quantity
+                    else:
+                        new_sord_entry = SordSubsidiaryAuditTrail()
+                        new_sord_entry.sord_no = entry.sord_no
+                        new_sord_entry.action_no = entry.action_no + 1
+                        new_sord_entry.action = 'SALE'
+                        new_sord_entry.initial_quantity = entry.end_quantity
+                        new_sord_entry.quantity_sold = changing_quantity
+                        new_sord_entry.end_quantity = entry.end_quantity - changing_quantity
+                        new_sord_entry.received_by = transaction.offer.request.name
+                        new_sord_entry.fuel_type = entry.fuel_type
+                        new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+                        new_sord_entry.save()
+                        changing_quantity = 0
             messages.success(request, "Transaction completed successfully!")
             return redirect('transaction')
         else:

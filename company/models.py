@@ -1,5 +1,7 @@
 from django.db import models
 from buyer.constants2 import COMPANY_CHOICES, INDUSTRY_CHOICES
+
+
 class Company(models.Model):
     name = models.CharField(max_length=255, default='')
     address = models.CharField(max_length=255, default='')
@@ -21,10 +23,10 @@ class Company(models.Model):
     def get_model_by_id(cls, id):
         return cls.objects.filter(id=id).first()
 
-    @classmethod
-    def get_all_subsidiaries(cls, id):
-        from supplier.models import Subsidiaries
-        return Subsidiaries.objects.filter(company=self)
+    # @classmethod
+    # def get_all_subsidiaries(cls, id):
+    #     from supplier.models import Subsidiaries
+    #     return Subsidiaries.objects.filter(company=self)
 
    
 class CompanyFuelUpdate(models.Model):
@@ -42,7 +44,6 @@ class CompanyFuelUpdate(models.Model):
 
     class Meta:
         ordering = ['company']
-
 
 
 class SuballocationFuelUpdate(models.Model):
@@ -66,10 +67,3 @@ class SuballocationFuelUpdate(models.Model):
 
     def __str__(self):
         return f'{self.id} -- SubAllocation '
-
-
-# class CompanyStatsCard(models.Model):
-#     '''
-#     Table to hold all relevant statistics
-#     '''
-#     pass
