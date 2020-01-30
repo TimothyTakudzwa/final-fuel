@@ -35,6 +35,7 @@ from supplier.models import *
 from users.models import *
 from company.models import Company, CompanyFuelUpdate
 from company.lib import *
+from fuelUpdates.models import SordCompanyAuditTrail
 from django.contrib.auth import authenticate
 from django.db.models import Q
 from .forms import AllocationForm
@@ -396,8 +397,8 @@ def supplier_user_edit(request, cid):
 
 @login_required
 def sord_allocations(request):
-    sord_allocations_received = ''
-    return render(request, 'users/sord_allocations.html')    
+    sord_allocations = SordCompanyAuditTrail.objects.all()
+    return render(request, 'users/sord_allocations.html', {'sord_allocations':sord_allocations})    
 
 @login_required
 def client_history(request, cid):
