@@ -145,19 +145,30 @@ def stock_update(request,id):
     updates = SuballocationFuelUpdate.objects.filter(id=id).first()
     available_petrol = updates.petrol_quantity
     available_diesel = updates.diesel_quantity
+    suballocations = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).all()
+    subsidiary_fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).first()
+    subsidiary_total = 0
     if request.method == 'POST':
         if SuballocationFuelUpdate.objects.filter(id=id).exists():
             fuel_update = SuballocationFuelUpdate.objects.filter(id=id).first()
             if request.POST['fuel_type'] == 'Petrol':
-                if int(request.POST['quantity']) > available_petrol:
+                if float(request.POST['quantity']) > available_petrol:
                     messages.warning(request, 'You can only reduce your petrol quantity')
                     return redirect('available_stock')
-                fuel_update.petrol_quantity = int(request.POST['quantity'])
+                fuel_update.petrol_quantity = float(request.POST['quantity'])
+                for sub in suballocations:
+                    subsidiary_total = subsidiary_total + sub.petrol_quantity
+                subsidiary_fuel.petrol_quantity = subsidiary_total - float(request.POST['quantity'])
+                subsidiary_fuel.save()
             else:
                 if int(request.POST['quantity']) > available_diesel:
                     messages.warning(request, 'You can only reduce your diesel quantity')
                     return redirect('available_stock')
-                fuel_update.diesel_quantity = int(request.POST['quantity'])
+                fuel_update.diesel_quantity = float(request.POST['quantity'])
+                for sub in suballocations:
+                    subsidiary_total = subsidiary_total + sub.diesel_quantity
+                subsidiary_fuel.diesel_quantity = subsidiary_total - float(request.POST['quantity'])
+                subsidiary_fuel.save()
             fuel_update.cash = request.POST['cash']
             fuel_update.swipe = request.POST['swipe']
             if fuel_update.payment_type != 'USD':
@@ -448,6 +459,7 @@ def my_offers(request):
 @login_required
 def complete_transaction(request, id):
     transaction = Transaction.objects.filter(id = id).first()
+    subsidiary_fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).first()
     fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD & RTGS').first()
     if transaction.offer.request.payment_method == 'USD':
         fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD').first()
@@ -472,6 +484,9 @@ def complete_transaction(request, id):
             else:
                 fuel.petrol_quantity = fuel.petrol_quantity - transaction_quantity
                 fuel.save()
+
+            subsidiary_fuel.petrol_quantity = subsidiary_fuel.petrol_quantity - transaction_quantity
+            subsidiary_fuel.save()
 
             end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type='Petrol', end_quantity = 0).all()
             initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type='Petrol').all()
@@ -537,6 +552,9 @@ def complete_transaction(request, id):
             else:
                 fuel.diesel_quantity = fuel.diesel_quantity - transaction_quantity
                 fuel.save()
+            
+            subsidiary_fuel.diesel_quantity = subsidiary_fuel.diesel_quantity - transaction_quantity
+            subsidiary_fuel.save()
 
             end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type='Diesel', end_quantity = 0).all()
             initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type = 'Diesel').all()
