@@ -384,6 +384,11 @@ def supplier_user_edit(request, cid):
     return render(request, 'users/suppliers_list.html')
 
 @login_required
+def sord_allocations(request):
+    sord_allocations_received = ''
+    return render(request, 'users/sord_allocations.html')    
+
+@login_required
 def client_history(request, cid):
     buyer = User.objects.filter(id=cid).first()
     trans = []
