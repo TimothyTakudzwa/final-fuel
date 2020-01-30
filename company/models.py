@@ -44,26 +44,3 @@ class CompanyFuelUpdate(models.Model):
 
     class Meta:
         ordering = ['company']
-
-
-class SuballocationFuelUpdate(models.Model):
-    from supplier.models import Subsidiaries
-    subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE, related_name='subsidiary_suballocation')
-    payment_type = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS'), ('USD & RTGS', 'USD & RTGS')))
-    queue_length = models.CharField(max_length=255,choices=(('short', 'Short'), ('medium', 'Medium Long'), ('long', 'Long')))
-    deliver = models.BooleanField(default=False)
-    cash = models.BooleanField(default=False)
-    ecocash = models.BooleanField(default=False)
-    swipe = models.BooleanField(default=False)
-    usd = models.BooleanField(default=False)
-    fca = models.BooleanField(default=False)
-    last_updated = models.DateField()
-    petrol_price = models.FloatField()
-    diesel_price = models.FloatField()
-    petrol_usd_price = models.FloatField()
-    diesel_usd_price = models.FloatField()
-    status = models.CharField(max_length=1000)
-    limit = models.FloatField()
-
-    def __str__(self):
-        return f'{self.id} -- SubAllocation '
