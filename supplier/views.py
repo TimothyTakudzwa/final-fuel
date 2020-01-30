@@ -150,7 +150,6 @@ def stock_update(request,id):
     available_diesel = updates.diesel_quantity
     suballocations = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).all()
     subsidiary_fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).first()
-    subsidiary_total = 0
     if request.method == 'POST':
         if SuballocationFuelUpdate.objects.filter(id=id).exists():
             fuel_update = SuballocationFuelUpdate.objects.filter(id=id).first()
@@ -158,19 +157,17 @@ def stock_update(request,id):
                 if float(request.POST['quantity']) > available_petrol:
                     messages.warning(request, 'You can only reduce your petrol quantity')
                     return redirect('available_stock')
+                fuel_reduction = fuel_update.petrol_quantity - float(request.POST['quantity'])
                 fuel_update.petrol_quantity = float(request.POST['quantity'])
-                for sub in suballocations:
-                    subsidiary_total = subsidiary_total + sub.petrol_quantity
-                subsidiary_fuel.petrol_quantity = subsidiary_total - float(request.POST['quantity'])
+                subsidiary_fuel.petrol_quantity = subsidiary_fuel.petrol_quantity - fuel_reduction
                 subsidiary_fuel.save()
             else:
                 if int(request.POST['quantity']) > available_diesel:
                     messages.warning(request, 'You can only reduce your diesel quantity')
                     return redirect('available_stock')
+                fuel_reduction = fuel_update.diesel_quantity - float(request.POST['quantity'])
                 fuel_update.diesel_quantity = float(request.POST['quantity'])
-                for sub in suballocations:
-                    subsidiary_total = subsidiary_total + sub.diesel_quantity
-                subsidiary_fuel.diesel_quantity = subsidiary_total - float(request.POST['quantity'])
+                subsidiary_fuel.diesel_quantity = subsidiary_fuel.diesel_quantity - fuel_reduction
                 subsidiary_fuel.save()
             fuel_update.cash = request.POST['cash']
             fuel_update.swipe = request.POST['swipe']
