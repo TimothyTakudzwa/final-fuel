@@ -1,6 +1,7 @@
 from django.db import models
 from company.models import Company
 from buyer.models import User
+from supplier.models import Subsidiaries
 
 
 class SordCompanyAuditTrail(models.Model):
@@ -13,7 +14,7 @@ class SordCompanyAuditTrail(models.Model):
     quantity_allocated = models.FloatField(default=0.0)
     end_quantity = models.FloatField(default=0.0)
     allocated_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='allocated_by')
-    allocated_to = models.ForeignKey(Company, on_delete=models.DO_NOTHING, related_name='allocated_by')
+    allocated_to = models.ForeignKey(Subsidiaries, on_delete=models.DO_NOTHING, related_name='allocated_by')
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, related_name='company_sord')
 
     def __str__(self):
@@ -21,5 +22,5 @@ class SordCompanyAuditTrail(models.Model):
 
     class Meta:
         ordering = ['date']
-     
+        
 

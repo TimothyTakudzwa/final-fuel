@@ -36,6 +36,7 @@ from supplier.models import *
 from users.models import *
 from company.models import Company, CompanyFuelUpdate
 from company.lib import *
+from fuelUpdates.models import SordCompanyAuditTrail
 from django.contrib.auth import authenticate
 from django.db.models import Q
 from .forms import AllocationForm
@@ -81,6 +82,7 @@ def allocated_fuel(request,sid):
             depot.petrol_quantity = depot.petrol_quantity + int(request.POST['quantity']) 
             company_quantity.unallocated_petrol = company_quantity.unallocated_petrol - int(request.POST['quantity'])
             company_quantity.save()
+            messages.success(request, 'Fuel Allocation SUccesful')
         else:
             if int(request.POST['quantity']) > company_quantity.unallocated_diesel:
                 messages.warning(request, f'You can not allocate fuel above your company diesel capacity of {company_quantity.unallocated_diesel}')
@@ -96,8 +98,54 @@ def allocated_fuel(request,sid):
             depot.diesel_quantity = depot.diesel_quantity + int(request.POST['quantity']) 
             company_quantity.unallocated_diesel = company_quantity.unallocated_diesel - int(request.POST['quantity'])
             company_quantity.save()
+            messages.success(request, 'Fuel Allocation SUccesful')
         fuel_updated.save()
         depot.save()
+        
+        action = 'Allocation of ' + request.POST['fuel_type']
+        if request.POST['fuel_type'].lower() == 'petrol':
+            FuelAllocation.objects.create(company=request.user.company, fuel_payment_type= fuel_updated.payment_type, action = action,petrol_price=fuel_updated.petrol_price,petrol_quantity=request.POST['quantity'],sub_type="Suballocation",cash=request.POST['cash'],swipe=request.POST['swipe'],allocated_subsidiary_id=fuel_updated.subsidiary.id)
+            proceed = True
+            amount_cf = float(request.POST['quantity'])
+
+            while proceed:
+                sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company, fuel_type="Petrol", end_quantity__gte=0).first()
+                if sord_allocation.end_quantity >= amount_cf:
+                    sord_allocation.quantity_allocated += amount_cf
+                    sord_allocation.end_quantity -= amount_cf
+                    sord_allocation.action_no += 1
+                    sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
+                    sord_allocation.save()
+                    proceed = False
+                else:
+                    amount_cf -= sord_allocation.end_quantity
+                    sord_allocation.end_quantity = 0
+                    sord_allocation.quantity_allocated += sord_allocation.end_quantity
+                    sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
+                    sord_allocation.action_no += 1
+                    sord_allocation.save()
+        else:
+            FuelAllocation.objects.create(company=request.user.company, fuel_payment_type= fuel_updated.payment_type, action = action,diesel_price=fuel_updated.diesel_price,diesel_quantity=request.POST['quantity'],sub_type="Suballocation",cash=request.POST['cash'],swipe=request.POST['swipe'],allocated_subsidiary_id=fuel_updated.subsidiary.id)
+            proceed = True
+            amount_cf = float(request.POST['quantity'])
+
+            while proceed:
+                sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company, fuel_type="Diesel", end_quantity__gte=0).first()
+                if sord_allocation.end_quantity >= amount_cf:
+                    sord_allocation.quantity_allocated += amount_cf
+                    sord_allocation.end_quantity -= amount_cf
+                    sord_allocation.action_no += 1
+                    sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
+                    sord_allocation.save()
+                    proceed = False
+                else:
+                    amount_cf -= sord_allocation.end_quantity
+                    sord_allocation.end_quantity = 0
+                    sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
+                    sord_allocation.quantity_allocated += sord_allocation.end_quantity
+                    sord_allocation.action_no += 1
+                    sord_allocation.save()
+
     type_list = []  
     if allocates is not None: 
         
@@ -219,8 +267,46 @@ def allocation_update(request,id):
             action = 'Allocation of ' + request.POST['fuel_type']
             if request.POST['fuel_type'].lower() == 'petrol':
                 FuelAllocation.objects.create(company=request.user.company, fuel_payment_type= fuel_update.payment_type, action = action,petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['quantity'],sub_type="Suballocation",cash=request.POST['cash'],swipe=request.POST['swipe'],allocated_subsidiary_id=fuel_update.subsidiary.id)
+                proceed = True
+                amount_cf = float(request.POST['quantity'])
+
+                while proceed:
+                    sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company, fuel_type="Petrol", end_quantity__gte=0).first()
+                    if sord_allocation.end_quantity >= amount_cf:
+                        sord_allocation.quantity_allocated += amount_cf
+                        sord_allocation.end_quantity -= amount_cf
+                        sord_allocation.action_no += 1
+                        sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
+                        sord_allocation.save()
+                        proceed = False
+                    else:
+                        amount_cf -= sord_allocation.end_quantity
+                        sord_allocation.end_quantity = 0
+                        sord_allocation.quantity_allocated += sord_allocation.end_quantity
+                        sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
+                        sord_allocation.action_no += 1
+                        sord_allocation.save()
             else:
                 FuelAllocation.objects.create(company=request.user.company, fuel_payment_type= fuel_update.payment_type, action = action,diesel_price=fuel_update.diesel_price,diesel_quantity=request.POST['quantity'],sub_type="Suballocation",cash=request.POST['cash'],swipe=request.POST['swipe'],allocated_subsidiary_id=fuel_update.subsidiary.id)
+                proceed = True
+                amount_cf = float(request.POST['quantity'])
+
+                while proceed:
+                    sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company, fuel_type="Diesel", end_quantity__gte=0).first()
+                    if sord_allocation.end_quantity >= amount_cf:
+                        sord_allocation.quantity_allocated += amount_cf
+                        sord_allocation.end_quantity -= amount_cf
+                        sord_allocation.action_no += 1
+                        sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
+                        sord_allocation.save()
+                        proceed = False
+                    else:
+                        amount_cf -= sord_allocation.end_quantity
+                        sord_allocation.end_quantity = 0
+                        sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
+                        sord_allocation.quantity_allocated += sord_allocation.end_quantity
+                        sord_allocation.action_no += 1
+                        sord_allocation.save()
 
             messages.success(request, 'Fuel Allocation SUccesful')
             service_station = Subsidiaries.objects.filter(id=fuel_update.subsidiary.id).first()
@@ -278,30 +364,47 @@ def allocation_update_main(request,id):
             action = 'Allocation of ' + request.POST['fuel_type']
             if request.POST['fuel_type'].lower() == 'petrol':
                 FuelAllocation.objects.create(company=request.user.company, fuel_payment_type= "RTGS", action = action,petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['quantity'],sub_type="Service Station",cash=request.POST['cash'],swipe=request.POST['swipe'],allocated_subsidiary_id=fuel_update.subsidiary.id)
+                proceed = True
+                amount_cf = float(request.POST['quantity'])
+
+                while proceed:
+                    sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company, fuel_type="Petrol", end_quantity__gte=0).first()
+                    if sord_allocation.end_quantity >= amount_cf:
+                        sord_allocation.quantity_allocated += amount_cf
+                        sord_allocation.end_quantity -= amount_cf
+                        sord_allocation.action_no += 1
+                        sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
+                        sord_allocation.save()
+                        proceed = False
+                    else:
+                        amount_cf -= sord_allocation.end_quantity
+                        sord_allocation.end_quantity = 0
+                        sord_allocation.quantity_allocated += sord_allocation.end_quantity
+                        sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
+                        sord_allocation.action_no += 1
+                        sord_allocation.save()
             else:
                 FuelAllocation.objects.create(company=request.user.company, fuel_payment_type= "RTGS", action = action,diesel_price=fuel_update.diesel_price,diesel_quantity=request.POST['quantity'],sub_type="Service Station",cash=request.POST['cash'],swipe=request.POST['swipe'],allocated_subsidiary_id=fuel_update.subsidiary.id)
-            
-            proceed = True
-            amount_cf = request.POST['quantity']
+                proceed = True
+                amount_cf = float(request.POST['quantity'])
 
-            while proceed:
-                sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company, end_quantity__gte=0).first()
-                if sord_allocation.end_quantity >= amount_cf:
-                    sord_allocation.allocated_quantity = amount_cf
-                    sord_allocation.end_quantity -= amount_cf
-                    sord_allocation.action_no += 1
-                    sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
-                    sord_allocation.save()
-                    proceed = False
-                else:
-                    amount_cf -= sord_allocation.end_quantity
-                    sord_allocation.end_quantity = 0
-                    sord_allocation.save()
-                    # execute filter
-                    #adjust_qty(new_sod)
-
-                    
-
+                while proceed:
+                    sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company, fuel_type="Diesel", end_quantity__gte=0).first()
+                    if sord_allocation.end_quantity >= amount_cf:
+                        sord_allocation.quantity_allocated += amount_cf
+                        sord_allocation.end_quantity -= amount_cf
+                        sord_allocation.action_no += 1
+                        sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
+                        sord_allocation.save()
+                        proceed = False
+                    else:
+                        amount_cf -= sord_allocation.end_quantity
+                        sord_allocation.end_quantity = 0
+                        sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
+                        sord_allocation.quantity_allocated += sord_allocation.end_quantity
+                        sord_allocation.action_no += 1
+                        sord_allocation.save()
+       
             messages.success(request, 'Fuel Allocation SUccesful')
             service_station = Subsidiaries.objects.filter(id=fuel_update.subsidiary.id).first()
             reference = 'fuel allocation'
@@ -419,8 +522,8 @@ def supplier_user_edit(request, cid):
 
 @login_required
 def sord_allocations(request):
-    sord_allocations_received = ''
-    return render(request, 'users/sord_allocations.html')    
+    sord_allocations = SordCompanyAuditTrail.objects.all()
+    return render(request, 'users/sord_allocations.html', {'sord_allocations':sord_allocations})    
 
 @login_required
 def client_history(request, cid):

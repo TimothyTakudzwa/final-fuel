@@ -70,12 +70,12 @@
                                 Confirmation Code: 
                                 </a>
                                 </h3>
-                            Issued by Fuel Finder on behalf of {{transaction.offer.supplier.company}} to the {{transaction.buyer.company.name}} that indicates the 
+                            Issued by Fuel Finder on behalf of {{transaction.offer.supplier.company}} to {{transaction.buyer.company.name}} that indicates the 
                             quantities and costs of the fuel. Payment terms are indicate as tabulated.</td>
                             <td class="unit">{{transaction.offer.request.fuel_type}} </td>
                             <td class="unit">{{transaction.offer.request.amount|intcomma}} Litres</td>
                             <td class="qty">{{transaction.offer.quantity|intcomma}} Litres</td>
-                            <td class="unit">{% if transaction.offer.request.cash %}CASH &nbsp;{% if transaction.offer.request.ecocash %}ECOCASH &nbsp;{% if transaction.offer.request.usd %}USD &nbsp;{% if transaction.offer.request.swipe %}SWIPE{% endif %}{% endif %}{% endif %}{% endif %}</td>
+                            <td class="unit">{{transaction.offer.request.payment_method }}</td>
                             <td class="unit">{{transaction.offer.request.date}}</td>
                             <td class="unit">{{transaction.offer.price}}</td>
                             <td class="unit">${{total|intcomma}}</td>
