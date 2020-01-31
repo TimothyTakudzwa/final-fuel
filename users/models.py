@@ -13,6 +13,15 @@ class AuditTrail(models.Model):
     reference = models.CharField(max_length=300, blank=True)
     reference_id = models.PositiveIntegerField(default=0)
 
+class SordActionsAuditTrail(models.Model):
+    date = models.DateField(auto_now_add=True)
+    sord_num = models.CharField(max_length=150, blank=True, null=True)
+    action_num = models.IntegerField(default=0)
+    allocated_quantity = models.FloatField(default=0.0)
+    allocated_by = models.CharField(max_length=150, blank=True, null=True)
+    allocated_to = models.CharField(max_length=150, blank=True, null=True)
+    fuel_type = models.CharField(max_length=150, blank=True, null=True)
+
 
 class Audit_Trail(models.Model):
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING)

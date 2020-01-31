@@ -25,7 +25,7 @@ from supplier.forms import *
 from buyer.models import *
 from buyer.forms import *
 from .forms import *
-from .models import AuditTrail
+from .models import AuditTrail, SordActionsAuditTrail
 import secrets
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from datetime import datetime, date, timedelta
@@ -1372,4 +1372,11 @@ def edit_allocation(request, id):
             messages.warning(request, 'Fuel object does not exists')
             return redirect('users:allocate') 
 
-
+def sordactions(request, id):
+    sord_actions = SordActionsAuditTrail.objects.filter(sord_num=id).all()
+    
+    if sord_actions:
+        sord_number = sord_actions[0].sord_num
+    else:
+        sord_number  = "-" 
+    return render(request, 'users/sord_actions.html', {'sord_number':sord_number, 'sord_actions':sord_actions})
