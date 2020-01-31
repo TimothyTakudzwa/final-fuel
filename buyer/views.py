@@ -101,18 +101,15 @@ def token_is_send(request, user):
     token_auth.save()
     domain = request.get_host()
     url = f'https://{domain}/verification/{token}/{user.id}'
-    print(url)
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
     message = f"Dear {user.first_name}  {user.last_name}. \nYour username is: {user.username}\n\nPlease complete signup here : \n {url} \n. "
     try:
-        print(message)
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
         msg.send()
         messages.success(request, f"{user.first_name}  {user.last_name} Registered Successfully")
         return True
     except Exception as e:
-        print(e)
         messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
         return False
     messages.success(request, ('Your profile was successfully updated!'))
@@ -168,7 +165,6 @@ def send_message(phone_number, message):
     }
     url = "https://eu33.chat-api.com/instance78632/sendMessage?token=sq0pk8hw4iclh42b"
     r = requests.post(url=url, data=payload)
-    print(r)
     return r.status_code
 
 
@@ -281,7 +277,6 @@ def fuel_finder(request):
             amount = form.cleaned_data['amount']
             delivery_method = form.cleaned_data['delivery_method']
             fuel_type = form.cleaned_data['fuel_type']
-            print(f"===================={request.POST.get('company_id')}--------------------  ")
             fuel_request = FuelRequest()
             fuel_request.name = request.user
             fuel_request.amount = amount
@@ -339,8 +334,7 @@ def dashboard(request):
                     'dipping_stick_required') == "on" else False
                 fuel_request.meter_required = True if request.POST.get('meter_required') == "on" else False
                 fuel_request.is_direct_deal = True
-                fuel_request.last_deal = request.POST.get('company_id')
-                print(fuel_request.meter_required)
+                fuel_request.last_deal = int(request.POST.get('company_id'))
                 fuel_request.save()
                 user = User.objects.filter(subsidiary_id=fuel_request.last_deal).first()
             messages.success(request, f'kindly note your request has been made ')
@@ -377,7 +371,6 @@ def dashboard(request):
                 fuel_request = FuelRequest()
                 fuel_request.name = request.user
                 fuel_request.payment_method = request.POST.get('fuel_payment_method')
-                print(fuel_request.payment_method)
                 fuel_request.amount = amount
                 fuel_request.fuel_type = fuel_type
                 fuel_request.delivery_method = delivery_method
@@ -450,9 +443,6 @@ def reject_offer(request, id):
 
 def transactions(request):
     if request.method == "POST":
-        # print(f"________{Transaction.objects.get(id=request.POST.get('transaction_id'))}__________")
-        # print(f"_____________{request.POST.get('rating')}______________")
-        # print(f"_____________{request.POST.get('comment')}______________")
         tran = Transaction.objects.get(id=request.POST.get('transaction_id'))
         now = datetime.now(),
         from supplier.models import UserReview
@@ -521,11 +511,8 @@ def view_invoice(request, id):
         if subsidiary is not None:
             transaction.depot = subsidiary.name
             transaction.address = subsidiary.address
-            print('l am here')
-            print(transaction.depot)
 
     total = transaction.offer.quantity * transaction.offer.price
-    print(total)
     g_total = total + 25
 
     context = {
