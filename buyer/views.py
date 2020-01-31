@@ -300,10 +300,10 @@ def fuel_finder(request):
 
 
 def dashboard(request):
-    updates = SuballocationFuelUpdate.objects.filter(sub_type="Suballocation").filter(~Q(diesel_quantity=0.00)).filter(
+    updates = SuballocationFuelUpdate.objects.filter(~Q(diesel_quantity=0.00)).filter(
         ~Q(petrol_quantity=0.00))
     for update in updates:
-        subsidiary = Subsidiaries.objects.filter(id=update.relationship_id).first()
+        subsidiary = Subsidiaries.objects.filter(id=update.subsidiary.id).first()
         if UserReview.objects.filter(depot=subsidiary).exists():
             ratings = UserReview.objects.filter(depot=subsidiary).all()
             sum_rate = 0
@@ -315,7 +315,7 @@ def dashboard(request):
         else:
             update.rating = '-'
 
-        sub = Subsidiaries.objects.filter(id=update.subsidiary.id)
+        sub = Subsidiaries.objects.filter(id=update.subsidiary.id).first()
         company = Company.objects.filter(id=sub.company.id).first()
         if company is not None:
             update.company = company.name
