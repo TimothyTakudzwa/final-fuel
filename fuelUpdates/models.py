@@ -19,7 +19,7 @@ class SordCompanyAuditTrail(models.Model):
     def __str__(self):
         return f'{self.id} -- SordCompanyAuditTrail'
 
-   class Meta:
+    class Meta:
         ordering = ['date']
      
 
