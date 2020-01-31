@@ -334,7 +334,7 @@ def dashboard(request):
                     'dipping_stick_required') == "on" else False
                 fuel_request.meter_required = True if request.POST.get('meter_required') == "on" else False
                 fuel_request.is_direct_deal = True
-                fuel_request.last_deal = request.POST.get('company_id')
+                fuel_request.last_deal = int(request.POST.get('company_id'))
                 fuel_request.save()
                 user = User.objects.filter(subsidiary_id=fuel_request.last_deal).first()
             messages.success(request, f'kindly note your request has been made ')

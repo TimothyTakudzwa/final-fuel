@@ -334,9 +334,13 @@
                                                     </div>
                                                 </div>
                                                 <div class="row col-sm-12">
-                                                    <div class="col-sm-6 form-group">
-                                                        <label class="form-group">Payment Method</label>
-                                                        <input type="text" name="fuel_payment_method" class="form-control" value="{{data.entry_type}}" /> 
+                                                    <div class="col-sm-6">
+                                                        <label class="form-group">Select Payment Method</label>
+                                                        <select class="form-control" name="fuel_payment_method">
+                                                            <option value="USD">USD</option>
+                                                            <option value="RTGS">RTGS</option>
+                                                            <option value="USD & RTGS">Either</option>
+                                                        </select>
                                                     </div>
 
 
@@ -407,7 +411,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <input type="hidden" value="{{data.relationship_id}}" name="company_id" />
+                                                <input type="hidden" value="{{data.subsidiary.company.id}}" name="company_id"/>
                                         </div>
                                         <div class="modal-footer justify-content-center">
                                             <button type="submit" name="MakeDeal" class="btn btn-primary ">Submit
