@@ -13,11 +13,11 @@
     </div>
     <div class="header-title">
 
-        <h1> Allocations Audit Trail </h1>
+        <h1> Subsidiary Sales Audit Trail </h1>
         <small>Fuel Finder Zimbabwe</small>
         <ol class="breadcrumb hidden-xs">
             <li><a href="{% url 'users:allocate' %}"><i class="pe-7s-home"></i> Home</a></li>
-            <li class="active">Allocations Audit Trail</li>
+            <li class="active">Sales Audit Trail</li>
         </ol>
 
     </div>
@@ -27,7 +27,7 @@
     <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
         <div class="panel-heading ui-sortable-handle">
             <div class="btn-group">
-                <h4>Sord Allocations</h4>
+                <h4>Sord Sales</h4>
             </div>
             <div class="dropdown">
                 <ul class="dropdown-menu dropdown-menu-right">
@@ -40,64 +40,64 @@
         </div>
         <div class="panel-body">
 
-            {% if sord_allocations %}
+            {% if sord_sales %}
             <div class="table-responsive">
                 <table id="example" class="table table-striped table-bordered" style="width:100%">
                     <thead>
                         <tr>
                             <th>
-                                Sord Number
+                                Date
+                            </th>
+                            <th>
+                                Subsidiary
+                            </th>
+                            <th>
+                                Sord Num
                             </th>
 
                             <th>
-                                Number of Actions
+                                Action Num
                             </th>
-
                             <th>
-                                Action Detail
+                                Action
                             </th>
                             <th>
                                 Fuel Type
                             </th>
                             <th>
-                                Initial
+                                Initial Quantity
                             </th>
                             <th>
-                                Allocated
+                                Quantity Sold
                             </th>
                             <th>
                                 End Quantity
                             </th>
 
                             <th>
-                                Last Allocation
+                                Last Upadted
                             </th>
 
                             <th>
-                                Action
+                                Received By
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for sord in sord_allocations%}
+                        {% for sord in sord_sales%}
                         <tr>
+                            <td>{{sord.date}}</td>
+                            <td>{{sord.subsidiary.name}}</td>
                             <td>{{sord.sord_no}}</td>
                             <td>{{sord.action_no}}</td>
                             <td>{{sord.action}}</td>
                             <td>{{sord.fuel_type}}</td>
                             <td>{{sord.initial_quantity}}</td>
-                            <td>{{sord.quantity_allocated}}</td>
+                            <td>{{sord.quantity_sold}}</td>
                             <td>{{sord.end_quantity}}</td>
-                            <td>{{sord.allocated_to}}</td>
-                            <td style="width: 25%;">
-                                <div class="btn-group">
-
-
-                                    
-                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'users:sordactions' sord.sord_no %}">View All Actions</a>
-
-                                </div>
-                            </td>
+                            <td>{{sord.last_updated}}</td>
+                            <td>{{sord.received_by}}</td>
+                           
 
                         </tr>
                         {% endfor %}
@@ -105,7 +105,7 @@
                 </table>
             </div>
             {% else %}
-            <p>No Allocations Available</p>
+            <p>No Sales Available</p>
             {% endif %}
 
 

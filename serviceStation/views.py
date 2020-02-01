@@ -17,10 +17,11 @@ from users.models import Audit_Trail
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 user = get_user_model()
+from national.models import NationalFuelUpdate
 
 @login_required()
 def fuel_updates(request):
-    updates = FuelUpdate.objects.filter(sub_type='Service Station').filter(relationship_id=request.user.subsidiary_id).first()
+    updates = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).first()
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     if request.method == 'POST':
         #fuel_update = FuelUpdate.objects.filter(sub_type=request.POST['sub_type']).first()

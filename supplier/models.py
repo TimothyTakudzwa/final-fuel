@@ -171,8 +171,19 @@ class UserReview(models.Model):
         return f'{self.rating} - {self.rater}'
 
 
+
+class DeliverySchedule(models.Model):
+    date = models.DateField(auto_now_add=True)
+    transaction = models.ForeignKey(Transaction, on_delete=models.DO_NOTHING)    
+    driver_name = models.CharField(max_length=150, blank=True, null=True)
+    phone_number = models.CharField(max_length=150, blank=True, null=True)
+    id_number = models.CharField(max_length=150, blank=True, null=True)
+    vehicle_reg = models.CharField(max_length=150, blank=True, null=True)
+    delivery_time = models.CharField(max_length=150, blank=True, null=True)
+
 class SordSubsidiaryAuditTrail(models.Model):
     from company.models import Company
+    date = models.DateTimeField(auto_now_add=True)
     sord_no =  models.CharField(max_length=100)
     action_no = models.PositiveIntegerField()
     action = models.CharField(max_length=150)
