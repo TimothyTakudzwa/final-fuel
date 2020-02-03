@@ -55,7 +55,7 @@ def fuel_updates(request):
 @login_required()
 def update_diesel(request, id):
     if request.method == 'POST':
-        diesel_update = FuelUpdate.objects.filter(id=id).first()
+        diesel_update = SubsidiaryFuelUpdate.objects.filter(id=id).first()
         if int(diesel_update.diesel_quantity) < int(request.POST['diesel_quantity']):
             messages.warning(request, 'You cannot update Diesel to an amount more than the available quantity')
             return redirect('serviceStation:home')
