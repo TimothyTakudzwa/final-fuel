@@ -57,8 +57,11 @@
                                 <th style="color: white;">Quantity(l)</th>
                                 <th style="color: white;">Price</th>
                                 <th style="color: white;">Amount</th>
-                                <th style="color: white;">Delivery Schedule</th>
-                                <th style="color: white;">Status</th>
+                                <th style="color: white;">Receipt Status</th>
+                                <th style="color: white;">Transaction Status</th>
+
+                                
+
 
                             </tr>
                         </thead>
@@ -73,18 +76,23 @@
                                 <td>{{ transaction.offer.quantity |intcomma}}</td>
                                 <td>{{ transaction.offer.price }}</td>
                                 <td>{{ transaction.offer.quantity| mul:transaction.offer.price |intcomma}}</td>
-                                {% if transaction.delivery_sched %}
-                                <td><button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#schedule{{transaction.id}}">View Schedule</button></td>
+                                {% if transaction.offer.request.delivery_method == "DELIVERY" or transaction.delivery_method == "delivery" %}
+                                    {% if transaction.delivery_sched %}
+                                    <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{transaction.id}}">View Schedule</button></td>
+                                    {% else %}
+                                    <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button></td>
+                                    {% endif %}
+                                   
                                 {% else %}
-                                <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button></td>
-                                {% endif %}
+                                    <td>Self Collected</td>    
+                                {% endif %}   
                                 {% if transaction.is_complete %}
                                 <td><a class="btn btn-primary btn-sm" href="{% url 'view_invoice' transaction.id %}" >Download</a></td>
                                 {% else %}
                                 <td>
                                 <a class="btn btn-sm" style="background-color: #428bca; color: whitesmoke;" href="{% url 'complete-transaction' transaction.id %}" >Complete</a>
                                 </td>
-                                {% endif %}
+                                {% endif %} 
                             </tr>
                             
                             <div class="modal fade modal-sucess in" id="schedule{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -96,18 +104,43 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                     </div>
-                                    <div class="modal-body">
-                                        <p>Date: {{transaction.delivery_sched.date}}</p>
-                                        <p>Driver Name: {{transaction.delivery_sched.driver_name}}</p>
-                                        <p>Phone Number: {{transaction.delivery_sched.phone_number}}</p>
-                                        <p>Id Number: {{transaction.delivery_sched.id_number}}</p>
-                                        <p>Vehicle Reg: {{transaction.delivery_sched.vehicle_reg}}</p>
-                                        <p>Delivery Time: {{transaction.delivery_sched.delivery_time }}
-                                        {% if transaction.delivery_sched.confirmation_document %}
-                                        <a href="">View Confirmation Doc</a>   
-                                        {%else %}
-                                        <p>Status: Pending <p>     
-                                        {% endif %}             
+                                    <div class="modal-body" style="padding: 30px;">
+                                        <div class="row" style="padding: 10px;">
+                                            <p class="col-md-6">Date: </p>
+                                            <p class="col-md-6">{{transaction.delivery_sched.date}}</p>
+                                        </div>
+                                        <div class="row" style="padding: 10px;">
+                                            <p class="col-md-6">Driver Name: </p>
+                                            <p class="col-md-6">{{transaction.delivery_sched.driver_name}}</p>
+                                        </div>   
+                                        <div class="row" style="padding: 10px;">
+                                            <p class="col-md-6">Phone Number: </p>
+                                            <p class="col-md-6">{{transaction.delivery_sched.phone_number}}</p>
+                                        </div>   
+                                        <div class="row" style="padding: 10px;">
+                                            <p class="col-md-6">Id Number: </p>
+                                            <p class="col-md-6">{{transaction.delivery_sched.id_number}}</p>
+                                        </div>   
+                                        <div class="row" style="padding: 10px;">
+                                            <p class="col-md-6">Vehicle Reg: </p>
+                                            <p class="col-md-6">{{transaction.delivery_sched.vehicle_reg}}</p>
+                                        </div>
+                                        <div class="row" style="padding: 10px;">
+                                            <p class="col-md-6">Delivery Time: </p>
+                                            <p class="col-md-6">{{transaction.delivery_sched.delivery_time }}</p>
+                                        </div>  
+                                        <div class="row" style="padding: 10px;">
+                                            <p class="col-md-6">Status: </p>
+                                            {% if transaction.delivery_sched.confirmation_document %}
+                                            <p class="col-md-6"> 
+                                                <a href="">View Confirmation Doc</a>
+                                            </p>       
+                                            {%else %}
+                                            <p class="col-md-6">Status: Pending </p>    
+                                            {% endif %} 
+                                        </div>           
+                                      
+                                                    
                                     </div>
                                     <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -129,44 +162,41 @@
                                             {% csrf_token %}
                                             <div class="row">
                                                 <div class="form-group col-md-6">
-                                                <lable>Date</lable>
+                                                <label>Delivery Date</label>
                                                 <input type="date" name="delivery_date" class="form-control" required/>
                                             </div>
-                                            <div class="form-group col-md-6">
-                                                <lable>Transaction</lable>
-                                                <input type="text" name="transaction" class="form-control" value={{transaction.id}}  required/>
+                                            <div class="form-group col-md-6">         
+                                                <label>Delivery Time</label>
+                                                <input type="time" name="delivery_time" class="form-control"  required/>  
                                             </div>
                                             </div>
                                             <div class="row">
 
                                             <div class="form-group col-md-6">
-                                                <lable>Driver Name</lable>
+                                                <label>Driver Name</label>
                                                 <input type="text" name="driver_name" class="form-control"  required/>
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <lable>Phone Number</lable>
+                                                <label>Phone Number</label>
                                                 <input type="telephone" name="phone_number" class="form-control"  value="{{ supplier.phone_number}}" required/>
                                             </div>
                                             </div>
                                             <div class="row">
 
                                                 <div class="form-group col-md-6">
-                                                    <lable>Id Number</lable>
+                                                    <label>Id Number</label>
                                                     <input type="text" name="id_num" class="form-control"  required/>
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <lable>Vehicle Reg</lable>
+                                                    <label>Vehicle Reg</label>
                                                     <input type="text" name="vehicle_reg" class="form-control"  value="{{ supplier.phone_number}}" required/>
                                                 </div>
                                                 </div>
 
                                                 <div class="row">
+                                                    <input type="hidden" name="transaction" class="form-control" value={{transaction.id}}  required/>
 
-                                                    <div class="form-group col-md-6">
-                                                        <lable>Delivery Time</lable>
-                                                        <input type="time" name="delivery_time" class="form-control"  required/>
-                                                    </div>
-                                                    
+                                                      
                                                     </div>    
                                                 
                                                     <div class="modal-footer">

@@ -19,5 +19,7 @@ urlpatterns = [
     path('change-password/', api.change_password),
     path('force-password-change/', api.force_password_change),
 
+    path('comments/', api.comments),
+
 ]
 

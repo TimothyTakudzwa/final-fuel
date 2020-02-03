@@ -20,8 +20,8 @@ urlpatterns = [
     path('change_password/', views.change_password, name='change_password'),
     path('view_invoice/<int:id>', views.view_invoice, name='view_invoice'),
     path('create-company/<int:id>', views.create_company, name='create_company'),
-    path('delivery_schedule/<int:id>', views.delivery_schedule, name="delivery_schedule"),
-    path('delivery_schedules/', views.delivery_schedule, name="delivery_schedule"),
+    path('edit_delivery_schedule/', views.edit_delivery_schedule, name="edit_delivery_schedule"),
+    path('delivery_schedules/', views.delivery_schedules, name="delivery_schedules"),
     path('create_delivery_schedule/', views.create_delivery_schedule, name="create_delivery_schedule"),
 
 

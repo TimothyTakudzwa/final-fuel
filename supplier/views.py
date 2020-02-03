@@ -31,15 +31,23 @@ User = get_user_model()
 # today's date
 today = date.today()
 
-
 @login_required
-def delivery_schedule(request):
-    schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user)
-    return render(request, 'supplier/delivery_schedules.html', {'schedules': schedules})
+def edit_delivery_schedule(request):
+    if request.method == "POST":
+        delivery_schedule = DeliverySchedule.objects.filter(id=int(request.POST['delivery_id'])).first()
+        delivery_schedule.driver_name = request.POST['driver_name']
+        delivery_schedule.phone_number = request.POST['phone_number']
+        delivery_schedule.id_number = request.POST['id_number']
+        delivery_schedule.vehicle_reg = request.POST['vehicle_reg']
+        delivery_schedule.delivery_time = request.POST['delivery_time']
+        delivery_schedule.save()
+        messages.success(request, "Schedule Successfully Updated")
+        return redirect('supplier:delivery_schedules')
 
+        
 @login_required
 def delivery_schedules(request):
-    schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user)
+    schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).all()
     return render(request, 'supplier/delivery_schedules.html', {'schedules': schedules})    
 
 
