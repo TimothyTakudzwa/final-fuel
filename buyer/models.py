@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractUser
 from company.models import Company
 
 
+
 class User(AbstractUser):
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, null=True)
     fuel_request = models.PositiveIntegerField(default=0)
@@ -68,4 +69,5 @@ class FuelRequest(models.Model):
     # def __str__(self):
     #     return f'{str(self.name)}'
 
-    
+
+
