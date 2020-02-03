@@ -354,6 +354,10 @@ def allocation_update(request,id):
     return render(request, 'users/allocate.html')
 
 
+@login_required
+def delivery_schedule(request):
+    pass
+
 @login_required()
 def allocation_update_main(request,id):
     if request.method == 'POST':
