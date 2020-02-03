@@ -324,7 +324,7 @@ def dashboard(request):
             if form.is_valid():
                 fuel_request = FuelRequest()
                 fuel_request.name = request.user
-                fuel_request.amount = form.cleaned_data['amount']
+                fuel_request.amount = int(form.cleaned_data['amount'])
                 fuel_request.fuel_type = form.cleaned_data['fuel_type']
                 fuel_request.payment_method = request.POST.get('fuel_payment_method')
                 fuel_request.delivery_method = form.cleaned_data['delivery_method']
@@ -336,7 +336,10 @@ def dashboard(request):
                     'dipping_stick_required') == "on" else False
                 fuel_request.meter_required = True if request.POST.get('meter_required') == "on" else False
                 fuel_request.is_direct_deal = True
+                print('company id')
+                print(request.POST.get('company_id'))
                 fuel_request.last_deal = int(request.POST.get('company_id'))
+                print(fuel_request.meter_required)
                 fuel_request.save()
                 user = User.objects.filter(subsidiary_id=fuel_request.last_deal).first()
             messages.success(request, f'kindly note your request has been made ')

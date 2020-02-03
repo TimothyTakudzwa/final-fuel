@@ -49,6 +49,8 @@ urlpatterns = [
     path('approval/<int:id>', views.approval, name="approval"),
     path('decline_applicant/<int:id>', views.decline_applicant, name="decline_applicant"),
     path('edit_allocation/<int:id>', views.edit_allocation, name="edit_allocation"),
+    path('delivery_schedule/<int:id>', views.delivery_schedule, name="delivery_schedule"),
+
     
 
     
