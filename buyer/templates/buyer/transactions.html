@@ -69,12 +69,16 @@
                             {{transaction.offer.time}}</td>
                             <td>
                                 
-                                {% if not transaction.review %}
+                                {% if transaction.is_complete %}
                                     <a class="btn btn-primary btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
                                         Rate {{transaction.supplier}}
                                     </a>
                                 {% else %}
-                               
+                                    {% if transaction.delivery_sched %}
+                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#schedule{{transaction.id}}">View Schedule</button>
+                                    {% else %}
+                                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button>
+                                    {% endif %}
                                 {% endif %}    
                             </td>
                             <div class="modal fade" id="review_{{transaction.id}}" role="dialog">
@@ -110,6 +114,68 @@
                                     </div>
                                 </div>
                             </div>
+
+                    <!--delivery schedule modal-->
+                    <div class="modal fade modal-sucess in" id="create_schedule{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #009688; color: white">
+                            <span class="modal-title" id="exampleModalLabel">Create Schedule</span>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{% url 'supplier:create_delivery_schedule' %}" method="POST">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                        <lable>Date</lable>
+                                        <input type="date" name="delivery_date" class="form-control" required/>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <lable>Delivery Time</lable>
+                                        <input type="time" name="delivery_time" class="form-control"  required/>
+                                    </div>
+                                    </div>
+                                    <div class="row">
+
+                                    <div class="form-group col-md-6">
+                                        <lable>Driver Name</lable>
+                                        <input type="text" name="driver_name" class="form-control"  required/>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <lable>Phone Number</lable>
+                                        <input type="telephone" name="phone_number" class="form-control"  value="{{ supplier.phone_number}}" required/>
+                                    </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="form-group col-md-6">
+                                            <lable>Id Number</lable>
+                                            <input type="text" name="id_num" class="form-control"  required/>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <lable>Vehicle Reg</lable>
+                                            <input type="text" name="vehicle_reg" class="form-control"  value="{{ supplier.phone_number}}" required/>
+                                        </div>
+                                        </div>
+                                        <input type="hidden" name="transaction" class="form-control" value={{transaction.id}}  required/>
+                                               
+                                        
+                                            <div class="modal-footer">
+                                                <div class="row pull-left">    
+                                                    
+                                                    <button type="submit" class="btn btn-primary col-sm-12" style="margin-left: 15px;">Create Schedule</button>
+                                                </div>
+                                                </div>                                        
+                                </form>          
+                            </div>
+                            
+                        </div>
+                        </div>
+                    </div>
+                    <!--end delivery schedule modal-->
                         {%endfor%}
                     </tbody>
                 </table>

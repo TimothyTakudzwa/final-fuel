@@ -16,6 +16,7 @@ urlpatterns = [
     path('accept/<int:id>', views.accept_offer, name='accept-offer'),
     path('reject/<int:id>', views.reject_offer, name='reject-offer'),
     path('transactions', views.transactions, name='buyer-transactions'),
+    path('delivery-schedule/', views.delivery_schedule, name="delivery-schedule"),
     path('invoice/<int:id>', views.invoice, name='buyer-invoice'),
     path('view_invoice/<int:id>', views.view_invoice, name='view-invoice'),
 ]
