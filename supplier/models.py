@@ -180,6 +180,8 @@ class DeliverySchedule(models.Model):
     id_number = models.CharField(max_length=150, blank=True, null=True)
     vehicle_reg = models.CharField(max_length=150, blank=True, null=True)
     delivery_time = models.CharField(max_length=150, blank=True, null=True)
+    confirmation_document = models.FileField()
+    # delivery_address = models.CharField(max_length=150, blank=True, null=True)
 
 class SordSubsidiaryAuditTrail(models.Model):
     from company.models import Company

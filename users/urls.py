@@ -37,7 +37,7 @@ urlpatterns = [
     path('delete_subsidiary/<int:id>', views.delete_subsidiary, name="delete_subsidiary"),
     path('edit_fuel_prices/<int:id>', views.edit_fuel_prices, name="edit_fuel_prices"),
     path('sordactions/<id>', views.sordactions, name="sordactions"),
-    path('sord_station_sales/', views.sord_station_sales, name="sord_station_sales"),
+    # path('sord_station_sales/', views.sord_station_sales, name="sord_station_sales"),
     path('allocate_diesel/<int:id>', views.allocate_diesel, name="allocate_diesel"),
     path('edit_ss_rep/<int:id>', views.edit_ss_rep, name="edit_ss_rep"),
     path('edit_depot_rep/<int:id>', views.edit_depot_rep, name="edit_depot_rep"),
@@ -49,7 +49,7 @@ urlpatterns = [
     path('approval/<int:id>', views.approval, name="approval"),
     path('decline_applicant/<int:id>', views.decline_applicant, name="decline_applicant"),
     path('edit_allocation/<int:id>', views.edit_allocation, name="edit_allocation"),
-    path('delivery_schedule/<int:id>', views.delivery_schedule, name="delivery_schedule"),
+    #path('delivery_schedule/<int:id>', views.delivery_schedule, name="delivery_schedule"),
 
     
 
