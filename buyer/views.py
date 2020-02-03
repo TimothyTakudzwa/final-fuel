@@ -15,10 +15,11 @@ from company.models import Company
 from supplier.models import Offer, Subsidiaries, DeliverySchedule, Transaction, TokenAuthentication, UserReview, SuballocationFuelUpdate
 
 from .constants import sample_data
-from .forms import BuyerRegisterForm, PasswordChange, FuelRequestForm, PasswordChangeForm, LoginForm
+from .forms import BuyerRegisterForm, PasswordChange, FuelRequestForm, PasswordChangeForm, LoginForm 
 from .models import FuelRequest
 from buyer.utils import render_to_pdf
 from notification.models import Notification
+from supplier.forms import DeliveryScheduleForm
 
 user = get_user_model()
 
@@ -449,6 +450,7 @@ def reject_offer(request, id):
 
 @login_required
 def transactions(request):
+
     if request.method == "POST":
         tran = Transaction.objects.get(id=request.POST.get('transaction_id'))
         now = datetime.now(),
@@ -467,6 +469,13 @@ def transactions(request):
     transactions = Transaction.objects.filter(buyer=buyer).all()
     for transaction in transactions:
         subsidiary = Subsidiaries.objects.filter(id=transaction.supplier.subsidiary_id).first()
+        delivery_schedule = DeliverySchedule.objects.filter(transaction__id=transaction.id).exists()
+        if delivery_schedule:
+            transaction.delivery_schedule = True
+            transaction.delivery_object = DeliverySchedule.objects.filter(transaction__id=transaction.id).first()
+        else:
+            transaction.delivery_schedule = False
+            transaction.delivery_object = None
         if subsidiary is not None:
             transaction.depot = subsidiary.name
             transaction.address = subsidiary.address
@@ -532,5 +541,15 @@ def view_invoice(request, id):
 
 @login_required
 def delivery_schedule(request):
-    schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user)
-    return render(request, 'buyer/delivery_schedules.html', {'schedules': schedules})
+    context = {
+        'form': DeliveryScheduleForm(),
+        'schedules' : DeliverySchedule.objects.filter(transaction__buyer=request.user)
+    }
+    if request.method == 'POST':
+        confirmation_document = request.FILES.get('confirmation_document')
+        delivery_id = request.POST.get('id')
+
+        schedule = DeliverySchedule.objects.get(id=id)
+        schedule.confirmation_document = confirmation_document
+        schedule.save()
+    return render(request, 'buyer/delivery_schedules.html', context=context)
