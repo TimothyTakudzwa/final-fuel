@@ -1429,6 +1429,6 @@ def sordactions(request, id):
         sord_number  = "-" 
     return render(request, 'users/sord_actions.html', {'sord_number':sord_number, 'sord_actions':sord_actions})
 
-
-def delivery_schedule(request, id):
-    return render(request, 'users/delivery_schedule.html')
+def sord_station_sales(request):
+    sord_sales = SordSubsidiaryAuditTrail.objects.filter(subsidiary__company = request.user.company).all()
+    return render(request, 'users/sord_station_sales.html', {'sord_sales':sord_sales})
