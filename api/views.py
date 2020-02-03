@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 from buyer.models import User
 from supplier.models import Subsidiaries, SubsidiaryFuelUpdate
 from users.models import Audit_Trail
+from comments.models import CommentsPermission, Comment
 
 import secrets
 from datetime import date
@@ -29,7 +30,7 @@ def login(request):
         status = authenticate(username=username, password=password)
         if status:
             # auth success
-            user = User.objects.get(username=username)
+            user = User.objects.get(usename=username)
             # service station admin and must reset password
             if user.user_type == 'SS_SUPPLIER' and user.password_reset:
                 data = {'username': user.username}
@@ -348,3 +349,38 @@ def password_reset(request):
         # user doesn't exist
         else:
             return HttpResponse(status=404)
+
+
+@api_view(['POST'])
+def comments(request):
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        username = request.POST.get('username')
+        station = request.POST.get('station')
+        comment = request.POST.get('comment')
+
+        comments_data = []
+
+        if action == 'UPDATE':
+            permission = CommentsPermission.objects.filter().first()
+            if permission.allowed:
+                Comment.objects.create(
+                    user=User.objects.get(username=username),
+                    station=Subsidiaries.objects.get(name=station, is_depot=False),
+                    comment=comment
+                )
+                return HttpResponse(200)
+            else:
+                return HttpResponse(406)
+        else:
+            all_comments = Comment.objects.filter()
+            if all_comments:
+                for comment in all_comments:
+                    data = {
+                        'name': comment.user, 'station': comment.station,
+                        'comment': station.comment, 'date': date, 'time': comment.time
+                    }
+                    comments_data.append(data)
+                return JsonResponse(list(comments_data), status=200, safe=False)
+            else:
+                return HttpResponse(status=404)

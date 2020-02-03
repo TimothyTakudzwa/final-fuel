@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'mathfilters',
     'debug_toolbar',
+    'comments.apps.CommentsConfig'
 
 ]
 
