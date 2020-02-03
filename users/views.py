@@ -1380,3 +1380,7 @@ def sordactions(request, id):
     else:
         sord_number  = "-" 
     return render(request, 'users/sord_actions.html', {'sord_number':sord_number, 'sord_actions':sord_actions})
+
+
+def delivery_schedule(request, id):
+    return render(request, 'users/delivery_schedule.html')
