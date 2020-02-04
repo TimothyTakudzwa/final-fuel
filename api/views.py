@@ -211,7 +211,7 @@ def view_updates_user(request):
         data = []
         # fetch updates
         try:
-            updates = SubsidiaryFuelUpdate.objects.filter(subsidiary=Subsidiaries.objects.filter(is_depot=False).all())
+            updates = SubsidiaryFuelUpdate.objects.filter(subsidiary__is_depot=False).all()
             for update in updates:
                 image = f'https://{request.get_host()}{update.subsidiary.logo.url}/'
                 if update.diesel_quantity == 0 and update.petrol_quantity == 0:
