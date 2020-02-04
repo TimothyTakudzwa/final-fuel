@@ -12,13 +12,14 @@ from buyer.models import User
 from buyer.recommend import recommend
 # from company.models import Company, FuelUpdate
 from company.models import Company
-from supplier.models import Offer, Subsidiaries, Transaction, TokenAuthentication, UserReview, SuballocationFuelUpdate
+from supplier.models import Offer, Subsidiaries, DeliverySchedule, Transaction, TokenAuthentication, UserReview, SuballocationFuelUpdate
 
 from .constants import sample_data
-from .forms import BuyerRegisterForm, PasswordChange, FuelRequestForm, PasswordChangeForm, LoginForm
+from .forms import BuyerRegisterForm, PasswordChange, FuelRequestForm, PasswordChangeForm, LoginForm 
 from .models import FuelRequest
 from buyer.utils import render_to_pdf
 from notification.models import Notification
+from supplier.forms import DeliveryScheduleForm
 
 user = get_user_model()
 
@@ -248,10 +249,6 @@ def fuel_request(request):
     fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).all()
     for fuel_request in fuel_requests:
         if fuel_request.is_direct_deal:
-            # sub = Subsidiaries.objects.filter(id=fuel_request.last_deal).first()
-            # print(sub)
-            # search_company = SuballocationFuelUpdate.objects.filter(subsidiary=sub).first()
-            # print(search_company)
             depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
             company = Company.objects.filter(id=depot.company.id).first()
             fuel_request.request_company = company.name
@@ -272,6 +269,7 @@ def fuel_request(request):
     return render(request, 'buyer/fuel_request.html', context=context)
 
 
+@login_required
 def fuel_finder(request):
     if request.method == 'POST':
         form = FuelRequestForm(request.POST)
@@ -296,6 +294,7 @@ def fuel_finder(request):
     return render(request, 'buyer/dashboard.html', {'form': form, 'sample_data': sample_data})
 
 
+@login_required
 def dashboard(request):
     updates = SuballocationFuelUpdate.objects.filter(~Q(diesel_quantity=0.00)).filter(
         ~Q(petrol_quantity=0.00))
@@ -336,10 +335,7 @@ def dashboard(request):
                     'dipping_stick_required') == "on" else False
                 fuel_request.meter_required = True if request.POST.get('meter_required') == "on" else False
                 fuel_request.is_direct_deal = True
-                print('company id')
-                print(request.POST.get('company_id'))
                 fuel_request.last_deal = int(request.POST.get('company_id'))
-                print(fuel_request.meter_required)
                 fuel_request.save()
                 user = User.objects.filter(subsidiary_id=fuel_request.last_deal).first()
             messages.success(request, f'kindly note your request has been made ')
@@ -392,7 +388,7 @@ def dashboard(request):
         form = FuelRequestForm
     return render(request, 'buyer/dashboard.html', {'form': form, 'updates': updates})
 
-
+@login_required
 def offers(request, id):
     selected_request = FuelRequest.objects.filter(id=id).first()
     offers = Offer.objects.filter(request=selected_request).filter(declined=False).all()
@@ -404,17 +400,17 @@ def offers(request, id):
 
     return render(request, 'buyer/offer.html', {'offers': offers})
 
-
+@login_required
 def new_offer(request, id):
     offers = Offer.objects.filter(id=id).all()
     return render(request, 'buyer/new_offer.html', {'offers': offers})
 
-
+@login_required
 def new_fuel_offer(request, id):
     offers = Offer.objects.filter(id=id).all()
     return render(request, 'buyer/new_offer.html', {'offers': offers})
 
-
+@login_required
 def accept_offer(request, id):
     offer = Offer.objects.filter(id=id).first()
     Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier, is_complete=False)
@@ -428,7 +424,7 @@ def accept_offer(request, id):
     messages.warning(request, "Your request has been saved successfully")
     return redirect("buyer-transactions")
 
-
+@login_required
 def reject_offer(request, id):
     offer = Offer.objects.filter(id=id).first()
     offer.declined = True
@@ -446,8 +442,9 @@ def reject_offer(request, id):
                      "Your request has been saved and as offer updates are coming you will receive notifications")
     return redirect("buyer-fuel-request")
 
-
+@login_required
 def transactions(request):
+
     if request.method == "POST":
         tran = Transaction.objects.get(id=request.POST.get('transaction_id'))
         now = datetime.now(),
@@ -466,6 +463,13 @@ def transactions(request):
     transactions = Transaction.objects.filter(buyer=buyer).all()
     for transaction in transactions:
         subsidiary = Subsidiaries.objects.filter(id=transaction.supplier.subsidiary_id).first()
+        delivery_schedule = DeliverySchedule.objects.filter(transaction__id=transaction.id).exists()
+        if delivery_schedule:
+            transaction.delivery_schedule = True
+            transaction.delivery_object = DeliverySchedule.objects.filter(transaction__id=transaction.id).first()
+        else:
+            transaction.delivery_schedule = False
+            transaction.delivery_object = None
         if subsidiary is not None:
             transaction.depot = subsidiary.name
             transaction.address = subsidiary.address
@@ -478,7 +482,7 @@ def transactions(request):
 
     return render(request, 'buyer/transactions.html', context=context)
 
-
+@login_required
 def transactions_review_delete(request, id):
     from supplier.models import UserReview
     rev = UserReview.objects.filter(id=id).first()
@@ -486,7 +490,7 @@ def transactions_review_delete(request, id):
     messages.success(request, 'Review Successfully Deleted')
     return redirect("buyer-transactions")
 
-
+@login_required
 def transaction_review_edit(request, id):
     from supplier.models import UserReview
     review = UserReview.objects.filter(id=id).first()
@@ -497,7 +501,7 @@ def transaction_review_edit(request, id):
         messages.success(request, 'Review Successfully Edited')
     return redirect("buyer-transactions")
 
-
+@login_required
 def invoice(request, id):
     buyer = request.user
     transactions = Transaction.objects.filter(buyer=buyer, id=id).first()
@@ -508,7 +512,7 @@ def invoice(request, id):
     pdf = render_to_pdf('buyer/invoice.html', context)
     return HttpResponse(pdf, content_type='application/pdf')
 
-
+@login_required
 def view_invoice(request, id):
     buyer = request.user
     transaction = Transaction.objects.filter(buyer=buyer, id=id).all()
@@ -527,3 +531,20 @@ def view_invoice(request, id):
         'g_total': g_total
     }
     return render(request, 'buyer/invoice2.html', context)
+
+
+@login_required
+def delivery_schedule(request):
+    context = {
+        'form': DeliveryScheduleForm(),
+        'schedules' : DeliverySchedule.objects.filter(transaction__buyer=request.user)
+    }
+    if request.method == 'POST':
+        confirmation_document = request.FILES.get('confirmation_document')
+        delivery_id = request.POST.get('delivery_id')
+
+        schedule = DeliverySchedule.objects.get(id=delivery_id)
+        schedule.confirmation_document = confirmation_document
+        schedule.save()
+        Notification.objects.create(user=request.user,action='DELIVERY', message=f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document", reference_id=schedule.transaction.supplier.id)
+    return render(request, 'buyer/delivery_schedules.html', context=context)

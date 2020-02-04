@@ -21,7 +21,7 @@ from buyer.models import FuelRequest
 from users.models import AuditTrail
 from .forms import PasswordChange, RegistrationForm, \
     RegistrationEmailForm, UserUpdateForm, FuelRequestForm, CreateCompany, OfferForm
-from .models import Transaction, FuelAllocation, TokenAuthentication, SordSubsidiaryAuditTrail, Offer, Subsidiaries, SuballocationFuelUpdate, SubsidiaryFuelUpdate
+from .models import Transaction, FuelAllocation, TokenAuthentication, SordSubsidiaryAuditTrail, Offer, Subsidiaries, SuballocationFuelUpdate, SubsidiaryFuelUpdate ,DeliverySchedule
 from notification.models import Notification
 from django.contrib.auth import get_user_model
 from whatsapp.helper_functions import send_message
@@ -30,6 +30,25 @@ User = get_user_model()
 
 # today's date
 today = date.today()
+
+@login_required
+def edit_delivery_schedule(request):
+    if request.method == "POST":
+        delivery_schedule = DeliverySchedule.objects.filter(id=int(request.POST['delivery_id'])).first()
+        delivery_schedule.driver_name = request.POST['driver_name']
+        delivery_schedule.phone_number = request.POST['phone_number']
+        delivery_schedule.id_number = request.POST['id_number']
+        delivery_schedule.vehicle_reg = request.POST['vehicle_reg']
+        delivery_schedule.delivery_time = request.POST['delivery_time']
+        delivery_schedule.save()
+        messages.success(request, "Schedule Successfully Updated")
+        return redirect('supplier:delivery_schedules')
+
+        
+@login_required
+def delivery_schedules(request):
+    schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).all()
+    return render(request, 'supplier/delivery_schedules.html', {'schedules': schedules})    
 
 
 @login_required()
@@ -321,11 +340,32 @@ def edit_offer(request, id):
 
 @login_required
 def transaction(request):
+    transactions = []
+    for tran in Transaction.objects.filter(supplier__company=request.user.company).all():
+        delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
+        if delivery_sched:
+            tran.delivery_sched = delivery_sched
+        transactions.append(tran)    
     context= { 
-       'transactions' : Transaction.objects.filter(supplier=request.user).all()
+       'transactions' : transactions
         }
     return render(request, 'supplier/transactions.html',context=context)
 
+@login_required
+def create_delivery_schedule(request):
+    if request.method == 'POST':
+        DeliverySchedule.objects.create(
+            date=request.POST['delivery_date'],
+            transaction = Transaction.objects.filter(id=int(request.POST['transaction'])).first(),
+            driver_name = request.POST['driver_name'],
+            phone_number = request.POST['phone_number'],
+            id_number = request.POST['id_num'],
+            vehicle_reg = request.POST['vehicle_reg'],
+            delivery_time = request.POST['delivery_time']
+        )
+        messages.success(request,"Schedule Successfully Created")
+        return redirect('transaction')
+        
 
 def allocated_quantity(request):
     allocations = FuelAllocation.objects.filter(allocated_subsidiary_id= request.user.subsidiary_id).all()

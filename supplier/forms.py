@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from supplier.models import Subsidiaries
 from .constants import *
 User = get_user_model()
-from .models import  FuelRequest, Offer
+from .models import  FuelRequest, Offer, DeliverySchedule
 from .constants import Harare
 # from company.models import Company, FuelUpdate
 from buyer.constants2 import *
@@ -206,3 +206,8 @@ def editoffer(request):
     return {
         'edit_offer_form': EditOfferForm()
     }
+
+class DeliveryScheduleForm(forms.ModelForm):
+    class Meta:
+        model = DeliverySchedule
+        fields = ['confirmation_document']

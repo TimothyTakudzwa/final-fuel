@@ -53,7 +53,8 @@
                             <th>Fuel Requested</th>
                             <th>Fuel Offered</th>
                             <th>Requested On</th>
-                            <th>Action</th>
+                            <th>Schedule</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,17 +66,20 @@
                             <td class="name truncate">{{transaction.offer.request.fuel_type}}</td>
                             <td class="name truncate">{{transaction.offer.quantity}}</td>
                             <td class="name truncate">{{transaction.offer.price}}</td>
-                            <td class="name truncate">{{transaction.offer.date}}
-                            {{transaction.offer.time}}</td>
-                            <td>
-                                
-                                {% if not transaction.review %}
+                            <td class="name truncate">{{transaction.offer.date}} {{transaction.offer.time}}</td>
+                            {% if transaction.delivery_schedule %}
+                            <td><a class="btn btn-primary btn-sm" style="color: white;" data-toggle="modal" data-target="#delivery_{{transaction.id}}">
+                                        View Schedule</a></td>
+                            {% else %}
+                            <td>No Schedule</td>
+                            {% endif %}
+                            <td>                               
+                                {% if transaction.is_complete and not transaction.review %}
                                     <a class="btn btn-primary btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
                                         Rate {{transaction.supplier}}
                                     </a>
                                 {% else %}
-                               
-                                {% endif %}    
+                                {% endif %}
                             </td>
                             <div class="modal fade" id="review_{{transaction.id}}" role="dialog">
                                 <div class="modal-dialog">
@@ -110,6 +114,57 @@
                                     </div>
                                 </div>
                             </div>
+
+                    <!--view modal-->
+                    <div class="modal fade modal-sucess in" id="delivery_{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #009688; color: white">
+                            <span class="modal-title" id="exampleModalLabel">Delivery Schedule</span>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                        <lable><b> Delivery Date:</b></lable>
+                                        &nbsp;{{transaction.delivery_object.date }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                      <lable><b>Delivery Time:</b></lable>
+                                      &nbsp;{{transaction.delivery_object.delivery_time }}
+                                  </div>
+                                    </div>
+                                    <div class="row">
+  
+                                    <div class="form-group col-md-6">
+                                        <lable><b>Driver Name:</b></lable>
+                                        &nbsp;{{transaction.delivery_object.driver_name }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <lable><b>Phone Number:</b></lable>
+                                        &nbsp;{{transaction.delivery_object.phone_number }}
+                                    </div>
+                                    </div>
+                                    <div class="row">
+  
+                                        <div class="form-group col-md-6">
+                                            <lable><b>Id Number:</b></lable>
+                                            &nbsp;{{transaction.delivery_object.id_number }}
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <lable><b>Vehicle Reg:</b></lable>
+                                            &nbsp;{{transaction.delivery_object.vehicle_reg }}
+                                        </div>
+                                        </div>
+                            </div>
+                            
+                        </div>
+                        </div>
+                    </div>
+                    <!--End View Modal-->
                         {%endfor%}
                     </tbody>
                 </table>
