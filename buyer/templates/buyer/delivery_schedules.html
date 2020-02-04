@@ -44,29 +44,40 @@
                 <thead style="background-color: lightslategray; color:white;">
                     <tr>
                         <th style="color: white;">Date</th>
-                        <th style="color: white;">Transaction</th>
+                        <th style="color: white;">Time</th>
+                        <th style="color: white;">Supplier</th>
+                        <th style="color: white;">Fuel</th>
+                        <th style="color: white;">Quantity</th>
+                        <th style="color: white;">Equipment</th>
                         <th style="color: white;">Driver Name</th>
                         <th style="color: white;">Phone Number</th>
                         <th style="color: white;">Id Number</th>
-                        <th style="color: white;">Vehicle Registration</th>
-                        <th style="color: white;">Delivery Time</th>
-                        <th style="color: white;">Delivery Status</th>
+                        <th style="color: white;">Vehicle Reg</th>                        
+                        <th style="color: white;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for delivery in schedules %}
                     <tr>
                         <td>{{ delivery.date }}</td>
-                        <td>{{ delivery.transaction }}</td>
+                        <td>{{ delivery.delivery_time }}</td>
+                        <td>{{ delivery.transaction.supplier }}</td>
+                        <td>{{ delivery.transaction.offer.request.fuel_type }}</td>
+                        <td>{{ delivery.transaction.offer.quantity }}</td>
+                        <td>
+                            {% if delivery.transaction.pump_available %} Pump &nbsp; {% endif %}
+                            {% if delivery.transaction.meter_available %} Meter &nbsp; {% endif %}
+                            {% if delivery.transaction.dipping_stick_available %} Stick &nbsp; {% endif %}
+                            {% if not delivery.transaction.pump_available and not delivery.transaction.meter_available and not delivery.transaction.dipping_stick_available %} No Equipment {% endif %}
+                        </td>
                         <td>{{ delivery.driver_name }}</td>
                         <td>{{ delivery.phone_number }}</td>
                         <td>{{ delivery.id_number }}</td>
-                        <td>{{ delivery.vehicle_reg }}</td> 
-                        <td>{{ delivery.delivery_time }}</td>
+                        <td>{{ delivery.vehicle_reg }}</td>                        
                         {% if not delivery.confirmation_document %}
-                        <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#upload_{{delivery.id}}">Upload Confirmation</button></td>
+                        <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#upload_{{delivery.id}}">Confirm Delivery</button></td>
                         {% else %}
-                        <td>Delivered</td>
+                        <td>Received</td>
                         {% endif %}
                     </tr>
 

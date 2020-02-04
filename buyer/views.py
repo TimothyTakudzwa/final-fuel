@@ -249,7 +249,7 @@ def fuel_request(request):
     fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).all()
     for fuel_request in fuel_requests:
         if fuel_request.is_direct_deal:
-            depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+            depot = Subsidiaries.objects.filter(id=fuel_request.last_deal).first()
             company = Company.objects.filter(id=depot.company.id).first()
             fuel_request.request_company = company.name
             fuel_request.depot = depot.name
@@ -546,5 +546,7 @@ def delivery_schedule(request):
         schedule = DeliverySchedule.objects.get(id=delivery_id)
         schedule.confirmation_document = confirmation_document
         schedule.save()
+        messages.success(request, "confirmation successfully uploaded!!!")
         Notification.objects.create(user=request.user,action='DELIVERY', message=f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document", reference_id=schedule.transaction.supplier.id)
+        return redirect('delivery-schedule')
     return render(request, 'buyer/delivery_schedules.html', context=context)

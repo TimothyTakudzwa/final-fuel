@@ -647,3 +647,14 @@ def sord_update(request, user, quantity, action, fuel_type):
                 new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
                 new_sord_entry.save()
                 changing_quantity = 0
+
+def view_confirmation_doc(request,id):
+    delivery = DeliverySchedule.objects.filter(id=id).first()
+    if delivery:
+        filename = delivery.confirmation_document.name.split('/')[-1]
+        response = HttpResponse(delivery.confirmation_document, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        redirect('supplier:delivery_schedules')
+    return response
