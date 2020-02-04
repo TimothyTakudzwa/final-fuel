@@ -545,5 +545,7 @@ def delivery_schedule(request):
         schedule = DeliverySchedule.objects.get(id=delivery_id)
         schedule.confirmation_document = confirmation_document
         schedule.save()
+        messages.success(request, "confirmation successfully uploaded!!!")
         Notification.objects.create(user=request.user,action='DELIVERY', message=f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document", reference_id=schedule.transaction.supplier.id)
+        return redirect('delivery-schedule')
     return render(request, 'buyer/delivery_schedules.html', context=context)
