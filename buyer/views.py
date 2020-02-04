@@ -249,10 +249,6 @@ def fuel_request(request):
     fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).all()
     for fuel_request in fuel_requests:
         if fuel_request.is_direct_deal:
-            # sub = Subsidiaries.objects.filter(id=fuel_request.last_deal).first()
-            # print(sub)
-            # search_company = SuballocationFuelUpdate.objects.filter(subsidiary=sub).first()
-            # print(search_company)
             depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
             company = Company.objects.filter(id=depot.company.id).first()
             fuel_request.request_company = company.name
@@ -339,10 +335,7 @@ def dashboard(request):
                     'dipping_stick_required') == "on" else False
                 fuel_request.meter_required = True if request.POST.get('meter_required') == "on" else False
                 fuel_request.is_direct_deal = True
-                print('company id')
-                print(request.POST.get('company_id'))
                 fuel_request.last_deal = int(request.POST.get('company_id'))
-                print(fuel_request.meter_required)
                 fuel_request.save()
                 user = User.objects.filter(subsidiary_id=fuel_request.last_deal).first()
             messages.success(request, f'kindly note your request has been made ')

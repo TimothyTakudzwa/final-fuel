@@ -67,9 +67,13 @@
                             <td class="name truncate">{{transaction.offer.quantity}}</td>
                             <td class="name truncate">{{transaction.offer.price}}</td>
                             <td class="name truncate">{{transaction.offer.date}} {{transaction.offer.time}}</td>
+                            {% if transaction.delivery_schedule %}
                             <td><a class="btn btn-primary btn-sm" style="color: white;" data-toggle="modal" data-target="#delivery_{{transaction.id}}">
                                         View Schedule</a></td>
-                            <td>                                
+                            {% else %}
+                            <td>No Schedule</td>
+                            {% endif %}
+                            <td>                               
                                 {% if transaction.is_complete and not transaction.review %}
                                     <a class="btn btn-primary btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
                                         Rate {{transaction.supplier}}
@@ -125,34 +129,34 @@
                                     {% csrf_token %}
                                     <div class="row">
                                         <div class="form-group col-md-6">
-                                        <lable>Delivery Date:</lable>
-                                        {{transaction.delivery_object.date }}
+                                        <lable><b> Delivery Date:</b></lable>
+                                        &nbsp;{{transaction.delivery_object.date }}
                                     </div>
                                     <div class="form-group col-md-6">
-                                      <lable>Delivery Time</lable>
-                                      {{transaction.delivery_object.delivery_time }}
+                                      <lable><b>Delivery Time:</b></lable>
+                                      &nbsp;{{transaction.delivery_object.delivery_time }}
                                   </div>
                                     </div>
                                     <div class="row">
   
                                     <div class="form-group col-md-6">
-                                        <lable>Driver Name</lable>
-                                        {{transaction.delivery_object.driver_name }}
+                                        <lable><b>Driver Name:</b></lable>
+                                        &nbsp;{{transaction.delivery_object.driver_name }}
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <lable>Phone Number</lable>
-                                        {{transaction.delivery_object.phone_number }}
+                                        <lable><b>Phone Number:</b></lable>
+                                        &nbsp;{{transaction.delivery_object.phone_number }}
                                     </div>
                                     </div>
                                     <div class="row">
   
                                         <div class="form-group col-md-6">
-                                            <lable>Id Number</lable>
-                                            {{transaction.delivery_object.id_number }}
+                                            <lable><b>Id Number:</b></lable>
+                                            &nbsp;{{transaction.delivery_object.id_number }}
                                         </div>
                                         <div class="form-group col-md-6">
-                                            <lable>Vehicle Reg</lable>
-                                            {{transaction.delivery_object.vehicle_reg }}
+                                            <lable><b>Vehicle Reg:</b></lable>
+                                            &nbsp;{{transaction.delivery_object.vehicle_reg }}
                                         </div>
                                         </div>
                             </div>
