@@ -352,35 +352,41 @@ def password_reset(request):
 
 
 @api_view(['POST'])
-def comments(request):
+def update_comments(request):
     if request.method == 'POST':
-        action = request.POST.get('action')
-        username = request.POST.get('username')
         station = request.POST.get('station')
+        company = request.POST.get('company')
         comment = request.POST.get('comment')
+        username = request.POST.get('username')
+
+        permission = CommentsPermission.objects.filter().first()
+        if permission.allowed:
+            Comment.objects.create(
+                user=User.objects.get(username=username),
+                station=Subsidiaries.objects.get(name=station, company__name=company, is_depot=False),
+                comment=comment
+            )
+            return HttpResponse(200)
+        else:
+            return HttpResponse(404)
+
+
+@api_view(['POST'])
+def view_comments(request):
+    if request.method == 'POST':
+        station = request.POST.get('station')
+        company = request.POST.get('company')
 
         comments_data = []
 
-        if action == 'UPDATE':
-            permission = CommentsPermission.objects.filter().first()
-            if permission.allowed:
-                Comment.objects.create(
-                    user=User.objects.get(username=username),
-                    station=Subsidiaries.objects.get(name=station, is_depot=False),
-                    comment=comment
-                )
-                return HttpResponse(200)
-            else:
-                return HttpResponse(406)
+        all_comments = Comment.objects.filter(station__name=station, station__company__name=company)
+        if all_comments:
+            for comment in all_comments:
+                data = {
+                    'name': comment.user, 'station': comment.station,
+                    'comment': station.comment, 'date': date, 'time': comment.time
+                }
+                comments_data.append(data)
+            return JsonResponse(list(comments_data), status=200, safe=False)
         else:
-            all_comments = Comment.objects.filter()
-            if all_comments:
-                for comment in all_comments:
-                    data = {
-                        'name': comment.user, 'station': comment.station,
-                        'comment': station.comment, 'date': date, 'time': comment.time
-                    }
-                    comments_data.append(data)
-                return JsonResponse(list(comments_data), status=200, safe=False)
-            else:
-                return HttpResponse(status=404)
+            return HttpResponse(status=404)
