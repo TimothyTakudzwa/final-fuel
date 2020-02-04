@@ -42,8 +42,10 @@
             <table id="delivery_example" class="table table-striped table-bordered" style="width:100%">
                 <thead style="background-color: lightslategray; color:white;">
                     <tr>
+                        <td></td>
                         <th style="color: white;">Date</th>
-                        <th style="color: white;">Recepient</th>
+                        <th style="color: white;">Recipient</th>
+                        <th style="color: white;">Delivery Addr</th>
                         <th style="color: white;">Transporter Name</th>
                         <th style="color: white;">Phone No.</th>
                         <th style="color: white;">Id No.</th>
@@ -56,8 +58,10 @@
                 <tbody>
                     {% for delivery in schedules %}
                     <tr>
+                        <td></td>
                         <td>{{ delivery.date }}</td>
                         <td>{{ delivery.transaction.buyer.username|title }}</td>
+                        <td>{{ delivery.transaction.offer.request.delivery_address }}</td>
                         <td>{{ delivery.driver_name }}</td>
                         <td>{{ delivery.phone_number }}</td>
                         <td>{{ delivery.id_number }}</td>
@@ -125,7 +129,7 @@
 
                           <div class="modal-footer">
                             <div class="row pull-right" style="margin-right: 15px;">                
-                                <button class="btn btn-primary" type="submit">Edit Delivery</button>
+                                <button class="btn btn-primary" type="submit">Save Changes</button>
                             </div>
                         </div>
                           </form>
