@@ -658,3 +658,7 @@ def view_confirmation_doc(request,id):
         messages.warning(request, 'Document Not Found')
         redirect('supplier:delivery_schedules')
     return response
+
+
+def view_delivery_schedule(request,id):
+    pass

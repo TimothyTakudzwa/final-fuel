@@ -24,6 +24,8 @@ urlpatterns = [
     path('delivery_schedules/', views.delivery_schedules, name="delivery_schedules"),
     path('create_delivery_schedule/', views.create_delivery_schedule, name="create_delivery_schedule"),
     path('view_confirmation_doc/<int:id>', views.view_confirmation_doc, name="view_confirmation_doc"),
+    path('view_delivery_schedule/<int:id>', views.view_delivery_schedule, name="view_delivery_schedule"),
+
 
 
 
