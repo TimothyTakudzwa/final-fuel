@@ -69,7 +69,7 @@
                         <td>{{ delivery.delivery_time }}</td>  
                         <td>                            
                         {% if delivery.confirmation_document %}
-                        <button class="btn btn-info btn-sm" data-toggle="m" data-target="">View Confirmation Document </button>
+                        <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#confirmation_doc{{delivery.id}}">View Confirmation </button>
                         {% else %}
                         Pending
                         {%endif%}
@@ -135,7 +135,22 @@
                           </form>
                           </div>
                           </div>
+                    </div>
+                    <div class="modal fade modal-success in" id="confirmation_doc{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                          aria-hidden="true">
+                          <div class="modal-dialog modal-notice">
+                          <div class="modal-content">
+                          <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                              <span class="modal-title">Confirmation Document</span>
                           </div>
+                          <div class="modal-body" style="margin-bottom: 150px;">
+                            <a class="btn btn-purple" href="{% url 'supplier:view_confirmation_doc' delivery.id %}">View Doc</a>
+                            {{delivery.display_text_file}}
+                          </div>
+                          </div>
+                    </div>
+
 
                     {%endfor%}
                 </tbody>
