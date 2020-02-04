@@ -381,8 +381,9 @@ def dashboard(request):
                     messages.error(request, response_message)
                 else:
                     offer = Offer.objects.filter(id=offer_id).first()
+                    sub = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
                     messages.info(request, "Match Found")
-                    return render(request, 'buyer/dashboard.html', {'form': form, 'updates': updates, 'offer': offer})
+                    return render(request, 'buyer/dashboard.html', {'form': form, 'updates': updates, 'offer': offer, 'sub': sub})
     else:
         form = FuelRequestForm
     return render(request, 'buyer/dashboard.html', {'form': form, 'updates': updates})
