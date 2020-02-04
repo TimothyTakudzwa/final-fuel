@@ -249,7 +249,7 @@ def fuel_request(request):
     fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).all()
     for fuel_request in fuel_requests:
         if fuel_request.is_direct_deal:
-            depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+            depot = Subsidiaries.objects.filter(id=fuel_request.last_deal).first()
             company = Company.objects.filter(id=depot.company.id).first()
             fuel_request.request_company = company.name
             fuel_request.depot = depot.name
