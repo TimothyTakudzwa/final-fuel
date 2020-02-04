@@ -202,7 +202,6 @@ def view_station_updates(request):
         else:
             return HttpResponse(status=403)
 
-
 @csrf_exempt
 @api_view(['POST'])
 def view_updates_user(request):
@@ -383,7 +382,7 @@ def view_comments(request):
         if all_comments:
             for comment in all_comments:
                 data = {
-                    'name': comment.user, 'comment': station.comment, 'date': date, 'time': comment.time
+                    'name': comment.user.username, 'comment': comment.comment, 'date': comment.date, 'time': comment.time
                 }
                 comments_data.append(data)
             return JsonResponse(list(comments_data), status=200, safe=False)
