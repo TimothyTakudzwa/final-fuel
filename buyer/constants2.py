@@ -106,10 +106,12 @@ TYPE_CHOICES = (
     ('BUYER', 'Buyer'),
     ('SUPPLIER', 'Supplier'),
     ('SS_SUPPLIER', 'Service Station Rep'),
+    ('Transporter', 'Transporter'),
+
     
 )
 
-COMPANY_CHOICES = (('CORPORATE', 'CORPORATE'), ('SUPPLIER', 'SUPPLIER'))
+COMPANY_CHOICES = (('CORPORATE', 'CORPORATE'), ('SUPPLIER', 'SUPPLIER'), ('TRANSPORTER','TRANSPORTER'))
 
 SUPPLIER_CHOICES = (
     ('Admin','ADMIN'),

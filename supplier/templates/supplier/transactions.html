@@ -82,10 +82,15 @@
                                     {% else %}
                                     <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button></td>
                                     {% endif %}
-                                   
-                                {% else %}
-                                    <td>Self Collected</td>    
-                                {% endif %}   
+                                {% endif %}
+                                {% if not transaction.offer.request.delivery_method == "DELIVERY" or transaction.delivery_method == "delivery" %}
+                                    {% if transaction.delivery_sched %}
+                                    <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{transaction.id}}">View Schedule</button></td>
+                                    {% else %}
+                                    <td>Awaiting Schedule</td>
+                                    {% endif %}
+                                {% endif %}     
+                                 
                                 {% if transaction.is_complete %}
                                 <td><a class="btn btn-primary btn-sm" href="{% url 'view_invoice' transaction.id %}" >Download</a></td>
                                 {% else %}
@@ -133,7 +138,8 @@
                                             <p class="col-md-6">Status: </p>
                                             {% if transaction.delivery_sched.confirmation_document %}
                                             <p class="col-md-6"> 
-                                                <a href="">View Confirmation Doc</a>
+                        <a class="btn btn-info btn-sm" href="{% url 'supplier:view_confirmation_doc' transaction.delivery_sched.id %}" >View Confirmation </a>
+                                                
                                             </p>       
                                             {%else %}
                                             <p class="col-md-6">Status: Pending </p>    
