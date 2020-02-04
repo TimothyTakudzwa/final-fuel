@@ -249,10 +249,6 @@ def fuel_request(request):
     fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).all()
     for fuel_request in fuel_requests:
         if fuel_request.is_direct_deal:
-            # sub = Subsidiaries.objects.filter(id=fuel_request.last_deal).first()
-            # print(sub)
-            # search_company = SuballocationFuelUpdate.objects.filter(subsidiary=sub).first()
-            # print(search_company)
             depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
             company = Company.objects.filter(id=depot.company.id).first()
             fuel_request.request_company = company.name
@@ -339,10 +335,7 @@ def dashboard(request):
                     'dipping_stick_required') == "on" else False
                 fuel_request.meter_required = True if request.POST.get('meter_required') == "on" else False
                 fuel_request.is_direct_deal = True
-                print('company id')
-                print(request.POST.get('company_id'))
                 fuel_request.last_deal = int(request.POST.get('company_id'))
-                print(fuel_request.meter_required)
                 fuel_request.save()
                 user = User.objects.filter(subsidiary_id=fuel_request.last_deal).first()
             messages.success(request, f'kindly note your request has been made ')
@@ -388,8 +381,9 @@ def dashboard(request):
                     messages.error(request, response_message)
                 else:
                     offer = Offer.objects.filter(id=offer_id).first()
+                    sub = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
                     messages.info(request, "Match Found")
-                    return render(request, 'buyer/dashboard.html', {'form': form, 'updates': updates, 'offer': offer})
+                    return render(request, 'buyer/dashboard.html', {'form': form, 'updates': updates, 'offer': offer, 'sub': sub})
     else:
         form = FuelRequestForm
     return render(request, 'buyer/dashboard.html', {'form': form, 'updates': updates})
@@ -552,4 +546,5 @@ def delivery_schedule(request):
         schedule = DeliverySchedule.objects.get(id=delivery_id)
         schedule.confirmation_document = confirmation_document
         schedule.save()
+        Notification.objects.create(user=request.user,action='DELIVERY', message=f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document", reference_id=schedule.transaction.supplier.id)
     return render(request, 'buyer/delivery_schedules.html', context=context)
