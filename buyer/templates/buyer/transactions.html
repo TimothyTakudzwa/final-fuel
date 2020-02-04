@@ -52,6 +52,7 @@
                             <th>Fuel Type</th>
                             <th>Fuel Requested</th>
                             <th>Fuel Offered</th>
+                            <th>Price</th>
                             <th>Requested On</th>
                             <th>Schedule</th>
                             <th></th>
@@ -61,17 +62,20 @@
                         {% for transaction in transactions %}
                         <tr>
                             <td class="name truncate">{{transaction.offer.supplier.company.name}}</td>
-                            <td class="name truncate">{{transaction.offer.supplier.company}}</td>
-                            <td class="name truncate">{{transaction.offer.supplier.company.address}}</td>
+                            <td class="name truncate">{{transaction.depot}}</td>
+                            <td class="name truncate">{{transaction.address}}</td>
                             <td class="name truncate">{{transaction.offer.request.fuel_type}}</td>
+                            <td class="name truncate">{{transaction.offer.quantity}}</td>
                             <td class="name truncate">{{transaction.offer.quantity}}</td>
                             <td class="name truncate">{{transaction.offer.price}}</td>
                             <td class="name truncate">{{transaction.offer.date}} {{transaction.offer.time}}</td>
-                            {% if transaction.delivery_schedule %}
+                            {% if transaction.delivery_schedule and not transaction.delivery_object.confirmation_document %}
                             <td><a class="btn btn-primary btn-sm" style="color: white;" data-toggle="modal" data-target="#delivery_{{transaction.id}}">
                                         View Schedule</a></td>
+                            {% elif transaction.delivery_object.confirmation_document %}
+                            <td>Received</td>
                             {% else %}
-                            <td>No Schedule</td>
+                            <td>Pending</td>
                             {% endif %}
                             <td>                               
                                 {% if transaction.is_complete and not transaction.review %}

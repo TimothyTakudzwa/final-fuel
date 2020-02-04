@@ -23,6 +23,9 @@ urlpatterns = [
     path('edit_delivery_schedule/', views.edit_delivery_schedule, name="edit_delivery_schedule"),
     path('delivery_schedules/', views.delivery_schedules, name="delivery_schedules"),
     path('create_delivery_schedule/', views.create_delivery_schedule, name="create_delivery_schedule"),
+    path('view_confirmation_doc/<int:id>', views.view_confirmation_doc, name="view_confirmation_doc"),
+
+
 
 
 

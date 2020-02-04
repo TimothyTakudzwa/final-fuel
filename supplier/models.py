@@ -71,6 +71,7 @@ class SubsidiaryFuelUpdate(models.Model):
     petrol_price = models.FloatField(default=0.00)
     diesel_price = models.FloatField(default=0.00)
     status = models.CharField(max_length=1000)
+    queue_length = models.CharField(max_length=150, default='Short')
     limit = models.FloatField()
 
     def __str__(self):
@@ -181,6 +182,10 @@ class DeliverySchedule(models.Model):
     vehicle_reg = models.CharField(max_length=150, blank=True, null=True)
     delivery_time = models.CharField(max_length=150, blank=True, null=True)
     confirmation_document = models.FileField(null=True, upload_to='documents')
+
+    def display_text_file(self):
+        with open(self.confirmation_document.path) as fp:
+            return fp.read().replace('\n', '<br>')
 
 class SordSubsidiaryAuditTrail(models.Model):
     from company.models import Company
