@@ -71,6 +71,7 @@ class SubsidiaryFuelUpdate(models.Model):
     petrol_price = models.FloatField(default=0.00)
     diesel_price = models.FloatField(default=0.00)
     status = models.CharField(max_length=1000)
+    queue_length = models.CharField(max_length=150, default='Short')
     limit = models.FloatField()
 
     def __str__(self):

@@ -32,7 +32,7 @@ Kindly Respond With The Word Rating and Your Score as below
 '''
 
 buyer_menu='''
-Hello {0}, What would you like to do today\n\n
+Hello {0}, What would you like to do today\n
 
 1. Make a Fuel Request\n
 2. Follow up on Fuel Request\n
@@ -49,7 +49,7 @@ Hello {0}, What would you like to do today\n
 '''
 
 ss_supplier_menu='''
-Hello {0}, What would you like to do today\n\n
+Hello {0}, What would you like to do today\n
 
 1. Update Petrol Quantity\n
 2. Update Diesel Quantity\n
