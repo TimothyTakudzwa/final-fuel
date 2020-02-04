@@ -27,4 +27,4 @@ class Comment(models.Model):
         return f'{str(self.user.username)} - {str(self.station.name)}'
 
     class Meta:
-        ordering = ['date', 'time']
+        ordering = ['-date', '-time']
