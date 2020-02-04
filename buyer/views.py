@@ -547,9 +547,9 @@ def delivery_schedule(request):
     }
     if request.method == 'POST':
         confirmation_document = request.FILES.get('confirmation_document')
-        delivery_id = request.POST.get('id')
+        delivery_id = request.POST.get('delivery_id')
 
-        schedule = DeliverySchedule.objects.get(id=id)
+        schedule = DeliverySchedule.objects.get(id=delivery_id)
         schedule.confirmation_document = confirmation_document
         schedule.save()
     return render(request, 'buyer/delivery_schedules.html', context=context)
