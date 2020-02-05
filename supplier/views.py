@@ -105,12 +105,12 @@ def change_password(request):
 
 @login_required()
 def account(request):
-    subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-    if subsidiary is not None:
-        subsidiary_name = subsidiary.name
-    else:
-        subsidiary_name = "Not Set"
-    return render(request, 'supplier/user_profile.html', {'subsidiary_name':subsidiary_name})
+    sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+    # if subsidiary is not None:
+    #     subsidiary_name = subsidiary.name
+    # else:
+    #     subsidiary_name = "Not Set"
+    return render(request, 'supplier/user_profile.html', {'sub':sub})
 
 
 @login_required()
