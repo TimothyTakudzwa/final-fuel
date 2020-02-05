@@ -250,9 +250,12 @@ def fuel_request(request):
     for fuel_request in fuel_requests:
         if fuel_request.is_direct_deal:
             depot = Subsidiaries.objects.filter(id=fuel_request.last_deal).first()
-            company = Company.objects.filter(id=depot.company.id).first()
-            fuel_request.request_company = company.name
-            fuel_request.depot = depot.name
+            if depot is not None:
+                company = Company.objects.filter(id=depot.company.id).first()
+                fuel_request.request_company = company.name
+                fuel_request.depot = depot.name
+            else:
+                pass
         else:
             fuel_request.request_company = ''
     for fuel_request in fuel_requests:
@@ -419,7 +422,7 @@ def accept_offer(request, id):
     offer.save()
 
     message = f'{offer.request.name.first_name} {offer.request.name.last_name} accepted your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
-    Notification.objects.create(message=message, user=offer.supplier, reference_id=offer.id, action="ofer_accepted")
+    Notification.objects.create(message=message, user=offer.supplier, reference_id=offer.id, action="offer_accepted")
 
     messages.warning(request, "Your request has been saved successfully")
     return redirect("buyer-transactions")

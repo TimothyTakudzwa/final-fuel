@@ -378,7 +378,7 @@ def view_comments(request):
 
         comments_data = []
 
-        all_comments = Comment.objects.filter(station__name=station, station__company__name=company)
+        all_comments = Comment.objects.filter(station__name=station, station__company__name=company, date=today)
         if all_comments:
             for comment in all_comments:
                 data = {
