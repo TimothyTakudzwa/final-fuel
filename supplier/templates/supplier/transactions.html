@@ -173,7 +173,7 @@
                                                 <input type="text" name="driver_name" class="form-control"  required/>
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <label>Phone Number</label>
+                                                <label>Driver's Phone Number</label>
                                                 <input type="telephone" name="phone_number" class="form-control"  value="{{ supplier.phone_number}}" required/>
                                             </div>
                                             </div>
@@ -190,12 +190,8 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="form-group col-md-6">
-                                                        <label>Transporter Agent</label>
-                                                        <select class="form-control" id="sel1" name="trans">
-                                                            {% for transporter in transporters%}
-                                                            <option> {{ transporter.name }}</option>
-                                                            {% endfor %}
-                                                        </select>
+                                                        <label>Transporter Company</label>
+                                                        <input type="text" class="form-control" name="transport_company" class="transport_company" required/>
                                                     </div>
                                                 </div>    
 
