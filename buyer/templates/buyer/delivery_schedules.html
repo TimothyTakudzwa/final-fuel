@@ -43,6 +43,7 @@
             <table id="delivery" class="table table-striped table-bordered" style="width:100%">
                 <thead style="background-color: lightslategray; color:white;">
                     <tr>
+                        <th style="color: white;">Supplier</th>
                         <th style="color: white;">Delivery Date</th>
                         <th style="color: white;">Delivery Time</th>
                         <th style="color: white;">Fuel</th>
@@ -56,6 +57,7 @@
                 <tbody>
                     {% for delivery in schedules %}
                     <tr>
+                        <td>{{ delivery.subsidiary }}</td>
                         <td>{{ delivery.date }}</td>
                         <td>{{ delivery.delivery_time }}</td>
                         <td>{{ delivery.transaction.offer.request.fuel_type }}</td>
@@ -114,7 +116,7 @@
                                         <p class="col-md-6">{{delivery.transaction.offer.request.delivery_address}}</p>
                                     </div>
                                     <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Supplier: </p>
+                                        <p class="col-md-6" style="font-weight: bold;">Supplier Name: </p>
                                         <p class="col-md-6">{{delivery.transaction.supplier.first_name|title}} {{delivery.transaction.supplier.last_name|title}}</p>
                                     </div>
                                     <div class="row" style="padding: 10px;">
