@@ -126,7 +126,7 @@ def update_station(request):
         # check for fuel station
         status = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id).first()
         # station exists
-        if status.exists():
+        if status:
             update = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id).first()
 
             previous_petrol = update.petrol_quantity
@@ -188,7 +188,7 @@ def view_station_updates(request):
         # check if user has update object
         status = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id).first()
         # if update object exists
-        if status.exists():
+        if status:
             updates = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id).first()
             # fetching data
             for update in updates:
