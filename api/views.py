@@ -189,7 +189,7 @@ def view_station_updates(request):
         status = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id).first()
         # if update object exists
         if status:
-            updates = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id).first()
+            updates = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id)
             # fetching data
             for update in updates:
                 company = Subsidiaries.objects.get(id=update.relationship_id)
