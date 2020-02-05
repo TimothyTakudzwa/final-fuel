@@ -43,13 +43,12 @@
                 <thead style="background-color: lightslategray; color:white;">
                     <tr>
                         <td></td>
-                        <th style="color: white;">Date</th>
                         <th style="color: white;">Recipient</th>
+                        <th style="color: white;">Address</th>
                         <th style="color: white;">Product</th>
-                        <th style="color: white;">Transporter Company</th>
-                        <th style="color: white;">Phone No.</th>
-                        <th style="color: white;">Del. Time</th>
-                        <th style="color: white;">Del. Status</th>
+                        <th style="color: white;">Quantity</th>
+                        <th style="color: white;">Transporter</th>
+                        <th style="color: white;">Status</th>
                         <th style="color: white;">Action</th>
                         <th style="color: white;">Add. Information</th>  
                     </tr>
@@ -58,12 +57,12 @@
                     {% for delivery in schedules %}
                     <tr>
                         <td></td>
-                        <td>{{ delivery.date }}</td>
                         <td>{{ delivery.transaction.buyer.username|title }}</td>
+                        <td>{{delivery.transaction.offer.request.delivery_address}}</td>
                         <td>{{ delivery.transaction.offer.request.fuel_type}}</td>
+                        <td>{{delivery.transaction.offer.request.amount}} </td>
                         <td>{{ delivery.transport_agent.company.name}}</td>
-                        <td>{{ delivery.phone_number }}</td>
-                        <td>{{ delivery.delivery_time }}</td>  
+                       
                         <td>                            
                         {% if delivery.confirmation_document %}
                         <!-- <a class="btn btn-primary btn-sm" href="{% url 'supplier:view_confirmation_doc' delivery.id %}" >View Confirmation </a> -->
@@ -149,12 +148,16 @@
                             </div>
                                 <div class="modal-body" style="padding: 30px;">
                                     <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Delivery Address: </p>
-                                        <p class="col-md-6">{{delivery.transaction.offer.request.delivery_address}}</p>
+                                        <p class="col-md-6" style="font-weight: bold;">Delivery Date/Time: </p>
+                                        <p class="col-md-6">{{ delivery.date }} | {{ delivery.delivery_time }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Quantity: </p>
+                                        <p class="col-md-6">{{delivery.transaction.offer.request.amount}} (Litres)</p>
                                     </div>
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Contact Person: </p>
-                                        <p class="col-md-6">{{delivery.transport_agent.first_name|title}} {{delivery.transport_agent.last_name|title}}</p>
+                                        <p class="col-md-6">{{delivery.transaction.buyer.name|title}}</p>
                                     </div>    
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Driver Name: </p>
@@ -241,7 +244,7 @@
                                     <!--end of confirmation docx  -->
                                     <!-- Support Documents -->
                                     <div class="col-md-6">
-                                    <h4>Our Confirmation</h4>
+                                    <h4>Supplier Confirmation</h4>
                                     {% if not delivery.supplier_document %}
                                     <p class="col-md-12" style="font-weight: 100; margin-bottom:30px;">Upload Confirmation Document: </p>
                                     <div style="padding-left: 15px;">
@@ -262,7 +265,7 @@
 
                                     <div class="btn-group">
                                     <a class="btn btn-info btn-sm pull-left" href="{% url 'supplier:view_supplier_doc' delivery.id %}" >View Document </a>
-                                    <a class="btn btn-info btn-danger btn-sm" href="{% url 'supplier:del_supplier_doc' delivery.id %}" >Remove Document </a>
+                                    <a class="btn btn-info btn-purple btn-sm" href="{% url 'supplier:del_supplier_doc' delivery.id %}" >Upload Another </a>
 
 
                                     </div> 

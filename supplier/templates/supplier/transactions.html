@@ -76,21 +76,11 @@
                                 <td>{{ transaction.offer.quantity |intcomma}}</td>
                                 <td>{{ transaction.offer.price }}</td>
                                 <td>{{ transaction.offer.quantity| mul:transaction.offer.price |intcomma}}</td>
-                                {% if transaction.offer.request.delivery_method == "DELIVERY" or transaction.delivery_method == "delivery" %}
-                                    {% if transaction.delivery_sched %}
-                                    <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{transaction.id}}">View Schedule</button></td>
-                                    {% else %}
-                                    <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button></td>
-                                    {% endif %}
+                                {% if transaction.delivery_sched %}
+                                <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{transaction.id}}">View Schedule</button></td>
+                                {% else %}
+                                <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button></td>
                                 {% endif %}
-                                {% if not transaction.offer.request.delivery_method == "DELIVERY" or transaction.delivery_method == "delivery" %}
-                                    {% if transaction.delivery_sched %}
-                                    <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{transaction.id}}">View Schedule</button></td>
-                                    {% else %}
-                                    <td>Awaiting Schedule</td>
-                                    {% endif %}
-                                {% endif %}     
-                                 
                                 {% if transaction.is_complete %}
                                 <td><a class="btn btn-primary btn-sm" href="{% url 'view_invoice' transaction.id %}" >Download</a></td>
                                 {% else %}
@@ -198,6 +188,17 @@
                                                     <input type="text" name="vehicle_reg" class="form-control"  value="{{ supplier.phone_number}}" required/>
                                                 </div>
                                                 </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <label>Transporter Agent</label>
+                                                        <select class="form-control" id="sel1" name="trans">
+                                                            {% for transporter in transporters%}
+                                                            <option> {{ transporter.name }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>    
+
 
                                                 <div class="row">
                                                     <input type="hidden" name="transaction" class="form-control" value={{transaction.id}}  required/>

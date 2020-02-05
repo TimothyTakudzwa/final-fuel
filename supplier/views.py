@@ -349,6 +349,7 @@ def edit_offer(request, id):
 
 @login_required
 def transaction(request):
+    transporters = Company.objects.filter(company_type="TRANSPORTER").all()
     transactions = []
     for tran in Transaction.objects.filter(supplier__company=request.user.company).all():
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
@@ -356,19 +357,24 @@ def transaction(request):
             tran.delivery_sched = delivery_sched
         transactions.append(tran)    
     context= { 
-       'transactions' : transactions
+       'transactions' : transactions,
+       'transporters' : transporters
         }
     return render(request, 'supplier/transactions.html',context=context)
 
 @login_required
 def create_delivery_schedule(request):
     if request.method == 'POST':
+        transporter = Company.objects.filter(name=request.POST['trans']).first()
+        transporter = User.objects.filter(company=transporter).first()
+        print(request.POST['trans'])
         DeliverySchedule.objects.create(
             date=request.POST['delivery_date'],
             transaction = Transaction.objects.filter(id=int(request.POST['transaction'])).first(),
             driver_name = request.POST['driver_name'],
             phone_number = request.POST['phone_number'],
             id_number = request.POST['id_num'],
+            transport_agent = transporter,
             vehicle_reg = request.POST['vehicle_reg'],
             delivery_time = request.POST['delivery_time']
         )
