@@ -30,7 +30,7 @@ def login(request):
         status = authenticate(username=username, password=password)
         if status:
             # auth success
-            user = User.objects.get(usename=username)
+            user = User.objects.get(username=username)
             # service station admin and must reset password
             if user.user_type == 'SS_SUPPLIER' and user.password_reset:
                 data = {'username': user.username}
@@ -193,7 +193,7 @@ def view_station_updates(request):
                     'diesel_price': update.diesel_price, 'petrol_quantity': update.petrol_quantity,
                     'petrol_price': update.petrol_price, 'cash': update.cash, 'ecocash': update.ecocash,
                     'swipe': update.swipe, 'queue': update.queue_length, 'limit': update.limit,
-                    'status': update.status, 'image': image
+                    'status': update.status, 'image': image, 'company': company.company.name
                 }
                 # add to dictionary
                 data.append(station_update)
