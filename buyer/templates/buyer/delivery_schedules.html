@@ -48,7 +48,8 @@
                         <th style="color: white;">Fuel</th>
                         <th style="color: white;">Quantity</th>
                         <th style="color: white;">Equipment</th>
-                        <th style="color: white;">Info</th>                       
+                        <th style="color: white;">Transport Agent</th> 
+                        <th style="color: white;">Transport Info</th>                       
                         <th style="color: white;">Action</th>
                     </tr>
                 </thead>
@@ -65,7 +66,8 @@
                             {% if delivery.transaction.offer.dipping_stick_available %} Stick &nbsp; {% endif %}
                             {% if not delivery.transaction.offer.pump_available and not delivery.transaction.offer.meter_available and not delivery.transaction.offer.dipping_stick_available %} No Equipment {% endif %}
                         </td>
-                        <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#additonal_information{{delivery.id}}">Info</button></td>                      
+                        <td>{{delivery.transport_company}}</td>
+                        <td><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#additonal_information{{delivery.id}}">View Information</button></td>                      
                         {% if not delivery.confirmation_document %}
                         <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#upload_{{delivery.id}}">Confirm Delivery</button></td>
                         {% else %}
@@ -89,7 +91,7 @@
                                       {% csrf_token %}
                                       <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
                                       {{form|crispy}}
-                                      <input class="btn btn-info" type="submit" value="Submit">
+                                    <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Confirm Delivery"></p>
                                   </form>
                               </div>
                           </div>
@@ -146,7 +148,7 @@
                                                 {% csrf_token %}
                                                 <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
                                                 {{form|crispy}}
-                                                <input class="btn btn-info" type="submit" value="Submit">
+                                                <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Confirm Delivery"></p>
                                             </form>    
                                         {% endif %} 
                                     </div>           
