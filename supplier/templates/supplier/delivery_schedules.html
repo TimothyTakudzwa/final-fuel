@@ -61,7 +61,7 @@
                         <td>{{delivery.transaction.offer.request.delivery_address}}</td>
                         <td>{{ delivery.transaction.offer.request.fuel_type}}</td>
                         <td>{{delivery.transaction.offer.request.amount}} </td>
-                        <td>{{ delivery.transport_agent.company.name}}</td>
+                        <td>{{ delivery.transport_company}}</td>
                        
                         <td>                            
                         {% if delivery.confirmation_document %}
@@ -94,14 +94,18 @@
                               <div class=" row col-sm-12" style="margin-bottom: 5px;">
                               
 
-                              <div class="col-sm-6" style="margin-bottom: 10px;">
+                              <div class="col-sm-4" style="margin-bottom: 10px;">
                                   <label style="margin-bottom: 5px;">Transporter Name</label>
                                   <input type="text" name="driver_name" class="form-control" value="{{delivery.driver_name}}" />
                               </div>
-                              <div class="col-sm-6" style="margin-bottom: 10px;">
+                              <div class="col-sm-4" style="margin-bottom: 10px;">
                                   <label style="margin-bottom: 5px;">Phone Number</label>
                                   <input type="text" name="phone_number" class="form-control" value="{{delivery.phone_number}}"/>
                               </div>
+                              <div class="col-sm-4" style="margin-bottom: 10px;">
+                                <label style="margin-bottom: 5px;">Tran. Company</label>
+                                <input type="text" name="transport_company" class="form-control" value="{{delivery.transport_company}}"/>
+                            </div>
                               </div>
                               <div class=" row col-sm-12">
                                 <div class="col-sm-4" style="margin-bottom: 10px;">
@@ -157,14 +161,18 @@
                                     </div>
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Contact Person: </p>
-                                        <p class="col-md-6">{{delivery.transaction.buyer.name|title}}</p>
-                                    </div>    
+                                        <p class="col-md-6">{{delivery.transaction.buyer.first_name|title}} {{delivery.transaction.buyer.last_name|title}} </p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Contact Phone: </p>
+                                        <p class="col-md-6">{{delivery.transaction.buyer.phone_number}}</p>
+                                    </div>       
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Driver Name: </p>
                                         <p class="col-md-6">{{delivery.driver_name}}</p>
                                     </div>   
                                     <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Phone Number: </p>
+                                        <p class="col-md-6" style="font-weight: bold;"> Driver Phone Number: </p>
                                         <p class="col-md-6">{{delivery.phone_number}}</p>
                                     </div>   
                                     <div class="row" style="padding: 10px;">

@@ -40,6 +40,7 @@ def edit_delivery_schedule(request):
         delivery_schedule.id_number = request.POST['id_number']
         delivery_schedule.vehicle_reg = request.POST['vehicle_reg']
         delivery_schedule.delivery_time = request.POST['delivery_time']
+        delivery_schedule.transport_company = request.POST['transport_company']       
         delivery_schedule.save()
         messages.success(request, "Schedule Successfully Updated")
         return redirect('supplier:delivery_schedules')
@@ -365,16 +366,13 @@ def transaction(request):
 @login_required
 def create_delivery_schedule(request):
     if request.method == 'POST':
-        transporter = Company.objects.filter(name=request.POST['trans']).first()
-        transporter = User.objects.filter(company=transporter).first()
-        print(request.POST['trans'])
         DeliverySchedule.objects.create(
             date=request.POST['delivery_date'],
             transaction = Transaction.objects.filter(id=int(request.POST['transaction'])).first(),
             driver_name = request.POST['driver_name'],
             phone_number = request.POST['phone_number'],
             id_number = request.POST['id_num'],
-            transport_agent = transporter,
+            transport_company = request.POST['transport_company'],
             vehicle_reg = request.POST['vehicle_reg'],
             delivery_time = request.POST['delivery_time']
         )
