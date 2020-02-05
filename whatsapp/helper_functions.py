@@ -9,8 +9,7 @@ from buyer.models import FuelRequest
 from .constants import *
 from buyer.views import token_is_send
 from users.views import message_is_sent
-from supplier.models import Offer, Transaction, FuelAllocation, Subsidiaries, UserReview, SubsidiaryFuelUpdate, \
-    SuballocationFuelUpdate
+from supplier.models import Offer, Transaction, FuelAllocation, Subsidiaries, UserReview, SubsidiaryFuelUpdate, SuballocationFuelUpdate, SordSubsidiaryAuditTrail
 # from buyer.models import User, FuelRequest
 # from company.models import FuelUpdate
 from django.db.models import Q
@@ -702,10 +701,12 @@ def update_fuel(user, message):
         #try:
         petrol_update = float(message)
         if petrol_update < petrol_available:
+            fuel_reduction = fuel_update.petrol_quantity - petrol_update
             fuel_update.petrol_quantity = petrol_update
             fuel_update.save()
             user.position = 4
             user.save()
+            sord_update(user, fuel_reduction, 'Fuel Update', 'Petrol')
             response_message = "How much diesel do you have in stock?"
         else:
             response_message = f"You can only reduce your stock. To increase it contact you admin to update your fuel allocations! You currently have *{diesel_availabe}* litre, please enter available stock if it is less."
@@ -719,10 +720,12 @@ def update_fuel(user, message):
         diesel_update = float(message)
         diesel_available = fuel_update.diesel_quantity
         if diesel_update < diesel_available:
+            fuel_reduction = fuel_update.diesel_quantity - float(message)
             fuel_update.diesel_quantity = float(message)
             fuel_update.save()
             user.position = 6
             user.save()
+            sord_update(user, fuel_reduction, 'Fuel Update', 'Diesel')
             response_message = "You have successfully updated you fuel stocks. Send *menu* to go back to main menu"
         else:
             response_message = f"You can only reduce your stock. To increase it contact you admin to update your fuel allocations! You currently have *{diesel_available}* litres, update if you have less stock."
@@ -949,10 +952,12 @@ def update_petrol(user, message):
             user.position = 40
             user.save()
         else:
+            fuel_reduction = update.petrol_quantity - float(message)
             update.petrol_quantity = message
             user.position = 41
             user.save()
             update.save()
+            sord_update(user, fuel_reduction, 'Fuel Update', 'Petrol')
             response_message = 'What is the queue size?\n\n1. Short\n2. Medium Long\n3. Long'
     elif user.position == 41:
         sub = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
@@ -1033,10 +1038,12 @@ def update_diesel(user, message):
             user.position = 50
             user.save()
         else:
+            fuel_reduction = update.diesel_quantity - float(message)
             update.diesel_quantity = message
             user.position = 51
             user.save()
             update.save()
+            sord_update(user, fuel_reduction, 'Fuel Update', 'Diesel')
             response_message = 'What is the queue size?\n\n1. Short\n2. Medium Long\n3. Long'
     elif user.position == 51:
         sub = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
@@ -1224,3 +1231,46 @@ def station_updates(user, message):
 
 def fuel_finder():
     return 
+
+def sord_update(user, quantity, action, fuel_type):
+    end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = user.subsidiary_id, fuel_type=fuel_type, end_quantity = 0).all()
+    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = user.subsidiary_id, fuel_type=fuel_type).all()
+    sord_quantity_zero = []
+    sord_quantity = []
+    for sord in end_quantity_zero:
+        sord_quantity_zero.append(sord.sord_no)
+    for x in initial_sord:
+        if x.sord_no in sord_quantity_zero:
+            pass
+        else:
+            sord_quantity.append(x)
+    sord_quantity.sort(key = attrgetter('last_updated'), reverse = True)
+    changing_quantity = quantity
+    for entry in sord_quantity:
+        if changing_quantity != 0:
+            if entry.end_quantity < changing_quantity:
+                new_sord_entry = SordSubsidiaryAuditTrail()
+                new_sord_entry.sord_no = entry.sord_no
+                new_sord_entry.action_no = entry.action_no + 1
+                new_sord_entry.action = action
+                new_sord_entry.initial_quantity = entry.end_quantity
+                new_sord_entry.quantity_sold = entry.end_quantity
+                new_sord_entry.end_quantity = 0
+                new_sord_entry.received_by = user
+                new_sord_entry.fuel_type = entry.fuel_type
+                new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
+                new_sord_entry.save()
+                changing_quantity = changing_quantity - entry.end_quantity
+            else:
+                new_sord_entry = SordSubsidiaryAuditTrail()
+                new_sord_entry.sord_no = entry.sord_no
+                new_sord_entry.action_no = entry.action_no + 1
+                new_sord_entry.action = action
+                new_sord_entry.initial_quantity = entry.end_quantity
+                new_sord_entry.quantity_sold = changing_quantity
+                new_sord_entry.end_quantity = entry.end_quantity - changing_quantity
+                new_sord_entry.received_by = user
+                new_sord_entry.fuel_type = entry.fuel_type
+                new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
+                new_sord_entry.save()
+                changing_quantity = 0
