@@ -54,6 +54,8 @@ urlpatterns = [
     path('activate_whatsapp/', supplier_views.activate_whatsapp, name='activate_whatsapp'),
     path('change_password/', supplier_views.change_password, name='change_password'),
     path('view_invoice/<int:id>', supplier_views.view_invoice, name='view_invoice'),
+    path('view_delivery_schedule/<int:id>', supplier_views.view_delivery_schedule, name="view_delivery_schedule"),
+
     
 ]
 
