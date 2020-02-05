@@ -18,6 +18,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 user = get_user_model()
 from national.models import NationalFuelUpdate
+from itertools import chain
+from operator import attrgetter
 
 @login_required()
 def fuel_updates(request):
@@ -28,6 +30,7 @@ def fuel_updates(request):
         if int(updates.petrol_quantity) < int(request.POST['petrol_quantity']):
             messages.warning(request, 'You cannot update Petrol to an amount more than the available quantity')
             return redirect('serviceStation:home')
+        fuel_reduction = updates.petrol_quantity - float(request.POST['petrol_quantity'])
         updates.petrol_quantity = request.POST['petrol_quantity'] 
         updates.queue_length = request.POST['queue_length']
         updates.status = request.POST['status']
@@ -42,6 +45,7 @@ def fuel_updates(request):
             return redirect('serviceStation:home')
 
         updates.save()
+        sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Petrol')
         messages.success(request, 'Updated Petrol QuantitY Successfully')
         service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         reference = 'fuel quantity updates'
@@ -59,6 +63,7 @@ def update_diesel(request, id):
         if int(diesel_update.diesel_quantity) < int(request.POST['diesel_quantity']):
             messages.warning(request, 'You cannot update Diesel to an amount more than the available quantity')
             return redirect('serviceStation:home')
+        fuel_reduction = diesel_update.diesel_quantity - float(request.POST['diesel_quantity'])
         diesel_update.diesel_quantity = request.POST['diesel_quantity']
         diesel_update.queue_length = request.POST['queue_length']
         diesel_update.status = request.POST['status']
@@ -70,6 +75,7 @@ def update_diesel(request, id):
             return redirect('serviceStation:home')
 
         diesel_update.save()
+        sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Diesel')
         messages.success(request, 'Updated Diesel QuantitY Successfully')
         service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         reference = 'fuel quantity updates'
@@ -81,6 +87,49 @@ def update_diesel(request, id):
     else:
         messages.success(request, 'Fuel Object Does Not Exist')
         return redirect('serviceStation:home')
+
+def sord_update(request, user, quantity, action, fuel_type):
+    end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, end_quantity = 0).all()
+    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type).all()
+    sord_quantity_zero = []
+    sord_quantity = []
+    for sord in end_quantity_zero:
+        sord_quantity_zero.append(sord.sord_no)
+    for x in initial_sord:
+        if x.sord_no in sord_quantity_zero:
+            pass
+        else:
+            sord_quantity.append(x)
+    sord_quantity.sort(key = attrgetter('last_updated'), reverse = True)
+    changing_quantity = quantity
+    for entry in sord_quantity:
+        if changing_quantity != 0:
+            if entry.end_quantity < changing_quantity:
+                new_sord_entry = SordSubsidiaryAuditTrail()
+                new_sord_entry.sord_no = entry.sord_no
+                new_sord_entry.action_no = entry.action_no + 1
+                new_sord_entry.action = action
+                new_sord_entry.initial_quantity = entry.end_quantity
+                new_sord_entry.quantity_sold = entry.end_quantity
+                new_sord_entry.end_quantity = 0
+                new_sord_entry.received_by = user
+                new_sord_entry.fuel_type = entry.fuel_type
+                new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+                new_sord_entry.save()
+                changing_quantity = changing_quantity - entry.end_quantity
+            else:
+                new_sord_entry = SordSubsidiaryAuditTrail()
+                new_sord_entry.sord_no = entry.sord_no
+                new_sord_entry.action_no = entry.action_no + 1
+                new_sord_entry.action = action
+                new_sord_entry.initial_quantity = entry.end_quantity
+                new_sord_entry.quantity_sold = changing_quantity
+                new_sord_entry.end_quantity = entry.end_quantity - changing_quantity
+                new_sord_entry.received_by = user
+                new_sord_entry.fuel_type = entry.fuel_type
+                new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+                new_sord_entry.save()
+                changing_quantity = 0
 
 
 @login_required()

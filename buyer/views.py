@@ -250,9 +250,12 @@ def fuel_request(request):
     for fuel_request in fuel_requests:
         if fuel_request.is_direct_deal:
             depot = Subsidiaries.objects.filter(id=fuel_request.last_deal).first()
-            company = Company.objects.filter(id=depot.company.id).first()
-            fuel_request.request_company = company.name
-            fuel_request.depot = depot.name
+            if depot is not None:
+                company = Company.objects.filter(id=depot.company.id).first()
+                fuel_request.request_company = company.name
+                fuel_request.depot = depot.name
+            else:
+                pass
         else:
             fuel_request.request_company = ''
     for fuel_request in fuel_requests:
@@ -419,7 +422,7 @@ def accept_offer(request, id):
     offer.save()
 
     message = f'{offer.request.name.first_name} {offer.request.name.last_name} accepted your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
-    Notification.objects.create(message=message, user=offer.supplier, reference_id=offer.id, action="ofer_accepted")
+    Notification.objects.create(message=message, user=offer.supplier, reference_id=offer.id, action="offer_accepted")
 
     messages.warning(request, "Your request has been saved successfully")
     return redirect("buyer-transactions")
@@ -535,10 +538,10 @@ def view_invoice(request, id):
 
 @login_required
 def delivery_schedule(request):
-    context = {
-        'form': DeliveryScheduleForm(),
-        'schedules' : DeliverySchedule.objects.filter(transaction__buyer=request.user)
-    }
+    form = DeliveryScheduleForm(),
+    schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user)
+    for schedule in schedules:
+        schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
     if request.method == 'POST':
         confirmation_document = request.FILES.get('confirmation_document')
         delivery_id = request.POST.get('delivery_id')
@@ -546,7 +549,8 @@ def delivery_schedule(request):
         schedule = DeliverySchedule.objects.get(id=delivery_id)
         schedule.confirmation_document = confirmation_document
         schedule.save()
+        messages.success(request, 'Delivery successfully confirmed!!!')
         message = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
         Notification.objects.create(user=request.user,action='DELIVERY', message=message, reference_id=schedule.transaction.supplier.id)
 
-    return render(request, 'buyer/delivery_schedules.html', context=context)
+    return render(request, 'buyer/delivery_schedules.html', {'from':form, 'schedules':schedules })

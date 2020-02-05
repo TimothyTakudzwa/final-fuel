@@ -18,11 +18,14 @@ class Subsidiaries(models.Model):
     is_depot = models.BooleanField(default=False)    
     opening_time = models.CharField(max_length=100, default='08:00')
     closing_time = models.CharField(max_length=100, default='22:00')
-    #fuel_capacity = models.ForeignKey(SubsidiaryFuelUpdate, on_delete=models.CASCADE, null=True)
     destination_bank = models.CharField(max_length=100, default="")
     account_number = models.CharField(max_length=100, default="")
     amount = models.FloatField(default=0.00)
     logo = models.ImageField(default='default.png', upload_to='subsidiary_profile_logo')
+    license_num = models.CharField(max_length=150,blank=True,null=True)
+    praz_reg_num = models.CharField(max_length=150,blank=True,null=True)
+    bp_num = models.CharField(max_length=150,blank=True,null=True)
+    
 
 
     def __str__(self):
@@ -174,16 +177,16 @@ class UserReview(models.Model):
 
 
 class DeliverySchedule(models.Model):
-    date = models.DateField(auto_now_add=True)
+    date = models.DateField()
     transaction = models.ForeignKey(Transaction, on_delete=models.DO_NOTHING)    
     driver_name = models.CharField(max_length=150, blank=True, null=True)
     phone_number = models.CharField(max_length=150, blank=True, null=True)
     id_number = models.CharField(max_length=150, blank=True, null=True)
     vehicle_reg = models.CharField(max_length=150, blank=True, null=True)
     delivery_time = models.CharField(max_length=150, blank=True, null=True)
-    transport_agent = models.ForeignKey(User, on_delete=models.CASCADE, blank=True,null=True)
     confirmation_document = models.FileField(null=True, upload_to='documents')
     supplier_document = models.FileField(null=True, upload_to='documents')
+    transport_company = models.CharField(max_length=150, blank=True, null=True)
 
     # def display_text_file(self):
     #     with open(self.confirmation_document.path) as fp:
