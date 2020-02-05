@@ -25,6 +25,7 @@ class Subsidiaries(models.Model):
     license_num = models.CharField(max_length=150,blank=True,null=True)
     praz_reg_num = models.CharField(max_length=150,blank=True,null=True)
     bp_num = models.CharField(max_length=150,blank=True,null=True)
+    vat = models.CharField(max_length=150,blank=True,null=True)
     
 
 
