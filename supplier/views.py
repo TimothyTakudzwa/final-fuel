@@ -190,7 +190,7 @@ def stock_update(request,id):
                 subsidiary_fuel.petrol_quantity = subsidiary_fuel.petrol_quantity - fuel_reduction
                 subsidiary_fuel.save()
 
-                sord_update(request, request.user, fuel_reduction, 'FUEL UPDATE', 'Petrol')
+                sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Petrol')
 
             else:
                 if float(request.POST['quantity']) > available_diesel:
@@ -201,7 +201,7 @@ def stock_update(request,id):
                 subsidiary_fuel.diesel_quantity = subsidiary_fuel.diesel_quantity - fuel_reduction
                 subsidiary_fuel.save()
 
-                sord_update(request, request.user, fuel_reduction, 'FUEL UPDATE', 'Diesel')
+                sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Diesel')
 
             fuel_update.cash = request.POST['cash']
             fuel_update.swipe = request.POST['swipe']
