@@ -542,6 +542,10 @@ def delivery_schedule(request):
     schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user)
     for schedule in schedules:
         schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+    context ={
+        'form' : form
+        'schedules' : schedules
+    }
     if request.method == 'POST':
         confirmation_document = request.FILES.get('confirmation_document')
         delivery_id = request.POST.get('delivery_id')
@@ -553,4 +557,4 @@ def delivery_schedule(request):
         message = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
         Notification.objects.create(user=request.user,action='DELIVERY', message=message, reference_id=schedule.transaction.supplier.id)
 
-    return render(request, 'buyer/delivery_schedules.html', {'form':form, 'schedules':schedules })
+    return render(request, 'buyer/delivery_schedules.html', context = context)
