@@ -1,0 +1,148 @@
+{% extends "supplier/supplier_base.html" %}
+{% load humanize %}
+{% load mathfilters %}
+
+{% block body %}
+<section class="content-header">
+    <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search...">
+            <span class="input-group-btn">4
+                <button type="submit" name="search" id="search-btn" class="btn"><i
+                        class="fa fa-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="header-icon">
+      <i class="fa fa-truck"></i>
+    </div>
+    <div class="header-title">
+        <h1>Delivery Schedule Confirmation</h1>
+        <small>Delivery Schedule Confirmation</small>
+        <ol class="breadcrumb hidden-xs">
+            <li><a href="{%url 'fuel-request'%}"><i class="pe-7s-home"></i> Home</a></li>
+            <li class="active">Delivery Schedule</li>
+        </ol>
+    </div>
+  </section>
+
+  <div class="content">
+
+
+    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
+    data-index="0">
+    <div class="panel-heading ui-sortable-handle">
+        <div class="btn-group">
+            <h3 class="display-3" style="color: rgb(79, 189, 150);">Delivery Confirmation</h3>
+    
+        </div>
+        <div class="dropdown">
+            <ul class="dropdown-menu dropdown-menu-right">
+    
+    
+            </ul>
+            <div class="dropdown-toggle" data-toggle="dropdown"><span
+                    class="panel-control-icon glyphicon glyphicon-cog"></span>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+    
+    
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+
+            <div class="col-sm-12">
+             
+                <div class="review-block">
+                    <div class="row">
+                       
+                        <div class="col-sm-4">
+                            <div class="review-block-rate">
+                                <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Recepient</h4>
+                                </label>
+                               
+                            </div>
+                            <div class="review-block-title">{{schedule.transaction.buyer.company.name}} </div>
+                            <div class="review-block-description"> </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="review-block-rate">
+                                <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Buyer Confirmation</h4>
+                                </label>
+                               
+                            </div>
+                            <div class="review-block-title">
+                                {% if schedule.confirmation_document %}
+                                        <p class="col-md-6"> 
+                                            <a class="btn btn-purple btn-sm" href="{% url 'supplier:view_confirmation_doc' schedule.id %}">View Confirmation Doc</a>
+                                </p>       
+                                {%else %}
+                                <p class="col-md-6">Status: Pending </p>    
+                                {% endif %} 
+                            </div>
+                            <div class="review-block-description"> </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <div class="review-block-rate">
+                              <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Supplier Confirmation</h4>
+                              </label>
+                             
+                          </div>
+                          <div class="review-block-title">
+                            <div class="col-md-6">
+                                {% if not schedule.supplier_document %}
+                                <p class="col-md-12" style="font-weight: 100; margin-bottom:30px;">Upload Confirmation Document: </p>
+                                <div style="padding-left: 15px;">
+                                <form method="POST" action="" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="text" name="delivery_id" value="{{schedule.id}}" hidden/>
+                                <div class="form-group">
+                                <input type="file" name="supplier_document" class="form-control-file" id="exampleFormControlFile1">
+                                </div>
+                                <div class="form-group">
+                                <input class="btn btn-info btn-sm" type="submit" value="Submit">
+                                </div>
+                                </form>
+                                </div>    
+                                {% else %}
+                                <div class="" style="padding: 10px;">
+                                <!-- <p class="col-md-12" style="font-weight: 100; margin-bottom: 30px;">View Uploaded Doc: </p> -->
+
+                                <div class="btn-group">
+                                <a class="btn btn-info btn-sm pull-left" href="{% url 'supplier:view_supplier_doc' schedule.id %}" >View Document </a>
+                                <!-- <a class="btn btn-info btn-purple btn-sm" href="{% url 'supplier:del_supplier_doc' schedule.id %}" >Upload Another </a> -->
+
+
+                                </div> 
+                                {%endif%}
+
+                                </div>
+                          </div>
+                          <div class="review-block-description"> </div>
+                      </div>
+                      <!-- <div class="col-sm-12">
+                        <div class="review-block-rate">
+                            <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Company Bank</h4>
+                            </label>
+                           
+                        </div>
+                        <div class="review-block-title">{{user.company.destination_bank}} - {{user.company.account_number}}</div>
+                        <div class="review-block-description"> </div>
+                    </div> -->
+                        
+                    </div>
+                   
+                </div>
+            </div>
+        </div> 
+    </section> <!-- /.content -->
+    
+    
+    </div>
+    </div>
+  
+  
+  </div>  
+{%endblock%}
