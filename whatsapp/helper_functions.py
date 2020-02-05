@@ -680,24 +680,24 @@ def update_fuel(user, message):
         user.save()
     elif user.position == 1:
         if message == "1":
-            fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD").filter(relationship_id=user.subsidiary_id).first()
+            fuel_update = SuballocationFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id).filter(payment_type="USD").first()
             user.fuel_request = fuel_update.id
             user.position = 2
             user.save()
         elif message == "2":
-            fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="RTGS").filter(relationship_id=user.subsidiary_id).first()
+            fuel_update = SuballocationFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id).filter(payment_type="RTGS").first()
             user.fuel_request = fuel_update.id
             user.position = 2
             user.save()
         elif message == "3":
-            fuel_update = FuelUpdate.objects.filter(sub_type="Suballocation").filter(entry_type="USD & RTGS").filter(relationship_id=user.subsidiary_id).first()
+            fuel_update = SuballocationFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id).filter(payment_type="USD & RTGS").first()
             user.fuel_request = fuel_update.id
             user.position = 2
             user.save()
         response_message = "How much petrol do you have?"
 
     elif user.position == 2:
-        fuel_update = FuelUpdate.objects.filter(id=user.fuel_request).first()
+        fuel_update = SuballocationFuelUpdate.objects.filter(id=user.fuel_request).first()
         petrol_available = fuel_update.petrol_quantity
         #try:
         petrol_update = float(message)
@@ -714,7 +714,7 @@ def update_fuel(user, message):
 
     # 
     elif user.position == 4:
-        fuel_update = FuelUpdate.objects.filter(id=user.fuel_request).first()
+        fuel_update = SuballocationFuelUpdate.objects.filter(id=user.fuel_request).first()
         #try:
         diesel_update = float(message)
         diesel_available = fuel_update.diesel_quantity
@@ -725,7 +725,7 @@ def update_fuel(user, message):
             user.save()
             response_message = "You have successfully updated you fuel stocks. Send *menu* to go back to main menu"
         else:
-            response_message = f"You can only reduce your stock. To increase it contact you admin to update your fuel allocations! You currently have *{diesel_availabe}* litres, update if you have less stock."
+            response_message = f"You can only reduce your stock. To increase it contact you admin to update your fuel allocations! You currently have *{diesel_available}* litres, update if you have less stock."
             user.position = 4
             user.save()
 
