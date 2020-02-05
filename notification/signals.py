@@ -37,7 +37,7 @@ def distribute(sender, instance, created, **kwargs):
         elif messages.action == 'DELIVERY':
             click_url = f'https://fuelfinderzim.com/view_delivery_schedule/{messages.reference_id}'
             url = 'https://dreamhub.co.zw/notify'
-            values = dict(user_id=messages.user.id, notification=messages.message, action=messages.action,url = 'click_url')
+            values = dict(user_id=messages.user.id, notification=messages.message, action=messages.action,url = click_url)
             return requests.post(url=url, json=values)
 
 
