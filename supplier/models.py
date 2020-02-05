@@ -18,11 +18,14 @@ class Subsidiaries(models.Model):
     is_depot = models.BooleanField(default=False)    
     opening_time = models.CharField(max_length=100, default='08:00')
     closing_time = models.CharField(max_length=100, default='22:00')
-    #fuel_capacity = models.ForeignKey(SubsidiaryFuelUpdate, on_delete=models.CASCADE, null=True)
     destination_bank = models.CharField(max_length=100, default="")
     account_number = models.CharField(max_length=100, default="")
     amount = models.FloatField(default=0.00)
     logo = models.ImageField(default='default.png', upload_to='subsidiary_profile_logo')
+    license_num = models.CharField(max_length=150,blank=True,null=True)
+    praz_reg_num = models.CharField(max_length=150,blank=True,null=True)
+    bp_num = models.CharField(max_length=150,blank=True,null=True)
+    
 
 
     def __str__(self):
