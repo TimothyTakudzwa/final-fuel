@@ -76,21 +76,11 @@
                                 <td>{{ transaction.offer.quantity |intcomma}}</td>
                                 <td>{{ transaction.offer.price }}</td>
                                 <td>{{ transaction.offer.quantity| mul:transaction.offer.price |intcomma}}</td>
-                                {% if transaction.offer.request.delivery_method == "DELIVERY" or transaction.delivery_method == "delivery" %}
-                                    {% if transaction.delivery_sched %}
-                                    <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{transaction.id}}">View Schedule</button></td>
-                                    {% else %}
-                                    <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button></td>
-                                    {% endif %}
+                                {% if transaction.delivery_sched %}
+                                <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{transaction.id}}">View Schedule</button></td>
+                                {% else %}
+                                <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button></td>
                                 {% endif %}
-                                {% if not transaction.offer.request.delivery_method == "DELIVERY" or transaction.delivery_method == "delivery" %}
-                                    {% if transaction.delivery_sched %}
-                                    <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{transaction.id}}">View Schedule</button></td>
-                                    {% else %}
-                                    <td>Awaiting Schedule</td>
-                                    {% endif %}
-                                {% endif %}     
-                                 
                                 {% if transaction.is_complete %}
                                 <td><a class="btn btn-primary btn-sm" href="{% url 'view_invoice' transaction.id %}" >Download</a></td>
                                 {% else %}
@@ -183,7 +173,7 @@
                                                 <input type="text" name="driver_name" class="form-control"  required/>
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <label>Phone Number</label>
+                                                <label>Driver's Phone Number</label>
                                                 <input type="telephone" name="phone_number" class="form-control"  value="{{ supplier.phone_number}}" required/>
                                             </div>
                                             </div>
@@ -198,6 +188,13 @@
                                                     <input type="text" name="vehicle_reg" class="form-control"  value="{{ supplier.phone_number}}" required/>
                                                 </div>
                                                 </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <label>Transporter Company</label>
+                                                        <input type="text" class="form-control" name="transport_company" class="transport_company" required/>
+                                                    </div>
+                                                </div>    
+
 
                                                 <div class="row">
                                                     <input type="hidden" name="transaction" class="form-control" value={{transaction.id}}  required/>

@@ -40,6 +40,7 @@ def edit_delivery_schedule(request):
         delivery_schedule.id_number = request.POST['id_number']
         delivery_schedule.vehicle_reg = request.POST['vehicle_reg']
         delivery_schedule.delivery_time = request.POST['delivery_time']
+        delivery_schedule.transport_company = request.POST['transport_company']       
         delivery_schedule.save()
         messages.success(request, "Schedule Successfully Updated")
         return redirect('supplier:delivery_schedules')
@@ -349,14 +350,16 @@ def edit_offer(request, id):
 
 @login_required
 def transaction(request):
+    transporters = Company.objects.filter(company_type="TRANSPORTER").all()
     transactions = []
-    for tran in Transaction.objects.filter(supplier__company=request.user.company).all():
+    for tran in Transaction.objects.filter(supplier=request.user).all():
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
         if delivery_sched:
             tran.delivery_sched = delivery_sched
         transactions.append(tran)    
     context= { 
-       'transactions' : transactions
+       'transactions' : transactions,
+       'transporters' : transporters
         }
     return render(request, 'supplier/transactions.html',context=context)
 
@@ -369,6 +372,7 @@ def create_delivery_schedule(request):
             driver_name = request.POST['driver_name'],
             phone_number = request.POST['phone_number'],
             id_number = request.POST['id_num'],
+            transport_company = request.POST['transport_company'],
             vehicle_reg = request.POST['vehicle_reg'],
             delivery_time = request.POST['delivery_time']
         )

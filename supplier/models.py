@@ -177,16 +177,16 @@ class UserReview(models.Model):
 
 
 class DeliverySchedule(models.Model):
-    date = models.DateField(auto_now_add=True)
+    date = models.DateField()
     transaction = models.ForeignKey(Transaction, on_delete=models.DO_NOTHING)    
     driver_name = models.CharField(max_length=150, blank=True, null=True)
     phone_number = models.CharField(max_length=150, blank=True, null=True)
     id_number = models.CharField(max_length=150, blank=True, null=True)
     vehicle_reg = models.CharField(max_length=150, blank=True, null=True)
     delivery_time = models.CharField(max_length=150, blank=True, null=True)
-    transport_agent = models.ForeignKey(User, on_delete=models.CASCADE, blank=True,null=True)
     confirmation_document = models.FileField(null=True, upload_to='documents')
     supplier_document = models.FileField(null=True, upload_to='documents')
+    transport_company = models.CharField(max_length=150, blank=True, null=True)
 
     # def display_text_file(self):
     #     with open(self.confirmation_document.path) as fp:

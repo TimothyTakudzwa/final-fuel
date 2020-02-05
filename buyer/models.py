@@ -41,6 +41,7 @@ class User(AbstractUser):
 
 class FuelRequest(models.Model):
     name = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    #contact_person = models.CharField(max_length=50)
     amount = models.IntegerField(default=0)
     fuel_type = models.CharField(max_length=50)
     delivery_method = models.CharField(max_length=200)
