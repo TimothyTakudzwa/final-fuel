@@ -352,7 +352,7 @@ def edit_offer(request, id):
 def transaction(request):
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
     transactions = []
-    for tran in Transaction.objects.filter(supplier__company=request.user.company).all():
+    for tran in Transaction.objects.filter(supplier=request.user).all():
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
         if delivery_sched:
             tran.delivery_sched = delivery_sched
