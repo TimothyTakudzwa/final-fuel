@@ -689,6 +689,10 @@ def stations(request):
         location = request.POST['location']
         destination_bank = request.POST['destination_bank']
         account_number = request.POST['account_number']
+        license_num = request.POST['licence']
+        praz_reg_num = request.POST['praz']
+        bp_num = request.POST['bp']
+        vat = request.POST['vat']
         if request.POST['is_depot'] == "Service Station":
             is_depot = False
         else:
@@ -699,7 +703,7 @@ def stations(request):
         usd = request.POST['usd']
         swipe = request.POST['swipe']
         ecocash = request.POST['ecocash']
-        sub = Subsidiaries.objects.create(account_number=account_number,destination_bank=destination_bank,city=city,location=location,company=request.user.company,name=name,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time) 
+        sub = Subsidiaries.objects.create(license_num=license_num,praz_reg_num=praz_reg_num,bp_num=bp_num,vat=vat,account_number=account_number,destination_bank=destination_bank,city=city,location=location,company=request.user.company,name=name,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time) 
         sub.save()   
         if request.POST['is_depot'] == "Service Station":
             fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=sub, cash=cash, swipe=swipe, ecocash=ecocash,limit=2000)
