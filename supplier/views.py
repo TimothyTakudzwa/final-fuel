@@ -55,9 +55,11 @@ def delivery_schedules(request):
         schedule.supplier_document = supplier_document
         schedule.save()
         messages.success(request, "File Successfully Uploaded")
+        msg = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
+        Notification.objects.create(user=request.user,action='DELIVERY', message=message, reference_id=schedule.transaction.supplier.id)
         print(schedule.supplier_document)
         
-    schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).all()
+    schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user).all()
     return render(request, 'supplier/delivery_schedules.html', {'schedules': schedules})    
 
 
@@ -696,4 +698,6 @@ def del_supplier_doc(request,id):
 
 
 def view_delivery_schedule(request,id):
-    pass
+    schedule = DeliverySchedule.objects.filter(id=id).first()
+    return render(request, 'supplier/view_delivery_schedule.html', {'schedule': schedule})
+    

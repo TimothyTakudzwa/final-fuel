@@ -548,6 +548,6 @@ def delivery_schedule(request):
         schedule.save()
         messages.success(request, 'Delivery successfully confirmed!!!')
         message = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
-        Notification.objects.create(user=request.user,action='DELIVERY', message=message, reference_id=schedule.transaction.supplier.id)
+        Notification.objects.create(user=request.user,action='DELIVERY', message=message, reference_id=schedule.id)
 
     return render(request, 'buyer/delivery_schedules.html', {'from':form, 'schedules':schedules })

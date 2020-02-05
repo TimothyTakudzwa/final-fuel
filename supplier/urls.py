@@ -26,7 +26,6 @@ urlpatterns = [
     path('view_confirmation_doc/<int:id>', views.view_confirmation_doc, name="view_confirmation_doc"),
     path('view_supplier_doc/<int:id>', views.view_supplier_doc, name="view_supplier_doc"),
     path('del_supplier_doc/<int:id>', views.del_supplier_doc, name="del_supplier_doc"),
-    path('view_delivery_schedule/<int:id>', views.view_delivery_schedule, name="view_delivery_schedule"),
 
 
 
