@@ -192,7 +192,7 @@ def view_station_updates(request):
             updates = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id)
             # fetching data
             for update in updates:
-                company = Subsidiaries.objects.get(id=update.relationship_id)
+                company = Subsidiaries.objects.get(id=update.subsidiary.id)
                 image = f'https://{request.get_host()}{company.logo.url}/'
                 # end fetch
                 station_update = {
