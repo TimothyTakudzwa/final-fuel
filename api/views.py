@@ -357,13 +357,15 @@ def update_comments(request):
         company = request.POST.get('company')
         comment = request.POST.get('comment')
         username = request.POST.get('username')
+        comment_type = request.POST.get('comment_type')
 
         permission = CommentsPermission.objects.filter().first()
         if permission.allowed:
             Comment.objects.create(
                 user=User.objects.get(username=username),
                 station=Subsidiaries.objects.get(name=station, company__name=company, is_depot=False),
-                comment=comment
+                comment=comment,
+                comment_type=comment_type
             )
             return HttpResponse(200)
         else:
@@ -382,7 +384,7 @@ def view_comments(request):
         if all_comments:
             for comment in all_comments:
                 data = {
-                    'name': comment.user.username, 'comment': comment.comment,
+                    'name': comment.user.username, 'comment': comment.comment, 'type': comment.comment_type,
                     'date': comment.date.strftime('%a %d %B %y'), 'time': comment.time.strftime("%H:%M")
                 }
                 comments_data.append(data)
