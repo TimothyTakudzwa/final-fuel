@@ -47,6 +47,15 @@ def edit_delivery_schedule(request):
         
 @login_required
 def delivery_schedules(request):
+    if request.method == 'POST':
+        supplier_document = request.FILES.get('supplier_document')
+        delivery_id = request.POST.get('delivery_id')
+        schedule = DeliverySchedule.objects.get(id=delivery_id)
+        schedule.supplier_document = supplier_document
+        schedule.save()
+        messages.success(request, "File Successfully Uploaded")
+        print(schedule.supplier_document)
+        
     schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).all()
     return render(request, 'supplier/delivery_schedules.html', {'schedules': schedules})    
 
@@ -658,3 +667,29 @@ def view_confirmation_doc(request,id):
         messages.warning(request, 'Document Not Found')
         redirect('supplier:delivery_schedules')
     return response
+
+def view_supplier_doc(request,id):
+    delivery = DeliverySchedule.objects.filter(id=id).first()
+    if delivery:
+        filename = delivery.supplier_document.name.split('/')[-1]
+        response = HttpResponse(delivery.supplier_document, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        redirect('supplier:delivery_schedules')
+    return response
+
+def del_supplier_doc(request,id):
+    delivery = DeliverySchedule.objects.filter(id=id).first()
+    delivery.supplier_document = None
+    delivery.save()
+    messages.success(request, 'Document Removed Successfully')
+    return redirect('supplier:delivery_schedules')
+
+
+
+    
+
+
+def view_delivery_schedule(request,id):
+    pass

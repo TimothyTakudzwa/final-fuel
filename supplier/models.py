@@ -181,11 +181,13 @@ class DeliverySchedule(models.Model):
     id_number = models.CharField(max_length=150, blank=True, null=True)
     vehicle_reg = models.CharField(max_length=150, blank=True, null=True)
     delivery_time = models.CharField(max_length=150, blank=True, null=True)
+    transport_agent = models.ForeignKey(User, on_delete=models.CASCADE, blank=True,null=True)
     confirmation_document = models.FileField(null=True, upload_to='documents')
+    supplier_document = models.FileField(null=True, upload_to='documents')
 
-    def display_text_file(self):
-        with open(self.confirmation_document.path) as fp:
-            return fp.read().replace('\n', '<br>')
+    # def display_text_file(self):
+    #     with open(self.confirmation_document.path) as fp:
+    #         return fp.read().replace('\n', '<br>')
 
 class SordSubsidiaryAuditTrail(models.Model):
     from company.models import Company
