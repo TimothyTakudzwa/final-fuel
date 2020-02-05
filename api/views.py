@@ -15,6 +15,8 @@ import secrets
 from datetime import date
 from fuelfinder import settings
 
+from whatsapp.helper_functions import sord_update
+
 user = get_user_model()
 today = date.today()
 
@@ -30,7 +32,7 @@ def login(request):
         status = authenticate(username=username, password=password)
         if status:
             # auth success
-            user = User.objects.get(usename=username)
+            user = User.objects.get(username=username)
             # service station admin and must reset password
             if user.user_type == 'SS_SUPPLIER' and user.password_reset:
                 data = {'username': user.username}
@@ -122,12 +124,14 @@ def update_station(request):
         # fetch user data
         user = User.objects.get(username=username)
         # check for fuel station
-        status = SubsidiaryFuelUpdate.objects.filter(subsidiary=Subsidiaries.objects.
-                                                     filter(id=user.subsidiary_id).first())
+        status = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id).first()
         # station exists
-        if status.exists():
-            update = SubsidiaryFuelUpdate.objects.filter(subsidiary=Subsidiaries.objects.
-                                                         filter(id=user.subsidiary_id).first())
+        if status:
+            update = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id).first()
+
+            previous_petrol = update.petrol_quantity
+            previous_diesel = update.diesel_quantity
+
             # fetch details
             p_quantity = request.POST.get('petrol_quantity')
             d_quantity = request.POST.get('diesel_quantity')
@@ -150,6 +154,11 @@ def update_station(request):
             update.last_updated = today
             # save update
             update.save()
+
+            # sord update
+            sord_update(user, previous_diesel-float(d_quantity), 'Fuel Update', 'Diesel')
+            sord_update(user, previous_petrol - float(p_quantity), 'Fuel Update', 'Petrol')
+
             # add audit trail
             Audit_Trail.objects.create(
                 user=user,
@@ -177,15 +186,13 @@ def view_station_updates(request):
         # get user data
         user = User.objects.get(username=username)
         # check if user has update object
-        status = SubsidiaryFuelUpdate.objects.filter(subsidiary=Subsidiaries.objects.
-                                                     filter(id=user.subsidiary_id).first())
+        status = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id).first()
         # if update object exists
-        if status.exists():
-            updates = SubsidiaryFuelUpdate.objects.filter(subsidiary=Subsidiaries.objects.
-                                                          filter(id=user.subsidiary_id).first())
+        if status:
+            updates = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id)
             # fetching data
             for update in updates:
-                company = Subsidiaries.objects.get(id=update.relationship_id)
+                company = Subsidiaries.objects.get(id=update.subsidiary.id)
                 image = f'https://{request.get_host()}{company.logo.url}/'
                 # end fetch
                 station_update = {
@@ -193,7 +200,7 @@ def view_station_updates(request):
                     'diesel_price': update.diesel_price, 'petrol_quantity': update.petrol_quantity,
                     'petrol_price': update.petrol_price, 'cash': update.cash, 'ecocash': update.ecocash,
                     'swipe': update.swipe, 'queue': update.queue_length, 'limit': update.limit,
-                    'status': update.status, 'image': image
+                    'status': update.status, 'image': image, 'company': company.company.name
                 }
                 # add to dictionary
                 data.append(station_update)

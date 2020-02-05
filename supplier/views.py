@@ -368,7 +368,7 @@ def transaction(request):
 @login_required
 def create_delivery_schedule(request):
     if request.method == 'POST':
-        DeliverySchedule.objects.create(
+        schedule = DeliverySchedule.objects.create(
             date=request.POST['delivery_date'],
             transaction = Transaction.objects.filter(id=int(request.POST['transaction'])).first(),
             driver_name = request.POST['driver_name'],
@@ -379,6 +379,8 @@ def create_delivery_schedule(request):
             delivery_time = request.POST['delivery_time']
         )
         messages.success(request,"Schedule Successfully Created")
+        message = f"{schedule.transaction.supplier.company} has created a delivery schedule for you, Click To View Schedule"
+        Notification.objects.create(user=schedule.transaction.buyer,action='schedule', message=message, reference_id=schedule.id)
         return redirect('transaction')
         
 
