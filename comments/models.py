@@ -19,7 +19,7 @@ class CommentsPermission(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comment')
     station = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE, related_name='station_name')
-    comment_type = models.CharField(default='USER')
+    comment_type = models.CharField(default='USER', max_length=20)
     comment = models.CharField(max_length=200)
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
