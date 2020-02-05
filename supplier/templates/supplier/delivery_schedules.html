@@ -66,7 +66,9 @@
                         <td>{{ delivery.delivery_time }}</td>  
                         <td>                            
                         {% if delivery.confirmation_document %}
-                        <a class="btn btn-primary btn-sm" href="{% url 'supplier:view_confirmation_doc' delivery.id %}" >View Confirmation </a>
+                        <!-- <a class="btn btn-primary btn-sm" href="{% url 'supplier:view_confirmation_doc' delivery.id %}" >View Confirmation </a> -->
+                        <button type="button" class="btn btn-purple btn-sm" data-toggle="modal"
+                            data-target="#state_{{delivery.id}}">Status</button>
                         {% else %}
                         Pending
                         {%endif%}
@@ -136,91 +138,160 @@
                           </div>
                           </div>
                     </div>
+                        
                     <div class="modal fade modal-success in" id="additonal_information{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                          aria-hidden="true">
-                          <div class="modal-dialog modal-notice">
-                          <div class="modal-content">
-                          <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                              <span class="modal-title">Additional Information</span>
-                          </div>
-                         
-                          <div class="modal-body" style="padding: 30px;">
-                            <div class="row" style="padding: 10px;">
-                                <p class="col-md-6" style="font-weight: bold;">Delivery Address: </p>
-                                <p class="col-md-6">{{delivery.transaction.offer.request.delivery_address}}</p>
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-notice">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                <span class="modal-title">Additional Information</span>
                             </div>
-                            <div class="row" style="padding: 10px;">
-                                <p class="col-md-6" style="font-weight: bold;">Contact Person: </p>
-                                <p class="col-md-6">{{delivery.transport_agent.first_name|title}} {{delivery.transport_agent.last_name|title}}</p>
-                            <div class="row" style="padding: 10px;">
-                                <p class="col-md-6" style="font-weight: bold;">Driver Name: </p>
-                                <p class="col-md-6">{{delivery.driver_name}}</p>
-                            </div>   
-                            <div class="row" style="padding: 10px;">
-                                <p class="col-md-6" style="font-weight: bold;">Phone Number: </p>
-                                <p class="col-md-6">{{delivery.phone_number}}</p>
-                            </div>   
-                            <div class="row" style="padding: 10px;">
-                                <p class="col-md-6" style="font-weight: bold;">Id Number: </p>
-                                <p class="col-md-6">{{delivery.id_number}}</p>
-                            </div>   
-                            <div class="row" style="padding: 10px;">
-                                <p class="col-md-6" style="font-weight: bold;">Vehicle Reg: </p>
-                                <p class="col-md-6">{{delivery.vehicle_reg}}</p>
+                                <div class="modal-body" style="padding: 30px;">
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Delivery Address: </p>
+                                        <p class="col-md-6">{{delivery.transaction.offer.request.delivery_address}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Contact Person: </p>
+                                        <p class="col-md-6">{{delivery.transport_agent.first_name|title}} {{delivery.transport_agent.last_name|title}}</p>
+                                    </div>    
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Driver Name: </p>
+                                        <p class="col-md-6">{{delivery.driver_name}}</p>
+                                    </div>   
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Phone Number: </p>
+                                        <p class="col-md-6">{{delivery.phone_number}}</p>
+                                    </div>   
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Id Number: </p>
+                                        <p class="col-md-6">{{delivery.id_number}}</p>
+                                    </div>   
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Vehicle Reg: </p>
+                                        <p class="col-md-6">{{delivery.vehicle_reg}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Tank Details: </p>
+                                        <p class="col-md-6">{{delivery.transaction.offer.request.storage_tanks}}</p>
+                                    </div>
+                                    
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Equipment Required: </p>
+                                        <p class="col-md-6">
+                                            {% if delivery.transaction.offer.request.pump_required %}
+                                            Pump
+                                            {% endif %}
+                                            {% if delivery.transaction.offer.request.dipping_stick_required %}
+                                            Dipping Stick
+                                            {% endif %}
+                                            {% if delivery.transaction.offer.request.meter_required %}
+                                            Meter Required
+                                            {% else %}
+                                            N/A
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Status: </p>
+                                        {% if delivery.confirmation_document %}
+                                        <p class="col-md-6"> 
+                                            <a class="btn btn-purple btn-sm" href="{% url 'supplier:view_confirmation_doc' delivery.id %}">View Confirmation Doc</a>
+                                        </p>       
+                                        {%else %}
+                                        <p class="col-md-6">Status: Pending </p>    
+                                        {% endif %} 
+                                    </div>           
+
+                                </div>
+                                </div>
+                                
                             </div>
-                            <div class="row" style="padding: 10px;">
-                                <p class="col-md-6" style="font-weight: bold;">Tank Details: </p>
-                                <p class="col-md-6">{{delivery.transaction.offer.request.storage_tanks}}</p>
-                            </div>
-                            
-                            <div class="row" style="padding: 10px;">
-                                <p class="col-md-6" style="font-weight: bold;">Equipment Required: </p>
-                                <p class="col-md-6">
-                                    {% if delivery.transaction.offer.request.pump_required %}
-                                    Pump
-                                    {% endif %}
-                                    {% if delivery.transaction.offer.request.dipping_stick_required %}
-                                    Dipping Stick
-                                    {% endif %}
-                                    {% if delivery.transaction.offer.request.meter_required %}
-                                    Meter Required
-                                    {% else %}
-                                    N/A
-                                    {% endif %}
-                                </p>
-                            </div>
-                            <div class="row" style="padding: 10px;">
-                                <p class="col-md-6" style="font-weight: bold;">Status: </p>
-                                {% if delivery.confirmation_document %}
-                                <p class="col-md-6"> 
-                                    <a class="btn btn-purple btn-sm" href="{% url 'supplier:view_confirmation_doc' delivery.id %}">View Confirmation Doc</a>
-                                </p>       
-                                {%else %}
-                                <p class="col-md-6">Status: Pending </p>    
-                                {% endif %} 
-                            </div>           
-                          
-                                        
                         </div>
-                          </div>
-                    </div>
-                    <div class="modal fade modal-success in" id="confirmation_doc{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                    </div> 
+
+                    <div class="modal fade modal-success in" id="state_{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                           aria-hidden="true">
-                          <div class="modal-dialog modal-notice">
-                          <div class="modal-content">
-                          <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                              <span class="modal-title">Confirmation Document</span>
-                          </div>
-                          <div class="modal-body" style="margin-bottom: 150px;">
-                            <a class="btn btn-purple" href="{% url 'supplier:view_confirmation_doc' delivery.id %}">View Doc</a>
-                            {% if delivery.confirmation_document %}
-                                {{delivery.display_text_file}}
-                            {% endif %}    
-                          </div>
-                          </div>
+                        <div class="modal-dialog modal-notice">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <span class="modal-title">Delivery Status
+                                    {%if not delivery.supplier_document%}
+                                    (Not Reconciled)
+                                    {% else %}
+                                    (Reconciled)
+                                    {%endif%}
+
+                                    </span>
+                                </div>
+                                <div class="modal-body" style="margin-bottom: 15px;">
+                                    <div class="row" style="padding-left: 15px;">
+                                    <!-- Confirmation Documents -->
+                                    <div class="col-md-6">
+                                        <h4>Buyer Confirmation</h4>
+                                        <div class="col-md-6" style="padding: 10px;">
+                                        <!-- <p class="col-md-12" style="font-weight: 100; margin-bottom: 30px;">View {{delivery.transaction.buyer.company.name|title}}'s Confirmation: </p> -->
+
+                                        <a class="btn btn-info btn-sm" href="{% url 'supplier:view_confirmation_doc' delivery.id %}" >View Confirmation </a>
+
+                                        </div>
+                                    </div>
+                                    <!--end of confirmation docx  -->
+                                    <!-- Support Documents -->
+                                    <div class="col-md-6">
+                                    <h4>Our Confirmation</h4>
+                                    {% if not delivery.supplier_document %}
+                                    <p class="col-md-12" style="font-weight: 100; margin-bottom:30px;">Upload Confirmation Document: </p>
+                                    <div style="padding-left: 15px;">
+                                    <form method="POST" action="" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
+                                    <div class="form-group">
+                                    <input type="file" name="supplier_document" class="form-control-file" id="exampleFormControlFile1">
+                                    </div>
+                                    <div class="form-group">
+                                    <input class="btn btn-info btn-sm" type="submit" value="Submit">
+                                    </div>
+                                    </form>
+                                    </div>    
+                                    {% else %}
+                                    <div class="" style="padding: 10px;">
+                                    <!-- <p class="col-md-12" style="font-weight: 100; margin-bottom: 30px;">View Uploaded Doc: </p> -->
+
+                                    <div class="btn-group">
+                                    <a class="btn btn-info btn-sm pull-left" href="{% url 'supplier:view_supplier_doc' delivery.id %}" >View Document </a>
+                                    <a class="btn btn-info btn-danger btn-sm" href="{% url 'supplier:del_supplier_doc' delivery.id %}" >Remove Document </a>
+
+
+                                    </div> 
+                                    {%endif%}
+
+                                    </div>
+                                    <!--end of support docx  -->
+
+
+                                    </div>
+
+
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                                    </div>
+
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
                     </div>
+
+
+                    
 
 
                     {%endfor%}
