@@ -1264,23 +1264,57 @@ def delete_subsidiary(request, id):
 @login_required()
 def edit_fuel_prices(request, id):
     if request.method == 'POST':
-        if F_Update.objects.filter(id=id).exists():
-            prices_update = F_Update.objects.filter(id=id).first()
+        if SubsidiaryFuelUpdate.objects.filter(id=id).exists():
+            prices_update = SubsidiaryFuelUpdate.objects.filter(id=id).first()
+            company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
+            if float(request.POST['petrol_price']) > company_capacity.petrol_price:
+                messages.warning(request, f'You can not set price above NOIC petrol price of {company_capacity.petrol_price}')
+                return redirect('users:allocate')
             prices_update.petrol_price = request.POST['petrol_price']
+            if float(request.POST['diesel_price']) > company_capacity.diesel_price:
+                messages.warning(request, f'You can not set price above NOIC diesel price of {company_capacity.diesel_price}')
+                return redirect('users:allocate')
             prices_update.diesel_price = request.POST['diesel_price']
             prices_update.save()
             messages.success(request, 'Prices of fuel updated successfully')
-            service_station = Subsidiaries.objects.filter(id=prices_update.relationship_id).first()
+            service_station = Subsidiaries.objects.filter(id=prices_update.subsidiary.id).first()
             reference = 'prices updates'
             reference_id = prices_update.id
             action = f"You have changed petrol price to {request.POST['petrol_price']} and diesel price to {request.POST['diesel_price']} "
             Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
-            print(prices_update.petrol_price,prices_update.diesel_price)
             return redirect(f'/users/allocated_fuel/{prices_update.relationship_id}')
 
         else:
             messages.success(request, 'Fuel object does not exists')
-            return redirect('users:allocate')    
+            return redirect('users:allocate')   
+
+
+@login_required()
+def edit_suballocation_fuel_prices(request, id):
+    if request.method == 'POST':
+        if SuballocationFuelUpdate.objects.filter(id=id).exists():
+            prices_update = SuballocationFuelUpdate.objects.filter(id=id).first()
+            company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
+            if float(request.POST['petrol_price']) > company_capacity.petrol_price:
+                messages.warning(request, f'You can not set price above NOIC petrol price of {company_capacity.petrol_price}')
+                return redirect(f'/users/allocated_fuel/{prices_update.subsidiary.id}')
+            prices_update.petrol_price = request.POST['petrol_price']
+            if float(request.POST['diesel_price']) > company_capacity.diesel_price:
+                messages.warning(request, f'You can not set price above NOIC diesel price of {company_capacity.diesel_price}')
+                return redirect(f'/users/allocated_fuel/{prices_update.subsidiary.id}')
+            prices_update.diesel_price = request.POST['diesel_price']
+            prices_update.save()
+            messages.success(request, 'Prices of fuel updated successfully')
+            service_station = Subsidiaries.objects.filter(id=prices_update.subsidiary.id).first()
+            reference = 'prices updates'
+            reference_id = prices_update.id
+            action = f"You have changed petrol price to {request.POST['petrol_price']} and diesel price to {request.POST['diesel_price']} "
+            Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
+            return redirect(f'/users/allocated_fuel/{prices_update.subsidiary.id}')
+
+        else:
+            messages.success(request, 'Fuel object does not exists')
+            return redirect('users:allocate') 
 
 
 @login_required()
