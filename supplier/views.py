@@ -380,7 +380,7 @@ def create_delivery_schedule(request):
         )
         messages.success(request,"Schedule Successfully Created")
         message = f"{schedule.transaction.supplier.company} has created a delivery schedule for you, Click To View Schedule"
-        Notification.objects.create(user=schedule.transaction.buyer,action='schedule', message=message, reference_id=schedule.id)
+        Notification.objects.create(user=schedule.transaction.buyer,action='schedule`   ', message=message, reference_id=schedule.id)
         return redirect('transaction')
         
 

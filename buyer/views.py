@@ -559,5 +559,8 @@ def delivery_schedule(request):
 
 
 def delivery_schedule(request,id):
-    schedule = DeliverySchedule.objects.filter(id=id).first()
-    return render(request, 'supplier/delivery_schedule.html', {'schedule': schedule})
+    context = { 
+               'form' : DeliveryScheduleForm(),
+               'schedule' : DeliverySchedule.objects.filter(id=id).first()
+            }
+    return render(request, 'supplier/delivery_schedule.html', context=context)
