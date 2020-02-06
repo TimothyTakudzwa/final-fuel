@@ -556,3 +556,8 @@ def delivery_schedule(request):
         Notification.objects.create(user=request.user,action='DELIVERY', message=message, reference_id=schedule.id)
 
     return render(request, 'buyer/delivery_schedules.html', context = context)
+
+
+def delivery_schedule(request,id):
+    schedule = DeliverySchedule.objects.filter(id=id).first()
+    return render(request, 'supplier/delivery_schedule.html', {'schedule': schedule})

@@ -140,7 +140,7 @@ def allocated_fuel(request):
 @login_required()
 def myaccount(request):
     staff = user.objects.get(id=request.user.id)
-    print(staff.username)
+    sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     if request.method == 'POST':
         staff.email = request.POST['email']
         staff.phone_number = request.POST['phone_number']
@@ -148,7 +148,7 @@ def myaccount(request):
         staff.save()
         messages.success(request, 'Your Changes Have Been Saved')
        
-    return render(request, 'serviceStation/profile.html')
+    return render(request, 'serviceStation/profile.html', {'sub':sub})
 
 
 #activated_for_whatsapp
