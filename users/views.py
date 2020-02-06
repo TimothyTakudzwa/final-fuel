@@ -71,11 +71,18 @@ def allocated_fuel(request,sid):
             if int(request.POST['quantity']) > company_quantity.unallocated_petrol:
                 messages.warning(request, f'You can not allocate fuel above your company petrol capacity of {company_quantity.unallocated_petrol}')
                 return redirect('users:allocate')
-            
-            if float(request.POST['price']) > company_quantity.petrol_price:
-                messages.warning(request, f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}')
-                return redirect('users:allocate')
-                
+            if request.POST['fuel_payment_type'] == "RTGS":
+                if float(request.POST['price']) > company_quantity.petrol_price:
+                    messages.warning(request, f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}')
+                    return redirect('users:allocate')
+                else:
+                    pass
+            elif request.POST['fuel_payment_type'] == "USD": 
+                if float(request.POST['price']) > company_quantity.usd_petrol_price:
+                    messages.warning(request, f'You can not set price above NOIC petrol price of {company_quantity.usd_petrol_price}')
+                    return redirect('users:allocate')
+                else:
+                    pass
             fuel_updated = SuballocationFuelUpdate.objects.create(subsidiary=sub, payment_type=request.POST['fuel_payment_type'], cash=request.POST['cash'], swipe=request.POST['swipe'], petrol_quantity=request.POST['quantity'], petrol_price=request.POST['price'])
             if request.POST['fuel_payment_type'] == 'USD & RTGS':
                 fuel_updated.petrol_usd_price = request.POST['usd_price']
@@ -92,10 +99,18 @@ def allocated_fuel(request,sid):
             if int(request.POST['quantity']) > company_quantity.unallocated_diesel:
                 messages.warning(request, f'You can not allocate fuel above your company diesel capacity of {company_quantity.unallocated_diesel}')
                 return redirect('users:allocate')
-
-            if float(request.POST['price']) > company_quantity.diesel_price:
-                messages.warning(request, f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}')
-                return redirect('users:allocate')
+            if request.POST['fuel_payment_type'] == "RTGS":
+                if float(request.POST['price']) > company_quantity.diesel_price:
+                    messages.warning(request, f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}')
+                    return redirect('users:allocate')
+                else:
+                    pass
+            elif request.POST['fuel_payment_type'] == "USD": 
+                if float(request.POST['price']) > company_quantity.usd_diesel_price:
+                    messages.warning(request, f'You can not set price above NOIC diesel price of {company_quantity.usd_diesel_price}')
+                    return redirect('users:allocate')
+                else:
+                    pass
             fuel_updated = SuballocationFuelUpdate.objects.create(subsidiary=sub, payment_type=request.POST['fuel_payment_type'], cash=request.POST['cash'], swipe=request.POST['swipe'], diesel_quantity=request.POST['quantity'], diesel_price=request.POST['price'])
             if request.POST['fuel_payment_type'] == 'USD & RTGS':
                 fuel_updated.diesel_usd_price = request.POST['usd_price']
