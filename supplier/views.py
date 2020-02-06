@@ -58,7 +58,7 @@ def delivery_schedules(request):
         messages.success(request, "File Successfully Uploaded")
         msg = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
         Notification.objects.create(user=request.user,action='DELIVERY', message=msg, reference_id=schedule.id)
-        print(schedule.supplier_document)
+        return redirect('delivery_schedules')
         
     schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user).all()
     for schedule in schedules:
@@ -720,7 +720,7 @@ def view_delivery_schedule(request,id):
         messages.success(request, "File Successfully Uploaded")
         msg = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
         Notification.objects.create(user=request.user,action='DELIVERY', message=msg, reference_id=schedule.id)
-        print(schedule.supplier_document)
+        return redirect('delivery_schedules')
     schedule = DeliverySchedule.objects.filter(id=id).first()
     if schedule.transaction.offer.delivery_method.lower() == 'delivery':
         schedule.delivery_address = schedule.transaction.offer.request.delivery_address
