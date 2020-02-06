@@ -1425,11 +1425,11 @@ def edit_depot_rep(request, id):
 def company_profile(request):
     compan = Company.objects.filter(id = request.user.company.id).first()
     num_of_subsidiaries = Subsidiaries.objects.filter(company=request.user.company).count()
-    fuel_capacity = F_Update.objects.filter(company_id=request.user.company.id).filter(sub_type='Company').first()
+    fuel_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
 
     if request.method == 'POST':
-        if F_Update.objects.filter(id=fuel_capacity.id).exists():
-            fuel_update = F_Update.objects.filter(id=fuel_capacity.id).first()
+        if CompanyFuelUpdate.objects.filter(id=fuel_capacity.id).exists():
+            fuel_update = CompanyFuelUpdate.objects.filter(id=fuel_capacity.id).first()
             fuel_update.petrol_quantity = request.POST['petrol']
             fuel_update.diesel_quantity = request.POST['diesel']
             fuel_update.save()
