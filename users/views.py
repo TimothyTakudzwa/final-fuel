@@ -287,13 +287,13 @@ def allocation_update(request,id):
                 fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['quantity'])
                 depot.diesel_quantity = depot.diesel_quantity + int(request.POST['quantity'])
                 
-                if fuel_update.payment == "RTGS":
+                if fuel_update.payment_type == "RTGS":
                     if float(request.POST['price']) > company_quantity.diesel_price: 
                         messages.warning(request, f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}')
                         return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}') 
                     else:
                         fuel_update.diesel_price = request.POST['price']   
-                elif fuel_update.payment == "USD":
+                elif fuel_update.payment_type == "USD":
                     if float(request.POST['price']) > company_quantity.usd_diesel_price: 
                         messages.warning(request, f'You can not set price above NOIC usd diesel price of {company_quantity.usd_diesel_price}')
                         return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}') 
