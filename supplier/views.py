@@ -15,7 +15,7 @@ import secrets
 from buyer.utils import render_to_pdf
 from company.models import Company
 from users.models import Audit_Trail
-from datetime import date, time
+from datetime import date, time, datetime
 from buyer.constants2 import industries, job_titles
 from buyer.forms import BuyerUpdateForm
 from buyer.models import FuelRequest
@@ -122,11 +122,12 @@ def account(request):
 @login_required()
 def fuel_request(request):
     sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-    if sub.praz_reg_num != None:
-        requests = FuelRequest.objects.filter(is_deleted=False ,wait=True, is_complete=False).all()
-        direct_requests =  FuelRequest.objects.filter(is_deleted=False, is_complete=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
-        requests = list(chain(requests, direct_requests))
-        requests.sort(key = attrgetter('date', 'time'), reverse = True)
+    if sub:
+        if sub.praz_reg_num != None:
+            requests = FuelRequest.objects.filter(is_deleted=False ,wait=True, is_complete=False).all()
+            direct_requests =  FuelRequest.objects.filter(is_deleted=False, is_complete=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
+            requests = list(chain(requests, direct_requests))
+            requests.sort(key = attrgetter('date', 'time'), reverse = True)
     else:
         requests = FuelRequest.objects.filter(~Q(name__company__is_govnt_org=True)).filter(is_deleted=False ,wait=True, is_complete=False).all()
         direct_requests =  FuelRequest.objects.filter(~Q(name__company__is_govnt_org=True)).filter(is_deleted=False, is_complete=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
@@ -365,6 +366,7 @@ def edit_offer(request, id):
 
 @login_required
 def transaction(request):
+    today = datetime.now().strftime("%m/%d/%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
     transactions = []
     for tran in Transaction.objects.filter(supplier=request.user).all():
@@ -374,7 +376,8 @@ def transaction(request):
         transactions.append(tran)    
     context= { 
        'transactions' : transactions,
-       'transporters' : transporters
+       'transporters' : transporters,
+       'today': today
         }
     return render(request, 'supplier/transactions.html',context=context)
 

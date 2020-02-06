@@ -38,6 +38,8 @@ class CompanyFuelUpdate(models.Model):
     allocated_diesel = models.FloatField(default=0.00)
     unallocated_petrol = models.FloatField(default=0.00)
     unallocated_diesel = models.FloatField(default=0.00)
+    usd_diesel_price = models.FloatField(default=0.00)
+    usd_petrol_price = models.FloatField(default=0.00)
     diesel_price = models.FloatField(default=0.00)
     petrol_price = models.FloatField(default=0.00)
 

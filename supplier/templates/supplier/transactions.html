@@ -4,6 +4,7 @@
 
 {% block body %}
 <!-- Content Header (Page header) -->
+
 <section class="content-header">
     <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
         <div class="input-group">
@@ -159,7 +160,7 @@
                                             <div class="row">
                                                 <div class="form-group col-md-6">
                                                 <label>Delivery Date</label>
-                                                <input type="date" name="delivery_date" class="form-control" required/>
+                                                <input id="date_field" type="date" name="delivery_date" class="form-control"  required/>
                                             </div>
                                             <div class="form-group col-md-6">         
                                                 <label>Delivery Time</label>
@@ -225,5 +226,19 @@
             </div>
         </div>
     </div>
+    <script>
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+        var yyyy = today.getFullYear();
+        if(dd<10){
+                dd='0'+dd
+            } 
+            if(mm<10){
+                mm='0'+mm
+            } 
     
+        today = yyyy+'-'+mm+'-'+dd;
+    document.getElementById("date_field").setAttribute("min", today);
+    </script>
 {%endblock%}

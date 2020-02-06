@@ -134,7 +134,7 @@
                                     </div>
                                     <div class="modal-body">
                                         {% load crispy_forms_tags %}
-                                        <form action="{% url 'users:edit_fuel_prices' allocate.id %}" method="POST">
+                                        <form action="{% url 'users:edit_suballocation_fuel_prices' allocate.id %}" method="POST">
                                             {% csrf_token %}
 
 
