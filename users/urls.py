@@ -36,6 +36,7 @@ urlpatterns = [
     path('edit_subsidiary/<int:id>', views.edit_subsidiary, name="edit_subsidiary"),
     path('delete_subsidiary/<int:id>', views.delete_subsidiary, name="delete_subsidiary"),
     path('edit_fuel_prices/<int:id>', views.edit_fuel_prices, name="edit_fuel_prices"),
+    path('edit_suballocation_fuel_prices/<int:id>', views.edit_suballocation_fuel_prices, name="edit_suballocation_fuel_prices"),
     path('sordactions/<id>', views.sordactions, name="sordactions"),
     path('sord_station_sales/', views.sord_station_sales, name="sord_station_sales"),
     path('allocate_diesel/<int:id>', views.allocate_diesel, name="allocate_diesel"),

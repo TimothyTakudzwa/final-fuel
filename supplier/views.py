@@ -61,6 +61,11 @@ def delivery_schedules(request):
         print(schedule.supplier_document)
         
     schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user).all()
+    for schedule in schedules:
+        if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+            schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+        else:
+            schedule.delivery_address = schedule.transaction.offer.collection_address
     return render(request, 'supplier/delivery_schedules.html', {'schedules': schedules})    
 
 
@@ -117,12 +122,11 @@ def account(request):
 @login_required()
 def fuel_request(request):
     sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-    if sub:
-        if sub.praz_reg_num != None:
-            requests = FuelRequest.objects.filter(is_deleted=False ,wait=True, is_complete=False).all()
-            direct_requests =  FuelRequest.objects.filter(is_deleted=False, is_complete=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
-            requests = list(chain(requests, direct_requests))
-            requests.sort(key = attrgetter('date', 'time'), reverse = True)
+    if sub.praz_reg_num != None:
+        requests = FuelRequest.objects.filter(is_deleted=False ,wait=True, is_complete=False).all()
+        direct_requests =  FuelRequest.objects.filter(is_deleted=False, is_complete=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
+        requests = list(chain(requests, direct_requests))
+        requests.sort(key = attrgetter('date', 'time'), reverse = True)
     else:
         requests = FuelRequest.objects.filter(~Q(name__company__is_govnt_org=True)).filter(is_deleted=False ,wait=True, is_complete=False).all()
         direct_requests =  FuelRequest.objects.filter(~Q(name__company__is_govnt_org=True)).filter(is_deleted=False, is_complete=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
@@ -718,5 +722,9 @@ def view_delivery_schedule(request,id):
         Notification.objects.create(user=request.user,action='DELIVERY', message=msg, reference_id=schedule.id)
         print(schedule.supplier_document)
     schedule = DeliverySchedule.objects.filter(id=id).first()
+    if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+        schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+    else:
+        schedule.delivery_address = schedule.transaction.offer.collection_address
     return render(request, 'supplier/view_delivery_schedule.html', {'schedule': schedule})
     

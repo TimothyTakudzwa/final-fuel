@@ -79,28 +79,19 @@
                 <script>
                     $(document).ready(function () {
                       $('#choices{{forloop.counter}}').hide();
-                      $('#choices1{{forloop.counter}}').hide();
-                  
-                      $('#delivery_method1{{forloop.counter}}').change(function () {
-                        if ($('#delivery_method1{{forloop.counter}} option:selected').text() == "Delivery") {
-                          $('#choices1{{forloop.counter}}').hide();
-                        }
-                        else {
-                          $('#choices1{{forloop.counter}}').show();
-                          $('#street_name').attr('required', '');
-                          $('#street_number').attr('required', '');
-                          $('#location').attr('required', '');                                        
-                        }
-                      });
+
                       $('#delivery_method{{forloop.counter}}').change(function () {
                         if ($('#delivery_method{{forloop.counter}} option:selected').text() == "Self Collection") {
                           $('#choices{{forloop.counter}}').show();
-                          $('#street_name').attr('required', '');
-                          $('#street_number').attr('required', '');
-                          $('#location').attr('required', '');
+                          $('#street_name{{forloop.counter}}').attr('required', '');
+                          $('#street_number{{forloop.counter}}').attr('required', '');
+                          $('#location{{forloop.counter}}').attr('required', '');
                         }
                         else {
                           $('#choices{{forloop.counter}}').hide();
+                          $('#street_name{{forloop.counter}}').removeAttr('required', '');
+                          $('#street_number{{forloop.counter}}').removeAttr('required', '');
+                          $('#location{{forloop.counter}}').removeAttr('required', '');
                         }
                       });
                     });
@@ -161,28 +152,28 @@ aria-hidden="true">
 
      <div class="form-group">
          <label>Pick Up Method</label>
-         <select id="delivery_method1{{forloop.counter}}" name="delivery_method1" class="form-control">
+         <select id="delivery_method{{forloop.counter}}" name="delivery_method" class="form-control">
             <option value='DELIVERY'>Delivery</option>
             <option value='SELF COLLECTION'>Self Collection</option>
          </select>
      </div>
 
-     <div class="form-group" name='choices1' id='choices1{{forloop.counter}}'>
+     <div class="form-group" name='choices' id='choices{{forloop.counter}}'>
         <p style="text-align: center;"><label>Collection Address</label></p>
          <div class=" row col-sm-12">                          
             <div class="togglebutton col-sm-4">
               <label for="">Street Number</label>
-              <input type="text" class="form-control" name="street_number" aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="street_number" id="street_number{{forloop.counter}}" aria-describedby="helpId" placeholder="">
               
             </div>
             <div class="togglebutton col-sm-4">
               <label for="">Street Name</label>
-              <input type="text" class="form-control" name="street_name" aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="street_name" id="street_name{{forloop.counter}}"aria-describedby="helpId" placeholder="">
               
             </div>
             <div class="togglebutton col-sm-4">
               <label for="">Location/Town</label>
-              <input type="text" class="form-control" name="location" aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="location" id="location{{forloop.counter}}" aria-describedby="helpId" placeholder="">
             </div>
             </div>
         </div>
