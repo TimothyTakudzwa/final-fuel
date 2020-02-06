@@ -3,7 +3,7 @@ from operator import attrgetter
 
 from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
@@ -707,7 +707,7 @@ def view_delivery_schedule(request,id):
     if request.method == 'POST':
         supplier_document = request.FILES.get('supplier_document')
         delivery_id = request.POST.get('delivery_id')
-        schedule = DeliverySchedule.objects.get(id=delivery_id)
+        schedule = get_object_or_404(DeliverySchedule,id=delivery_id)
         schedule.supplier_document = supplier_document
         schedule.save()
         messages.success(request, "File Successfully Uploaded")
