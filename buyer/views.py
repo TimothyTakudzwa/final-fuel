@@ -539,7 +539,7 @@ def view_invoice(request, id):
 
 
 @login_required
-def delivery_schedule(request):
+def delivery_schedules(request):
     schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user)
     for schedule in schedules:
         schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
@@ -562,4 +562,4 @@ def delivery_schedule(request):
 
 def delivery_schedule(request,id):
     schedule = DeliverySchedule.objects.filter(id=id).first()
-    return render(request, 'supplier/delivery_schedule.html', {'schedule': schedule})
+    return render(request, 'buyer/delivery_schedule.html', {'schedule': schedule})

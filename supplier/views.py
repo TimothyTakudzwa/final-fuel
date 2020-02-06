@@ -3,7 +3,7 @@ from operator import attrgetter
 
 from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
@@ -57,7 +57,7 @@ def delivery_schedules(request):
         schedule.save()
         messages.success(request, "File Successfully Uploaded")
         msg = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
-        Notification.objects.create(user=request.user,action='DELIVERY', message=message, reference_id=schedule.id)
+        Notification.objects.create(user=request.user,action='DELIVERY', message=msg, reference_id=schedule.id)
         print(schedule.supplier_document)
         
     schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user).all()
@@ -389,6 +389,7 @@ def create_delivery_schedule(request):
         messages.success(request,"Schedule Successfully Created")
         message = f"{schedule.transaction.supplier.company} has created a delivery schedule for you, Click To View Schedule"
         Notification.objects.create(user=schedule.transaction.buyer,action='schedule', message=message, reference_id=schedule.id)
+        
         return redirect('transaction')
         
 
@@ -703,6 +704,16 @@ def del_supplier_doc(request,id):
     return redirect('supplier:delivery_schedules')
 
 def view_delivery_schedule(request,id):
+    if request.method == 'POST':
+        supplier_document = request.FILES.get('supplier_document')
+        delivery_id = request.POST.get('delivery_id')
+        schedule = get_object_or_404(DeliverySchedule,id=delivery_id)
+        schedule.supplier_document = supplier_document
+        schedule.save()
+        messages.success(request, "File Successfully Uploaded")
+        msg = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
+        Notification.objects.create(user=request.user,action='DELIVERY', message=msg, reference_id=schedule.id)
+        print(schedule.supplier_document)
     schedule = DeliverySchedule.objects.filter(id=id).first()
     return render(request, 'supplier/view_delivery_schedule.html', {'schedule': schedule})
     
