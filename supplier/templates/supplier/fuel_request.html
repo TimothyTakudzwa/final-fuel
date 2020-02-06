@@ -98,23 +98,29 @@
                       $('#delivery_method1{{forloop.counter}}').change(function () {
                         if ($('#delivery_method1{{forloop.counter}} option:selected').text() == "Delivery") {
                           $('#choices1{{forloop.counter}}').hide();
+                          $('#location{{forloop.counter}}').removeAttr('required', '');
+                          $('#street_number{{forloop.counter}}').removeAttr('required', '');
+                          $('#street_name{{forloop.counter}}').removeAttr('required', '');
                         }
                         else {
                           $('#choices1{{forloop.counter}}').show();
-                          $('#street_name').attr('required', '');
-                          $('#street_number').attr('required', '');
-                          $('#location').attr('required', '');                                        
+                          $('#street_name{{forloop.counter}}').attr('required', '');
+                          $('#street_number{{forloop.counter}}').attr('required', '');
+                          $('#location{{forloop.counter}}').attr('required', '');                                        
                         }
                       });
                       $('#delivery_method{{forloop.counter}}').change(function () {
                         if ($('#delivery_method{{forloop.counter}} option:selected').text() == "Self Collection") {
                           $('#choices{{forloop.counter}}').show();
-                          $('#street_name').attr('required', '');
-                          $('#street_number').attr('required', '');
-                          $('#location').attr('required', '');
+                          $('#street_name{{forloop.counter}}').attr('required', '');
+                          $('#street_number{{forloop.counter}}').attr('required', '');
+                          $('#location{{forloop.counter}}').attr('required', '');
                         }
                         else {
                           $('#choices{{forloop.counter}}').hide();
+                          $('#location{{forloop.counter}}').removeAttr('required', '');
+                          $('#street_number{{forloop.counter}}').removeAttr('required', '');
+                          $('#street_name{{forloop.counter}}').removeAttr('required', '');
                         }
                       });
                     });
@@ -171,37 +177,6 @@ aria-hidden="true">
         <input type="text" name="price" class="form-control" value="{{req.price}}"/>
     </div>
     </div>
-    <!-- <p style="text-align: center;"><label class="form-group">Select Payment Method</label></p>
-    <div class="col-sm-12 col">
-        <div class="togglebutton form-group col-sm-3">
-            <label>
-                <input type="checkbox" name="cash" id="cash">
-                <span class="toggle"></span>
-                Cash
-            </label>
-        </div>
-        <div class="togglebutton form-group col-sm-3">
-            <label>
-                <input type="checkbox" name="ecocash" id="ecocash">
-                <span class="toggle" value="True"></span>
-                Ecocash
-            </label>
-        </div>
-        <div class="togglebutton form-group col-sm-3">
-            <label>
-                <input type="checkbox" name="swipe" id="swipe">
-                <span class="toggle"></span>
-                Swipe
-            </label>
-        </div>
-        <div class="togglebutton form-group col-sm-3">
-            <label>
-                <input type="checkbox" name="usd" id="usd">
-                <span class="toggle"></span>
-                USD
-            </label>
-        </div>
-    </div> -->
 
 
     <div class="row col-sm-12 form-group" style="margin-top: 5;">
@@ -217,17 +192,17 @@ aria-hidden="true">
         <div class=" row col-sm-12">                            
             <div class="togglebutton col-sm-4">
               <label for="">Street Number</label>
-              <input type="text" class="form-control" name="street_number" aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="street_number" id="street_number{{forloop.counter}}" aria-describedby="helpId" placeholder="">
               
             </div>
             <div class="togglebutton col-sm-4">
               <label for="">Street Name</label>
-              <input type="text" class="form-control" name="street_name" aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="street_name" id="street_name{{forloop.counter}}" aria-describedby="helpId" placeholder="">
               
             </div>
             <div class="togglebutton col-sm-4">
               <label for="">Location/Town</label>
-              <input type="text" class="form-control" name="location" aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="location" id="location{{forloop.counter}}" aria-describedby="helpId" placeholder="">
              
             </div>
             </div>
@@ -289,37 +264,6 @@ aria-hidden="true">
          <input type="text" name="price" class="form-control" value="{{req.offer_price}}"/>
      </div>
      </div>
-     <!-- <p style="text-align: center;"><label class="form-group">Select Payment Method</label></p>
-     <div class="col-sm-12 col">
-        <div class="togglebutton form-group col-sm-3">
-            <label>
-                <input type="checkbox" name="cash">
-                <span class="toggle"></span>
-                Cash
-            </label>
-        </div>
-        <div class="togglebutton form-group col-sm-3">
-            <label>
-                <input type="checkbox" name="ecocash">
-                <span class="toggle" value="True"></span>
-                Ecocash
-            </label>
-        </div>
-        <div class="togglebutton form-group col-sm-3">
-            <label>
-                <input type="checkbox" name="swipe">
-                <span class="toggle"></span>
-                Swipe
-            </label>
-        </div>
-        <div class="togglebutton form-group col-sm-3">
-            <label>
-                <input type="checkbox" name="usd">
-                <span class="toggle"></span>
-                USD
-            </label>
-        </div>
-    </div> -->
 
 
     <div class="row col-sm-12 form-group" style="margin-top: 5;">
@@ -335,17 +279,17 @@ aria-hidden="true">
          <div class=" row col-sm-12">                          
             <div class="togglebutton col-sm-4">
               <label for="">Street Number</label>
-              <input type="text" class="form-control" name="street_number" aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="street_number" id="street_number{{forloop.counter}}" aria-describedby="helpId" placeholder="">
               
             </div>
             <div class="togglebutton col-sm-4">
               <label for="">Street Name</label>
-              <input type="text" class="form-control" name="street_name" aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="street_name" id="street_name{{forloop.counter}}" aria-describedby="helpId" placeholder="">
               
             </div>
             <div class="togglebutton col-sm-4">
               <label for="">Location/Town</label>
-              <input type="text" class="form-control" name="location" aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="location" id="location{{forloop.counter}}" aria-describedby="helpId" placeholder="">
             </div>
             </div>
         </div>

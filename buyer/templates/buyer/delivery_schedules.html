@@ -46,6 +46,7 @@
                         <th style="color: white;">Supplier</th>
                         <th style="color: white;">Delivery Date</th>
                         <th style="color: white;">Delivery Time</th>
+                        <th style="color: white;">Address</th>
                         <th style="color: white;">Fuel</th>
                         <th style="color: white;">Quantity</th>
                         <th style="color: white;">Equipment</th>
@@ -60,6 +61,7 @@
                         <td>{{ delivery.subsidiary }}</td>
                         <td>{{ delivery.date }}</td>
                         <td>{{ delivery.delivery_time }}</td>
+                        <td>{{ delivery.delivery_address }}</td>
                         <td>{{ delivery.transaction.offer.request.fuel_type }}</td>
                         <td>{{ delivery.transaction.offer.quantity }}</td>
                         <td>
@@ -113,7 +115,7 @@
                                 <div class="modal-body" style="padding: 30px;">
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Delivery Address: </p>
-                                        <p class="col-md-6">{{delivery.transaction.offer.request.delivery_address}}</p>
+                                        <p class="col-md-6">{{delivery.delivery_address}}</p>
                                     </div>
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Supplier Name: </p>
