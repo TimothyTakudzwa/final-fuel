@@ -85,11 +85,11 @@
                                 {% else %}
                                 {% endif %}
                             </td>
-                            <div class="modal fade" id="review_{{transaction.id}}" role="dialog">
+                            <div class="modal fade modal-success in" id="review_{{transaction.id}}" role="dialog">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                        <div class="modal-header" style= "background:#402d57e0">
-                                            <h4 class="modal-title" style= "color:whitesmoke" >Review {{transaction.supplier}}</h4>   
+                                        <div class="modal-header">
+                                            <span class="modal-title" style= "color:whitesmoke" >Review {{transaction.supplier}}</span>   
                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                                         </div>
                                         <div class="modal-body" style= "background:white">
@@ -111,8 +111,9 @@
                                                     <label>Comment</label>
                                                     <input type="text" name="comment" class="form-control"/>
                                                 </div>
-                                                
+                                                <div class="modal-footer">
                                                 <input class="btn btn-info" type="submit" value="Submit">
+                                            </div>
                                             </form>
                                         </div>
                                     </div>
@@ -162,6 +163,12 @@
                                             <lable><b>Vehicle Reg:</b></lable>
                                             &nbsp;{{transaction.delivery_object.vehicle_reg }}
                                         </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" style="background-color: lightslategray;" data-dismiss="modal" aria-label="Close">
+                                                Close
+                                            </button>
+
                                         </div>
                             </div>
                             

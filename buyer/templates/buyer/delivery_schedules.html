@@ -93,7 +93,9 @@
                                       {% csrf_token %}
                                       <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
                                       {{form|crispy}}
-                                    <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Confirm Delivery"></p>
+                                    <div class="modal-footer">  
+                                    <input class="btn btn-info" type="submit" value="Confirm Delivery">
+                                    </div>
                                   </form>
                               </div>
                           </div>
@@ -177,10 +179,16 @@
                                                 <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Confirm Delivery"></p>
                                             </form>    
                                         {% endif %} 
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-primary" data-dismiss="modal">
+                                            Close
+                                        </button>
                                     </div>           
 
                                 </div>
                                 </div>
+                                </div>>
                                 
                             </div>
                         </div>
