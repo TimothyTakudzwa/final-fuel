@@ -98,15 +98,15 @@
                       $('#delivery_method1{{forloop.counter}}').change(function () {
                         if ($('#delivery_method1{{forloop.counter}} option:selected').text() == "Delivery") {
                           $('#choices1{{forloop.counter}}').hide();
-                          $('#location{{forloop.counter}}').removeAttr('required', '');
-                          $('#street_number{{forloop.counter}}').removeAttr('required', '');
-                          $('#street_name{{forloop.counter}}').removeAttr('required', '');
+                          $('#location1{{forloop.counter}}').removeAttr('required', '');
+                          $('#street_number1{{forloop.counter}}').removeAttr('required', '');
+                          $('#street_name1{{forloop.counter}}').removeAttr('required', '');
                         }
                         else {
                           $('#choices1{{forloop.counter}}').show();
-                          $('#street_name{{forloop.counter}}').attr('required', '');
-                          $('#street_number{{forloop.counter}}').attr('required', '');
-                          $('#location{{forloop.counter}}').attr('required', '');                                        
+                          $('#street_name1{{forloop.counter}}').attr('required', '');
+                          $('#street_number1{{forloop.counter}}').attr('required', '');
+                          $('#location1{{forloop.counter}}').attr('required', '');                                        
                         }
                       });
                       $('#delivery_method{{forloop.counter}}').change(function () {
@@ -279,17 +279,17 @@ aria-hidden="true">
          <div class=" row col-sm-12">                          
             <div class="togglebutton col-sm-4">
               <label for="">Street Number</label>
-              <input type="text" class="form-control" name="street_number" id="street_number{{forloop.counter}}" aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="street_number" id="street_number1{{forloop.counter}}" aria-describedby="helpId" placeholder="">
               
             </div>
             <div class="togglebutton col-sm-4">
               <label for="">Street Name</label>
-              <input type="text" class="form-control" name="street_name" id="street_name{{forloop.counter}}" aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="street_name" id="street_name1{{forloop.counter}}" aria-describedby="helpId" placeholder="">
               
             </div>
             <div class="togglebutton col-sm-4">
               <label for="">Location/Town</label>
-              <input type="text" class="form-control" name="location" id="location{{forloop.counter}}" aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="location" id="location1{{forloop.counter}}" aria-describedby="helpId" placeholder="">
             </div>
             </div>
         </div>
