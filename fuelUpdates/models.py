@@ -10,6 +10,7 @@ class SordCompanyAuditTrail(models.Model):
     action_no = models.PositiveIntegerField()
     action = models.CharField(max_length=150)
     fuel_type = models.CharField(max_length=150, blank=True, null=True)
+    payment_type = models.CharField(max_length=150,default="RTGS")
     initial_quantity = models.FloatField(default=0.0)
     quantity_allocated = models.FloatField(default=0.0)
     end_quantity = models.FloatField(default=0.0)
