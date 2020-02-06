@@ -417,14 +417,11 @@ def allocation_update_main(request,id):
                     messages.warning(request, f'You can not allocate fuel above your company petrol quantity of {company_quantity.unallocated_petrol}')
                     return redirect('users:allocate')
                 fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['quantity']) 
-                #depot.petrol_quantity = depot.petrol_quantity + int(request.POST['quantity']) 
                 if float(request.POST['price']) > company_quantity.petrol_price:
                     messages.warning(request, f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}')
                     return redirect('users:allocate')   
                 else:                    
                     fuel_update.petrol_price = float(request.POST['price'])   
-                # if fuel_update.payment_type == 'USD & RTGS':
-                #     fuel_update.petrol_usd_price = float(request.POST['usd_price'])            
                 company_quantity.unallocated_petrol = company_quantity.unallocated_petrol - int(request.POST['quantity'])
                 company_quantity.save()
             else:
@@ -432,23 +429,18 @@ def allocation_update_main(request,id):
                     messages.warning(request, f'You can not allocate fuel above your company diesel quantity of {company_quantity.unallocated_diesel}')
                     return redirect('users:allocate')
                 fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['quantity'])
-                #depot.diesel_quantity = depot.diesel_quantity + int(request.POST['quantity'])
                 if float(request.POST['price']) > company_quantity.diesel_price:
                     messages.warning(request, f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}')
                     return redirect('users:allocate')
                 else:
                     fuel_update.diesel_price = request.POST['price']    
-                # if fuel_update.entry_type == 'USD & RTGS':
-                #     fuel_update.diesel_usd_price = float(request.POST['usd_price']) 
                 company_quantity.unallocated_diesel = company_quantity.unallocated_diesel - int(request.POST['quantity'])
                 company_quantity.save()   
             fuel_update.cash = request.POST['cash']
             fuel_update.swipe = request.POST['swipe']
-            #if fuel_update.payment_type != 'USD':
             fuel_update.ecocash = request.POST['ecocash']         
            
             fuel_update.save()
-            #depot.save()
             
             action = 'Allocation of ' + request.POST['fuel_type']
             if request.POST['fuel_type'].lower() == 'petrol':
