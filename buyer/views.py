@@ -543,6 +543,10 @@ def delivery_schedules(request):
     schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user)
     for schedule in schedules:
         schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+        if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+            schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+        else:
+            schedule.delivery_address = schedule.transaction.offer.collection_address
     context = { 'form' : DeliveryScheduleForm(),
                'schedules' : schedules
             }
@@ -563,6 +567,10 @@ def delivery_schedules(request):
 def delivery_schedule(request,id):
     schedule = DeliverySchedule.objects.filter(id=id).first()
     schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+    if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+        schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+    else:
+        schedule.delivery_address = schedule.transaction.offer.collection_address
     context = { 
                'form' : DeliveryScheduleForm(),
                'schedule' : schedule

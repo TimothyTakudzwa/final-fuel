@@ -61,6 +61,11 @@ def delivery_schedules(request):
         print(schedule.supplier_document)
         
     schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user).all()
+    for schedule in schedules:
+        if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+            schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+        else:
+            schedule.delivery_address = schedule.transaction.offer.collection_address
     return render(request, 'supplier/delivery_schedules.html', {'schedules': schedules})    
 
 
@@ -718,5 +723,9 @@ def view_delivery_schedule(request,id):
         Notification.objects.create(user=request.user,action='DELIVERY', message=msg, reference_id=schedule.id)
         print(schedule.supplier_document)
     schedule = DeliverySchedule.objects.filter(id=id).first()
+    if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+        schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+    else:
+        schedule.delivery_address = schedule.transaction.offer.collection_address
     return render(request, 'supplier/view_delivery_schedule.html', {'schedule': schedule})
     
