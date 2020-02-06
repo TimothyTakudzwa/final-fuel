@@ -3,11 +3,12 @@ from operator import attrgetter
 
 from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.contrib import messages
+from django.db.models import Q
 
 import secrets
 
@@ -56,7 +57,7 @@ def delivery_schedules(request):
         schedule.save()
         messages.success(request, "File Successfully Uploaded")
         msg = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
-        Notification.objects.create(user=request.user,action='DELIVERY', message=message, reference_id=schedule.id)
+        Notification.objects.create(user=request.user,action='DELIVERY', message=msg, reference_id=schedule.id)
         print(schedule.supplier_document)
         
     schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user).all()
@@ -105,20 +106,27 @@ def change_password(request):
 
 @login_required()
 def account(request):
-    subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-    if subsidiary is not None:
-        subsidiary_name = subsidiary.name
-    else:
-        subsidiary_name = "Not Set"
-    return render(request, 'supplier/user_profile.html', {'subsidiary_name':subsidiary_name})
+    sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+    # if subsidiary is not None:
+    #     subsidiary_name = subsidiary.name
+    # else:
+    #     subsidiary_name = "Not Set"
+    return render(request, 'supplier/user_profile.html', {'sub':sub})
 
 
 @login_required()
 def fuel_request(request):
-    requests = FuelRequest.objects.filter(is_deleted=False ,wait=True, is_complete=False).all()
-    direct_requests =  FuelRequest.objects.filter(is_deleted=False, is_complete=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
-    requests = list(chain(requests, direct_requests))
-    requests.sort(key = attrgetter('date', 'time'), reverse = True)
+    sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+    if sub.praz_reg_num != None:
+        requests = FuelRequest.objects.filter(is_deleted=False ,wait=True, is_complete=False).all()
+        direct_requests =  FuelRequest.objects.filter(is_deleted=False, is_complete=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
+        requests = list(chain(requests, direct_requests))
+        requests.sort(key = attrgetter('date', 'time'), reverse = True)
+    else:
+        requests = FuelRequest.objects.filter(~Q(name__company__is_govnt_org=True)).filter(is_deleted=False ,wait=True, is_complete=False).all()
+        direct_requests =  FuelRequest.objects.filter(~Q(name__company__is_govnt_org=True)).filter(is_deleted=False, is_complete=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
+        requests = list(chain(requests, direct_requests))
+        requests.sort(key = attrgetter('date', 'time'), reverse = True)
 
     for buyer_request in requests:
         if buyer_request.payment_method == 'USD':
@@ -380,7 +388,12 @@ def create_delivery_schedule(request):
         )
         messages.success(request,"Schedule Successfully Created")
         message = f"{schedule.transaction.supplier.company} has created a delivery schedule for you, Click To View Schedule"
+<<<<<<< HEAD
         Notification.objects.create(user=schedule.transaction.buyer,action='schedule`   ', message=message, reference_id=schedule.id)
+=======
+        Notification.objects.create(user=schedule.transaction.buyer,action='schedule', message=message, reference_id=schedule.id)
+        
+>>>>>>> e458a6a1a8168ccfd421746b56e48bb26f2e80c1
         return redirect('transaction')
         
 
@@ -482,10 +495,10 @@ def create_company(request, id):
             if user_type == 'BUYER':
                 company_name = request.POST.get('company_name')
                 address = request.POST.get('address')
+                is_govnt_org = request.POST.get('is_govnt_org')
                 logo = request.FILES.get('logo')
                 company_name = user.company.name
-                Company.objects.filter(name=company_name).update(name = company_name,
-                address = address, logo = logo)
+                Company.objects.filter(name=company_name).update(name = company_name,address = address, logo = logo,is_govnt_org=is_govnt_org)
                 return redirect('login')
 
             else:
@@ -694,12 +707,17 @@ def del_supplier_doc(request,id):
     messages.success(request, 'Document Removed Successfully')
     return redirect('supplier:delivery_schedules')
 
-
-
-    
-
-
 def view_delivery_schedule(request,id):
+    if request.method == 'POST':
+        supplier_document = request.FILES.get('supplier_document')
+        delivery_id = request.POST.get('delivery_id')
+        schedule = get_object_or_404(DeliverySchedule,id=delivery_id)
+        schedule.supplier_document = supplier_document
+        schedule.save()
+        messages.success(request, "File Successfully Uploaded")
+        msg = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
+        Notification.objects.create(user=request.user,action='DELIVERY', message=msg, reference_id=schedule.id)
+        print(schedule.supplier_document)
     schedule = DeliverySchedule.objects.filter(id=id).first()
     return render(request, 'supplier/view_delivery_schedule.html', {'schedule': schedule})
     

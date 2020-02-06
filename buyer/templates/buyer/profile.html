@@ -106,21 +106,26 @@
                       </div>
                       <div class="col-sm-4">
                         <div class="review-block-rate">
-                            <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Company Address</h4>
+                            <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Company Industry</h4>
                             </label>
                            
                         </div>
-                        <div class="review-block-title">{{user.company.address}}</div>
+                        <div class="review-block-title">{{user.company.industry}}</div>
                         <div class="review-block-description"> </div>
                     </div>
                     <div class="col-sm-12">
                       <div class="review-block-rate">
-                          <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Company Address</h4>
+                          <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>BP Number</h4>
                           </label>
                          
                       </div>
-                      <div class="review-block-title">{{user.company.address}}</div>
+                      {% if user.company.bp_num != None %}
+                      <div class="review-block-title">{{user.company.bp_num}}</div>
                       <div class="review-block-description"> </div>
+                      {% else %}
+                      <div class="review-block-title">N/A</div>
+                      <div class="review-block-description"> </div>
+                      {% endif %}
                   </div>
                       
                   </div>

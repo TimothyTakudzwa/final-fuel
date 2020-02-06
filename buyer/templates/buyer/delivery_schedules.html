@@ -140,6 +140,26 @@
                                         <p class="col-md-6">{{delivery.vehicle_reg}}</p>
                                     </div>
                                     <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Tank Details: </p>
+                                        <p class="col-md-6">{{delivery.transaction.offer.request.storage_tanks}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Equipment Required: </p>
+                                        <p class="col-md-6">
+                                            {% if delivery.transaction.offer.request.pump_required %}
+                                            Pump
+                                            {% endif %}
+                                            {% if delivery.transaction.offer.request.dipping_stick_required %}
+                                            Dipping Stick
+                                            {% endif %}
+                                            {% if delivery.transaction.offer.request.meter_required %}
+                                            Meter Required
+                                            {% else %}
+                                            N/A
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Status: </p>
                                         {% if delivery.confirmation_document %}
                                         <p class="col-md-6"> 

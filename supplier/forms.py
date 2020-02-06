@@ -57,11 +57,12 @@ class UserUpdateForm(forms.ModelForm):
 class CreateCompany(forms.ModelForm):
     company_name = forms.CharField(required=True)
     address = forms.CharField(required=True)
+    is_govnt_org = forms.CharField(label='Government Organisation?',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
    
 
     class Meta:
         model = Company
-        fields = ['company_name', 'address', 'logo']
+        fields = ['company_name', 'address', 'logo', 'is_govnt_org']
 
 
 class FuelRequestForm(forms.ModelForm):
