@@ -16,6 +16,7 @@ class Company(models.Model):
     account_number = models.CharField(max_length=100, default='', blank=True, null=True)
     amount = models.FloatField(default=0.00, blank=True, null=True)
     bp_num = models.CharField(max_length=100, blank=True, null=True)
+    is_govnt_org = models.BooleanField(default=False)
 
     
     def __str__(self):

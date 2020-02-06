@@ -482,10 +482,10 @@ def create_company(request, id):
             if user_type == 'BUYER':
                 company_name = request.POST.get('company_name')
                 address = request.POST.get('address')
+                is_govnt_org = request.POST.get('is_govnt_org')
                 logo = request.FILES.get('logo')
                 company_name = user.company.name
-                Company.objects.filter(name=company_name).update(name = company_name,
-                address = address, logo = logo)
+                Company.objects.filter(name=company_name).update(name = company_name,address = address, logo = logo,is_govnt_org=is_govnt_org)
                 return redirect('login')
 
             else:

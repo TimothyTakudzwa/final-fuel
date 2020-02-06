@@ -299,8 +299,10 @@ def fuel_finder(request):
 
 @login_required
 def dashboard(request):
-    updates = SuballocationFuelUpdate.objects.filter(~Q(diesel_quantity=0.00)).filter(
-        ~Q(petrol_quantity=0.00))
+    if request.user.company.is_govnt_org == True:
+        updates = SuballocationFuelUpdate.objects.filter(~Q(subsidiary__praz_reg_num = None)).filter(~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
+    else:
+        updates = SuballocationFuelUpdate.objects.filter(~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
     for update in updates:
         subsidiary = Subsidiaries.objects.filter(id=update.subsidiary.id).first()
         if UserReview.objects.filter(depot=subsidiary).exists():

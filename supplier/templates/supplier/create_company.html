@@ -205,6 +205,7 @@
                                                                             {% if user_type == 'BUYER' %}
                                                                                 {{ form.company_name|as_crispy_field }}
                                                                                 {{ form.address|as_crispy_field }}
+                                                                                {{ form.is_govnt_org|as_crispy_field }}
                                                                                 {{ form.logo|as_crispy_field }}
                                                                             {% else %}
                                                                                 {{ form|crispy }}
