@@ -562,4 +562,9 @@ def delivery_schedules(request):
 
 def delivery_schedule(request,id):
     schedule = DeliverySchedule.objects.filter(id=id).first()
-    return render(request, 'buyer/delivery_schedule.html', {'schedule': schedule})
+    schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+    context = { 
+               'form' : DeliveryScheduleForm(),
+               'schedule' : schedule
+            }
+    return render(request, 'supplier/delivery_schedule.html', context=context)

@@ -209,6 +209,7 @@ def view_station_updates(request):
         else:
             return HttpResponse(status=403)
 
+
 @csrf_exempt
 @api_view(['POST'])
 def view_updates_user(request):
