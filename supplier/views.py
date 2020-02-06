@@ -692,11 +692,6 @@ def del_supplier_doc(request,id):
     messages.success(request, 'Document Removed Successfully')
     return redirect('supplier:delivery_schedules')
 
-
-
-    
-
-
 def view_delivery_schedule(request,id):
     schedule = DeliverySchedule.objects.filter(id=id).first()
     return render(request, 'supplier/view_delivery_schedule.html', {'schedule': schedule})
