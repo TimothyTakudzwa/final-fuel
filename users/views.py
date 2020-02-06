@@ -263,12 +263,19 @@ def allocation_update(request,id):
                     messages.warning(request, f'You can not allocate fuel above your company petrol quantity of {company_quantity.unallocated_petrol}')
                     return redirect('users:allocate')
                 fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['quantity']) 
-                depot.petrol_quantity = depot.petrol_quantity + int(request.POST['quantity']) 
-                if float(request.POST['price']) > company_quantity.petrol_price: 
-                    messages.warning(request, f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}')
-                    return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}') 
-                else:                  
-                    fuel_update.petrol_price = float(request.POST['price'])   
+                depot.petrol_quantity = depot.petrol_quantity + int(request.POST['quantity'])
+                if fuel_update.payment_type == "RTGS": 
+                    if float(request.POST['price']) > company_quantity.petrol_price: 
+                        messages.warning(request, f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}')
+                        return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}') 
+                    else:                  
+                        fuel_update.petrol_price = float(request.POST['price']) 
+                elif fuel_update.payment_type == "USD":
+                    if float(request.POST['price']) > company_quantity.usd_petrol_price: 
+                        messages.warning(request, f'You can not set price above NOIC usd petrol price of {company_quantity.usd_petrol_price}')
+                        return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}') 
+                    else:                  
+                        fuel_update.petrol_price = float(request.POST['price'])   
                 if fuel_update.payment_type == 'USD & RTGS':
                     fuel_update.petrol_usd_price = float(request.POST['usd_price'])            
                 company_quantity.unallocated_petrol = company_quantity.unallocated_petrol - int(request.POST['quantity'])
@@ -279,12 +286,19 @@ def allocation_update(request,id):
                     return redirect('users:allocate')
                 fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['quantity'])
                 depot.diesel_quantity = depot.diesel_quantity + int(request.POST['quantity'])
-
-                if float(request.POST['price']) > company_quantity.diesel_price: 
-                    messages.warning(request, f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}')
-                    return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}') 
-                else:
-                    fuel_update.diesel_price = request.POST['price']    
+                
+                if fuel_update.payment == "RTGS":
+                    if float(request.POST['price']) > company_quantity.diesel_price: 
+                        messages.warning(request, f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}')
+                        return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}') 
+                    else:
+                        fuel_update.diesel_price = request.POST['price']   
+                elif fuel_update.payment == "USD":
+                    if float(request.POST['price']) > company_quantity.usd_diesel_price: 
+                        messages.warning(request, f'You can not set price above NOIC usd diesel price of {company_quantity.usd_diesel_price}')
+                        return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}') 
+                    else:
+                        fuel_update.diesel_price = request.POST['price']  
                 if fuel_update.payment_type == 'USD & RTGS':
                     fuel_update.diesel_usd_price = float(request.POST['usd_price']) 
                 company_quantity.unallocated_diesel = company_quantity.unallocated_diesel - int(request.POST['quantity'])
