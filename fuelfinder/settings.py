@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'company.apps.CompanyConfig',
     'serviceStation.apps.ServicestationConfig',
     'supplier.apps.SupplierConfig',
+    'accounts.apps.AccountsConfig',
     'finder.apps.FinderConfig',
     'notification.apps.NotificationConfig',
     'whatsapp.apps.WhatsappConfig',
