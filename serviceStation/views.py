@@ -89,8 +89,8 @@ def update_diesel(request, id):
         return redirect('serviceStation:home')
 
 def sord_update(request, user, quantity, action, fuel_type):
-    end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, end_quantity = 0).all()
-    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type).all()
+    end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, payment_type="RTGS", end_quantity = 0).all()
+    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, payment_type="RTGS").all()
     sord_quantity_zero = []
     sord_quantity = []
     for sord in end_quantity_zero:
