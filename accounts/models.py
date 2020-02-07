@@ -13,6 +13,7 @@ class Account(models.Model):
     account_number = models.CharField(max_length=100, default='', blank=True, null=True)
     is_verified = models.BooleanField(default=False)
     application_document = models.FileField(upload_to='applications')
+    id_document = models.FileField(upload_to='id_documents')
 
     class Meta:
         ordering = ['date', 'time']
