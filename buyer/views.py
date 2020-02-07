@@ -347,6 +347,7 @@ def dashboard(request):
             message = f'{request.user.first_name} {request.user.last_name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
             Notification.objects.create(message=message, user=user, reference_id=fuel_request.id, action="new_request",
                                         user_id=request.user.id)
+            return redirect('buyer-dashboard')
 
         if 'WaitForOffer' in request.POST:
             if form.is_valid():
@@ -368,6 +369,7 @@ def dashboard(request):
             message = f'{request.user.first_name} {request.user.last_name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
             Notification.objects.create(message=message, user=request.user, reference_id=fuel_request.id,
                                         action="new_request")
+            return redirect('buyer-dashboard')
 
         if 'Recommender' in request.POST:
             if form.is_valid():
@@ -463,6 +465,7 @@ def transactions(request):
             comment=request.POST.get('comment')
         )
         messages.success(request, 'Transaction Successfully Reviewed')
+        return redirect('buyer-transactions')
 
     buyer = request.user
     transactions = Transaction.objects.filter(buyer=buyer).all()
@@ -560,6 +563,7 @@ def delivery_schedules(request):
         messages.success(request, 'Delivery successfully confirmed!!!')
         message = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
         Notification.objects.create(user=request.user,action='DELIVERY', message=message, reference_id=schedule.id)
+        return redirect('delivery-schedule')
 
     return render(request, 'buyer/delivery_schedules.html', context = context)
 

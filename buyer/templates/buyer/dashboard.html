@@ -184,15 +184,15 @@
                                     $('#delivery_method1{{forloop.counter}}').change(function () {
                                         if ($('#delivery_method1{{forloop.counter}} option:selected').text() == "Direct Delivery") {
                                             $('#choices1{{forloop.counter}}').show();
-                                            $('#s_name{{forloop.counter}}').attr('required', '');
-                                            $('#s_number{{forloop.counter}}').attr('required', '');
-                                            $('#s_town{{forloop.counter}}').attr('required', '');
+                                            $('#s_name1{{forloop.counter}}').attr('required', '');
+                                            $('#s_number1{{forloop.counter}}').attr('required', '');
+                                            $('#s_town1{{forloop.counter}}').attr('required', '');
                                         }
                                         else {
                                             $('#choices1{{forloop.counter}}').hide();
-                                            $('#s_town{{forloop.counter}}').removeAttr('required', '');
-                                            $('#s_number{{forloop.counter}}').removeAttr('required', '');
-                                            $('#s_name{{forloop.counter}}').removeAttr('required', '');
+                                            $('#s_town1{{forloop.counter}}').removeAttr('required', '');
+                                            $('#s_number1{{forloop.counter}}').removeAttr('required', '');
+                                            $('#s_name1{{forloop.counter}}').removeAttr('required', '');
                                         }
                                     });
                                     $('#delivery_method{{forloop.counter}}').change(function () {
@@ -386,18 +386,18 @@
                                                         <div class="togglebutton form-group col-sm-4">
                                                             <label for="">Street Number</label>
                                                             <input type="text" class="form-control" name="s_number"
-                                                                   id="s_number{{forloop.counter}}" aria-describedby="helpId" placeholder="">
+                                                                   id="s_number1{{forloop.counter}}" aria-describedby="helpId" placeholder="">
 
                                                         </div>
                                                         <div class="togglebutton form-group col-sm-4">
                                                             <label for="">Street Name</label>
-                                                            <input type="text" class="form-control" name="s_name" id="s_name{{forloop.counter}"
+                                                            <input type="text" class="form-control" name="s_name" id="s_name1{{forloop.counter}}"
                                                                    aria-describedby="helpId" placeholder="">
 
                                                         </div>
                                                         <div class="togglebutton form-group col-sm-4">
                                                             <label for="">Location/Town</label>
-                                                            <input type="text" class="form-control" name="s_town" id="s_town{{forloop.counter}}"
+                                                            <input type="text" class="form-control" name="s_town" id="s_town1{{forloop.counter}}"
                                                                    aria-describedby="helpId" placeholder="">
 
                                                         </div>
