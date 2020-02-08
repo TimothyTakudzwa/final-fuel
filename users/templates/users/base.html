@@ -480,6 +480,19 @@
 
         </script>
 
+<script>
+    $(document).ready(function() {
+        var t = $('#client_application').DataTable( {
+            "columnDefs": [ {
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            } ],
+            "order": [[ 0, 'desc' ]]
+        } );
+    } );
+    </script>
+
 
     </body>
 </html>

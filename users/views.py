@@ -34,6 +34,7 @@ from buyer.models import *
 from supplier.forms import *
 from supplier.models import *
 from users.models import *
+from accounts.models import Account
 from company.models import Company, CompanyFuelUpdate
 from company.lib import *
 from fuelUpdates.models import SordCompanyAuditTrail
@@ -1522,3 +1523,50 @@ def sord_station_sales(request):
 
 def delivery_schedule(request, id):
     return render(request, 'users/delivery_schedule.html')
+
+@login_required
+def client_application(request):
+    context = {
+        'clients' : Account.objects.filter(is_verified=False, supplier_company=request.user.company).all()
+    }
+    if request.method == 'POST':
+        company = Company.objects.filter(id=request.user.company.id).first()
+        company.application_form = request.FILES.get('application_form')
+        company.save()
+        return redirect('users:client-application')
+    return render(request, 'users/clients_applications.html', context=context)
+
+
+def download_application(request,id):
+    application = Account.objects.filter(id=id).first()
+    if application:
+        filename = application.application_document.name.split('/')[-1]
+        response = HttpResponse(application.application_document, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect('users:client-application')
+    return response
+
+
+def download_document(request,id):
+    document = Account.objects.filter(id=id).first()
+    if document:
+        filename = document.id_document.name.split('/')[-1]
+        response = HttpResponse(document.id_document, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect('users:client-application')
+    return response
+
+
+@login_required
+def application_approval(request, id):
+    if request.method == "POST":
+        account = Account.objects.filter(id=id).first()
+        account.is_verified = True
+        account.account_number = request.POST['account_number']
+        account.save()
+        messages.success(request, 'Account Successfully Approved!!!')
+    return redirect('users:client-application')

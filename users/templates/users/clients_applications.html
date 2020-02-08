@@ -1,0 +1,138 @@
+{% extends "users/base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block body %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search...">
+            <span class="input-group-btn">
+                <button type="submit" name="search" id="search-btn" class="btn"><i
+                        class="fa fa-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="header-icon">
+        <i class="fa fa-binoculars"></i>
+    </div>
+    <div class="header-title">
+        <h1>Client Applications</h1>
+        <small>List of All Applications by Clients</small>
+        <ol class="breadcrumb hidden-xs">
+            <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
+            <li class="active">clients</li>
+        </ol>
+    </div>
+</section>
+<!-- Main content -->
+<div class="content">
+    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
+        data-index="0">
+        <div class="panel-heading ui-sortable-handle">
+            <div class="btn-group"> 
+                <a class="btn btn-success" data-toggle="modal" data-target="#application_form_upload" style="background-color: #388dc5;"><i class="fa fa-upload" style="margin-right: 11px;"></i>
+                        Upload Application Form
+                </a>  
+            </div>
+            
+            <div class="dropdown">
+                <ul class="dropdown-menu dropdown-menu-right">
+
+
+                </ul>
+                <div class="dropdown-toggle" data-toggle="dropdown"><span
+                        class="panel-control-icon glyphicon glyphicon-cog"></span>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">              
+      
+      <div class="table-responsive">
+        <table id="client_application" class="table table-striped table-bordered" style="width:100%">
+            <thead style="background-color: lightslategray; color:white;">
+                <tr>
+                    <th style="color: white;">Date</th>
+                    <th style="color: white;">Company</th>
+                    <th style="color: white;">User</th>
+                    <th style="color: white;">Contact</th>
+                    <th style="color: white;">Email</th>
+                    <th style="color: white;">Application</th>
+                    <th style="color: white;">Company Docs</th>
+                    <th style="color: white;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in clients %}
+                <tr>
+                    <td>{{ client.date }}</td>
+                    <td>{{ client.buyer_company }}</td>
+                    <td>{{ client.applied_by.first_name }} {{client.applied_by.lastname}}</td>
+                    <td>{{client.applied_by.phone_number}}</td>                    
+                    <td>{{ client.applied_by.email }}</td>
+                    <td><a class="btn btn-info btn-sm" href="{% url 'users:download-application' client.id %}" >Download</a></td>
+                    <td><a class="btn btn-warning btn-sm" href="{% url 'users:download-document' client.id %}">Download</a></td>
+                    <td><a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#approve{{client.id}}">Approve</a></td>
+                </tr>
+
+                <!--Approve Modal-->
+            <div class="modal fade modal-sucess in" id="approve{{client.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #009688; color: white">
+                    <span class="modal-title" id="exampleModalLabel">Approve Account</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                            <form method="POST" action="{% url 'users:application-approval' client.id %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="col-sm-12">
+                                    <lable>Account Number</lable>
+                                    <input type="text" name="account_number" class="form-control"/>
+                                </div>
+                               <br>
+                              <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Approve"></p>
+                              
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Approve modal-->
+                {%endfor%}
+            </tbody>
+            </table>
+
+            <!--Upload Document-->
+            <div class="modal fade modal-sucess in" id="application_form_upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #009688; color: white">
+                    <span class="modal-title" id="exampleModalLabel">Upload Application Form</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                            
+                            <form method="POST" action="" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="file" accept=".pdf, .doc,.docx" name="application_form" class="form-control-file" id="exampleFormControlFile1" required>
+                               <br>
+                              <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+                              
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Upload Document-->
+
+</div>
+</div>
+</div>
+</div>
+    {%endblock%}

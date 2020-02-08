@@ -23,6 +23,9 @@ urlpatterns = [
     path('account_activate/', views.account_activate, name="account_activate"),
     path('export_csv/', views.export_csv, name="export_csv"),
     path('statistics/', views.statistics, name="statistics"),
+    path('client-application/', views.client_application, name="client-application"),
+    path('download-application/<int:id>', views.download_application, name="download-application"),
+    path('download-document/<int:id>', views.download_document, name="download-document"),
     path('report_generator/', views.report_generator, name="report_generator"),
     path('buyers/', views.buyers_list, name="buyers_list"),
     path('supplier_user_create/<int:sid>', views.supplier_user_create, name="supplier_user_create"),
@@ -36,6 +39,7 @@ urlpatterns = [
     path('edit_subsidiary/<int:id>', views.edit_subsidiary, name="edit_subsidiary"),
     path('delete_subsidiary/<int:id>', views.delete_subsidiary, name="delete_subsidiary"),
     path('edit_fuel_prices/<int:id>', views.edit_fuel_prices, name="edit_fuel_prices"),
+    path('application-approval/<int:id>', views.application_approval, name="application-approval"),
     path('edit_suballocation_fuel_prices/<int:id>', views.edit_suballocation_fuel_prices, name="edit_suballocation_fuel_prices"),
     path('sordactions/<id>', views.sordactions, name="sordactions"),
     path('sord_station_sales/', views.sord_station_sales, name="sord_station_sales"),
@@ -51,30 +55,6 @@ urlpatterns = [
     path('decline_applicant/<int:id>', views.decline_applicant, name="decline_applicant"),
     path('edit_allocation/<int:id>', views.edit_allocation, name="edit_allocation"),
     #path('delivery_schedule/<int:id>', views.delivery_schedule, name="delivery_schedule"),
-
-    
-
-    
-
-    
-    
-
-    
-    
-
-   
-
-    
-    
-    
-    
-    
-
-    
-    
-
-
-
     # path('/index/', views.index, name="home")
     # path('/index/', views.index, name="home")
 
