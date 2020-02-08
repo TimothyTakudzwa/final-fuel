@@ -26,6 +26,15 @@ urlpatterns = [
     path('view_confirmation_doc/<int:id>', views.view_confirmation_doc, name="view_confirmation_doc"),
     path('view_supplier_doc/<int:id>', views.view_supplier_doc, name="view_supplier_doc"),
     path('del_supplier_doc/<int:id>', views.del_supplier_doc, name="del_supplier_doc"),
+    path('clients', views.clients, name="clients"),
+    path('verify_client/<int:id>', views.verify_client, name="verify_client"),
+    path('view_client_id_document/<int:id>', views.view_client_id_document, name="view_client_id_document"),
+    path('view_client_application_document/<int:id>', views.view_application_id_document, name="view_application_id_document"),
+    path('client_transaction_history/<int:id>', views.client_transaction_history, name="client_transaction_history")
+
+
+
+
 
 
 
