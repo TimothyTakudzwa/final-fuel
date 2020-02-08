@@ -206,7 +206,7 @@ def stock_update(request,id):
                 subsidiary_fuel.petrol_quantity = subsidiary_fuel.petrol_quantity - fuel_reduction
                 subsidiary_fuel.save()
 
-                sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Petrol')
+                sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Petrol', fuel_update.payment_type)
 
             else:
                 if float(request.POST['quantity']) > available_diesel:
@@ -217,7 +217,7 @@ def stock_update(request,id):
                 subsidiary_fuel.diesel_quantity = subsidiary_fuel.diesel_quantity - fuel_reduction
                 subsidiary_fuel.save()
 
-                sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Diesel')
+                sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Diesel', fuel_update.payment_type)
 
             fuel_update.cash = request.POST['cash']
             fuel_update.swipe = request.POST['swipe']
@@ -510,8 +510,9 @@ def create_company(request, id):
                 logo = request.FILES.get('logo')
                 iban_number = request.POST.get('iban_number')
                 license_number = request.POST.get('license_number')
-                Company.objects.filter(name=company_name).update(name = company_name,
-                address = address, logo = logo, iban_number = iban_number, license_number = license_number)
+                new_company = Company.objects.filter(name=company_name).update(name = company_name, address = address, logo = logo, iban_number = iban_number, license_number = license_number)
+                new_company.save()
+                CompanyFuelUpdate.objects.create(company=new_company)
                 return render(request,'supplier/final_reg.html')
             
     return render(request, 'supplier/create_company.html', {'form': form, 'user_type':user_type })
@@ -638,9 +639,9 @@ def view_invoice(request, id):
     return render(request, 'supplier/invoice2.html', context)
 
 
-def sord_update(request, user, quantity, action, fuel_type):
-    end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, end_quantity = 0).all()
-    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type).all()
+def sord_update(request, user, quantity, action, fuel_type, payment_type):
+    end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, payment_type=payment_type, end_quantity = 0).all()
+    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, payment_type=payment_type).all()
     sord_quantity_zero = []
     sord_quantity = []
     for sord in end_quantity_zero:
