@@ -19,6 +19,7 @@ from datetime import date, time, datetime
 from buyer.constants2 import industries, job_titles
 from buyer.forms import BuyerUpdateForm
 from buyer.models import FuelRequest
+from accounts.models import Account
 from users.models import AuditTrail
 from .forms import PasswordChange, RegistrationForm, \
     RegistrationEmailForm, UserUpdateForm, FuelRequestForm, CreateCompany, OfferForm
@@ -26,6 +27,7 @@ from .models import Transaction, FuelAllocation, TokenAuthentication, SordSubsid
 from notification.models import Notification
 from django.contrib.auth import get_user_model
 from whatsapp.helper_functions import send_message
+from .lib import *
 
 User = get_user_model()
 
@@ -45,6 +47,73 @@ def edit_delivery_schedule(request):
         delivery_schedule.save()
         messages.success(request, "Schedule Successfully Updated")
         return redirect('supplier:delivery_schedules')
+
+@login_required
+def clients(request):
+    clients = Account.objects.filter(supplier_company=request.user.company)
+    return render(request, 'supplier/clients.html', {'clients': clients})
+
+
+@login_required
+def verify_client(request,id):
+    client = get_object_or_404(Account, id=id)
+    if not client.is_verified:
+        client.is_verified = True
+        client.save()
+        messages.success(request, f'{client.buyer_company.name} Successfully Verified')
+        return redirect('supplier:clients')
+    client.is_verified = False
+    client.save()
+    messages.success(request, f'{client.buyer_company.name}"s Verification Overturned')
+    return redirect('supplier:clients')
+
+@login_required
+def view_client_id_document(request,id):
+    client = Account.objects.filter(id=id).first()
+    if client:
+        filename = client.id_document.name.split('/')[-1]
+        response = HttpResponse(client.id_document, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        redirect('supplier:clients')
+    return response
+
+
+@login_required
+def view_application_id_document(request,id):
+    client = Account.objects.filter(id=id).first()
+    if client:
+        filename = client.application_document.name.split('/')[-1]
+        response = HttpResponse(client.application_document, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        redirect('supplier:clients')
+    return response
+
+
+@login_required
+def client_transaction_history(request,id):
+    client = Account.objects.filter(id=id).first()
+
+    contribution = get_customer_contributions(request.user.id, client.buyer_company)
+    cash_contribution = get_customer_contributions(request.user.id, client.buyer_company)[1]
+    total_cash = client_revenue(request.user.id, client.buyer_company)
+    all_requests, todays_requests = total_requests(client.buyer_company)
+
+
+    trns = Transaction.objects.filter(supplier=request.user,buyer__company=client.buyer_company)
+    transactions = []
+    for tran in trns:
+        tran.revenue = tran.offer.request.amount * tran.offer.price
+        transactions.append(tran)
+
+    return render(request, 'supplier/client_activity.html', {'transactions': transactions, 'client': client,
+    'contribution':contribution, 'cash_contribution':cash_contribution, 'total_cash':total_cash,
+     'all_requests':all_requests, 'todays_requests': todays_requests })
+
+
 
         
 @login_required
