@@ -13,8 +13,8 @@ class Account(models.Model):
     applied_by = models.ForeignKey(User, on_delete=models.DO_NOTHING,blank=True, null=True, related_name='applicant')
     account_number = models.CharField(max_length=100, default='', blank=True, null=True)
     is_verified = models.BooleanField(default=False)
-    application_document = models.FileField(upload_to='applications')
-    id_document = models.FileField(upload_to='id_documents')
+    application_document = models.FileField(upload_to='applications', blank=True)
+    id_document = models.FileField(upload_to='id_documents', blank=True)
 
     class Meta:
         ordering = ['date', 'time']
