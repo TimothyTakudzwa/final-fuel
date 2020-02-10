@@ -17,6 +17,7 @@ from supplier.models import Offer, Subsidiaries, DeliverySchedule, Transaction, 
 from .constants import sample_data
 from .forms import BuyerRegisterForm, PasswordChange, FuelRequestForm, PasswordChangeForm, LoginForm 
 from .models import FuelRequest
+from accounts.models import Account
 from buyer.utils import render_to_pdf
 from notification.models import Notification
 from supplier.forms import DeliveryScheduleForm
@@ -580,3 +581,59 @@ def delivery_schedule(request,id):
                'schedule' : schedule
             }
     return render(request, 'supplier/delivery_schedule.html', context=context)
+
+
+def accounts(request):
+    accounts = Account.objects.filter(buyer_company=request.user.company).all()
+    fuel_orders = FuelRequest.objects.filter(supplier__isnull=False).all().order_by('date')
+    return render(request, 'buyer/accounts.html', {'accounts': accounts, 'fuel_orders': fuel_orders})
+
+
+def make_direct_request(request):
+    """
+    Function To Make Direct Requests With A Particular Supplier
+    """
+    if request.method == "POST":
+        supplier = User.objects.filter(company__id=int(request.POST.get('supplier_id'))).first()
+        if supplier:
+            FuelRequest.objects.create(
+                name = request.user,
+                is_direct_deal = True,
+                fuel_type = request.POST.get('fuel_type'),
+                amount = request.POST.get('quantity'),
+                payment_method = request.POST.get('currency'),
+                delivery_method = request.POST.get('delivery_method'),
+                supplier=supplier,
+            )
+            messages.success(request, f"Successfully Made An Order to {supplier.company.name}")
+        else:
+            messages.warning(request, f"Supplier Not Found")
+
+    return redirect('buyer:accounts')
+
+def edit_account_details(request, id):
+    account = Account.objects.filter(id=id).first()
+    if request.method == "POST":
+        account.account_number = request.POST.get('account_number')
+        account.save()
+        messages.success(request, f"Successfully Made Changes To Account Details")
+    return redirect('buyer:accounts')
+
+
+def make_private_request(request):
+    accounts = Account.objects.filter(buyer_company=request.user.company).all()
+    if request.method == "POST":
+        for account in accounts:
+            supplier = User.objects.filter(company__id=account.supplier_company.id).first()
+            FuelRequest.objects.create(
+                name = request.user,
+                is_direct_deal = True,
+                fuel_type = request.POST.get('fuel_type'),
+                amount = request.POST.get('quantity'),
+                payment_method = request.POST.get('currency'),
+                delivery_method = request.POST.get('delivery_method'),
+                supplier=supplier,
+                private_mode=True,
+            )
+        messages.success(request, f"Successfully Made A Private Order To Our Suppliers")
+    return redirect('buyer:accounts')
