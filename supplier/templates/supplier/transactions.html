@@ -58,8 +58,7 @@
                             <th style="color: white;">Quantity(l)</th>
                             <th style="color: white;">Price</th>
                             <th style="color: white;">Amount</th>
-                            <th style="color: white;">Receipt Status</th>
-                            <th style="color: white;">Transaction Status</th>
+                            <th style="color: white;">Action</th>
                             <th style="color: white;">Contact Person</th>
 
 
@@ -76,17 +75,19 @@
                                 <td>{{ transaction.offer.quantity |intcomma}}</td>
                                 <td>{{ transaction.offer.price }}</td>
                                 <td>{{ transaction.offer.quantity| mul:transaction.offer.price |intcomma}}</td>
-                                {% if transaction.delivery_sched %}
-                                    <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{transaction.id}}">View Schedule</button></td>
+                                {% if transaction.proof_of_payment and transaction.is_complete %}
+                                    {% if transaction.delivery_sched %}
+                                        <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{transaction.id}}">View Schedule</button></td>
+                                    {% else %}
+                                        <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button></td>
+                                    {% endif %}
                                 {% else %}
-                                    <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button></td>
-                                {% endif %}
-                                {% if transaction.is_complete %}
-                                    <td><a class="btn btn-primary btn-sm" href="{% url 'view_invoice' transaction.id %}" >Download</a></td>
-                                {% else %}
-                                    <td>
-                                        <a class="btn btn-sm" style="background-color: #428bca; color: whitesmoke;" href="{% url 'complete-transaction' transaction.id %}" >Complete</a>
-                                    </td>
+                                <td>
+                                    <div class="btn-group">
+                                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-proof' transaction.id %}" >Download Proof</a>
+                                    <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'complete-transaction' transaction.id %}" >Complete</a>
+                                    </div>
+                                </td>
                                 {% endif %}
                                 <td>
                                     <div class="text-center">

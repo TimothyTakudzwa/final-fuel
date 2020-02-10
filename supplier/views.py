@@ -614,8 +614,10 @@ def complete_transaction(request, id):
     fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD & RTGS').first()
     if transaction.offer.request.payment_method == 'USD':
         fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD').first()
+        payment_type = 'USD'
     elif transaction.offer.request.payment_method == 'RTGS':
         fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'RTGS').first()
+        payment_type = 'RTGS'
     fuel_type = transaction.offer.request.fuel_type.lower()
     if fuel_type == 'petrol':
         transaction_quantity = transaction.offer.quantity
@@ -640,7 +642,7 @@ def complete_transaction(request, id):
             subsidiary_fuel.save()
 
             user = transaction.offer.request.name
-            sord_update(request, user, transaction_quantity, 'SALE', 'Petrol')
+            sord_update(request, user, transaction_quantity, 'SALE', 'Petrol', payment_type)
 
             messages.success(request, "Transaction completed successfully!")
             return redirect('transaction')
@@ -670,7 +672,7 @@ def complete_transaction(request, id):
             subsidiary_fuel.save()
 
             user = transaction.offer.request.name
-            sord_update(request, user, transaction_quantity, 'SALE', 'Diesel')
+            sord_update(request, user, transaction_quantity, 'SALE', 'Diesel', payment_type)
 
             messages.success(request, "Transaction completed successfully!")
             return redirect('transaction')
@@ -800,3 +802,14 @@ def view_delivery_schedule(request,id):
         schedule.delivery_address = schedule.transaction.offer.collection_address
     return render(request, 'supplier/view_delivery_schedule.html', {'schedule': schedule})
     
+
+def download_proof(request,id):
+    document = Transaction.objects.filter(id=id).first()
+    if document:
+        filename = document.proof_of_payment.name.split('/')[-1]
+        response = HttpResponse(document.proof_of_payment, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect('transaction')
+    return response
