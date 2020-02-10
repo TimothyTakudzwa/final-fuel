@@ -156,6 +156,7 @@ class Transaction(models.Model):
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)
+    proof_of_payment = models.FileField(upload_to='proof_of_payment', null=True)
     
     
     class Meta:
