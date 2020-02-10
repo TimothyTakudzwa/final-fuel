@@ -14,10 +14,12 @@ from accounts.models import Account
 # from company.models import Company, FuelUpdate
 from company.models import Company
 from supplier.models import Offer, Subsidiaries, DeliverySchedule, Transaction, TokenAuthentication, UserReview, SuballocationFuelUpdate
+from supplier.lib import total_requests, transactions_total_cost, total_offers
 
 from .constants import sample_data
 from .forms import BuyerRegisterForm, PasswordChange, FuelRequestForm, PasswordChangeForm, LoginForm 
 from .models import FuelRequest
+from accounts.models import Account
 from buyer.utils import render_to_pdf
 from notification.models import Notification
 from supplier.forms import DeliveryScheduleForm
@@ -581,50 +583,65 @@ def delivery_schedule(request,id):
                'form' : DeliveryScheduleForm(),
                'schedule' : schedule
             }
-    return render(request, 'buyer/delivery_schedule.html', context=context)
+    return render(request, 'supplier/delivery_schedule.html', context=context)
 
 
-@login_required
-def account_application(request):
-    companies = Company.objects.filter(company_type='SUPPLIER').all()
-    for company in companies:
-        company.admin = User.objects.filter(company=company).first()
-        status = Account.objects.filter(buyer_company=request.user.company, supplier_company=company).exists()
-        if status:
-            account = Account.objects.filter(buyer_company=request.user.company, supplier_company=company).first()
-            if account.is_verified:
-                company.account_verified = True
-            else:
-                company.account_verified = False
-            company.account_exist = True
+def accounts(request):
+    accounts = Account.objects.filter(buyer_company=request.user.company).all()
+    fuel_orders = FuelRequest.objects.filter(supplier__isnull=False).all().order_by('date')
+    order_nums,latest_orders = total_requests(request.user.company)
+    total_costs = transactions_total_cost(request.user)
+    offers_count_all, offers_count_today = total_offers(request.user)
+    return render(request, 'buyer/accounts.html', {'accounts': accounts, 'fuel_orders': fuel_orders, 'order_nums': order_nums,
+    'latest_orders': latest_orders, 'total_costs': total_costs, 'offers_count_all': offers_count_all,
+     'offers_count_today': offers_count_today})
+
+
+def make_direct_request(request):
+    """
+    Function To Make Direct Requests With A Particular Supplier
+    """
+    if request.method == "POST":
+        supplier = User.objects.filter(company__id=int(request.POST.get('supplier_id'))).first()
+        if supplier:
+            FuelRequest.objects.create(
+                name = request.user,
+                is_direct_deal = True,
+                fuel_type = request.POST.get('fuel_type'),
+                amount = request.POST.get('quantity'),
+                payment_method = request.POST.get('currency'),
+                delivery_method = request.POST.get('delivery_method'),
+                supplier=supplier,
+            )
+            messages.success(request, f"Successfully Made An Order to {supplier.company.name}")
         else:
-            company.account_exist = False
-    context = {
-        'companies' : companies
-    }
-    return render(request, 'buyer/supplier_application.html', context=context)
+            messages.warning(request, f"Supplier Not Found")
+
+    return redirect('buyer:accounts')
+
+def edit_account_details(request, id):
+    account = Account.objects.filter(id=id).first()
+    if request.method == "POST":
+        account.account_number = request.POST.get('account_number')
+        account.save()
+        messages.success(request, f"Successfully Made Changes To Account Details")
+    return redirect('buyer:accounts')
 
 
-@login_required
-def download_application(request, id):
-    document = Company.objects.filter(id=id).first()
-    if document:
-        filename = document.application_form.name.split('/')[-1]
-        response = HttpResponse(document.application_form, content_type='text/plain')
-        response['Content-Disposition'] = 'attachment; filename=%s' % filename
-    else:
-        messages.warning(request, 'Document Not Found')
-        return redirect('accounts-status')
-    return response
-
-
-@login_required
-def upload_application(request, id):
-    if request.method == 'POST':
-        supplier = Company.objects.filter(id=id).first()
-        buyer = request.user.company
-        application_form = request.FILES.get('application_form')
-        company_documents = request.FILES.get('company_documents')
-        Account.objects.create(supplier_company=supplier, buyer_company=buyer, application_document=application_form, id_document=company_documents, applied_by=request.user)
-        messages.success(request, 'Application successfully send')
-    return redirect('accounts-status')
+def make_private_request(request):
+    accounts = Account.objects.filter(buyer_company=request.user.company).all()
+    if request.method == "POST":
+        for account in accounts:
+            supplier = User.objects.filter(company__id=account.supplier_company.id).first()
+            FuelRequest.objects.create(
+                name = request.user,
+                is_direct_deal = True,
+                fuel_type = request.POST.get('fuel_type'),
+                amount = request.POST.get('quantity'),
+                payment_method = request.POST.get('currency'),
+                delivery_method = request.POST.get('delivery_method'),
+                supplier=supplier,
+                private_mode=True,
+            )
+        messages.success(request, f"Successfully Made A Private Order To Our Suppliers")
+    return redirect('buyer:accounts')

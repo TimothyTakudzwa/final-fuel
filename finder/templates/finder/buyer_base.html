@@ -131,6 +131,10 @@
                         <a href="{%url 'buyer-dashboard'%}"><i class="fa fa-hospital-o"></i><span>Dashboard</span>
                         </a>
                     </li>
+                    <li class="nav-item {% if request.path == '/buyer/accounts' %} active {% endif %}  ">
+                        <a href="{%url 'accounts'%}"><i class="fa fa-address-book" aria-hidden="true"></i><span>Accounts</span>
+                        </a>
+                    </li>
                     <li class="nav-item {% if request.path == '/buyer/fuel' %} active {% endif %}  ">
                         <a href="{%url 'buyer-fuel-request'%}"><i class="fa fa-binoculars"></i><span>Requests</span>
                         </a>
@@ -143,10 +147,7 @@
                         <a href="{%url 'delivery-schedule'%}"><i class="fa fa-truck"></i><span>Delivery Schedule</span>
                         </a>
                     </li>
-                    <li class="nav-item {% if request.path == '/buyer/accounts-status' %} active {% endif %}  ">
-                        <a href="{%url 'accounts-status'%}"><i class="fa fa-handshake-o"></i><span>Account Applications</span>
-                        </a>
-                    </li>
+                    
                     <li class="nav-item {% if request.path == '/buyer/profile' %} active {% endif %}  ">
                         <a href="{%url 'buyer-profile'%}"><i class="fa fa-user"></i><span>User Profile</span>
                         </a>
@@ -223,6 +224,11 @@
     <script>
         $(document).ready(function () {
             $('#delivery').DataTable();
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#accounts_table').DataTable();
         });
     </script>
 

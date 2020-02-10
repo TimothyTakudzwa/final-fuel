@@ -36,7 +36,7 @@
             <div class="panel-heading ui-sortable-handle">
                 <div class="btn-group">
                     <button class="btn btn-info btn-md" data-toggle="modal" data-target="#new_user">
-                        Upload Users
+                        Upload Accounts
                     </button>
                 </div>
                 <div class="dropdown">
@@ -56,8 +56,10 @@
                     <tr>
                         <th class="custom-table">Company Name</th>
                         <th class="custom-table">Account Number</th>
-                        <th class="custom-table">Applied By</th>
+                        <th class="custom-table">Admin Name</th>
+                        <th class="custom-table">Admin Phone Number</th>
                         <th class="custom-table">Date Created</th>
+                        <th class="custom-table">View Activity</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -65,8 +67,63 @@
                         <tr>
                             <td>{{ account.buyer_company.name }}</td>
                             <td>{{ account.account_number }}</td>
-                            <td>{{ account.applied_by.username }}</td>
+                            <td>{{ account.applied_by.first_name }}  {{ account.applied_by.last_name }}</td>
+                            <td>{{ account.applied_by.phone_number }} </td>
                             <td>{{ account.date }}</td>
+                            <td>
+                                <!--activity button-->
+                                <div class="text-center">
+                                    <button class="btn btn-info btn-md" data-toggle="modal" data-target="#activity{{ account.id }}">
+                                        Activity
+                                    </button>
+                                </div>
+
+                                <!--activity modal-->
+                                <div class="modal fade modal-success in" id="activity{{ account.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document" style="margin: 0;">
+                                        <div class="modal-content modal-lg">
+                                            <div class="modal-header">
+                                                <span class="modal-title" id="exampleModalLabel">Activity for {{ account.buyer_company.name }} </span>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+
+                                            <div class="modal-body">
+
+                                                <div class="table-responsive">
+                                                    <table id="example" class="table table-striped table-bordered" style="width:100%">
+                                                        <thead>
+                                                        <tr>
+                                                            <th class="custom-table">Quantity</th>
+                                                            <th class="custom-table">Fuel Type</th>
+                                                            <th class="custom-table">Price</th>
+                                                            <th class="custom-table">Date</th>
+                                                            <th class="custom-table">Time</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for transaction in transactions %}
+                                                            {% if transaction.supplier.id == user.id  and transaction.buyer.id == account.applied_by.id %}
+                                                                <tr>
+                                                                    <td>{{ transaction.quantity }}</td>
+                                                                    <td>{{ transaction.request.fuel_type }}</td>
+                                                                    <td>{{ transaction.price }}</td>
+                                                                    <td>{{ transaction.date }}</td>
+                                                                    <td>{{ transaction.time }}</td>
+                                                                </tr>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -97,7 +154,7 @@
                                 </div>
                                 <div class="text-center" style="padding-left: 20px;">
                                     <button class="btn btn-info btn-md" type="submit">
-                                        Upload Data Sheet
+                                        Upload Accounts
                                     </button>
                                 </div>
                             </div>
