@@ -124,5 +124,5 @@ class ActionForm(forms.Form):
     pass                    
 
 
-
-   
+class UsersUploadForm(forms.Form):
+    file = forms.FileField(required=True)

@@ -10,10 +10,11 @@ class Account(models.Model):
     time = models.TimeField(auto_now_add=True)
     buyer_company = models.ForeignKey(Company, on_delete=models.DO_NOTHING,blank=True, null=True ,related_name='buyer_name')
     supplier_company = models.ForeignKey(Company, on_delete=models.DO_NOTHING,blank=True, null=True, related_name='supplier_name')
+    applied_by = models.ForeignKey(User, on_delete=models.DO_NOTHING,blank=True, null=True, related_name='applicant')
     account_number = models.CharField(max_length=100, default='', blank=True, null=True)
     is_verified = models.BooleanField(default=False)
-    application_document = models.FileField(upload_to='applications')
-    id_document = models.FileField(upload_to='id_documents')
+    application_document = models.FileField(upload_to='applications', blank=True)
+    id_document = models.FileField(upload_to='id_documents', blank=True)
 
     class Meta:
         ordering = ['date', 'time']

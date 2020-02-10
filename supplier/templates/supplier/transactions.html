@@ -3,71 +3,70 @@
 {% load mathfilters %}
 
 {% block body %}
-<!-- Content Header (Page header) -->
+    <!-- Content Header (Page header) -->
 
-<section class="content-header">
-    <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
-        <div class="input-group">
-            <input type="text" name="q" class="form-control" placeholder="Search...">
-            <span class="input-group-btn">4
+    <section class="content-header">
+        <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search...">
+                <span class="input-group-btn">4
                 <button type="submit" name="search" id="search-btn" class="btn"><i
                         class="fa fa-search"></i></button>
             </span>
+            </div>
+        </form>
+        <div class="header-icon">
+            <i class="fa fa-exchange"></i>
         </div>
-    </form>
-    <div class="header-icon">
-      <i class="fa fa-exchange"></i>
-    </div>
-    <div class="header-title">
-        <h1>Transactions</h1>
-        <small>List of all your transactions</small>
-        <ol class="breadcrumb hidden-xs">
-            <li><a href="{%url 'fuel-request'%}"><i class="pe-7s-home"></i> Home</a></li>
-            <li class="active">Transactions</li>
-        </ol>
-    </div>
-  </section>
-  <!-- Main content -->
-  <div class="content">
-    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
-        data-index="0">
-        <div class="panel-heading ui-sortable-handle">
-            
-            <div class="dropdown">
-                <ul class="dropdown-menu dropdown-menu-right">
-  
-  
-                </ul>
-                <div class="dropdown-toggle" data-toggle="dropdown"><span
-                        class="panel-control-icon glyphicon glyphicon-cog"></span>
+        <div class="header-title">
+            <h1>Transactions</h1>
+            <small>List of all your transactions</small>
+            <ol class="breadcrumb hidden-xs">
+                <li><a href="{%url 'fuel-request'%}"><i class="pe-7s-home"></i> Home</a></li>
+                <li class="active">Transactions</li>
+            </ol>
+        </div>
+    </section>
+    <!-- Main content -->
+    <div class="content">
+        <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
+             data-index="0">
+            <div class="panel-heading ui-sortable-handle">
+
+                <div class="dropdown">
+                    <ul class="dropdown-menu dropdown-menu-right">
+
+
+                    </ul>
+                    <div class="dropdown-toggle" data-toggle="dropdown"><span
+                            class="panel-control-icon glyphicon glyphicon-cog"></span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="panel-body">
-              
-      
-      <div class="table-responsive">
-        <table id="example" class="table table-striped table-bordered" style="width:100%">
+            <div class="panel-body">
+
+
+                <div class="table-responsive">
+                    <table id="example" class="table table-striped table-bordered" style="width:100%">
                         <thead style="background-color: lightslategray; color:white;">
-                            <tr>
-                                <th style="color: white;"></th>
-                                <th style="color: white;"> Date </th>
-                                <th style="color: white;">Buyer Name</th>
-                                <th style="color: white;">Company</th>
-                                <th style="color: white;">Fuel Type</th>
-                                <th style="color: white;">Quantity(l)</th>
-                                <th style="color: white;">Price</th>
-                                <th style="color: white;">Amount</th>
-                                <th style="color: white;">Receipt Status</th>
-                                <th style="color: white;">Transaction Status</th>
+                        <tr>
+                            <th style="color: white;"></th>
+                            <th style="color: white;"> Date </th>
+                            <th style="color: white;">Buyer Name</th>
+                            <th style="color: white;">Company</th>
+                            <th style="color: white;">Fuel Type</th>
+                            <th style="color: white;">Quantity(l)</th>
+                            <th style="color: white;">Price</th>
+                            <th style="color: white;">Amount</th>
+                            <th style="color: white;">Receipt Status</th>
+                            <th style="color: white;">Transaction Status</th>
+                            <th style="color: white;">Contact Person</th>
 
-                                
 
-
-                            </tr>
+                        </tr>
                         </thead>
                         <tbody>
-                            {% for transaction in transactions %}
+                        {% for transaction in transactions %}
                             <tr>
                                 <td></td>
                                 <td>{{ transaction.date }}</td>
@@ -78,148 +77,185 @@
                                 <td>{{ transaction.offer.price }}</td>
                                 <td>{{ transaction.offer.quantity| mul:transaction.offer.price |intcomma}}</td>
                                 {% if transaction.delivery_sched %}
-                                <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{transaction.id}}">View Schedule</button></td>
+                                    <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{transaction.id}}">View Schedule</button></td>
                                 {% else %}
-                                <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button></td>
+                                    <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button></td>
                                 {% endif %}
                                 {% if transaction.is_complete %}
-                                <td><a class="btn btn-primary btn-sm" href="{% url 'view_invoice' transaction.id %}" >Download</a></td>
+                                    <td><a class="btn btn-primary btn-sm" href="{% url 'view_invoice' transaction.id %}" >Download</a></td>
                                 {% else %}
+                                    <td>
+                                        <a class="btn btn-sm" style="background-color: #428bca; color: whitesmoke;" href="{% url 'complete-transaction' transaction.id %}" >Complete</a>
+                                    </td>
+                                {% endif %}
                                 <td>
-                                <a class="btn btn-sm" style="background-color: #428bca; color: whitesmoke;" href="{% url 'complete-transaction' transaction.id %}" >Complete</a>
+                                    <div class="text-center">
+                                        <!--call modal-->
+                                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{transaction.id}}">
+                                            View Details
+                                        </button>
+                                        <!--view details-->
+                                        <div class="modal fade modal-success in" id="view{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header" style="background-color: #009688; color: white">
+                                                        <span class="modal-title" id="exampleModalLabel">Details For {{ transaction.buyer.company.name }} Contact Person</span>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <!--name-->
+                                                            <div class="col-md-12">
+                                                                <h4>Name &nbsp;&nbsp; : &nbsp;&nbsp; {{ transaction.buyer.first_name }} {{ transaction.supplier.last_name }}</h4>
+                                                            </div>
+                                                            <!--email-->
+                                                            <div class="col-md-12">
+                                                                <h4>Email &nbsp;&nbsp; : &nbsp;&nbsp; {{ transaction.buyer.email}}</h4>
+                                                            </div>
+                                                            <!--phone-->
+                                                            <div class="col-md-12">
+                                                                <h4>Phone &nbsp;&nbsp; : &nbsp;&nbsp; {{ transaction.buyer.phone_number }}</h4>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
-                                {% endif %} 
                             </tr>
-                            
+
                             <div class="modal fade modal-sucess in" id="schedule{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header" style="background-color: #009688; color: white">
-                                    <span class="modal-title" id="exampleModalLabel">Delivery Schedule</span>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    </div>
-                                    <div class="modal-body" style="padding: 30px;">
-                                        <div class="row" style="padding: 10px;">
-                                            <p class="col-md-6">Date: </p>
-                                            <p class="col-md-6">{{transaction.delivery_sched.date}}</p>
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color: #009688; color: white">
+                                            <span class="modal-title" id="exampleModalLabel">Delivery Schedule</span>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
                                         </div>
-                                        <div class="row" style="padding: 10px;">
-                                            <p class="col-md-6">Driver Name: </p>
-                                            <p class="col-md-6">{{transaction.delivery_sched.driver_name}}</p>
-                                        </div>   
-                                        <div class="row" style="padding: 10px;">
-                                            <p class="col-md-6">Phone Number: </p>
-                                            <p class="col-md-6">{{transaction.delivery_sched.phone_number}}</p>
-                                        </div>   
-                                        <div class="row" style="padding: 10px;">
-                                            <p class="col-md-6">Id Number: </p>
-                                            <p class="col-md-6">{{transaction.delivery_sched.id_number}}</p>
-                                        </div>   
-                                        <div class="row" style="padding: 10px;">
-                                            <p class="col-md-6">Vehicle Reg: </p>
-                                            <p class="col-md-6">{{transaction.delivery_sched.vehicle_reg}}</p>
+                                        <div class="modal-body" style="padding: 30px;">
+                                            <div class="row" style="padding: 10px;">
+                                                <p class="col-md-6">Date: </p>
+                                                <p class="col-md-6">{{transaction.delivery_sched.date}}</p>
+                                            </div>
+                                            <div class="row" style="padding: 10px;">
+                                                <p class="col-md-6">Driver Name: </p>
+                                                <p class="col-md-6">{{transaction.delivery_sched.driver_name}}</p>
+                                            </div>
+                                            <div class="row" style="padding: 10px;">
+                                                <p class="col-md-6">Phone Number: </p>
+                                                <p class="col-md-6">{{transaction.delivery_sched.phone_number}}</p>
+                                            </div>
+                                            <div class="row" style="padding: 10px;">
+                                                <p class="col-md-6">Id Number: </p>
+                                                <p class="col-md-6">{{transaction.delivery_sched.id_number}}</p>
+                                            </div>
+                                            <div class="row" style="padding: 10px;">
+                                                <p class="col-md-6">Vehicle Reg: </p>
+                                                <p class="col-md-6">{{transaction.delivery_sched.vehicle_reg}}</p>
+                                            </div>
+                                            <div class="row" style="padding: 10px;">
+                                                <p class="col-md-6">Delivery Time: </p>
+                                                <p class="col-md-6">{{transaction.delivery_sched.delivery_time }}</p>
+                                            </div>
+                                            <div class="row" style="padding: 10px;">
+                                                <p class="col-md-6">Status: </p>
+                                                {% if transaction.delivery_sched.confirmation_document %}
+                                                    <p class="col-md-6">
+                                                        <a class="btn btn-info btn-sm" href="{% url 'supplier:view_confirmation_doc' transaction.delivery_sched.id %}" >View Confirmation </a>
+
+                                                    </p>
+                                                {%else %}
+                                                    <p class="col-md-6">Status: Pending </p>
+                                                {% endif %}
+                                            </div>
+
+
                                         </div>
-                                        <div class="row" style="padding: 10px;">
-                                            <p class="col-md-6">Delivery Time: </p>
-                                            <p class="col-md-6">{{transaction.delivery_sched.delivery_time }}</p>
-                                        </div>  
-                                        <div class="row" style="padding: 10px;">
-                                            <p class="col-md-6">Status: </p>
-                                            {% if transaction.delivery_sched.confirmation_document %}
-                                            <p class="col-md-6"> 
-                        <a class="btn btn-info btn-sm" href="{% url 'supplier:view_confirmation_doc' transaction.delivery_sched.id %}" >View Confirmation </a>
-                                                
-                                            </p>       
-                                            {%else %}
-                                            <p class="col-md-6">Status: Pending </p>    
-                                            {% endif %} 
-                                        </div>           
-                                      
-                                                    
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
                                     </div>
-                                    <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
                                 </div>
                             </div>
                             <div class="modal fade modal-sucess in" id="create_schedule{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header" style="background-color: #009688; color: white">
-                                    <span class="modal-title" id="exampleModalLabel">Create Schedule</span>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="{% url 'supplier:create_delivery_schedule' %}" method="POST">
-                                            {% csrf_token %}
-                                            <div class="row">
-                                                <div class="form-group col-md-6">
-                                                <label>Delivery Date</label>
-                                                <input id="date_field" type="date" name="delivery_date" class="form-control"  required/>
-                                            </div>
-                                            <div class="form-group col-md-6">         
-                                                <label>Delivery Time</label>
-                                                <input type="time" name="delivery_time" class="form-control"  required/>  
-                                            </div>
-                                            </div>
-                                            <div class="row">
-
-                                            <div class="form-group col-md-6">
-                                                <label>Driver Name</label>
-                                                <input type="text" name="driver_name" class="form-control"  required/>
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label>Driver's Phone Number</label>
-                                                <input type="telephone" name="phone_number" class="form-control"  value="{{ supplier.phone_number}}" required/>
-                                            </div>
-                                            </div>
-                                            <div class="row">
-
-                                                <div class="form-group col-md-6">
-                                                    <label>Id Number</label>
-                                                    <input type="text" name="id_num" class="form-control"  required/>
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color: #009688; color: white">
+                                            <span class="modal-title" id="exampleModalLabel">Create Schedule</span>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="{% url 'supplier:create_delivery_schedule' %}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <label>Delivery Date</label>
+                                                        <input id="date_field" type="date" name="delivery_date" class="form-control"  required/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>Delivery Time</label>
+                                                        <input type="time" name="delivery_time" class="form-control"  required/>
+                                                    </div>
                                                 </div>
-                                                <div class="form-group col-md-6">
-                                                    <label>Vehicle Reg</label>
-                                                    <input type="text" name="vehicle_reg" class="form-control"  value="{{ supplier.phone_number}}" required/>
+                                                <div class="row">
+
+                                                    <div class="form-group col-md-6">
+                                                        <label>Driver Name</label>
+                                                        <input type="text" name="driver_name" class="form-control"  required/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>Driver's Phone Number</label>
+                                                        <input type="telephone" name="phone_number" class="form-control"  value="{{ supplier.phone_number}}" required/>
+                                                    </div>
                                                 </div>
+                                                <div class="row">
+
+                                                    <div class="form-group col-md-6">
+                                                        <label>Id Number</label>
+                                                        <input type="text" name="id_num" class="form-control"  required/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>Vehicle Reg</label>
+                                                        <input type="text" name="vehicle_reg" class="form-control"  value="{{ supplier.phone_number}}" required/>
+                                                    </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="form-group col-md-6">
                                                         <label>Transporter Company</label>
                                                         <input type="text" class="form-control" name="transport_company" class="transport_company" required/>
                                                     </div>
-                                                </div>    
+                                                </div>
 
 
                                                 <div class="row">
                                                     <input type="hidden" name="transaction" class="form-control" value={{transaction.id}}  required/>
 
-                                                      
-                                                    </div>    
-                                                
-                                                    <div class="modal-footer">
-                                                        <div class="row pull-left">    
-                                                            
-                                                            <button type="submit" class="btn btn-primary col-sm-12" style="margin-left: 15px;">Create Schedule</button>
-                                                        </div>
-                                                        </div>
 
-                                                
-                                        </form>          
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <div class="row pull-left">
+
+                                                        <button type="submit" class="btn btn-primary col-sm-12" style="margin-left: 15px;">Create Schedule</button>
+                                                    </div>
+                                                </div>
+
+
+                                            </form>
+                                        </div>
+
                                     </div>
-                                    
-                                </div>
                                 </div>
                             </div>
-                            
-        
-                            {%endfor%}
+
+
+                        {%endfor%}
                         </tbody>
                     </table>
                 </div>
@@ -232,13 +268,13 @@
         var mm = today.getMonth()+1; //January is 0!
         var yyyy = today.getFullYear();
         if(dd<10){
-                dd='0'+dd
-            } 
-            if(mm<10){
-                mm='0'+mm
-            } 
-    
+            dd='0'+dd
+        }
+        if(mm<10){
+            mm='0'+mm
+        }
+
         today = yyyy+'-'+mm+'-'+dd;
-    document.getElementById("date_field").setAttribute("min", today);
+        document.getElementById("date_field").setAttribute("min", today);
     </script>
 {%endblock%}

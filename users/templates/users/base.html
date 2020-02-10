@@ -167,6 +167,10 @@
                             <a href="{% url 'users:allocate' %}"><i class="fa fa-clipboard"></i><span>Fuel Allocations</span>
                             </a>
                         </li>
+                        <li class="{% if request.path == '/users/client-application/' %} active {% endif %}">
+                            <a href="{% url 'users:client-application' %}"><i class="fa fa-clipboard"></i><span>Client Applications</span>
+                            </a>
+                        </li>
                         <li class="{% if request.path == '/users/sord_allocations/' %} active {% endif %}">
                             <a href="{% url 'users:sord_allocations' %}"><i class="fa fa-clipboard"></i><span>Sord Allocations Audit</span>
                             </a>
@@ -202,6 +206,10 @@
                         </li>
                         <li class="{% if request.path == '/users/waiting_for_approval/' %} active {% endif %}">
                             <a href="{% url 'users:waiting_for_approval' %}"><i class="fa fa-users"></i><span>Staff Applications</span>
+                            </a>
+                        </li>
+                        <li class="{% if request.path == '/users/upload_users/' %} active {% endif %}">
+                            <a href="{% url 'users:upload_users' %}"><i class="fa fa-upload"></i><span>Accounts</span>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -479,6 +487,19 @@
 
 
         </script>
+
+<script>
+    $(document).ready(function() {
+        var t = $('#client_application').DataTable( {
+            "columnDefs": [ {
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            } ],
+            "order": [[ 0, 'desc' ]]
+        } );
+    } );
+    </script>
 
 
     </body>

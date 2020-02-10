@@ -34,6 +34,7 @@ from buyer.models import *
 from supplier.forms import *
 from supplier.models import *
 from users.models import *
+from accounts.models import Account
 from company.models import Company, CompanyFuelUpdate
 from company.lib import *
 from fuelUpdates.models import SordCompanyAuditTrail
@@ -43,6 +44,7 @@ from .forms import AllocationForm
 # from company.models import FuelUpdate as F_Update
 from django.contrib.auth import get_user_model
 from fuelUpdates.models import SordCompanyAuditTrail
+
 user = get_user_model()
 
 
@@ -1522,3 +1524,291 @@ def sord_station_sales(request):
 
 def delivery_schedule(request, id):
     return render(request, 'users/delivery_schedule.html')
+
+@login_required
+def client_application(request):
+    context = {
+        'clients' : Account.objects.filter(is_verified=False, supplier_company=request.user.company).all()
+    }
+    if request.method == 'POST':
+        company = Company.objects.filter(id=request.user.company.id).first()
+        company.application_form = request.FILES.get('application_form')
+        company.save()
+        return redirect('users:client-application')
+    return render(request, 'users/clients_applications.html', context=context)
+
+
+def download_application(request,id):
+    application = Account.objects.filter(id=id).first()
+    if application:
+        filename = application.application_document.name.split('/')[-1]
+        response = HttpResponse(application.application_document, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect('users:client-application')
+    return response
+
+
+def download_document(request,id):
+    document = Account.objects.filter(id=id).first()
+    if document:
+        filename = document.id_document.name.split('/')[-1]
+        response = HttpResponse(document.id_document, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect('users:client-application')
+    return response
+
+
+@login_required
+def application_approval(request, id):
+    if request.method == "POST":
+        new_account = request.POST['account_number']
+        all_accounts = Account.objects.filter(supplier_company=request.user.company)
+        accounts_list = []
+        for account in all_accounts:
+            accounts_list.append(account.account_number)
+        if new_account in accounts_list:
+            messages.warning(request, 'Account number already exists!')
+            return redirect('users:client-application')
+        else:
+            account = Account.objects.filter(id=id).first()
+            account.is_verified = True
+            account.account_number = new_account
+            account.save()
+            messages.success(request, 'Account Successfully Approved!!!')
+            return redirect('users:client-application')
+
+
+@login_required
+def upload_users(request):
+    context = {
+        'form': UsersUploadForm(),
+        'accounts': Account.objects.filter(supplier_company=request.user.company)
+    }
+    if request.method == 'POST':
+        file = request.FILES.get('file')
+        if file.name.endswith('.csv') or file.name.endswith('.xlsx'):
+            if file.name.endswith('.csv'):
+                df = pd.DataFrame(pd.read_csv(file))
+                try:
+                    for index, row in df.iterrows():
+                        # email or phone exists
+                        if User.objects.filter(email=row['EMAIL']) or User.objects.filter(phone_number=row['PHONE NUMBER']):
+                            pass
+                        else:
+                            password = secrets.token_hex(3)
+                            username = row['SURNAME'] + row['NAME']
+                            # create user
+                            user = User.objects.create_user(username=username, password=password)
+
+                            # look for company
+                            if Company.objects.filter(name=row['COMPANY NAME']).exists():
+                                company = Company.objects.filter(name=row['COMPANY NAME']).first()
+
+                                # updating user company details
+                                user.company = company
+                                user.user_type = 'BUYER'
+                                user.email = row['EMAIL'].upper()
+                                user.password_reset = True
+                                user.phone_number = row['PHONE NUMBER']
+                                user.first_name = row['NAME']
+                                user.last_name = row['SURNAME']
+                                user.save()
+
+                                # creating account with supplier
+                                if Account.objects.filter(buyer_company=company).exists():
+                                    # do nothing
+                                    pass
+                                else:
+                                    Account.objects.create(
+                                        supplier_company=request.user.company,
+                                        buyer_company=company,
+                                        account_number=row['ACCOUNT NUMBER'.upper()],
+                                        applied_by=request.user,
+                                        is_verified=True,
+
+                                    )
+
+                                # send email
+                                sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
+                                title = f'Account Creation By {request.user.company.name}'
+                                message = f"Dear {user.first_name}, {request.user.company.name} has created an account" \
+                                          f"for you on Fuel Finder. Here are the details\n\n" \
+                                          f"Username  :  {user.username}\n" \
+                                          f"Password  :   {password}"
+                                # send email
+                                try:
+                                    msg = EmailMultiAlternatives(title, message, sender, [user.email])
+                                    msg.send()
+                                # if error occurs
+                                except BadHeaderError:
+                                    pass
+                                    # error log should be created
+
+                            # company doesn't exists, create it
+                            else:
+                                company = Company.objects.create(
+                                    name=row['COMPANY NAME'],
+                                    company_type='BUYER'
+                                )
+
+                                user.company = company
+                                user.user_type = 'BUYER'
+                                user.email = row['EMAIL'].upper()
+                                user.password_reset = True
+                                user.phone_number = row['PHONE NUMBER']
+                                user.first_name = row['NAME']
+                                user.last_name = row['SURNAME']
+                                user.save()
+
+                                # creating account with supplier
+                                if Account.objects.filter(buyer_company=company).exists():
+                                    # do nothing
+                                    pass
+                                else:
+                                    Account.objects.create(
+                                        supplier_company=request.user.company,
+                                        buyer_company=company,
+                                        account_number=row['ACCOUNT NUMBER'.upper()],
+                                        applied_by=request.user,
+                                        is_verified=True,
+
+                                    )
+
+                                # send email
+                                sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
+                                title = f'Account Creation By Fuel Supplier {request.user.company.name}'
+                                message = f"Dear {user.first_name}, {request.user.company.name} has created an account" \
+                                          f"for you on Fuel Finder. Here are the details\n\n" \
+                                          f"Username  :  {user.username}\"" \
+                                          f"Password  :   {password}"
+                                # send email
+                                try:
+                                    msg = EmailMultiAlternatives(title, message, sender, [user.email])
+                                    msg.send()
+                                # if error occurs
+                                except BadHeaderError:
+                                    pass
+                                    # error log should be created
+
+                    messages.success(request, 'Successfully uploaded data')
+                    return redirect('users:upload_users')
+                except KeyError:
+                    messages.warning(request, 'Please use the standard file')
+                    return redirect('users:upload_users')
+            elif file.name.endswith('.xlsx'):
+                df = pd.DataFrame(pd.read_excel(file))
+                try:
+                    for index, row in df.iterrows():
+                        # email or phone exists
+                        if User.objects.filter(email=row['EMAIL']) or User.objects.filter(
+                                phone_number=row['PHONE NUMBER']):
+                            pass
+                        else:
+                            password = secrets.token_hex(3)
+                            username = row['SURNAME'] + row['NAME']
+                            # create user
+                            user = User.objects.create_user(username=username, password=password)
+
+                            # look for company
+                            if Company.objects.filter(name=row['COMPANY NAME']).exists():
+                                company = Company.objects.filter(name=row['COMPANY NAME']).first()
+
+                                # updating user company details
+                                user.company = company
+                                user.user_type = 'BUYER'
+                                user.password_reset = True
+                                user.email = row['EMAIL'].upper()
+                                user.phone_number = row['PHONE NUMBER']
+                                user.first_name = row['NAME']
+                                user.last_name = row['SURNAME']
+                                user.save()
+
+                                # creating account with supplier
+                                if Account.objects.filter(buyer_company=company).exists():
+                                    # do nothing
+                                    pass
+                                else:
+                                    Account.objects.create(
+                                        supplier_company=request.user.company,
+                                        buyer_company=company,
+                                        account_number=row['ACCOUNT NUMBER'.upper()],
+                                        applied_by=request.user,
+                                        is_verified=True,
+                                    )
+
+                                # send email
+                                sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
+                                title = f'Account Creation By Fuel Supplier {request.user.company.name}'
+                                message = f"Dear {user.first_name}, {request.user.company.name} has created an account" \
+                                          f"for you on Fuel Finder. Here are the details\n\n" \
+                                          f"Username  :  {user.username}\"" \
+                                          f"Password  :   {password}"
+                                # send email
+                                try:
+                                    msg = EmailMultiAlternatives(title, message, sender, [user.email])
+                                    msg.send()
+                                # if error occurs
+                                except BadHeaderError:
+                                    pass
+                                    # error log should be created
+
+                            # company doesn't exists, create it
+                            else:
+                                company = Company.objects.create(
+                                    name=row['COMPANY NAME'.upper()],
+                                    company_type='BUYER'
+                                )
+
+                                user.company = company
+                                user.user_type = 'BUYER'
+                                user.password_reset = True
+                                user.email = row['EMAIL']
+                                user.phone_number = row['PHONE NUMBER']
+                                user.first_name = row['NAME']
+                                user.last_name = row['SURNAME']
+                                user.save()
+
+                                # creating account with supplier
+                                if Account.objects.filter(buyer_company=company).exists():
+                                    # do nothing
+                                    pass
+                                else:
+                                    Account.objects.create(
+                                        supplier_company=request.user.company,
+                                        buyer_company=company,
+                                        account_number=row['ACCOUNT NUMBER'.upper()],
+                                        applied_by=request.user,
+                                        is_verified=True,
+
+                                    )
+
+                                # send email
+                                sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
+                                title = f'Account Creation By {request.user.company.name}'
+                                message = f"Dear {user.first_name}, {request.user.company.name} has created an account" \
+                                          f"for you on Fuel Finder. Here are the details\n\n" \
+                                          f"Username  :  {user.username}\n" \
+                                          f"Password  :   {password}"
+                                # send email
+                                try:
+                                    msg = EmailMultiAlternatives(title, message, sender, [user.email])
+                                    msg.send()
+                                # if error occurs
+                                except BadHeaderError:
+                                    pass
+                                    # error log should be created
+
+                    messages.success(request, 'Successfully uploaded data')
+                    return redirect('users:upload_users')
+                except KeyError:
+                    messages.warning(request, 'Please use the standard file')
+                    return redirect('users:upload_users')
+        else:
+            messages.warning(request, "Uploaded file doesn't meet the required format")
+            return redirect('users:upload_users')
+    return render(request, 'users/upload_users.html', context=context)
+
