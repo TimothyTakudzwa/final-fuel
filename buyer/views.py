@@ -645,3 +645,13 @@ def make_private_request(request):
             )
         messages.success(request, f"Successfully Made A Private Order To Our Suppliers")
     return redirect('buyer:accounts')
+
+
+@login_required
+def proof_of_payment(request, id):
+    if request.method == 'POST':
+        transaction = Transaction.objects.filter(id=id).first()
+        transaction.proof_of_payment = request.FILES.get('proof_of_payment')
+        transaction.save()
+        messages.success(request, 'Proof of payment successfully uploaded')
+        return redirect('buyer-transactions')
