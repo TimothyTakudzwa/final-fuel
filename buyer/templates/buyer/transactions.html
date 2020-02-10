@@ -46,14 +46,12 @@
                     <table id="fuel_updates" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                         <tr>
-                            <th>Company Name</th>
                             <th>Company Depot</th>
                             <th>Depot Address</th>
                             <th>Fuel Type</th>
-                            <th>Fuel Requested</th>
-                            <th>Fuel Offered</th>
+                            <th>Requested(l)</th>
+                            <th>Offered(l)</th>
                             <th>Price</th>
-                            <th>Requested On</th>
                             <th>Schedule</th>
                             <th>Contact</th>
                             <th>Contact Person</th>
@@ -63,14 +61,12 @@
                         <tbody>
                         {% for transaction in transactions %}
                             <tr>
-                            <td class="name truncate">{{transaction.offer.supplier.company.name}}</td>
                             <td class="name truncate">{{transaction.depot}}</td>
                             <td class="name truncate">{{transaction.address}}</td>
                             <td class="name truncate">{{transaction.offer.request.fuel_type}}</td>
                             <td class="name truncate">{{transaction.offer.quantity}}</td>
                             <td class="name truncate">{{transaction.offer.quantity}}</td>
                             <td class="name truncate">{{transaction.offer.price}}</td>
-                            <td class="name truncate">{{transaction.offer.date}} {{transaction.offer.time}}</td>
                             {% if transaction.delivery_schedule and not transaction.delivery_object.confirmation_document %}
                                 <td><a class="btn btn-primary btn-sm" style="color: white;" data-toggle="modal" data-target="#delivery_{{transaction.id}}">
                                     View Schedule</a></td>
