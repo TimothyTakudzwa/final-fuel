@@ -655,3 +655,49 @@ def proof_of_payment(request, id):
         transaction.save()
         messages.success(request, 'Proof of payment successfully uploaded')
         return redirect('buyer-transactions')
+
+        
+@login_required
+def account_application(request):
+    companies = Company.objects.filter(company_type='SUPPLIER').all()
+    for company in companies:
+        company.admin = User.objects.filter(company=company).first()
+        status = Account.objects.filter(buyer_company=request.user.company, supplier_company=company).exists()
+        if status:
+            account = Account.objects.filter(buyer_company=request.user.company, supplier_company=company).first()
+            if account.is_verified:
+                company.account_verified = True
+            else:
+                company.account_verified = False
+            company.account_exist = True
+        else:
+            company.account_exist = False
+    context = {
+        'companies' : companies
+    }
+    return render(request, 'buyer/supplier_application.html', context=context)
+
+
+@login_required
+def download_application(request, id):
+    document = Company.objects.filter(id=id).first()
+    if document:
+        filename = document.application_form.name.split('/')[-1]
+        response = HttpResponse(document.application_form, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect('accounts-status')
+    return response
+
+
+@login_required
+def upload_application(request, id):
+    if request.method == 'POST':
+        supplier = Company.objects.filter(id=id).first()
+        buyer = request.user.company
+        application_form = request.FILES.get('application_form')
+        company_documents = request.FILES.get('company_documents')
+        Account.objects.create(supplier_company=supplier, buyer_company=buyer, application_document=application_form, id_document=company_documents, applied_by=request.user)
+        messages.success(request, 'Application successfully send')
+    return redirect('accounts-status')

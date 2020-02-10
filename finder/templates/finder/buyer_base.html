@@ -147,7 +147,10 @@
                         <a href="{%url 'delivery-schedule'%}"><i class="fa fa-truck"></i><span>Delivery Schedule</span>
                         </a>
                     </li>
-                    
+                    <li class="nav-item {% if request.path == '/buyer/accounts-status' %} active {% endif %}  ">
+                        <a href="{%url 'accounts-status'%}"><i class="fa fa-handshake-o"></i><span>Account Applications</span>
+                        </a>
+                    </li>
                     <li class="nav-item {% if request.path == '/buyer/profile' %} active {% endif %}  ">
                         <a href="{%url 'buyer-profile'%}"><i class="fa fa-user"></i><span>User Profile</span>
                         </a>
