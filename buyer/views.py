@@ -486,7 +486,8 @@ def transactions(request):
         transaction.review = UserReview.objects.filter(transaction=transaction).first()
 
     context = {
-        'transactions': transactions
+        'transactions': transactions,
+        'subsidiary': Subsidiaries.objects.filter(),
     }
 
     return render(request, 'buyer/transactions.html', context=context)
