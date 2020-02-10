@@ -1586,7 +1586,8 @@ def application_approval(request, id):
 def upload_users(request):
     context = {
         'form': UsersUploadForm(),
-        'accounts': Account.objects.filter(supplier_company=request.user.company)
+        'accounts': Account.objects.filter(supplier_company=request.user.company),
+        'transactions': Transaction.objects.filter()
     }
     if request.method == 'POST':
         file = request.FILES.get('file')
@@ -1627,7 +1628,7 @@ def upload_users(request):
                                         supplier_company=request.user.company,
                                         buyer_company=company,
                                         account_number=row['ACCOUNT NUMBER'.upper()],
-                                        applied_by=request.user,
+                                        applied_by=user,
                                         is_verified=True,
 
                                     )
@@ -1673,7 +1674,7 @@ def upload_users(request):
                                         supplier_company=request.user.company,
                                         buyer_company=company,
                                         account_number=row['ACCOUNT NUMBER'.upper()],
-                                        applied_by=request.user,
+                                        applied_by=user,
                                         is_verified=True,
 
                                     )
@@ -1736,7 +1737,7 @@ def upload_users(request):
                                         supplier_company=request.user.company,
                                         buyer_company=company,
                                         account_number=row['ACCOUNT NUMBER'.upper()],
-                                        applied_by=request.user,
+                                        applied_by=user,
                                         is_verified=True,
                                     )
 
@@ -1781,7 +1782,7 @@ def upload_users(request):
                                         supplier_company=request.user.company,
                                         buyer_company=company,
                                         account_number=row['ACCOUNT NUMBER'.upper()],
-                                        applied_by=request.user,
+                                        applied_by=user,
                                         is_verified=True,
 
                                     )
