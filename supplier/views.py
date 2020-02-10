@@ -191,49 +191,51 @@ def account(request):
 @login_required()
 def fuel_request(request):
     sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-    if sub.praz_reg_num != None:
-        requests = FuelRequest.objects.filter(is_deleted=False ,wait=True, is_complete=False).all()
-        direct_requests =  FuelRequest.objects.filter(is_deleted=False, is_complete=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
-        requests = list(chain(requests, direct_requests))
-        requests.sort(key = attrgetter('date', 'time'), reverse = True)
-    else:
-        requests = FuelRequest.objects.filter(~Q(name__company__is_govnt_org=True)).filter(is_deleted=False ,wait=True, is_complete=False).all()
-        direct_requests =  FuelRequest.objects.filter(~Q(name__company__is_govnt_org=True)).filter(is_deleted=False, is_complete=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
-        requests = list(chain(requests, direct_requests))
-        requests.sort(key = attrgetter('date', 'time'), reverse = True)
-
-    for buyer_request in requests:
-        if buyer_request.payment_method == 'USD':
-            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='USD').first()
-        elif buyer_request.payment_method == 'RTGS':
-            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='RTGS').first()
-        elif buyer_request.payment_method == 'USD & RTGS':
-            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='USD & RTGS').first()
+    if sub:
+        if sub.praz_reg_num != None:
+            requests = FuelRequest.objects.filter(is_deleted=False ,wait=True, is_complete=False).all()
+            direct_requests =  FuelRequest.objects.filter(is_deleted=False, is_complete=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
+            requests = list(chain(requests, direct_requests))
+            requests.sort(key = attrgetter('date', 'time'), reverse = True)
         else:
-            fuel = None
-        if buyer_request.dipping_stick_required==buyer_request.meter_required==buyer_request.pump_required==False:
-            buyer_request.no_equipments = True
-        if buyer_request.cash==buyer_request.ecocash==buyer_request.swipe==buyer_request.usd==False:
-            buyer_request.no_payment = True
-        if not buyer_request.delivery_address.strip():
-            buyer_request.delivery_address = f'N/A'
-        if Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).exists():
-            offer = Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).first()
-            buyer_request.my_offer = f'{offer.quantity}ltrs @ ${offer.price}'
-            buyer_request.offer_price = offer.price
-            buyer_request.offer_quantity = offer.quantity
-            buyer_request.offer_id = offer.id
-        else:
-            buyer_request.my_offer = 'No Offer'
-            buyer_request.offer_id = 0
-        if fuel:
-            if buyer_request.fuel_type.lower() == 'petrol':
+            requests = FuelRequest.objects.filter(~Q(name__company__is_govnt_org=True)).filter(is_deleted=False ,wait=True, is_complete=False).all()
+            direct_requests =  FuelRequest.objects.filter(~Q(name__company__is_govnt_org=True)).filter(is_deleted=False, is_complete=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
+            requests = list(chain(requests, direct_requests))
+            requests.sort(key = attrgetter('date', 'time'), reverse = True)
 
-                buyer_request.price = fuel.petrol_price
+        for buyer_request in requests:
+            if buyer_request.payment_method == 'USD':
+                fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='USD').first()
+            elif buyer_request.payment_method == 'RTGS':
+                fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='RTGS').first()
+            elif buyer_request.payment_method == 'USD & RTGS':
+                fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='USD & RTGS').first()
             else:
-                buyer_request.price = fuel.diesel_price
-        else:
-            buyer_request.price = 0.00
+                fuel = None
+            if buyer_request.dipping_stick_required==buyer_request.meter_required==buyer_request.pump_required==False:
+                buyer_request.no_equipments = True
+            if buyer_request.cash==buyer_request.ecocash==buyer_request.swipe==buyer_request.usd==False:
+                buyer_request.no_payment = True
+            if not buyer_request.delivery_address.strip():
+                buyer_request.delivery_address = f'N/A'
+            if Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).exists():
+                offer = Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).first()
+                buyer_request.my_offer = f'{offer.quantity}ltrs @ ${offer.price}'
+                buyer_request.offer_price = offer.price
+                buyer_request.offer_quantity = offer.quantity
+                buyer_request.offer_id = offer.id
+            else:
+                buyer_request.my_offer = 'No Offer'
+                buyer_request.offer_id = 0
+            if fuel:
+                if buyer_request.fuel_type.lower() == 'petrol':
+
+                    buyer_request.price = fuel.petrol_price
+                else:
+                    buyer_request.price = fuel.diesel_price
+            else:
+                buyer_request.price = 0.00
+    requests = None        
     return render(request, 'supplier/fuel_request.html', {'requests':requests})
 
 def new_fuel_request(request, id):
