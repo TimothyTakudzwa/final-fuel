@@ -14,6 +14,7 @@ from accounts.models import Account
 # from company.models import Company, FuelUpdate
 from company.models import Company
 from supplier.models import Offer, Subsidiaries, DeliverySchedule, Transaction, TokenAuthentication, UserReview, SuballocationFuelUpdate
+from supplier.lib import total_requests, transactions_total_cost, total_offers
 
 from .constants import sample_data
 from .forms import BuyerRegisterForm, PasswordChange, FuelRequestForm, PasswordChangeForm, LoginForm 
@@ -588,7 +589,12 @@ def delivery_schedule(request,id):
 def accounts(request):
     accounts = Account.objects.filter(buyer_company=request.user.company).all()
     fuel_orders = FuelRequest.objects.filter(supplier__isnull=False).all().order_by('date')
-    return render(request, 'buyer/accounts.html', {'accounts': accounts, 'fuel_orders': fuel_orders})
+    order_nums,latest_orders = total_requests(request.user.company)
+    total_costs = transactions_total_cost(request.user)
+    offers_count_all, offers_count_today = total_offers(request.user)
+    return render(request, 'buyer/accounts.html', {'accounts': accounts, 'fuel_orders': fuel_orders, 'order_nums': order_nums,
+    'latest_orders': latest_orders, 'total_costs': total_costs, 'offers_count_all': offers_count_all,
+     'offers_count_today': offers_count_today})
 
 
 def make_direct_request(request):

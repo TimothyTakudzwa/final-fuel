@@ -28,7 +28,22 @@ def total_requests(buyer_company):
     yesterday = date.today() - timedelta(days=1)
     all_reqs = FuelRequest.objects.filter(name__company=buyer_company).count()  
     today_reqs = FuelRequest.objects.filter(name__company=buyer_company,date__gt=yesterday).count() 
-    return all_reqs, today_reqs     
+    return all_reqs, today_reqs
+
+def transactions_total_cost(buyer):
+    revenue = 0
+    trans = Transaction.objects.filter(buyer=buyer, is_complete=True).all()
+    if trans:
+        for tran in trans:
+            revenue += (tran.offer.request.amount * tran.offer.price)
+    return revenue 
+
+def total_offers(buyer):
+    yesterday = date.today() - timedelta(days=1)
+    all_offers = Offer.objects.filter(request__name=buyer).count()
+    todays_offers = Offer.objects.filter(request__name=buyer, date__gt=yesterday).count()
+    return all_offers, todays_offers
+
 
 
 
