@@ -1565,12 +1565,21 @@ def download_document(request,id):
 @login_required
 def application_approval(request, id):
     if request.method == "POST":
-        account = Account.objects.filter(id=id).first()
-        account.is_verified = True
-        account.account_number = request.POST['account_number']
-        account.save()
-        messages.success(request, 'Account Successfully Approved!!!')
-    return redirect('users:client-application')
+        new_account = request.POST['account_number']
+        all_accounts = Account.objects.filter(supplier_company=request.user.company)
+        accounts_list = []
+        for account in all_accounts:
+            accounts_list.append(account.account_number)
+        if new_account in accounts_list:
+            messages.warning(request, 'Account number already exists!')
+            return redirect('users:client-application')
+        else:
+            account = Account.objects.filter(id=id).first()
+            account.is_verified = True
+            account.account_number = new_account
+            account.save()
+            messages.success(request, 'Account Successfully Approved!!!')
+            return redirect('users:client-application')
 
 
 @login_required
