@@ -194,7 +194,7 @@ def fuel_request(request):
     if sub:
         if sub.praz_reg_num != None:
             requests = FuelRequest.objects.filter(is_deleted=False ,wait=True, is_complete=False).all()
-            direct_requests =  FuelRequest.objects.filter(is_deleted=False, is_complete=False, is_direct_deal=True, last_deal=request.user.subsidiary_id).all()
+            direct_requests =  FuelRequest.objects.filter(is_deleted=False, is_complete=False, is_direct_deal=True, supplier=request.user).all()
             requests = list(chain(requests, direct_requests))
             requests.sort(key = attrgetter('date', 'time'), reverse = True)
         else:

@@ -604,7 +604,7 @@ def make_direct_request(request):
     if request.method == "POST":
         supplier = User.objects.filter(company__id=int(request.POST.get('supplier_id'))).first()
         if supplier:
-            FuelRequest.objects.create(
+            fuel_request = FuelRequest.objects.create(
                 name = request.user,
                 is_direct_deal = True,
                 fuel_type = request.POST.get('fuel_type'),
@@ -612,8 +612,11 @@ def make_direct_request(request):
                 payment_method = request.POST.get('currency'),
                 delivery_method = request.POST.get('delivery_method'),
                 supplier=supplier,
+                wait=True,
             )
             messages.success(request, f"Successfully Made An Order to {supplier.company.name}")
+            message = f'{request.user.company.name.title()} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
+            Notification.objects.create(user=supplier,message=message, reference_id=fuel_request.id, action="new_request")
         else:
             messages.warning(request, f"Supplier Not Found")
 
@@ -629,11 +632,15 @@ def edit_account_details(request, id):
 
 
 def make_private_request(request):
+    '''
+    This Function Will Retrieve Form Data and Create A Request With Only The Suppliers
+    That The Buyer Has An Account With
+    '''
     accounts = Account.objects.filter(buyer_company=request.user.company).all()
     if request.method == "POST":
         for account in accounts:
             supplier = User.objects.filter(company__id=account.supplier_company.id).first()
-            FuelRequest.objects.create(
+            fuel_request = FuelRequest.objects.create(
                 name = request.user,
                 is_direct_deal = True,
                 fuel_type = request.POST.get('fuel_type'),
@@ -642,8 +649,12 @@ def make_private_request(request):
                 delivery_method = request.POST.get('delivery_method'),
                 supplier=supplier,
                 private_mode=True,
+                wait=True,
             )
+            message = f'{request.user.company.name.title()} made a private request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
+            Notification.objects.create(user=supplier,message=message, reference_id=fuel_request.id, action="new_request")
         messages.success(request, f"Successfully Made A Private Order To Our Suppliers")
+        
     return redirect('buyer:accounts')
 
 @login_required
