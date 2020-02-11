@@ -358,8 +358,10 @@
         });
 
         socket.on('new_request', function (msg) {
-            MyFunction(msg);
-            console.log("Testing New Notification");
+            if (logged_user == msg.user_id) {
+                MyFunction(msg);
+                console.log("Testing New Notification");
+            }
  
         });
 
