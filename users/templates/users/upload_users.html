@@ -30,7 +30,7 @@
 
 
     <!--body-->
-    <div class="container" style="margin-top: 50px">
+    <div class="content" >
         <!--table-->
         <div class="mt-3 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
             <div class="panel-heading ui-sortable-handle">
@@ -116,6 +116,20 @@
                                                         {% endfor %}
                                                         </tbody>
                                                     </table>
+
+
+                                                    <form method="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" value="{{ account.applied_by.id }}" name="buyer_id">
+                                                        <input type="hidden" value="{{ account.applied_by.username }}" name="buyer_name">
+
+                                                        <button class="btn btn-info btn-md">
+                                                            Generate Report
+                                                        </button>
+
+                                                    </form>
+
+
                                                 </div>
                                             </div>
 
@@ -168,9 +182,9 @@
     </div>
 
     <script>
-            $(document).ready( function () {
-                $('#activityTable').DataTable();
-            } );
-        </script>
+        $(document).ready( function () {
+            $('#activityTable').DataTable();
+        } );
+    </script>
 
 {% endblock %}
