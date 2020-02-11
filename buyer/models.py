@@ -40,9 +40,12 @@ class User(AbstractUser):
 
 
 class FuelRequest(models.Model):
+    '''
+    last deal is tied to a specific subsidiary.
+    '''
     name = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     #contact_person = models.CharField(max_length=50)
-    supplier = models.ForeignKey(User, related_name="fuelrequest_supplier_set",on_delete=models.DO_NOTHING, blank=True, null=True)
+    supplier_company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, blank=True, null=True)
     amount = models.IntegerField(default=0)
     fuel_type = models.CharField(max_length=50)
     delivery_method = models.CharField(max_length=200)

@@ -221,7 +221,7 @@
                     "orderable": false,
                     "targets": 0
                 } ],
-                "order": [[ 1, 'desc' ]]
+                "order": [[ 1, 'asc' ]]
             } );
          
             t.on( 'order.dt search.dt', function () {
@@ -358,10 +358,8 @@
         });
 
         socket.on('new_request', function (msg) {
-            if (logged_user == msg.user_id) {
-                MyFunction(msg);
-                console.log("Testing New Notification");
-            }
+            MyFunction(msg);
+            console.log("Testing New Notification");
  
         });
 
