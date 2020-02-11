@@ -657,6 +657,17 @@ def make_private_request(request):
         
     return redirect('buyer:accounts')
 
+
+@login_required
+def proof_of_payment(request, id):
+    if request.method == 'POST':
+        transaction = Transaction.objects.filter(id=id).first()
+        transaction.proof_of_payment = request.FILES.get('proof_of_payment')
+        transaction.save()
+        messages.success(request, 'Proof of payment successfully uploaded')
+        return redirect('buyer-transactions')
+
+        
 @login_required
 def account_application(request):
     companies = Company.objects.filter(company_type='SUPPLIER').all()
