@@ -44,14 +44,14 @@
                 <thead style="background-color: lightslategray; color:white;">
                     <tr>
                         <th style="color: white;">Supplier</th>
-                        <th style="color: white;">Delivery Date</th>
-                        <th style="color: white;">Delivery Time</th>
+                        <!-- <th style="color: white;">Delivery Date</th>
+                        <th style="color: white;">Delivery Time</th> -->
                         <th style="color: white;">Address</th>
-                        <th style="color: white;">Fuel</th>
+                        <th style="color: white;">Product</th>
                         <th style="color: white;">Quantity</th>
-                        <th style="color: white;">Equipment</th>
-                        <th style="color: white;">Transport Agent</th> 
-                        <th style="color: white;">Transport Info</th>                       
+                        <!-- <th style="color: white;">Equipment</th> -->
+                        <th style="color: white;">Transporter</th> 
+                        <th style="color: white;">Add. Information</th>                       
                         <th style="color: white;">Action</th>
                     </tr>
                 </thead>
@@ -59,8 +59,8 @@
                     {% for delivery in schedules %}
                     <tr>
                         <td>{{ delivery.subsidiary }}</td>
-                        <td>{{ delivery.date }}</td>
-                        <td>{{ delivery.delivery_time }}</td>
+                        <!--<td>{{ delivery.date }}</td>
+                        <td>{{ delivery.delivery_time }}</td>-->
                         <td>{{ delivery.delivery_address }}</td>
                         <td>{{ delivery.transaction.offer.request.fuel_type }}</td>
                         <td>{{ delivery.transaction.offer.quantity }}</td>
@@ -70,8 +70,8 @@
                             {% if delivery.transaction.offer.dipping_stick_available %} Stick &nbsp; {% endif %}
                             {% if not delivery.transaction.offer.pump_available and not delivery.transaction.offer.meter_available and not delivery.transaction.offer.dipping_stick_available %} No Equipment {% endif %}
                         </td>
-                        <td>{{delivery.transport_company}}</td>
-                        <td><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#additonal_information{{delivery.id}}">View Information</button></td>                      
+                        <!-- <td>{{delivery.transport_company}}</td> -->
+                        <td><button class="btn btn-purple btn-sm" data-toggle="modal" data-target="#additonal_information{{delivery.id}}">View Information</button></td>                      
                         {% if not delivery.confirmation_document %}
                         <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#upload_{{delivery.id}}">Confirm Delivery</button></td>
                         {% else %}
@@ -116,6 +116,10 @@
                             </div>
                                 <div class="modal-body" style="padding: 30px;">
                                     <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Delivery date/Time: </p>
+                                        <p class="col-md-6">{{delivery.date}} | {{ delivery.delivery_time }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Delivery Address: </p>
                                         <p class="col-md-6">{{delivery.delivery_address}}</p>
                                     </div>
@@ -129,7 +133,7 @@
                                     </div>
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Transporter: </p>
-                                        <p class="col-md-6">{{delivery.transport_company</p>
+                                        <p class="col-md-6">{{delivery.transport_company}}</p>
                                     </div>      
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Driver Name: </p>
@@ -181,12 +185,7 @@
                                                 <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Confirm Delivery"></p>
                                             </form>    
                                         {% endif %} 
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-primary" data-dismiss="modal">
-                                            Close
-                                        </button>
-                                    </div>           
+                                    </div>         
 
                                 </div>
                                 </div>
