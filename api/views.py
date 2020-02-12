@@ -1,3 +1,8 @@
+import secrets
+from datetime import date
+from fuelfinder import settings
+
+
 from django.contrib.auth import authenticate, update_session_auth_hash
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail.message import BadHeaderError
@@ -11,14 +16,16 @@ from supplier.models import Subsidiaries, SubsidiaryFuelUpdate
 from users.models import Audit_Trail
 from comments.models import CommentsPermission, Comment
 
-import secrets
-from datetime import date
-from fuelfinder import settings
-
 from whatsapp.helper_functions import sord_update
 
 user = get_user_model()
 today = date.today()
+
+"""
+
+Authentication for service station admin
+
+"""
 
 
 @csrf_exempt
@@ -32,14 +39,14 @@ def login(request):
         status = authenticate(username=username, password=password)
         if status:
             # auth success
-            user = User.objects.get(username=username)
+            app_user = User.objects.get(username=username)
             # service station admin and must reset password
-            if user.user_type == 'SS_SUPPLIER' and user.password_reset:
-                data = {'username': user.username}
+            if app_user.user_type == 'SS_SUPPLIER' and app_user.password_reset:
+                data = {'username': app_user.username}
                 return JsonResponse(status=201, data=data)
             # service station admin
-            elif user.user_type == 'SS_SUPPLIER':
-                data = {'username': user.username}
+            elif app_user.user_type == 'SS_SUPPLIER':
+                data = {'username': app_user.username}
                 return JsonResponse(status=200, data=data)
             # wrong details
             else:
@@ -47,6 +54,13 @@ def login(request):
         # no account
         else:
             return HttpResponse(status=401)
+
+
+"""
+
+Authentication for service station admin
+
+"""
 
 
 @csrf_exempt
@@ -62,14 +76,14 @@ def login_user(request):
             status = authenticate(username=username, password=password)
             # auth success
             if status:
-                user = User.objects.get(username=username)
+                site_user = User.objects.get(username=username)
                 # user must reset password
-                if user.password_reset:
-                    data = {'username': user.username}
+                if site_user.password_reset:
+                    data = {'username': site_user.username}
                     return JsonResponse(status=201, data=data)
                 # login
                 else:
-                    data = {'username': user.username}
+                    data = {'username': site_user.username}
                     return JsonResponse(status=200, data=data)
             # wrong details
             else:
@@ -77,6 +91,13 @@ def login_user(request):
         # no account
         else:
             return HttpResponse(status=403)
+
+
+"""
+
+Registration for individual buyer
+
+"""
 
 
 @csrf_exempt
@@ -100,6 +121,7 @@ def register(request):
         elif email_check.exists():
             return HttpResponse(status=406)
         else:
+            # noinspection PyBroadException
             try:
                 # creating account
                 client = user.objects.create_user(username=username, email=email, password=password)
@@ -116,18 +138,25 @@ def register(request):
                 return HttpResponse(status=403)
 
 
+"""
+
+Updating service station
+
+"""
+
+
 @csrf_exempt
 @api_view(['POST'])
 def update_station(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         # fetch user data
-        user = User.objects.get(username=username)
+        app_user = User.objects.get(username=username)
         # check for fuel station
-        status = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id).first()
+        status = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id).first()
         # station exists
         if status:
-            update = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id).first()
+            update = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id).first()
 
             previous_petrol = update.petrol_quantity
             previous_diesel = update.diesel_quantity
@@ -156,14 +185,14 @@ def update_station(request):
             update.save()
 
             # sord update
-            sord_update(user, previous_diesel-float(d_quantity), 'Fuel Update', 'Diesel')
-            sord_update(user, previous_petrol - float(p_quantity), 'Fuel Update', 'Petrol')
+            sord_update(app_user, previous_diesel - float(d_quantity), 'Fuel Update', 'Diesel')
+            sord_update(app_user, previous_petrol - float(p_quantity), 'Fuel Update', 'Petrol')
 
             # add audit trail
             Audit_Trail.objects.create(
-                user=user,
-                company=user.company,
-                service_station=Subsidiaries.objects.filter(id=user.subsidiary_id).first(),
+                user=app_user,
+                company=app_user.company,
+                service_station=Subsidiaries.objects.filter(id=app_user.subsidiary_id).first(),
                 action='Updating fuel quantities and station status via mobile app',
                 reference='Fuel update',
                 reference_id=update.id,
@@ -175,6 +204,13 @@ def update_station(request):
             return HttpResponse(status=404)
 
 
+"""
+
+View service station updates, service station admin
+
+"""
+
+
 @csrf_exempt
 @api_view(['POST'])
 def view_station_updates(request):
@@ -184,12 +220,12 @@ def view_station_updates(request):
         # data to be returned
         data = []
         # get user data
-        user = User.objects.get(username=username)
+        app_user = User.objects.get(username=username)
         # check if user has update object
-        status = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id).first()
+        status = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id).first()
         # if update object exists
         if status:
-            updates = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=user.subsidiary_id)
+            updates = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id)
             # fetching data
             for update in updates:
                 company = Subsidiaries.objects.get(id=update.subsidiary.id)
@@ -210,6 +246,13 @@ def view_station_updates(request):
             return HttpResponse(status=403)
 
 
+"""
+
+View service station updates, all users
+
+"""
+
+
 @csrf_exempt
 @api_view(['POST'])
 def view_updates_user(request):
@@ -217,6 +260,7 @@ def view_updates_user(request):
         # data container
         data = []
         # fetch updates
+        # noinspection PyBroadException
         try:
             updates = SubsidiaryFuelUpdate.objects.filter(subsidiary__is_depot=False).all()
             for update in updates:
@@ -240,6 +284,13 @@ def view_updates_user(request):
             return JsonResponse(list(data), status=200, safe=False)
 
 
+"""
+
+Fetch profile information for all users
+
+"""
+
+
 @csrf_exempt
 @api_view(['POST'])
 def get_profile(request):
@@ -259,6 +310,13 @@ def get_profile(request):
         # error response
         else:
             return HttpResponse(status=403)
+
+
+"""
+
+Force service password resetting
+
+"""
 
 
 @csrf_exempt
@@ -290,6 +348,13 @@ def force_password_change(request):
             return HttpResponse(status=403)
 
 
+"""
+
+Password change
+
+"""
+
+
 @csrf_exempt
 @api_view(['POST'])
 def change_password(request):
@@ -319,6 +384,13 @@ def change_password(request):
         # no validation
         else:
             return HttpResponse(status=403)
+
+
+"""
+
+Resetting password 
+
+"""
 
 
 @csrf_exempt
@@ -358,6 +430,13 @@ def password_reset(request):
             return HttpResponse(status=404)
 
 
+"""
+
+Comment updating
+
+"""
+
+
 @api_view(['POST'])
 def update_comments(request):
     if request.method == 'POST':
@@ -378,6 +457,13 @@ def update_comments(request):
             return HttpResponse(200)
         else:
             return HttpResponse(404)
+
+
+"""
+
+View comments
+
+"""
 
 
 @api_view(['POST'])
