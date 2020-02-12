@@ -1,3 +1,4 @@
+import secrets
 from itertools import chain
 from operator import attrgetter
 
@@ -9,8 +10,6 @@ from django.contrib.auth.models import User
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.contrib import messages
 from django.db.models import Q
-
-import secrets
 
 from buyer.utils import render_to_pdf
 from company.models import Company
@@ -34,19 +33,184 @@ User = get_user_model()
 # today's date
 today = date.today()
 
-@login_required
-def edit_delivery_schedule(request):
-    if request.method == "POST":
-        delivery_schedule = DeliverySchedule.objects.filter(id=int(request.POST['delivery_id'])).first()
-        delivery_schedule.driver_name = request.POST['driver_name']
-        delivery_schedule.phone_number = request.POST['phone_number']
-        delivery_schedule.id_number = request.POST['id_number']
-        delivery_schedule.vehicle_reg = request.POST['vehicle_reg']
-        delivery_schedule.delivery_time = request.POST['delivery_time']
-        delivery_schedule.transport_company = request.POST['transport_company']       
-        delivery_schedule.save()
-        messages.success(request, "Schedule Successfully Updated")
-        return redirect('supplier:delivery_schedules')
+
+'''
+user registraion and login functions
+'''
+
+def verification(request, token, user_id):
+    user = User.objects.get(id=user_id)
+    token_check = TokenAuthentication.objects.filter(user=user, token=token)  
+    if token_check.exists():
+        token_not_used = TokenAuthentication.objects.filter(user=user, used=False)
+        if token_not_used.exists():
+            form = BuyerUpdateForm
+            check = User.objects.filter(id=user_id)
+            if check.exists():
+                user = User.objects.get(id=user_id)
+                if user.user_type == 'BUYER':
+                    companies = Company.objects.filter(company_type='CORPORATE').all()
+                else:
+                    companies = Company.objects.filter(company_type='SUPPLIER').all()
+
+            if request.method == 'POST':
+                user = User.objects.get(id=user_id)
+                form = BuyerUpdateForm(request.POST, request.FILES, instance=user)
+                if form.is_valid():
+                    form.save()
+                    company_exists = Company.objects.filter(name=request.POST.get('company')).exists()
+                    if company_exists:
+                        selected_company =Company.objects.filter(name=request.POST.get('company')).first()
+                        user.company = selected_company
+                        user.is_active = True
+                        user.stage = 'menu'
+                        user.save()
+                        TokenAuthentication.objects.filter(user=user).update(used=True)
+                        if user.user_type == 'BUYER':
+                            return redirect('login')
+                        else:
+                            user.is_active = False
+                            user.is_waiting = True
+                            user.stage = 'menu'
+                            user.save()
+                            my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
+                            if my_admin is not None:
+                                return render(request,'supplier/final_registration.html',{'my_admin': my_admin})
+                            else:
+                                return render(request,'supplier/final_reg.html')
+                    else:
+                        selected_company =Company.objects.create(name=request.POST.get('company'))
+                        user.is_active = False
+                        user.is_waiting = True
+                        if user.user_type == 'SUPPLIER':
+                            user.user_type = 'S_ADMIN'
+                        selected_company.save()
+                        user.company = selected_company
+                        user.is_waiting = True
+                        user.save() 
+                        TokenAuthentication.objects.filter(user=user).update(used=True)
+                        return redirect('supplier:create_company', id=user.id)
+                    
+            else:
+                return render(request, 'supplier/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
+        else:
+            messages.warning(request, 'This link has been used before')
+            return redirect('buyer-register')
+        
+    else:
+        messages.warning(request, 'Wrong verification token, kindly follow the link send in the email')
+        return redirect('login')
+    
+    return render(request, 'supplier/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
+
+
+@login_required()
+def change_password(request):
+    context = {
+        'title': 'Fuel Finder | Change Password',
+        'password_change': PasswordChange(user=request.user)
+    }
+    if request.method == 'POST':
+        old = request.POST.get('old_password')
+        new1 = request.POST.get('new_password1')
+        new2 = request.POST.get('new_password2')
+
+        if authenticate(request, username=request.user.username, password=old):
+            if new1 != new2:
+                messages.warning(request, "Passwords Don't Match")
+                return redirect('change-password')
+            elif new1 == old:
+                messages.warning(request, "New password can not be similar to the old one")
+                return redirect('change-password')
+            elif len(new1) < 8:
+                messages.warning(request, "Password is too short")
+                return redirect('change-password')
+            elif new1.isnumeric():
+                messages.warning(request, "Password can not be entirely numeric!")
+            elif not new1.isalnum():
+                messages.warning(request, "Password should be alphanumeric")
+                return redirect('change-password')
+            else:
+                user = request.user
+                user.set_password(new1)
+                user.save()
+                update_session_auth_hash(request, user)
+
+                messages.success(request, 'Password Successfully Changed')
+                return redirect('account')
+        else:
+            messages.warning(request, 'Wrong Old Password, Please Try Again')
+            return redirect('change-password')
+    return render(request, 'supplier/change_password.html', context=context)
+
+
+'''
+Create a new company
+'''
+
+def create_company(request, id):
+    form = CreateCompany()
+    user = User.objects.filter(id=id).first()
+    user_type = user.user_type
+    form.initial['company_name'] = user.company.name
+
+    if request.method == 'POST':
+        form = CreateCompany(request.POST)
+        if form.is_valid():
+            if user_type == 'BUYER':
+                company_name = request.POST.get('company_name')
+                address = request.POST.get('address')
+                is_govnt_org = request.POST.get('is_govnt_org')
+                logo = request.FILES.get('logo')
+                company_name = user.company.name
+                Company.objects.filter(name=company_name).update(name = company_name,address = address, logo = logo,is_govnt_org=is_govnt_org)
+                return redirect('login')
+
+            else:
+                company_name = request.POST.get('company_name')
+                address = request.POST.get('address')
+                logo = request.FILES.get('logo')
+                iban_number = request.POST.get('iban_number')
+                license_number = request.POST.get('license_number')
+                new_company = Company.objects.filter(name=company_name).update(name = company_name, address = address, logo = logo, iban_number = iban_number, license_number = license_number)
+                new_company.save()
+                CompanyFuelUpdate.objects.create(company=new_company)
+                return render(request,'supplier/final_reg.html')
+            
+    return render(request, 'supplier/create_company.html', {'form': form, 'user_type':user_type })
+
+'''
+Supplier Profile
+'''
+
+@login_required()
+def account(request):
+    sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+    return render(request, 'supplier/user_profile.html', {'sub':sub})
+
+
+'''
+supplier activate whatsapp
+'''
+
+def activate_whatsapp(request):
+    user = User.objects.filter(id=request.user.id).first()
+    if user.activated_for_whatsapp == False:
+        user.activated_for_whatsapp = True
+        user.save()
+        messages.success(request, 'Your WhatsApp has been activated successfully')
+        return redirect('fuel-request')
+
+    else:
+        user.activated_for_whatsapp = False
+        user.save()
+        messages.warning(request, 'Your WhatsApp has been deactivated successfully')
+        return redirect('fuel-request')
+
+
+'''
+handling client applications
+'''
 
 @login_required
 def clients(request):
@@ -94,99 +258,23 @@ def view_application_id_document(request,id):
 
 
 @login_required
-def client_transaction_history(request,id):
-    client = Account.objects.filter(id=id).first()
-
-    contribution = get_customer_contributions(request.user.id, client.buyer_company)
-    cash_contribution = get_customer_contributions(request.user.id, client.buyer_company)[1]
-    total_cash = client_revenue(request.user.id, client.buyer_company)
-    all_requests, todays_requests = total_requests(client.buyer_company)
-
-
-    trns = Transaction.objects.filter(supplier=request.user,buyer__company=client.buyer_company)
-    transactions = []
-    for tran in trns:
-        tran.revenue = tran.offer.request.amount * tran.offer.price
-        transactions.append(tran)
-
-    return render(request, 'supplier/client_activity.html', {'transactions': transactions, 'client': client,
-    'contribution':contribution, 'cash_contribution':cash_contribution, 'total_cash':total_cash,
-     'all_requests':all_requests, 'todays_requests': todays_requests })
+def edit_delivery_schedule(request):
+    if request.method == "POST":
+        delivery_schedule = DeliverySchedule.objects.filter(id=int(request.POST['delivery_id'])).first()
+        delivery_schedule.driver_name = request.POST['driver_name']
+        delivery_schedule.phone_number = request.POST['phone_number']
+        delivery_schedule.id_number = request.POST['id_number']
+        delivery_schedule.vehicle_reg = request.POST['vehicle_reg']
+        delivery_schedule.delivery_time = request.POST['delivery_time']
+        delivery_schedule.transport_company = request.POST['transport_company']       
+        delivery_schedule.save()
+        messages.success(request, "Schedule Successfully Updated")
+        return redirect('supplier:delivery_schedules')    
 
 
-
-        
-@login_required
-def delivery_schedules(request):
-    if request.method == 'POST':
-        supplier_document = request.FILES.get('supplier_document')
-        delivery_id = request.POST.get('delivery_id')
-        schedule = DeliverySchedule.objects.get(id=delivery_id)
-        schedule.supplier_document = supplier_document
-        schedule.save()
-        messages.success(request, "File Successfully Uploaded")
-        msg = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
-        Notification.objects.create(user=request.user,action='DELIVERY', message=msg, reference_id=schedule.id)
-        return redirect('delivery_schedules')
-        
-    schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user).all()
-    for schedule in schedules:
-        if schedule.transaction.offer.delivery_method.lower() == 'delivery':
-            schedule.delivery_address = schedule.transaction.offer.request.delivery_address
-        else:
-            schedule.delivery_address = schedule.transaction.offer.collection_address
-    return render(request, 'supplier/delivery_schedules.html', {'schedules': schedules})    
-
-
-@login_required()
-def change_password(request):
-    context = {
-        'title': 'Fuel Finder | Change Password',
-        'password_change': PasswordChange(user=request.user)
-    }
-    if request.method == 'POST':
-        old = request.POST.get('old_password')
-        new1 = request.POST.get('new_password1')
-        new2 = request.POST.get('new_password2')
-
-        if authenticate(request, username=request.user.username, password=old):
-            if new1 != new2:
-                messages.warning(request, "Passwords Don't Match")
-                return redirect('change-password')
-            elif new1 == old:
-                messages.warning(request, "New password can not be similar to the old one")
-                return redirect('change-password')
-            elif len(new1) < 8:
-                messages.warning(request, "Password is too short")
-                return redirect('change-password')
-            elif new1.isnumeric():
-                messages.warning(request, "Password can not be entirely numeric!")
-            elif not new1.isalnum():
-                messages.warning(request, "Password should be alphanumeric")
-                return redirect('change-password')
-            else:
-                user = request.user
-                user.set_password(new1)
-                user.save()
-                update_session_auth_hash(request, user)
-
-                messages.success(request, 'Password Successfully Changed')
-                return redirect('account')
-        else:
-            messages.warning(request, 'Wrong Old Password, Please Try Again')
-            return redirect('change-password')
-    return render(request, 'supplier/change_password.html', context=context)
-
-
-@login_required()
-def account(request):
-    sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-    # if subsidiary is not None:
-    #     subsidiary_name = subsidiary.name
-    # else:
-    #     subsidiary_name = "Not Set"
-    return render(request, 'supplier/user_profile.html', {'sub':sub})
-
+'''
+Fuel Requests
+'''
 
 @login_required()
 def fuel_request(request):
@@ -279,15 +367,10 @@ def new_fuel_request(request, id):
     requests = FuelRequest.objects.filter(id = id,wait=True).all()
     return render(request, 'supplier/new_fuel_request.html', {'requests':requests})
 
-def accepted_offer(request, id):
-    transactions = Transaction.objects.filter(id=id).all()
-    return render(request, 'supplier/new_transaction.html', {'transactions':transactions})
 
-def rejected_offer(request, id):
-    offers = Offer.objects.filter(id=id).all()
-    return render(request, 'supplier/my_offer.html', {'offers':offers})
-
-
+'''
+Fuel Stock operations
+'''
 
 @login_required
 def available_stock(request):
@@ -334,6 +417,23 @@ def stock_update(request,id):
             fuel_update.save()
             messages.success(request, 'Fuel successfully updated')
     return redirect('available_stock')
+
+
+'''
+Offers Operations
+'''
+
+def my_offers(request):
+    offers = Offer.objects.filter(supplier=request.user, is_accepted=False).all()
+    for offer_temp in offers:
+        if offer_temp.cash==offer_temp.ecocash==offer_temp.swipe==offer_temp.usd==False:
+            offer_temp.no_payment = True
+        if offer_temp.dipping_stick_available==offer_temp.meter_available==offer_temp.pump_available==False:
+            offer_temp.no_equipments = True
+        if not offer_temp.collection_address.strip():
+            offer_temp.collection_address = f'N/A'
+    return render(request, 'supplier/my_offers.html', {'offers':offers})
+
 
 
 def offer(request, id):
@@ -413,6 +513,7 @@ def offer(request, id):
             return redirect('fuel-request')
     return render(request, 'supplier/fuel_request.html')
 
+
 @login_required
 def edit_offer(request, id):
     offer = Offer.objects.get(id=id)
@@ -471,6 +572,35 @@ def edit_offer(request, id):
     return render(request, 'supplier/fuel_request.html', {'offer': offer})
 
 
+def accepted_offer(request, id):
+    transactions = Transaction.objects.filter(id=id).all()
+    return render(request, 'supplier/new_transaction.html', {'transactions':transactions})
+
+
+def rejected_offer(request, id):
+    offers = Offer.objects.filter(id=id).all()
+    return render(request, 'supplier/my_offer.html', {'offers':offers})
+        
+
+'''
+allocated quantities
+'''
+
+def allocated_quantity(request):
+    allocations = FuelAllocation.objects.filter(allocated_subsidiary_id= request.user.subsidiary_id).all()
+    return render(request, 'supplier/allocated_quantity.html', {'allocations': allocations})
+
+    
+def company(request):
+    subsidiary = Subsidiaries.objects.filter(id = request.user.subsidiary_id).first()
+    num_of_suppliers = User.objects.filter(subsidiary_id=request.user.subsidiary_id).count() 
+    return render(request, 'supplier/company.html', {'subsidiary': subsidiary, 'num_of_suppliers': num_of_suppliers})
+
+
+'''
+Transactions Operations
+'''
+
 @login_required
 def transaction(request):
     today = datetime.now().strftime("%m/%d/%y")
@@ -487,161 +617,6 @@ def transaction(request):
        'today': today
         }
     return render(request, 'supplier/transactions.html',context=context)
-
-@login_required
-def create_delivery_schedule(request):
-    if request.method == 'POST':
-        schedule = DeliverySchedule.objects.create(
-            date=request.POST['delivery_date'],
-            transaction = Transaction.objects.filter(id=int(request.POST['transaction'])).first(),
-            driver_name = request.POST['driver_name'],
-            phone_number = request.POST['phone_number'],
-            id_number = request.POST['id_num'],
-            transport_company = request.POST['transport_company'],
-            vehicle_reg = request.POST['vehicle_reg'],
-            delivery_time = request.POST['delivery_time']
-        )
-        messages.success(request,"Schedule Successfully Created")
-        message = f"{schedule.transaction.supplier.company} has created a delivery schedule for you, Click To View Schedule"
-        Notification.objects.create(user=schedule.transaction.buyer,action='schedule', message=message, reference_id=schedule.id)
-        
-        return redirect('transaction')
-        
-
-def allocated_quantity(request):
-    allocations = FuelAllocation.objects.filter(allocated_subsidiary_id= request.user.subsidiary_id).all()
-    return render(request, 'supplier/allocated_quantity.html', {'allocations': allocations})
-
-
-def activate_whatsapp(request):
-    user = User.objects.filter(id=request.user.id).first()
-    if user.activated_for_whatsapp == False:
-        user.activated_for_whatsapp = True
-        user.save()
-        messages.success(request, 'Your WhatsApp has been activated successfully')
-        return redirect('fuel-request')
-
-    else:
-        user.activated_for_whatsapp = False
-        user.save()
-        messages.warning(request, 'Your WhatsApp has been deactivated successfully')
-        return redirect('fuel-request')
-
-
-def verification(request, token, user_id):
-    user = User.objects.get(id=user_id)
-    token_check = TokenAuthentication.objects.filter(user=user, token=token)  
-    if token_check.exists():
-        token_not_used = TokenAuthentication.objects.filter(user=user, used=False)
-        if token_not_used.exists():
-            form = BuyerUpdateForm
-            check = User.objects.filter(id=user_id)
-            if check.exists():
-                user = User.objects.get(id=user_id)
-                if user.user_type == 'BUYER':
-                    companies = Company.objects.filter(company_type='CORPORATE').all()
-                else:
-                    companies = Company.objects.filter(company_type='SUPPLIER').all()
-
-            if request.method == 'POST':
-                user = User.objects.get(id=user_id)
-                form = BuyerUpdateForm(request.POST, request.FILES, instance=user)
-                if form.is_valid():
-                    form.save()
-                    company_exists = Company.objects.filter(name=request.POST.get('company')).exists()
-                    if company_exists:
-                        selected_company =Company.objects.filter(name=request.POST.get('company')).first()
-                        user.company = selected_company
-                        user.is_active = True
-                        user.stage = 'menu'
-                        user.save()
-                        TokenAuthentication.objects.filter(user=user).update(used=True)
-                        if user.user_type == 'BUYER':
-                            return redirect('login')
-                        else:
-                            user.is_active = False
-                            user.is_waiting = True
-                            user.stage = 'menu'
-                            user.save()
-                            my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
-                            if my_admin is not None:
-                                return render(request,'supplier/final_registration.html',{'my_admin': my_admin})
-                            else:
-                                return render(request,'supplier/final_reg.html')
-                    else:
-                        selected_company =Company.objects.create(name=request.POST.get('company'))
-                        user.is_active = False
-                        user.is_waiting = True
-                        if user.user_type == 'SUPPLIER':
-                            user.user_type = 'S_ADMIN'
-                        # selected_company = Company.objects.create(name=request.POST.get('company'))
-                        selected_company.save()
-                        user.company = selected_company
-                        user.is_waiting = True
-                        user.save() 
-                        TokenAuthentication.objects.filter(user=user).update(used=True)
-                        return redirect('supplier:create_company', id=user.id)
-                    
-            else:
-                return render(request, 'supplier/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
-        else:
-            messages.warning(request, 'This link has been used before')
-            return redirect('buyer-register')
-        
-    else:
-        messages.warning(request, 'Wrong verification token, kindly follow the link send in the email')
-        return redirect('login')
-    
-    return render(request, 'supplier/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
-
-def create_company(request, id):
-    form = CreateCompany()
-    user = User.objects.filter(id=id).first()
-    user_type = user.user_type
-    form.initial['company_name'] = user.company.name
-
-    if request.method == 'POST':
-        form = CreateCompany(request.POST)
-        if form.is_valid():
-            if user_type == 'BUYER':
-                company_name = request.POST.get('company_name')
-                address = request.POST.get('address')
-                is_govnt_org = request.POST.get('is_govnt_org')
-                logo = request.FILES.get('logo')
-                company_name = user.company.name
-                Company.objects.filter(name=company_name).update(name = company_name,address = address, logo = logo,is_govnt_org=is_govnt_org)
-                return redirect('login')
-
-            else:
-                company_name = request.POST.get('company_name')
-                address = request.POST.get('address')
-                logo = request.FILES.get('logo')
-                iban_number = request.POST.get('iban_number')
-                license_number = request.POST.get('license_number')
-                new_company = Company.objects.filter(name=company_name).update(name = company_name, address = address, logo = logo, iban_number = iban_number, license_number = license_number)
-                new_company.save()
-                CompanyFuelUpdate.objects.create(company=new_company)
-                return render(request,'supplier/final_reg.html')
-            
-    return render(request, 'supplier/create_company.html', {'form': form, 'user_type':user_type })
-
-    
-def company(request):
-    subsidiary = Subsidiaries.objects.filter(id = request.user.subsidiary_id).first()
-    num_of_suppliers = User.objects.filter(subsidiary_id=request.user.subsidiary_id).count() 
-    return render(request, 'supplier/company.html', {'subsidiary': subsidiary, 'num_of_suppliers': num_of_suppliers})
-
-
-def my_offers(request):
-    offers = Offer.objects.filter(supplier=request.user, is_accepted=False).all()
-    for offer_temp in offers:
-        if offer_temp.cash==offer_temp.ecocash==offer_temp.swipe==offer_temp.usd==False:
-            offer_temp.no_payment = True
-        if offer_temp.dipping_stick_available==offer_temp.meter_available==offer_temp.pump_available==False:
-            offer_temp.no_equipments = True
-        if not offer_temp.collection_address.strip():
-            offer_temp.collection_address = f'N/A'
-    return render(request, 'supplier/my_offers.html', {'offers':offers})
 
 
 @login_required
@@ -749,18 +724,47 @@ def view_invoice(request, id):
     return render(request, 'supplier/invoice2.html', context)
 
 
+def download_proof(request,id):
+    document = Transaction.objects.filter(id=id).first()
+    if document:
+        filename = document.proof_of_payment.name.split('/')[-1]
+        response = HttpResponse(document.proof_of_payment, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect('transaction')
+    return response
+
+
+@login_required
+def client_transaction_history(request,id):
+    client = Account.objects.filter(id=id).first()
+
+    contribution = get_customer_contributions(request.user.id, client.buyer_company)
+    cash_contribution = get_customer_contributions(request.user.id, client.buyer_company)[1]
+    total_cash = client_revenue(request.user.id, client.buyer_company)
+    all_requests, todays_requests = total_requests(client.buyer_company)
+
+
+    trns = Transaction.objects.filter(supplier=request.user,buyer__company=client.buyer_company)
+    transactions = []
+    for tran in trns:
+        tran.revenue = tran.offer.request.amount * tran.offer.price
+        transactions.append(tran)
+
+    return render(request, 'supplier/client_activity.html', {'transactions': transactions, 'client': client,
+    'contribution':contribution, 'cash_contribution':cash_contribution, 'total_cash':total_cash,
+     'all_requests':all_requests, 'todays_requests': todays_requests })
+
+
 def sord_update(request, user, quantity, action, fuel_type, payment_type):
-    end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, payment_type=payment_type, end_quantity = 0).all()
     initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, payment_type=payment_type).all()
-    sord_quantity_zero = []
     sord_quantity = []
-    for sord in end_quantity_zero:
-        sord_quantity_zero.append(sord.sord_no)
-    for x in initial_sord:
-        if x.sord_no in sord_quantity_zero:
-            pass
+    for sord in initial_sord:
+        if sord.end_quantity != 0:
+            sord_quantity.append(sord)
         else:
-            sord_quantity.append(x)
+            pass
     sord_quantity.sort(key = attrgetter('last_updated'), reverse = True)
     changing_quantity = quantity
     for entry in sord_quantity:
@@ -794,6 +798,72 @@ def sord_update(request, user, quantity, action, fuel_type, payment_type):
                 new_sord_entry.save()
                 changing_quantity = 0
 
+
+'''
+Delivery Schedule Operations
+'''
+
+@login_required
+def create_delivery_schedule(request):
+    if request.method == 'POST':
+        schedule = DeliverySchedule.objects.create(
+            date=request.POST['delivery_date'],
+            transaction = Transaction.objects.filter(id=int(request.POST['transaction'])).first(),
+            driver_name = request.POST['driver_name'],
+            phone_number = request.POST['phone_number'],
+            id_number = request.POST['id_num'],
+            transport_company = request.POST['transport_company'],
+            vehicle_reg = request.POST['vehicle_reg'],
+            delivery_time = request.POST['delivery_time']
+        )
+        messages.success(request,"Schedule Successfully Created")
+        message = f"{schedule.transaction.supplier.company} has created a delivery schedule for you, Click To View Schedule"
+        Notification.objects.create(user=schedule.transaction.buyer,action='schedule', message=message, reference_id=schedule.id)
+        
+        return redirect('transaction')
+
+
+@login_required
+def delivery_schedules(request):
+    if request.method == 'POST':
+        supplier_document = request.FILES.get('supplier_document')
+        delivery_id = request.POST.get('delivery_id')
+        schedule = DeliverySchedule.objects.get(id=delivery_id)
+        schedule.supplier_document = supplier_document
+        schedule.save()
+        messages.success(request, "File Successfully Uploaded")
+        msg = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
+        Notification.objects.create(user=request.user,action='DELIVERY', message=msg, reference_id=schedule.id)
+        return redirect('delivery_schedules')
+        
+    schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user).all()
+    for schedule in schedules:
+        if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+            schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+        else:
+            schedule.delivery_address = schedule.transaction.offer.collection_address
+    return render(request, 'supplier/delivery_schedules.html', {'schedules': schedules})
+
+
+def view_delivery_schedule(request,id):
+    if request.method == 'POST':
+        supplier_document = request.FILES.get('supplier_document')
+        delivery_id = request.POST.get('delivery_id')
+        schedule = get_object_or_404(DeliverySchedule,id=delivery_id)
+        schedule.supplier_document = supplier_document
+        schedule.save()
+        messages.success(request, "File Successfully Uploaded")
+        msg = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
+        Notification.objects.create(user=request.user,action='DELIVERY', message=msg, reference_id=schedule.id)
+        return redirect('delivery_schedules')
+    schedule = DeliverySchedule.objects.filter(id=id).first()
+    if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+        schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+    else:
+        schedule.delivery_address = schedule.transaction.offer.collection_address
+    return render(request, 'supplier/view_delivery_schedule.html', {'schedule': schedule})
+
+
 def view_confirmation_doc(request,id):
     delivery = DeliverySchedule.objects.filter(id=id).first()
     if delivery:
@@ -822,33 +892,4 @@ def del_supplier_doc(request,id):
     delivery.save()
     messages.success(request, 'Document Removed Successfully')
     return redirect('supplier:delivery_schedules')
-
-def view_delivery_schedule(request,id):
-    if request.method == 'POST':
-        supplier_document = request.FILES.get('supplier_document')
-        delivery_id = request.POST.get('delivery_id')
-        schedule = get_object_or_404(DeliverySchedule,id=delivery_id)
-        schedule.supplier_document = supplier_document
-        schedule.save()
-        messages.success(request, "File Successfully Uploaded")
-        msg = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
-        Notification.objects.create(user=request.user,action='DELIVERY', message=msg, reference_id=schedule.id)
-        return redirect('delivery_schedules')
-    schedule = DeliverySchedule.objects.filter(id=id).first()
-    if schedule.transaction.offer.delivery_method.lower() == 'delivery':
-        schedule.delivery_address = schedule.transaction.offer.request.delivery_address
-    else:
-        schedule.delivery_address = schedule.transaction.offer.collection_address
-    return render(request, 'supplier/view_delivery_schedule.html', {'schedule': schedule})
     
-
-def download_proof(request,id):
-    document = Transaction.objects.filter(id=id).first()
-    if document:
-        filename = document.proof_of_payment.name.split('/')[-1]
-        response = HttpResponse(document.proof_of_payment, content_type='text/plain')
-        response['Content-Disposition'] = 'attachment; filename=%s' % filename
-    else:
-        messages.warning(request, 'Document Not Found')
-        return redirect('transaction')
-    return response
