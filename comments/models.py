@@ -1,6 +1,14 @@
 from django.db import models
+
 from buyer.models import User
 from supplier.models import Subsidiaries
+
+"""
+
+Comments Permissions Model
+
+
+"""
 
 
 class CommentsPermission(models.Model):
@@ -11,9 +19,17 @@ class CommentsPermission(models.Model):
 
     def save(self, *args, **kwargs):
         super(CommentsPermission, self).save(*args, **kwargs)
-
+        """ One permission rule should be present """
         if CommentsPermission.objects.filter().count() > 1:
             self.delete()
+
+
+"""
+
+Comments Model
+
+
+"""
 
 
 class Comment(models.Model):
@@ -29,3 +45,4 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['date', 'time']
+
