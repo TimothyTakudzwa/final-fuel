@@ -185,8 +185,8 @@ Supplier Profile
 
 @login_required()
 def account(request):
-    sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-    return render(request, 'supplier/user_profile.html', {'sub':sub})
+    subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+    return render(request, 'supplier/user_profile.html', {'subsidiary':subsidiary})
 
 
 '''
