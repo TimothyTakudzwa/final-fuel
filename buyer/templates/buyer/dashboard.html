@@ -166,7 +166,32 @@
                                     {{data.last_updated}}
                                 </td>
                                 <td>
-                                    {{data.rating}}
+                                    
+                                    {% if data.rating == 0%}
+                                    <p style="text-align: center;">-</p>
+                                    {% elif data.rating == 1%}
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    {% elif data.rating == 2%}
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    {% elif data.rating == 3%}
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    {% elif data.rating == 4%}
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    {% elif data.rating == 5%}
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    {% endif%}
+
+                                    
                                 </td>
                                 <td>
 

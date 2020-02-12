@@ -15,89 +15,7 @@
     </div>
 </section>
 <div class="content" style="min-height: 50px;">
-        <div class="row" style="margin-bottom: 0px;">
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
-                <div class="panel panel-bd cardbox" style="background-color: #387684;border: 1px solid #387684;">
-                    <div class="panel-body">
-                    <div class="items pull-left">
-                        <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
-                        <h4>Contribution</h4>
-                    </div>
-                    
-                        <div class="statistic-box">
-                            <div class="row" style="padding-bottom: 10px;">
-                                <h2 class="card-title" style="font-size: 1em;padding-right: 10px;">All : 
-                                <span class="">{{offers_count_all}}</span>
-                                <!-- <small style="color: white; font-size:100%">%</small> -->
-                                </h2>
-                            </div> 
-                            <div class="row"> 
-                            <h2 class="card-title" style="font-size: 1em;padding-right: 10px;">Today : 
-                                <span class="count-number">{{offers_count_today}}</span>
-                                <!-- <small style="color: white; font-size:100%">%</small> -->
-                                
-                            </h2>
-                            </div>
-                            
-                        </div>
-                        
-                    </div>
         
-                    
-                </div>
-                
-                
-            </div>
-            
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
-                <div class="panel panel-bd cardbox" style="background-color: #387684;border: 1px solid #387684;">
-                    <div class="panel-body">
-                        <div class="statistic-box">
-                            <h2><span style="font-size: 20px;">$ {{total_costs|stringformat:".2f"}}</span>
-                            </h2>
-                        </div>
-                        <div class="items pull-left">
-                            <i class="fa fa-money fa-2x"></i>
-                            <h4>Expenditure</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
-        
-        
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
-                <div class="panel panel-bd cardbox" style="background-color: #387684;border: 1px solid #387684;">
-                    <div class="panel-body">
-                        <div class="statistic-box">
-                            <h2><span style="font-size: 20px;">{{latest_orders}}</span>
-                            </h2>
-                        </div>
-                        <div class="items pull-left">
-                            <i class="fa fa-envelope fa-2x"></i>
-
-                            <h4>Orders</h4>
-                            <small class="pull-right" style="font-size: small">Last 24 hrs</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
-                <div class="panel panel-bd cardbox" style="background-color: #387684;border: 1px solid #387684;">
-                    <div class="panel-body">
-                        <div class="statistic-box">
-                            <h2><span style="font-size: 20px;">{{order_nums}}</span>
-                            </h2>
-                        </div>
-                        <div class="items pull-left">
-                            <i class="fa fa-envelope fa-2x"></i>
-                            <h4> Total Orders</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-        </div>
 
     </div>
 <section class="content">
@@ -240,7 +158,7 @@
                             </td>
                             <td class="">
                                  {% if not fuel_request.supplier_company %}
-                                 Private Mode
+                                 Private Request
                                  {% else %}
                                  Direct Order To - 
                                  <small style="color: lightslategray; font-size: smaller;">
@@ -327,7 +245,7 @@
                         <td>{{ account.buyer_company.address}}</td>
                         <td>{{account.account_number}} </td>
                         <td> <button type="button" class="btn btn-purple btn-sm" data-toggle="modal"
-                            data-target="#order_{{account.id}}">Make Order</button></td>
+                            data-target="#order_{{account.id}}">Place Order</button></td>
                       <td>
                         <button type="button" class="btn btn-purple btn-sm" data-toggle="modal"
                             data-target="#edit_account_details{{account.id}}">Edit Details</button>
@@ -354,10 +272,10 @@
                                   <label style="margin-bottom: 5px;">Address</label>
                                   <input type="text" name="address" class="form-control" value="{{account.buyer_company.address}}" />
                               </div>
-                              <div class="col-sm-9" style="margin-bottom: 10px;">
+                              <!-- <div class="col-sm-9" style="margin-bottom: 10px;">
                                   <label style="margin-bottom: 5px;">Account Number</label>
                                   <input type="text" name="account_number" class="form-control" value="{{account.account_number}}"/>
-                              </div>
+                              </div> -->
                               
                               </div>
                               
