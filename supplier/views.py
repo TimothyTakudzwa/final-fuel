@@ -776,6 +776,7 @@ def sord_update(request, user, quantity, action, fuel_type, payment_type):
                 new_sord_entry.received_by = user
                 new_sord_entry.fuel_type = entry.fuel_type
                 new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+                new_sord_entry.payment_type = payment_type
                 new_sord_entry.save()
                 changing_quantity = changing_quantity - entry.end_quantity
             else:
@@ -789,6 +790,7 @@ def sord_update(request, user, quantity, action, fuel_type, payment_type):
                 new_sord_entry.received_by = user
                 new_sord_entry.fuel_type = entry.fuel_type
                 new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+                new_sord_entry.payment_type = payment_type
                 new_sord_entry.save()
                 changing_quantity = 0
 
