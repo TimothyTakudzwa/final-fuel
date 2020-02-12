@@ -62,6 +62,57 @@ class Render:
             return HttpResponse("Error Rendering PDF", status=400)
 
 
+"""
+function for viewing allocations from NOIC, showing sord numbers, quantities, payment etc
+
+"""
+@login_required
+def sord_allocations(request):
+    sord_allocations = SordCompanyAuditTrail.objects.all()
+    return render(request, 'users/sord_allocations.html', {'sord_allocations':sord_allocations})
+
+"""
+functions for allocating fuel to depots and stations
+
+"""
+@login_required()
+def allocate(request):
+    allocates=[]
+    company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
+    subs_total_diesel_capacity = 0
+    subs_total_petrol_capacity = 0
+    subsidiaries_fuel = SubsidiaryFuelUpdate.objects.all()
+    for sub_fuel in subsidiaries_fuel:
+        subs_total_diesel_capacity += sub_fuel.diesel_quantity
+        subs_total_petrol_capacity += sub_fuel.petrol_quantity
+
+    company_total_diesel_capacity = subs_total_diesel_capacity + company_capacity.unallocated_diesel
+    company_total_petrol_capacity = subs_total_petrol_capacity + company_capacity.unallocated_petrol
+
+    company_total_diesel_capacity= '{:,}'.format(company_total_diesel_capacity)
+    company_total_petrol_capacity= '{:,}'.format(company_total_petrol_capacity)
+
+    subs = Subsidiaries.objects.filter(company=request.user.company).all()
+    for sub in subs:
+        allocates.append(SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first())
+    allocations = FuelAllocation.objects.filter(company=request.user.company).all()
+    if company_capacity is not None:
+        company_capacity.unallocated_diesel= '{:,}'.format(company_capacity.unallocated_diesel)
+        company_capacity.unallocated_petrol= '{:,}'.format(company_capacity.unallocated_petrol)
+    else:
+        company_capacity = company_capacity
+    if allocations is not None:
+        for alloc in allocations:
+            subsidiary = Subsidiaries.objects.filter(id=alloc.allocated_subsidiary_id).first()
+            if subsidiary is not None:
+                alloc.subsidiary_name = subsidiary.name
+            else:
+                allocations = allocations
+    else:
+        allocations = allocations
+    return render(request, 'users/allocate.html', {'allocates': allocates, 'allocations':allocations, 'company_capacity': company_capacity, 'company_total_diesel_capacity': company_total_diesel_capacity, 'company_total_petrol_capacity':company_total_petrol_capacity})
+
+
 def allocated_fuel(request,sid):
     sub = Subsidiaries.objects.filter(id = sid).first()
     allocates = SuballocationFuelUpdate.objects.filter(subsidiary=sub).all()
@@ -202,70 +253,8 @@ def allocated_fuel(request,sid):
                 allocates = allocates
         else:
             allocates = allocates
-
-
     return render(request, 'users/fuel_allocations.html', {'allocates': allocates, 'type_list': type_list})
 
-def get_pdf(request):
-    trans = Transaction.objects.all()
-    today = timezone.now()
-    params = {
-        'today': today,
-        'trans': trans,
-        'request': request
-    }
-    return Render.render('users/pdf.html', params)
-
-
-def account_activate(request):
-    return render(request, 'users/account_activate.html')
-
-@login_required()
-def index(request):
-    return render(request, 'users/index.html')
-
-@login_required()
-def allocate(request):
-    allocates=[]
-    company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
-    subs_total_diesel_capacity = 0
-    subs_total_petrol_capacity = 0
-
-    subsidiaries_fuel = SubsidiaryFuelUpdate.objects.all()
-    for sub_fuel in subsidiaries_fuel:
-        subs_total_diesel_capacity += sub_fuel.diesel_quantity
-        subs_total_petrol_capacity += sub_fuel.petrol_quantity
-
-    company_total_diesel_capacity = subs_total_diesel_capacity + company_capacity.unallocated_diesel
-    company_total_petrol_capacity = subs_total_petrol_capacity + company_capacity.unallocated_petrol
-
-    company_total_diesel_capacity= '{:,}'.format(company_total_diesel_capacity)
-    company_total_petrol_capacity= '{:,}'.format(company_total_petrol_capacity)
-
-    subs = Subsidiaries.objects.filter(company=request.user.company).all()
-    for sub in subs:
-        allocates.append(SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first())
-
-    allocations = FuelAllocation.objects.filter(company=request.user.company).all()
-    if company_capacity is not None:
-        company_capacity.unallocated_diesel= '{:,}'.format(company_capacity.unallocated_diesel)
-        company_capacity.unallocated_petrol= '{:,}'.format(company_capacity.unallocated_petrol)
-    else:
-        company_capacity = company_capacity
-    if allocations is not None:
-        for alloc in allocations:
-
-            subsidiary = Subsidiaries.objects.filter(id=alloc.allocated_subsidiary_id).first()
-            if subsidiary is not None:
-                alloc.subsidiary_name = subsidiary.name
-            else:
-                allocations = allocations
-
-    else:
-        allocations = allocations
-
-
-    return render(request, 'users/allocate.html', {'allocates': allocates, 'allocations':allocations, 'company_capacity': company_capacity, 'company_total_diesel_capacity': company_total_diesel_capacity, 'company_total_petrol_capacity':company_total_petrol_capacity})
 
 @login_required()
 def allocation_update(request,id):
@@ -402,10 +391,6 @@ def allocation_update(request,id):
     return render(request, 'users/allocate.html')
 
 
-@login_required
-def delivery_schedule(request):
-    pass
-
 @login_required()
 def allocation_update_main(request,id):
     if request.method == 'POST':
@@ -517,6 +502,122 @@ def allocation_update_main(request,id):
             return redirect('users:allocate')
     return render(request, 'users/allocate.html')
 
+
+"""
+function for creating subsidiaries (Depots & Stations) & their fuel update objects
+
+"""
+@login_required()
+def stations(request):
+    stations = Subsidiaries.objects.filter(company=request.user.company).all()
+    zimbabwean_towns = ["Select City ---","Harare","Bulawayo","Gweru","Mutare","Chirundu","Bindura","Beitbridge","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Chinhoyi","Mutoko","Nyanga","Victoria Falls"]
+    Harare = ['Avenues', 'Budiriro','Dzivaresekwa',  'Kuwadzana', 'Warren Park','Glen Norah', 'Glen View',  'Avondale',  'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park','Borrowdale',  'Chisipiti',  'Glen Lorne', 'Greendale', 'Greystone Park', 'Helensvale', 'Highlands',   'Mandara', 'Manresa','Msasa','Newlands',  'The Grange',  'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft', 'Hatcliffe', 'Mabelreign', 'Marlborough',  'Meyrick Park', 'Mount Pleasant',  'Pomona',   'Tynwald',  'Vainona', 'Arcadia','Braeside', 'CBD',  'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale', 'Sunningdale', 'Epworth','Highfield' 'Kambuzuma',  'Southerton', 'Warren Park', 'Southerton',  'Mabvuku', 'Tafara',  'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park',  'Marimba Park', 'Mufakose']
+    Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane', 'North End', 'Northvale', 'North Lynne', 'Northlea','North Trenance', 'Ntaba Moyo', 'Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont', 'Bradfield']
+    Mutare = ['Murambi', 'Hillside', 'Fairbridge Park', 'Morningside', 'Tigers Kloof', 'Yeovil', 'Westlea', 'Florida', 'Chikanga', 'Garikai', 'Sakubva', 'Dangamvura','Weirmouth', 'Fern Valley', 'Palmerstone', 'Avenues', 'Utopia','Darlington', 'Greeside', 'Greenside Extension', 'Toronto', 'Bordervale', 'Natview Park','Mai Maria', 'Gimboki', 'Musha Mukadzi']
+    Gweru = ['Gweru East', 'Woodlands Park', 'Kopje', 'Mtausi Park', 'Nashville', 'Senga', 'Hertifordshire', 'Athlone', 'Daylesford', 'Mkoba', 'Riverside', 'Southview', 'Nehosho','Clydesdale Park', 'Lundi Park', 'Montrose', 'Ascot', 'Ridgemont', 'Windsor Park', 'Ivene', 'Haben Park', 'Bata', 'ThornHill Air Field' 'Green Dale', 'Bristle', 'Southdowns']
+    if request.method == 'POST':
+        name = request.POST['name']
+        city = request.POST['city']
+        location = request.POST['location']
+        destination_bank = request.POST['destination_bank']
+        account_number = request.POST['account_number']
+        license_num = request.POST['licence']
+        praz_reg_num = request.POST['praz']
+        bp_num = request.POST['bp']
+        vat = request.POST['vat']
+        if request.POST['is_depot'] == "Service Station":
+            is_depot = False
+        else:
+            is_depot = True
+        opening_time = request.POST['opening_time']
+        closing_time = request.POST['closing_time']
+        cash = request.POST['cash']
+        usd = request.POST['usd']
+        swipe = request.POST['swipe']
+        ecocash = request.POST['ecocash']
+        subsidiary = Subsidiaries.objects.create(license_num=license_num,praz_reg_num=praz_reg_num,bp_num=bp_num,vat=vat,account_number=account_number,destination_bank=destination_bank,city=city,location=location,company=request.user.company,name=name,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)
+        subsidiary.save()
+        if request.POST['is_depot'] == "Service Station":
+            fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=sub, cash=cash, swipe=swipe, ecocash=ecocash,limit=2000)
+            fuel_update.save()
+            messages.success(request, 'Subsidiary Created Successfully')
+            return redirect('users:stations')
+        else:
+            fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=sub, cash=cash, swipe=swipe, ecocash=ecocash,limit=2000)
+            fuel_update.save()
+            messages.success(request, 'Subsidiary Created Successfully')
+            return redirect('users:stations')
+
+    return render(request, 'users/service_stations.html', {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns, 'Mutare': Mutare, 'Gweru': Gweru})
+
+
+@login_required()
+def suppliers_list(request):
+    suppliers = User.objects.filter(company=request.user.company).filter(user_type='SS_SUPPLIER').all()
+    if suppliers is not None:
+        for supplier in suppliers:
+            subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
+            if subsidiary is not None:
+                supplier.subsidiary_name = subsidiary.name
+            else:
+                pass
+    else:
+        suppliers = None
+    form1 = SupplierContactForm()
+    subsidiaries = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
+    form1.fields['service_station'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in subsidiaries]
+    if request.method == 'POST':
+        form1 = SupplierContactForm( request.POST)
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        sup = User.objects.filter(email=email).first()
+        if sup is not None:
+            messages.warning(request, f"{sup.email} already used in the system, please use a different email")
+            return redirect('users:suppliers_list')
+        password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+        phone_number = request.POST.get('phone_number')
+        subsidiary_id = request.POST.get('service_station')
+        full_name = first_name + " " + last_name
+        i = 0
+        username = initial_username = first_name[0] + last_name
+        while  User.objects.filter(username=username.lower()).exists():
+            username = initial_username + str(i)
+            i+=1
+        user = User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username.lower(), first_name=first_name, last_name=last_name, user_type = 'SS_SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
+        if message_is_send(request, user):
+            if user.is_active:
+                user.stage = 'menu'
+                user.save()
+            else:
+                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+        return redirect('users:suppliers_list')
+    return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1})
+
+def get_pdf(request):
+    trans = Transaction.objects.all()
+    today = timezone.now()
+    params = {
+        'today': today,
+        'trans': trans,
+        'request': request
+    }
+    return Render.render('users/pdf.html', params)
+
+
+def account_activate(request):
+    return render(request, 'users/account_activate.html')
+
+@login_required()
+def index(request):
+    return render(request, 'users/index.html')
+
+
+@login_required
+def delivery_schedule(request):
+    pass
+
+
 @login_required()
 def statistics(request):
     company = request.user.company
@@ -619,10 +720,7 @@ def supplier_user_edit(request, cid):
         messages.success(request, 'Your Changes Have Been Saved')
     return render(request, 'users/suppliers_list.html')
 
-@login_required
-def sord_allocations(request):
-    sord_allocations = SordCompanyAuditTrail.objects.all()
-    return render(request, 'users/sord_allocations.html', {'sord_allocations':sord_allocations})
+
 
 @login_required
 def client_history(request, cid):
@@ -721,49 +819,6 @@ def myaccount(request):
         messages.success(request, 'Your Changes Have Been Saved')
 
     return render(request, 'users/profile.html')
-
-@login_required()
-def stations(request):
-    stations = Subsidiaries.objects.filter(company=request.user.company).all()
-    zimbabwean_towns = ["Select City ---","Harare","Bulawayo","Gweru","Mutare","Chirundu","Bindura","Beitbridge","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Chinhoyi","Mutoko","Nyanga","Victoria Falls"]
-    Harare = ['Avenues', 'Budiriro','Dzivaresekwa',  'Kuwadzana', 'Warren Park','Glen Norah', 'Glen View',  'Avondale',  'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park','Borrowdale',  'Chisipiti',  'Glen Lorne', 'Greendale', 'Greystone Park', 'Helensvale', 'Highlands',   'Mandara', 'Manresa','Msasa','Newlands',  'The Grange',  'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft', 'Hatcliffe', 'Mabelreign', 'Marlborough',  'Meyrick Park', 'Mount Pleasant',  'Pomona',   'Tynwald',  'Vainona', 'Arcadia','Braeside', 'CBD',  'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale', 'Sunningdale', 'Epworth','Highfield' 'Kambuzuma',  'Southerton', 'Warren Park', 'Southerton',  'Mabvuku', 'Tafara',  'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park',  'Marimba Park', 'Mufakose']
-    Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane', 'North End', 'Northvale', 'North Lynne', 'Northlea','North Trenance', 'Ntaba Moyo', 'Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont', 'Bradfield']
-    Mutare = ['Murambi', 'Hillside', 'Fairbridge Park', 'Morningside', 'Tigers Kloof', 'Yeovil', 'Westlea', 'Florida', 'Chikanga', 'Garikai', 'Sakubva', 'Dangamvura','Weirmouth', 'Fern Valley', 'Palmerstone', 'Avenues', 'Utopia','Darlington', 'Greeside', 'Greenside Extension', 'Toronto', 'Bordervale', 'Natview Park','Mai Maria', 'Gimboki', 'Musha Mukadzi']
-    Gweru = ['Gweru East', 'Woodlands Park', 'Kopje', 'Mtausi Park', 'Nashville', 'Senga', 'Hertifordshire', 'Athlone', 'Daylesford', 'Mkoba', 'Riverside', 'Southview', 'Nehosho','Clydesdale Park', 'Lundi Park', 'Montrose', 'Ascot', 'Ridgemont', 'Windsor Park', 'Ivene', 'Haben Park', 'Bata', 'ThornHill Air Field' 'Green Dale', 'Bristle', 'Southdowns']
-    if request.method == 'POST':
-        name = request.POST['name']
-        city = request.POST['city']
-        location = request.POST['location']
-        destination_bank = request.POST['destination_bank']
-        account_number = request.POST['account_number']
-        license_num = request.POST['licence']
-        praz_reg_num = request.POST['praz']
-        bp_num = request.POST['bp']
-        vat = request.POST['vat']
-        if request.POST['is_depot'] == "Service Station":
-            is_depot = False
-        else:
-            is_depot = True
-        opening_time = request.POST['opening_time']
-        closing_time = request.POST['closing_time']
-        cash = request.POST['cash']
-        usd = request.POST['usd']
-        swipe = request.POST['swipe']
-        ecocash = request.POST['ecocash']
-        sub = Subsidiaries.objects.create(license_num=license_num,praz_reg_num=praz_reg_num,bp_num=bp_num,vat=vat,account_number=account_number,destination_bank=destination_bank,city=city,location=location,company=request.user.company,name=name,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)
-        sub.save()
-        if request.POST['is_depot'] == "Service Station":
-            fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=sub, cash=cash, swipe=swipe, ecocash=ecocash,limit=2000)
-            fuel_update.save()
-            messages.success(request, 'Subsidiary Created Successfully')
-            return redirect('users:stations')
-        else:
-            fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=sub, cash=cash, swipe=swipe, ecocash=ecocash,limit=2000)
-            fuel_update.save()
-            messages.success(request, 'Subsidiary Created Successfully')
-            return redirect('users:stations')
-
-    return render(request, 'users/service_stations.html', {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns, 'Mutare': Mutare, 'Gweru': Gweru})
 
 
 @login_required()
@@ -879,57 +934,7 @@ def decline_applicant(request, id):
     messages.warning(request, f'declined a request for registration from {applicant.first_name}')
     return redirect('users:waiting_for_approval')
 
-@login_required()
-def suppliers_list(request):
-    suppliers = User.objects.filter(company=request.user.company).filter(user_type='SS_SUPPLIER').all()
-    if suppliers is not None:
-        for supplier in suppliers:
-            subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
-            if subsidiary is not None:
-                supplier.subsidiary_name = subsidiary.name
-            else:
-                pass
-    else:
-        suppliers = None
 
-    form1 = SupplierContactForm()
-    subsidiaries = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
-    form1.fields['service_station'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in subsidiaries]
-
-    if request.method == 'POST':
-        form1 = SupplierContactForm( request.POST)
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        email = request.POST.get('email')
-        sup = User.objects.filter(email=email).first()
-        if sup is not None:
-            messages.warning(request, f"{sup.email} already used in the system, please use a different email")
-            return redirect('users:suppliers_list')
-
-        password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
-        phone_number = request.POST.get('phone_number')
-        subsidiary_id = request.POST.get('service_station')
-        full_name = first_name + " " + last_name
-        i = 0
-        username = initial_username = first_name[0] + last_name
-        while  User.objects.filter(username=username.lower()).exists():
-            username = initial_username + str(i)
-            i+=1
-        user = User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username.lower(), first_name=first_name, last_name=last_name, user_type = 'SS_SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
-        if message_is_send(request, user):
-            if user.is_active:
-                #messages.success(request, "You have been registered succesfully")
-                user.stage = 'menu'
-                user.save()
-
-                #return render(request, 'buyer/email_send.html')
-            else:
-                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
-                #return render(request, 'buyer/email_send.html')
-        #messages.success(request, f"{username.lower()} succesfully registered as service station rep")
-        return redirect('users:suppliers_list')
-
-    return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1})
 
 
 def message_is_send(request, user):
