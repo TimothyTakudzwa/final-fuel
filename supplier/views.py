@@ -766,37 +766,18 @@ def sord_update(request, user, quantity, action, fuel_type, payment_type):
         else:
             pass
     sord_quantity.sort(key = attrgetter('last_updated'), reverse = True)
-    changing_quantity = quantity
+    balance_brought_forward = quantity
     for entry in sord_quantity:
-        if changing_quantity != 0:
-            if entry.end_quantity < changing_quantity:
-                new_sord_entry = SordSubsidiaryAuditTrail()
-                new_sord_entry.sord_no = entry.sord_no
-                new_sord_entry.action_no = entry.action_no + 1
-                new_sord_entry.action = action
-                new_sord_entry.initial_quantity = entry.end_quantity
-                new_sord_entry.quantity_sold = entry.end_quantity
-                new_sord_entry.end_quantity = 0
-                new_sord_entry.received_by = user
-                new_sord_entry.fuel_type = entry.fuel_type
-                new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-                new_sord_entry.payment_type = payment_type
-                new_sord_entry.save()
-                changing_quantity = changing_quantity - entry.end_quantity
+        if balance_brought_forward != 0:
+            subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+            if entry.end_quantity < balance_brought_forward:
+                SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1, action = action, initial_quantity = entry.end_quantity,
+                quantity_sold = entry.end_quantity, end_quantity = 0, received_by = user, fuel_type = entry.fuel_type, subsidiary = subsidiary, payment_type = payment_type)
+                balance_brought_forward = balance_brought_forward - entry.end_quantity
             else:
-                new_sord_entry = SordSubsidiaryAuditTrail()
-                new_sord_entry.sord_no = entry.sord_no
-                new_sord_entry.action_no = entry.action_no + 1
-                new_sord_entry.action = action
-                new_sord_entry.initial_quantity = entry.end_quantity
-                new_sord_entry.quantity_sold = changing_quantity
-                new_sord_entry.end_quantity = entry.end_quantity - changing_quantity
-                new_sord_entry.received_by = user
-                new_sord_entry.fuel_type = entry.fuel_type
-                new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-                new_sord_entry.payment_type = payment_type
-                new_sord_entry.save()
-                changing_quantity = 0
+                SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1, action = action, initial_quantity = entry.end_quantity,
+                quantity_sold = balance_brought_forward, end_quantity = entry.end_quantity - balance_brought_forward, received_by = user, fuel_type = entry.fuel_type, subsidiary = subsidiary, payment_type = payment_type)
+                balance_brought_forward = 0
 
 
 '''
