@@ -1,8 +1,9 @@
+import requests
+
 from itertools import chain
 from operator import attrgetter
-
+from django.db.models import Q
 from django.shortcuts import render
-import requests
 from validate_email import validate_email
 
 from buyer.models import FuelRequest
@@ -10,12 +11,13 @@ from .constants import *
 from buyer.views import token_is_send
 from users.views import message_is_sent
 from supplier.models import Offer, Transaction, FuelAllocation, Subsidiaries, UserReview, SubsidiaryFuelUpdate, SuballocationFuelUpdate, SordSubsidiaryAuditTrail
-# from buyer.models import User, FuelRequest
-# from company.models import FuelUpdate
-from django.db.models import Q
 from buyer.recommend import recommend
 from notification.models import Notification
 
+"""
+function for sending whatsapp messages
+
+"""
 def send_message(phone_number, message):
     payload = {
         "phone": phone_number,
@@ -26,6 +28,120 @@ def send_message(phone_number, message):
     print(r)
     return r.status_code
 
+
+"""
+function for checking user types and directing them to their respective handlers
+
+"""
+def bot_action(request, user, message):
+    if user.stage == 'registration' and user.position !=0:
+        return registration_handler(request, user, message)
+    if user.user_type == 'INDIVIDUAL':
+        return individual_handler(request, user, message)
+    elif user.user_type == 'S_ADMIN':
+        return "You are not allowed to use this platform"
+    elif user.user_type == 'BUYER':
+        return buyer_handler(request, user,message)
+    elif user.user_type == 'SUPPLIER':
+        return supplier_handler(request, user, message)
+    elif user.user_type == 'SS_SUPPLIER':
+        return service_station_handler(request, user,message)
+
+
+"""
+function for registering new users
+
+"""
+def registration_handler(request, user, message):
+
+    if user.position == 1:
+        response_message = "First before we get started can i please have your *Full Name*"
+        user.position = 2
+        user.save()
+    elif user.position == 2:
+        try:
+            user.first_name, user.last_name = message.split(' ', 2)[0], message.split(' ', 2)[1]
+        except:
+            user.first_name = message
+        full_name = user.first_name + " " + user.last_name
+        response_message = greetings_message.format(full_name)
+        user.position = 3
+        user.save()
+    elif user.position == 3:
+        try:
+            selected_option = user_types[int(message) - 1]
+            user.user_type = selected_option
+            user.position = 4
+            user.save()
+            print(user.user_type)
+        except:
+            return "Please select a valid option\n\n" + greetings_message
+        print("got here")
+        if selected_option == 'SUPPLIER' or selected_option == 'BUYER':
+            response_message = "Can i have your company email address.\n*NB* using your personal email address gets you lower precedence in the fuel finding process"
+        else:
+            response_message = "Can i please have your email address"
+    elif user.position == 4:
+        user_exists = User.objects.filter(email=message).first()
+        if user_exists is not None:
+            response_message = "There is an existing user with the same email, please user a different email"
+        else:
+            is_valid = validate_email(message, verify=True)
+            print(" is this valid-------------????", is_valid)
+            if is_valid:
+                pass
+            else:
+                return "*_Couldn't verify the email_*.\n\nPlease enter the a valid email address"
+            user.email = message.lower()
+            if user.user_type == 'INDIVIDUAL':
+                user.stage = 'individual_finder'
+                user.password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+                user.password_reset = True
+                user.position = 1
+                if user.last_name != '':
+                    username = initial_username = user.first_name[0] + user.last_name
+                else:
+                    username = initial_username = user.first_name[0] + user.first_name
+                i = 0
+                while User.objects.filter(username=username.lower()).exists():
+                    username = initial_username + str(i)
+                user.username = username.lower()
+                user.is_active = True
+                user.save()
+                if message_is_sent(request, user):
+                    user.stage = 'menu'
+                    user.save()
+                else:
+                    response_message = 'oooops!!! something went wrong'
+                return "You have finished the registration process for Fuel Finder. To now start looking for fuel, Please type *menu* or open your email to get your username and initial password if you want to use the mobile app."
+            else:
+                user.position = 5
+                user.save()
+                if user.last_name != '':
+                    username = initial_username = user.first_name[0] + user.last_name
+                else:
+                    username = initial_username = user.first_name[0] + user.first_name
+                i = 0
+                while User.objects.filter(username=username.lower()).exists():
+                    username = initial_username + str(i)
+                user.username = username.lower()
+                if token_is_send(request, user):
+                    response_message = "We have sent a verification email to your supplied email, Please visit the link to complete the registration process"
+                    user.is_active = True
+                    user.save()
+                else:
+                    response_message = "*_We have failed to register you to the platform_*.\n\nPlease enter a valid email address"
+                    user.position = 4
+                    user.save()
+    elif user.position == 5:
+        response_message = "Please wait for approval of your company"
+    return response_message
+
+
+"""
+functions for handling individual buyer
+
+"""
 def individual_handler(request, user,message):
     if message.lower() == 'menu' and user.stage != 'registration':
         user.position = 1
@@ -66,6 +182,108 @@ def individual_handler(request, user,message):
         pass
     return response_message
 
+
+def requesting(user, message):
+    if user.position == 1:
+        cities = ["Harare","Bulawayo","Beitbridge","Bindura","Chinhoyi","Chirundu","Gweru","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Mutare","Mutoko","Nyanga","Victoria Falls"]
+        response_message = "Which City are you in?\n\n"
+        i = 1
+        for city in cities:
+            response_message = response_message + f'{i}. {city}\n'
+            i += 1
+        user.position = 11
+        user.save()
+    elif user.position == 11:
+        if message =="1":
+            Harare = ['Avenues', 'Budiriro','Dzivaresekwa',  'Kuwadzana', 'Warren Park','Glen Norah', 'Glen View',  'Avondale',  'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park','Borrowdale',  'Chisipiti',  'Glen Lorne', 'Greendale', 'Greystone Park', 'Helensvale', 'Highlands',   'Mandara', 'Manresa','Msasa','Newlands',  'The Grange',  'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft', 'Hatcliffe', 'Mabelreign', 'Marlborough',  'Meyrick Park', 'Mount Pleasant',  'Pomona',   'Tynwald',  'Vainona', 'Arcadia','Braeside', 'CBD',  'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale', 'Sunningdale', 'Epworth','Highfield' 'Kambuzuma',  'Southerton', 'Warren Park', 'Southerton',  'Mabvuku', 'Tafara',  'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park',  'Marimba Park', 'Mufakose']
+            user.fuel_updates_ids = "Harare"
+            response_message = 'Which location do you want to look for fuel in?\n\n'
+            i = 1
+            for location in Harare:
+                response_message = response_message + f'{i}. {location}\n'
+                i += 1
+            user.position = 12
+            user.save()
+        elif message == "2":
+            Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane', 'North End', 'Northvale', 'North Lynne', 'Northlea', 'North Trenance', 'Ntaba Moyo', 'Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont', 'Bradfield','Burnside', 'Cement', 'Cowdray Park', 'Donnington West', 'Donnington', 'Douglasdale', 'Emakhandeni', 'Eloana', 'Emganwini', 'Enqameni', 'Enqotsheni']
+            user.fuel_updates_ids = "Bulawayo"
+            response_message = 'Which location do you want to look for fuel in?\n\n'
+            i = 1
+            for location in Bulawayo:
+                response_message = response_message + f'{i}. {location}\n'
+                i += 1
+            user.position = 13
+            user.save()
+        else:
+            cities = ["Harare","Bulawayo","Beitbridge","Bindura","Chinhoyi","Chirundu","Gweru","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Mutare","Mutoko","Nyanga","Victoria Falls"]
+            my_city = cities[int(message) - 1]
+            stations = Subsidiaries.objects.filter(city=my_city,is_depot=False).all()
+            response_message = 'Please visit one of the service stations below to buy fuel\n\n'
+            i = 1
+            for station in stations:
+                fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).exists()
+                if fuel_update:
+                    fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).first()
+                    response_message = response_message + f'{i}. *{station.name}*\nPetrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nDiesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n'
+                    i += 1
+                else:
+                    pass
+
+
+    elif user.position == 12:
+        Harare = ['Avenues', 'Budiriro','Dzivaresekwa',  'Kuwadzana', 'Warren Park','Glen Norah', 'Glen View',  'Avondale',  'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park','Borrowdale',  'Chisipiti',  'Glen Lorne', 'Greendale', 'Greystone Park', 'Helensvale', 'Highlands',   'Mandara', 'Manresa','Msasa','Newlands',  'The Grange',  'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft', 'Hatcliffe', 'Mabelreign', 'Marlborough',  'Meyrick Park', 'Mount Pleasant',  'Pomona',   'Tynwald',  'Vainona', 'Arcadia','Braeside', 'CBD',  'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale', 'Sunningdale', 'Epworth','Highfield' 'Kambuzuma',  'Southerton', 'Warren Park', 'Southerton',  'Mabvuku', 'Tafara',  'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park',  'Marimba Park', 'Mufakose']
+        loc = Harare[int(message) - 1]
+        stations = Subsidiaries.objects.filter(city=user.fuel_updates_ids,location=loc,is_depot=False).all()
+        response_message = 'Please visit one of the service stations below to buy fuel\n\n'
+        i = 1
+        for station in stations:
+            fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).exists()
+            if fuel_update:
+                fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).first()
+                response_message = response_message + f'{i}. *{station.name}*\nPetrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nDiesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n'
+                i += 1
+            else:
+                pass
+
+    elif user.position == 13:
+        Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane', 'North End', 'Northvale', 'North Lynne', 'Northlea', 'North Trenance', 'Ntaba Moyo', 'Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont', 'Bradfield','Burnside', 'Cement', 'Cowdray Park', 'Donnington West', 'Donnington', 'Douglasdale', 'Emakhandeni', 'Eloana', 'Emganwini', 'Enqameni', 'Enqotsheni']
+        loc = Bulawayo[int(message) - 1]
+        stations = Subsidiaries.objects.filter(city=user.fuel_updates_ids,location=loc,is_depot=False).all()
+        response_message = 'Please visit one of the service stations below to buy fuel\n\n'
+        i = 1
+        for station in stations:
+            fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).exists()
+            if fuel_update:
+                fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).first()
+                response_message = response_message + f'{i}. *{station.name}*\nPetrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nDiesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n'
+                i += 1
+            else:
+                pass
+
+
+    return response_message
+
+def station_updates(user, message):
+    if user.position == 1:
+        stations = Subsidiaries.objects.filter(is_depot=False).all()
+        i = 1
+        for station in stations:
+            response_message = 'The following are the current updates of fuel available in different stations. Please type *menu* to go back to menu and look for fuel\n\n'
+            sub_fuel_updates = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).exists()
+            if sub_fuel_updates:
+                sub_fuel_updates = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).first()
+                response_message = response_message + f'{i}. *{station.name}*\nPetrol: {sub_fuel_updates.petrol_quantity} Litres\nPrice: {sub_fuel_updates.petrol_price}\nDiesel: {sub_fuel_updates.diesel_quantity} Litres\nPrice: {sub_fuel_updates.diesel_price}\nQueue Length: {sub_fuel_updates.queue_length}\nStatus: {sub_fuel_updates.status}\n\n'
+                i += 1
+            else:
+                pass
+
+    return response_message
+
+
+"""
+functions for handling corporate buyer
+
+"""
 def buyer_handler(request,user,message):
     if message.lower() == 'menu':
         user.stage = 'menu'
@@ -110,6 +328,7 @@ def buyer_handler(request,user,message):
     else:
         pass
     return response_message
+
 
 def requests_handler(user, message):
     if user.position == 1:
@@ -416,6 +635,61 @@ def view_fuel_updates(user, message):
         my_request.save()
         response_message = 'made request successfully'
 
+    return response_message
+
+
+"""
+functions for handling supplier
+
+"""
+def supplier_handler(request,user,message):
+    response_message = ""
+    if message.lower() == 'menu':
+        user.stage = 'menu'
+        user.fuel_updates_ids = " "
+        user.position = 1
+        user.save()
+        full_name = user.first_name + " " + user.last_name
+        response_message = supplier_menu.format(full_name)
+        return response_message
+    elif user.stage == 'menu':
+        if message == "1":
+            user.stage = 'view_requests'
+            user.position = 0
+            user.save()
+            response_message = view_requests_handler(user, message)
+        elif message == "2":
+            user.stage = 'view_offers'
+            user.position = 0
+            user.save()
+            response_message = view_offers_handler(user, message)
+        elif message == "3":
+            user.stage = 'view_allocations'
+            user.position = 1
+            user.save()
+            response_message = view_allocations(user, message)
+        elif message == "4":
+            user.position = 0
+            user.stage = 'update_fuel'
+            user.save()
+            response_message = update_fuel(user, message)
+        elif message == "5":
+            user.stage = 'view_transactions'
+            user.position = 0
+            user.save()
+            response_message = view_transactions_handler(user, message)
+        else:
+            response_message = "You entered an invalid option. Type *menu* to restart."
+    elif user.stage == 'view_requests':
+        response_message= view_requests_handler(user, message)
+    elif user.stage == 'view_offers':
+        response_message = view_offers_handler(user, message)
+    elif user.stage == 'view_allocations':
+        response_message = view_allocations(user, message)
+    elif user.stage == 'update_fuel':
+        response_message = update_fuel(user, message)
+    else:
+        pass
 
     return response_message
 
@@ -740,156 +1014,67 @@ def update_fuel(user, message):
     return response_message
 
 
-def supplier_handler(request,user,message):
-    response_message = ""
-    if message.lower() == 'menu':
-        user.stage = 'menu'
-        user.fuel_updates_ids = " "
-        user.position = 1
-        user.save()
-        full_name = user.first_name + " " + user.last_name
-        response_message = supplier_menu.format(full_name)
-        return response_message
-    elif user.stage == 'menu':
-        if message == "1":
-            user.stage = 'view_requests'
-            user.position = 0
-            user.save()
-            response_message = view_requests_handler(user, message)
-        elif message == "2":
-            user.stage = 'view_offers'
-            user.position = 0
-            user.save()
-            response_message = view_offers_handler(user, message)
-        elif message == "3":
-            user.stage = 'view_allocations'
-            user.position = 1
-            user.save()
-            response_message = view_allocations(user, message)
-        elif message == "4":
-            user.position = 0
-            user.stage = 'update_fuel'
-            user.save()
-            response_message = update_fuel(user, message)
-        elif message == "5":
-            user.stage = 'view_transactions'
-            user.position = 0
-            user.save()
-            response_message = view_transactions_handler(user, message)
-        else:
-            response_message = "You entered an invalid option. Type *menu* to restart."
-    elif user.stage == 'view_requests':
-        response_message= view_requests_handler(user, message)
-    elif user.stage == 'view_offers':
-        response_message = view_offers_handler(user, message)
-    elif user.stage == 'view_allocations':
-        response_message = view_allocations(user, message)
-    elif user.stage == 'update_fuel':
-        response_message = update_fuel(user, message)
-    else:
-        pass
-
-    return response_message
-
-def bot_action(request, user, message):
-    if user.stage == 'registration' and user.position !=0:
-        return registration_handler(request, user, message)
-    if user.user_type == 'INDIVIDUAL':
-        return individual_handler(request, user, message)
-    elif user.user_type == 'S_ADMIN':
-        return "You are not allowed to use this platform"
-    elif user.user_type == 'BUYER':
-        return buyer_handler(request, user,message)
-    elif user.user_type == 'SUPPLIER':
-        return supplier_handler(request, user, message)
-    elif user.user_type == 'SS_SUPPLIER':
-        return service_station_handler(request, user,message)
-
-def registration_handler(request, user, message):
-
+def transacting_handler(user, message):
     if user.position == 1:
-        response_message = "First before we get started can i please have your *Full Name*"
-        user.position = 2
-        user.save()
-    elif user.position == 2:
-        try:
-            user.first_name, user.last_name = message.split(' ', 2)[0], message.split(' ', 2)[1]
-        except:
-            user.first_name = message
-        full_name = user.first_name + " " + user.last_name
-        response_message = greetings_message.format(full_name)
-        user.position = 3
-        user.save()
-    elif user.position == 3:
-        try:
-            selected_option = user_types[int(message) - 1]
-            user.user_type = selected_option
-            user.position = 4
-            user.save()
-            print(user.user_type)
-        except:
-            return "Please select a valid option\n\n" + greetings_message
-        print("got here")
-        if selected_option == 'SUPPLIER' or selected_option == 'BUYER':
-            response_message = "Can i have your company email address.\n*NB* using your personal email address gets you lower precedence in the fuel finding process"
-        else:
-            response_message = "Can i please have your email address"
-    elif user.position == 4:
-        user_exists = User.objects.filter(email=message).first()
-        if user_exists is not None:
-            response_message = "There is an existing user with the same email, please user a different email"
-        else:
-            is_valid = validate_email(message, verify=True)
-            print(" is this valid-------------????", is_valid)
-            if is_valid:
-                pass
-            else:
-                return "*_Couldn't verify the email_*.\n\nPlease enter the a valid email address"
-            user.email = message.lower()
-            if user.user_type == 'INDIVIDUAL':
-                user.stage = 'individual_finder'
-                user.password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
-                user.password_reset = True
-                user.position = 1
-                if user.last_name != '':
-                    username = initial_username = user.first_name[0] + user.last_name
-                else:
-                    username = initial_username = user.first_name[0] + user.first_name
-                i = 0
-                while User.objects.filter(username=username.lower()).exists():
-                    username = initial_username + str(i)
-                user.username = username.lower()
-                user.is_active = True
-                user.save()
-                if message_is_sent(request, user):
-                    user.stage = 'menu'
-                    user.save()
-                else:
-                    response_message = 'oooops!!! something went wrong'
-                return "You have finished the registration process for Fuel Finder. To now start looking for fuel, Please type *menu* or open your email to get your username and initial password if you want to use the mobile app."
-            else:
-                user.position = 5
-                user.save()
-                if user.last_name != '':
-                    username = initial_username = user.first_name[0] + user.last_name
-                else:
-                    username = initial_username = user.first_name[0] + user.first_name
-                i = 0
-                while User.objects.filter(username=username.lower()).exists():
-                    username = initial_username + str(i)
-                user.username = username.lower()
-                if token_is_send(request, user):
-                    response_message = "We have sent a verification email to your supplied email, Please visit the link to complete the registration process"
-                    user.is_active = True
-                    user.save()
-                else:
-                    response_message = "*_We have failed to register you to the platform_*.\n\nPlease enter a valid email address"
-                    user.position = 4
-                    user.save()
-    elif user.position == 5:
-        response_message = "Please wait for approval of your company"
+        if 'accept' in message.lower():
+            offer_id = ''.join(x for x in message if x.isdigit())
+            offer =  Offer.objects.filter(id=offer_id).first()
+            if offer is not None:
+                Transaction.objects.create(request_name=offer.request, buyer_name=user)
+                response_message = 'This transaction has been completed'
+        elif message.lower() == 'wait':
+            pass
     return response_message
 
+
+def depot_sord_update(user, quantity, action, fuel_type,payment_type):
+    end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = user.subsidiary_id, fuel_type=fuel_type, payment_type=payment_type, end_quantity = 0).all()
+    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = user.subsidiary_id, fuel_type=fuel_type, payment_type=payment_type).all()
+    sord_quantity_zero = []
+    sord_quantity = []
+    for sord in end_quantity_zero:
+        sord_quantity_zero.append(sord.sord_no)
+    for x in initial_sord:
+        if x.sord_no in sord_quantity_zero:
+            pass
+        else:
+            sord_quantity.append(x)
+    sord_quantity.sort(key = attrgetter('last_updated'), reverse = True)
+    changing_quantity = quantity
+    for entry in sord_quantity:
+        if changing_quantity != 0:
+            if entry.end_quantity < changing_quantity:
+                new_sord_entry = SordSubsidiaryAuditTrail()
+                new_sord_entry.sord_no = entry.sord_no
+                new_sord_entry.action_no = entry.action_no + 1
+                new_sord_entry.action = action
+                new_sord_entry.initial_quantity = entry.end_quantity
+                new_sord_entry.quantity_sold = entry.end_quantity
+                new_sord_entry.end_quantity = 0
+                new_sord_entry.received_by = user
+                new_sord_entry.fuel_type = entry.fuel_type
+                new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
+                new_sord_entry.save()
+                changing_quantity = changing_quantity - entry.end_quantity
+            else:
+                new_sord_entry = SordSubsidiaryAuditTrail()
+                new_sord_entry.sord_no = entry.sord_no
+                new_sord_entry.action_no = entry.action_no + 1
+                new_sord_entry.action = action
+                new_sord_entry.initial_quantity = entry.end_quantity
+                new_sord_entry.quantity_sold = changing_quantity
+                new_sord_entry.end_quantity = entry.end_quantity - changing_quantity
+                new_sord_entry.received_by = user
+                new_sord_entry.fuel_type = entry.fuel_type
+                new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
+                new_sord_entry.save()
+                changing_quantity = 0
+
+
+"""
+functions for handling service station rep
+
+"""
 def service_station_handler(request,user,message):
     if message.lower() == 'menu':
         user.stage = 'menu'
@@ -1104,6 +1289,7 @@ def update_diesel(user, message):
 
     return response_message
 
+
 def view_allocations(user, message):
     if user.position == 1:
         allocations = FuelAllocation.objects.filter(allocated_subsidiary_id=user.subsidiary_id).all()
@@ -1119,118 +1305,6 @@ def view_allocations(user, message):
             response_message = "Invalid response! Please type *menu* to go back to main menu."
     return response_message
 
-def transacting_handler(user, message):
-    if user.position == 1:
-        if 'accept' in message.lower():
-            offer_id = ''.join(x for x in message if x.isdigit())
-            offer =  Offer.objects.filter(id=offer_id).first()
-            if offer is not None:
-                Transaction.objects.create(request_name=offer.request, buyer_name=user)
-                response_message = 'This transaction has been completed'
-        elif message.lower() == 'wait':
-            pass
-    return response_message
-
-
-def requesting(user, message):
-    if user.position == 1:
-        cities = ["Harare","Bulawayo","Beitbridge","Bindura","Chinhoyi","Chirundu","Gweru","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Mutare","Mutoko","Nyanga","Victoria Falls"]
-        response_message = "Which City are you in?\n\n"
-        i = 1
-        for city in cities:
-            response_message = response_message + f'{i}. {city}\n'
-            i += 1
-        user.position = 11
-        user.save()
-    elif user.position == 11:
-        if message =="1":
-            Harare = ['Avenues', 'Budiriro','Dzivaresekwa',  'Kuwadzana', 'Warren Park','Glen Norah', 'Glen View',  'Avondale',  'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park','Borrowdale',  'Chisipiti',  'Glen Lorne', 'Greendale', 'Greystone Park', 'Helensvale', 'Highlands',   'Mandara', 'Manresa','Msasa','Newlands',  'The Grange',  'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft', 'Hatcliffe', 'Mabelreign', 'Marlborough',  'Meyrick Park', 'Mount Pleasant',  'Pomona',   'Tynwald',  'Vainona', 'Arcadia','Braeside', 'CBD',  'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale', 'Sunningdale', 'Epworth','Highfield' 'Kambuzuma',  'Southerton', 'Warren Park', 'Southerton',  'Mabvuku', 'Tafara',  'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park',  'Marimba Park', 'Mufakose']
-            user.fuel_updates_ids = "Harare"
-            response_message = 'Which location do you want to look for fuel in?\n\n'
-            i = 1
-            for location in Harare:
-                response_message = response_message + f'{i}. {location}\n'
-                i += 1
-            user.position = 12
-            user.save()
-        elif message == "2":
-            Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane', 'North End', 'Northvale', 'North Lynne', 'Northlea', 'North Trenance', 'Ntaba Moyo', 'Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont', 'Bradfield','Burnside', 'Cement', 'Cowdray Park', 'Donnington West', 'Donnington', 'Douglasdale', 'Emakhandeni', 'Eloana', 'Emganwini', 'Enqameni', 'Enqotsheni']
-            user.fuel_updates_ids = "Bulawayo"
-            response_message = 'Which location do you want to look for fuel in?\n\n'
-            i = 1
-            for location in Bulawayo:
-                response_message = response_message + f'{i}. {location}\n'
-                i += 1
-            user.position = 13
-            user.save()
-        else:
-            cities = ["Harare","Bulawayo","Beitbridge","Bindura","Chinhoyi","Chirundu","Gweru","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Mutare","Mutoko","Nyanga","Victoria Falls"]
-            my_city = cities[int(message) - 1]
-            stations = Subsidiaries.objects.filter(city=my_city,is_depot=False).all()
-            response_message = 'Please visit one of the service stations below to buy fuel\n\n'
-            i = 1
-            for station in stations:
-                fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).exists()
-                if fuel_update:
-                    fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).first()
-                    response_message = response_message + f'{i}. *{station.name}*\nPetrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nDiesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n'
-                    i += 1
-                else:
-                    pass
-
-
-    elif user.position == 12:
-        Harare = ['Avenues', 'Budiriro','Dzivaresekwa',  'Kuwadzana', 'Warren Park','Glen Norah', 'Glen View',  'Avondale',  'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park','Borrowdale',  'Chisipiti',  'Glen Lorne', 'Greendale', 'Greystone Park', 'Helensvale', 'Highlands',   'Mandara', 'Manresa','Msasa','Newlands',  'The Grange',  'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft', 'Hatcliffe', 'Mabelreign', 'Marlborough',  'Meyrick Park', 'Mount Pleasant',  'Pomona',   'Tynwald',  'Vainona', 'Arcadia','Braeside', 'CBD',  'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale', 'Sunningdale', 'Epworth','Highfield' 'Kambuzuma',  'Southerton', 'Warren Park', 'Southerton',  'Mabvuku', 'Tafara',  'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park',  'Marimba Park', 'Mufakose']
-        loc = Harare[int(message) - 1]
-        stations = Subsidiaries.objects.filter(city=user.fuel_updates_ids,location=loc,is_depot=False).all()
-        response_message = 'Please visit one of the service stations below to buy fuel\n\n'
-        i = 1
-        for station in stations:
-            fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).exists()
-            if fuel_update:
-                fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).first()
-                response_message = response_message + f'{i}. *{station.name}*\nPetrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nDiesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n'
-                i += 1
-            else:
-                pass
-
-    elif user.position == 13:
-        Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane', 'North End', 'Northvale', 'North Lynne', 'Northlea', 'North Trenance', 'Ntaba Moyo', 'Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont', 'Bradfield','Burnside', 'Cement', 'Cowdray Park', 'Donnington West', 'Donnington', 'Douglasdale', 'Emakhandeni', 'Eloana', 'Emganwini', 'Enqameni', 'Enqotsheni']
-        loc = Bulawayo[int(message) - 1]
-        stations = Subsidiaries.objects.filter(city=user.fuel_updates_ids,location=loc,is_depot=False).all()
-        response_message = 'Please visit one of the service stations below to buy fuel\n\n'
-        i = 1
-        for station in stations:
-            fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).exists()
-            if fuel_update:
-                fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).first()
-                response_message = response_message + f'{i}. *{station.name}*\nPetrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nDiesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n'
-                i += 1
-            else:
-                pass
-
-
-    return response_message
-
-def station_updates(user, message):
-    if user.position == 1:
-        stations = Subsidiaries.objects.filter(is_depot=False).all()
-        i = 1
-        for station in stations:
-            response_message = 'The following are the current updates of fuel available in different stations. Please type *menu* to go back to menu and look for fuel\n\n'
-            sub_fuel_updates = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).exists()
-            if sub_fuel_updates:
-                sub_fuel_updates = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).first()
-                response_message = response_message + f'{i}. *{station.name}*\nPetrol: {sub_fuel_updates.petrol_quantity} Litres\nPrice: {sub_fuel_updates.petrol_price}\nDiesel: {sub_fuel_updates.diesel_quantity} Litres\nPrice: {sub_fuel_updates.diesel_price}\nQueue Length: {sub_fuel_updates.queue_length}\nStatus: {sub_fuel_updates.status}\n\n'
-                i += 1
-            else:
-                pass
-
-    return response_message
-
-
-def fuel_finder():
-    return 
 
 def sord_update(user, quantity, action, fuel_type):
     end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = user.subsidiary_id, fuel_type=fuel_type, payment_type="RTGS", end_quantity = 0).all()
@@ -1275,45 +1349,6 @@ def sord_update(user, quantity, action, fuel_type):
                 new_sord_entry.save()
                 changing_quantity = 0
 
-def depot_sord_update(user, quantity, action, fuel_type,payment_type):
-    end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = user.subsidiary_id, fuel_type=fuel_type, payment_type=payment_type, end_quantity = 0).all()
-    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = user.subsidiary_id, fuel_type=fuel_type, payment_type=payment_type).all()
-    sord_quantity_zero = []
-    sord_quantity = []
-    for sord in end_quantity_zero:
-        sord_quantity_zero.append(sord.sord_no)
-    for x in initial_sord:
-        if x.sord_no in sord_quantity_zero:
-            pass
-        else:
-            sord_quantity.append(x)
-    sord_quantity.sort(key = attrgetter('last_updated'), reverse = True)
-    changing_quantity = quantity
-    for entry in sord_quantity:
-        if changing_quantity != 0:
-            if entry.end_quantity < changing_quantity:
-                new_sord_entry = SordSubsidiaryAuditTrail()
-                new_sord_entry.sord_no = entry.sord_no
-                new_sord_entry.action_no = entry.action_no + 1
-                new_sord_entry.action = action
-                new_sord_entry.initial_quantity = entry.end_quantity
-                new_sord_entry.quantity_sold = entry.end_quantity
-                new_sord_entry.end_quantity = 0
-                new_sord_entry.received_by = user
-                new_sord_entry.fuel_type = entry.fuel_type
-                new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
-                new_sord_entry.save()
-                changing_quantity = changing_quantity - entry.end_quantity
-            else:
-                new_sord_entry = SordSubsidiaryAuditTrail()
-                new_sord_entry.sord_no = entry.sord_no
-                new_sord_entry.action_no = entry.action_no + 1
-                new_sord_entry.action = action
-                new_sord_entry.initial_quantity = entry.end_quantity
-                new_sord_entry.quantity_sold = changing_quantity
-                new_sord_entry.end_quantity = entry.end_quantity - changing_quantity
-                new_sord_entry.received_by = user
-                new_sord_entry.fuel_type = entry.fuel_type
-                new_sord_entry.subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
-                new_sord_entry.save()
-                changing_quantity = 0
+
+def fuel_finder():
+    return 

@@ -1,12 +1,16 @@
+from datetime import datetime, timedelta
+
 from supplier.models import Subsidiaries, Transaction, UserReview
 # from company.models import Company, FuelUpdate
 from buyer.models import User
-from datetime import datetime, timedelta
 from company.models import CompanyFuelUpdate
 
 
-
-def top_branches(count,company):
+def get_top_branches(count,company):
+    '''
+    Get an ordered list of a companies top subsidiaries
+    according to revenue generated
+    '''
     branches = Subsidiaries.objects.filter(is_depot=True).filter(company=company)
     subs = []
 
@@ -25,16 +29,25 @@ def top_branches(count,company):
     return sorted_subs
 
 
-def top_contributors(user):
-    top_subs = top_branches(5,user.company)
+def get_top_contributors(user):
+    '''
+    Get the top 5 subsidiaries of a company
+    '''
+    top_subs = get_top_branches(5,user.company)
     trans = get_total_revenue(user.company)
 
 
 def get_week_days(date):
+    '''
+    Get This Weeks Dates
+    '''
     return [date + timedelta(days=i) for i in range(0 - date.weekday(), 7 - date.weekday())]
 
 
 def get_weekly_sales(company, this_week):
+    '''
+    Get the company's weekly sales
+    '''
     if this_week == True:
         date = datetime.now().date()
     else:
@@ -54,6 +67,9 @@ def get_weekly_sales(company, this_week):
 
 
 def get_monthly_sales(company, year):
+    '''
+    Get the companies monthly sales
+    '''
 
     months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     monthly_data = {}
@@ -75,6 +91,9 @@ def get_monthly_sales(company, year):
     
 
 def get_average_rating(company):
+    '''
+    Get company's average rating from user reviews
+    '''
     average_rating = 0
     reviews = UserReview.objects.filter(company_type='Supplier', company=company)
     
@@ -91,10 +110,16 @@ def get_average_rating(company):
 
 
 def get_all_subsidiaries(company):
+    '''
+    Get all company subsidiaries
+    '''
     return Subsidiaries.objects.filter(company=company)
 
 
-def get_aggregate_stock(company): 
+def get_aggregate_stock(company):
+    '''
+    Get a company's total inventory
+    ''' 
     fuel_update = CompanyFuelUpdate.objects.filter(company=company.id).first()
     if fuel_update:
         allocated_diesel = fuel_update.allocated_diesel
@@ -107,6 +132,9 @@ def get_aggregate_stock(company):
     
 
 def get_total_revenue(user):
+    '''
+    Get a company's total sales revenue
+    '''
     revenue = 0
 
     trans = Transaction.objects.filter(supplier__company=user.company, is_complete=True)
@@ -120,6 +148,9 @@ def get_total_revenue(user):
 
 
 def get_transactions_complete_percentage(user):
+    '''
+    Get % of complete transactions
+    '''
     try:
         trans = (Transaction.objects.filter(supplier__company=user.company, is_complete=True).count()/Transaction.objects.filter(supplier__company=user.company).count()) * 100
     except:
@@ -128,4 +159,7 @@ def get_transactions_complete_percentage(user):
 
 
 def get_aggregate_staff(company):
+    '''
+    Get list of all the staff belonging to a company
+    '''
     return User.objects.filter(company=company)
