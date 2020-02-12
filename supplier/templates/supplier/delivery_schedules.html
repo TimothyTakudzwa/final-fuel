@@ -57,7 +57,7 @@
                     {% for delivery in schedules %}
                     <tr>
                         <td></td>
-                        <td>{{ delivery.transaction.buyer.username|title }}</td>
+                        <td>{{ delivery.transaction.buyer.company.name|title }}</td>
                         <td>{{delivery.delivery_address}}</td>
                         <td>{{ delivery.transaction.offer.request.fuel_type}}</td>
                         <td>{{delivery.transaction.offer.request.amount}} </td>
@@ -154,6 +154,22 @@
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Delivery Date/Time: </p>
                                         <p class="col-md-6">{{ delivery.date }} | {{ delivery.delivery_time }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Recipient: </p>
+                                        <p class="col-md-6">{{ delivery.transaction.buyer.company.name|title }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Address: </p>
+                                        <p class="col-md-6">{{delivery.delivery_address}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Product: </p>
+                                        <p class="col-md-6">{{delivery.transaction.offer.request.fuel_type}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Transporter </p>
+                                        <p class="col-md-6">{{delivery.transport_company}}</p>
                                     </div>
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Quantity: </p>
