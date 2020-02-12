@@ -35,7 +35,7 @@ import sys
 from supplier.forms import Subsidiaries
 from buyer.models import *
 from buyer.forms import *
-from .forms import AllocationForm, SupplierContactForm
+from .forms import AllocationForm, SupplierContactForm, ReportForm
 from .models import AuditTrail, SordActionsAuditTrail
 from buyer.models import *
 from supplier.models import *

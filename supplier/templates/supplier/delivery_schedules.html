@@ -95,7 +95,7 @@
                               
 
                               <div class="col-sm-4" style="margin-bottom: 10px;">
-                                  <label style="margin-bottom: 5px;">Transporter Name</label>
+                                  <label style="margin-bottom: 5px;">Driver Name</label>
                                   <input type="text" name="driver_name" class="form-control" value="{{delivery.driver_name}}" />
                               </div>
                               <div class="col-sm-4" style="margin-bottom: 10px;">
@@ -118,8 +118,8 @@
                                     <input type="text" name="vehicle_reg" class="form-control" value="{{delivery.vehicle_reg}}" />
                                 </div>
                                 <div class="col-sm-4" style="margin-bottom: 10px;">
-                                    <label style="margin-bottom: 5px;">Delivery Time</label>
-                                    <input type="time" name="delivery_time" class="form-control" value="{{delivery.delivery_time}}"/>
+                                    <label style="margin-bottom: 5px;">Delivery Date</label>
+                                    <input type="date" name="delivery_date" class="form-control" value="{{delivery.date}}"/>
                                 </div>
                                 </div>
                               
@@ -143,14 +143,14 @@
                     </div>
                         
                     <div class="modal fade modal-success in" id="additonal_information{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                        aria-hidden="true">
+                        aria-hidden="true" style="overflow-y: initial !important;">
                         <div class="modal-dialog modal-notice">
                             <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                 <span class="modal-title">Additional Information</span>
                             </div>
-                                <div class="modal-body" style="padding: 30px;">
+                                <div class="modal-body" style="padding: 30px;height: 400px;overflow-y: auto;">
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Delivery Date/Time: </p>
                                         <p class="col-md-6">{{ delivery.date }} | {{ delivery.delivery_time }}</p>

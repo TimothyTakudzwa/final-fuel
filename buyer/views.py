@@ -317,7 +317,7 @@ def dashboard(request):
                 rate_count += 1
             update.rating = round(sum_rate / rate_count)
         else:
-            update.rating = '-'
+            update.rating = 0
 
         sub = Subsidiaries.objects.filter(id=update.subsidiary.id).first()
         company = Company.objects.filter(id=sub.company.id).first()
