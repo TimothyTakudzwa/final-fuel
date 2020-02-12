@@ -6,9 +6,10 @@ import uuid
 
 from fpdf import FPDF
 # from weasyprint import HTML
-from xhtml2pdf import pisa 
+from weasyprint import HTML
+from xhtml2pdf import pisa
 from io import BytesIO
-from django.template.loader import get_template 
+from django.template.loader import get_template
 from django.template import Context
 from pandas import DataFrame
 import pandas as pd
@@ -44,12 +45,15 @@ from .forms import AllocationForm
 # from company.models import FuelUpdate as F_Update
 from django.contrib.auth import get_user_model
 from fuelUpdates.models import SordCompanyAuditTrail
+import datetime
+import sys
+
 
 user = get_user_model()
 
 
 class Render:
-    
+
     @staticmethod
     def render(path: str, params: dict):
         template = get_template(path)
@@ -62,7 +66,7 @@ class Render:
             return HttpResponse("Error Rendering PDF", status=400)
 
 
-def allocated_fuel(request,sid): 
+def allocated_fuel(request,sid):
     sub = Subsidiaries.objects.filter(id = sid).first()
     allocates = SuballocationFuelUpdate.objects.filter(subsidiary=sub).all()
     company_quantity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
@@ -79,7 +83,7 @@ def allocated_fuel(request,sid):
                     return redirect('users:allocate')
                 else:
                     pass
-            elif request.POST['fuel_payment_type'] == "USD": 
+            elif request.POST['fuel_payment_type'] == "USD":
                 if float(request.POST['price']) > company_quantity.usd_petrol_price:
                     messages.warning(request, f'You can not set price above NOIC petrol price of {company_quantity.usd_petrol_price}')
                     return redirect('users:allocate')
@@ -93,7 +97,7 @@ def allocated_fuel(request,sid):
                 fuel_updated.ecocash = request.POST['ecocash']
             else:
                 pass
-            depot.petrol_quantity = depot.petrol_quantity + int(request.POST['quantity']) 
+            depot.petrol_quantity = depot.petrol_quantity + int(request.POST['quantity'])
             company_quantity.unallocated_petrol = company_quantity.unallocated_petrol - int(request.POST['quantity'])
             company_quantity.save()
             messages.success(request, 'Fuel Allocation SUccesful')
@@ -107,7 +111,7 @@ def allocated_fuel(request,sid):
                     return redirect('users:allocate')
                 else:
                     pass
-            elif request.POST['fuel_payment_type'] == "USD": 
+            elif request.POST['fuel_payment_type'] == "USD":
                 if float(request.POST['price']) > company_quantity.usd_diesel_price:
                     messages.warning(request, f'You can not set price above NOIC diesel price of {company_quantity.usd_diesel_price}')
                     return redirect('users:allocate')
@@ -121,13 +125,13 @@ def allocated_fuel(request,sid):
                 fuel_updated.ecocash = request.POST['ecocash']
             else:
                 pass
-            depot.diesel_quantity = depot.diesel_quantity + int(request.POST['quantity']) 
+            depot.diesel_quantity = depot.diesel_quantity + int(request.POST['quantity'])
             company_quantity.unallocated_diesel = company_quantity.unallocated_diesel - int(request.POST['quantity'])
             company_quantity.save()
             messages.success(request, 'Fuel Allocation SUccesful')
         fuel_updated.save()
         depot.save()
-        
+
         action = 'Allocation of ' + request.POST['fuel_type']
         if request.POST['fuel_type'].lower() == 'petrol':
             FuelAllocation.objects.create(company=request.user.company, fuel_payment_type= fuel_updated.payment_type, action = action,petrol_price=fuel_updated.petrol_price,petrol_quantity=request.POST['quantity'],sub_type="Suballocation",cash=request.POST['cash'],swipe=request.POST['swipe'],allocated_subsidiary_id=fuel_updated.subsidiary.id)
@@ -188,9 +192,9 @@ def allocated_fuel(request,sid):
                     depot_audit = SordSubsidiaryAuditTrail.objects.create(subsidiary=sub, sord_no=sord_allocation.sord_no, action_no=sord_allocation.action_no, action="Receiving Fuel", fuel_type="Diesel", payment_type=fuel_updated.payment_type, initial_quantity=sord_allocation.end_quantity, end_quantity=sord_allocation.end_quantity, received_by=receiver)
                     depot_audit.save()
 
-    type_list = []  
-    if allocates is not None: 
-        
+    type_list = []
+    if allocates is not None:
+
         for allocate in allocates:
             type_list.append(allocate.payment_type)
             subsidiary = Subsidiaries.objects.filter(id=allocate.subsidiary.id).first()
@@ -199,13 +203,13 @@ def allocated_fuel(request,sid):
                 allocate.diesel_quantity= '{:,}'.format(allocate.diesel_quantity)
                 allocate.petrol_quantity= '{:,}'.format(allocate.petrol_quantity)
             else:
-                allocates = allocates    
+                allocates = allocates
         else:
             allocates = allocates
-    
-    
+
+
     return render(request, 'users/fuel_allocations.html', {'allocates': allocates, 'type_list': type_list})
-    
+
 def get_pdf(request):
     trans = Transaction.objects.all()
     today = timezone.now()
@@ -214,7 +218,7 @@ def get_pdf(request):
         'trans': trans,
         'request': request
     }
-    return Render.render('users/pdf.html', params)            
+    return Render.render('users/pdf.html', params)
 
 
 def account_activate(request):
@@ -241,7 +245,7 @@ def allocate(request):
 
     company_total_diesel_capacity= '{:,}'.format(company_total_diesel_capacity)
     company_total_petrol_capacity= '{:,}'.format(company_total_petrol_capacity)
-    
+
     subs = Subsidiaries.objects.filter(company=request.user.company).all()
     for sub in subs:
         allocates.append(SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first())
@@ -252,19 +256,19 @@ def allocate(request):
         company_capacity.unallocated_petrol= '{:,}'.format(company_capacity.unallocated_petrol)
     else:
         company_capacity = company_capacity
-    if allocations is not None: 
+    if allocations is not None:
         for alloc in allocations:
-            
+
             subsidiary = Subsidiaries.objects.filter(id=alloc.allocated_subsidiary_id).first()
             if subsidiary is not None:
                 alloc.subsidiary_name = subsidiary.name
             else:
-                allocations = allocations  
-        
+                allocations = allocations
+
     else:
         allocations = allocations
 
-    
+
     return render(request, 'users/allocate.html', {'allocates': allocates, 'allocations':allocations, 'company_capacity': company_capacity, 'company_total_diesel_capacity': company_total_diesel_capacity, 'company_total_petrol_capacity':company_total_petrol_capacity})
 
 @login_required()
@@ -279,22 +283,22 @@ def allocation_update(request,id):
                 if int(request.POST['quantity']) > company_quantity.unallocated_petrol:
                     messages.warning(request, f'You can not allocate fuel above your company petrol quantity of {company_quantity.unallocated_petrol}')
                     return redirect('users:allocate')
-                fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['quantity']) 
+                fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['quantity'])
                 depot.petrol_quantity = depot.petrol_quantity + int(request.POST['quantity'])
-                if fuel_update.payment_type == "RTGS": 
-                    if float(request.POST['price']) > company_quantity.petrol_price: 
+                if fuel_update.payment_type == "RTGS":
+                    if float(request.POST['price']) > company_quantity.petrol_price:
                         messages.warning(request, f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}')
-                        return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}') 
-                    else:                  
-                        fuel_update.petrol_price = float(request.POST['price']) 
+                        return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
+                    else:
+                        fuel_update.petrol_price = float(request.POST['price'])
                 elif fuel_update.payment_type == "USD":
-                    if float(request.POST['price']) > company_quantity.usd_petrol_price: 
+                    if float(request.POST['price']) > company_quantity.usd_petrol_price:
                         messages.warning(request, f'You can not set price above NOIC usd petrol price of {company_quantity.usd_petrol_price}')
-                        return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}') 
-                    else:                  
-                        fuel_update.petrol_price = float(request.POST['price'])   
+                        return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
+                    else:
+                        fuel_update.petrol_price = float(request.POST['price'])
                 if fuel_update.payment_type == 'USD & RTGS':
-                    fuel_update.petrol_usd_price = float(request.POST['usd_price'])            
+                    fuel_update.petrol_usd_price = float(request.POST['usd_price'])
                 company_quantity.unallocated_petrol = company_quantity.unallocated_petrol - int(request.POST['quantity'])
                 company_quantity.save()
             else:
@@ -303,31 +307,31 @@ def allocation_update(request,id):
                     return redirect('users:allocate')
                 fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['quantity'])
                 depot.diesel_quantity = depot.diesel_quantity + int(request.POST['quantity'])
-                
+
                 if fuel_update.payment_type == "RTGS":
-                    if float(request.POST['price']) > company_quantity.diesel_price: 
+                    if float(request.POST['price']) > company_quantity.diesel_price:
                         messages.warning(request, f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}')
-                        return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}') 
+                        return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                     else:
-                        fuel_update.diesel_price = request.POST['price']   
+                        fuel_update.diesel_price = request.POST['price']
                 elif fuel_update.payment_type == "USD":
-                    if float(request.POST['price']) > company_quantity.usd_diesel_price: 
+                    if float(request.POST['price']) > company_quantity.usd_diesel_price:
                         messages.warning(request, f'You can not set price above NOIC usd diesel price of {company_quantity.usd_diesel_price}')
-                        return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}') 
+                        return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                     else:
-                        fuel_update.diesel_price = request.POST['price']  
+                        fuel_update.diesel_price = request.POST['price']
                 if fuel_update.payment_type == 'USD & RTGS':
-                    fuel_update.diesel_usd_price = float(request.POST['usd_price']) 
+                    fuel_update.diesel_usd_price = float(request.POST['usd_price'])
                 company_quantity.unallocated_diesel = company_quantity.unallocated_diesel - int(request.POST['quantity'])
-                company_quantity.save()   
+                company_quantity.save()
             fuel_update.cash = request.POST['cash']
             fuel_update.swipe = request.POST['swipe']
             if fuel_update.payment_type != 'USD':
-                fuel_update.ecocash = request.POST['ecocash']         
-           
+                fuel_update.ecocash = request.POST['ecocash']
+
             fuel_update.save()
             depot.save()
-            
+
             action = 'Allocation of ' + request.POST['fuel_type']
             if request.POST['fuel_type'].lower() == 'petrol':
                 FuelAllocation.objects.create(company=request.user.company, fuel_payment_type= fuel_update.payment_type, action = action,petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['quantity'],sub_type="Suballocation",cash=request.POST['cash'],swipe=request.POST['swipe'],allocated_subsidiary_id=fuel_update.subsidiary.id)
@@ -394,11 +398,11 @@ def allocation_update(request,id):
             reference_id = fuel_update.id
             action = f"You have allocated { request.POST['fuel_type']} quantity of {int(request.POST['quantity'])}L @ {fuel_update.petrol_price} "
             Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
-            return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')            
-           
+            return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
+
         else:
             messages.success(request, 'Subsidiary does not exists')
-            return redirect('users:allocate')  
+            return redirect('users:allocate')
     return render(request, 'users/allocate.html')
 
 
@@ -413,17 +417,17 @@ def allocation_update_main(request,id):
             fuel_update = SubsidiaryFuelUpdate.objects.filter(id=id).first()
             sub = Subsidiaries.objects.filter(id=fuel_update.subsidiary.id).first()
             company_quantity = CompanyFuelUpdate.objects.filter(company = request.user.company).first()
-            
+
             if request.POST['fuel_type'] == 'Petrol':
                 if int(request.POST['quantity']) > company_quantity.unallocated_petrol:
                     messages.warning(request, f'You can not allocate fuel above your company petrol quantity of {company_quantity.unallocated_petrol}')
                     return redirect('users:allocate')
-                fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['quantity']) 
+                fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['quantity'])
                 if float(request.POST['price']) > company_quantity.petrol_price:
                     messages.warning(request, f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}')
-                    return redirect('users:allocate')   
-                else:                    
-                    fuel_update.petrol_price = float(request.POST['price'])   
+                    return redirect('users:allocate')
+                else:
+                    fuel_update.petrol_price = float(request.POST['price'])
                 company_quantity.unallocated_petrol = company_quantity.unallocated_petrol - int(request.POST['quantity'])
                 company_quantity.save()
             else:
@@ -435,15 +439,15 @@ def allocation_update_main(request,id):
                     messages.warning(request, f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}')
                     return redirect('users:allocate')
                 else:
-                    fuel_update.diesel_price = request.POST['price']    
+                    fuel_update.diesel_price = request.POST['price']
                 company_quantity.unallocated_diesel = company_quantity.unallocated_diesel - int(request.POST['quantity'])
-                company_quantity.save()   
+                company_quantity.save()
             fuel_update.cash = request.POST['cash']
             fuel_update.swipe = request.POST['swipe']
-            fuel_update.ecocash = request.POST['ecocash']         
-           
+            fuel_update.ecocash = request.POST['ecocash']
+
             fuel_update.save()
-            
+
             action = 'Allocation of ' + request.POST['fuel_type']
             if request.POST['fuel_type'].lower() == 'petrol':
                 FuelAllocation.objects.create(company=request.user.company, fuel_payment_type= "RTGS", action = action,petrol_price=fuel_update.petrol_price,petrol_quantity=request.POST['quantity'],sub_type="Service Station",cash=request.POST['cash'],swipe=request.POST['swipe'],allocated_subsidiary_id=fuel_update.subsidiary.id)
@@ -503,18 +507,18 @@ def allocation_update_main(request,id):
                         receiver = User.objects.filter(subsidiary_id=sub.id).first()
                         depot_audit = SordSubsidiaryAuditTrail.objects.create(subsidiary=sub, sord_no=sord_allocation.sord_no, action_no=sord_allocation.action_no, action="Receiving Fuel", fuel_type="Diesel",  payment_type="RTGS", initial_quantity=sord_allocation.end_quantity, end_quantity=sord_allocation.end_quantity, received_by=receiver)
                         depot_audit.save()
-       
+
             messages.success(request, 'Fuel Allocation SUccesful')
             service_station = Subsidiaries.objects.filter(id=fuel_update.subsidiary.id).first()
             reference = 'fuel allocation'
             reference_id = fuel_update.id
             action = f"You have allocated { request.POST['fuel_type']} quantity of {int(request.POST['quantity'])}L @ {fuel_update.petrol_price} "
             Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
-            return redirect('users:allocate')           
-           
+            return redirect('users:allocate')
+
         else:
             messages.success(request, 'Subsidiary does not exists')
-            return redirect('users:allocate')  
+            return redirect('users:allocate')
     return render(request, 'users/allocate.html')
 
 @login_required()
@@ -533,15 +537,15 @@ def statistics(request):
     try:
         rating = SupplierRating.objects.filter(supplier=request.user.company).first().rating
     except:
-        rating = 0  
-   
+        rating = 0
+
     admin_staff = User.objects.filter(company=company).filter(user_type='SUPPLIER').count()
     # all_staff = User.objects.filter(company=company).count()
     other_staff = User.objects.filter(company=company).filter(user_type='SS_SUPPLIER').count()
     clients = []
     stock = get_aggregate_stock(request.user.company)
     diesel = stock['diesel']; petrol = stock['petrol']
-    
+
     trans = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).annotate(number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
     buyers = [client.buyer for client in trans]
 
@@ -559,7 +563,7 @@ def statistics(request):
         subs.append(sub)
 
     # sort subsidiaries by transaction value
-    sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True)    
+    sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True)
 
     new_buyers = []
     for buyer in buyers:
@@ -578,8 +582,8 @@ def statistics(request):
         buyer.number_of_trans = total_transactions
         if buyer not in new_buyers:
             new_buyers.append(buyer)
-       
-    clients = sorted(new_buyers, key=lambda x: x.total_revenue, reverse=True)    
+
+    clients = sorted(new_buyers, key=lambda x: x.total_revenue, reverse=True)
 
     # for company in companies:
     #     company.total_value = value[counter]
@@ -591,7 +595,7 @@ def statistics(request):
     # revenue = round(float(sum(value)))
     revenue = get_total_revenue(request.user)
     revenue = '${:,.2f}'.format(revenue)
-    #revenue = str(revenue) + '.00'   
+    #revenue = str(revenue) + '.00'
 
     # try:
     #     trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
@@ -622,7 +626,7 @@ def supplier_user_edit(request, cid):
 @login_required
 def sord_allocations(request):
     sord_allocations = SordCompanyAuditTrail.objects.all()
-    return render(request, 'users/sord_allocations.html', {'sord_allocations':sord_allocations})    
+    return render(request, 'users/sord_allocations.html', {'sord_allocations':sord_allocations})
 
 @login_required
 def client_history(request, cid):
@@ -661,7 +665,7 @@ def client_history(request, cid):
     trans = []
     for tran in trns:
         tran.revenue = tran.offer.request.amount * tran.offer.price
-        trans.append(tran)      
+        trans.append(tran)
 
     return render(request, 'users/client_history.html', {'trans':trans, 'buyer':buyer, 'state': state})
 
@@ -672,7 +676,7 @@ def subsidiary_transaction_history(request, sid):
     state = 'All'
 
     if request.method == "POST":
-    
+
         if request.POST.get('report_type') == 'Complete':
             trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id, is_complete=True)
             trans = []
@@ -698,7 +702,7 @@ def subsidiary_transaction_history(request, sid):
             state = 'All'
         return render(request, 'users/subs_history.html', {'trans':trans, 'subsidiary':subsidiary, 'state': state})
 
-     
+
 
     for tran in trns:
         tran.revenue = tran.offer.request.amount * tran.offer.price
@@ -707,7 +711,7 @@ def subsidiary_transaction_history(request, sid):
     return render(request, 'users/subs_history.html', {'trans':trans, 'subsidiary':subsidiary})
 
 
-    
+
 
 @login_required()
 def myaccount(request):
@@ -719,7 +723,7 @@ def myaccount(request):
         staff.company_position = request.POST['company_position']
         staff.save()
         messages.success(request, 'Your Changes Have Been Saved')
-       
+
     return render(request, 'users/profile.html')
 
 @login_required()
@@ -743,26 +747,26 @@ def stations(request):
         if request.POST['is_depot'] == "Service Station":
             is_depot = False
         else:
-            is_depot = True    
+            is_depot = True
         opening_time = request.POST['opening_time']
         closing_time = request.POST['closing_time']
         cash = request.POST['cash']
         usd = request.POST['usd']
         swipe = request.POST['swipe']
         ecocash = request.POST['ecocash']
-        sub = Subsidiaries.objects.create(license_num=license_num,praz_reg_num=praz_reg_num,bp_num=bp_num,vat=vat,account_number=account_number,destination_bank=destination_bank,city=city,location=location,company=request.user.company,name=name,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time) 
-        sub.save()   
+        sub = Subsidiaries.objects.create(license_num=license_num,praz_reg_num=praz_reg_num,bp_num=bp_num,vat=vat,account_number=account_number,destination_bank=destination_bank,city=city,location=location,company=request.user.company,name=name,is_depot=is_depot,opening_time=opening_time,closing_time=closing_time)
+        sub.save()
         if request.POST['is_depot'] == "Service Station":
             fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=sub, cash=cash, swipe=swipe, ecocash=ecocash,limit=2000)
             fuel_update.save()
             messages.success(request, 'Subsidiary Created Successfully')
-            return redirect('users:stations')  
+            return redirect('users:stations')
         else:
             fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=sub, cash=cash, swipe=swipe, ecocash=ecocash,limit=2000)
             fuel_update.save()
             messages.success(request, 'Subsidiary Created Successfully')
-            return redirect('users:stations') 
-        
+            return redirect('users:stations')
+
 
     return render(request, 'users/service_stations.html', {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns, 'Mutare': Mutare, 'Gweru': Gweru})
 
@@ -773,7 +777,7 @@ def report_generator(request):
     #trans = Transaction.objects.filter(supplier__company=request.user.company).all()
     start_date =start = "December 1 2019"
     end_date =end = "January 1 2019"
-    
+
     if request.method == "POST":
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
@@ -786,14 +790,14 @@ def report_generator(request):
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
             stock = CompanyFuelUpdate.objects.filter(company=request.user.company).all()
-            
-            
+
+
             requests = None; allocations = None; trans = None; revs=None
         if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':
             trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier__company=request.user.company)
             requests = None; allocations = None; revs=None
 
-            
+
             if request.POST.get('report_type') == 'Revenue':
                 trans = Transaction.objects.filter(date__range=[start_date, end_date], supplier__company=request.user.company, is_complete=True)
                 revs = {}
@@ -823,14 +827,14 @@ def report_generator(request):
             requests = None; revs = None; stock = None
         start = start_date
         end = end_date
-        
+
         #revs = 0
         return render(request, 'users/reports.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form,
         'start': start, 'end': end, 'revs': revs, 'stock':stock })
 
     show = False
     print(trans)
-    return render(request, 'users/reports.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form, 
+    return render(request, 'users/reports.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form,
         'start': start_date, 'end': end_date,'show':show, 'stock':stock })
 
 @login_required()
@@ -846,10 +850,10 @@ def export_pdf(request):
             end = request.POST.get('end')
             start = datetime.strptime(start, '%b. %d, %Y').date()
             end = datetime.strptime(end, '%b. %d, %Y').date()
-            
+
             data = Transaction.objects.filter(date__range=[start, end])
 
-            
+
             for i in data:
                 result += f'Date : {i.date}\n Time : {i.time}\n Buyer : {i.buyer}\n Completed : {i.is_complete}\n'
             pdf = FPDF(orientation='P', format='A5')
@@ -867,10 +871,10 @@ def export_pdf(request):
             end = request.POST.get('end')
             start = datetime.strptime(start, '%b. %d, %Y').date()
             end = datetime.strptime(end, '%b. %d, %Y').date()
-            
+
             data = FuelRequest.objects.filter(date__range=[start, end])
 
-            
+
             for i in data:
                 result += f'Name : {i.name}\n Amount : {i.amount}\n Fuel Type : {i.fuel_type}\n Payment Method : {i.payment_method}\n'
             pdf = FPDF(orientation='P', format='A5')
@@ -890,16 +894,16 @@ def export_pdf(request):
             end = datetime.strptime(end, '%b. %d, %Y').date()
 
             data = Transaction.objects.filter(date__range=[start, end])
-            
+
 
 
 
 
         return redirect('users:report_generator')
 
-def html_to_pdf(request): 
+def html_to_pdf(request):
     data = {'trans': Transaction.objects.all()}
-    template = get_template("users/report.html") 
+    template = get_template("users/report.html")
     html  = template.render(data)
     # context = {'pagesize':'A4'}
     # html = template.render(context) 
@@ -914,7 +918,7 @@ def html_to_pdf(request):
 
     file.seek(0)
     pdf = file.read()
-    file.close()            
+    file.close()
     return HttpResponse(pdf, 'application/pdf')
 
 
@@ -928,7 +932,7 @@ def html_to_pdf(request):
 #             end = request.POST.get('end')
 #             start = datetime.strptime(start, '%b. %d, %Y').date()
 #             end = datetime.strptime(end, '%b. %d, %Y').date()
-            
+
 #             data = Transaction.objects.filter(date__range=[start, end])
 
 #             # Rendered
@@ -965,12 +969,12 @@ def export_csv(request):
             end = datetime.strptime(end, '%b. %d, %Y')
 
             print(start)
-            
+
             data = Transaction.objects.filter(date__range=[start, end]).values()
             print(data)
             fields = ['Date', 'Time', 'Amount', 'Complete']
             #df = DataFrame(data,columns=fields)
-            df = pd.DataFrame(list(data.values('date','time','buyer','is_complete'))) 
+            df = pd.DataFrame(list(data.values('date','time','buyer','is_complete')))
             #df['Date'] = f'{dt[2]}/{dt[1]}/{dt[0]}'
 
             day = str(datetime.now().day)
@@ -980,7 +984,7 @@ def export_csv(request):
             name = 'Transactions'
 
             csv_name = f'{name}-{year}-{month}-{day}-ACC'
-            
+
             if request.POST.get('format') == 'excel':
                 df.to_excel(f'media/reports/transactions/csv/{csv_name}.xlsx', index=None, header=True)
 
@@ -996,24 +1000,24 @@ def export_csv(request):
                     response = HttpResponse(csv_name.read())
                     response['Content-Disposition'] = f'attachment;filename={name}-{day}/{month}/{year}.csv'
                     return response
-    return result                    
-                    
-            
+    return result
+
+
 
 
 
 @login_required()
 def depots(request):
     depots = Depot.objects.all()
-    return render(request, 'users/depots.html', {'depots': depots})         
+    return render(request, 'users/depots.html', {'depots': depots})
 
 @login_required()
 def audit_trail(request):
     trails = Audit_Trail.objects.filter(company=request.user.company).all()
-    return render(request, 'users/audit_trail.html', {'trails': trails})    
+    return render(request, 'users/audit_trail.html', {'trails': trails})
 
 def waiting_for_approval(request):
-    stations = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all() 
+    stations = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
     depots = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company).all()
     applicants = user.objects.filter(is_waiting=True,company=request.user.company).all()
     return render(request, 'users/waiting_for_approval.html', {'applicants': applicants,'stations': stations, 'depots': depots})
@@ -1031,12 +1035,12 @@ def approval(request, id):
             applicant.save()
             messages.success(request, f'Approval for {applicant.first_name} made successfully')
             return redirect('users:waiting_for_approval')
-       
+
 
         else:
             messages.warning(request, 'oops! something went wrong')
-            return redirect('users:waiting_for_approval')    
-    
+            return redirect('users:waiting_for_approval')
+
 
 def decline_applicant(request, id):
     applicant = user.objects.filter(id = id).first()
@@ -1057,9 +1061,9 @@ def suppliers_list(request):
     else:
         suppliers = None
 
-    form1 = SupplierContactForm()         
+    form1 = SupplierContactForm()
     subsidiaries = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
-    form1.fields['service_station'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in subsidiaries] 
+    form1.fields['service_station'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in subsidiaries]
 
     if request.method == 'POST':
         form1 = SupplierContactForm( request.POST)
@@ -1078,28 +1082,28 @@ def suppliers_list(request):
         i = 0
         username = initial_username = first_name[0] + last_name
         while  User.objects.filter(username=username.lower()).exists():
-            username = initial_username + str(i) 
+            username = initial_username + str(i)
             i+=1
         user = User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username.lower(), first_name=first_name, last_name=last_name, user_type = 'SS_SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
-        if message_is_send(request, user):   
+        if message_is_send(request, user):
             if user.is_active:
                 #messages.success(request, "You have been registered succesfully")
                 user.stage = 'menu'
-                user.save()  
-                                 
+                user.save()
+
                 #return render(request, 'buyer/email_send.html')
             else:
                 messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
                 #return render(request, 'buyer/email_send.html')
         #messages.success(request, f"{username.lower()} succesfully registered as service station rep")
         return redirect('users:suppliers_list')
-    
+
     return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1})
 
 def message_is_send(request, user):
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
-    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: 12345 \n\nPlease login on Fuel Finder Website and access your assigned Station & don't forget to change your password on user profile. \n. "            
+    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: 12345 \n\nPlease login on Fuel Finder Website and access your assigned Station & don't forget to change your password on user profile. \n. "
     try:
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
         msg.send()
@@ -1107,13 +1111,13 @@ def message_is_send(request, user):
         return True
     except Exception as e:
         messages.warning(request, f"Oops , Something Wen't Wrong sending email, Please make sure you have Internet access")
-        return False              
+        return False
     return render(request, 'buyer/send_email.html')
 
 def message_is_sent(request, user):
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
-    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: 12345 \n\nPlease download the Fuel Finder mobile app on PlayStore and login to start looking for fuel. \n. "            
+    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: 12345 \n\nPlease download the Fuel Finder mobile app on PlayStore and login to start looking for fuel. \n. "
     try:
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
         msg.send()
@@ -1121,7 +1125,7 @@ def message_is_sent(request, user):
         return True
     except Exception as e:
         #messages.warning(request, f"Oops , Something Wen't Wrong sending email, Please make sure you have Internet access")
-        return False              
+        return False
     return render(request, 'buyer/send_email.html')
 
 
@@ -1129,23 +1133,23 @@ def message_is_sent(request, user):
 def suppliers_delete(request, sid):
     supplier = User.objects.filter(id=sid).first()
     if request.method == 'POST':
-        supplier.delete()    
+        supplier.delete()
         messages.success(request, f"{supplier.username} deleted successfully")
         return redirect('users:suppliers_list')
     else:
         messages.success(request, 'user does not exists')
-        return redirect('users:suppliers_list')    
+        return redirect('users:suppliers_list')
 
 @login_required()
 def delete_depot_staff(request, id):
     supplier = User.objects.filter(id=id).first()
     if request.method == 'POST':
-        supplier.delete()    
+        supplier.delete()
         messages.success(request, f"{supplier.username} deleted successfully")
         return redirect('users:depot_staff')
     else:
         messages.success(request, 'user does not exists')
-        return redirect('users:depot_staff')    
+        return redirect('users:depot_staff')
 
 @login_required()
 def buyers_list(request):
@@ -1158,7 +1162,7 @@ def buyers_list(request):
 def buyers_delete(request, sid):
     buyer = Profile.objects.filter(id=sid).first()
     if request.method == 'POST':
-        buyer.delete()    
+        buyer.delete()
 
     return redirect('users:buyers_list')
 
@@ -1168,7 +1172,7 @@ def supplier_user_delete(request,cid,sid):
     if request.method == 'POST':
         contact.delete()
 
-    return redirect('users:supplier_user_create', sid=sid)  
+    return redirect('users:supplier_user_create', sid=sid)
 
 @login_required()
 def supplier_user_create(request,sid):
@@ -1176,11 +1180,11 @@ def supplier_user_create(request,sid):
 
 @login_required()
 def buyer_user_create(request, sid):
-    return render (request, 'users/add_buyer.html') 
+    return render (request, 'users/add_buyer.html')
 
 @login_required()
 def edit_buyer(request,id):
-    
+
     return render(request, 'users/buyer_edit.html', {'form': form, 'buyer': buyer})
 
 @login_required()
@@ -1193,7 +1197,7 @@ def delete_user(request,id):
             supplier.delete()
             messages.success(request, 'User Has Been Deleted')
         return redirect('administrator:blog_all_posts')
-    form = ActionForm()    
+    form = ActionForm()
 
     return render(request, 'user/supplier_delete.html', {'form': form, 'supplier': supplier})
 
@@ -1204,13 +1208,13 @@ def depot_staff(request):
         subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
         if subsidiary:
             supplier.subsidiary_name = subsidiary.name
-    #suppliers = [sup for sup in suppliers if not sup == request.user]   
-    form1 = DepotContactForm()         
+    #suppliers = [sup for sup in suppliers if not sup == request.user]
+    form1 = DepotContactForm()
     subsidiaries = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company).all()
-    form1.fields['depot'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in subsidiaries] 
+    form1.fields['depot'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in subsidiaries]
 
     if request.method == 'POST':
-        
+
         form1 = DepotContactForm( request.POST)
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
@@ -1227,15 +1231,15 @@ def depot_staff(request):
         i = 0
         username = initial_username = first_name[0] + last_name
         while  User.objects.filter(username=username.lower()).exists():
-            username = initial_username + str(i) 
+            username = initial_username + str(i)
             i+=1
         user = User.objects.create(company_position='manager',subsidiary_id=subsidiary_id,username=username.lower(), first_name=first_name, last_name=last_name, user_type = 'SUPPLIER', company=request.user.company, email=email ,password=password, phone_number=phone_number)
-        if message_is_send(request, user):   
+        if message_is_send(request, user):
             if user.is_active:
                 #messages.success(request, "You have been registered succesfully")
                 user.stage = 'menu'
-                user.save()  
-                                 
+                user.save()
+
                 #return render(request, 'buyer/email_send.html')
             else:
                 messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
@@ -1247,7 +1251,7 @@ def depot_staff(request):
         messages.warning(request, f"The username has already been,please use another username to register")
         return redirect('users:depot_staff')
     '''
-       
+
     return render(request, 'users/depot_staff.html', {'suppliers': suppliers, 'form1': form1})
 
 @login_required()
@@ -1282,7 +1286,7 @@ def delete_subsidiary(request, id):
 
         else:
             messages.success(request, 'Subsidiary does not exists')
-            return redirect('users:stations')    
+            return redirect('users:stations')
 
 @login_required()
 def edit_fuel_prices(request, id):
@@ -1309,7 +1313,7 @@ def edit_fuel_prices(request, id):
 
         else:
             messages.success(request, 'Fuel object does not exists')
-            return redirect('users:allocate')   
+            return redirect('users:allocate')
 
 
 @login_required()
@@ -1337,7 +1341,7 @@ def edit_suballocation_fuel_prices(request, id):
 
         else:
             messages.success(request, 'Fuel object does not exists')
-            return redirect('users:allocate') 
+            return redirect('users:allocate')
 
 
 @login_required()
@@ -1350,7 +1354,7 @@ def allocate_diesel(request, id):
             if int(request.POST['diesel_quantity']) > company_quantity.diesel_quantity:
                 messages.warning(request, f'You can not allocate fuel above your company diesel capacity of {company_quantity.diesel_quantity}')
                 return redirect('users:allocate')
-            
+
             company_quantity.diesel_quantity = company_quantity.diesel_quantity - int(request.POST['diesel_quantity'])
             company_quantity.save()
             diesel_update.save()
@@ -1368,7 +1372,7 @@ def allocate_diesel(request, id):
             else:
                 action = 'Allocation of Diesel'
                 FuelAllocation.objects.create(company=request.user.company,action=action,diesel_price=diesel_update.diesel_price,diesel_quantity=request.POST['diesel_quantity'],sub_type=diesel_update.sub_type,cash=request.POST['cash'],usd=request.POST['usd'],swipe=request.POST['swipe'],ecocash=request.POST['ecocash'],allocated_subsidiary_id=diesel_update.relationship_id)
-                
+
                 service_station = Subsidiaries.objects.filter(id=diesel_update.relationship_id).first()
                 reference = 'fuel allocation'
                 reference_id = diesel_update.id
@@ -1380,7 +1384,7 @@ def allocate_diesel(request, id):
 
         else:
             messages.success(request, 'Fuel object does not exists')
-            return redirect('users:allocate')    
+            return redirect('users:allocate')
 
 @login_required()
 def edit_ss_rep(request, id):
@@ -1397,7 +1401,7 @@ def edit_ss_rep(request, id):
 
         else:
             messages.success(request, 'user does not exists')
-            return redirect('users:suppliers_list')    
+            return redirect('users:suppliers_list')
 
 @login_required()
 def edit_depot_rep(request, id):
@@ -1414,7 +1418,7 @@ def edit_depot_rep(request, id):
 
         else:
             messages.success(request, 'user does not exists')
-            return redirect('users:depot_staff')    
+            return redirect('users:depot_staff')
 
 def company_profile(request):
     compan = Company.objects.filter(id = request.user.company.id).first()
@@ -1440,7 +1444,7 @@ def company_profile(request):
 
         else:
             messages.success(request, 'Something went wrong')
-            return redirect('users:company_profile')    
+            return redirect('users:company_profile')
     return render(request, 'users/company_profile.html', {'compan': compan, 'num_of_subsidiaries': num_of_subsidiaries, 'fuel_capacity': fuel_capacity})
 
 def company_petrol(request,id):
@@ -1455,7 +1459,7 @@ def company_petrol(request,id):
 
         else:
             messages.success(request, 'Fuel object does not exists')
-            return redirect('users:allocate')    
+            return redirect('users:allocate')
 
 def company_diesel(request,id):
     if request.method == 'POST':
@@ -1469,15 +1473,15 @@ def company_diesel(request,id):
 
         else:
             messages.warning(request, 'Fuel object does not exists')
-            return redirect('users:allocate') 
+            return redirect('users:allocate')
 
 
 def edit_allocation(request, id):
     if request.method == 'POST':
         if FuelAllocation.objects.filter(id=id).exists():
             correction = FuelAllocation.objects.filter(id=id).first()
-            if int(request.POST['diesel_quantity']) > 0: 
-                sub = Subsidiaries.objects.filter(id =correction.allocated_subsidiary_id).first() 
+            if int(request.POST['diesel_quantity']) > 0:
+                sub = Subsidiaries.objects.filter(id =correction.allocated_subsidiary_id).first()
                 updated = SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first()
                 updated.diesel_quantity = int(updated.diesel_quantity) - int(int(correction.diesel_quantity) - int(request.POST['diesel_quantity']))
                 updated.save()
@@ -1485,7 +1489,7 @@ def edit_allocation(request, id):
                 if int(request.POST['diesel_quantity']) > int(company_fuel.unallocated_diesel):
                     messages.warning(request, 'You can not edit an allocation to an amount greater than the company unallocated diesel quantity ')
                     return redirect('users:allocate')
-                company_fuel.unallocated_diesel = int(company_fuel.unallocated_diesel) + int(int(correction.diesel_quantity) - int(request.POST['diesel_quantity'])) 
+                company_fuel.unallocated_diesel = int(company_fuel.unallocated_diesel) + int(int(correction.diesel_quantity) - int(request.POST['diesel_quantity']))
                 company_fuel.save()
                 correction.diesel_quantity = request.POST['diesel_quantity']
                 correction.save()
@@ -1498,7 +1502,7 @@ def edit_allocation(request, id):
                 if int(request.POST['petrol_quantity']) > int(company_fuel.unallocated_petrol):
                     messages.warning(request, 'You can not edit an allocation to an amount greater than the company unallocated petrol quantity ')
                     return redirect('users:allocate')
-                company_fuel.unallocated_petrol = int(company_fuel.unallocated_petrol) + int(int(correction.petrol_quantity) - int(request.POST['petrol_quantity'])) 
+                company_fuel.unallocated_petrol = int(company_fuel.unallocated_petrol) + int(int(correction.petrol_quantity) - int(request.POST['petrol_quantity']))
                 company_fuel.save()
                 correction.petrol_quantity = request.POST['petrol_quantity']
                 correction.save()
@@ -1507,15 +1511,15 @@ def edit_allocation(request, id):
 
         else:
             messages.warning(request, 'Fuel object does not exists')
-            return redirect('users:allocate') 
+            return redirect('users:allocate')
 
 def sordactions(request, id):
     sord_actions = SordActionsAuditTrail.objects.filter(sord_num=id).all()
-    
+
     if sord_actions:
         sord_number = sord_actions[0].sord_num
     else:
-        sord_number  = "-" 
+        sord_number  = "-"
     return render(request, 'users/sord_actions.html', {'sord_number':sord_number, 'sord_actions':sord_actions})
 
 def sord_station_sales(request):
@@ -1591,225 +1595,242 @@ def upload_users(request):
     }
     if request.method == 'POST':
         file = request.FILES.get('file')
-        if file.name.endswith('.csv') or file.name.endswith('.xlsx'):
-            if file.name.endswith('.csv'):
-                df = pd.DataFrame(pd.read_csv(file))
-                try:
-                    for index, row in df.iterrows():
-                        # email or phone exists
-                        if User.objects.filter(email=row['EMAIL']) or User.objects.filter(phone_number=row['PHONE NUMBER']):
-                            pass
-                        else:
-                            password = secrets.token_hex(3)
-                            username = row['SURNAME'] + row['NAME']
-                            # create user
-                            user = User.objects.create_user(username=username, password=password)
-
-                            # look for company
-                            if Company.objects.filter(name=row['COMPANY NAME']).exists():
-                                company = Company.objects.filter(name=row['COMPANY NAME']).first()
-
-                                # updating user company details
-                                user.company = company
-                                user.user_type = 'BUYER'
-                                user.email = row['EMAIL'].upper()
-                                user.password_reset = True
-                                user.phone_number = row['PHONE NUMBER']
-                                user.first_name = row['NAME']
-                                user.last_name = row['SURNAME']
-                                user.save()
-
-                                # creating account with supplier
-                                if Account.objects.filter(buyer_company=company).exists():
-                                    # do nothing
-                                    pass
-                                else:
-                                    Account.objects.create(
-                                        supplier_company=request.user.company,
-                                        buyer_company=company,
-                                        account_number=row['ACCOUNT NUMBER'.upper()],
-                                        applied_by=user,
-                                        is_verified=True,
-
-                                    )
-
-                                # send email
-                                sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
-                                title = f'Account Creation By {request.user.company.name}'
-                                message = f"Dear {user.first_name}, {request.user.company.name} has created an account" \
-                                          f"for you on Fuel Finder. Here are the details\n\n" \
-                                          f"Username  :  {user.username}\n" \
-                                          f"Password  :   {password}"
-                                # send email
-                                try:
-                                    msg = EmailMultiAlternatives(title, message, sender, [user.email])
-                                    msg.send()
-                                # if error occurs
-                                except BadHeaderError:
-                                    pass
-                                    # error log should be created
-
-                            # company doesn't exists, create it
+        if file is not None:
+            if file.name.endswith('.csv') or file.name.endswith('.xlsx'):
+                if file.name.endswith('.csv'):
+                    df = pd.DataFrame(pd.read_csv(file))
+                    try:
+                        for index, row in df.iterrows():
+                            # email or phone exists
+                            if User.objects.filter(email=row['EMAIL']) or User.objects.filter(phone_number=row['PHONE NUMBER']):
+                                pass
                             else:
-                                company = Company.objects.create(
-                                    name=row['COMPANY NAME'],
-                                    company_type='BUYER'
-                                )
+                                password = secrets.token_hex(3)
+                                username = row['SURNAME'] + row['NAME']
+                                # create user
+                                user = User.objects.create_user(username=username, password=password)
 
-                                user.company = company
-                                user.user_type = 'BUYER'
-                                user.email = row['EMAIL'].upper()
-                                user.password_reset = True
-                                user.phone_number = row['PHONE NUMBER']
-                                user.first_name = row['NAME']
-                                user.last_name = row['SURNAME']
-                                user.save()
+                                # look for company
+                                if Company.objects.filter(name=row['COMPANY NAME']).exists():
+                                    company = Company.objects.filter(name=row['COMPANY NAME']).first()
 
-                                # creating account with supplier
-                                if Account.objects.filter(buyer_company=company).exists():
-                                    # do nothing
-                                    pass
+                                    # updating user company details
+                                    user.company = company
+                                    user.user_type = 'BUYER'
+                                    user.email = row['EMAIL'].upper()
+                                    user.password_reset = True
+                                    user.phone_number = row['PHONE NUMBER']
+                                    user.first_name = row['NAME']
+                                    user.last_name = row['SURNAME']
+                                    user.save()
+
+                                    # creating account with supplier
+                                    if Account.objects.filter(buyer_company=company).exists():
+                                        # do nothing
+                                        pass
+                                    else:
+                                        Account.objects.create(
+                                            supplier_company=request.user.company,
+                                            buyer_company=company,
+                                            account_number=row['ACCOUNT NUMBER'.upper()],
+                                            applied_by=user,
+                                            is_verified=True,
+
+                                        )
+
+                                    # send email
+                                    sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
+                                    title = f'Account Creation By {request.user.company.name}'
+                                    message = f"Dear {user.first_name}, {request.user.company.name} has created an account" \
+                                              f"for you on Fuel Finder. Here are the details\n\n" \
+                                              f"Username  :  {user.username}\n" \
+                                              f"Password  :   {password}"
+                                    # send email
+                                    try:
+                                        msg = EmailMultiAlternatives(title, message, sender, [user.email])
+                                        msg.send()
+                                    # if error occurs
+                                    except BadHeaderError:
+                                        pass
+                                        # error log should be created
+
+                                # company doesn't exists, create it
                                 else:
-                                    Account.objects.create(
-                                        supplier_company=request.user.company,
-                                        buyer_company=company,
-                                        account_number=row['ACCOUNT NUMBER'.upper()],
-                                        applied_by=user,
-                                        is_verified=True,
-
+                                    company = Company.objects.create(
+                                        name=row['COMPANY NAME'],
+                                        company_type='BUYER'
                                     )
 
-                                # send email
-                                sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
-                                title = f'Account Creation By Fuel Supplier {request.user.company.name}'
-                                message = f"Dear {user.first_name}, {request.user.company.name} has created an account" \
-                                          f"for you on Fuel Finder. Here are the details\n\n" \
-                                          f"Username  :  {user.username}\"" \
-                                          f"Password  :   {password}"
-                                # send email
-                                try:
-                                    msg = EmailMultiAlternatives(title, message, sender, [user.email])
-                                    msg.send()
-                                # if error occurs
-                                except BadHeaderError:
-                                    pass
-                                    # error log should be created
+                                    user.company = company
+                                    user.user_type = 'BUYER'
+                                    user.email = row['EMAIL'].upper()
+                                    user.password_reset = True
+                                    user.phone_number = row['PHONE NUMBER']
+                                    user.first_name = row['NAME']
+                                    user.last_name = row['SURNAME']
+                                    user.save()
 
-                    messages.success(request, 'Successfully uploaded data')
-                    return redirect('users:upload_users')
-                except KeyError:
-                    messages.warning(request, 'Please use the standard file')
-                    return redirect('users:upload_users')
-            elif file.name.endswith('.xlsx'):
-                df = pd.DataFrame(pd.read_excel(file))
-                try:
-                    for index, row in df.iterrows():
-                        # email or phone exists
-                        if User.objects.filter(email=row['EMAIL']) or User.objects.filter(
-                                phone_number=row['PHONE NUMBER']):
-                            pass
-                        else:
-                            password = secrets.token_hex(3)
-                            username = row['SURNAME'] + row['NAME']
-                            # create user
-                            user = User.objects.create_user(username=username, password=password)
+                                    # creating account with supplier
+                                    if Account.objects.filter(buyer_company=company).exists():
+                                        # do nothing
+                                        pass
+                                    else:
+                                        Account.objects.create(
+                                            supplier_company=request.user.company,
+                                            buyer_company=company,
+                                            account_number=row['ACCOUNT NUMBER'.upper()],
+                                            applied_by=user,
+                                            is_verified=True,
 
-                            # look for company
-                            if Company.objects.filter(name=row['COMPANY NAME']).exists():
-                                company = Company.objects.filter(name=row['COMPANY NAME']).first()
+                                        )
 
-                                # updating user company details
-                                user.company = company
-                                user.user_type = 'BUYER'
-                                user.password_reset = True
-                                user.email = row['EMAIL'].upper()
-                                user.phone_number = row['PHONE NUMBER']
-                                user.first_name = row['NAME']
-                                user.last_name = row['SURNAME']
-                                user.save()
+                                    # send email
+                                    sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
+                                    title = f'Account Creation By Fuel Supplier {request.user.company.name}'
+                                    message = f"Dear {user.first_name}, {request.user.company.name} has created an account" \
+                                              f"for you on Fuel Finder. Here are the details\n\n" \
+                                              f"Username  :  {user.username}\"" \
+                                              f"Password  :   {password}"
+                                    # send email
+                                    try:
+                                        msg = EmailMultiAlternatives(title, message, sender, [user.email])
+                                        msg.send()
+                                    # if error occurs
+                                    except BadHeaderError:
+                                        pass
+                                        # error log should be created
 
-                                # creating account with supplier
-                                if Account.objects.filter(buyer_company=company).exists():
-                                    # do nothing
-                                    pass
-                                else:
-                                    Account.objects.create(
-                                        supplier_company=request.user.company,
-                                        buyer_company=company,
-                                        account_number=row['ACCOUNT NUMBER'.upper()],
-                                        applied_by=user,
-                                        is_verified=True,
-                                    )
-
-                                # send email
-                                sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
-                                title = f'Account Creation By Fuel Supplier {request.user.company.name}'
-                                message = f"Dear {user.first_name}, {request.user.company.name} has created an account" \
-                                          f"for you on Fuel Finder. Here are the details\n\n" \
-                                          f"Username  :  {user.username}\"" \
-                                          f"Password  :   {password}"
-                                # send email
-                                try:
-                                    msg = EmailMultiAlternatives(title, message, sender, [user.email])
-                                    msg.send()
-                                # if error occurs
-                                except BadHeaderError:
-                                    pass
-                                    # error log should be created
-
-                            # company doesn't exists, create it
+                        messages.success(request, 'Successfully uploaded data')
+                        return redirect('users:upload_users')
+                    except KeyError:
+                        messages.warning(request, 'Please use the standard file')
+                        return redirect('users:upload_users')
+                elif file.name.endswith('.xlsx'):
+                    df = pd.DataFrame(pd.read_excel(file))
+                    try:
+                        for index, row in df.iterrows():
+                            # email or phone exists
+                            if User.objects.filter(email=row['EMAIL']) or User.objects.filter(
+                                    phone_number=row['PHONE NUMBER']):
+                                pass
                             else:
-                                company = Company.objects.create(
-                                    name=row['COMPANY NAME'.upper()],
-                                    company_type='BUYER'
-                                )
+                                password = secrets.token_hex(3)
+                                username = row['SURNAME'] + row['NAME']
+                                # create user
+                                user = User.objects.create_user(username=username, password=password)
 
-                                user.company = company
-                                user.user_type = 'BUYER'
-                                user.password_reset = True
-                                user.email = row['EMAIL']
-                                user.phone_number = row['PHONE NUMBER']
-                                user.first_name = row['NAME']
-                                user.last_name = row['SURNAME']
-                                user.save()
+                                # look for company
+                                if Company.objects.filter(name=row['COMPANY NAME']).exists():
+                                    company = Company.objects.filter(name=row['COMPANY NAME']).first()
 
-                                # creating account with supplier
-                                if Account.objects.filter(buyer_company=company).exists():
-                                    # do nothing
-                                    pass
+                                    # updating user company details
+                                    user.company = company
+                                    user.user_type = 'BUYER'
+                                    user.password_reset = True
+                                    user.email = row['EMAIL'].upper()
+                                    user.phone_number = row['PHONE NUMBER']
+                                    user.first_name = row['NAME']
+                                    user.last_name = row['SURNAME']
+                                    user.save()
+
+                                    # creating account with supplier
+                                    if Account.objects.filter(buyer_company=company).exists():
+                                        # do nothing
+                                        pass
+                                    else:
+                                        Account.objects.create(
+                                            supplier_company=request.user.company,
+                                            buyer_company=company,
+                                            account_number=row['ACCOUNT NUMBER'.upper()],
+                                            applied_by=user,
+                                            is_verified=True,
+                                        )
+
+                                    # send email
+                                    sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
+                                    title = f'Account Creation By Fuel Supplier {request.user.company.name}'
+                                    message = f"Dear {user.first_name}, {request.user.company.name} has created an account" \
+                                              f"for you on Fuel Finder. Here are the details\n\n" \
+                                              f"Username  :  {user.username}\"" \
+                                              f"Password  :   {password}"
+                                    # send email
+                                    try:
+                                        msg = EmailMultiAlternatives(title, message, sender, [user.email])
+                                        msg.send()
+                                    # if error occurs
+                                    except BadHeaderError:
+                                        pass
+                                        # error log should be created
+
+                                # company doesn't exists, create it
                                 else:
-                                    Account.objects.create(
-                                        supplier_company=request.user.company,
-                                        buyer_company=company,
-                                        account_number=row['ACCOUNT NUMBER'.upper()],
-                                        applied_by=user,
-                                        is_verified=True,
-
+                                    company = Company.objects.create(
+                                        name=row['COMPANY NAME'.upper()],
+                                        company_type='BUYER'
                                     )
 
-                                # send email
-                                sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
-                                title = f'Account Creation By {request.user.company.name}'
-                                message = f"Dear {user.first_name}, {request.user.company.name} has created an account" \
-                                          f"for you on Fuel Finder. Here are the details\n\n" \
-                                          f"Username  :  {user.username}\n" \
-                                          f"Password  :   {password}"
-                                # send email
-                                try:
-                                    msg = EmailMultiAlternatives(title, message, sender, [user.email])
-                                    msg.send()
-                                # if error occurs
-                                except BadHeaderError:
-                                    pass
-                                    # error log should be created
+                                    user.company = company
+                                    user.user_type = 'BUYER'
+                                    user.password_reset = True
+                                    user.email = row['EMAIL']
+                                    user.phone_number = row['PHONE NUMBER']
+                                    user.first_name = row['NAME']
+                                    user.last_name = row['SURNAME']
+                                    user.save()
 
-                    messages.success(request, 'Successfully uploaded data')
-                    return redirect('users:upload_users')
-                except KeyError:
-                    messages.warning(request, 'Please use the standard file')
-                    return redirect('users:upload_users')
-        else:
-            messages.warning(request, "Uploaded file doesn't meet the required format")
-            return redirect('users:upload_users')
+                                    # creating account with supplier
+                                    if Account.objects.filter(buyer_company=company).exists():
+                                        # do nothing
+                                        pass
+                                    else:
+                                        Account.objects.create(
+                                            supplier_company=request.user.company,
+                                            buyer_company=company,
+                                            account_number=row['ACCOUNT NUMBER'.upper()],
+                                            applied_by=user,
+                                            is_verified=True,
+
+                                        )
+
+                                    # send email
+                                    sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
+                                    title = f'Account Creation By {request.user.company.name}'
+                                    message = f"Dear {user.first_name}, {request.user.company.name} has created an account" \
+                                              f"for you on Fuel Finder. Here are the details\n\n" \
+                                              f"Username  :  {user.username}\n" \
+                                              f"Password  :   {password}"
+                                    # send email
+                                    try:
+                                        msg = EmailMultiAlternatives(title, message, sender, [user.email])
+                                        msg.send()
+                                    # if error occurs
+                                    except BadHeaderError:
+                                        pass
+                                        # error log should be created
+
+                        messages.success(request, 'Successfully uploaded data')
+                        return redirect('users:upload_users')
+                    except KeyError:
+                        messages.warning(request, 'Please use the standard file')
+                        return redirect('users:upload_users')
+            else:
+                messages.warning(request, "Uploaded file doesn't meet the required format")
+                return redirect('users:upload_users')
+        elif request.POST.get('buyer_id') is not None:
+            buyer_transactions = Transaction.objects.filter(supplier=request.user, buyer_id=int(request.POST.get('buyer_id')))
+            html_string = render_to_string('supplier/export.html', {'transactions': buyer_transactions,
+                                                                    'name': request.POST.get('buyer_name')})
+            html = HTML(string=html_string)
+
+            export_name = f"{request.POST.get('buyer_name')}{datetime.datetime.today().strftime('%H%M%S')}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = 'attachment;filename=export.pdf'
+                return response
+
     return render(request, 'users/upload_users.html', context=context)
 

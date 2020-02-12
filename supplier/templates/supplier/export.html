@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transaction Summary</title>
+
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+
+</head>
+<body>
+
+<h4 style="text-align: center">Transaction summary for {{ name }}</h4>
+
+<table>
+    <tr>
+        <th>Quantity</th>
+        <th>Fuel Type</th>
+        <th>Price</th>
+        <th>Date</th>
+        <th>Date</th>
+    </tr>
+
+
+    <tr>
+        {% for transaction in transactions %}
+            <td>{{ transaction.offer.quantity }}L</td>
+            <td>{{ transaction.offer.request.fuel_type }}</td>
+            <td>${{ transaction.offer.price }}</td>
+            <td>{{ transaction.date }}</td>
+            <td>{{ transaction.time }}</td>
+        {% endfor %}
+    </tr>
+
+</table>
+
+</body>
+</html>
