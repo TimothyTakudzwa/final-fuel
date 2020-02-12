@@ -107,7 +107,7 @@
                             </label>
                            
                         </div>
-                        <div class="review-block-title">{{sub.name}}</div>
+                        <div class="review-block-title">{{subsidiary.name}}</div>
                         <div class="review-block-description"> </div>
                     </div>
                     <div class="col-sm-4">
@@ -116,7 +116,7 @@
                           </label>
                          
                       </div>
-                      <div class="review-block-title">{{sub.location}} - {{sub.city}}</div>
+                      <div class="review-block-title">{{subsidiary.location}} - {{subsidiary.city}}</div>
                       <div class="review-block-description"> </div>
                   </div>
                  
@@ -129,8 +129,8 @@
                       </label>
                      
                   </div>
-                  {% if sub.destination_bank != None %}
-                  <div class="review-block-title">{{sub.destination_bank}} - {{sub.account_number}}</div>
+                  {% if subsidiary.destination_bank != None %}
+                  <div class="review-block-title">{{subsidiary.destination_bank}} - {{subsidiary.account_number}}</div>
                   <div class="review-block-description"> </div>
                   {% else %}
                   <div class="review-block-title">   N/A</div>
@@ -143,8 +143,8 @@
                       </label>
                      
                   </div>
-                  {% if sub.licence_num != None %}
-                  <div class="review-block-title">{{sub.licence_num}}</div>
+                  {% if subsidiary.licence_num != None %}
+                  <div class="review-block-title">{{subsidiary.licence_num}}</div>
                   <div class="review-block-description"> </div>
                   {% else %}
                   <div class="review-block-title">   N/A</div>
@@ -157,8 +157,8 @@
                       </label>
                      
                   </div>
-                  {% if sub.praz_reg_num != None %}
-                  <div class="review-block-title">{{sub.praz_reg_num}}</div>
+                  {% if subsidiary.praz_reg_num != None %}
+                  <div class="review-block-title">{{subsidiary.praz_reg_num}}</div>
                   <div class="review-block-description"> </div>
                   {% else %}
                   <div class="review-block-title">   N/A</div>
@@ -173,8 +173,8 @@
                       </label>
                      
                   </div>
-                  {% if sub.bp_num != None %}
-                  <div class="review-block-title">{{sub.bp_num}}</div>
+                  {% if subsidiary.bp_num != None %}
+                  <div class="review-block-title">{{subsidiary.bp_num}}</div>
                   <div class="review-block-description"> </div>
                   {% else %}
                   <div class="review-block-title">   N/A</div>
