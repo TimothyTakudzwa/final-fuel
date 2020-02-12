@@ -5,45 +5,38 @@
 {% block body %}
 
 <div>
-  <section class="content-header">
-    <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
-          <div class="input-group">
-          <input type="text" name="q" class="form-control" placeholder="Search...">
-              <span class="input-group-btn">
-                  <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
-              </span>
-          </div>
-      </form>   
-  <div class="header-icon">
-      <i class="fa fa-line-chart"></i>
-  </div>
-  <div class="header-title">
-
-      <h1> Statistics </h1>
-      <small>Fuel Finder Zimbabwe</small>
-      <ol class="breadcrumb hidden-xs">
-          <li><a href="{% url 'users:allocate' %}"><i class="pe-7s-home"></i> Home</a></li>
-          <li class="active">Statistics</li>
-      </ol>
-
-  </div>
-
-  </section>
-
-  
-<!--
-<div class="container" >
-  <button id="slidetop" class="btn btn-black btn-sm progress-button pull-right">
-      <span class="">Run example</span>
-      <span class="progress"></span>
-  </button>
- 
+<!--Begining Of Header Section  -->
+<section class="content-header">
+<form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+        <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Search...">
+            <span class="input-group-btn">
+                <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+            </span>
+        </div>
+    </form>   
+<div class="header-icon">
+    <i class="fa fa-line-chart"></i>
 </div>
--->
+<div class="header-title">
 
-<!---->
+    <h1> Statistics </h1>
+    <small>Fuel Finder Zimbabwe</small>
+    <ol class="breadcrumb hidden-xs">
+        <li><a href="{% url 'users:allocate' %}"><i class="pe-7s-home"></i> Home</a></li>
+        <li class="active">Statistics</li>
+    </ol>
+
+</div>
+
+</section>
+<!-- End of Header Section -->
+  
+<!-- Begining Of Content Section -->
 <section class="content">
+    <!-- Begining of Stats Cards Box  -->
     <div class="row">
+        <!-- Stock Section -->
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
@@ -71,11 +64,11 @@
                 </div>
 
                 
-            </div>
-            
-            
+            </div> 
         </div>
+        <!-- End of Stock section -->
         
+        <!-- Revenue Section -->
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
@@ -90,9 +83,9 @@
                 </div>
             </div>
         </div>
+        <!-- End of Revenue section -->
 
-
-
+        <!-- Rating Section -->
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
@@ -107,6 +100,9 @@
                 </div>
             </div>
         </div>
+        <!-- End of Rating section -->
+
+        <!-- Requests Section -->
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
@@ -121,6 +117,9 @@
                 </div>
             </div>
         </div>
+        <!-- End of Rating section -->
+
+        <!-- Staff section -->
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
@@ -147,6 +146,9 @@
                 </div>
             </div>
         </div>
+        <!-- End of Staff section -->
+
+        <!-- Transaction Completion section -->
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
@@ -161,6 +163,9 @@
                 </div>
             </div>
         </div>
+        <!-- End of Rating section -->
+
+        <!-- End of Our Offers section -->
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
@@ -175,7 +180,9 @@
                 </div>
             </div>
         </div>
+        <!-- End of Offer section -->
 
+        <!-- End of New Orders section -->
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
@@ -190,7 +197,10 @@
                 </div>
             </div>
         </div>
+        <!-- End of Rating section -->
+
     </div>
+    <!-- End Of Stats Card -->
 
 <!-- calender -->
 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 lobipanel-parent-sortable ui-sortable hide" data-lobipanel-child-inner-id="RPeO3kdba8">
