@@ -3,7 +3,6 @@ import locale
 import tempfile
 import uuid
 
-
 from fpdf import FPDF
 # from weasyprint import HTML
 from weasyprint import HTML
@@ -21,39 +20,36 @@ from django.db.models import Q, Count
 from django.shortcuts import Http404
 from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
 from django.contrib.auth.decorators import login_required
-from supplier.models import *
-from supplier.forms import *
-from buyer.models import *
-from buyer.forms import *
-from .forms import *
-from .models import AuditTrail, SordActionsAuditTrail
 import secrets
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from datetime import datetime, date, timedelta
 from django.contrib import messages
-from buyer.models import *
-from supplier.forms import *
-from supplier.models import *
-from users.models import *
-from accounts.models import Account
-from company.models import Company, CompanyFuelUpdate
-from company.lib import *
-from fuelUpdates.models import SordCompanyAuditTrail
 from django.contrib.auth import authenticate
 from django.db.models import Q
-from .forms import AllocationForm
 # from company.models import FuelUpdate as F_Update
 from django.contrib.auth import get_user_model
 from fuelUpdates.models import SordCompanyAuditTrail
 import datetime
 import sys
 
+from supplier.forms import Subsidiaries
+from buyer.models import *
+from buyer.forms import *
+from .forms import AllocationForm, SupplierContactForm
+from .models import AuditTrail, SordActionsAuditTrail
+from buyer.models import *
+from supplier.models import *
+from users.models import *
+from accounts.models import Account
+from company.models import Company, CompanyFuelUpdate
+from company.lib import *
+from fuelUpdates.models import SordCompanyAuditTrail
+
 
 user = get_user_model()
 
 
 class Render:
-
     @staticmethod
     def render(path: str, params: dict):
         template = get_template(path)
@@ -767,11 +763,12 @@ def stations(request):
             messages.success(request, 'Subsidiary Created Successfully')
             return redirect('users:stations')
 
-
     return render(request, 'users/service_stations.html', {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns, 'Mutare': Mutare, 'Gweru': Gweru})
+
 
 @login_required()
 def report_generator(request):
+    '''View to dynamically render form tables based on different criteria'''
     form = ReportForm()
     allocations = requests = trans = stock = None
     #trans = Transaction.objects.filter(supplier__company=request.user.company).all()
@@ -837,184 +834,18 @@ def report_generator(request):
     return render(request, 'users/reports.html', {'trans': trans, 'requests': requests,'allocations':allocations, 'form':form,
         'start': start_date, 'end': end_date,'show':show, 'stock':stock })
 
-@login_required()
-def export_pdf(request):
-    result = ''
-    if request.method == "POST":
-        print(request.POST.get('type_model'))
-        if request.POST.get('type_model') == "stock":
-            data = FuelUpdate.objects.filter(company_id=request.user.company.id)
-        if request.POST.get('type_model') == "transaction":
-            print('------------------Im In Here---------------------------')
-            start = request.POST.get('start')
-            end = request.POST.get('end')
-            start = datetime.strptime(start, '%b. %d, %Y').date()
-            end = datetime.strptime(end, '%b. %d, %Y').date()
-
-            data = Transaction.objects.filter(date__range=[start, end])
-
-
-            for i in data:
-                result += f'Date : {i.date}\n Time : {i.time}\n Buyer : {i.buyer}\n Completed : {i.is_complete}\n'
-            pdf = FPDF(orientation='P', format='A5')
-            pdf.add_page()
-            epw = pdf.w - 2*pdf.l_margin
-            col_width = epw/4
-
-            pdf.set_font('Times', '', 10)
-            # pdf.image('project/static/project/img/receipt.png', x=40)
-            pdf.multi_cell(w=100, h=10, txt=result)
-            pdf.output(f'media/reports/transactions/Report - {datetime.now().strftime("%Y-%M-%d")}.pdf', 'F')
-        if request.POST.get('type_model') == "reqs":
-            print('-------------------------Im in FuelRequests----------------------')
-            start = request.POST.get('start')
-            end = request.POST.get('end')
-            start = datetime.strptime(start, '%b. %d, %Y').date()
-            end = datetime.strptime(end, '%b. %d, %Y').date()
-
-            data = FuelRequest.objects.filter(date__range=[start, end])
-
-
-            for i in data:
-                result += f'Name : {i.name}\n Amount : {i.amount}\n Fuel Type : {i.fuel_type}\n Payment Method : {i.payment_method}\n'
-            pdf = FPDF(orientation='P', format='A5')
-            pdf.add_page()
-            epw = pdf.w - 2*pdf.l_margin
-            col_width = epw/4
-
-            pdf.set_font('Times', '', 10)
-            # pdf.image('project/static/project/img/receipt.png', x=40)
-            pdf.multi_cell(w=100, h=10, txt=result)
-            pdf.output(f'media/reports/requests/Report - {datetime.now().strftime("%Y-%M-%d")}.pdf', 'F')
-
-        if request.POST.get('type_model') == "revenue":
-            start = request.POST.get('start')
-            end = request.POST.get('end')
-            start = datetime.strptime(start, '%b. %d, %Y').date()
-            end = datetime.strptime(end, '%b. %d, %Y').date()
-
-            data = Transaction.objects.filter(date__range=[start, end])
-
-
-
-
-
-        return redirect('users:report_generator')
-
-def html_to_pdf(request):
-    data = {'trans': Transaction.objects.all()}
-    template = get_template("users/report.html")
-    html  = template.render(data)
-    # context = {'pagesize':'A4'}
-    # html = template.render(context) 
-    # result = StringIO() 
-    # pdf = pisa.pisaDocument(StringIO(html), dest=result) 
-    # if not pdf.err: 
-    #     return HttpResponse(result.getvalue(), content_type='application/pdf') 
-    # else: return HttpResponse('Errors')
-    file = open('test.pdf', "w+b")
-    pisaStatus = pisa.CreatePDF(html.encode('utf-8'), dest=file,
-            encoding='utf-8')
-
-    file.seek(0)
-    pdf = file.read()
-    file.close()
-    return HttpResponse(pdf, 'application/pdf')
-
-
-
-# def generate_pdf(request):
-#     if request.method == "POST":
-#         print(request.POST.get('type_model'))
-#         if request.POST.get('type_model') == "transaction":
-#             print('------------------Im In Here---------------------------')
-#             start = request.POST.get('start')
-#             end = request.POST.get('end')
-#             start = datetime.strptime(start, '%b. %d, %Y').date()
-#             end = datetime.strptime(end, '%b. %d, %Y').date()
-
-#             data = Transaction.objects.filter(date__range=[start, end])
-
-#             # Rendered
-#             html_string = render_to_string('users/reports.html', {'people': people})
-#             html = HTML(string=html_string)
-#             result = html.write_pdf()
-
-#             response = HttpResponse(content_type='application/pdf;')
-#             response['Content-Disposition'] = 'inline; filename=list_people.pdf'
-#             response['Content-Transfer-Encoding'] = 'binary'
-
-#             with tempfile.NamedTemporaryFile(delete=True) as output:
-#                 output.write(result)
-#                 output.flush()
-#                 output = open(output.name, 'r')
-#                 response.write(output.read())
-
-#             return response    
-
-
-
-
-@login_required()
-def export_csv(request):
-    result = ''
-    if request.method == "POST":
-        print(request.POST.get('type_model'))
-        if request.POST.get('type_model') == "transaction":
-            print('------------------Im In Here---------------------------')
-            start = request.POST.get('start')
-            end = request.POST.get('end')
-            print(f'__________{start}__________')
-            start = datetime.strptime(start, '%b. %d, %Y')
-            end = datetime.strptime(end, '%b. %d, %Y')
-
-            print(start)
-
-            data = Transaction.objects.filter(date__range=[start, end]).values()
-            print(data)
-            fields = ['Date', 'Time', 'Amount', 'Complete']
-            #df = DataFrame(data,columns=fields)
-            df = pd.DataFrame(list(data.values('date','time','buyer','is_complete')))
-            #df['Date'] = f'{dt[2]}/{dt[1]}/{dt[0]}'
-
-            day = str(datetime.now().day)
-            month = str(datetime.now().month)
-            year = str(datetime.now().year)
-
-            name = 'Transactions'
-
-            csv_name = f'{name}-{year}-{month}-{day}-ACC'
-
-            if request.POST.get('format') == 'excel':
-                df.to_excel(f'media/reports/transactions/csv/{csv_name}.xlsx', index=None, header=True)
-
-                with open(f'media/reports/transactions/csv/{csv_name}.xlsx', 'rb') as csv_name:
-                    response = HttpResponse(csv_name.read())
-                    response['Content-Disposition'] = f'attachment;filename={name}-{day}/{month}/{year}.xlsx'
-                    return response
-
-            if request.POST.get('format') == 'csv':
-                df.to_csv(f'media/reports/transactions/csv/{csv_name}.csv', index=None, header=True)
-
-                with open(f'media/reports/transactions/csv/{csv_name}.csv', 'rb') as csv_name:
-                    response = HttpResponse(csv_name.read())
-                    response['Content-Disposition'] = f'attachment;filename={name}-{day}/{month}/{year}.csv'
-                    return response
-    return result
-
-
-
-
 
 @login_required()
 def depots(request):
     depots = Depot.objects.all()
     return render(request, 'users/depots.html', {'depots': depots})
 
+
 @login_required()
 def audit_trail(request):
     trails = Audit_Trail.objects.filter(company=request.user.company).all()
     return render(request, 'users/audit_trail.html', {'trails': trails})
+
 
 def waiting_for_approval(request):
     stations = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
@@ -1022,7 +853,8 @@ def waiting_for_approval(request):
     applicants = user.objects.filter(is_waiting=True,company=request.user.company).all()
     return render(request, 'users/waiting_for_approval.html', {'applicants': applicants,'stations': stations, 'depots': depots})
 
-def approval(request, id):
+
+def approve_applicant(request, id):
     if request.method == 'POST':
         if user.objects.filter(id=id).exists():
             applicant = user.objects.filter(id = id).first()
@@ -1035,7 +867,6 @@ def approval(request, id):
             applicant.save()
             messages.success(request, f'Approval for {applicant.first_name} made successfully')
             return redirect('users:waiting_for_approval')
-
 
         else:
             messages.warning(request, 'oops! something went wrong')
@@ -1100,6 +931,7 @@ def suppliers_list(request):
 
     return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1})
 
+
 def message_is_send(request, user):
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
@@ -1113,6 +945,7 @@ def message_is_send(request, user):
         messages.warning(request, f"Oops , Something Wen't Wrong sending email, Please make sure you have Internet access")
         return False
     return render(request, 'buyer/send_email.html')
+
 
 def message_is_sent(request, user):
     sender = "intelliwhatsappbanking@gmail.com"
@@ -1254,6 +1087,7 @@ def depot_staff(request):
 
     return render(request, 'users/depot_staff.html', {'suppliers': suppliers, 'form1': form1})
 
+
 @login_required()
 def edit_subsidiary(request, id):
     if request.method == 'POST':
@@ -1275,6 +1109,7 @@ def edit_subsidiary(request, id):
             messages.success(request, 'Subsidiary does not exists')
             return redirect('users:stations')
 
+
 @login_required()
 def delete_subsidiary(request, id):
     if request.method == 'POST':
@@ -1287,6 +1122,7 @@ def delete_subsidiary(request, id):
         else:
             messages.success(request, 'Subsidiary does not exists')
             return redirect('users:stations')
+
 
 @login_required()
 def edit_fuel_prices(request, id):
@@ -1386,6 +1222,7 @@ def allocate_diesel(request, id):
             messages.success(request, 'Fuel object does not exists')
             return redirect('users:allocate')
 
+
 @login_required()
 def edit_ss_rep(request, id):
     if request.method == 'POST':
@@ -1403,6 +1240,7 @@ def edit_ss_rep(request, id):
             messages.success(request, 'user does not exists')
             return redirect('users:suppliers_list')
 
+
 @login_required()
 def edit_depot_rep(request, id):
     if request.method == 'POST':
@@ -1419,6 +1257,7 @@ def edit_depot_rep(request, id):
         else:
             messages.success(request, 'user does not exists')
             return redirect('users:depot_staff')
+
 
 def company_profile(request):
     compan = Company.objects.filter(id = request.user.company.id).first()
@@ -1446,6 +1285,7 @@ def company_profile(request):
             messages.success(request, 'Something went wrong')
             return redirect('users:company_profile')
     return render(request, 'users/company_profile.html', {'compan': compan, 'num_of_subsidiaries': num_of_subsidiaries, 'fuel_capacity': fuel_capacity})
+
 
 def company_petrol(request,id):
     if request.method == 'POST':
@@ -1513,6 +1353,7 @@ def edit_allocation(request, id):
             messages.warning(request, 'Fuel object does not exists')
             return redirect('users:allocate')
 
+
 def sordactions(request, id):
     sord_actions = SordActionsAuditTrail.objects.filter(sord_num=id).all()
 
@@ -1522,12 +1363,15 @@ def sordactions(request, id):
         sord_number  = "-"
     return render(request, 'users/sord_actions.html', {'sord_number':sord_number, 'sord_actions':sord_actions})
 
+
 def sord_station_sales(request):
     sord_sales = SordSubsidiaryAuditTrail.objects.filter(subsidiary__company = request.user.company).all()
     return render(request, 'users/sord_station_sales.html', {'sord_sales':sord_sales})
 
+
 def delivery_schedule(request, id):
     return render(request, 'users/delivery_schedule.html')
+
 
 @login_required
 def client_application(request):
