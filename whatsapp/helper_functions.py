@@ -14,6 +14,7 @@ from supplier.models import Offer, Transaction, FuelAllocation, Subsidiaries, Us
 from buyer.recommend import recommend
 from notification.models import Notification
 
+
 """
 function for sending whatsapp messages
 
@@ -228,8 +229,6 @@ def requesting_for_fuel(user, message):
                     i += 1
                 else:
                     pass
-
-
     elif user.position == 12:
         Harare = ['Avenues', 'Budiriro','Dzivaresekwa',  'Kuwadzana', 'Warren Park','Glen Norah', 'Glen View',  'Avondale',  'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park','Borrowdale',  'Chisipiti',  'Glen Lorne', 'Greendale', 'Greystone Park', 'Helensvale', 'Highlands',   'Mandara', 'Manresa','Msasa','Newlands',  'The Grange',  'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft', 'Hatcliffe', 'Mabelreign', 'Marlborough',  'Meyrick Park', 'Mount Pleasant',  'Pomona',   'Tynwald',  'Vainona', 'Arcadia','Braeside', 'CBD',  'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale', 'Sunningdale', 'Epworth','Highfield' 'Kambuzuma',  'Southerton', 'Warren Park', 'Southerton',  'Mabvuku', 'Tafara',  'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park',  'Marimba Park', 'Mufakose']
         location = Harare[int(message) - 1]
@@ -244,7 +243,6 @@ def requesting_for_fuel(user, message):
                 i += 1
             else:
                 pass
-
     elif user.position == 13:
         Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane', 'North End', 'Northvale', 'North Lynne', 'Northlea', 'North Trenance', 'Ntaba Moyo', 'Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont', 'Bradfield','Burnside', 'Cement', 'Cowdray Park', 'Donnington West', 'Donnington', 'Douglasdale', 'Emakhandeni', 'Eloana', 'Emganwini', 'Enqameni', 'Enqotsheni']
         location = Bulawayo[int(message) - 1]
@@ -259,9 +257,8 @@ def requesting_for_fuel(user, message):
                 i += 1
             else:
                 pass
-
-
     return response_message
+
 
 def station_updates(user, message):
     if user.position == 1:
@@ -276,7 +273,6 @@ def station_updates(user, message):
                 i += 1
             else:
                 pass
-
     return response_message
 
 
@@ -362,29 +358,24 @@ def requests_handler(user, message):
             user.position = 55
             user.save()
             response_message = 'What is your payment method?\n\n1. USD\n2. RTGS\n'
-
         elif message == "2":
             fuel_request.delivery_method = "DELIVERY"
             fuel_request.save()
             response_message = "what is your location"
             user.position = 70
             user.save()
-
         else:
             return "Incorrect Choice"
-
     elif user.position == 55:
         fuel_request = FuelRequest.objects.get(id=user.fuel_request)
         if message == "1":
             fuel_request.payment_method = "USD"
         elif message == "2":
             fuel_request.payment_method = "RTGS"
-
         fuel_request.save()
         response_message = 'Please choose between the following:? \n\n1. Wait for Offers\n2. Get System Generated'
         user.position = 7
         user.save()
-
     elif user.position == 70:
         fuel_request = FuelRequest.objects.get(id=user.fuel_request)
         fuel_request.delivery_address = message
@@ -392,7 +383,6 @@ def requests_handler(user, message):
         user.position = 55
         user.save()
         response_message = 'What is your payment method?\n\n1. USD\n2. RTGS\n'
-
     elif user.position == 7:
         fuel_request = FuelRequest.objects.get(id=user.fuel_request)
         if message == "1":
@@ -401,7 +391,6 @@ def requests_handler(user, message):
             response_message = 'Request made successfully! Please wait for offers'
             message = f'{user.first_name} {user.last_name} made a request of {fuel_request.amount}L {fuel_request.fuel_type.lower()}'
             Notification.objects.create(message = message, user = user, reference_id = fuel_request.id, action = "new_request")
-
         elif message == "2":
             response,response_message = recommend(fuel_request)
             if response == False:
@@ -415,10 +404,8 @@ def requests_handler(user, message):
                 print(response_message)
                 user.position = 71
                 user.save()
-
         else:
             return "Incorrect Choice"
-
     elif user.position == 71:
         if 'accept' in message.lower():
             digits = [int(s) for s in message.split() if s.isdigit()]
@@ -444,12 +431,10 @@ def requests_handler(user, message):
             fuel_request.wait = True
             fuel_request.save()
             response_message = 'Request made successfully! Please wait for offers'
-
         else:
             response_message = 'oops!! something went wrong during processing of your request, please type *Wait* to wait for offers or *Menu* to go back to main menu'
             user.position = 72
             user.save()
-
     elif user.position == 100:
         if 'rating' in message.lower():
             rating = [int(s) for s in message.split() if s.isdigit()]
@@ -468,7 +453,6 @@ def requests_handler(user, message):
         review.comment = message
         review.save()
         response_message = "Your review has been submitted successfully"
-
     return response_message
 
 
@@ -527,7 +511,6 @@ def follow_up(user, message):
         review.comment = message
         review.save()
         response_message = "Your review has been submitted successfully"
-
     return response_message
 
 
@@ -568,20 +551,17 @@ def view_fuel_updates(user, message):
                     response_message = response_message + f'{i} *{subsidiary.name}*\nPetrol: {sub_update.petrol_quantity} Litres\nPrice: {sub_update.petrol_usd_price} \nDiesel:{sub_update.diesel_quantity} Litres \nPrice: {sub_update.diesel_usd_price} \n\n'
                     user.fuel_updates_ids = user.fuel_updates_ids + str(sub_fuel_updates.id) + " "
                     user.save()
-
                     i += 1
                 else:
                     sub_update = SuballocationFuelUpdate.objects.filter(subsidiary=update.subsidiary).filter(payment_type="USD & RTGS").first()
                     response_message = response_message + f'{i} *{subsidiary.name}*\nPetrol: {sub_update.petrol_quantity} Litres\nPrice: {sub_update.petrol_price} \nDiesel:{sub_update.diesel_quantity} Litres \nPrice: {sub_update.diesel_price} \n\n'
                     user.fuel_updates_ids = user.fuel_updates_ids + str(sub_fuel_updates.id) + " "
                     user.save()
-
                     i += 1
             else:
                 pass
             if not sub_fuel_updates and not sub_update:
                 response_message = 'We could not find ' + user.paying_method + ' fuel updates for you. Please Try again Later'
-
         user.position = 31
         user.save()
     elif user.position == 31:
@@ -613,7 +593,6 @@ def view_fuel_updates(user, message):
         user.position = 35
         user.save()
         response_message = "*Please select delivery method*\n\n1. Pick Up\n2. Delivery*"
-
     elif user.position == 35:
         my_request = FuelRequest.objects.get(id=user.fuel_request)
         if message == "1":
@@ -628,13 +607,11 @@ def view_fuel_updates(user, message):
             user.save()
         else:
             return "Incorrect Choice"
-
     elif user.position == 36:
         my_request = FuelRequest.objects.get(id=user.fuel_request)
         my_request.delivery_address = message
         my_request.save()
         response_message = 'made request successfully'
-
     return response_message
 
 
@@ -690,7 +667,6 @@ def supplier_handler(request,user,message):
         response_message = update_fuel(user, message)
     else:
         pass
-
     return response_message
 
 
@@ -729,7 +705,6 @@ def view_requests_handler(user, message):
         request_quantity = fuel_request.amount
         subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
         fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
-
         if fuel_request.fuel_type.lower() == 'petrol':
             available_fuel = fuel.petrol_quantity
         elif fuel_request.fuel_type.lower() == 'diesel':
@@ -750,7 +725,6 @@ def view_requests_handler(user, message):
             response_message = f"You can not offer fuel more than the available fuel stock. You have *{available_fuel}* litres left. Please try a leser quantity."
             user.position = 2
             user.save()
-
     elif user.position == 4:
         fuel_request = FuelRequest.objects.filter(id=user.fuel_request).first()
         offer = Offer.objects.filter(supplier=user, request=fuel_request).first()
@@ -833,7 +807,6 @@ def view_offers_handler(user, message):
         request_quantity = offer.request.amount
         subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
         fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
-
         if offer.request.fuel_type.lower() == 'petrol':
             available_fuel = fuel.petrol_quantity
         elif offer.request.fuel_type.lower() == 'diesel':
@@ -864,7 +837,6 @@ def view_offers_handler(user, message):
                 response_message = "Expected a number! Please re-enter a valid quantity or type *pass* if you do not wish to edit."
                 user.position = 2
                 user.save()
-
     elif user.position == 4:
         offer = Offer.objects.filter(id=user.fuel_request).first()
         if message.lower() == 'pass':
@@ -946,6 +918,7 @@ def view_transactions_handler(user, message):
             response_message = "Invalid response! Please type *menu* to go back to the main menu"
     return response_message
 
+
 def update_fuel(user, message):
     if user.position == 0:
         response_message = 'What type of fuel do you want to update?\n\n1. USD Fuel\n2. RTGS Fuel\n3. USD & RTGS Fuel\n'
@@ -968,11 +941,9 @@ def update_fuel(user, message):
             user.position = 2
             user.save()
         response_message = "How much petrol do you have?"
-
     elif user.position == 2:
         fuel_update = SuballocationFuelUpdate.objects.filter(id=user.fuel_request).first()
         petrol_available = fuel_update.petrol_quantity
-        #try:
         petrol_update = float(message)
         if petrol_update < petrol_available:
             fuel_reduction = fuel_update.petrol_quantity - petrol_update
@@ -986,11 +957,8 @@ def update_fuel(user, message):
             response_message = f"You can only reduce your stock. To increase it contact you admin to update your fuel allocations! You currently have *{diesel_availabe}* litre, please enter available stock if it is less."
             user.position = 2
             user.save()
-
-    # 
     elif user.position == 4:
         fuel_update = SuballocationFuelUpdate.objects.filter(id=user.fuel_request).first()
-        #try:
         diesel_update = float(message)
         diesel_available = fuel_update.diesel_quantity
         if diesel_update < diesel_available:
@@ -1005,12 +973,9 @@ def update_fuel(user, message):
             response_message = f"You can only reduce your stock. To increase it contact you admin to update your fuel allocations! You currently have *{diesel_available}* litres, update if you have less stock."
             user.position = 4
             user.save()
-
-
     elif user.position == 6:
         if message.lower != 'menu':
             response_message = "Invalid response. Please send *menu* to go back to main menu"
-
     return response_message
 
 
@@ -1102,7 +1067,6 @@ def service_station_handler(request,user,message):
             full_name = user.first_name + " " + user.last_name
             response_message = ss_supplier_menu.format(full_name)
         return response_message
-
     elif user.stage == 'update_petrol':
         response_message = update_petrol(user, message)
     elif user.stage == 'update_diesel':
@@ -1182,7 +1146,6 @@ def update_petrol(user, message):
         user.fuel_request = update.id
         user.save()
         response_message = 'What do you want to use for payment.\n\n1. ZWL(Cash) Only\n2. Ecocash Only\n3. RTGS(Swipe)/Transfer Only\n4. USD Only\n5. Cash or Ecocash\n6. Cash or Swipe\n7. Ecocash or Swipe\n'
-
     elif user.position == 43:
         update = SubsidiaryFuelUpdate.objects.filter(id=user.fuel_request).first()
         if message == "1":
@@ -1205,7 +1168,6 @@ def update_petrol(user, message):
         else:
             return "Incorrect Choice"
         response_message = "Made an update successfully, Please type *menu* to go back to main menu"
-
     return response_message
 
 
@@ -1265,7 +1227,6 @@ def update_diesel(user, message):
         user.fuel_request = update.id
         user.save()
         response_message = 'What do you want to use for payment.\n\n1. ZWL(Cash) Only\n2. Ecocash Only\n3. RTGS(Swipe)/Transfer Only\n4. USD Only\n5. Cash or Ecocash\n6. Cash or Swipe\n7. Ecocash or Swipe\n'
-
     elif user.position == 53:
         update = SubsidiaryFuelUpdate.objects.filter(id=user.fuel_request).first()
         if message == "1":
@@ -1288,7 +1249,6 @@ def update_diesel(user, message):
         else:
             return "Incorrect Choice"
         response_message = "Made an update successfully, Please type *menu* to go back to main menu"
-
     return response_message
 
 
