@@ -189,6 +189,7 @@ class DeliverySchedule(models.Model):
     confirmation_document = models.FileField(null=True, upload_to='documents')
     supplier_document = models.FileField(null=True, upload_to='documents')
     transport_company = models.CharField(max_length=150, blank=True, null=True)
+    reminder_sent = models.BooleanField(default=False)
 
     # def display_text_file(self):
     #     with open(self.confirmation_document.path) as fp:

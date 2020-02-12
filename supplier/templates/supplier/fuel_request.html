@@ -75,7 +75,7 @@
                 <tr>
                     <td></td>
                     <td>{{ req.date }}</td>
-                    <td>{{ req.name.first_name|lower|capfirst }} {{ req.name.last_name|lower|capfirst }}</td>
+                    <td>{{ req.name.company.name|lower|title }}</td>
                     <td>{{ req.amount|intcomma }}</td>
                     <td>{{ req.fuel_type|lower|capfirst }}</td>
                     <td>{{req.payment_method}}</td>                    
