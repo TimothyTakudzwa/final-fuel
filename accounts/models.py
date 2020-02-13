@@ -39,3 +39,4 @@ class AccountHistory(models.Model):
 
     def __str__(self):
         return f'{str(self.account.buyer_company.name)} - ${str(self.balance)}'
+
