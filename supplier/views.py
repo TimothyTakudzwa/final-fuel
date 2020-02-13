@@ -356,6 +356,7 @@ def fuel_request(request):
             buyer_request.offer_price = offer.price
             buyer_request.offer_quantity = offer.quantity
             buyer_request.offer_id = offer.id
+            buyer_request.transport_fee = offer.transport_fee
         else:
             buyer_request.my_offer = 'No Offer'
             buyer_request.offer_id = 0
@@ -472,7 +473,8 @@ def offer(request, id):
                     offer = Offer()
                     offer.supplier = request.user
                     offer.request = fuel_request
-                    offer.price = request.POST.get('price')    
+                    offer.price = request.POST.get('price')
+                    offer.transport_fee = request.POST.get('transport')    
                     offer.quantity = request.POST.get('quantity')
                     offer.fuel_type = request.POST.get('fuel_type')
                     offer.usd = True if request.POST.get('usd') == "on" else False
@@ -545,7 +547,8 @@ def edit_offer(request, id):
         request_quantity = offer.request.amount
         if new_offer <= available_fuel:
             if new_offer <= request_quantity:
-                offer.price = request.POST.get('price')      
+                offer.price = request.POST.get('price') 
+                offer.transport_fee = request.POST.get('transport')      
                 offer.quantity = request.POST.get('quantity')
                 offer.usd = True if request.POST.get('usd') == "on" else False
                 offer.cash = True if request.POST.get('cash') == "on" else False
@@ -627,7 +630,6 @@ def transaction(request):
 
 @login_required
 def complete_transaction(request, id):
-    print(f'---------------pfeeeeeeeeeeeeeeeee-------------------')
     transaction = Transaction.objects.filter(id = id).first()
     subsidiary_fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).first()
     fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD & RTGS').first()

@@ -157,25 +157,29 @@ aria-hidden="true">
 <div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <h1 class="modal-title">Make Offer</h1>
+        <h2 class="modal-title">Make Offer</h2>
     </div>
 <div class="modal-body">
 <form method="POST" action="{% url 'supplier:supplier' req.id %}">
     {% csrf_token %}
     <div class=" row col-sm-12">
-    <div class="col-sm-4">
+    <div class="col-sm-3">
         <label>Fuel Type</label>
         <input type="text" name="fuel_type" class="form-control" value="{{req.fuel_type}}" disabled/>
     </div>
 
-    <div class="col-sm-4">
+    <div class="col-sm-3">
         <label>Fuel Quantity</label>
         <input type="text" name="quantity" class="form-control" value="{{req.amount}}" required/>
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-3">
         <label>Fuel Price</label>
-        <input type="text" name="price" class="form-control" value="{{req.price}}"/>
+        <input type="text" name="price" class="form-control" value="{{req.price}}" required/>
     </div>
+    <div class="col-sm-3">
+      <label>Transport Fee</label>
+      <input type="text" name="transport" class="form-control" value="" />
+  </div>
     </div>
 
 
@@ -242,25 +246,29 @@ aria-hidden="true">
 <div class="modal-content">
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-    <h1 class="modal-title">Edit Offer</h1>
+    <h2 class="modal-title">Edit Offer</h2>
 </div>
 <div class="modal-body">
  <form method="POST" action="{% url 'supplier:edit_offer' req.offer_id %}">
      {% csrf_token %}
      <div class=" row col-sm-12">
-     <div class="col-sm-4">
+     <div class="col-sm-3">
          <lable>Fuel Type</lable>
          <input type="text" name="fuel_type" class="form-control" value="{{req.fuel_type}}" disabled/>
      </div>
 
-     <div class="col-sm-4">
+     <div class="col-sm-3">
          <lable>Fuel Quantity</lable>
          <input type="text" name="quantity" class="form-control" value="{{req.offer_quantity}}" />
      </div>
-     <div class="col-sm-4">
+     <div class="col-sm-3">
          <lable>Fuel Price</lable>
          <input type="text" name="price" class="form-control" value="{{req.offer_price}}"/>
      </div>
+     <div class="col-sm-3">
+      <lable>Transport Fee</lable>
+      <input type="text" name="transport" class="form-control" value="{{req.transport_fee}}"/>
+  </div>
      </div>
 
 
