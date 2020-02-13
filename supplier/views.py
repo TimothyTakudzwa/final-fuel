@@ -18,7 +18,7 @@ from datetime import date, time, datetime
 from buyer.constants2 import industries, job_titles
 from buyer.forms import BuyerUpdateForm
 from buyer.models import FuelRequest
-from accounts.models import Account
+from accounts.models import Account, AccountHistory
 from users.models import AuditTrail
 from .forms import PasswordChange, RegistrationForm, \
     RegistrationEmailForm, UserUpdateForm, FuelRequestForm, CreateCompany, OfferForm
@@ -403,7 +403,7 @@ def stock_update(request,id):
                 subsidiary_fuel.petrol_quantity = subsidiary_fuel.petrol_quantity - fuel_reduction
                 subsidiary_fuel.save()
 
-                sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Petrol', fuel_update.payment_type)
+                stock_sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Petrol', fuel_update.payment_type)
 
             else:
                 if float(request.POST['quantity']) > available_diesel:
@@ -414,7 +414,7 @@ def stock_update(request,id):
                 subsidiary_fuel.diesel_quantity = subsidiary_fuel.diesel_quantity - fuel_reduction
                 subsidiary_fuel.save()
 
-                sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Diesel', fuel_update.payment_type)
+                stock_sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Diesel', fuel_update.payment_type)
 
             fuel_update.cash = request.POST['cash']
             fuel_update.swipe = request.POST['swipe']
@@ -627,6 +627,7 @@ def transaction(request):
 
 @login_required
 def complete_transaction(request, id):
+    print(f'---------------pfeeeeeeeeeeeeeeeee-------------------')
     transaction = Transaction.objects.filter(id = id).first()
     subsidiary_fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).first()
     fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD & RTGS').first()
@@ -660,7 +661,7 @@ def complete_transaction(request, id):
             subsidiary_fuel.save()
 
             user = transaction.offer.request.name
-            sord_update(request, user, transaction_quantity, 'SALE', 'Petrol', payment_type)
+            transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Petrol', payment_type, transaction)
 
             messages.success(request, "Transaction completed successfully!")
             return redirect('transaction')
@@ -690,7 +691,7 @@ def complete_transaction(request, id):
             subsidiary_fuel.save()
 
             user = transaction.offer.request.name
-            sord_update(request, user, transaction_quantity, 'SALE', 'Diesel', payment_type)
+            transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Diesel', payment_type, transaction)
 
             messages.success(request, "Transaction completed successfully!")
             return redirect('transaction')
@@ -763,7 +764,7 @@ def client_transaction_history(request,id):
      'all_requests':all_requests, 'todays_requests': todays_requests })
 
 
-def sord_update(request, user, quantity, action, fuel_type, payment_type):
+def stock_sord_update(request, user, quantity, action, fuel_type, payment_type):
     initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, payment_type=payment_type).all()
     sord_quantity = []
     for sord in initial_sord:
@@ -784,6 +785,37 @@ def sord_update(request, user, quantity, action, fuel_type, payment_type):
                 SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1, action = action, initial_quantity = entry.end_quantity,
                 quantity_sold = balance_brought_forward, end_quantity = entry.end_quantity - balance_brought_forward, received_by = user, fuel_type = entry.fuel_type, subsidiary = subsidiary, payment_type = payment_type)
                 balance_brought_forward = 0
+
+
+def transaction_sord_update(request, user, quantity, action, fuel_type, payment_type, transaction):
+    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, payment_type=payment_type).all()
+    sord_quantity = []
+    for sord in initial_sord:
+        if sord.end_quantity != 0:
+            sord_quantity.append(sord)
+        else:
+            pass
+    sord_quantity.sort(key = attrgetter('last_updated'), reverse = True)
+    balance_brought_forward = quantity
+    for entry in sord_quantity:
+        if balance_brought_forward != 0:
+            subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+            if entry.end_quantity < balance_brought_forward:
+                SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1, action = action, initial_quantity = entry.end_quantity,
+                quantity_sold = entry.end_quantity, end_quantity = 0, received_by = user, fuel_type = entry.fuel_type, subsidiary = subsidiary, payment_type = payment_type)
+                balance_brought_forward = balance_brought_forward - entry.end_quantity
+                accounts = AccountHistory.objects.filter(transaction=transaction, sord_number=None).all()
+                for account in accounts:
+                    account.sord_number = entry.sord_no
+                    account.save()
+            else:
+                SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1, action = action, initial_quantity = entry.end_quantity,
+                quantity_sold = balance_brought_forward, end_quantity = entry.end_quantity - balance_brought_forward, received_by = user, fuel_type = entry.fuel_type, subsidiary = subsidiary, payment_type = payment_type)
+                balance_brought_forward = 0
+                accounts = AccountHistory.objects.filter(transaction=transaction, sord_number=None).all()
+                for account in accounts:
+                    account.sord_number = entry.sord_no
+                    account.save()
 
 
 '''

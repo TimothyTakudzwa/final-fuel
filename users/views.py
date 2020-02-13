@@ -26,7 +26,6 @@ from datetime import datetime, date, timedelta
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.db.models import Q
-# from company.models import FuelUpdate as F_Update
 from django.contrib.auth import get_user_model
 from fuelUpdates.models import SordCompanyAuditTrail
 import datetime
