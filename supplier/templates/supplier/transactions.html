@@ -57,7 +57,10 @@
                             <th style="color: white;">Fuel Type</th>
                             <th style="color: white;">Quantity(l)</th>
                             <th style="color: white;">Price</th>
-                            <th style="color: white;">Amount</th>
+                            <th style="color: white;">Expected</th>
+                            <th style="color: white;">Paid</th>
+                            <th style="color: white;">Status</th>
+                            <th style="color: white;">Payments History</th>
                             <th style="color: white;">Action</th>
                             <th style="color: white;">Contact Person</th>
 
@@ -74,20 +77,51 @@
                                 <td>{{ transaction.offer.request.fuel_type|lower|capfirst }}</td>
                                 <td>{{ transaction.offer.quantity |intcomma}}</td>
                                 <td>{{ transaction.offer.price }}</td>
-                                <td>{{ transaction.offer.quantity| mul:transaction.offer.price |intcomma}}</td>
-                                {% if transaction.proof_of_payment and transaction.is_complete %}
-                                    {% if transaction.delivery_sched %}
-                                        <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{transaction.id}}">View Schedule</button></td>
-                                    {% else %}
-                                        <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button></td>
-                                    {% endif %}
+                                <td>{{ transaction.expected}}</td>
+                                <td>{{ transaction.paid }}</td>
+                                {% if transaction.is_complete == True %}
+                                <td>Complete</td>
                                 {% else %}
-                                <td>
+                                <td>Incomplete</td>
+                                {% endif %}
+                                <td style="width: 25%;">
                                     <div class="btn-group">
-                                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-proof' transaction.id %}" >Download Proof</a>
-                                    <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'complete-transaction' transaction.id %}" >Complete</a>
+    
+    
+                                        
+                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'supplier:payment_history' transaction.id %}">View History & Schedules</a>
+    
                                     </div>
                                 </td>
+                                {% if transaction.expected == transaction.paid %}
+                                    {% if transaction.is_complete == True %} 
+                                    <td>N/A</td>
+                                    {% else %} 
+                                    <td>
+                                        <div class="btn-group">
+                                        <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'supplier:mark_completion' transaction.id %}" >Complete</a>
+                                        </div>
+                                    </td>
+                                    {% endif %}
+                                {% else %}
+                                {% if transaction.proof_of_payment %}
+                                    {% if transaction.proof_of_payment_approved == False %}
+                                    <td>
+                                        <div class="btn-group">
+                                        <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-proof' transaction.id %}" >Download Proof</a>
+                                        <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'complete-transaction' transaction.id %}" >Approve</a>
+                                        </div>
+                                    </td>
+                                    {% else %}
+                                    <td>
+                                        <div class="btn-group">
+                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button>
+                                        </div>
+                                    </td>
+                                    {% endif %}
+                                {% else %}
+                                <td>Proof Payment Pending</td>
+                                {% endif %}
                                 {% endif %}
                                 <td>
                                     <div class="text-center">
@@ -163,6 +197,12 @@
                                                 <p class="col-md-6">{{transaction.delivery_sched.delivery_time }}</p>
                                             </div>
                                             <div class="row" style="padding: 10px;">
+                                                <p class="col-md-6">Fuel Quantity: </p>
+                                                <p class="col-md-6">{{transaction.paid| div:transaction.offer.price |intcomma}}</p>
+                               
+
+                                            </div>
+                                            <div class="row" style="padding: 10px;">
                                                 <p class="col-md-6">Status: </p>
                                                 {% if transaction.delivery_sched.confirmation_document %}
                                                     <p class="col-md-6">
@@ -231,7 +271,12 @@
                                                         <label>Transporter Company</label>
                                                         <input type="text" class="form-control" name="transport_company" class="transport_company" required/>
                                                     </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>Amount Paid</label>
+                                                        <input type="text" class="form-control" name="paid" class="paid" required/>
+                                                    </div>
                                                 </div>
+                                                
 
 
                                                 <div class="row">

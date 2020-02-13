@@ -26,9 +26,11 @@ urlpatterns = [
     path('invoice/<int:id>', views.invoice, name='buyer-invoice'),
     path('view_invoice/<int:user_id>', views.view_invoice, name='view-invoice'),
     path('accounts', views.accounts, name='accounts'),
+    path('payment_history/<int:id>', views.payment_history, name='payment_history'),
     path('make_direct_request', views.make_direct_request, name='make_direct_request'),
     path('make_private_request', views.make_private_request, name='make_private_request'),
     path('edit_account_details/<int:user_id>', views.edit_account_details, name="edit_account_details"),
+    
 
 ]
 

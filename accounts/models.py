@@ -3,7 +3,8 @@ from django.db import models
 # Create your models here.
 from buyer.models import User
 from company.models import Company
-from supplier.models import Transaction
+from supplier.models import Transaction, DeliverySchedule
+
 
 
 class Account(models.Model):
@@ -25,17 +26,18 @@ class Account(models.Model):
 
 
 class AccountHistory(models.Model):
-    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='account_history')
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='account_history',blank=True, null=True)
     balance = models.FloatField(default=0)
-    sord_number = models.CharField(max_length=255)
+    sord_number = models.CharField(max_length=255,blank=True, null=True)
     proof_of_payment = models.FileField(null=True, upload_to='proof_of_payment')
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, related_name='transaction_account_history')
-    value = models.FloatField(help_text='proof of payment value')
+    value = models.FloatField(default=0.00, help_text='proof of payment value')
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
+    delivery_schedule = models.ForeignKey(DeliverySchedule, on_delete=models.CASCADE, related_name='account_history',blank=True, null=True)
 
     class Meta:
         ordering = ['date', 'time']
 
     def __str__(self):
-        return f'{str(self.account.buyer_company.name)} - ${str(self.balance)}'
+        return f'${str(self.balance)}'

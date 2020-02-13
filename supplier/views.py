@@ -13,6 +13,7 @@ from django.db.models import Q
 
 from buyer.utils import render_to_pdf
 from company.models import Company
+from accounts.models import AccountHistory
 from users.models import Audit_Trail
 from datetime import date, time, datetime
 from buyer.constants2 import industries, job_titles
@@ -644,7 +645,11 @@ def complete_transaction(request, id):
         else:
             available_fuel = fuel.petrol_quantity
         if transaction_quantity <= available_fuel:
-            transaction.is_complete = True
+            if transaction.expected == transaction.paid:
+                transaction.is_complete = True
+            else:
+                pass
+            transaction.proof_of_payment_approved = True
             transaction.save()
             if transaction_quantity > fuel.petrol_quantity:
                 fuel_remainder = transaction_quantity - fuel.petrol_quantity
@@ -662,7 +667,7 @@ def complete_transaction(request, id):
             user = transaction.offer.request.name
             sord_update(request, user, transaction_quantity, 'SALE', 'Petrol', payment_type)
 
-            messages.success(request, "Transaction completed successfully!")
+            messages.success(request, "Proof of Payment Approved!")
             return redirect('transaction')
         else:
             messages.warning(request, "There is not enough petrol in stock to complete the transaction.")
@@ -692,7 +697,7 @@ def complete_transaction(request, id):
             user = transaction.offer.request.name
             sord_update(request, user, transaction_quantity, 'SALE', 'Diesel', payment_type)
 
-            messages.success(request, "Transaction completed successfully!")
+            messages.success(request, "Proof of Payment Approved!")
             return redirect('transaction')
         else:
             messages.warning(request, "There is not enough diesel in stock to complete the transaction")
@@ -803,6 +808,16 @@ def create_delivery_schedule(request):
             vehicle_reg = request.POST['vehicle_reg'],
             delivery_time = request.POST['delivery_time']
         )
+        transaction = Transaction.objects.filter(id=int(request.POST['transaction'])).first()
+        transaction.paid += float(request.POST['paid'])
+        transaction.proof_of_payment = None
+        transaction.pending_proof_of_payment = False
+        transaction.save()
+        payment_history = AccountHistory.objects.filter(transaction=transaction).first()
+        payment_history.value += float(request.POST['paid'])
+        payment_history.balance -= float(request.POST['paid'])
+        payment_history.delivery_schedule=schedule
+        payment_history.save()
         messages.success(request,"Schedule Successfully Created")
         message = f"{schedule.transaction.supplier.company} has created a delivery schedule for you, Click To View Schedule"
         Notification.objects.create(user=schedule.transaction.buyer,action='schedule', message=message, reference_id=schedule.id)
@@ -879,4 +894,24 @@ def del_supplier_doc(request,id):
     delivery.save()
     messages.success(request, 'Document Removed Successfully')
     return redirect('supplier:delivery_schedules')
+
+
+"""
+
+payment history
+
+"""
+
+def payment_history(request, id):
+    transaction = Transaction.objects.filter(id=id).first()
+    payment_history = AccountHistory.objects.filter(transaction=transaction).all()
+    return render(request, 'supplier/payment_history.html', {'payment_history': payment_history})
+
+
+def mark_completion(request, id):
+    transaction = Transaction.objects.filter(id=id).first()
+    transaction.is_complete = True
+    transaction.save()
+    messages.success(request, 'Transaction is now complete')
+    return redirect('transaction')
     
