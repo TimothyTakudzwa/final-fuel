@@ -52,6 +52,7 @@
                             <th>Fuel Requested</th>
                             <th>Fuel Offered</th>
                             <th>Price</th>
+                            <th>Transport Fee</th>
                             <th>Contact Person</th>
                             <th>Banking Details</th>
                             <th>Action</th>
@@ -64,9 +65,10 @@
                             <td class="name truncate">{{transaction.depot}}</td>
                             <td class="name truncate">{{transaction.address}}</td>
                             <td class="name truncate">{{transaction.offer.request.fuel_type}}</td>
-                            <td class="name truncate">{{transaction.offer.quantity}}</td>
+                            <td class="name truncate">{{transaction.offer.request.amount}}</td>
                             <td class="name truncate">{{transaction.offer.quantity}}</td>
                             <td class="name truncate">{{transaction.offer.price}}</td>
+                            <td class="name truncate">{{transaction.offer.transport_fee}}</td>
                             <td>
                                 <div class="text-center">
                                     <!--call modal-->
