@@ -30,7 +30,7 @@ class AccountHistory(models.Model):
     sord_number = models.CharField(max_length=255)
     proof_of_payment = models.FileField(null=True, upload_to='proof_of_payment')
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, related_name='transaction_account_history')
-    value = models.FloatField()
+    value = models.FloatField(help_text='proof of payment value')
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
 
