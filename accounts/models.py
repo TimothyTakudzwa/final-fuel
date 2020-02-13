@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 from buyer.models import User
 from company.models import Company
+from supplier.models import Transaction
 
 
 class Account(models.Model):
@@ -23,3 +24,18 @@ class Account(models.Model):
         return f'{str(self.buyer_company.name)}'
 
 
+class AccountHistory(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='account_history')
+    balance = models.FloatField(default=0)
+    sord_number = models.CharField(max_length=255)
+    proof_of_payment = models.FileField(null=True, upload_to='proof_of_payment')
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, related_name='transaction_account_history')
+    value = models.FloatField(help_text='proof of payment value')
+    date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['date', 'time']
+
+    def __str__(self):
+        return f'{str(self.account.buyer_company.name)} - ${str(self.balance)}'

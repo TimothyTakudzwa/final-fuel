@@ -40,10 +40,13 @@
             <thead style="background-color: lightslategray; color:white;">
                 <tr>
                   <th style="color: white;"></th>
-                    <th style="color: white;">Date Created</th>
                     <th style="color: white;">Name</th>
+                    <th style="color: white;">Address</th>
                     <th style="color: white;">Account Number</th>
-                    <th style="color: white;">Verified</th>
+                    <th style="color: white;">Contact Person</th>
+                    <th style="color: white;">Phone Number</th>
+                    <th style="color: white;">Email</th>
+                    <th style="color: white;">Status</th>
                     <th style="color: white;">Documents</th>
                     <th style="color: white;">Activity</th>
      
@@ -53,10 +56,13 @@
                 {% if clients %}
                     {% for client in clients %}
                     <tr>
-                        <td></td>
-                    <td>{{ client.date }} {{client.time}}</td>
+                    <td></td>
                     <td>{{ client.buyer_company.name|title}}</td>
+                    <td>{{ client.buyer_company.address|title}}</td>
                         <td>{{ client.account_number }}</td>
+                        <td>{{ client.applied_by.first_name|title}} {{ client.applied_by.last_name|title}}</td>
+                        <td>{{ client.applied_by.phone_number}}</td>
+                        <td>{{ client.applied_by.email}}</td>
                         {% if client.is_verified %}
                         <td><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></td>
                         {% else %}

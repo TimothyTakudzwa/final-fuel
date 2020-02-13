@@ -1,10 +1,15 @@
 from django.db import models
-# from fuelfinder.settings import AUTH_USER_MODEL as User
-from .constants2 import * 
-from PIL import Image
 from django.contrib.auth.models import AbstractUser
+from PIL import Image
+
+from .constants2 import *
 from company.models import Company
 
+"""
+
+Custom User Model
+
+"""
 
 
 class User(AbstractUser):
@@ -23,28 +28,32 @@ class User(AbstractUser):
     password_reset = models.BooleanField(default=False)
     paying_method = models.CharField(max_length=2000, default=0)
 
-
-
     def __str__(self):
         return f'{self.username}'
-    
+
     def save(self, *args, **kwargs):
         super(User, self).save(*args, **kwargs)
 
         img = Image.open(self.image.path)
 
         if img.height > 300 or img.width > 300:
-            output_size = (300,300)
+            output_size = (300, 300)
             img.thumbnail(output_size)
-            img.save(self.image.path) 
+            img.save(self.image.path)
+
+
+"""
+
+Fuel Request Model
+
+"""
 
 
 class FuelRequest(models.Model):
-    '''
+    """
     last deal is tied to a specific subsidiary.
-    '''
+    """
     name = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    #contact_person = models.CharField(max_length=50)
     supplier_company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, blank=True, null=True)
     amount = models.IntegerField(default=0)
     fuel_type = models.CharField(max_length=50)
@@ -62,7 +71,8 @@ class FuelRequest(models.Model):
     wait = models.BooleanField(default=False)
     last_deal = models.IntegerField(default=0)
     is_complete = models.BooleanField(default=False)
-    payment_method = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS'), ('USD & RTGS', 'USD & RTGS')))
+    payment_method = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS'),
+                                                                          ('USD & RTGS', 'USD & RTGS')))
     cash = models.BooleanField(default=False)
     ecocash = models.BooleanField(default=False)
     swipe = models.BooleanField(default=False)
@@ -71,9 +81,3 @@ class FuelRequest(models.Model):
 
     class Meta:
         ordering = ['date', 'time', 'name']
-
-    # def __str__(self):
-    #     return f'{str(self.name)}'
-
-
-
