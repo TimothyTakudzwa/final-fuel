@@ -26,7 +26,6 @@ from datetime import datetime, date, timedelta
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.db.models import Q
-# from company.models import FuelUpdate as F_Update
 from django.contrib.auth import get_user_model
 from fuelUpdates.models import SordCompanyAuditTrail
 import datetime
@@ -35,7 +34,7 @@ import sys
 from supplier.forms import Subsidiaries
 from buyer.models import *
 from buyer.forms import *
-from .forms import AllocationForm, SupplierContactForm, ReportForm
+from .forms import AllocationForm, SupplierContactForm, UsersUploadForm, ReportForm
 from .models import AuditTrail, SordActionsAuditTrail
 from buyer.models import *
 from supplier.models import *
@@ -1950,10 +1949,12 @@ def upload_users(request):
                 messages.warning(request, "Uploaded file doesn't meet the required format")
                 return redirect('users:upload_users')
         elif request.POST.get('buyer_id') is not None:
-            buyer_transactions = Transaction.objects.filter(supplier=request.user,
-                                                            buyer_id=int(request.POST.get('buyer_id')))
+            buyer_transactions = AccountHistory.objects.filter(transaction__supplier=request.user,
+                                                            transaction__buyer_id=int(request.POST.get('buyer_id')))
             html_string = render_to_string('supplier/export.html', {'transactions': buyer_transactions,
-                                                                    'name': request.POST.get('buyer_name')})
+                'supplier_details': AccountHistory.objects.filter(transaction__supplier=request.user),
+                'buyer_details': AccountHistory.objects.filter(transaction__buyer__username=request.POST.get('buyer_name'))
+                })
             html = HTML(string=html_string)
 
             export_name = f"{request.POST.get('buyer_name')}{datetime.datetime.today().strftime('%H%M%S')}"

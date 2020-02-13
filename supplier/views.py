@@ -19,7 +19,7 @@ from datetime import date, time, datetime
 from buyer.constants2 import industries, job_titles
 from buyer.forms import BuyerUpdateForm
 from buyer.models import FuelRequest
-from accounts.models import Account
+from accounts.models import Account, AccountHistory
 from users.models import AuditTrail
 from .forms import PasswordChange, RegistrationForm, \
     RegistrationEmailForm, UserUpdateForm, FuelRequestForm, CreateCompany, OfferForm
@@ -36,7 +36,7 @@ today = date.today()
 
 
 '''
-user registraion and login functions
+user registration and login functions
 '''
 
 def verification(request, token, user_id):
@@ -357,6 +357,7 @@ def fuel_request(request):
             buyer_request.offer_price = offer.price
             buyer_request.offer_quantity = offer.quantity
             buyer_request.offer_id = offer.id
+            buyer_request.transport_fee = offer.transport_fee
         else:
             buyer_request.my_offer = 'No Offer'
             buyer_request.offer_id = 0
@@ -404,7 +405,7 @@ def stock_update(request,id):
                 subsidiary_fuel.petrol_quantity = subsidiary_fuel.petrol_quantity - fuel_reduction
                 subsidiary_fuel.save()
 
-                sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Petrol', fuel_update.payment_type)
+                stock_sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Petrol', fuel_update.payment_type)
 
             else:
                 if float(request.POST['quantity']) > available_diesel:
@@ -415,7 +416,7 @@ def stock_update(request,id):
                 subsidiary_fuel.diesel_quantity = subsidiary_fuel.diesel_quantity - fuel_reduction
                 subsidiary_fuel.save()
 
-                sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Diesel', fuel_update.payment_type)
+                stock_sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Diesel', fuel_update.payment_type)
 
             fuel_update.cash = request.POST['cash']
             fuel_update.swipe = request.POST['swipe']
@@ -473,7 +474,8 @@ def offer(request, id):
                     offer = Offer()
                     offer.supplier = request.user
                     offer.request = fuel_request
-                    offer.price = request.POST.get('price')    
+                    offer.price = request.POST.get('price')
+                    offer.transport_fee = request.POST.get('transport')    
                     offer.quantity = request.POST.get('quantity')
                     offer.fuel_type = request.POST.get('fuel_type')
                     offer.usd = True if request.POST.get('usd') == "on" else False
@@ -546,7 +548,8 @@ def edit_offer(request, id):
         request_quantity = offer.request.amount
         if new_offer <= available_fuel:
             if new_offer <= request_quantity:
-                offer.price = request.POST.get('price')      
+                offer.price = request.POST.get('price') 
+                offer.transport_fee = request.POST.get('transport')      
                 offer.quantity = request.POST.get('quantity')
                 offer.usd = True if request.POST.get('usd') == "on" else False
                 offer.cash = True if request.POST.get('cash') == "on" else False
@@ -665,7 +668,7 @@ def complete_transaction(request, id):
             subsidiary_fuel.save()
 
             user = transaction.offer.request.name
-            sord_update(request, user, transaction_quantity, 'SALE', 'Petrol', payment_type)
+            transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Petrol', payment_type, transaction)
 
             messages.success(request, "Proof of Payment Approved!")
             return redirect('transaction')
@@ -695,7 +698,7 @@ def complete_transaction(request, id):
             subsidiary_fuel.save()
 
             user = transaction.offer.request.name
-            sord_update(request, user, transaction_quantity, 'SALE', 'Diesel', payment_type)
+            transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Diesel', payment_type, transaction)
 
             messages.success(request, "Proof of Payment Approved!")
             return redirect('transaction')
@@ -768,7 +771,7 @@ def client_transaction_history(request,id):
      'all_requests':all_requests, 'todays_requests': todays_requests })
 
 
-def sord_update(request, user, quantity, action, fuel_type, payment_type):
+def stock_sord_update(request, user, quantity, action, fuel_type, payment_type):
     initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, payment_type=payment_type).all()
     sord_quantity = []
     for sord in initial_sord:
@@ -789,6 +792,37 @@ def sord_update(request, user, quantity, action, fuel_type, payment_type):
                 SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1, action = action, initial_quantity = entry.end_quantity,
                 quantity_sold = balance_brought_forward, end_quantity = entry.end_quantity - balance_brought_forward, received_by = user, fuel_type = entry.fuel_type, subsidiary = subsidiary, payment_type = payment_type)
                 balance_brought_forward = 0
+
+
+def transaction_sord_update(request, user, quantity, action, fuel_type, payment_type, transaction):
+    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, payment_type=payment_type).all()
+    sord_quantity = []
+    for sord in initial_sord:
+        if sord.end_quantity != 0:
+            sord_quantity.append(sord)
+        else:
+            pass
+    sord_quantity.sort(key = attrgetter('last_updated'), reverse = True)
+    balance_brought_forward = quantity
+    for entry in sord_quantity:
+        if balance_brought_forward != 0:
+            subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+            if entry.end_quantity < balance_brought_forward:
+                SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1, action = action, initial_quantity = entry.end_quantity,
+                quantity_sold = entry.end_quantity, end_quantity = 0, received_by = user, fuel_type = entry.fuel_type, subsidiary = subsidiary, payment_type = payment_type)
+                balance_brought_forward = balance_brought_forward - entry.end_quantity
+                accounts = AccountHistory.objects.filter(transaction=transaction, sord_number=None).all()
+                for account in accounts:
+                    account.sord_number = entry.sord_no
+                    account.save()
+            else:
+                SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1, action = action, initial_quantity = entry.end_quantity,
+                quantity_sold = balance_brought_forward, end_quantity = entry.end_quantity - balance_brought_forward, received_by = user, fuel_type = entry.fuel_type, subsidiary = subsidiary, payment_type = payment_type)
+                balance_brought_forward = 0
+                accounts = AccountHistory.objects.filter(transaction=transaction, sord_number=None).all()
+                for account in accounts:
+                    account.sord_number = entry.sord_no
+                    account.save()
 
 
 '''
