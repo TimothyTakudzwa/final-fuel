@@ -25,7 +25,43 @@
 </head>
 <body>
 
-<h4 style="text-align: center">Transaction summary for {{ name }}</h4>
+
+
+<div class="container">
+    <div class="row">
+        <!--supplier-->
+        <div class="col-md-6">
+            {%  for supplier in supplier_details %}
+                <!--name-->
+                <h4>Name &nbsp; : &nbsp; {{ supplier.account.supplier_company.name }}</h4>
+                <!--address-->
+                <h4>Address &nbsp; : &nbsp; {{ supplier.account.supplier_company.address }}</h4>
+                <!--bank-->
+                <h4>Bank &nbsp; : &nbsp; {{ supplier.account.supplier_company.destination_bank }}</h4>
+                <!--account-->
+                <h4>Account Number &nbsp; : &nbsp; {{ supplier.account.supplier_company.account_number }}</h4>
+                <!--vat number-->
+                <h4>BPN Number &nbsp; : &nbsp; {{ supplier.account.supplier_company.bp_num }}</h4>
+            {% endfor %}
+        </div>
+        <!--buyer-->
+        <div class="col-md-6">
+            {%  for buyer in buyer_details %}
+                <!--name-->
+                <h4>Name &nbsp; : &nbsp; {{ buyer.account.buyer_company.name }}</h4>
+                <!--address-->
+                <h4>Address &nbsp; : &nbsp; {{ buyer.account.buyer_company.address }}</h4>
+                <!--bank-->
+                <h4>Bank &nbsp; : &nbsp; {{ buyer.account.buyer_company.destination_bank }}</h4>
+                <!--account-->
+                <h4>Account Number &nbsp; : &nbsp; {{ buyer.account.buyer_company.account_number }}</h4>
+                <!--vat number-->
+                <h4>BPN Number &nbsp; : &nbsp; {{ buyer.account.buyer_company.bp_num}}</h4>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
 
 <table>
     <tr>
