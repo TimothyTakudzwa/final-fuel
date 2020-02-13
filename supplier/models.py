@@ -158,6 +158,10 @@ class Transaction(models.Model):
     time = models.TimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)
     proof_of_payment = models.FileField(upload_to='proof_of_payment', null=True)
+    expected = models.FloatField(default=0.00)
+    paid = models.FloatField(default=0.00)
+    proof_of_payment_approved = models.BooleanField(default=False)
+    pending_proof_of_payment  = models.BooleanField(default=False) 
     
     
     class Meta:
