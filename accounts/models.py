@@ -27,10 +27,10 @@ class Account(models.Model):
 class AccountHistory(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='account_history')
     balance = models.FloatField(default=0)
-    sord_number = models.CharField(max_length=255)
-    proof_of_payment = models.FileField(null=True, upload_to='proof_of_payment')
+    sord_number = models.CharField(max_length=255, null=True, blank=True)
+    proof_of_payment = models.FileField(null=True, upload_to='proof_of_payment', blank=True)
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, related_name='transaction_account_history')
-    value = models.FloatField(help_text='proof of payment value')
+    value = models.FloatField(help_text='proof of payment value', null=True, blank=True)
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
 
@@ -39,3 +39,4 @@ class AccountHistory(models.Model):
 
     def __str__(self):
         return f'{str(self.account.buyer_company.name)} - ${str(self.balance)}'
+
