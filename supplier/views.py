@@ -35,7 +35,7 @@ today = date.today()
 
 
 '''
-user registraion and login functions
+user registration and login functions
 '''
 
 def verification(request, token, user_id):
