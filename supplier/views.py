@@ -797,6 +797,7 @@ def stock_sord_update(request, user, quantity, action, fuel_type, payment_type):
 def transaction_sord_update(request, user, quantity, action, fuel_type, payment_type, transaction):
     initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, payment_type=payment_type).all()
     sord_quantity = []
+    account_sord_list = []
     for sord in initial_sord:
         if sord.end_quantity != 0:
             sord_quantity.append(sord)
@@ -811,18 +812,14 @@ def transaction_sord_update(request, user, quantity, action, fuel_type, payment_
                 SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1, action = action, initial_quantity = entry.end_quantity,
                 quantity_sold = entry.end_quantity, end_quantity = 0, received_by = user, fuel_type = entry.fuel_type, subsidiary = subsidiary, payment_type = payment_type)
                 balance_brought_forward = balance_brought_forward - entry.end_quantity
-                accounts = AccountHistory.objects.filter(transaction=transaction, sord_number=None).all()
-                for account in accounts:
-                    account.sord_number = entry.sord_no
-                    account.save()
+                account_sord_list.append(entry.sord_no)
             else:
                 SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1, action = action, initial_quantity = entry.end_quantity,
                 quantity_sold = balance_brought_forward, end_quantity = entry.end_quantity - balance_brought_forward, received_by = user, fuel_type = entry.fuel_type, subsidiary = subsidiary, payment_type = payment_type)
                 balance_brought_forward = 0
-                accounts = AccountHistory.objects.filter(transaction=transaction, sord_number=None).all()
-                for account in accounts:
-                    account.sord_number = entry.sord_no
-                    account.save()
+                account_sord_list.append(entry.sord_no)
+    account = AccountHistory.objects.filter(transaction=transaction, sord_number=None).first()
+    account.sord_number = ','.join(map(str, account_sord_list))
 
 
 '''
