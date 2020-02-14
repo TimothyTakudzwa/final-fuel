@@ -21,7 +21,7 @@ class Command(BaseCommand):
         self.stdout.write("Finished Sending Notifications")
         
     def process_delivery_schedules(self):
-        schedules = DeliverySchedule.objects.filter(date__lt=datetime.today(),reminder_sent=False)
+        schedules = DeliverySchedule.objects.filter(date__lt=datetime.today(),confirmation_document__isnull=True,supplier_document__isnull=True)
         if schedules:
             for delivery in schedules:
                 message = f'Please Note That Your Delivery To {delivery.transaction.buyer.company.name.title()} Is Late As Of {delivery.date.strftime("%D")}'
@@ -32,7 +32,8 @@ class Command(BaseCommand):
                 message = f"Dear {delivery.transaction.supplier.first_name}, this is mail serves to inform you " \
                         f"that the due date for the delivery of {delivery.transaction.offer.request.amount}L of {delivery.transaction.offer.request.fuel_type} to {delivery.transaction.buyer.company.name.title()} has elapsed as of {delivery.date.strftime('%A the %dth of %b %Y')}\n." \
                         f"Kindly see to it that concerned parties are informed and that the delivery is secure and it's whereabouts are known.\n\n" \
-                        f"Driver Details\n Name: {delivery.driver_name}\n Phone:{delivery.phone_number}"     
+                        f"Driver Details\n Name: {delivery.driver_name}\n Phone:{delivery.phone_number}"
+                        f"You can extend due date on this page https://fuelfinderzim.com//supplier/delivery_schedules/"     
                         
                 # send email
                 try:
@@ -45,7 +46,6 @@ class Command(BaseCommand):
             
                 # Notification.objects.create(message=message, reference_id=delivery.id, action="schedule_reminder")
                 self.stdout.write(f"Sending Reminder To {delivery.transaction.supplier.username.title()} Regarding A Late Delivery Date As Of {delivery.date.strftime('%a')}")
-                delivery.reminder_sent=True;
                 delivery.save()
         else:
             self.stdout.write("Nothing To Process")      
