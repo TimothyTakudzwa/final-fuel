@@ -54,6 +54,7 @@
                             <th>Fuel Requested</th>
                             <th>Fuel Offered</th>
                             <th>Price</th>
+                            <th>Transport Fee</th>
                             <th>Expected</th>
                             <th>Paid</th>
                             <th>Status</th>
@@ -74,6 +75,7 @@
                             <td class="name truncate">{{transaction.offer.request.amount}}</td>
                             <td class="name truncate">{{transaction.offer.quantity}}</td>
                             <td class="name truncate">{{transaction.offer.price}}</td>
+                            <td class="name truncate">{{transaction.offer.transport_fee}}</td>
                             <td class="name truncate">{{transaction.expected}}</td>
                             <td class="name truncate">{{transaction.paid}}</td>
                             {% if transaction.is_complete == True %}
