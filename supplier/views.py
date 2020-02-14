@@ -13,6 +13,7 @@ from django.db.models import Q
 
 from buyer.utils import render_to_pdf
 from company.models import Company
+from accounts.models import AccountHistory
 from users.models import Audit_Trail
 from datetime import date, time, datetime
 from buyer.constants2 import industries, job_titles
@@ -35,7 +36,7 @@ today = date.today()
 
 
 '''
-user registraion and login functions
+user registration and login functions
 '''
 
 def verification(request, token, user_id):
@@ -356,6 +357,7 @@ def fuel_request(request):
             buyer_request.offer_price = offer.price
             buyer_request.offer_quantity = offer.quantity
             buyer_request.offer_id = offer.id
+            buyer_request.transport_fee = offer.transport_fee
         else:
             buyer_request.my_offer = 'No Offer'
             buyer_request.offer_id = 0
@@ -472,7 +474,8 @@ def offer(request, id):
                     offer = Offer()
                     offer.supplier = request.user
                     offer.request = fuel_request
-                    offer.price = request.POST.get('price')    
+                    offer.price = request.POST.get('price')
+                    offer.transport_fee = request.POST.get('transport')    
                     offer.quantity = request.POST.get('quantity')
                     offer.fuel_type = request.POST.get('fuel_type')
                     offer.usd = True if request.POST.get('usd') == "on" else False
@@ -545,7 +548,8 @@ def edit_offer(request, id):
         request_quantity = offer.request.amount
         if new_offer <= available_fuel:
             if new_offer <= request_quantity:
-                offer.price = request.POST.get('price')      
+                offer.price = request.POST.get('price') 
+                offer.transport_fee = request.POST.get('transport')      
                 offer.quantity = request.POST.get('quantity')
                 offer.usd = True if request.POST.get('usd') == "on" else False
                 offer.cash = True if request.POST.get('cash') == "on" else False
@@ -627,7 +631,6 @@ def transaction(request):
 
 @login_required
 def complete_transaction(request, id):
-    print(f'---------------pfeeeeeeeeeeeeeeeee-------------------')
     transaction = Transaction.objects.filter(id = id).first()
     subsidiary_fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).first()
     fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD & RTGS').first()
@@ -645,7 +648,11 @@ def complete_transaction(request, id):
         else:
             available_fuel = fuel.petrol_quantity
         if transaction_quantity <= available_fuel:
-            transaction.is_complete = True
+            if transaction.expected == transaction.paid:
+                transaction.is_complete = True
+            else:
+                pass
+            transaction.proof_of_payment_approved = True
             transaction.save()
             if transaction_quantity > fuel.petrol_quantity:
                 fuel_remainder = transaction_quantity - fuel.petrol_quantity
@@ -663,7 +670,7 @@ def complete_transaction(request, id):
             user = transaction.offer.request.name
             transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Petrol', payment_type, transaction)
 
-            messages.success(request, "Transaction completed successfully!")
+            messages.success(request, "Proof of Payment Approved!")
             return redirect('transaction')
         else:
             messages.warning(request, "There is not enough petrol in stock to complete the transaction.")
@@ -693,7 +700,7 @@ def complete_transaction(request, id):
             user = transaction.offer.request.name
             transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Diesel', payment_type, transaction)
 
-            messages.success(request, "Transaction completed successfully!")
+            messages.success(request, "Proof of Payment Approved!")
             return redirect('transaction')
         else:
             messages.warning(request, "There is not enough diesel in stock to complete the transaction")
@@ -835,6 +842,16 @@ def create_delivery_schedule(request):
             vehicle_reg = request.POST['vehicle_reg'],
             delivery_time = request.POST['delivery_time']
         )
+        transaction = Transaction.objects.filter(id=int(request.POST['transaction'])).first()
+        transaction.paid += float(request.POST['paid'])
+        transaction.proof_of_payment = None
+        transaction.pending_proof_of_payment = False
+        transaction.save()
+        payment_history = AccountHistory.objects.filter(transaction=transaction).first()
+        payment_history.value += float(request.POST['paid'])
+        payment_history.balance -= float(request.POST['paid'])
+        payment_history.delivery_schedule=schedule
+        payment_history.save()
         messages.success(request,"Schedule Successfully Created")
         message = f"{schedule.transaction.supplier.company} has created a delivery schedule for you, Click To View Schedule"
         Notification.objects.create(user=schedule.transaction.buyer,action='schedule', message=message, reference_id=schedule.id)
@@ -911,4 +928,24 @@ def del_supplier_doc(request,id):
     delivery.save()
     messages.success(request, 'Document Removed Successfully')
     return redirect('supplier:delivery_schedules')
+
+
+"""
+
+payment history
+
+"""
+
+def payment_history(request, id):
+    transaction = Transaction.objects.filter(id=id).first()
+    payment_history = AccountHistory.objects.filter(transaction=transaction).all()
+    return render(request, 'supplier/payment_history.html', {'payment_history': payment_history})
+
+
+def mark_completion(request, id):
+    transaction = Transaction.objects.filter(id=id).first()
+    transaction.is_complete = True
+    transaction.save()
+    messages.success(request, 'Transaction is now complete')
+    return redirect('transaction')
     

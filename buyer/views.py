@@ -11,6 +11,7 @@ from django.shortcuts import redirect, render
 
 from accounts.models import Account
 from buyer.models import User
+from accounts.models import AccountHistory
 from buyer.recommend import recommend
 from buyer.utils import render_to_pdf
 from company.models import Company
@@ -466,8 +467,8 @@ Offers
 
 
 @login_required
-def offers(request, user_id):
-    selected_request = FuelRequest.objects.filter(id=user_id).first()
+def offers(request, id):
+    selected_request = FuelRequest.objects.filter(id=id).first()
     offers = Offer.objects.filter(request=selected_request).filter(declined=False).all()
     for offer in offers:
         depot = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
@@ -497,9 +498,9 @@ def new_fuel_offer(request, user_id):
 
 
 @login_required
-def accept_offer(request, user_id):
-    offer = Offer.objects.filter(id=user_id).first()
-    Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier, is_complete=False)
+def accept_offer(request, id):
+    offer = Offer.objects.filter(id=id).first()
+    Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier, is_complete=False,expected = offer.quantity * offer.price)
     FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
     offer.is_accepted = True
     offer.save()
@@ -796,11 +797,37 @@ Proof of payment
 def proof_of_payment(request, user_id):
     if request.method == 'POST':
         transaction = Transaction.objects.filter(id=user_id).first()
-        transaction.proof_of_payment = request.FILES.get('proof_of_payment')
-        transaction.save()
-        messages.success(request, 'Proof of payment successfully uploaded')
-        return redirect('buyer-transactions')
+        if transaction is not None:
+            if transaction.pending_proof_of_payment == True:
+                messages.warning(request, 'Please wait for the supplier to approve the existing proof of payment')
+                return redirect('buyer-transactions')
+            else:
+                account = Account.objects.filter(buyer_company=request.user.company).first()
+                account_history= AccountHistory.objects.create(transaction=transaction,account=account)
+                account_history.proof_of_payment = request.FILES.get('proof_of_payment')
+                account_history.balance = transaction.expected
+                account_history.save()
+                transaction.proof_of_payment = request.FILES.get('proof_of_payment')
+                transaction.proof_of_payment_approved = False
+                transaction.pending_proof_of_payment == True
+                transaction.save()
+                messages.success(request, 'Proof of payment successfully uploaded')
+                return redirect('buyer-transactions')
+        else:
+            pass
 
+
+"""
+
+payment history
+
+"""
+
+def payment_history(request, id):
+    print(request.user.company)
+    transaction = Transaction.objects.filter(id=id).first()
+    payment_history = AccountHistory.objects.filter(transaction=transaction).all()
+    return render(request, 'buyer/payment_history.html', {'payment_history': payment_history})
 
 """
 
