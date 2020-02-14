@@ -244,7 +244,7 @@
                                         <p class="col-md-6" style="font-weight: bold;">Status: </p>
                                         {% if transaction.delivery_sched.confirmation_document %}
                                         <p class="col-md-6"> 
-                                            <a class="btn btn-purple btn-sm" href="{% url 'supplier:view_confirmation_doc' delivery.id %}">View Confirmation Doc</a>
+                                            <a class="btn btn-purple btn-sm" href="{% url 'supplier:view_confirmation_doc' transaction.delivery_sched.id %}">View Confirmation Doc</a>
                                         </p>       
                                         {%else %}
                                         <p class="col-md-6">Status: Pending </p>    
