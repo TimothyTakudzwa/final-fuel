@@ -195,7 +195,7 @@ class DeliverySchedule(models.Model):
     supplier_document = models.FileField(null=True, upload_to='documents')
     transport_company = models.CharField(max_length=150, blank=True, null=True)
     date_edit_count = models.PositiveIntegerField(default=0)
-
+    delivery_quantity = models.FloatField(default=0.0)
     # def display_text_file(self):
     #     with open(self.confirmation_document.path) as fp:
     #         return fp.read().replace('\n', '<br>')
