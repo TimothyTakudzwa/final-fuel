@@ -820,6 +820,7 @@ def transaction_sord_update(request, user, quantity, action, fuel_type, payment_
                 account_sord_list.append(entry.sord_no)
     account = AccountHistory.objects.filter(transaction=transaction, sord_number=None).first()
     account.sord_number = ','.join(map(str, account_sord_list))
+    account.save()
 
 
 '''
