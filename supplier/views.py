@@ -870,7 +870,7 @@ def delivery_schedules(request):
         messages.success(request, "File Successfully Uploaded")
         msg = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
         Notification.objects.create(user=request.user,action='DELIVERY', message=msg, reference_id=schedule.id)
-        return redirect('delivery_schedules')
+        return redirect('supplier:delivery_schedules')
         
     schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user).all()
     for schedule in schedules:
