@@ -656,6 +656,8 @@ def complete_transaction(request, id):
                     pass
                 transaction.proof_of_payment_approved = True
                 transaction.paid += float(request.POST['received'])
+                transaction.paid_reserve = float(request.POST['received'])
+                transaction.fuel_money_reserve = float(request.POST['for_fuel'])
                 transaction.save()
                 if transaction_quantity > fuel.petrol_quantity:
                     fuel_remainder = transaction_quantity - fuel.petrol_quantity
@@ -693,6 +695,8 @@ def complete_transaction(request, id):
                     pass
                 transaction.proof_of_payment_approved = True
                 transaction.paid += float(request.POST['received'])
+                transaction.paid_reserve = float(request.POST['received'])
+                transaction.fuel_money_reserve = float(request.POST['for_fuel'])
                 transaction.save()
                 if transaction_quantity > fuel.diesel_quantity:
                     fuel_remainder = transaction_quantity - fuel.diesel_quantity
@@ -851,15 +855,15 @@ def create_delivery_schedule(request):
             delivery_time = request.POST['delivery_time']
         )
         transaction = Transaction.objects.filter(id=int(request.POST['transaction'])).first()
-        # transaction.paid += float(request.POST['paid'])
         transaction.proof_of_payment = None
         transaction.pending_proof_of_payment = False
-        transaction.save()    
-        schedule.delivery_quantity = int(float(request.POST['paid']) / float(tran-saction.offer.price))
+        transaction.save()
+        schedule.delivery_quantity = int(float(transaction.fuel_money_reserve) / float(transaction.offer.price))
+        schedule.amount_for_fuel = transaction.fuel_money_reserve
         schedule.save()
         payment_history = AccountHistory.objects.filter(transaction=transaction, value=0.00).first()
-        payment_history.value += float(request.POST['paid'])
-        payment_history.balance -= float(request.POST['paid'])
+        payment_history.value += transaction.paid_reserve
+        payment_history.balance -= transaction.paid_reserve
         payment_history.delivery_schedule=schedule
         payment_history.save()
         messages.success(request,"Schedule Successfully Created")
