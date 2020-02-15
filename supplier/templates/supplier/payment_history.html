@@ -49,6 +49,7 @@
                 <table id="example" class="table table-striped table-bordered" style="width:100%">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>
                                 Date
                             </th>
@@ -79,6 +80,7 @@
                     <tbody>
                         {% for payment in payment_history%}
                         <tr>
+                            <td></td>
                             <td>{{payment.date}} - {{payment.time}}</td>
                             <td>
                                 <div class="text-center">
@@ -171,7 +173,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>{{payment.proof_of_payment}}</td>
+                            <td>Approved</td>
                             <td>{{payment.value}}</td>
                             <td>{{payment.balance}}</td>
                             {% if payment.delivery_schedule != None %}
@@ -232,13 +234,19 @@
     
                                                 <div class="form-group col-md-6">
                                                     <lable><b>Amount Paid:</b></lable>
-                                                    &nbsp;{{payment.transaction.paid }}
+                                                    &nbsp;{{payment.value }}
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Fuel Quantity:</b></lable>
-                                                    &nbsp;{{payment.transaction.paid| div:payment.transaction.offer.price |intcomma}}
+                                                    <lable><b>Transport Charge:</b></lable>
+                                                    &nbsp;{{payment.value| sub:payment.delivery_schedule.amount_for_fuel}}
                                                 </div>
                                             </div>
+                                            <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <lable><b>Delivery Quantity:</b></lable>
+                                                &nbsp;{{payment.delivery_schedule.delivery_quantity}}
+                                            </div>
+                                        </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-default" style="background-color: lightslategray;" data-dismiss="modal" aria-label="Close">
                                                     Close

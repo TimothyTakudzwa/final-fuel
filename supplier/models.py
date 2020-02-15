@@ -162,6 +162,8 @@ class Transaction(models.Model):
     paid = models.FloatField(default=0.00)
     proof_of_payment_approved = models.BooleanField(default=False)
     pending_proof_of_payment  = models.BooleanField(default=False) 
+    paid_reserve = models.FloatField(default=0.00)
+    fuel_money_reserve = models.FloatField(default=0.00)
     
     
     class Meta:
@@ -196,6 +198,7 @@ class DeliverySchedule(models.Model):
     transport_company = models.CharField(max_length=150, blank=True, null=True)
     date_edit_count = models.PositiveIntegerField(default=0)
     delivery_quantity = models.FloatField(default=0.0)
+    amount_for_fuel = models.FloatField(default=0.00)
     # def display_text_file(self):
     #     with open(self.confirmation_document.path) as fp:
     #         return fp.read().replace('\n', '<br>')
