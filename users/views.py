@@ -1912,7 +1912,7 @@ def upload_users(request):
 
                                     # creating account with supplier
                                     if Account.objects.filter(buyer_company=company).exists():
-                                        # do nothing
+                                        # do nothing.
                                         pass
                                     else:
                                         Account.objects.create(
