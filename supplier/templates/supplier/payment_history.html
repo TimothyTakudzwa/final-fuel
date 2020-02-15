@@ -232,11 +232,11 @@
     
                                                 <div class="form-group col-md-6">
                                                     <lable><b>Amount Paid:</b></lable>
-                                                    &nbsp;{{payment.transaction.paid }}
+                                                    &nbsp;{{payment.value }}
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <lable><b>Fuel Quantity:</b></lable>
-                                                    &nbsp;{{payment.transaction.paid| div:payment.transaction.offer.price |intcomma}}
+                                                    &nbsp;{{payment.delivery_schedule.delivery_quantity}}
                                                 </div>
                                             </div>
                                             <div class="modal-footer">

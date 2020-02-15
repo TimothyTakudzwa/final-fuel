@@ -162,6 +162,8 @@ class Transaction(models.Model):
     paid = models.FloatField(default=0.00)
     proof_of_payment_approved = models.BooleanField(default=False)
     pending_proof_of_payment  = models.BooleanField(default=False) 
+    paid_reserve = models.FloatField(default=0.00)
+    fuel_money_reserve = models.FloatField(default=0.00)
     
     
     class Meta:
