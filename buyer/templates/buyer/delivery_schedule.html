@@ -62,7 +62,7 @@
                         <td>{{ schedule.delivery_time }}</td>
                         <td>{{ schedule.delivery_address }}</td>
                         <td>{{ schedule.transaction.offer.request.fuel_type }}</td>
-                        <td>{{ schedule.transaction.offer.quantity }}</td>
+                        <td>{{ schedule.delivery_quantity }}</td>
                         <td>
                             {% if schedule.transaction.offer.pump_available %} Pump &nbsp; {% endif %}
                             {% if schedule.transaction.offer.meter_available %} Meter &nbsp; {% endif %}
