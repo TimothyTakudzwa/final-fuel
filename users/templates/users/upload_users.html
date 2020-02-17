@@ -79,7 +79,7 @@
                                 </div>
 
                                 <!--activity modal-->
-                                <div class="modal fade modal-success in" id="activity{{ account.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade modal-lg modal-success in" id="activity{{ account.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document" style="margin: 0;">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -89,37 +89,46 @@
                                                 </button>
                                             </div>
 
-                                            <div class="modal-body">
+                                            <div class="modal-body" id="ignorePDF">
 
                                                 <!--account details-->
                                                 <div class="row">
                                                     <!--supplier-->
                                                     <div class="col-md-6">
+                                                        <h2>Supplier</h2>
                                                         <!--name-->
-                                                        <h4>Name &nbsp; : &nbsp; {{ account.supplier_company.name }}</h4>
-                                                        <!--address-->
-                                                        <h4>Address &nbsp; : &nbsp; {{ account.supplier_company.address }}</h4>
+                                                        <h5>{{ account.supplier_company.name }}</h5>
+                                                        <text class="text-muted">Address</text>
+                                                        <h5>{{ account.supplier_company.address }}</h5>
                                                         <!--bank-->
-                                                        <h4>Bank &nbsp; : &nbsp; {{ account.supplier_company.destination_bank }}</h4>
+                                                        <text class="text-muted">Bank</text>
+                                                        <h5>{{ account.supplier_company.destination_bank }}</h5>
+                                                        <text class="text-muted">A/c</text>
                                                         <!--account-->
-                                                        <h4>Account Number &nbsp; : &nbsp; {{ account.supplier_company.account_number }}</h4>
+                                                        <h5>{{ account.supplier_company.account_number }}</h5>
+                                                        <text class="text-muted">BPN</text>
                                                         <!--vat number-->
-                                                        <h4>BPN Number &nbsp; : &nbsp; {{ account.supplier_company.bp_num }}</h4>
+                                                        <h5>{{ account.supplier_company.bp_num }}</h5>
                                                     </div>
                                                     <!--buyer-->
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-6 text-right">
+                                                        <h2>Buyer</h2>
                                                         <!--name-->
-                                                        <h4>Name &nbsp; : &nbsp; {{ account.buyer_company.name }}</h4>
-                                                        <!--address-->
-                                                        <h4>Address &nbsp; : &nbsp; {{ account.buyer_company.address }}</h4>
+                                                        <h5>{{ account.buyer_company.name }}</h5>
+                                                        <text class="text-muted">Address</text>
+                                                        <h5>{{ account.buyer_company.address }}</h5>
                                                         <!--bank-->
-                                                        <h4>Bank &nbsp; : &nbsp; {{ account.buyer_company.destination_bank }}</h4>
+                                                        <text class="text-muted">Bank</text>
+                                                        <h5>{{ account.buyer_company.destination_bank }}</h5>
+                                                        <text class="text-muted">A/c</text>
                                                         <!--account-->
-                                                        <h4>Account Number &nbsp; : &nbsp; {{ account.buyer_company.account_number }}</h4>
+                                                        <h5>{{ account.buyer_company.account_number }}</h5>
+                                                        <text class="text-muted">BPN</text>
                                                         <!--vat number-->
-                                                        <h4>BPN Number &nbsp; : &nbsp; {{ account.buyer_company.bp_num}}</h4>
+                                                        <h5>{{ account.buyer_company.bp_num }}</h5>
                                                     </div>
                                                 </div>
+                                                <hr>
 
                                                 <!--statement details-->
                                                 <div class="table-responsive">
@@ -136,9 +145,9 @@
                                                         </thead>
                                                         <tbody>
                                                         {% for transaction in transactions %}
-                                                            {% if transaction.supplier.id == user.id  and transaction.buyer.id == account.applied_by.id %}
+                                                            {% if transaction.account.id == account.id %}
                                                                 <tr>
-                                                                    <td>{{ transaction.sord_number }}L</td>
+                                                                    <td>{{ transaction.sord_number }}</td>
                                                                     <td>{{ transaction.transaction.offer.quantity }}L</td>
                                                                     <td>{{ transaction.transaction.offer.request.fuel_type }}</td>
                                                                     <td>${{ transaction.transaction.offer.price }}</td>
@@ -153,8 +162,11 @@
 
                                                     <form method="POST">
                                                         {% csrf_token %}
-                                                        <input type="hidden" value="{{ account.applied_by.id }}" name="buyer_id">
-                                                        <input type="hidden" value="{{ account.applied_by.username }}" name="buyer_name">
+
+
+                                                        <input type="hidden" value="{{ account.buyer_company.id }}" name="buyer_name">
+
+                                                        <input type="hidden" value="{{ account.id }}" name="account_id">
 
                                                         <button class="btn btn-info btn-md">
                                                             Generate Report

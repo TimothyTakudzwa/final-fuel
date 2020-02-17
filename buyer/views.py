@@ -1,4 +1,5 @@
 import secrets
+from datetime import date
 
 import requests
 from django.contrib import messages
@@ -8,6 +9,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
+from weasyprint import HTML
 
 from accounts.models import Account
 from buyer.models import User
@@ -542,18 +545,40 @@ Transaction Handlers
 @login_required
 def transactions(request):
     if request.method == "POST":
-        tran = Transaction.objects.get(id=request.POST.get('transaction_id'))
-        from supplier.models import UserReview
-        UserReview.objects.create(
-            rater=request.user,
-            rating=int(request.POST.get('rating')),
-            company=tran.supplier.company,
-            transaction=tran,
-            depot=Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
-            comment=request.POST.get('comment')
-        )
-        messages.success(request, 'Transaction Successfully Reviewed')
-        return redirect('buyer-transactions')
+        if request.POST.get('buyer_company_id') is not None:
+            buyer_transactions = AccountHistory.objects.filter(
+                transaction__buyer__company__id=int(request.POST.get('buyer_company_id')),
+                transaction__supplier__company__id=int(request.POST.get('supplier_company_id')),
+            )
+            html_string = render_to_string('supplier/export.html', {'transactions': buyer_transactions,
+                          'supplier_details': AccountHistory.objects.filter(
+                              transaction__supplier_id=request.POST.get('supplier_company_id')),
+                          'buyer_details': AccountHistory.objects.filter(transaction__buyer_id=int(
+                              request.POST.get('buyer_company_id')))
+                            })
+            html = HTML(string=html_string)
+            export_name = f"{request.POST.get('buyer_name')}{date.today().strftime('%H%M%S')}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = 'attachment;filename=export.pdf'
+                return response
+        else:
+            tran = Transaction.objects.get(id=request.POST.get('transaction_id'))
+            from supplier.models import UserReview
+            UserReview.objects.create(
+                rater=request.user,
+                rating=int(request.POST.get('rating')),
+                company=tran.supplier.company,
+                transaction=tran,
+                depot=Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
+                comment=request.POST.get('comment')
+            )
+            messages.success(request, 'Transaction Successfully Reviewed')
+            return redirect('buyer-transactions')
 
     buyer = request.user
     all_transactions = Transaction.objects.filter(buyer=buyer).all()
@@ -575,6 +600,7 @@ def transactions(request):
     context = {
         'transactions': all_transactions,
         'subsidiary': Subsidiaries.objects.filter(),
+        'all_transactions': AccountHistory.objects.filter()
     }
 
     return render(request, 'buyer/transactions.html', context=context)

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
     <title>Transaction Summary</title>
 
     <style>
@@ -20,48 +21,68 @@
         tr:nth-child(even) {
             background-color: #dddddd;
         }
+        .first {
+            width: 20%;
+            float:left;
+
+        }
+        .second {
+            width:20%;
+            overflow: hidden;
+        }
+        .wrapper {
+            width: 100%;
+            overflow: hidden;
+        }
+        .text-muted{
+            color:#6c757d!important;
+        }
     </style>
 
 </head>
 <body>
 
-
-
-<div class="container">
-    <div class="row">
+{% for transaction in transactions|slice:"1" %}
+    <div class='wrapper'>
         <!--supplier-->
-        <div class="col-md-6">
-            {%  for supplier in supplier_details %}
-                <!--name-->
-                <h4>Name &nbsp; : &nbsp; {{ supplier.account.supplier_company.name }}</h4>
-                <!--address-->
-                <h4>Address &nbsp; : &nbsp; {{ supplier.account.supplier_company.address }}</h4>
-                <!--bank-->
-                <h4>Bank &nbsp; : &nbsp; {{ supplier.account.supplier_company.destination_bank }}</h4>
-                <!--account-->
-                <h4>Account Number &nbsp; : &nbsp; {{ supplier.account.supplier_company.account_number }}</h4>
-                <!--vat number-->
-                <h4>BPN Number &nbsp; : &nbsp; {{ supplier.account.supplier_company.bp_num }}</h4>
-            {% endfor %}
-        </div>
-        <!--buyer-->
-        <div class="col-md-6">
-            {%  for buyer in buyer_details %}
-                <!--name-->
-                <h4>Name &nbsp; : &nbsp; {{ buyer.account.buyer_company.name }}</h4>
-                <!--address-->
-                <h4>Address &nbsp; : &nbsp; {{ buyer.account.buyer_company.address }}</h4>
-                <!--bank-->
-                <h4>Bank &nbsp; : &nbsp; {{ buyer.account.buyer_company.destination_bank }}</h4>
-                <!--account-->
-                <h4>Account Number &nbsp; : &nbsp; {{ buyer.account.buyer_company.account_number }}</h4>
-                <!--vat number-->
-                <h4>BPN Number &nbsp; : &nbsp; {{ buyer.account.buyer_company.bp_num}}</h4>
-            {% endfor %}
-        </div>
-    </div>
-</div>
 
+        <div class='first'>
+            <h2>Supplier</h2>
+            <!--name-->
+            <h5>{{ transaction.account.supplier_company.name }}</h5>
+            <text class="text-muted">Address</text>
+            <h5>{{ transaction.account.supplier_company.address }}</h5>
+            <!--bank-->
+            <text class="text-muted">Bank</text>
+            <h5>{{ transaction.account.supplier_company.destination_bank }}</h5>
+            <text class="text-muted">A/c</text>
+            <!--account-->
+            <h5>{{ transaction.account.supplier_company.account_number }}</h5>
+            <text class="text-muted">BPN</text>
+            <!--vat number-->
+            <h5>{{ transaction.account.supplier_company.bp_num }}</h5>
+        </div>
+
+        <!--buyer-->
+        <div class='second'>
+            <h2>Buyer</h2>
+            <!--name-->
+            <h5>{{ transaction.account.buyer_company.name }}</h5>
+            <text class="text-muted">Address</text>
+            <h5>{{ transaction.account.buyer_company.address }}</h5>
+            <!--bank-->
+            <text class="text-muted">Bank</text>
+            <h5>{{ transaction.account.buyer_company.destination_bank }}</h5>
+            <text class="text-muted">A/c</text>
+            <!--account-->
+            <h5>{{ transaction.account.buyer_company.account_number }}</h5>
+            <text class="text-muted">BPN</text>
+            <!--vat number-->
+            <h5>{{ transaction.account.buyer_company.bp_num }}</h5>
+        </div>
+
+    </div>
+{% endfor %}
 
 <table>
     <tr>
@@ -69,21 +90,23 @@
         <th>Fuel Type</th>
         <th>Price</th>
         <th>Date</th>
-        <th>Date</th>
+        <th>Time</th>
     </tr>
 
+    {% for transaction in transactions %}
+        <tr>
 
-    <tr>
-        {% for transaction in transactions %}
-            <td>{{ transaction.offer.quantity }}L</td>
-            <td>{{ transaction.offer.request.fuel_type }}</td>
-            <td>${{ transaction.offer.price }}</td>
-            <td>{{ transaction.date }}</td>
-            <td>{{ transaction.time }}</td>
-        {% endfor %}
-    </tr>
+            <td>{{ transaction.transaction.offer.quantity }}L</td>
+            <td>{{ transaction.transaction.offer.request.fuel_type }}</td>
+            <td>${{ transaction.transaction.offer.price }}</td>
+            <td>{{ transaction.transaction.date }}</td>
+            <td>{{ transaction.transaction.time }}</td>
+
+        </tr>
+    {% endfor %}
 
 </table>
+
 
 </body>
 </html>
