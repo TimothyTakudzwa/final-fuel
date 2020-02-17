@@ -247,10 +247,16 @@
                                                 </div>
 
 
-                                                {% if not delivery.confirmation_document %}
-                                                <b>Status:</b> <i style="color: brown;">waiting for confirmation</i>
+                                                {% if payment.delivery_schedule.confirmation_document %}
+                                                <b>Status:</b> <i style="color: rgb(54, 167, 219);">Fuel Received </i>
                                                 {% else %}
-                                                Received
+                                                <form method="POST" action="{% url 'buyer:delivery-schedule' %}" enctype="multipart/form-data">
+                                                    
+                                                    {% csrf_token %}
+                                                    <input type="text" name="delivery_id" value="{{payment.delivery_schedule.id}}" hidden/>
+                                                    {{form1|crispy}}
+                                                    <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Confirm Delivery"></p>
+                                                </form> 
                                                 {% endif %}
                                             </div>
                                             <div class="modal-footer">
