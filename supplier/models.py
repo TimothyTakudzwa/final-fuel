@@ -157,7 +157,7 @@ class Transaction(models.Model):
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)
-    proof_of_payment = models.FileField(upload_to='proof_of_payment', null=True)
+    proof_of_payment = models.FileField(upload_to='proof_of_payment', null=True, blank=True)
     expected = models.FloatField(default=0.00)
     paid = models.FloatField(default=0.00)
     proof_of_payment_approved = models.BooleanField(default=False)
@@ -198,6 +198,7 @@ class DeliverySchedule(models.Model):
     transport_company = models.CharField(max_length=150, blank=True, null=True)
     date_edit_count = models.PositiveIntegerField(default=0)
     delivery_quantity = models.FloatField(default=0.0)
+    amount_for_fuel = models.FloatField(default=0.00)
     # def display_text_file(self):
     #     with open(self.confirmation_document.path) as fp:
     #         return fp.read().replace('\n', '<br>')

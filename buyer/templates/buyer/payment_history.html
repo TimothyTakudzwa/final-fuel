@@ -1,4 +1,5 @@
 {% extends "finder/buyer_base.html" %} 
+{% load crispy_forms_tags %}
 {% load humanize %}
 {% load mathfilters %} 
 {% block title %}Fuel Payment History {% endblock %} 
@@ -171,7 +172,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>{{payment.proof_of_payment}}</td>
+                            <td>Approved</td>
                             <td>{{payment.value}}</td>
                             <td>{{payment.balance}}</td>
                             {% if payment.delivery_schedule != None %}
@@ -235,9 +236,22 @@
                                                     &nbsp;{{payment.transaction.paid }}
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Fuel Quantity:</b></lable>
-                                                    &nbsp;{{payment.transaction.paid| div:payment.transaction.offer.price |intcomma}}
+                                                    <lable><b>Transport Charge:</b></lable>
+                                                    &nbsp;{{payment.value| sub:payment.delivery_schedule.amount_for_fuel}}
                                                 </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <lable><b>Delivery Quantity:</b></lable>
+                                                    &nbsp;{{payment.delivery_schedule.delivery_quantity}}
+                                                </div>
+
+
+                                                {% if not delivery.confirmation_document %}
+                                                <b>Status:</b> <i style="color: brown;">waiting for confirmation</i>
+                                                {% else %}
+                                                Received
+                                                {% endif %}
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-default" style="background-color: lightslategray;" data-dismiss="modal" aria-label="Close">
@@ -251,6 +265,31 @@
                                 </div>
                             </div>
                             <!--End View Modal-->
+                     <!-- Upload Document-->
+                    <!-- <div class="modal fade modal-sucess in" id="upload_{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #009688; color: white">
+                            <span class="modal-title" id="exampleModalLabel">Upload Document</span>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                                    
+                                    <form method="POST" action="" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
+                                        {{form|crispy}}
+                                      <div class="modal-footer">  
+                                      <input class="btn btn-info" type="submit" value="Confirm Delivery">
+                                      </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <!--End Upload Document -->
                         {% endfor %}
                     
                     </tbody>
