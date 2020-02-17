@@ -1,9 +1,11 @@
-from django.shortcuts import render
+import json
+
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
 from buyer.models import User
 from .helper_functions import bot_action, send_message
-from django.views.decorators.csrf import csrf_exempt
-import json 
+
 
 @csrf_exempt 
 def index(request):

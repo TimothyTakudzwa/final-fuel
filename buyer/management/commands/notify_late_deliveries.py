@@ -1,12 +1,10 @@
-from django.core.management.base import BaseCommand
-from django.core.mail import mail_managers
-from django.utils import timezone
+from datetime import datetime
+
 from django.conf import settings
-from datetime import timedelta, datetime
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
+from django.core.management.base import BaseCommand
 
 from supplier.models import DeliverySchedule
-from notification.models import Notification
 
 
 class Command(BaseCommand):
