@@ -696,7 +696,7 @@ def delivery_schedule(request, id):
         'form': DeliveryScheduleForm(),
         'schedule': schedule
     }
-    return render(request, 'supplier/delivery_schedule.html', context=context)
+    return render(request, 'buyer/delivery_schedule.html', context=context)
 
 
 """
