@@ -1016,5 +1016,6 @@ def mark_completion(request, id):
     transaction = Transaction.objects.filter(id=id).first()
     transaction.is_complete = True
     transaction.save()
+    
     messages.success(request, 'Transaction is now complete')
     return redirect('transaction')
