@@ -514,8 +514,8 @@ def accept_offer(request, id):
 
 
 @login_required
-def reject_offer(request, user_id):
-    offer = Offer.objects.filter(id=user_id).first()
+def reject_offer(request, id):
+    offer = Offer.objects.filter(id=id).first()
     offer.declined = True
     offer.save()
     my_request = FuelRequest.objects.filter(id=offer.request.id).first()
@@ -648,9 +648,25 @@ def delivery_schedules(request):
     for schedule in schedules:
         schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
         if schedule.transaction.offer.delivery_method.lower() == 'delivery':
-            schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+            if schedule.transaction.offer.request.delivery_address.strip() == "":
+                depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                schedule.delivery_address = depot.location
+            else:
+                if schedule.transaction.offer.request.delivery_address != None:
+                    schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+                else:
+                    depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                    schedule.delivery_address = depot.location
         else:
-            schedule.delivery_address = schedule.transaction.offer.collection_address
+            if schedule.transaction.offer.collection_address.strip()=="":
+                depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                schedule.delivery_address = depot.location
+            else:
+                if schedule.transaction.offer.collection_address != None:
+                    schedule.delivery_address = schedule.transaction.offer.collection_address 
+                else:
+                    depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                    schedule.delivery_address = depot.location
     context = {'form': DeliveryScheduleForm(),
                'schedules': schedules
                }
@@ -669,8 +685,8 @@ def delivery_schedules(request):
     return render(request, 'buyer/delivery_schedules.html', context=context)
 
 
-def delivery_schedule(request, user_id):
-    schedule = DeliverySchedule.objects.filter(id=user_id).first()
+def delivery_schedule(request, id):
+    schedule = DeliverySchedule.objects.filter(id=id).first()
     schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
     if schedule.transaction.offer.delivery_method.lower() == 'delivery':
         schedule.delivery_address = schedule.transaction.offer.request.delivery_address
@@ -825,10 +841,11 @@ payment history
 """
 
 def payment_history(request, id):
+    form1 = DeliveryScheduleForm()           
     print(request.user.company)
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
-    return render(request, 'buyer/payment_history.html', {'payment_history': payment_history})
+    return render(request, 'buyer/payment_history.html', {'payment_history': payment_history, 'form1':form1})
 
 """
 

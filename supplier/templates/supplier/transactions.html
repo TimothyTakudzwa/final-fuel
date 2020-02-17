@@ -95,11 +95,19 @@
                                     {% if transaction.is_complete == True %} 
                                     <td>N/A</td>
                                     {% else %} 
-                                    <td>
-                                        <div class="btn-group">
-                                        <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'supplier:mark_completion' transaction.id %}" >Complete</a>
-                                        </div>
-                                    </td>
+                                        {% if transaction.proof_of_payment %}
+                                        <td>
+                                            <div class="btn-group">
+                                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button>
+                                            </div>
+                                        </td>
+                                        {% else %}
+                                        <td>
+                                            <div class="btn-group">
+                                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'supplier:mark_completion' transaction.id %}" >Complete</a>
+                                            </div>
+                                        </td>
+                                        {% endif %}
                                     {% endif %}
                                 {% else %}
                                 {% if transaction.proof_of_payment %}

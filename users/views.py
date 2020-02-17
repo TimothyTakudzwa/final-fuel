@@ -15,7 +15,6 @@ from django.template.loader import render_to_string
 from weasyprint import HTML
 from xhtml2pdf import pisa
 
-<<<<<<< HEAD
 from buyer.models import *
 from buyer.forms import *
 from .forms import AllocationForm, SupplierContactForm, UsersUploadForm, ReportForm, DepotContactForm
@@ -23,8 +22,6 @@ from .models import AuditTrail, SordActionsAuditTrail
 from buyer.models import *
 from supplier.models import *
 from users.models import *
-=======
->>>>>>> 4ca2d0133bc72f0a993b52de4b5cb2e6a344e87f
 from accounts.models import Account, AccountHistory
 from buyer.forms import *
 from company.lib import *
@@ -1507,30 +1504,22 @@ def edit_depot_rep(request, id):
 def company_profile(request):
     compan = Company.objects.filter(id=request.user.company.id).first()
     num_of_subsidiaries = Subsidiaries.objects.filter(company=request.user.company).count()
-    fuel_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
+    # fuel_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
 
     if request.method == 'POST':
-        if CompanyFuelUpdate.objects.filter(id=fuel_capacity.id).exists():
-            fuel_update = CompanyFuelUpdate.objects.filter(id=fuel_capacity.id).first()
-            fuel_update.petrol_quantity = request.POST['petrol']
-            fuel_update.diesel_quantity = request.POST['diesel']
-            fuel_update.save()
-            compan.name = request.POST['name']
-            compan.address = request.POST['address']
-            compan.industry = request.POST['industry']
-            compan.iban_number = request.POST['iban_number']
-            compan.licence_number = request.POST['licence_number']
-            compan.destination_bank = request.POST['destination_bank']
-            compan.account_number = request.POST['account_number']
-            compan.save()
-            messages.success(request, 'Company Profile updated successfully')
-            return redirect('users:company_profile')
+        
+        compan.name = request.POST['name']
+        compan.address = request.POST['address']
+        compan.industry = request.POST['industry']
+        compan.iban_number = request.POST['iban_number']
+        compan.licence_number = request.POST['licence_number']
+        compan.destination_bank = request.POST['destination_bank']
+        compan.account_number = request.POST['account_number']
+        compan.save()
+        messages.success(request, 'Company Profile updated successfully')
+        return redirect('users:company_profile')
 
-        else:
-            messages.success(request, 'Something went wrong')
-            return redirect('users:company_profile')
-    return render(request, 'users/company_profile.html',
-                  {'compan': compan, 'num_of_subsidiaries': num_of_subsidiaries, 'fuel_capacity': fuel_capacity})
+    return render(request, 'users/company_profile.html', {'compan': compan, 'num_of_subsidiaries': num_of_subsidiaries})
 
 
 def company_petrol(request, id):

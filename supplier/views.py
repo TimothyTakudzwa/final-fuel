@@ -676,7 +676,7 @@ def complete_transaction(request, id):
     if fuel_type == 'petrol':
         if request.method == 'POST':
             # transaction_quantity = transaction.offer.quantity
-            transaction_quantity = float(request.POST['for_fuel']) / float(transaction.offer.price)
+            transaction_quantity = int(float(request.POST['for_fuel']) / float(transaction.offer.price))
             if fuel_reserve is not None:
                 available_fuel = fuel.petrol_quantity + fuel_reserve.petrol_quantity
             else:
@@ -708,7 +708,7 @@ def complete_transaction(request, id):
                 transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Petrol', payment_type,
                                         transaction)
 
-                messages.success(request, "Proof of Payment Approved!")
+                messages.success(request, "Proof of Payment Approved!, Please create a delivery schedule for the buyer.")
                 return redirect('transaction')
             else:
                 messages.warning(request, "There is not enough petrol in stock to complete the transaction.")
@@ -716,7 +716,7 @@ def complete_transaction(request, id):
     elif fuel_type == 'diesel':
         if request.method == 'POST':
             # transaction_quantity = transaction.offer.quantity
-            transaction_quantity = float(request.POST['for_fuel']) / float(transaction.offer.price)
+            transaction_quantity = int(float(request.POST['for_fuel']) / float(transaction.offer.price))
             if fuel_reserve is not None:
                 available_fuel = fuel.diesel_quantity + fuel_reserve.diesel_quantity
             else:
@@ -748,7 +748,7 @@ def complete_transaction(request, id):
                 transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Diesel', payment_type,
                                         transaction)
 
-                messages.success(request, "Proof of Payment Approved!")
+                messages.success(request, "Proof of Payment Approved!, Please create a delivery schedule for the buyer.")
                 return redirect('transaction')
             else:
                 messages.warning(request, "There is not enough diesel in stock to complete the transaction")
