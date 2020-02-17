@@ -12,7 +12,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import get_template
 from django.template.loader import render_to_string
-from weasyprint import HTML
+from weasyprint import HTML, default_url_fetcher, CSS
 from xhtml2pdf import pisa
 
 from buyer.models import *
@@ -1903,19 +1903,12 @@ def upload_users(request):
             else:
                 messages.warning(request, "Uploaded file doesn't meet the required format")
                 return redirect('users:upload_users')
-        elif request.POST.get('buyer_id') is not None:
-            buyer_transactions = AccountHistory.objects.filter(transaction__supplier=request.user,
-                                                               transaction__buyer_id=int(request.POST.get('buyer_id')))
-            html_string = render_to_string('supplier/export.html', {'transactions': buyer_transactions,
-                                                                    'supplier_details': AccountHistory.objects.filter(
-                                                                        transaction__supplier=request.user),
-                                                                    'buyer_details': AccountHistory.objects.filter(
-                                                                        transaction__buyer__username=request.POST.get(
-                                                                            'buyer_name'))
-                                                                    })
-            html = HTML(string=html_string)
+        elif request.POST.get('account_id') is not None:
+            buyer_transactions = AccountHistory.objects.filter(account_id=int(request.POST.get('account_id')))
+            html_string = render_to_string('supplier/export.html', {'transactions': buyer_transactions})
+            html = HTML(string=html_string, base_url=request.build_absolute_uri())
 
-            export_name = f"{request.POST.get('buyer_name')}{datetime.datetime.today().strftime('%H%M%S')}"
+            export_name = f"{request.POST.get('buyer_name')}{date.today().strftime('%H%M%S')}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
             download_file = f'media/transactions/{export_name}'
