@@ -1,19 +1,17 @@
-import requests
-
 from itertools import chain
 from operator import attrgetter
-from django.db.models import Q
-from django.shortcuts import render
+
+import requests
 from validate_email import validate_email
 
-from buyer.models import FuelRequest
-from .constants import *
-from buyer.views import token_is_send
-from users.views import message_is_sent
-from supplier.models import Offer, Transaction, FuelAllocation, Subsidiaries, UserReview, SubsidiaryFuelUpdate, SuballocationFuelUpdate, SordSubsidiaryAuditTrail
+from buyer.models import FuelRequest, User
 from buyer.recommend import recommend
+from buyer.views import token_is_send
 from notification.models import Notification
-
+from supplier.models import Offer, Transaction, FuelAllocation, Subsidiaries, UserReview, SubsidiaryFuelUpdate, \
+    SuballocationFuelUpdate, SordSubsidiaryAuditTrail
+from users.views import message_is_sent
+from .constants import *
 
 """
 function for sending whatsapp messages
@@ -954,7 +952,7 @@ def update_fuel(user, message):
             depot_sord_update(user, fuel_reduction, 'Fuel Update', 'Petrol', fuel_update.payment_type)
             response_message = "How much diesel do you have in stock?"
         else:
-            response_message = f"You can only reduce your stock. To increase it contact you admin to update your fuel allocations! You currently have *{diesel_availabe}* litre, please enter available stock if it is less."
+            response_message = f"You can only reduce your stock. To increase it contact you admin to update your fuel allocations! You currently have *{petrol_available}* litre, please enter available stock if it is less."
             user.position = 2
             user.save()
     elif user.position == 4:
