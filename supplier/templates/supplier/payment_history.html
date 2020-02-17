@@ -246,10 +246,10 @@
                                                 <lable><b>Delivery Quantity:</b></lable>
                                                 &nbsp;{{payment.delivery_schedule.delivery_quantity}}
                                             </div>
-                                            {% if not delivery.confirmation_document %}
-                                                <b>Status:</b> <i style="color: brown;">waiting for confirmation</i>
+                                            {% if payment.delivery_schedule.confirmation_document %}
+                                            <b>Status:</b> <i style="color: rgb(54, 167, 219);">Buyer Received Fuel </i>
                                                 {% else %}
-                                                Received
+                                                <b>Status:</b> <i style="color: brown;">waiting for confirmation</i>
                                                 {% endif %}
                                         </div>
                                             <div class="modal-footer">
