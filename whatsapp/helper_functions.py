@@ -1,19 +1,17 @@
-import requests
-
 from itertools import chain
 from operator import attrgetter
-from django.db.models import Q
-from django.shortcuts import render
+
+import requests
 from validate_email import validate_email
 
-from buyer.models import FuelRequest
-from .constants import *
-from buyer.views import token_is_send
-from users.views import message_is_sent
-from supplier.models import Offer, Transaction, FuelAllocation, Subsidiaries, UserReview, SubsidiaryFuelUpdate, SuballocationFuelUpdate, SordSubsidiaryAuditTrail
+from buyer.models import FuelRequest, User
 from buyer.recommend import recommend
+from buyer.views import token_is_send
 from notification.models import Notification
-
+from supplier.models import Offer, Transaction, FuelAllocation, Subsidiaries, UserReview, SubsidiaryFuelUpdate, \
+    SuballocationFuelUpdate, SordSubsidiaryAuditTrail
+from users.views import message_is_sent
+from .constants import *
 
 """
 function for sending whatsapp messages

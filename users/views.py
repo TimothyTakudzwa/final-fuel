@@ -1,36 +1,21 @@
-import random
-import locale
-import tempfile
-import uuid
-
-from fpdf import FPDF
-# from weasyprint import HTML
-from weasyprint import HTML
-from xhtml2pdf import pisa
+import datetime
+import secrets
+from datetime import date
 from io import BytesIO
-from django.template.loader import get_template
-from django.template import Context
-from pandas import DataFrame
+
 import pandas as pd
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.mail import BadHeaderError, EmailMultiAlternatives
+from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth import get_user_model
+from django.template.loader import get_template
 from django.template.loader import render_to_string
-from django.db.models import Q, Count
-from django.shortcuts import Http404
-from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
-from django.contrib.auth.decorators import login_required
-import secrets
-from django.core.mail import BadHeaderError, EmailMultiAlternatives
-from datetime import datetime, date, timedelta
-from django.contrib import messages
-from django.contrib.auth import authenticate
-from django.db.models import Q
-from django.contrib.auth import get_user_model
-from fuelUpdates.models import SordCompanyAuditTrail
-import datetime
-import sys
+from weasyprint import HTML
+from xhtml2pdf import pisa
 
+<<<<<<< HEAD
 from buyer.models import *
 from buyer.forms import *
 from .forms import AllocationForm, SupplierContactForm, UsersUploadForm, ReportForm, DepotContactForm
@@ -38,10 +23,14 @@ from .models import AuditTrail, SordActionsAuditTrail
 from buyer.models import *
 from supplier.models import *
 from users.models import *
+=======
+>>>>>>> 4ca2d0133bc72f0a993b52de4b5cb2e6a344e87f
 from accounts.models import Account, AccountHistory
-from company.models import Company, CompanyFuelUpdate
+from buyer.forms import *
 from company.lib import *
 from fuelUpdates.models import SordCompanyAuditTrail
+from users.models import *
+from .forms import SupplierContactForm, UsersUploadForm, ReportForm, ProfileEditForm, ActionForm, DepotContactForm
 
 user = get_user_model()
 
@@ -785,13 +774,13 @@ def stations(request):
                                                  opening_time=opening_time, closing_time=closing_time)
         subsidiary.save()
         if request.POST['is_depot'] == "Service Station":
-            fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=sub, cash=cash, swipe=swipe, ecocash=ecocash,
+            fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=subsidiary, cash=cash, swipe=swipe, ecocash=ecocash,
                                                               limit=2000)
             fuel_update.save()
             messages.success(request, 'Subsidiary Created Successfully')
             return redirect('users:stations')
         else:
-            fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=sub, cash=cash, swipe=swipe, ecocash=ecocash,
+            fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=subsidiary, cash=cash, swipe=swipe, ecocash=ecocash,
                                                               limit=2000)
             fuel_update.save()
             messages.success(request, 'Subsidiary Created Successfully')
@@ -851,7 +840,7 @@ def suppliers_list(request):
 
 def get_pdf(request):
     trans = Transaction.objects.all()
-    today = timezone.now()
+    today = datetime.datetime.today()
     params = {
         'today': today,
         'trans': trans,
@@ -897,7 +886,7 @@ def statistics(request):
     other_staff = User.objects.filter(company=company).filter(user_type='SS_SUPPLIER').count()
     clients = []
     stock = get_aggregate_stock(request.user.company)
-    diesel = stock['diesel'];
+    diesel = stock['diesel']
     petrol = stock['petrol']
 
     trans = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).annotate(
@@ -1060,7 +1049,8 @@ def subsidiary_transaction_history(request, sid):
                 trans.append(tran)
             state = 'All'
         return render(request, 'users/subs_history.html', {'trans': trans, 'subsidiary': subsidiary, 'state': state})
-
+    
+    trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
     for tran in trns:
         tran.revenue = tran.offer.request.amount * tran.offer.price
         trans.append(tran)
@@ -1104,15 +1094,15 @@ def report_generator(request):
         if request.POST.get('report_type') == 'Stock':
             stock = CompanyFuelUpdate.objects.filter(company=request.user.company).all()
 
-            requests = None;
-            allocations = None;
-            trans = None;
+            requests = None
+            allocations = None
+            trans = None
             revs = None
         if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':
             trans = Transaction.objects.filter(date__range=[start_date, end_date],
                                                supplier__company=request.user.company)
-            requests = None;
-            allocations = None;
+            requests = None
+            allocations = None
             revs = None
 
             if request.POST.get('report_type') == 'Revenue':
@@ -1132,22 +1122,22 @@ def report_generator(request):
                     revs['date'] = datetime.today().strftime('%D')
                 trans = None
 
-            requests = None;
-            allocations = None;
+            requests = None
+            allocations = None
             stock = None
         if request.POST.get('report_type') == 'Requests':
             requests = FuelRequest.objects.filter(date__range=[start_date, end_date])
             print(f'__________________{requests}__________________________________')
-            trans = None;
-            allocations = None;
-            stock = None;
+            trans = None
+            allocations = None
+            stock = None
             revs = None
         if request.POST.get('report_type') == 'Allocations':
             print("__________________________I am in allocations____________________________")
             allocations = FuelAllocation.objects.all()
             print(f'________________________________{allocations}__________________________')
-            requests = None;
-            revs = None;
+            requests = None
+            revs = None
             stock = None
         start = start_date
         end = end_date
@@ -1319,7 +1309,7 @@ def delete_user(request, id):
         return redirect('administrator:blog_all_posts')
     form = ActionForm()
 
-    return render(request, 'user/supplier_delete.html', {'form': form, 'supplier': supplier})
+    return render(request, 'users/supplier_delete.html', {'form': form, 'supplier': supplier})
 
 
 @login_required()
@@ -1545,10 +1535,10 @@ def company_profile(request):
 
 def company_petrol(request, id):
     if request.method == 'POST':
-        if F_Update.objects.filter(id=id).exists():
-            petrol_update = F_Update.objects.filter(id=id).first()
+        if CompanyFuelUpdate.objects.filter(id=id).exists():
+            petrol_update = CompanyFuelUpdate.objects.filter(id=id).first()
             petrol_update.petrol_price = request.POST['petrol_price']
-            petrol_update.petrol_quantity = request.POST['petrol_quantity']
+            petrol_update.unallocated_petrol = request.POST['petrol_quantity']
             petrol_update.save()
             messages.success(request, 'Quantity of petrol updated successfully')
             return redirect('users:allocate')
@@ -1560,9 +1550,9 @@ def company_petrol(request, id):
 
 def company_diesel(request, id):
     if request.method == 'POST':
-        if F_Update.objects.filter(id=id).exists():
-            diesel_update = F_Update.objects.filter(id=id).first()
-            diesel_update.diesel_quantity = request.POST['diesel_quantity']
+        if CompanyFuelUpdate.objects.filter(id=id).exists():
+            diesel_update = CompanyFuelUpdate.objects.filter(id=id).first()
+            diesel_update.unallocated_diesel = request.POST['diesel_quantity']
             diesel_update.diesel_price = request.POST['diesel_price']
             diesel_update.save()
             messages.success(request, 'Quantity of diesel updated successfully')
