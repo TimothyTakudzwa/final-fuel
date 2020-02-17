@@ -1,32 +1,22 @@
-import secrets
-from itertools import chain
 from operator import attrgetter
 
-from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.contrib.auth import authenticate, update_session_auth_hash
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.mail import BadHeaderError, EmailMultiAlternatives
-from django.contrib import messages
 from django.db.models import Q
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404, redirect
 
-from buyer.utils import render_to_pdf
-from company.models import Company
-from accounts.models import AccountHistory
-from users.models import Audit_Trail
-from datetime import date, time, datetime
-from buyer.constants2 import industries, job_titles
-from buyer.forms import BuyerUpdateForm
-from buyer.models import FuelRequest
 from accounts.models import Account, AccountHistory
-from users.models import AuditTrail
-from .forms import PasswordChange, RegistrationForm, \
-    RegistrationEmailForm, UserUpdateForm, FuelRequestForm, CreateCompany, OfferForm
-from .models import Transaction, FuelAllocation, TokenAuthentication, SordSubsidiaryAuditTrail, Offer, Subsidiaries, SuballocationFuelUpdate, SubsidiaryFuelUpdate ,DeliverySchedule
+from buyer.forms import BuyerUpdateForm
+from buyer.utils import render_to_pdf
+from company.models import CompanyFuelUpdate
 from notification.models import Notification
-from django.contrib.auth import get_user_model
+from users.models import Audit_Trail
 from whatsapp.helper_functions import send_message
+from .forms import PasswordChange, CreateCompany, OfferForm
 from .lib import *
 
 User = get_user_model()
@@ -34,14 +24,14 @@ User = get_user_model()
 # today's date
 today = date.today()
 
-
 '''
 user registration and login functions
 '''
 
+
 def verification(request, token, user_id):
     user = User.objects.get(id=user_id)
-    token_check = TokenAuthentication.objects.filter(user=user, token=token)  
+    token_check = TokenAuthentication.objects.filter(user=user, token=token)
     if token_check.exists():
         token_not_used = TokenAuthentication.objects.filter(user=user, used=False)
         if token_not_used.exists():
@@ -61,7 +51,7 @@ def verification(request, token, user_id):
                     form.save()
                     company_exists = Company.objects.filter(name=request.POST.get('company')).exists()
                     if company_exists:
-                        selected_company =Company.objects.filter(name=request.POST.get('company')).first()
+                        selected_company = Company.objects.filter(name=request.POST.get('company')).first()
                         user.company = selected_company
                         user.is_active = True
                         user.stage = 'menu'
@@ -74,13 +64,13 @@ def verification(request, token, user_id):
                             user.is_waiting = True
                             user.stage = 'menu'
                             user.save()
-                            my_admin = User.objects.filter(company=selected_company,user_type='S_ADMIN').first()
+                            my_admin = User.objects.filter(company=selected_company, user_type='S_ADMIN').first()
                             if my_admin is not None:
-                                return render(request,'supplier/final_registration.html',{'my_admin': my_admin})
+                                return render(request, 'supplier/final_registration.html', {'my_admin': my_admin})
                             else:
-                                return render(request,'supplier/final_reg.html')
+                                return render(request, 'supplier/final_reg.html')
                     else:
-                        selected_company =Company.objects.create(name=request.POST.get('company'))
+                        selected_company = Company.objects.create(name=request.POST.get('company'))
                         user.is_active = False
                         user.is_waiting = True
                         if user.user_type == 'SUPPLIER':
@@ -88,21 +78,23 @@ def verification(request, token, user_id):
                         selected_company.save()
                         user.company = selected_company
                         user.is_waiting = True
-                        user.save() 
+                        user.save()
                         TokenAuthentication.objects.filter(user=user).update(used=True)
                         return redirect('supplier:create_company', id=user.id)
-                    
+
             else:
-                return render(request, 'supplier/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
+                return render(request, 'supplier/verify.html',
+                              {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
         else:
             messages.warning(request, 'This link has been used before')
             return redirect('buyer-register')
-        
+
     else:
         messages.warning(request, 'Wrong verification token, kindly follow the link send in the email')
         return redirect('login')
-    
-    return render(request, 'supplier/verify.html', {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
+
+    return render(request, 'supplier/verify.html',
+                  {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
 
 
 @login_required()
@@ -149,6 +141,7 @@ def change_password(request):
 Create a new company
 '''
 
+
 def create_company(request, id):
     form = CreateCompany()
     user = User.objects.filter(id=id).first()
@@ -164,7 +157,8 @@ def create_company(request, id):
                 is_govnt_org = request.POST.get('is_govnt_org')
                 logo = request.FILES.get('logo')
                 company_name = user.company.name
-                Company.objects.filter(name=company_name).update(name = company_name,address = address, logo = logo,is_govnt_org=is_govnt_org)
+                Company.objects.filter(name=company_name).update(name=company_name, address=address, logo=logo,
+                                                                 is_govnt_org=is_govnt_org)
                 return redirect('login')
 
             else:
@@ -173,26 +167,31 @@ def create_company(request, id):
                 logo = request.FILES.get('logo')
                 iban_number = request.POST.get('iban_number')
                 license_number = request.POST.get('license_number')
-                new_company = Company.objects.filter(name=company_name).update(name = company_name, address = address, logo = logo, iban_number = iban_number, license_number = license_number)
+                new_company = Company.objects.filter(name=company_name).update(name=company_name, address=address,
+                                                                               logo=logo, iban_number=iban_number,
+                                                                               license_number=license_number)
                 new_company.save()
                 CompanyFuelUpdate.objects.create(company=new_company)
-                return render(request,'supplier/final_reg.html')
-            
-    return render(request, 'supplier/create_company.html', {'form': form, 'user_type':user_type })
+                return render(request, 'supplier/final_reg.html')
+
+    return render(request, 'supplier/create_company.html', {'form': form, 'user_type': user_type})
+
 
 '''
 Supplier Profile
 '''
 
+
 @login_required()
 def account(request):
     subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-    return render(request, 'supplier/user_profile.html', {'subsidiary':subsidiary})
+    return render(request, 'supplier/user_profile.html', {'subsidiary': subsidiary})
 
 
 '''
 supplier activate whatsapp
 '''
+
 
 def activate_whatsapp(request):
     user = User.objects.filter(id=request.user.id).first()
@@ -213,6 +212,7 @@ def activate_whatsapp(request):
 handling client applications
 '''
 
+
 @login_required
 def clients(request):
     clients = Account.objects.filter(supplier_company=request.user.company)
@@ -220,7 +220,7 @@ def clients(request):
 
 
 @login_required
-def verify_client(request,id):
+def verify_client(request, id):
     client = get_object_or_404(Account, id=id)
     if not client.is_verified:
         client.is_verified = True
@@ -232,8 +232,9 @@ def verify_client(request,id):
     messages.success(request, f'{client.buyer_company.name}"s Verification Overturned')
     return redirect('supplier:clients')
 
+
 @login_required
-def view_client_id_document(request,id):
+def view_client_id_document(request, id):
     client = Account.objects.filter(id=id).first()
     if client:
         filename = client.id_document.name.split('/')[-1]
@@ -246,7 +247,7 @@ def view_client_id_document(request,id):
 
 
 @login_required
-def view_application_id_document(request,id):
+def view_application_id_document(request, id):
     client = Account.objects.filter(id=id).first()
     if client:
         filename = client.application_document.name.split('/')[-1]
@@ -261,44 +262,46 @@ def view_application_id_document(request,id):
 @login_required
 def edit_delivery_schedule(request):
     if request.method == "POST":
-        delivery_schedule = DeliverySchedule.objects.filter(id=int(request.POST['delivery_id'])).first()  
+        delivery_schedule = DeliverySchedule.objects.filter(id=int(request.POST['delivery_id'])).first()
         delivery_schedule.driver_name = request.POST['driver_name']
         delivery_schedule.phone_number = request.POST['phone_number']
         delivery_schedule.id_number = request.POST['id_number']
         delivery_schedule.vehicle_reg = request.POST['vehicle_reg']
         if request.POST['delivery_date']:
             if delivery_schedule.date_edit_count >= 3:
-                messages.warning(request,"Sorry You Have Exceeded The Number Of Permitted Delivery Date Extensions,\
+                messages.warning(request, "Sorry You Have Exceeded The Number Of Permitted Delivery Date Extensions,\
                                      You Can Not Proceed")
                 return redirect('supplier:delivery_schedules')
-            delivery_schedule.date = request.POST['delivery_date'] 
+            delivery_schedule.date = request.POST['delivery_date']
             delivery_schedule.date_edit_count += 1
         delivery_schedule.transport_company = request.POST['transport_company']
         delivery_schedule.save()
         messages.success(request, f"Schedule Successfully Updated")
-        return redirect('supplier:delivery_schedules')    
+        return redirect('supplier:delivery_schedules')
 
 
 '''
 Fuel Requests
 '''
 
+
 @login_required()
 def fuel_request(request):
     sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     requests = []
     if sub.praz_reg_num != None:
-        all_requests = FuelRequest.objects.filter(is_deleted=False ,wait=True, is_complete=False).all()
+        all_requests = FuelRequest.objects.filter(is_deleted=False, wait=True, is_complete=False).all()
         for fuel_request in all_requests:
             if not fuel_request.is_direct_deal and not fuel_request.private_mode:
                 requests.append(fuel_request)
             elif fuel_request.is_direct_deal and not fuel_request.private_mode:
-                if fuel_request.last_deal==request.user.subsidiary_id:
+                if fuel_request.last_deal == request.user.subsidiary_id:
                     requests.append(fuel_request)
                 else:
                     pass
             elif not fuel_request.is_direct_deal and fuel_request.private_mode:
-                account_exists = Account.objects.filter(supplier_company=request.user.company, buyer_company=fuel_request.name.company).exists()
+                account_exists = Account.objects.filter(supplier_company=request.user.company,
+                                                        buyer_company=fuel_request.name.company).exists()
                 if account_exists:
                     requests.append(fuel_request)
                 else:
@@ -310,19 +313,22 @@ def fuel_request(request):
                     pass
             else:
                 pass
-        requests.sort(key = attrgetter('date', 'time'), reverse = True)
+        requests.sort(key=attrgetter('date', 'time'), reverse=True)
     else:
-        all_requests = FuelRequest.objects.filter(~Q(name__company__is_govnt_org=True)).filter(is_deleted=False ,wait=True, is_complete=False).all()
+        all_requests = FuelRequest.objects.filter(~Q(name__company__is_govnt_org=True)).filter(is_deleted=False,
+                                                                                               wait=True,
+                                                                                               is_complete=False).all()
         for fuel_request in all_requests:
             if not fuel_request.is_direct_deal and not fuel_request.private_mode:
                 requests.append(fuel_request)
             elif fuel_request.is_direct_deal and not fuel_request.private_mode:
-                if fuel_request.last_deal==request.user.subsidiary_id:
+                if fuel_request.last_deal == request.user.subsidiary_id:
                     requests.append(fuel_request)
                 else:
                     pass
             elif not fuel_request.is_direct_deal and fuel_request.private_mode:
-                account_exists = Account.objects.filter(supplier_company=request.user.company, buyer_company=fuel_request.name.company).exists()
+                account_exists = Account.objects.filter(supplier_company=request.user.company,
+                                                        buyer_company=fuel_request.name.company).exists()
                 if account_exists:
                     requests.append(fuel_request)
                 else:
@@ -334,20 +340,23 @@ def fuel_request(request):
                     pass
             else:
                 pass
-        requests.sort(key = attrgetter('date', 'time'), reverse = True)
+        requests.sort(key=attrgetter('date', 'time'), reverse=True)
 
     for buyer_request in requests:
         if buyer_request.payment_method == 'USD':
-            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='USD').first()
+            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(
+                payment_type='USD').first()
         elif buyer_request.payment_method == 'RTGS':
-            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='RTGS').first()
+            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(
+                payment_type='RTGS').first()
         elif buyer_request.payment_method == 'USD & RTGS':
-            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='USD & RTGS').first()
+            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(
+                payment_type='USD & RTGS').first()
         else:
             fuel = None
-        if buyer_request.dipping_stick_required==buyer_request.meter_required==buyer_request.pump_required==False:
+        if buyer_request.dipping_stick_required == buyer_request.meter_required == buyer_request.pump_required == False:
             buyer_request.no_equipments = True
-        if buyer_request.cash==buyer_request.ecocash==buyer_request.swipe==buyer_request.usd==False:
+        if buyer_request.cash == buyer_request.ecocash == buyer_request.swipe == buyer_request.usd == False:
             buyer_request.no_payment = True
         if not buyer_request.delivery_address.strip():
             buyer_request.delivery_address = f'N/A'
@@ -368,17 +377,19 @@ def fuel_request(request):
             else:
                 buyer_request.price = fuel.diesel_price
         else:
-            buyer_request.price = 0.00       
-    return render(request, 'supplier/fuel_request.html', {'requests':requests})
+            buyer_request.price = 0.00
+    return render(request, 'supplier/fuel_request.html', {'requests': requests})
+
 
 def new_fuel_request(request, id):
-    requests = FuelRequest.objects.filter(id = id,wait=True).all()
-    return render(request, 'supplier/new_fuel_request.html', {'requests':requests})
+    requests = FuelRequest.objects.filter(id=id, wait=True).all()
+    return render(request, 'supplier/new_fuel_request.html', {'requests': requests})
 
 
 '''
 Fuel Stock operations
 '''
+
 
 @login_required
 def available_stock(request):
@@ -386,8 +397,9 @@ def available_stock(request):
 
     return render(request, 'supplier/available_fuel.html', {'updates': updates})
 
+
 @login_required()
-def stock_update(request,id):
+def stock_update(request, id):
     updates = SuballocationFuelUpdate.objects.filter(id=id).first()
     available_petrol = updates.petrol_quantity
     available_diesel = updates.diesel_quantity
@@ -405,7 +417,8 @@ def stock_update(request,id):
                 subsidiary_fuel.petrol_quantity = subsidiary_fuel.petrol_quantity - fuel_reduction
                 subsidiary_fuel.save()
 
-                stock_sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Petrol', fuel_update.payment_type)
+                stock_sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Petrol',
+                                  fuel_update.payment_type)
 
             else:
                 if float(request.POST['quantity']) > available_diesel:
@@ -416,7 +429,8 @@ def stock_update(request,id):
                 subsidiary_fuel.diesel_quantity = subsidiary_fuel.diesel_quantity - fuel_reduction
                 subsidiary_fuel.save()
 
-                stock_sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Diesel', fuel_update.payment_type)
+                stock_sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Diesel',
+                                  fuel_update.payment_type)
 
             fuel_update.cash = request.POST['cash']
             fuel_update.swipe = request.POST['swipe']
@@ -431,17 +445,17 @@ def stock_update(request,id):
 Offers Operations
 '''
 
+
 def my_offers(request):
     offers = Offer.objects.filter(supplier=request.user, is_accepted=False).all()
     for offer_temp in offers:
-        if offer_temp.cash==offer_temp.ecocash==offer_temp.swipe==offer_temp.usd==False:
+        if offer_temp.cash == offer_temp.ecocash == offer_temp.swipe == offer_temp.usd == False:
             offer_temp.no_payment = True
-        if offer_temp.dipping_stick_available==offer_temp.meter_available==offer_temp.pump_available==False:
+        if offer_temp.dipping_stick_available == offer_temp.meter_available == offer_temp.pump_available == False:
             offer_temp.no_equipments = True
         if not offer_temp.collection_address.strip():
             offer_temp.collection_address = f'N/A'
-    return render(request, 'supplier/my_offers.html', {'offers':offers})
-
+    return render(request, 'supplier/my_offers.html', {'offers': offers})
 
 
 def offer(request, id):
@@ -449,13 +463,16 @@ def offer(request, id):
     if request.method == "POST":
         if float(request.POST.get('price')) != 0 and float(request.POST.get('quantity')) != 0:
             fuel_request = FuelRequest.objects.get(id=id)
-            fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD & RTGS').first()
+            fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id,
+                                                                  payment_type='USD & RTGS').first()
             if fuel_request.payment_method == 'USD':
-                fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD').first()
+                fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id,
+                                                              payment_type='USD').first()
             elif fuel_request.payment_method == 'RTGS':
-                 fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'RTGS').first()
+                fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id,
+                                                              payment_type='RTGS').first()
             subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-            
+
             if fuel_request.fuel_type.lower() == 'petrol':
                 if fuel_reserve is not None:
                     available_fuel = fuel.petrol_quantity + fuel_reserve.petrol_quantity
@@ -475,7 +492,7 @@ def offer(request, id):
                     offer.supplier = request.user
                     offer.request = fuel_request
                     offer.price = request.POST.get('price')
-                    offer.transport_fee = request.POST.get('transport')    
+                    offer.transport_fee = request.POST.get('transport')
                     offer.quantity = request.POST.get('quantity')
                     offer.fuel_type = request.POST.get('fuel_type')
                     offer.usd = True if request.POST.get('usd') == "on" else False
@@ -487,29 +504,34 @@ def offer(request, id):
                         offer.delivery_method = 'Delivery'
                     else:
                         offer.delivery_method = delivery_method
-                    collection_address = request.POST.get('street_number') + " " + request.POST.get('street_name') + " " + request.POST.get('location')
+                    collection_address = request.POST.get('street_number') + " " + request.POST.get(
+                        'street_name') + " " + request.POST.get('location')
                     if not collection_address.strip() and delivery_method.lower() == 'self collection':
                         offer.collection_address = subsidiary.location
                     else:
                         offer.collection_address = collection_address
                     offer.pump_available = True if request.POST.get('pump_available') == "on" else False
-                    offer.dipping_stick_available = True if request.POST.get('dipping_stick_available') == "on" else False
+                    offer.dipping_stick_available = True if request.POST.get(
+                        'dipping_stick_available') == "on" else False
                     offer.meter_available = True if request.POST.get('meter_available') == "on" else False
                     offer.save()
-                    
+
                     messages.success(request, 'Offer uploaded successfully')
 
-
                     message = f'You have a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.company.name.title()}  for your request of {fuel_request.amount}L'
-                    Notification.objects.create(message = message, user = fuel_request.name, reference_id = offer.id, action = "new_offer")
+                    Notification.objects.create(message=message, user=fuel_request.name, reference_id=offer.id,
+                                                action="new_offer")
                     click_url = f'https://fuelfinderzim.com/new_fuel_offer/{offer.id}'
                     if offer.request.name.activated_for_whatsapp:
-                        send_message(offer.request.name.phone_number,f'Your have received a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.company.name} {request.user.last_name} for your request of {fuel_request.amount}L click {click_url} to view details')
+                        send_message(offer.request.name.phone_number,
+                                     f'Your have received a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.company.name} {request.user.last_name} for your request of {fuel_request.amount}L click {click_url} to view details')
                     action = f"{request.user}  made an offer of {offer_quantity}L @ {request.POST.get('price')} to a request made by {fuel_request.name.username}"
                     service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
                     reference = 'offers'
                     reference_id = fuel_request.id
-                    Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
+                    Audit_Trail.objects.create(company=request.user.company, service_station=service_station,
+                                               user=request.user, action=action, reference=reference,
+                                               reference_id=reference_id)
                     return redirect('fuel-request')
                 else:
                     messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
@@ -526,14 +548,17 @@ def offer(request, id):
 @login_required
 def edit_offer(request, id):
     offer = Offer.objects.get(id=id)
-    fuel_reserve =SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD & RTGS').first()
+    fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id,
+                                                          payment_type='USD & RTGS').first()
     if request.method == 'POST':
         if offer.request.payment_method == 'USD':
-            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD').first()
+            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id,
+                                                          payment_type='USD').first()
         elif offer.request.payment_method == 'RTGS':
-            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'RTGS').first()
+            fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id,
+                                                          payment_type='RTGS').first()
         subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-        
+
         if offer.request.fuel_type.lower() == 'petrol':
             if fuel_reserve is not None:
                 available_fuel = fuel.petrol_quantity + fuel_reserve.petrol_quantity
@@ -548,8 +573,8 @@ def edit_offer(request, id):
         request_quantity = offer.request.amount
         if new_offer <= available_fuel:
             if new_offer <= request_quantity:
-                offer.price = request.POST.get('price') 
-                offer.transport_fee = request.POST.get('transport')      
+                offer.price = request.POST.get('price')
+                offer.transport_fee = request.POST.get('transport')
                 offer.quantity = request.POST.get('quantity')
                 offer.usd = True if request.POST.get('usd') == "on" else False
                 offer.cash = True if request.POST.get('cash') == "on" else False
@@ -560,7 +585,8 @@ def edit_offer(request, id):
                     offer.delivery_method = 'Delivery'
                 else:
                     offer.delivery_method = delivery_method
-                collection_address = request.POST.get('street_number') + " " + request.POST.get('street_name') + " " + request.POST.get('location')
+                collection_address = request.POST.get('street_number') + " " + request.POST.get(
+                    'street_name') + " " + request.POST.get('location')
                 if not collection_address.strip() and delivery_method.lower() == 'self collection':
                     offer.collection_address = subsidiary.location
                 else:
@@ -571,7 +597,8 @@ def edit_offer(request, id):
                 offer.save()
                 messages.success(request, 'Offer successfully updated')
                 message = f'You have an updated offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.company.name.title()} for your request of {offer.request.amount}L'
-                Notification.objects.create(message = message, user = offer.request.name, reference_id = offer.id, action = "new_offer")
+                Notification.objects.create(message=message, user=offer.request.name, reference_id=offer.id,
+                                            action="new_offer")
                 return redirect('my_offers')
             else:
                 messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
@@ -584,32 +611,34 @@ def edit_offer(request, id):
 
 def accepted_offer(request, id):
     transactions = Transaction.objects.filter(id=id).all()
-    return render(request, 'supplier/new_transaction.html', {'transactions':transactions})
+    return render(request, 'supplier/new_transaction.html', {'transactions': transactions})
 
 
 def rejected_offer(request, id):
     offers = Offer.objects.filter(id=id).all()
-    return render(request, 'supplier/my_offer.html', {'offers':offers})
-        
+    return render(request, 'supplier/my_offer.html', {'offers': offers})
+
 
 '''
 allocated quantities
 '''
 
+
 def allocated_quantity(request):
-    allocations = FuelAllocation.objects.filter(allocated_subsidiary_id= request.user.subsidiary_id).all()
+    allocations = FuelAllocation.objects.filter(allocated_subsidiary_id=request.user.subsidiary_id).all()
     return render(request, 'supplier/allocated_quantity.html', {'allocations': allocations})
 
-    
+
 def company(request):
-    subsidiary = Subsidiaries.objects.filter(id = request.user.subsidiary_id).first()
-    num_of_suppliers = User.objects.filter(subsidiary_id=request.user.subsidiary_id).count() 
+    subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+    num_of_suppliers = User.objects.filter(subsidiary_id=request.user.subsidiary_id).count()
     return render(request, 'supplier/company.html', {'subsidiary': subsidiary, 'num_of_suppliers': num_of_suppliers})
 
 
 '''
 Transactions Operations
 '''
+
 
 @login_required
 def transaction(request):
@@ -620,32 +649,35 @@ def transaction(request):
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
         if delivery_sched:
             tran.delivery_sched = delivery_sched
-        transactions.append(tran)    
-    context= { 
-       'transactions' : transactions,
-       'transporters' : transporters,
-       'today': today
-        }
-    return render(request, 'supplier/transactions.html',context=context)
+        transactions.append(tran)
+    context = {
+        'transactions': transactions,
+        'transporters': transporters,
+        'today': today
+    }
+    return render(request, 'supplier/transactions.html', context=context)
 
 
 @login_required
 def complete_transaction(request, id):
-    transaction = Transaction.objects.filter(id = id).first()
+    transaction = Transaction.objects.filter(id=id).first()
     subsidiary_fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).first()
-    fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD & RTGS').first()
+    fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id,
+                                                          payment_type='USD & RTGS').first()
     if transaction.offer.request.payment_method == 'USD':
-        fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'USD').first()
+        fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id,
+                                                      payment_type='USD').first()
         payment_type = 'USD'
     elif transaction.offer.request.payment_method == 'RTGS':
-        fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id, payment_type = 'RTGS').first()
+        fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id,
+                                                      payment_type='RTGS').first()
         payment_type = 'RTGS'
     fuel_type = transaction.offer.request.fuel_type.lower()
     if fuel_type == 'petrol':
         if request.method == 'POST':
             # transaction_quantity = transaction.offer.quantity
             transaction_quantity = float(request.POST['for_fuel']) / float(transaction.offer.price)
-            if fuel_reserve is not None:   
+            if fuel_reserve is not None:
                 available_fuel = fuel.petrol_quantity + fuel_reserve.petrol_quantity
             else:
                 available_fuel = fuel.petrol_quantity
@@ -673,7 +705,8 @@ def complete_transaction(request, id):
                 subsidiary_fuel.save()
 
                 user = transaction.offer.request.name
-                transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Petrol', payment_type, transaction)
+                transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Petrol', payment_type,
+                                        transaction)
 
                 messages.success(request, "Proof of Payment Approved!")
                 return redirect('transaction')
@@ -707,12 +740,13 @@ def complete_transaction(request, id):
                 else:
                     fuel.diesel_quantity = fuel.diesel_quantity - transaction_quantity
                     fuel.save()
-                
+
                 subsidiary_fuel.diesel_quantity = subsidiary_fuel.diesel_quantity - transaction_quantity
                 subsidiary_fuel.save()
 
                 user = transaction.offer.request.name
-                transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Diesel', payment_type, transaction)
+                transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Diesel', payment_type,
+                                        transaction)
 
                 messages.success(request, "Proof of Payment Approved!")
                 return redirect('transaction')
@@ -723,27 +757,26 @@ def complete_transaction(request, id):
 
 
 def invoice(request, id):
-    
     buyer = request.user
     transactions = Transaction.objects.filter(buyer=buyer, id=id).first()
-    
+
     context = {
         'transactions': transactions
     }
-    pdf = render_to_pdf('supplier/invoice.html',context)
+    pdf = render_to_pdf('supplier/invoice.html', context)
     return HttpResponse(pdf, content_type='application/pdf')
 
 
 def view_invoice(request, id):
     transaction = Transaction.objects.filter(supplier=request.user, id=id).all()
     for transaction in transaction:
-        subsidiary = Subsidiaries.objects.filter(id = transaction.supplier.subsidiary_id).first()
+        subsidiary = Subsidiaries.objects.filter(id=transaction.supplier.subsidiary_id).first()
         if subsidiary is not None:
             transaction.depot = subsidiary.name
             transaction.address = subsidiary.address
     total = transaction.offer.quantity * transaction.offer.price
     g_total = total + 25
-    
+
     context = {
         'transaction': transaction,
         'total': total,
@@ -752,7 +785,7 @@ def view_invoice(request, id):
     return render(request, 'supplier/invoice2.html', context)
 
 
-def download_proof(request,id):
+def download_proof(request, id):
     document = Transaction.objects.filter(id=id).first()
     if document:
         filename = document.proof_of_payment.name.split('/')[-1]
@@ -765,7 +798,7 @@ def download_proof(request,id):
 
 
 @login_required
-def client_transaction_history(request,id):
+def client_transaction_history(request, id):
     client = Account.objects.filter(id=id).first()
 
     contribution = get_customer_contributions(request.user.id, client.buyer_company)
@@ -773,43 +806,54 @@ def client_transaction_history(request,id):
     total_cash = client_revenue(request.user.id, client.buyer_company)
     all_requests, todays_requests = total_requests(client.buyer_company)
 
-
-    trns = Transaction.objects.filter(supplier=request.user,buyer__company=client.buyer_company)
+    trns = Transaction.objects.filter(supplier=request.user, buyer__company=client.buyer_company)
     transactions = []
     for tran in trns:
         tran.revenue = tran.offer.request.amount * tran.offer.price
         transactions.append(tran)
 
     return render(request, 'supplier/client_activity.html', {'transactions': transactions, 'client': client,
-    'contribution':contribution, 'cash_contribution':cash_contribution, 'total_cash':total_cash,
-     'all_requests':all_requests, 'todays_requests': todays_requests })
+                                                             'contribution': contribution,
+                                                             'cash_contribution': cash_contribution,
+                                                             'total_cash': total_cash,
+                                                             'all_requests': all_requests,
+                                                             'todays_requests': todays_requests})
 
 
 def stock_sord_update(request, user, quantity, action, fuel_type, payment_type):
-    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, payment_type=payment_type).all()
+    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id=request.user.subsidiary_id,
+                                                           fuel_type=fuel_type, payment_type=payment_type).all()
     sord_quantity = []
     for sord in initial_sord:
         if sord.end_quantity != 0:
             sord_quantity.append(sord)
         else:
             pass
-    sord_quantity.sort(key = attrgetter('last_updated'), reverse = True)
+    sord_quantity.sort(key=attrgetter('last_updated'), reverse=True)
     balance_brought_forward = quantity
     for entry in sord_quantity:
         if balance_brought_forward != 0:
             subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
             if entry.end_quantity < balance_brought_forward:
-                SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1, action = action, initial_quantity = entry.end_quantity,
-                quantity_sold = entry.end_quantity, end_quantity = 0, received_by = user, fuel_type = entry.fuel_type, subsidiary = subsidiary, payment_type = payment_type)
+                SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1,
+                                                        action=action, initial_quantity=entry.end_quantity,
+                                                        quantity_sold=entry.end_quantity, end_quantity=0,
+                                                        received_by=user, fuel_type=entry.fuel_type,
+                                                        subsidiary=subsidiary, payment_type=payment_type)
                 balance_brought_forward = balance_brought_forward - entry.end_quantity
             else:
-                SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1, action = action, initial_quantity = entry.end_quantity,
-                quantity_sold = balance_brought_forward, end_quantity = entry.end_quantity - balance_brought_forward, received_by = user, fuel_type = entry.fuel_type, subsidiary = subsidiary, payment_type = payment_type)
+                SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1,
+                                                        action=action, initial_quantity=entry.end_quantity,
+                                                        quantity_sold=balance_brought_forward,
+                                                        end_quantity=entry.end_quantity - balance_brought_forward,
+                                                        received_by=user, fuel_type=entry.fuel_type,
+                                                        subsidiary=subsidiary, payment_type=payment_type)
                 balance_brought_forward = 0
 
 
 def transaction_sord_update(request, user, quantity, action, fuel_type, payment_type, transaction):
-    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, payment_type=payment_type).all()
+    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id=request.user.subsidiary_id,
+                                                           fuel_type=fuel_type, payment_type=payment_type).all()
     sord_quantity = []
     account_sord_list = []
     for sord in initial_sord:
@@ -817,19 +861,26 @@ def transaction_sord_update(request, user, quantity, action, fuel_type, payment_
             sord_quantity.append(sord)
         else:
             pass
-    sord_quantity.sort(key = attrgetter('last_updated'), reverse = True)
+    sord_quantity.sort(key=attrgetter('last_updated'), reverse=True)
     balance_brought_forward = quantity
     for entry in sord_quantity:
         if balance_brought_forward != 0:
             subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
             if entry.end_quantity < balance_brought_forward:
-                SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1, action = action, initial_quantity = entry.end_quantity,
-                quantity_sold = entry.end_quantity, end_quantity = 0, received_by = user, fuel_type = entry.fuel_type, subsidiary = subsidiary, payment_type = payment_type)
+                SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1,
+                                                        action=action, initial_quantity=entry.end_quantity,
+                                                        quantity_sold=entry.end_quantity, end_quantity=0,
+                                                        received_by=user, fuel_type=entry.fuel_type,
+                                                        subsidiary=subsidiary, payment_type=payment_type)
                 balance_brought_forward = balance_brought_forward - entry.end_quantity
                 account_sord_list.append(entry.sord_no)
             else:
-                SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1, action = action, initial_quantity = entry.end_quantity,
-                quantity_sold = balance_brought_forward, end_quantity = entry.end_quantity - balance_brought_forward, received_by = user, fuel_type = entry.fuel_type, subsidiary = subsidiary, payment_type = payment_type)
+                SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1,
+                                                        action=action, initial_quantity=entry.end_quantity,
+                                                        quantity_sold=balance_brought_forward,
+                                                        end_quantity=entry.end_quantity - balance_brought_forward,
+                                                        received_by=user, fuel_type=entry.fuel_type,
+                                                        subsidiary=subsidiary, payment_type=payment_type)
                 balance_brought_forward = 0
                 account_sord_list.append(entry.sord_no)
     account = AccountHistory.objects.filter(transaction=transaction, sord_number=None).first()
@@ -841,18 +892,19 @@ def transaction_sord_update(request, user, quantity, action, fuel_type, payment_
 Delivery Schedule Operations
 '''
 
+
 @login_required
 def create_delivery_schedule(request):
     if request.method == 'POST':
         schedule = DeliverySchedule.objects.create(
             date=request.POST['delivery_date'],
-            transaction = Transaction.objects.filter(id=int(request.POST['transaction'])).first(),
-            driver_name = request.POST['driver_name'],
-            phone_number = request.POST['phone_number'],
-            id_number = request.POST['id_num'],
-            transport_company = request.POST['transport_company'],
-            vehicle_reg = request.POST['vehicle_reg'],
-            delivery_time = request.POST['delivery_time']
+            transaction=Transaction.objects.filter(id=int(request.POST['transaction'])).first(),
+            driver_name=request.POST['driver_name'],
+            phone_number=request.POST['phone_number'],
+            id_number=request.POST['id_num'],
+            transport_company=request.POST['transport_company'],
+            vehicle_reg=request.POST['vehicle_reg'],
+            delivery_time=request.POST['delivery_time']
         )
         transaction = Transaction.objects.filter(id=int(request.POST['transaction'])).first()
         transaction.proof_of_payment = None
@@ -864,12 +916,13 @@ def create_delivery_schedule(request):
         payment_history = AccountHistory.objects.filter(transaction=transaction, value=0.00).first()
         payment_history.value += transaction.paid_reserve
         payment_history.balance -= transaction.paid_reserve
-        payment_history.delivery_schedule=schedule
+        payment_history.delivery_schedule = schedule
         payment_history.save()
-        messages.success(request,"Schedule Successfully Created")
+        messages.success(request, "Schedule Successfully Created")
         message = f"{schedule.transaction.supplier.company} has created a delivery schedule for you, Click To View Schedule"
-        Notification.objects.create(user=schedule.transaction.buyer,action='schedule', message=message, reference_id=schedule.id)
-        
+        Notification.objects.create(user=schedule.transaction.buyer, action='schedule', message=message,
+                                    reference_id=schedule.id)
+
         return redirect('transaction')
 
 
@@ -883,9 +936,9 @@ def delivery_schedules(request):
         schedule.save()
         messages.success(request, "File Successfully Uploaded")
         msg = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
-        Notification.objects.create(user=request.user,action='DELIVERY', message=msg, reference_id=schedule.id)
+        Notification.objects.create(user=request.user, action='DELIVERY', message=msg, reference_id=schedule.id)
         return redirect('supplier:delivery_schedules')
-        
+
     schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user).all()
     for schedule in schedules:
         if schedule.transaction.offer.delivery_method.lower() == 'delivery':
@@ -895,16 +948,16 @@ def delivery_schedules(request):
     return render(request, 'supplier/delivery_schedules.html', {'schedules': schedules})
 
 
-def view_delivery_schedule(request,id):
+def view_delivery_schedule(request, id):
     if request.method == 'POST':
         supplier_document = request.FILES.get('supplier_document')
         delivery_id = request.POST.get('delivery_id')
-        schedule = get_object_or_404(DeliverySchedule,id=delivery_id)
+        schedule = get_object_or_404(DeliverySchedule, id=delivery_id)
         schedule.supplier_document = supplier_document
         schedule.save()
         messages.success(request, "File Successfully Uploaded")
         msg = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
-        Notification.objects.create(user=request.user,action='DELIVERY', message=msg, reference_id=schedule.id)
+        Notification.objects.create(user=request.user, action='DELIVERY', message=msg, reference_id=schedule.id)
         return redirect('delivery_schedules')
     schedule = DeliverySchedule.objects.filter(id=id).first()
     if schedule.transaction.offer.delivery_method.lower() == 'delivery':
@@ -914,7 +967,7 @@ def view_delivery_schedule(request,id):
     return render(request, 'supplier/view_delivery_schedule.html', {'schedule': schedule})
 
 
-def view_confirmation_doc(request,id):
+def view_confirmation_doc(request, id):
     delivery = DeliverySchedule.objects.filter(id=id).first()
     if delivery:
         filename = delivery.confirmation_document.name.split('/')[-1]
@@ -925,7 +978,8 @@ def view_confirmation_doc(request,id):
         redirect('supplier:delivery_schedules')
     return response
 
-def view_supplier_doc(request,id):
+
+def view_supplier_doc(request, id):
     delivery = DeliverySchedule.objects.filter(id=id).first()
     if delivery:
         filename = delivery.supplier_document.name.split('/')[-1]
@@ -936,7 +990,8 @@ def view_supplier_doc(request,id):
         redirect('supplier:delivery_schedules')
     return response
 
-def del_supplier_doc(request,id):
+
+def del_supplier_doc(request, id):
     delivery = DeliverySchedule.objects.filter(id=id).first()
     delivery.supplier_document = None
     delivery.save()
@@ -950,6 +1005,7 @@ payment history
 
 """
 
+
 def payment_history(request, id):
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
@@ -962,4 +1018,3 @@ def mark_completion(request, id):
     transaction.save()
     messages.success(request, 'Transaction is now complete')
     return redirect('transaction')
-    
