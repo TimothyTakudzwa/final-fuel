@@ -49,10 +49,8 @@
                         <thead>
                         <tr>
                             <th>Depot</th>
-                            <th>Address</th>
-                            <th>Fuel Type</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
+                            <th>PickUp Address</th>
+                            <th>Fuel</th>
                             <th>Transport Fee</th>
                             <th>Expected</th>
                             <th>Paid</th>
@@ -70,9 +68,9 @@
                             <tr>
                             <td class="name truncate">{{transaction.depot}}</td>
                             <td class="name truncate">{{transaction.address}}</td>
-                            <td class="name truncate">{{transaction.offer.request.fuel_type}}</td>
-                            <td class="name truncate">{{transaction.offer.quantity}}</td>
-                            <td class="name truncate">{{transaction.offer.price}}</td>
+                            <td class="name truncate">{{transaction.offer.request.fuel_type}} {{transaction.offer.quantity}}L @ {{transaction.offer.price}}</td>
+                            <!-- <td class="name truncate">{{transaction.offer.quantity}}</td>
+                            <td class="name truncate">{{transaction.offer.price}}</td> -->
                             <td class="name truncate">{{transaction.offer.transport_fee}}</td>
                             <td class="name truncate">{{transaction.expected}}</td>
                             <td class="name truncate">{{transaction.paid}}</td>
@@ -85,7 +83,7 @@
                                 <div class="text-center">
                                     <!--call modal-->
                                     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{transaction.id}}">
-                                        View Details
+                                        <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
                                     </button>
                                     <!--view details-->
                                     <div class="modal fade modal-success in" id="view{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -122,7 +120,7 @@
                                 <div class="text-center">
                                     <!--call modal-->
                                     <button class="btn btn-purple btn-sm" data-toggle="modal" data-target="#viewBank{{transaction.id}}">
-                                        View Banking Details
+                                        <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Bank Details
                                     </button>
                                     <!--view details-->
                                     <div class="modal fade modal-success in" id="viewBank{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -161,7 +159,7 @@
 
 
                                     
-                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_history' transaction.id %}">View History & Schedules</a>
+                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_history' transaction.id %}">History & Schedules</a>
 
                                 </div>
                             </td>

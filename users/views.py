@@ -31,10 +31,9 @@ from fuelUpdates.models import SordCompanyAuditTrail
 import datetime
 import sys
 
-from supplier.forms import Subsidiaries
 from buyer.models import *
 from buyer.forms import *
-from .forms import AllocationForm, SupplierContactForm, UsersUploadForm, ReportForm
+from .forms import AllocationForm, SupplierContactForm, UsersUploadForm, ReportForm, DepotContactForm
 from .models import AuditTrail, SordActionsAuditTrail
 from buyer.models import *
 from supplier.models import *
@@ -1473,68 +1472,6 @@ def edit_suballocation_fuel_prices(request, id):
             Audit_Trail.objects.create(company=request.user.company, service_station=service_station, user=request.user,
                                        action=action, reference=reference, reference_id=reference_id)
             return redirect(f'/users/allocated_fuel/{prices_update.subsidiary.id}')
-
-        else:
-            messages.success(request, 'Fuel object does not exists')
-            return redirect('users:allocate')
-
-
-@login_required()
-def allocate_diesel(request, id):
-    if request.method == 'POST':
-        if F_Update.objects.filter(id=id).exists():
-            diesel_update = F_Update.objects.filter(id=id).first()
-            diesel_update.diesel_quantity = diesel_update.diesel_quantity + int(request.POST['diesel_quantity'])
-            company_quantity = F_Update.objects.filter(company_id=request.user.company.id).filter(
-                sub_type='Company').first()
-            if int(request.POST['diesel_quantity']) > company_quantity.diesel_quantity:
-                messages.warning(request,
-                                 f'You can not allocate fuel above your company diesel capacity of {company_quantity.diesel_quantity}')
-                return redirect('users:allocate')
-
-            company_quantity.diesel_quantity = company_quantity.diesel_quantity - int(request.POST['diesel_quantity'])
-            company_quantity.save()
-            diesel_update.save()
-            assigned_staff = user.objects.filter(subsidiary_id=diesel_update.relationship_id).first()
-            if assigned_staff is not None:
-                action = 'Allocation of Diesel'
-                FuelAllocation.objects.create(company=request.user.company, action=action,
-                                              diesel_price=diesel_update.diesel_price,
-                                              diesel_quantity=request.POST['diesel_quantity'],
-                                              sub_type=diesel_update.sub_type, cash=request.POST['cash'],
-                                              usd=request.POST['usd'], swipe=request.POST['swipe'],
-                                              ecocash=request.POST['ecocash'],
-                                              allocated_subsidiary_id=assigned_staff.subsidiary_id)
-                messages.success(request, 'Updated diesel quantity successfully')
-                service_station = Subsidiaries.objects.filter(id=diesel_update.relationship_id).first()
-                reference = 'fuel allocation'
-                reference_id = diesel_update.id
-                action = f"You have allocated diesel quantity of {int(request.POST['diesel_quantity'])}L @ {diesel_update.diesel_price} "
-                Audit_Trail.objects.create(company=request.user.company, service_station=service_station,
-                                           user=request.user, action=action, reference=reference,
-                                           reference_id=reference_id)
-                return redirect('users:allocate')
-            else:
-                action = 'Allocation of Diesel'
-                FuelAllocation.objects.create(company=request.user.company, action=action,
-                                              diesel_price=diesel_update.diesel_price,
-                                              diesel_quantity=request.POST['diesel_quantity'],
-                                              sub_type=diesel_update.sub_type, cash=request.POST['cash'],
-                                              usd=request.POST['usd'], swipe=request.POST['swipe'],
-                                              ecocash=request.POST['ecocash'],
-                                              allocated_subsidiary_id=diesel_update.relationship_id)
-
-                service_station = Subsidiaries.objects.filter(id=diesel_update.relationship_id).first()
-                reference = 'fuel allocation'
-                reference_id = diesel_update.id
-                action = f"You have allocated diesel quantity of {int(request.POST['diesel_quantity'])}L @ {diesel_update.diesel_price} "
-                Audit_Trail.objects.create(company=request.user.company, service_station=service_station,
-                                           user=request.user, action=action, reference=reference,
-                                           reference_id=reference_id)
-                messages.warning(request,
-                                 'Please go to Depot or Station staff to assign a station representative before you allocate fuel again')
-                return redirect('users:allocate')
-
 
         else:
             messages.success(request, 'Fuel object does not exists')

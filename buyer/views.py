@@ -568,7 +568,7 @@ def transactions(request):
             transaction.delivery_object = None
         if subsidiary is not None:
             transaction.depot = subsidiary.name
-            transaction.address = subsidiary.address
+            transaction.address = subsidiary.location
         from supplier.models import UserReview
         transaction.review = UserReview.objects.filter(transaction=transaction).first()
 
