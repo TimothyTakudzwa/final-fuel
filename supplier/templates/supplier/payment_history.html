@@ -246,6 +246,11 @@
                                                 <lable><b>Delivery Quantity:</b></lable>
                                                 &nbsp;{{payment.delivery_schedule.delivery_quantity}}
                                             </div>
+                                            {% if not delivery.confirmation_document %}
+                                                <b>Status:</b> <i style="color: brown;">waiting for confirmation</i>
+                                                {% else %}
+                                                Received
+                                                {% endif %}
                                         </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-default" style="background-color: lightslategray;" data-dismiss="modal" aria-label="Close">
