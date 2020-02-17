@@ -30,10 +30,10 @@ class Command(BaseCommand):
                 sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
                 title = f'Delivery Schedule Reminder'
                 message = f"Dear {delivery.transaction.supplier.first_name}, this is mail serves to inform you " \
-                        f"that the due date for the delivery of {delivery.transaction.offer.request.amount}L of {delivery.transaction.offer.request.fuel_type} to {delivery.transaction.buyer.company.name.title()} has elapsed as of {delivery.date.strftime('%A the %dth of %b %Y')}\n." \
-                        f"Kindly see to it that concerned parties are informed and that the delivery is secure and it's whereabouts are known.\n\n" \
-                        f"Driver Details\n Name: {delivery.driver_name}\n Phone:{delivery.phone_number}"
-                        f"You can extend due date on this page https://fuelfinderzim.com//supplier/delivery_schedules/"     
+                            f"that the due date for the delivery of {delivery.transaction.offer.request.amount}L of {delivery.transaction.offer.request.fuel_type} to {delivery.transaction.buyer.company.name.title()} has elapsed as of {delivery.date.strftime('%A the %dth of %b %Y')}\n." \
+                            f"Kindly see to it that concerned parties are informed and that the delivery is secure and it's whereabouts are known.\n\n" \
+                            f"Driver Details\n Name: {delivery.driver_name}\n Phone:{delivery.phone_number}"
+                            f"You can extend due date on this page https://fuelfinderzim.com//supplier/delivery_schedules/"     
                         
                 # send email
                 try:
