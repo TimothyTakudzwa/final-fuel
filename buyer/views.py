@@ -884,7 +884,7 @@ Account Application
 def account_application(request):
     companies = Company.objects.filter(company_type='SUPPLIER').all()
     for company in companies:
-        company.admin = User.objects.filter(company=company).first()
+        company.admin = User.objects.filter(company=company, user_type='S_ADMIN').first()
         status = Account.objects.filter(buyer_company=request.user.company, supplier_company=company).exists()
         if status:
             account = Account.objects.filter(buyer_company=request.user.company, supplier_company=company).first()
