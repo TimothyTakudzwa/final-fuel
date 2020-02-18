@@ -906,10 +906,10 @@ def account_application(request):
 
 @login_required
 def download_application(request, id):
-    document = Company.objects.filter(id=id).first()
-    if document:
-        filename = document.application_form.name.split('/')[-1]
-        response = HttpResponse(document.application_form, content_type='text/plain')
+    company = Company.objects.filter(id=id).first()
+    if company.application_form:
+        filename = company.application_form.name.split('/')[-1]
+        response = HttpResponse(company.application_form, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document Not Found')
