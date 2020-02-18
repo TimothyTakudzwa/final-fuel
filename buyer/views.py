@@ -912,7 +912,7 @@ def download_application(request, id):
         response = HttpResponse(document.application_form, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.success(request, 'Document Not Found')
         return redirect('accounts-status')
     return response
 
