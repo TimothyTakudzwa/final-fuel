@@ -21,8 +21,8 @@ class Command(BaseCommand):
         self.stdout.write("Finished Sending Notifications")
 
     def process_delivery_schedules(self):
-        schedules = DeliverySchedule.objects.filter(date__lt=datetime.today(), confirmation_document__isnull=True,
-                                                    supplier_document__isnull=True)
+        schedules = DeliverySchedule.objects.filter(date__lt=datetime.today(), confirmation_document='',
+                                                    supplier_document='')
         if schedules:
             for delivery in schedules:
                 message = f'Please Note That Your Delivery To {delivery.transaction.buyer.company.name.title()} Is ' \

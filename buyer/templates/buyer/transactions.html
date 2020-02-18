@@ -162,20 +162,52 @@
 
                                         <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_history' transaction.id %}">View History & Schedules</a>
 
-                                    </div>
-                                </td>
+                                </div>
+                            </td>
 
-                                {% if transaction.expected == transaction.paid %}
-                                    {% if transaction.is_complete == True %}
-                                        <td>N/A</td>
-                                    {% elif transaction.delivery_object.confirmation_document %}
-                                        <td>Received</td>
-                                    {% else %}
-                                        <td>Pending</td>
-                                    {% endif %}
+                            {% if transaction.expected == transaction.paid %}
+                                {% if transaction.is_complete == True %}
+                                    <td><i class="fa fa-check-square-o" style="font-size:25px;color:rgb(0, 225, 255)"></i></td>
+                                {% elif transaction.delivery_object.confirmation_document %}
+                                    <td>Received</td>
                                 {% else %}
-                                    <td><a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#proof_{{transaction.id}}">
-                                        Proof of Payment</a></td>
+                                    <td>Pending</td>
+                                {% endif %}
+                            {% else %}
+                                <td><a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#proof_{{transaction.id}}">
+                                    Proof of Payment</a></td>
+                            {% endif %}
+                            <td>
+                                {% if transaction.is_complete and not transaction.review %}
+                                    <a class="btn btn-danger btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
+                                        Rate {{transaction.supplier.company.name}}
+                                    </a>
+                                {% elif not transaction.is_complete %}
+                                Incomplete
+                                {% else %}
+                                {% if transaction.review.rating == 0%}
+                                    <p style="text-align: center;">-</p>
+                                    {% elif transaction.review.rating == 1%}
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    {% elif transaction.review.rating == 2%}
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    {% elif transaction.review.rating == 3%}
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    {% elif transaction.review.rating == 4%}
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    {% elif transaction.review.rating == 5%}
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                    {% endif%}
                                 {% endif %}
                                 <td>
                                     {% if transaction.is_complete and not transaction.review %}
