@@ -185,29 +185,29 @@
                                 {% elif not transaction.is_complete %}
                                 Incomplete
                                 {% else %}
-                                {% if transaction.review.rating == 0%}
-                                    <p style="text-align: center;">-</p>
-                                    {% elif transaction.review.rating == 1%}
-                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
-                                    {% elif transaction.review.rating == 2%}
-                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
-                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
-                                    {% elif transaction.review.rating == 3%}
-                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
-                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
-                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
-                                    {% elif transaction.review.rating == 4%}
-                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
-                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
-                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
-                                    <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
-                                    {% elif transaction.review.rating == 5%}
+                                    {% if transaction.review.rating == 0%}
+                                        <p style="text-align: center;">-</p>
+                                        {% elif transaction.review.rating == 1%}
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        {% elif transaction.review.rating == 2%}
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        {% elif transaction.review.rating == 3%}
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        {% elif transaction.review.rating == 4%}
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        {% elif transaction.review.rating == 5%}
                                         <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
                                         <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
                                         <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
                                         <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
                                         <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
-                                    {% endif%}
+                                        {% endif%}
                                 {% endif %}
                             </td>
                             <div class="modal fade modal-success in" id="review_{{transaction.id}}" role="dialog">
