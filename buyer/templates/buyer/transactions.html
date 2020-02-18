@@ -182,6 +182,8 @@
                                     <a class="btn btn-danger btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
                                         Rate {{transaction.supplier.company.name}}
                                     </a>
+                                {% elif not transaction.is_complete %}
+                                Incomplete
                                 {% else %}
                                 {% if transaction.review.rating == 0%}
                                     <p style="text-align: center;">-</p>
