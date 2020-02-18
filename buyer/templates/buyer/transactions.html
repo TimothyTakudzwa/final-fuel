@@ -441,6 +441,7 @@
                                                             {% csrf_token %}
                                                             <input type="hidden" value="{{   transaction.buyer.company.id }}" name="buyer_id">
                                                             <input type="hidden" value="{{ transaction.supplier.company.id }}" name="supplier_id">
+                                                            <input type="hidden" value="{{   transaction.buyer.username }}" name="buyer_name">
                                                             <button class="btn btn-info btn-md">
                                                                 Generate Report
                                                             </button>
