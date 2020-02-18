@@ -1427,7 +1427,7 @@ def edit_fuel_prices(request, id):
             action = f"You have changed petrol price to {request.POST['petrol_price']} and diesel price to {request.POST['diesel_price']} "
             Audit_Trail.objects.create(company=request.user.company, service_station=service_station, user=request.user,
                                        action=action, reference=reference, reference_id=reference_id)
-            return redirect(f'/users/allocated_fuel/{prices_update.subsidiary.id}')
+            return redirect('users:allocate')
 
         else:
             messages.success(request, 'Fuel object does not exists')
