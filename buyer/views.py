@@ -1,4 +1,5 @@
 import secrets
+from datetime import date
 
 import requests
 from django.contrib import messages
@@ -8,6 +9,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
+from weasyprint import HTML
 
 from accounts.models import Account
 from buyer.models import User
@@ -405,7 +408,7 @@ def dashboard(request):
             message = f'{request.user.first_name} {request.user.last_name} made a request of ' \
                       f'{fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()}'
             Notification.objects.create(message=message, user=current_user, reference_id=fuel_request_object.id,
-                                        action="new_request", user_id=request.user.id)
+                                        action="new_request", id=request.user.id)
             return redirect('buyer-dashboard')
 
         if 'WaitForOffer' in request.POST:
@@ -486,15 +489,17 @@ Offer Handlers
 
 
 @login_required
-def new_offer(request, user_id):
-    offers_available = Offer.objects.filter(id=user_id).all()
+def new_offer(request, id):
+    offers_available = Offer.objects.filter(id=id).all()
     return render(request, 'buyer/new_offer.html', {'offers': offers_available})
 
 
 @login_required
-def new_fuel_offer(request, user_id):
-    offers_present = Offer.objects.filter(id=user_id).all()
-    return render(request, 'buyer/new_offer.html', {'offers': offers_present})
+def new_fuel_offer(request, id):
+    offers_present = Offer.objects.filter(id=id).all()
+    for offer in offers_present:
+        depot = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
+    return render(request, 'buyer/new_offer.html', {'offers': offers_present, 'depot':depot})
 
 
 @login_required
@@ -514,8 +519,8 @@ def accept_offer(request, id):
 
 
 @login_required
-def reject_offer(request, user_id):
-    offer = Offer.objects.filter(id=user_id).first()
+def reject_offer(request, id):
+    offer = Offer.objects.filter(id=id).first()
     offer.declined = True
     offer.save()
     my_request = FuelRequest.objects.filter(id=offer.request.id).first()
@@ -542,18 +547,40 @@ Transaction Handlers
 @login_required
 def transactions(request):
     if request.method == "POST":
-        tran = Transaction.objects.get(id=request.POST.get('transaction_id'))
-        from supplier.models import UserReview
-        UserReview.objects.create(
-            rater=request.user,
-            rating=int(request.POST.get('rating')),
-            company=tran.supplier.company,
-            transaction=tran,
-            depot=Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
-            comment=request.POST.get('comment')
-        )
-        messages.success(request, 'Transaction Successfully Reviewed')
-        return redirect('buyer-transactions')
+        if request.POST.get('buyer_company_id') is not None:
+            buyer_transactions = AccountHistory.objects.filter(
+                transaction__buyer__company__id=int(request.POST.get('buyer_company_id')),
+                transaction__supplier__company__id=int(request.POST.get('supplier_company_id')),
+            )
+            html_string = render_to_string('supplier/export.html', {'transactions': buyer_transactions,
+                          'supplier_details': AccountHistory.objects.filter(
+                              transaction__supplier_id=request.POST.get('supplier_company_id')),
+                          'buyer_details': AccountHistory.objects.filter(transaction__buyer_id=int(
+                              request.POST.get('buyer_company_id')))
+                            })
+            html = HTML(string=html_string)
+            export_name = f"{request.POST.get('buyer_name')}{date.today().strftime('%H%M%S')}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = 'attachment;filename=export.pdf'
+                return response
+        else:
+            tran = Transaction.objects.get(id=request.POST.get('transaction_id'))
+            from supplier.models import UserReview
+            UserReview.objects.create(
+                rater=request.user,
+                rating=int(request.POST.get('rating')),
+                company=tran.supplier.company,
+                transaction=tran,
+                depot=Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
+                comment=request.POST.get('comment')
+            )
+            messages.success(request, 'Transaction Successfully Reviewed')
+            return redirect('buyer-transactions')
 
     buyer = request.user
     all_transactions = Transaction.objects.filter(buyer=buyer).all()
@@ -568,13 +595,14 @@ def transactions(request):
             transaction.delivery_object = None
         if subsidiary is not None:
             transaction.depot = subsidiary.name
-            transaction.address = subsidiary.address
+            transaction.address = subsidiary.location
         from supplier.models import UserReview
         transaction.review = UserReview.objects.filter(transaction=transaction).first()
 
     context = {
         'transactions': all_transactions,
         'subsidiary': Subsidiaries.objects.filter(),
+        'all_transactions': AccountHistory.objects.filter()
     }
 
     return render(request, 'buyer/transactions.html', context=context)
@@ -590,9 +618,9 @@ def transactions_review_delete(request, transaction_id):
 
 
 @login_required
-def transaction_review_edit(request, user_id):
+def transaction_review_edit(request, id):
     from supplier.models import UserReview
-    review = UserReview.objects.filter(id=user_id).first()
+    review = UserReview.objects.filter(id=id).first()
     if request.method == "POST":
         review.rating = int(request.POST.get('rating'))
         review.comment = request.POST.get('comment')
@@ -609,9 +637,9 @@ Invoice Handlers
 
 
 @login_required
-def invoice(request, user_id):
+def invoice(request, id):
     buyer = request.user
-    transactions_availabe = Transaction.objects.filter(buyer=buyer, id=user_id).first()
+    transactions_availabe = Transaction.objects.filter(buyer=buyer, id=id).first()
 
     context = {
         'transactions': transactions_availabe
@@ -622,9 +650,9 @@ def invoice(request, user_id):
 
 
 @login_required
-def view_invoice(request, user_id):
+def view_invoice(request, id):
     buyer = request.user
-    transaction = Transaction.objects.filter(buyer=buyer, id=user_id).all()
+    transaction = Transaction.objects.filter(buyer=buyer, id=id).all()
     for transaction in transaction:
         subsidiary = Subsidiaries.objects.filter(id=transaction.supplier.subsidiary_id).first()
         if subsidiary is not None:
@@ -648,9 +676,25 @@ def delivery_schedules(request):
     for schedule in schedules:
         schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
         if schedule.transaction.offer.delivery_method.lower() == 'delivery':
-            schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+            if schedule.transaction.offer.request.delivery_address.strip() == "":
+                depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                schedule.delivery_address = depot.location
+            else:
+                if schedule.transaction.offer.request.delivery_address != None:
+                    schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+                else:
+                    depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                    schedule.delivery_address = depot.location
         else:
-            schedule.delivery_address = schedule.transaction.offer.collection_address
+            if schedule.transaction.offer.collection_address.strip()=="":
+                depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                schedule.delivery_address = depot.location
+            else:
+                if schedule.transaction.offer.collection_address != None:
+                    schedule.delivery_address = schedule.transaction.offer.collection_address 
+                else:
+                    depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                    schedule.delivery_address = depot.location
     context = {'form': DeliveryScheduleForm(),
                'schedules': schedules
                }
@@ -669,8 +713,8 @@ def delivery_schedules(request):
     return render(request, 'buyer/delivery_schedules.html', context=context)
 
 
-def delivery_schedule(request, user_id):
-    schedule = DeliverySchedule.objects.filter(id=user_id).first()
+def delivery_schedule(request, id):
+    schedule = DeliverySchedule.objects.filter(id=id).first()
     schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
     if schedule.transaction.offer.delivery_method.lower() == 'delivery':
         schedule.delivery_address = schedule.transaction.offer.request.delivery_address
@@ -680,7 +724,7 @@ def delivery_schedule(request, user_id):
         'form': DeliveryScheduleForm(),
         'schedule': schedule
     }
-    return render(request, 'supplier/delivery_schedule.html', context=context)
+    return render(request, 'buyer/delivery_schedule.html', context=context)
 
 
 """
@@ -745,8 +789,8 @@ Edit Account Details
 """
 
 
-def edit_account_details(request, user_id):
-    account = Account.objects.filter(id=user_id).first()
+def edit_account_details(request, id):
+    account = Account.objects.filter(id=id).first()
     if request.method == "POST":
         account.account_number = request.POST.get('account_number')
         account.save()
@@ -795,9 +839,9 @@ Proof of payment
 
 
 @login_required
-def proof_of_payment(request, user_id):
+def proof_of_payment(request, id):
     if request.method == 'POST':
-        transaction = Transaction.objects.filter(id=user_id).first()
+        transaction = Transaction.objects.filter(id=id).first()
         if transaction is not None:
             if transaction.pending_proof_of_payment == True:
                 messages.warning(request, 'Please wait for the supplier to approve the existing proof of payment')
@@ -825,10 +869,11 @@ payment history
 """
 
 def payment_history(request, id):
+    form1 = DeliveryScheduleForm()           
     print(request.user.company)
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
-    return render(request, 'buyer/payment_history.html', {'payment_history': payment_history})
+    return render(request, 'buyer/payment_history.html', {'payment_history': payment_history, 'form1':form1})
 
 """
 
@@ -841,7 +886,8 @@ Account Application
 def account_application(request):
     companies = Company.objects.filter(company_type='SUPPLIER').all()
     for company in companies:
-        company.admin = User.objects.filter(company=company).first()
+        company.admin = User.objects.filter(company=company, user_type='S_ADMIN').first()
+        print(company)
         status = Account.objects.filter(buyer_company=request.user.company, supplier_company=company).exists()
         if status:
             account = Account.objects.filter(buyer_company=request.user.company, supplier_company=company).first()
@@ -859,8 +905,8 @@ def account_application(request):
 
 
 @login_required
-def download_application(request, user_id):
-    document = Company.objects.filter(id=user_id).first()
+def download_application(request, id):
+    document = Company.objects.filter(id=id).first()
     if document:
         filename = document.application_form.name.split('/')[-1]
         response = HttpResponse(document.application_form, content_type='text/plain')
@@ -872,9 +918,9 @@ def download_application(request, user_id):
 
 
 @login_required
-def upload_application(request, user_id):
+def upload_application(request, id):
     if request.method == 'POST':
-        supplier = Company.objects.filter(id=user_id).first()
+        supplier = Company.objects.filter(id=id).first()
         buyer = request.user.company
         application_form = request.FILES.get('application_form')
         ids = request.FILES.get('company_documents')

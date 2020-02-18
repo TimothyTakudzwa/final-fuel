@@ -71,7 +71,7 @@
                                     {{fuel_request.delivery_method}}
                                 </td>
                                 <td>
-                                    {% if fuel_request.cash %}CASH &nbsp;{% if fuel_request.ecocash %}ECOCASH &nbsp;{% if fuel_request.usd %}USD &nbsp;{% if fuel_request.swipe %}SWIPE{% endif %}{% endif %}{% endif %}{% endif %}
+                                    {{fuel_request.payment_method}}
                                 </td>
                                 <td class="">
                                     {{fuel_request.fuel_type}}

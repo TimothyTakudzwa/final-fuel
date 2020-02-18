@@ -27,7 +27,7 @@ urlpatterns = [
     path('register', buyer_views.register, name='buyer-register'),
     path('new_fuel_offer/<id>', buyer_views.new_fuel_offer, name='new_fuel_offer'),
     path('new_offer/<id>', buyer_views.new_offer, name='new_offer'),
-    path('delivery_schedule/<int:id>', buyer_views.delivery_schedule, name="view_delivery_schedule"),
+    path('delivery_schedule/<int:id>', buyer_views.delivery_schedule, name="delivery_schedule"),
 
     path('account/', supplier_views.account, name='account'),
     path('fuel-request/', supplier_views.fuel_request, name='fuel-request'),

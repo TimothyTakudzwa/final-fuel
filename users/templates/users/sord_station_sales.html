@@ -42,7 +42,7 @@
 
             {% if sord_sales %}
             <div class="table-responsive">
-                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                <table id="sord_station_sales" class="table table-striped table-bordered" style="width:100%">
                     <thead>
                         <tr>
                             <th>
@@ -77,9 +77,6 @@
                                 End Quantity
                             </th>
 
-                            <th>
-                                Last Upadted
-                            </th>
 
                             <th>
                                 Received By
@@ -99,7 +96,6 @@
                             <td>{{sord.initial_quantity}}</td>
                             <td>{{sord.quantity_sold}}</td>
                             <td>{{sord.end_quantity}}</td>
-                            <td>{{sord.last_updated}}</td>
                             <td>{{sord.received_by}}</td>
                            
 

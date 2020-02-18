@@ -54,9 +54,7 @@
                             <th style="color: white;"> Date </th>
                             <th style="color: white;">Buyer Name</th>
                             <th style="color: white;">Company</th>
-                            <th style="color: white;">Fuel Type</th>
-                            <th style="color: white;">Quantity(l)</th>
-                            <th style="color: white;">Price</th>
+                            <th style="color: white;">Fuel </th>
                             <th style="color: white;">Expected</th>
                             <th style="color: white;">Paid</th>
                             <th style="color: white;">Status</th>
@@ -74,9 +72,9 @@
                                 <td>{{ transaction.date }}</td>
                                 <td>{{ transaction.buyer.first_name|lower|capfirst }} {{ transaction.buyer.last_name|lower|capfirst }}</td>
                                 <td>{{ transaction.buyer.company.name }}</td>
-                                <td>{{ transaction.offer.request.fuel_type|lower|capfirst }}</td>
-                                <td>{{ transaction.offer.quantity |intcomma}}</td>
-                                <td>{{ transaction.offer.price }}</td>
+                                <td>{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
+                                <!-- <td>{{ transaction.offer.quantity |intcomma}}</td>
+                                <td>{{ transaction.offer.price }}</td> -->
                                 <td>{{ transaction.expected}}</td>
                                 <td>{{ transaction.paid }}</td>
                                 {% if transaction.is_complete == True %}
@@ -84,12 +82,12 @@
                                 {% else %}
                                 <td>Incomplete</td>
                                 {% endif %}
-                                <td style="width: 25%;">
+                                <td>
                                     <div class="btn-group">
     
     
                                         
-                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'supplier:payment_history' transaction.id %}">View History & Schedules</a>
+                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'supplier:payment_history' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> History & Schedules</a>
     
                                     </div>
                                 </td>
@@ -97,11 +95,19 @@
                                     {% if transaction.is_complete == True %} 
                                     <td>N/A</td>
                                     {% else %} 
-                                    <td>
-                                        <div class="btn-group">
-                                        <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'supplier:mark_completion' transaction.id %}" >Complete</a>
-                                        </div>
-                                    </td>
+                                        {% if transaction.proof_of_payment %}
+                                        <td>
+                                            <div class="btn-group">
+                                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button>
+                                            </div>
+                                        </td>
+                                        {% else %}
+                                        <td>
+                                            <div class="btn-group">
+                                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'supplier:mark_completion' transaction.id %}" >Complete</a>
+                                            </div>
+                                        </td>
+                                        {% endif %}
                                     {% endif %}
                                 {% else %}
                                 {% if transaction.proof_of_payment %}
@@ -127,7 +133,7 @@
                                     <div class="text-center">
                                         <!--call modal-->
                                         <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{transaction.id}}">
-                                            View Details
+                                            <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
                                         </button>
                                         <!--view details-->
                                         <div class="modal fade modal-success in" id="view{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -952,7 +952,7 @@ def update_fuel(user, message):
             depot_sord_update(user, fuel_reduction, 'Fuel Update', 'Petrol', fuel_update.payment_type)
             response_message = "How much diesel do you have in stock?"
         else:
-            response_message = f"You can only reduce your stock. To increase it contact you admin to update your fuel allocations! You currently have *{petrol_available}* litre, please enter available stock if it is less."
+            response_message = f"You can only reduce your stock. To increase it contact you admin to update your fuel allocations! You currently have *{petrol_availabe}* litre, please enter available stock if it is less."
             user.position = 2
             user.save()
     elif user.position == 4:
