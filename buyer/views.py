@@ -497,7 +497,8 @@ def new_offer(request, id):
 @login_required
 def new_fuel_offer(request, id):
     offers_present = Offer.objects.filter(id=id).all()
-    depot = Subsidiaries.objects.filter(id=offers_present.supplier.subsidiary_id).first()
+    for offer in offers_present:
+        depot = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
     return render(request, 'buyer/new_offer.html', {'offers': offers_present, 'depot':depot})
 
 
