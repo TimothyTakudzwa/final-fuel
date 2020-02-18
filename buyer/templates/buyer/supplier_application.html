@@ -71,8 +71,8 @@
                     {% else %}
                     <td>
                     <div class="btn-group">
-                        <a class="btn btn-info btn-sm" href="{% url 'buyer:download-application' company.id %}" >Download</a>
-                        <a class="btn btn-warning btn-sm"  data-toggle="modal" data-target="#upload{{company.id}}" >Upload</a> 
+                        <a class="btn btn-info btn-sm" href="{% url 'buyer:download-application' company.id %}" >Download form</a>
+                        <a class="btn btn-warning btn-sm"  data-toggle="modal" data-target="#upload{{company.id}}" >Upload application</a> 
                     </div>
                     </td>
                     {% endif %}
@@ -103,10 +103,50 @@
                                 <br>
                                 <div class="col-sm-12" style="margin-bottom: 3;">
                                     <div class="col-sm-6">
-                                    <lable>Company Document</lable>
+                                    <label>CR14</label>
                                     </div>
                                     <div class="col-sm-6">
-                                    <input type="file" accept=".pdf, .doc,.docx" name="company_documents" class="form-control-file" id="exampleFormControlFile1" required>
+                                    <input type="file" accept=".pdf, .doc,.docx" name="cr14" class="form-control-file" id="exampleFormControlFile1" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12" style="margin-bottom: 3;">
+                                    <div class="col-sm-6">
+                                    <label>CR6</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                    <input type="file" accept=".pdf, .doc,.docx" name="cr6" class="form-control-file" id="exampleFormControlFile1" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12" style="margin-bottom: 3;">
+                                    <div class="col-sm-6">
+                                    <label>Certificate of Incorporaton</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                    <input type="file" accept=".pdf, .doc,.docx" name="cert_of_inco" class="form-control-file" id="exampleFormControlFile1" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12" style="margin-bottom: 3;">
+                                    <div class="col-sm-6">
+                                    <label>Tax Clearance</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                    <input type="file" accept=".pdf, .doc,.docx" name="tax_clearance" class="form-control-file" id="exampleFormControlFile1" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12" style="margin-bottom: 3;">
+                                    <div class="col-sm-6">
+                                    <label>Proof Of payment CIF2</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                    <input type="file" accept=".pdf, .doc,.docx" name="proof_of_payment" class="form-control-file" id="exampleFormControlFile1" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12" style="margin-bottom: 3;">
+                                    <div class="col-sm-6">
+                                    <label>IDs of Directors</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                    <input type="file" accept=".zip,.rar,.7zip" name="company_documents" class="form-control-file" id="exampleFormControlFile1" required>
                                     </div>
                                 </div>
                                 <br>

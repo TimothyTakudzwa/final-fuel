@@ -408,7 +408,7 @@ def dashboard(request):
             message = f'{request.user.first_name} {request.user.last_name} made a request of ' \
                       f'{fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()}'
             Notification.objects.create(message=message, user=current_user, reference_id=fuel_request_object.id,
-                                        action="new_request", user_id=request.user.id)
+                                        action="new_request", id=request.user.id)
             return redirect('buyer-dashboard')
 
         if 'WaitForOffer' in request.POST:
@@ -489,31 +489,38 @@ Offer Handlers
 
 
 @login_required
-def new_offer(request, user_id):
-    offers_available = Offer.objects.filter(id=user_id).all()
+def new_offer(request, id):
+    offers_available = Offer.objects.filter(id=id).all()
     return render(request, 'buyer/new_offer.html', {'offers': offers_available})
 
 
 @login_required
-def new_fuel_offer(request, user_id):
-    offers_present = Offer.objects.filter(id=user_id).all()
-    return render(request, 'buyer/new_offer.html', {'offers': offers_present})
+def new_fuel_offer(request, id):
+    offers_present = Offer.objects.filter(id=id).all()
+    for offer in offers_present:
+        depot = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
+    return render(request, 'buyer/new_offer.html', {'offers': offers_present, 'depot':depot})
 
 
 @login_required
 def accept_offer(request, id):
     offer = Offer.objects.filter(id=id).first()
-    expected = int(offer.quantity * offer.price) + int(offer.transport_fee)
-    Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier, is_complete=False,expected = expected)
-    FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
-    offer.is_accepted = True
-    offer.save()
+    account = Account.objects.filter(buyer_company=request.user.company,supplier_company=offer.supplier.company,is_verified=True).first()
+    if account is not None:
+        expected = int(offer.quantity * offer.price) + int(offer.transport_fee)
+        Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier, is_complete=False,expected = expected)
+        FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
+        offer.is_accepted = True
+        offer.save()
 
-    message = f'{offer.request.name.first_name} {offer.request.name.last_name} accepted your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
-    Notification.objects.create(message=message, user=offer.supplier, reference_id=offer.id, action="offer_accepted")
+        message = f'{offer.request.name.first_name} {offer.request.name.last_name} accepted your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
+        Notification.objects.create(message=message, user=offer.supplier, reference_id=offer.id, action="offer_accepted")
 
-    messages.warning(request, "Your request has been saved successfully")
-    return redirect("buyer-transactions")
+        messages.warning(request, "Your request has been saved successfully")
+        return redirect("buyer-transactions")
+    else:
+        messages.info(request, f"You have no account with {offer.supplier.company.name} yet, please apply or wait for approval if you have already applied")
+        return redirect("accounts-status")
 
 
 @login_required
@@ -616,9 +623,9 @@ def transactions_review_delete(request, transaction_id):
 
 
 @login_required
-def transaction_review_edit(request, user_id):
+def transaction_review_edit(request, id):
     from supplier.models import UserReview
-    review = UserReview.objects.filter(id=user_id).first()
+    review = UserReview.objects.filter(id=id).first()
     if request.method == "POST":
         review.rating = int(request.POST.get('rating'))
         review.comment = request.POST.get('comment')
@@ -635,9 +642,9 @@ Invoice Handlers
 
 
 @login_required
-def invoice(request, user_id):
+def invoice(request, id):
     buyer = request.user
-    transactions_availabe = Transaction.objects.filter(buyer=buyer, id=user_id).first()
+    transactions_availabe = Transaction.objects.filter(buyer=buyer, id=id).first()
 
     context = {
         'transactions': transactions_availabe
@@ -648,9 +655,9 @@ def invoice(request, user_id):
 
 
 @login_required
-def view_invoice(request, user_id):
+def view_invoice(request, id):
     buyer = request.user
-    transaction = Transaction.objects.filter(buyer=buyer, id=user_id).all()
+    transaction = Transaction.objects.filter(buyer=buyer, id=id).all()
     for transaction in transaction:
         subsidiary = Subsidiaries.objects.filter(id=transaction.supplier.subsidiary_id).first()
         if subsidiary is not None:
@@ -722,7 +729,7 @@ def delivery_schedule(request, id):
         'form': DeliveryScheduleForm(),
         'schedule': schedule
     }
-    return render(request, 'supplier/delivery_schedule.html', context=context)
+    return render(request, 'buyer/delivery_schedule.html', context=context)
 
 
 """
@@ -787,8 +794,8 @@ Edit Account Details
 """
 
 
-def edit_account_details(request, user_id):
-    account = Account.objects.filter(id=user_id).first()
+def edit_account_details(request, id):
+    account = Account.objects.filter(id=id).first()
     if request.method == "POST":
         account.account_number = request.POST.get('account_number')
         account.save()
@@ -837,9 +844,9 @@ Proof of payment
 
 
 @login_required
-def proof_of_payment(request, user_id):
+def proof_of_payment(request, id):
     if request.method == 'POST':
-        transaction = Transaction.objects.filter(id=user_id).first()
+        transaction = Transaction.objects.filter(id=id).first()
         if transaction is not None:
             if transaction.pending_proof_of_payment == True:
                 messages.warning(request, 'Please wait for the supplier to approve the existing proof of payment')
@@ -884,7 +891,8 @@ Account Application
 def account_application(request):
     companies = Company.objects.filter(company_type='SUPPLIER').all()
     for company in companies:
-        company.admin = User.objects.filter(company=company).first()
+        company.admin = User.objects.filter(company=company, user_type='S_ADMIN').first()
+        print(company)
         status = Account.objects.filter(buyer_company=request.user.company, supplier_company=company).exists()
         if status:
             account = Account.objects.filter(buyer_company=request.user.company, supplier_company=company).first()
@@ -902,26 +910,32 @@ def account_application(request):
 
 
 @login_required
-def download_application(request, user_id):
-    document = Company.objects.filter(id=user_id).first()
-    if document:
-        filename = document.application_form.name.split('/')[-1]
-        response = HttpResponse(document.application_form, content_type='text/plain')
+def download_application(request, id):
+    company = Company.objects.filter(id=id).first()
+    if company.application_form:
+        filename = company.application_form.name.split('/')[-1]
+        response = HttpResponse(company.application_form, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.info(request, 'Document Not Found')
         return redirect('accounts-status')
     return response
 
 
 @login_required
-def upload_application(request, user_id):
+def upload_application(request, id):
     if request.method == 'POST':
-        supplier = Company.objects.filter(id=user_id).first()
+        supplier = Company.objects.filter(id=id).first()
         buyer = request.user.company
         application_form = request.FILES.get('application_form')
-        company_documents = request.FILES.get('company_documents')
+        ids = request.FILES.get('company_documents')
+        cr14 = request.FILES.get('cr14')
+        cr6 = request.FILES.get('cr6')
+        cert_of_inco = request.FILES.get('cert_of_inco')
+        tax_clearance = request.FILES.get('tax_clearance')
+        proof_of_payment = request.FILES.get('proof_of_payment')
         Account.objects.create(supplier_company=supplier, buyer_company=buyer, application_document=application_form,
-                               id_document=company_documents, applied_by=request.user)
+                               id_document=ids, applied_by=request.user, proof_of_payment=proof_of_payment, cr14=cr14,
+                               cr6=cr6, tax_clearance=tax_clearance, cert_of_inco=cert_of_inco)
         messages.success(request, 'Application successfully send')
     return redirect('accounts-status')
