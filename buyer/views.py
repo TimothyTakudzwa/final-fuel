@@ -477,6 +477,7 @@ def offers(request, id):
         depot = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
         if depot:
             offer.depot_name = depot.name
+            offer.depot_address = depot.location
 
     return render(request, 'buyer/offer.html', {'offers': offers})
 
@@ -913,7 +914,7 @@ def download_application(request, id):
         response = HttpResponse(company.application_form, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.info(request, 'Document Not Found')
+        messages.info(request, f'Document Not Found, Please wait for {company.name} to upload application form')
         return redirect('accounts-status')
     return response
 

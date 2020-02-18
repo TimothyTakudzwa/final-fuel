@@ -155,19 +155,19 @@
                                     </div>
                                 </td>
 
-                                <td style="width: 25%;">
-                                    <div class="btn-group">
+                            <td>
+                                <div class="btn-group">
 
 
 
-                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_history' transaction.id %}">View History & Schedules</a>
+                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_history' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> History & Schedules</a>
 
                                 </div>
                             </td>
 
                             {% if transaction.expected == transaction.paid %}
                                 {% if transaction.is_complete == True %}
-                                    <td><i class="fa fa-check-square-o" style="font-size:25px;color:rgb(0, 225, 255)"></i></td>
+                                    <td><i class="fa fa-check-square-o" style="font-size:25px;color:rgb(0, 225, 255)">Done</i></td>
                                 {% elif transaction.delivery_object.confirmation_document %}
                                     <td>Received</td>
                                 {% else %}
