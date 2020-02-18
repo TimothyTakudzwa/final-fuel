@@ -76,9 +76,9 @@
                                 <td class="name truncate">{{transaction.expected}}</td>
                                 <td class="name truncate">{{transaction.paid}}</td>
                                 {% if transaction.is_complete == True %}
-                                    <td>Complete</td>
+                                    <td><p style="color:rgb(0, 68, 255)">Complete</p></td>
                                 {% else %}
-                                    <td>Incomplete</td>
+                                    <td><p style="color:rgb(22, 20, 20)">Incomplete</p></td>
                                 {% endif %}
                                 <td>
                                     <div class="text-center">
@@ -175,7 +175,7 @@
                                 {% endif %}
                             {% else %}
                                 <td><a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#proof_{{transaction.id}}">
-                                    Proof of Payment</a></td>
+                                    <i class="fa fa-upload" style="font-size:20px"></i> Payment Proof</a></td>
                             {% endif %}
                             <td>
                                 {% if transaction.is_complete and not transaction.review %}
