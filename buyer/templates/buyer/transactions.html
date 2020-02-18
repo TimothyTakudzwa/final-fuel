@@ -341,7 +341,7 @@
                                 <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#activity{{ transaction.id }}">
                                     Activity
                                 </button>
-                            </td>
+                           
 
                             <!--statement modal-->
                             <div class="modal fade modal-success in" id="activity{{ transaction.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -360,29 +360,39 @@
                                             <div class="row">
                                                 <!--supplier-->
                                                 <div class="col-md-6">
+                                                    <h2>Supplier</h2>
                                                     <!--name-->
-                                                    <h4>Name &nbsp; : &nbsp; {{ transaction.supplier.company.name }}</h4>
+                                                    <h5>{{ transaction.supplier.company.name }}</h5>
                                                     <!--address-->
-                                                    <h4>Address &nbsp; : &nbsp; {{ transaction.supplier.company.address }}</h4>
+                                                    <text class="text-muted">Address</text>
+                                                    <h5>{{ transaction.supplier.company.address }}</h5>
                                                     <!--bank-->
-                                                    <h4>Bank &nbsp; : &nbsp; {{ transaction.supplier.company.destination_bank }}</h4>
+                                                    <text class="text-muted">Bank</text>
+                                                    <h5>{{ transaction.supplier.company.destination_bank }}</h5>
                                                     <!--account-->
-                                                    <h4>Account Number &nbsp; : &nbsp; {{ transaction.supplier.company.account_number }}</h4>
+                                                    <text class="text-muted">A/c</text>
+                                                    <h5>{{ transaction.supplier.company.account_number }}</h5>
                                                     <!--vat number-->
-                                                    <h4>BPN Number &nbsp; : &nbsp; {{ transaction.supplier.company.bp_num }}</h4>
+                                                    <text class="text-muted">BPN</text>
+                                                    <h5>{{ transaction.supplier.company.bp_num }}</h5>
                                                 </div>
                                                 <!--buyer-->
                                                 <div class="col-md-6">
+                                                    <h2>Buyer</h2>
                                                     <!--name-->
-                                                    <h4>Name &nbsp; : &nbsp; {{ transaction.buyer.company.name }}</h4>
+                                                    <h5>{{ transaction.buyer.company.name }}</h5>
                                                     <!--address-->
-                                                    <h4>Address &nbsp; : &nbsp; {{ transaction.buyer.company.address }}</h4>
+                                                    <text class="text-muted">Address</text>
+                                                    <h5>{{ transaction.buyer.company.address }}</h5>
                                                     <!--bank-->
-                                                    <h4>Bank &nbsp; : &nbsp; {{ transaction.buyer.company.destination_bank }}</h4>
+                                                    <text class="text-muted">Bank</text>
+                                                    <h5>{{ transaction.buyer.company.destination_bank }}</h5>
                                                     <!--account-->
-                                                    <h4>Account Number &nbsp; : &nbsp; {{ transaction.buyer.company.account_number }}</h4>
+                                                    <text class="text-muted">A/c</text>
+                                                    <h5>{{ transaction.buyer.company.account_number }}</h5>
                                                     <!--vat number-->
-                                                    <h4>BPN Number &nbsp; : &nbsp; {{ transaction.buyer.company.bp_num }}</h4>
+                                                    <text class="text-muted">BPN</text>
+                                                    <h5>{{ transaction.buyer.company.bp_num }}</h5>
                                                 </div>
                                             </div>
 
@@ -390,7 +400,7 @@
 
                                             <!--statement details-->
                                             <div class="table-responsive">
-                                                <table id="activityTable" class="table table-striped table-bordered" style="width:100%">
+                                                <table id="fuel_updates" class="table table-striped table-bordered" style="width:100%">
                                                     <thead>
                                                     <tr>
                                                         <th class="custom-table">Sord Number</th>
@@ -437,7 +447,8 @@
                                 </div>
                             </div>
 
-
+                        </td>
+                        </tr>
                         {%endfor%}
                         </tbody>
                     </table>

@@ -505,17 +505,22 @@ def new_fuel_offer(request, id):
 @login_required
 def accept_offer(request, id):
     offer = Offer.objects.filter(id=id).first()
-    expected = int(offer.quantity * offer.price) + int(offer.transport_fee)
-    Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier, is_complete=False,expected = expected)
-    FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
-    offer.is_accepted = True
-    offer.save()
+    account = Account.objects.filter(buyer_company=request.user.company,supplier_company=offer.supplier.company,is_verified=True).first()
+    if account is not None:
+        expected = int(offer.quantity * offer.price) + int(offer.transport_fee)
+        Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier, is_complete=False,expected = expected)
+        FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
+        offer.is_accepted = True
+        offer.save()
 
-    message = f'{offer.request.name.first_name} {offer.request.name.last_name} accepted your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
-    Notification.objects.create(message=message, user=offer.supplier, reference_id=offer.id, action="offer_accepted")
+        message = f'{offer.request.name.first_name} {offer.request.name.last_name} accepted your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
+        Notification.objects.create(message=message, user=offer.supplier, reference_id=offer.id, action="offer_accepted")
 
-    messages.warning(request, "Your request has been saved successfully")
-    return redirect("buyer-transactions")
+        messages.warning(request, "Your request has been saved successfully")
+        return redirect("buyer-transactions")
+    else:
+        messages.info(request, f"You have no account with {offer.supplier.company.name} yet, please apply or wait for approval if you have already applied")
+        return redirect("accounts-status")
 
 
 @login_required
@@ -912,7 +917,7 @@ def download_application(request, id):
         response = HttpResponse(company.application_form, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.info(request, 'Document Not Found')
         return redirect('accounts-status')
     return response
 
