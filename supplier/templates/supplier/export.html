@@ -22,16 +22,15 @@
             background-color: #dddddd;
         }
         .first {
-            width: 20%;
+            width: 50%;
             float:left;
+            font-size: 12px;
 
-        }
-        .second {
-            width:20%;
-            overflow: hidden;
         }
         .wrapper {
             width: 100%;
+            margin: auto;
+            padding: 10px;
             overflow: hidden;
         }
         .text-muted{
@@ -45,46 +44,29 @@
 {% for transaction in transactions|slice:"1" %}
     <div class='wrapper'>
         <!--supplier-->
-
         <div class='first'>
-            <h2>Supplier</h2>
-            <!--name-->
-            <h5>{{ transaction.account.supplier_company.name }}</h5>
-            <text class="text-muted">Address</text>
-            <h5>{{ transaction.account.supplier_company.address }}</h5>
-            <!--bank-->
-            <text class="text-muted">Bank</text>
-            <h5>{{ transaction.account.supplier_company.destination_bank }}</h5>
-            <text class="text-muted">A/c</text>
-            <!--account-->
-            <h5>{{ transaction.account.supplier_company.account_number }}</h5>
-            <text class="text-muted">BPN</text>
-            <!--vat number-->
-            <h5>{{ transaction.account.supplier_company.bp_num }}</h5>
+            <h4 style="color: lightslategrey">SUPPLIER</h4>
+            <p class="text-muted">{{ transaction.account.supplier_company.name }}</p>
+            <p class="text-muted">{{ transaction.account.supplier_company.address }}</p>
+            <p class="text-muted">{{ transaction.account.supplier_company.destination_bank }}</p>
+            <p class="text-muted">{{ transaction.account.supplier_company.account_number }}</p>
+            <p class="text-muted">{{ transaction.account.supplier_company.bp_num }}</p>
         </div>
-
         <!--buyer-->
-        <div class='second'>
-            <h2>Buyer</h2>
-            <!--name-->
-            <h5>{{ transaction.account.buyer_company.name }}</h5>
-            <text class="text-muted">Address</text>
-            <h5>{{ transaction.account.buyer_company.address }}</h5>
-            <!--bank-->
-            <text class="text-muted">Bank</text>
-            <h5>{{ transaction.account.buyer_company.destination_bank }}</h5>
-            <text class="text-muted">A/c</text>
-            <!--account-->
-            <h5>{{ transaction.account.buyer_company.account_number }}</h5>
-            <text class="text-muted">BPN</text>
-            <!--vat number-->
-            <h5>{{ transaction.account.buyer_company.bp_num }}</h5>
+        <div class='first' style="text-align: right">
+            <h4 style="color: lightslategrey">BUYER</h4>
+            <p class="text-muted">{{ transaction.account.buyer_company.name }}</p>
+            <p class="text-muted">{{ transaction.account.buyer_company.address }}</p>
+            <p class="text-muted">{{ transaction.account.buyer_company.destination_bank }}</p>
+            <p class="text-muted">{{ transaction.account.buyer_company.account_number }}</p>
+            <p class="text-muted">{{ transaction.account.buyer_company.bp_num }}</p>
         </div>
-
     </div>
 {% endfor %}
 
-<table>
+<hr>
+
+<table style="padding-top: 20px">
     <tr>
         <th>Quantity</th>
         <th>Fuel Type</th>

@@ -477,6 +477,7 @@ def offers(request, id):
         depot = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
         if depot:
             offer.depot_name = depot.name
+            offer.depot_address = depot.location
 
     return render(request, 'buyer/offer.html', {'offers': offers})
 
@@ -552,17 +553,13 @@ Transaction Handlers
 @login_required
 def transactions(request):
     if request.method == "POST":
-        if request.POST.get('buyer_company_id') is not None:
+        if request.POST.get('buyer_id') is not None:
             buyer_transactions = AccountHistory.objects.filter(
-                transaction__buyer__company__id=int(request.POST.get('buyer_company_id')),
-                transaction__supplier__company__id=int(request.POST.get('supplier_company_id')),
+                transaction__buyer__company__id=int(request.POST.get('buyer_id')),
+                transaction__supplier__company__id=int(request.POST.get('supplier_id')),
             )
-            html_string = render_to_string('supplier/export.html', {'transactions': buyer_transactions,
-                          'supplier_details': AccountHistory.objects.filter(
-                              transaction__supplier_id=request.POST.get('supplier_company_id')),
-                          'buyer_details': AccountHistory.objects.filter(transaction__buyer_id=int(
-                              request.POST.get('buyer_company_id')))
-                            })
+
+            html_string = render_to_string('supplier/export.html', {'transactions': buyer_transactions})
             html = HTML(string=html_string)
             export_name = f"{request.POST.get('buyer_name')}{date.today().strftime('%H%M%S')}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
@@ -917,7 +914,7 @@ def download_application(request, id):
         response = HttpResponse(company.application_form, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.info(request, 'Document Not Found')
+        messages.info(request, f'Document Not Found, Please wait for {company.name} to upload application form')
         return redirect('accounts-status')
     return response
 

@@ -59,7 +59,7 @@
                             <th style="color: white;">Paid</th>
                             <th style="color: white;">Status</th>
                             <th style="color: white;">Payments History</th>
-                            <th style="color: white;">Action</th>
+                            <th style="color: white;width: 190px;">Action</th>
                             <th style="color: white;">Contact Person</th>
 
 
@@ -78,9 +78,9 @@
                                 <td>{{ transaction.expected}}</td>
                                 <td>{{ transaction.paid }}</td>
                                 {% if transaction.is_complete == True %}
-                                <td>Complete</td>
+                                <td><p style="color:rgb(0, 225, 255)">Complete</p></td>
                                 {% else %}
-                                <td>Incomplete</td>
+                                <td><p style="color:rgb(22, 20, 20)">Incomplete</p></td>
                                 {% endif %}
                                 <td>
                                     <div class="btn-group">
@@ -93,7 +93,7 @@
                                 </td>
                                 {% if transaction.expected == transaction.paid %}
                                     {% if transaction.is_complete == True %} 
-                                    <td>N/A</td>
+                                    <td><i class="fa fa-check-square-o" style="font-size:25px;color:rgb(0, 225, 255)">Done</i></td>
                                     {% else %} 
                                         {% if transaction.proof_of_payment %}
                                         <td>
@@ -114,7 +114,7 @@
                                     {% if transaction.proof_of_payment_approved == False %}
                                     <td>
                                         <div class="btn-group">
-                                        <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-proof' transaction.id %}" >Download Proof</a>
+                                        <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-proof' transaction.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a>
                                         <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" data-target="#approve{{transaction.id}}" >Approve</a>
                                         </div>
                                     </td>
