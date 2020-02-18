@@ -557,6 +557,7 @@ def transactions(request):
                 transaction__buyer__company__id=int(request.POST.get('buyer_id')),
                 transaction__supplier__company__id=int(request.POST.get('supplier_id')),
             )
+
             html_string = render_to_string('supplier/export.html', {'transactions': buyer_transactions})
             html = HTML(string=html_string)
             export_name = f"{request.POST.get('buyer_name')}{date.today().strftime('%H%M%S')}"
