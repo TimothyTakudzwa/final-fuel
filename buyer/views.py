@@ -552,17 +552,12 @@ Transaction Handlers
 @login_required
 def transactions(request):
     if request.method == "POST":
-        if request.POST.get('buyer_company_id') is not None:
+        if request.POST.get('buyer_id') is not None:
             buyer_transactions = AccountHistory.objects.filter(
-                transaction__buyer__company__id=int(request.POST.get('buyer_company_id')),
-                transaction__supplier__company__id=int(request.POST.get('supplier_company_id')),
+                transaction__buyer__company__id=int(request.POST.get('buyer_id')),
+                transaction__supplier__company__id=int(request.POST.get('supplier_id')),
             )
-            html_string = render_to_string('supplier/export.html', {'transactions': buyer_transactions,
-                          'supplier_details': AccountHistory.objects.filter(
-                              transaction__supplier_id=request.POST.get('supplier_company_id')),
-                          'buyer_details': AccountHistory.objects.filter(transaction__buyer_id=int(
-                              request.POST.get('buyer_company_id')))
-                            })
+            html_string = render_to_string('supplier/export.html', {'transactions': buyer_transactions})
             html = HTML(string=html_string)
             export_name = f"{request.POST.get('buyer_name')}{date.today().strftime('%H%M%S')}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
