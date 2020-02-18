@@ -923,8 +923,14 @@ def upload_application(request, id):
         supplier = Company.objects.filter(id=id).first()
         buyer = request.user.company
         application_form = request.FILES.get('application_form')
-        company_documents = request.FILES.get('company_documents')
+        ids = request.FILES.get('company_documents')
+        cr14 = request.FILES.get('cr14')
+        cr6 = request.FILES.get('cr6')
+        cert_of_inco = request.FILES.get('cert_of_inco')
+        tax_clearance = request.FILES.get('tax_clearance')
+        proof_of_payment = request.FILES.get('proof_of_payment')
         Account.objects.create(supplier_company=supplier, buyer_company=buyer, application_document=application_form,
-                               id_document=company_documents, applied_by=request.user)
+                               id_document=ids, applied_by=request.user, proof_of_payment=proof_of_payment, cr14=cr14,
+                               cr6=cr6, tax_clearance=tax_clearance, cert_of_inco=cert_of_inco)
         messages.success(request, 'Application successfully send')
     return redirect('accounts-status')

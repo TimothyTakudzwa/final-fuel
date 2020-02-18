@@ -18,6 +18,11 @@ class Account(models.Model):
     is_verified = models.BooleanField(default=False)
     application_document = models.FileField(upload_to='applications', blank=True)
     id_document = models.FileField(upload_to='id_documents', blank=True)
+    cr14 = models.FileField(upload_to='id_documents', blank=True)
+    cr6 = models.FileField(upload_to='id_documents', blank=True)
+    cert_of_inco = models.FileField(upload_to='id_documents', blank=True)
+    tax_clearance = models.FileField(upload_to='id_documents', blank=True)
+    proof_of_payment = models.FileField(upload_to='id_documents', blank=True)
 
     class Meta:
         ordering = ['date', 'time']
