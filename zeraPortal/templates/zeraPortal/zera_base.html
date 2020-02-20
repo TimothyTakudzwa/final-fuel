@@ -135,8 +135,8 @@
                         <a href=""><i class="fa fa-book" aria-hidden="true"></i><span>Depots & Stations</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href=""><i class="fa fa-binoculars"></i><span>Fuel Audit Trail</span>
+                    <li class="nav-item {% if request.path == '/zeraPortal/company_fuel/' %} active {% endif %}">
+                        <a href="{% url 'zeraPortal:company_fuel' %}"><i class="fa fa-binoculars"></i><span>Fuel Audit Trail</span>
                         </a>
                     </li>
                     <li class="nav-item ">
@@ -223,24 +223,24 @@
 
     <script>
         $(document).ready(function () {
-            $('#delivery').DataTable();
+            $('#companies').DataTable();
         });
     </script>
     <script>
         $(document).ready(function () {
-            $('#accounts_table').DataTable();
+            $('#subsidiaries').DataTable();
         });
     </script>
 
 <script>
     $(document).ready(function () {
-        $('#suppliers').DataTable();
+        $('#company_fuel').DataTable();
     });
 </script>
 
    <script>
         $(document).ready(function () {
-            $('#fuel_updates').DataTable();
+            $('#allocations').DataTable();
         });
     </script>
     <!-- jquery-ui -->

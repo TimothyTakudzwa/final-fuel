@@ -71,7 +71,7 @@ def allocate(request):
     company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
     subs_total_diesel_capacity = 0
     subs_total_petrol_capacity = 0
-    subsidiaries_fuel = SubsidiaryFuelUpdate.objects.all()
+    subsidiaries_fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary__company=request.user.company).all()
     for sub_fuel in subsidiaries_fuel:
         subs_total_diesel_capacity += sub_fuel.diesel_quantity
         subs_total_petrol_capacity += sub_fuel.petrol_quantity
