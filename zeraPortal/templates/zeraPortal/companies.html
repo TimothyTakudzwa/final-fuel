@@ -1,0 +1,120 @@
+{% extends "zeraPortal/zera_base.html" %}
+{% block body %}
+
+<section class="content-header">
+  <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+         <div class="input-group">
+         <input type="text" name="q" class="form-control" placeholder="Search...">
+             <span class="input-group-btn">
+                 <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+             </span>
+         </div>
+     </form>   
+ <div class="header-icon">
+     <i class="fa fa-binoculars"></i>
+ </div>
+ <div class="header-title">
+     <h1> ZERA  Portal</h1>
+     <small>Fuel Companies</small>
+     
+ </div>
+</section>
+    
+<div class="col-md-12">
+
+  <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
+  data-index="0">
+  <div class="panel-heading ui-sortable-handle">
+      
+      <div class="dropdown">
+          <ul class="dropdown-menu dropdown-menu-right">
+
+
+          </ul>
+          <div class="dropdown-toggle" data-toggle="dropdown"><span
+                  class="panel-control-icon glyphicon glyphicon-cog"></span>
+          </div>
+      </div>
+  </div>
+  <div class="panel-body">
+
+    {% if companies %}
+    <div class="table-responsive">
+        <table id="example" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>
+                        Company Name
+                    </th>
+
+                    <th>
+                        Address
+                    </th>
+                    <th>
+                        Is Verified
+                     </th>
+                     <th>
+                        License Number
+                     </th>
+                    <th>
+                       IBN Number
+                    </th>
+                    <th>
+                       Bank
+                    </th>
+
+                    <th>
+                        Account
+                     </th>
+                     <th>
+                        # of Depots
+                     </th>
+                     <th>
+                        # of Stations
+                     </th>
+                     <th>
+                        Action
+                     </th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for company in companies%}
+                <tr>
+                    <td>{{company.name}}</td>
+                    <td>{{company.address}}</td>
+                    {% if company.is_verified == True %}
+                    <td>Yes</td>
+                    {% else %}
+                    <td>No</td>
+                    {% endif %}
+                    <td>{{company.license_number}}</td>
+                    <td>{{company.iban_number}}</td>
+                    <td>{{company.destination_bank}}</td>
+                    <td>{{company.account_number}}</td>
+                    <td>{{company.num_of_depots}}</td>
+                    <td>{{company.num_of_stations}}</td>
+                    {% if company.is_verified != True %}
+                    <td style="width: 25%;">
+                        <div class="btn-group">
+                            <a class="btn btn-success btn-sm" data-toggle="modal" data-taget="verify">Verify</a>
+                        </div>
+                    </td>
+                    {% else %}
+                    <td><i class="fa fa-check-square-o" style="font-size:25px;color:rgb(0, 225, 255)">Done</i></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p>No Companies Available</p>
+    {% endif %}
+
+
+  </div>
+</div>
+  </div>
+
+{% endblock %}

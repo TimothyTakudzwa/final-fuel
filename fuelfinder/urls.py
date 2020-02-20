@@ -18,6 +18,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='supplier/logout.html'), name='logout'),
 
     path('buyer/', include('buyer.urls')),
+    path('zeraPortal/', include(('zeraPortal.urls', 'zeraPortal'), namespace='zeraPortal')),
     path('api/', include('api.urls')),
     path('supplier/', include(('supplier.urls', 'supplier'), namespace='supplier')),
     path('serviceStation/', include(('serviceStation.urls', 'serviceStation'), namespace='serviceStation')),

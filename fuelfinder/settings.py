@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'buyer.apps.BuyerConfig',
     'company.apps.CompanyConfig',
     'serviceStation.apps.ServicestationConfig',
+    'zeraPortal.apps.ZeraportalConfig',
     'supplier.apps.SupplierConfig',
     'accounts.apps.AccountsConfig',
     'finder.apps.FinderConfig',
