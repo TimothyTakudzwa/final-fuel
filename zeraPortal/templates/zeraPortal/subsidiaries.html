@@ -92,14 +92,18 @@
                             {% endif %}
                             <td>{{subsidiary.city}}</td>
                             <td>{{subsidiary.location}}</td>
+                            {% if subsidiary.license_num != None %}
                             <td>{{subsidiary.license_num}}</td>
+                            {% else %}
+                            <td>-</td>
+                            {% endif %}
                             <td>{{subsidiary.praz_reg_num}}</td>
                             <td>{{subsidiary.destination_bank}}</td>
                             <td>{{subsidiary.account_number}}</td>
                             <td style="width: 25%;">
                                 <div class="btn-group">
-                                    {% if subsidiary.license_num %}
-                                    <button class="btn btn-danger btn-sm" data-toggle="modal"
+                                    {% if subsidiary.license_num != None %}
+                                    <button class="btn btn-purple btn-sm" data-toggle="modal"
                                         data-target="#edit_{{subsidiary.id}}">Change Licence</button>
                                     {% else %}
                                     <button class="btn btn-danger btn-sm" data-toggle="modal"
@@ -122,7 +126,7 @@
                         <!-- Licence Edit Modal -->
                         <div class="modal fade modal-success in" id="edit_{{subsidiary.id}}" tabindex="-1" role="dialog"
                         aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document" style="margin: 0;">
+                        <div class="modal-dialog" role="document" >
                             <div class="modal-content">
                                 
                                 <div class="modal-header">
@@ -161,7 +165,7 @@
                     <!-- Block License Modal -->
                     <div class="modal fade modal-success in" id="block_{{subsidiary.id}}" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document" style="margin: 0;">
+                    <div class="modal-dialog" role="document" >
                         <div class="modal-content">
                             
                             <div class="modal-header">
@@ -189,7 +193,7 @@
                     <!-- Unblock License Modal -->
                     <div class="modal fade modal-success in" id="unblock_{{subsidiary.id}}" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document" style="margin: 0;">
+                    <div class="modal-dialog" role="document" >
                         <div class="modal-content">
                             
                             <div class="modal-header">
@@ -218,7 +222,7 @@
                    <!-- Approve & Add Licence Modal -->
                    <div class="modal fade modal-success in" id="approve_{{subsidiary.id}}" tabindex="-1" role="dialog"
                    aria-labelledby="exampleModalLabel" aria-hidden="true">
-                   <div class="modal-dialog" role="document" style="margin: 0;">
+                   <div class="modal-dialog" role="document" >
                        <div class="modal-content">
                            
                            <div class="modal-header">

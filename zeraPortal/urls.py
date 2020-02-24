@@ -17,7 +17,8 @@ urlpatterns = [
     path('change_licence/<int:id>', views.change_licence, name='change_licence'),
     path('block_licence/<int:id>', views.block_licence, name='block_licence'),
     path('unblock_licence/<int:id>', views.unblock_licence, name='unblock_licence'),
-    path('add_licence/<int:id>', views.add_licence, name='add_licence')
+    path('add_licence/<int:id>', views.add_licence, name='add_licence'),
+    path('profile/', views.profile, name='profile')
     
     
     

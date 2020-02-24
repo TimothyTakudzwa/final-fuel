@@ -35,8 +35,10 @@ def dashboard(request):
         destination_bank = request.POST.get('destination_bank')
         iban_number = request.POST.get('iban_number')
         account_number = request.POST.get('account_number')
-        Company.objects.create(name=name, address=address, license_number=license_number, destination_bank=destination_bank,
+        new_company = Company.objects.create(name=name, address=address, license_number=license_number, destination_bank=destination_bank,
                                iban_number=iban_number, account_number=account_number, company_type='SUPPLIER', is_active=True)
+        new_company.save()
+        CompanyFuelUpdate.objects.create(company=new_company)
         messages.success(request, 'Company successfully registered')
         return redirect('zeraPortal:dashboard')
     return render(request, 'zeraPortal/companies.html', {'companies': companies})
@@ -88,6 +90,9 @@ def allocations(request, id):
 
 def subsidiaries(request):
     subsidiaries = Subsidiaries.objects.all()
+    for subsidiary in subsidiaries:
+        if subsidiary.license_num.strip() == "":
+            subsidiary.license_num = None
     return render(request, 'zeraPortal/subsidiaries.html', {'subsidiaries':subsidiaries})
 
 
@@ -250,7 +255,7 @@ def statistics(request):
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
     weekly_rev = get_weekly_sales(True)
     last_week_rev = get_weekly_sales(False)
-    number_of_companies = Company.objects.all().count()
+    number_of_companies = Company.objects.filter(company_type='SUPPLIER').all().count()
     number_of_depots = Subsidiaries.objects.filter(is_depot=True).count()
     number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()   
     last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1))
@@ -336,3 +341,7 @@ def statistics(request):
                                                      'last_week_rev': last_week_rev, 'number_of_companies': number_of_companies,
                                                      'number_of_depots':number_of_depots, 'number_of_s_stations':number_of_s_stations,
                                                      'approval_percentage': approval_percentage})    
+
+
+def profile(request):
+    return render(request, 'zeraPortal/profile.html')
