@@ -103,6 +103,10 @@ def get_aggregate_stock():
     fuel_updates = CompanyFuelUpdate.objects.all()
     
     if fuel_updates:
+        allocated_diesel=0
+        unallocated_diesel=0
+        allocated_petrol=0
+        unallocated_petrol=0
         for update in fuel_updates:
             allocated_diesel += update.allocated_diesel
             unallocated_diesel += update.unallocated_diesel

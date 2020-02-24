@@ -26,6 +26,7 @@ class Subsidiaries(models.Model):
     praz_reg_num = models.CharField(max_length=150,blank=True,null=True)
     bp_num = models.CharField(max_length=150,blank=True,null=True)
     vat = models.CharField(max_length=150,blank=True,null=True)
+    is_active = models.BooleanField(default=False)
     
 
 

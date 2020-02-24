@@ -58,7 +58,44 @@ def allocations(request, id):
 
 def subsidiaries(request):
     subsidiaries = Subsidiaries.objects.all()
-    return render(request, 'subsidiaries.html', {'subsidiaries':subsidiaries})
+    return render(request, 'zeraPortal/subsidiaries.html', {'subsidiaries':subsidiaries})
+
+
+def change_licence(request, id):
+    subsidiary = Subsidiaries.objects.filter(id=id).first()
+    if request.method == 'POST':
+        subsidiary.license_num = request.POST['license_num']
+        subsidiary.save()
+        messages.success(request, f'{subsidiary.name} License updated successfully')
+        return redirect('zeraPortal:subsidiaries')
+
+
+def block_licence(request, id):
+    subsidiary = Subsidiaries.objects.filter(id=id).first()
+    if request.method == 'POST':
+        subsidiary.is_active = False
+        subsidiary.save()
+        messages.info(request, f'{subsidiary.name} License Blocked')
+        return redirect('zeraPortal:subsidiaries')
+
+
+def unblock_licence(request, id):
+    subsidiary = Subsidiaries.objects.filter(id=id).first()
+    if request.method == 'POST':
+        subsidiary.is_active = True
+        subsidiary.save()
+        messages.success(request, f'{subsidiary.name} License unblocked successfully')
+        return redirect('zeraPortal:subsidiaries')
+
+
+def add_licence(request, id):
+    subsidiary = Subsidiaries.objects.filter(id=id).first()
+    if request.method == 'POST':
+        subsidiary.license_num = request.POST['license_num']
+        subsidiary.save()
+        messages.success(request, f'{subsidiary.name} Approved Successfully')
+        return redirect('zeraPortal:subsidiaries')
+
 
 def report_generator(request):
     '''View to dynamically render form tables based on different criteria'''
