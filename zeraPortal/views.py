@@ -55,6 +55,11 @@ def allocations(request, id):
         allocation.subsidiary = Subsidiaries.objects.filter(id=allocation.allocated_subsidiary_id).first()
     return render(request, 'zeraPortal/fuel_allocations.html', {'allocations': allocations, 'company': company})
 
+
+def subsidiaries(request):
+    subsidiaries = Subsidiaries.objects.all()
+    return render(request, 'subsidiaries.html', {'subsidiaries':subsidiaries})
+
 def report_generator(request):
     '''View to dynamically render form tables based on different criteria'''
     allocations = requests = trans = stock = None

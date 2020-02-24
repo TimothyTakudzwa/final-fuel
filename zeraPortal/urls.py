@@ -10,7 +10,9 @@ urlpatterns = [
     path('company_fuel/', views.company_fuel, name='company_fuel'),
     path('allocations/<int:id>', views.allocations, name='allocations'),
     path('report_generator', views.report_generator, name='report_generator'),
-    path('statistics', views.statistics, name='statistics')
+    path('statistics', views.statistics, name='statistics'),
+    path('subsidiaries/', views.subsidiaries, name='subsidiaries')
+    
     
     
     
