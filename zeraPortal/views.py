@@ -237,7 +237,7 @@ def statistics(request):
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
     weekly_rev = get_weekly_sales(True)
     last_week_rev = get_weekly_sales(False)
-    number_of_companies = Company.objects.all().count()
+    number_of_companies = Company.objects.filter(company_type='SUPPLIER').all().count()
     number_of_depots = Subsidiaries.objects.filter(is_depot=True).count()
     number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()   
     last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1))
