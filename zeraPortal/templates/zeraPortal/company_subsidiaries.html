@@ -18,7 +18,7 @@
         <h1> Depots & Stations </h1>
         <small>Fuel Finder Zimbabwe</small>
         <ol class="breadcrumb hidden-xs">
-            <li><a href="{% url 'users:allocate' %}"><i class="pe-7s-home"></i> Home</a></li>
+            <li><a href="{% url 'zeraPortal:dashboard' %}"><i class="pe-7s-home"></i> Home</a></li>
             <li class="active">Subsidiaries</li>
         </ol>
 
@@ -48,9 +48,6 @@
                     <thead>
                         <tr>
                             <th>
-                                Company
-                            </th>
-                            <th>
                              Subsidiary
                              </th>
                              <th>
@@ -79,7 +76,6 @@
                     <tbody>
                         {% for subsidiary in subsidiaries %}
                         <tr>
-                            <td>{{subsidiary.company}}</td>
                             <td>{{subsidiary.name}}</td>
                             {% if subsidiary.is_depot == True %}
                             <td>Depot</td>
@@ -100,17 +96,17 @@
                                     <button class="btn btn-purple btn-sm" data-toggle="modal"
                                         data-target="#edit_{{subsidiary.id}}">Update Licence</button>
                                         {% if subsidiary.is_active == True %}
-                                        <button class="btn btn-danger btn-sm" data-toggle="modal"
-                                            data-target="#block_{{subsidiary.id}}">Cancel Licence</button>
-                                        {% else %}
-                                        <button class="btn btn-warning btn-sm" data-toggle="modal"
-                                            data-target="#unblock_{{subsidiary.id}}">Activate Licence</button>
-                                        {% endif %}
+                                    <button class="btn btn-danger btn-sm" data-toggle="modal"
+                                        data-target="#block_{{subsidiary.id}}">Cancel Licence</button>
+                                    {% else %}
+                                    <button class="btn btn-warning btn-sm" data-toggle="modal"
+                                        data-target="#unblock_{{subsidiary.id}}">Activate Licence</button>
+                                    {% endif %}
                                     {% else %}
                                     <button class="btn btn-primary btn-sm" data-toggle="modal"
                                         data-target="#approve_{{subsidiary.id}}">Add Licence</button>
                                     {% endif %}
-                                   
+                                    
 
 
                                 </div>

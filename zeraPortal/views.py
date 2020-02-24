@@ -17,7 +17,11 @@ from operator import attrgetter
 from buyer.models import User, FuelRequest
 from company.models import Company, CompanyFuelUpdate
 from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, Transaction, Offer
+<<<<<<< HEAD
 from .forms import ZeraProfileUpdateForm, ZeraImageUpdateForm
+=======
+from fuelUpdates.models import SordCompanyAuditTrail
+>>>>>>> 0fd4fcd032f7683f7af3adcd33fdf1b4f8974efa
 
 user = get_user_model()
 
@@ -30,7 +34,42 @@ def dashboard(request):
     for company in companies:
         company.num_of_depots = Subsidiaries.objects.filter(company=company, is_depot='True').count()
         company.num_of_stations = Subsidiaries.objects.filter(company=company, is_depot='False').count()
+<<<<<<< HEAD
+=======
+    if request.method == 'POST':
+        name = request.POST.get('company_name')
+        address = request.POST.get('address')
+        license_number = request.POST.get('license_number')
+        destination_bank = request.POST.get('destination_bank')
+        iban_number = request.POST.get('iban_number')
+        account_number = request.POST.get('account_number')
+        new_company = Company.objects.create(name=name, address=address, license_number=license_number, destination_bank=destination_bank,
+                               iban_number=iban_number, account_number=account_number, company_type='SUPPLIER', is_active=True)
+        new_company.save()
+        CompanyFuelUpdate.objects.create(company=new_company)
+        messages.success(request, 'Company successfully registered')
+        return redirect('zeraPortal:dashboard')
+>>>>>>> 0fd4fcd032f7683f7af3adcd33fdf1b4f8974efa
     return render(request, 'zeraPortal/companies.html', {'companies': companies})
+
+
+def block_company(request, id):
+    company = Company.objects.filter(id=id).first()
+    if request.method == 'POST':
+        company.is_active = False
+        company.save()
+        messages.success(request, f'{company.name} Successfully Blocked')
+        return redirect('zeraPortal:dashboard')
+
+
+def unblock_company(request, id):
+    company = Company.objects.filter(id=id).first()
+    if request.method == 'POST':
+        company.is_active = True
+        company.save()
+        messages.success(request, f'{company.name} Successfully Unblocked')
+        return redirect('zeraPortal:dashboard')
+
 
 def company_fuel(request):
     capacities = CompanyFuelUpdate.objects.all()
@@ -51,15 +90,28 @@ def company_fuel(request):
     return render(request, 'zeraPortal/company_fuel.html', {'capacities': capacities})
 
 def allocations(request, id):
-    company = Company.objects.filter(id=id).first()
-    allocations = FuelAllocation.objects.filter(company=company).all()
-    for allocation in allocations:
-        allocation.subsidiary = Subsidiaries.objects.filter(id=allocation.allocated_subsidiary_id).first()
-    return render(request, 'zeraPortal/fuel_allocations.html', {'allocations': allocations, 'company': company})
+    sord_allocations = SordCompanyAuditTrail.objects.filter(company__id=id).all()
+    # allocations = FuelAllocation.objects.filter(company=company).all()
+    # for allocation in allocations:
+        # allocation.subsidiary = Subsidiaries.objects.filter(id=allocation.allocated_subsidiary_id).first()
+    return render(request, 'zeraPortal/fuel_allocations.html', {'sord_allocations': sord_allocations})
+
+
+def company_subsidiaries(request, id):
+    subsidiaries = Subsidiaries.objects.filter(company__id=id).all()
+    for subsidiary in subsidiaries:
+        subsidiary.fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
+        if subsidiary.license_num.strip() == "":
+            subsidiary.license_num = None
+    return render(request, 'zeraPortal/company_subsidiaries.html', {'subsidiaries':subsidiaries})
 
 
 def subsidiaries(request):
     subsidiaries = Subsidiaries.objects.all()
+    for subsidiary in subsidiaries:
+        subsidiary.fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
+        if subsidiary.license_num.strip() == "":
+            subsidiary.license_num = None
     return render(request, 'zeraPortal/subsidiaries.html', {'subsidiaries':subsidiaries})
 
 
@@ -297,33 +349,98 @@ def statistics(request):
     approval_percentage = get_approved_company_complete_percentage()
 
     return render(request, 'zeraPortal/statistics.html', {'offers': offers,
-                                                          'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients,
-                                                          'normal_requests': normal_requests,
-                                                          'diesel': diesel, 'petrol': petrol, 'revenue': revenue,
-                                                          'new_orders': new_orders,'trans_complete': trans_complete,
-                                                          'sorted_subs': sorted_subs,
-                                                          'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
-                                                          'last_week_rev': last_week_rev, 'number_of_companies': number_of_companies,
-                                                          'number_of_depots':number_of_depots, 'number_of_s_stations':number_of_s_stations,
-                                                          'approval_percentage': approval_percentage})
+                                                     'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients,
+                                                     'normal_requests': normal_requests,
+                                                     'diesel': diesel, 'petrol': petrol, 'revenue': revenue,
+                                                     'inactive_stations': inactive_stations,'inactive_depots': inactive_depots,
+                                                     'sorted_subs': sorted_subs,
+                                                     'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
+                                                     'last_week_rev': last_week_rev, 'number_of_companies': number_of_companies,
+                                                     'number_of_depots':number_of_depots, 'number_of_s_stations':number_of_s_stations,
+                                                     'approval_percentage': approval_percentage})
+    
+
+def clients_history(request, cid):
+    buyer = User.objects.filter(id=cid).first()
+    trans = []
+    state = 'All'
+
+    if request.method == "POST":
+
+        if request.POST.get('report_type') == 'Complete':
+            trns = Transaction.objects.filter(buyer=buyer, is_complete=True)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Complete'
+
+        if request.POST.get('report_type') == 'Incomplete':
+            trns = Transaction.objects.filter(buyer=buyer, is_complete=False)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Incomplete'
+
+        if request.POST.get('report_type') == 'All':
+            trns = Transaction.objects.filter(buyer=buyer)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'All'
+        return render(request, 'zeraPortal/clients_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
+
+    trns = Transaction.objects.filter(buyer=buyer)
+    trans = []
+    for tran in trns:
+        tran.revenue = tran.offer.request.amount * tran.offer.price
+        trans.append(tran)
+
+    return render(request, 'zeraPortal/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state,      
+                                                     'approval_percentage': approval_percentage})    
 
 
-@login_required()
+@login_required
+def subsidiary_transaction_history(request, sid):
+    subsidiary = Subsidiaries.objects.filter(id=sid).first()
+    trans = []
+    state = 'All'
+
+    if request.method == "POST":
+
+        if request.POST.get('report_type') == 'Complete':
+            trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id, is_complete=True)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Complete'
+
+        if request.POST.get('report_type') == 'Incomplete':
+            trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id, is_complete=False)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Incomplete'
+
+        if request.POST.get('report_type') == 'All':
+            trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'All'
+        return render(request, 'zeraPortal/subsidiary_history.html', {'trans': trans, 'subsidiary': subsidiary, 'state': state})
+    
+    trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
+    for tran in trns:
+        tran.revenue = tran.offer.request.amount * tran.offer.price
+        trans.append(tran)
+
+    return render(request, 'zeraPortal/subsidiary_history.html', {'trans': trans, 'subsidiary': subsidiary})
+
 def profile(request):
-    context = {
-        'title': 'Fuel Finder Zim | Profile',
-        'profile_form': ZeraProfileUpdateForm(instance=request.user),
-        'picture_form': ZeraImageUpdateForm(request.FILES, instance=request.user),
-    }
-    if request.method == 'POST':
-        profile_form = ZeraProfileUpdateForm(request.POST, instance=request.user)
-        picture_form = ZeraImageUpdateForm(request.POST, request.FILES, instance=request.user)
-        if profile_form.is_valid() and picture_form.is_valid():
-            profile_form.save()
-            picture_form.save()
-            messages.success(request, 'Profile successfully updated')
-            return redirect('zeraPortal:profile')
-        else:
-            messages.warning(request, 'Invalid Details')
-            return redirect('zeraPortal:profile')
-    return render(request, 'zeraPortal/profile.html', context=context)
+    return render(request, 'zeraPortal/profile.html')
