@@ -66,6 +66,48 @@ def allocations(request, id):
         allocation.subsidiary = Subsidiaries.objects.filter(id=allocation.allocated_subsidiary_id).first()
     return render(request, 'zeraPortal/fuel_allocations.html', {'allocations': allocations, 'company': company})
 
+
+def subsidiaries(request):
+    subsidiaries = Subsidiaries.objects.all()
+    return render(request, 'zeraPortal/subsidiaries.html', {'subsidiaries':subsidiaries})
+
+
+def change_licence(request, id):
+    subsidiary = Subsidiaries.objects.filter(id=id).first()
+    if request.method == 'POST':
+        subsidiary.license_num = request.POST['license_num']
+        subsidiary.save()
+        messages.success(request, f'{subsidiary.name} License updated successfully')
+        return redirect('zeraPortal:subsidiaries')
+
+
+def block_licence(request, id):
+    subsidiary = Subsidiaries.objects.filter(id=id).first()
+    if request.method == 'POST':
+        subsidiary.is_active = False
+        subsidiary.save()
+        messages.info(request, f'{subsidiary.name} License Blocked')
+        return redirect('zeraPortal:subsidiaries')
+
+
+def unblock_licence(request, id):
+    subsidiary = Subsidiaries.objects.filter(id=id).first()
+    if request.method == 'POST':
+        subsidiary.is_active = True
+        subsidiary.save()
+        messages.success(request, f'{subsidiary.name} License unblocked successfully')
+        return redirect('zeraPortal:subsidiaries')
+
+
+def add_licence(request, id):
+    subsidiary = Subsidiaries.objects.filter(id=id).first()
+    if request.method == 'POST':
+        subsidiary.license_num = request.POST['license_num']
+        subsidiary.save()
+        messages.success(request, f'{subsidiary.name} Approved Successfully')
+        return redirect('zeraPortal:subsidiaries')
+
+
 def report_generator(request):
     '''View to dynamically render form tables based on different criteria'''
     allocations = requests = trans = stock = None
@@ -106,7 +148,7 @@ def report_generator(request):
                                                    supplier__company=request.user.company, is_complete=True)
                 revs = {}
                 total_revenue = 0
-                trans_no = 0
+                trans_no =0
 
                 if trans:
                     for tran in trans:
@@ -189,13 +231,15 @@ def statistics(request):
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
     weekly_rev = get_weekly_sales(True)
     last_week_rev = get_weekly_sales(False)
+    number_of_companies = Company.objects.all().count()
+    number_of_depots = Subsidiaries.objects.filter(is_depot=True).count()
+    number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()   
     last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1))
     offers = Offer.objects.all().count()
     bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
     normal_requests = FuelRequest.objects.filter(delivery_method="DELIVERY").count()  # Change these 2 items
     staff = ''
     new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
-    
     clients = []
     stock = get_aggregate_stock()
     diesel = stock['diesel']
@@ -259,6 +303,7 @@ def statistics(request):
     # except:
     #     trans = 0    
     trans_complete = get_aggregate_transactions_complete_percentage()
+    approval_percentage = get_approved_company_complete_percentage()
 
     return render(request, 'zeraPortal/statistics.html', {'offers': offers,
                                                      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients,
@@ -267,4 +312,6 @@ def statistics(request):
                                                      'new_orders': new_orders,'trans_complete': trans_complete,
                                                      'sorted_subs': sorted_subs,
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
-                                                     'last_week_rev': last_week_rev})    
+                                                     'last_week_rev': last_week_rev, 'number_of_companies': number_of_companies,
+                                                     'number_of_depots':number_of_depots, 'number_of_s_stations':number_of_s_stations,
+                                                     'approval_percentage': approval_percentage})    
