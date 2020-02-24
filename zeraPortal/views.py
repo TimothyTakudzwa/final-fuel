@@ -381,9 +381,49 @@ def clients_history(request, cid):
         tran.revenue = tran.offer.request.amount * tran.offer.price
         trans.append(tran)
 
-    return render(request, 'zeraPortal/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state})        
+    return render(request, 'zeraPortal/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state,      
                                                      'approval_percentage': approval_percentage})    
 
+
+@login_required
+def subsidiary_transaction_history(request, sid):
+    subsidiary = Subsidiaries.objects.filter(id=sid).first()
+    trans = []
+    state = 'All'
+
+    if request.method == "POST":
+
+        if request.POST.get('report_type') == 'Complete':
+            trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id, is_complete=True)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Complete'
+
+        if request.POST.get('report_type') == 'Incomplete':
+            trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id, is_complete=False)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Incomplete'
+
+        if request.POST.get('report_type') == 'All':
+            trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'All'
+        return render(request, 'zeraPortal/subsidiary_history.html', {'trans': trans, 'subsidiary': subsidiary, 'state': state})
+    
+    trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
+    for tran in trns:
+        tran.revenue = tran.offer.request.amount * tran.offer.price
+        trans.append(tran)
+
+    return render(request, 'zeraPortal/subsidiary_history.html', {'trans': trans, 'subsidiary': subsidiary})
 
 def profile(request):
     return render(request, 'zeraPortal/profile.html')
