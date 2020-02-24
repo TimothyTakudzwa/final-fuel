@@ -90,6 +90,15 @@ def allocations(request, id):
     return render(request, 'zeraPortal/fuel_allocations.html', {'allocations': allocations, 'company': company})
 
 
+def company_subsidiaries(request, id):
+    subsidiaries = Subsidiaries.objects.filter(company__id=id).all()
+    for subsidiary in subsidiaries:
+        subsidiary.fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
+        if subsidiary.license_num.strip() == "":
+            subsidiary.license_num = None
+    return render(request, 'zeraPortal/company_subsidiaries.html', {'subsidiaries':subsidiaries})
+
+
 def subsidiaries(request):
     subsidiaries = Subsidiaries.objects.all()
     for subsidiary in subsidiaries:

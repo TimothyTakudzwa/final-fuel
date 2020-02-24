@@ -117,10 +117,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                             Account
                         </th>
                         <th>
-                            Depots
-                        </th>
-                        <th>
-                            Stations
+                            Subsidiaries
                         </th>
                         <th>
                             Action
@@ -137,8 +134,8 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <td>{{company.iban_number}}</td>
                         <td>{{company.destination_bank}}</td>
                         <td>{{company.account_number}}</td>
-                        <td>{{company.num_of_depots}}</td>
-                        <td>{{company.num_of_stations}}</td>
+                        <td><a class="btn btn-success btn-sm" href="{% url 'zeraPortal:company-subsidiaries' company.id %}"><i class="fa fa-eye" style="margin-right: 11px;"></i>
+                            View</a></td>
                         {% if company.is_active == True %}
                         <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#block_{{company.id}}">Block</button></td>
                         {% else %}
