@@ -92,13 +92,17 @@
                             {% endif %}
                             <td>{{subsidiary.city}}</td>
                             <td>{{subsidiary.location}}</td>
+                            {% if subsidiary.license_num != None %}
                             <td>{{subsidiary.license_num}}</td>
+                            {% else %}
+                            <td>-</td>
+                            {% endif %}
                             <td>{{subsidiary.praz_reg_num}}</td>
                             <td>{{subsidiary.destination_bank}}</td>
                             <td>{{subsidiary.account_number}}</td>
                             <td style="width: 25%;">
                                 <div class="btn-group">
-                                    {% if subsidiary.license_num %}
+                                    {% if subsidiary.license_num != None %}
                                     <button class="btn btn-danger btn-sm" data-toggle="modal"
                                         data-target="#edit_{{subsidiary.id}}">Change Licence</button>
                                     {% else %}
