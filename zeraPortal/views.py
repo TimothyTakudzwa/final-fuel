@@ -322,3 +322,7 @@ def statistics(request):
                                                      'last_week_rev': last_week_rev, 'number_of_companies': number_of_companies,
                                                      'number_of_depots':number_of_depots, 'number_of_s_stations':number_of_s_stations,
                                                      'approval_percentage': approval_percentage})    
+
+
+def profile(request):
+    return render(request, 'zeraPortal/profile.html')
