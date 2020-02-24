@@ -302,14 +302,16 @@ def statistics(request):
     #     trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
     # except:
     #     trans = 0    
-    trans_complete = get_aggregate_transactions_complete_percentage()
+    # trans_complete = get_aggregate_transactions_complete_percentage()
+    inactive_depots = Subsidiaries.objects.filter(is_active=False, is_depot=True).count()
+    inactive_stations = Subsidiaries.objects.filter(is_active=False, is_depot=False).count()
     approval_percentage = get_approved_company_complete_percentage()
 
     return render(request, 'zeraPortal/statistics.html', {'offers': offers,
                                                      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients,
                                                      'normal_requests': normal_requests,
                                                      'diesel': diesel, 'petrol': petrol, 'revenue': revenue,
-                                                     'new_orders': new_orders,'trans_complete': trans_complete,
+                                                     'inactive_stations': inactive_stations,'inactive_depots': inactive_depots,
                                                      'sorted_subs': sorted_subs,
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
                                                      'last_week_rev': last_week_rev, 'number_of_companies': number_of_companies,
