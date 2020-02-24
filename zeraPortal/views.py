@@ -17,6 +17,8 @@ from operator import attrgetter
 from buyer.models import User, FuelRequest
 from company.models import Company, CompanyFuelUpdate
 from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, Transaction, Offer
+from .forms import ZeraProfileUpdateForm, ZeraImageUpdateForm
+
 user = get_user_model()
 
 from .lib import *
@@ -28,17 +30,6 @@ def dashboard(request):
     for company in companies:
         company.num_of_depots = Subsidiaries.objects.filter(company=company, is_depot='True').count()
         company.num_of_stations = Subsidiaries.objects.filter(company=company, is_depot='False').count()
-    if request.method == 'POST':
-        name = request.POST.get('company_name')
-        address = request.POST.get('address')
-        license_number = request.POST.get('license_number')
-        destination_bank = request.POST.get('destination_bank')
-        iban_number = request.POST.get('iban_number')
-        account_number = request.POST.get('account_number')
-        Company.objects.create(name=name, address=address, license_number=license_number, destination_bank=destination_bank,
-                               iban_number=iban_number, account_number=account_number, company_type='SUPPLIER', is_active=True)
-        messages.success(request, 'Company successfully registered')
-        return redirect('zeraPortal:dashboard')
     return render(request, 'zeraPortal/companies.html', {'companies': companies})
 
 def company_fuel(request):
@@ -69,12 +60,7 @@ def allocations(request, id):
 
 def subsidiaries(request):
     subsidiaries = Subsidiaries.objects.all()
-    for subsidiary in subsidiaries:
-        if subsidiary.license_num.strip() == "":
-            subsidiary.license_num = None
     return render(request, 'zeraPortal/subsidiaries.html', {'subsidiaries':subsidiaries})
-<<<<<<< HEAD
-=======
 
 
 def change_licence(request, id):
@@ -112,7 +98,6 @@ def add_licence(request, id):
         messages.success(request, f'{subsidiary.name} Approved Successfully')
         return redirect('zeraPortal:subsidiaries')
 
->>>>>>> 49850af7091b1fcb31147fdb3c66936df4099dc7
 
 def report_generator(request):
     '''View to dynamically render form tables based on different criteria'''
@@ -237,19 +222,15 @@ def statistics(request):
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
     weekly_rev = get_weekly_sales(True)
     last_week_rev = get_weekly_sales(False)
-    number_of_companies = Company.objects.filter(company_type='SUPPLIER').all().count()
+    number_of_companies = Company.objects.all().count()
     number_of_depots = Subsidiaries.objects.filter(is_depot=True).count()
-    number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()   
+    number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()
     last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1))
     offers = Offer.objects.all().count()
     bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
     normal_requests = FuelRequest.objects.filter(delivery_method="DELIVERY").count()  # Change these 2 items
     staff = ''
     new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
-<<<<<<< HEAD
-
-=======
->>>>>>> 49850af7091b1fcb31147fdb3c66936df4099dc7
     clients = []
     stock = get_aggregate_stock()
     diesel = stock['diesel']
@@ -312,28 +293,37 @@ def statistics(request):
     #     trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
     # except:
     #     trans = 0    
-    # trans_complete = get_aggregate_transactions_complete_percentage()
-    inactive_depots = Subsidiaries.objects.filter(is_active=False, is_depot=True).count()
-    inactive_stations = Subsidiaries.objects.filter(is_active=False, is_depot=False).count()
+    trans_complete = get_aggregate_transactions_complete_percentage()
     approval_percentage = get_approved_company_complete_percentage()
 
     return render(request, 'zeraPortal/statistics.html', {'offers': offers,
-<<<<<<< HEAD
                                                           'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients,
                                                           'normal_requests': normal_requests,
                                                           'diesel': diesel, 'petrol': petrol, 'revenue': revenue,
                                                           'new_orders': new_orders,'trans_complete': trans_complete,
                                                           'sorted_subs': sorted_subs,
                                                           'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
-                                                          'last_week_rev': last_week_rev})
-=======
-                                                     'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients,
-                                                     'normal_requests': normal_requests,
-                                                     'diesel': diesel, 'petrol': petrol, 'revenue': revenue,
-                                                     'inactive_stations': inactive_stations,'inactive_depots': inactive_depots,
-                                                     'sorted_subs': sorted_subs,
-                                                     'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
-                                                     'last_week_rev': last_week_rev, 'number_of_companies': number_of_companies,
-                                                     'number_of_depots':number_of_depots, 'number_of_s_stations':number_of_s_stations,
-                                                     'approval_percentage': approval_percentage})    
->>>>>>> 49850af7091b1fcb31147fdb3c66936df4099dc7
+                                                          'last_week_rev': last_week_rev, 'number_of_companies': number_of_companies,
+                                                          'number_of_depots':number_of_depots, 'number_of_s_stations':number_of_s_stations,
+                                                          'approval_percentage': approval_percentage})
+
+
+@login_required()
+def profile(request):
+    context = {
+        'title': 'Fuel Finder Zim | Profile',
+        'profile_form': ZeraProfileUpdateForm(instance=request.user),
+        'picture_form': ZeraImageUpdateForm(request.FILES, instance=request.user),
+    }
+    if request.method == 'POST':
+        profile_form = ZeraProfileUpdateForm(request.POST, instance=request.user)
+        picture_form = ZeraImageUpdateForm(request.POST, request.FILES, instance=request.user)
+        if profile_form.is_valid() and picture_form.is_valid():
+            profile_form.save()
+            picture_form.save()
+            messages.success(request, 'Profile successfully updated')
+            return redirect('zeraPortal:profile')
+        else:
+            messages.warning(request, 'Invalid Details')
+            return redirect('zeraPortal:profile')
+    return render(request, 'zeraPortal/profile.html', context=context)

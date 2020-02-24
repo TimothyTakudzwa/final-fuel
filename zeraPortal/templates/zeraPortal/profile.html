@@ -1,0 +1,76 @@
+{% extends "zeraPortal/zera_base.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block body %}
+    <!--top head-->
+    <section class="content-header">
+        <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search...">
+                <span class="input-group-btn">
+                 <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+             </span>
+            </div>
+        </form>
+        <div class="header-icon">
+            <i class="fa fa-user"></i>
+        </div>
+        <div class="header-title">
+            <h1> ZERA  Portal</h1>
+            <small>User Profile</small>
+        </div>
+    </section>
+
+    <!--body-->
+    <div class="content">
+        <!--image-->
+        <div class="text-center">
+            <img class="img-circle" src="{{ user.image.url }}" alt="profile" style="height: 80px; width: 80px">
+        </div>
+        <!--other details-->
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <!--first name-->
+                <div class="col-md-6">
+                    <fieldset class="form-control">
+                        {{ profile_form.first_name|as_crispy_field }}
+                    </fieldset>
+                </div>
+                <!--last name-->
+                <div class="col-md-6">
+                    <fieldset class="form-control">
+                        {{ profile_form.last_name|as_crispy_field }}
+                    </fieldset>
+                </div>
+                <!--phone number-->
+                <div class="col-md-6">
+                    <fieldset class="form-control">
+                        {{ profile_form.phone_number|as_crispy_field }}
+                    </fieldset>
+                </div>
+                <!--email-->
+                <div class="col-md-6">
+                    <fieldset class="form-control">
+                        {{ profile_form.email|as_crispy_field }}
+                    </fieldset>
+                </div>
+                <!--picture-->
+                <div class="col-md-6">
+                    <fieldset class="form-control">
+                        {{ picture_form|crispy }}
+                    </fieldset>
+                </div>
+                <!--submit button-->
+                <div class="col-md-12 text-center">
+                    <button class="btn btn-primary btn-md w-50" type="submit">
+                        Update Details
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
+
