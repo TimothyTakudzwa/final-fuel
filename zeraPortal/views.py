@@ -45,7 +45,7 @@ def company_fuel(request):
 
         fuel.diesel_capacity = '{:,}'.format(fuel.diesel_capacity)
         fuel.petrol_capacity = '{:,}'.format(fuel.petrol_capacity)
-    
+
     return render(request, 'zeraPortal/company_fuel.html', {'capacities': capacities})
 
 def allocations(request, id):
@@ -58,7 +58,7 @@ def allocations(request, id):
 
 def subsidiaries(request):
     subsidiaries = Subsidiaries.objects.all()
-    return render(request, 'subsidiaries.html', {'subsidiaries':subsidiaries})
+    return render(request, 'zeraPortal/subsidiaries.html', {'subsidiaries':subsidiaries})
 
 def report_generator(request):
     '''View to dynamically render form tables based on different criteria'''
@@ -127,12 +127,12 @@ def report_generator(request):
         if request.POST.get('report_type') == 'Companies - Verified':
             v_companies = Company.objects.filter(is_verified=True)
             verified_companies = []
-            
+
             for company in v_companies:
                 company.admin = User.objects.filter(company=company).first()
                 verified_companies.append(company)
-            
-            
+
+
             print(f'__________________{verified_companies}__________________________________')
             trans = None
             allocations = None
@@ -142,18 +142,18 @@ def report_generator(request):
         if request.POST.get('report_type') == 'Companies - Unverified':
             uv_companies = Company.objects.filter(is_verified=False)
             unverified_companies = []
-            
+
             for company in uv_companies:
                 company.admin = User.objects.filter(company=company).first()
                 unverified_companies.append(company)
-            
-            
+
+
             print(f'__________________{unverified_companies}__________________________________')
             trans = None
             allocations = None
             stock = None
             revs = None
-            verified_companies=None        
+            verified_companies=None
         if request.POST.get('report_type') == 'Allocations':
             print("__________________________I am in allocations____________________________")
             allocations = FuelAllocation.objects.all()
@@ -176,8 +176,8 @@ def report_generator(request):
     return render(request, 'zeraPortal/reports.html',
                   {'trans': trans, 'requests': requests, 'allocations': allocations,
                    'start': start_date, 'end': end_date, 'show': show, 'stock': stock})
-    
-    
+
+
 def statistics(request):
     yesterday = date.today() - timedelta(days=1)
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
@@ -189,7 +189,7 @@ def statistics(request):
     normal_requests = FuelRequest.objects.filter(delivery_method="DELIVERY").count()  # Change these 2 items
     staff = ''
     new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
-    
+
     clients = []
     stock = get_aggregate_stock()
     diesel = stock['diesel']
@@ -255,10 +255,10 @@ def statistics(request):
     trans_complete = get_aggregate_transactions_complete_percentage()
 
     return render(request, 'zeraPortal/statistics.html', {'offers': offers,
-                                                     'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients,
-                                                     'normal_requests': normal_requests,
-                                                     'diesel': diesel, 'petrol': petrol, 'revenue': revenue,
-                                                     'new_orders': new_orders,'trans_complete': trans_complete,
-                                                     'sorted_subs': sorted_subs,
-                                                     'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
-                                                     'last_week_rev': last_week_rev})    
+                                                          'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients,
+                                                          'normal_requests': normal_requests,
+                                                          'diesel': diesel, 'petrol': petrol, 'revenue': revenue,
+                                                          'new_orders': new_orders,'trans_complete': trans_complete,
+                                                          'sorted_subs': sorted_subs,
+                                                          'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
+                                                          'last_week_rev': last_week_rev})
