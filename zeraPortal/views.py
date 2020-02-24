@@ -41,6 +41,25 @@ def dashboard(request):
         return redirect('zeraPortal:dashboard')
     return render(request, 'zeraPortal/companies.html', {'companies': companies})
 
+
+def block_company(request, id):
+    company = Company.objects.filter(id=id).first()
+    if request.method == 'POST':
+        company.is_active = False
+        company.save()
+        messages.success(request, f'{company.name} Successfully Blocked')
+        return redirect('zeraPortal:dashboard')
+
+
+def unblock_company(request, id):
+    company = Company.objects.filter(id=id).first()
+    if request.method == 'POST':
+        company.is_active = True
+        company.save()
+        messages.success(request, f'{company.name} Successfully Unblocked')
+        return redirect('zeraPortal:dashboard')
+
+
 def company_fuel(request):
     capacities = CompanyFuelUpdate.objects.all()
     for fuel in capacities:
