@@ -17,7 +17,8 @@ urlpatterns = [
     path('add_licence/<int:id>', views.add_licence, name='add_licence'),
     path('clients_history/<int:cid>', views.clients_history, name="clients_history"),
     path('subsidiary_transaction_history/<int:sid>', views.subsidiary_transaction_history, name="subsidiary_transaction_history"),
-    path('profile/', views.profile, name='profile')
+    path('profile/', views.profile, name='profile'),
+    path('sordactions/<id>', views.sordactions, name='sordactions')
     
     
     

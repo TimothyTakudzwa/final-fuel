@@ -17,11 +17,9 @@ from operator import attrgetter
 from buyer.models import User, FuelRequest
 from company.models import Company, CompanyFuelUpdate
 from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, Transaction, Offer
-<<<<<<< HEAD
 from .forms import ZeraProfileUpdateForm, ZeraImageUpdateForm
-=======
 from fuelUpdates.models import SordCompanyAuditTrail
->>>>>>> 0fd4fcd032f7683f7af3adcd33fdf1b4f8974efa
+from users.models import SordActionsAuditTrail
 
 user = get_user_model()
 
@@ -34,8 +32,6 @@ def dashboard(request):
     for company in companies:
         company.num_of_depots = Subsidiaries.objects.filter(company=company, is_depot='True').count()
         company.num_of_stations = Subsidiaries.objects.filter(company=company, is_depot='False').count()
-<<<<<<< HEAD
-=======
     if request.method == 'POST':
         name = request.POST.get('company_name')
         address = request.POST.get('address')
@@ -49,7 +45,6 @@ def dashboard(request):
         CompanyFuelUpdate.objects.create(company=new_company)
         messages.success(request, 'Company successfully registered')
         return redirect('zeraPortal:dashboard')
->>>>>>> 0fd4fcd032f7683f7af3adcd33fdf1b4f8974efa
     return render(request, 'zeraPortal/companies.html', {'companies': companies})
 
 
@@ -89,12 +84,20 @@ def company_fuel(request):
 
     return render(request, 'zeraPortal/company_fuel.html', {'capacities': capacities})
 
+
 def allocations(request, id):
     sord_allocations = SordCompanyAuditTrail.objects.filter(company__id=id).all()
-    # allocations = FuelAllocation.objects.filter(company=company).all()
-    # for allocation in allocations:
-        # allocation.subsidiary = Subsidiaries.objects.filter(id=allocation.allocated_subsidiary_id).first()
     return render(request, 'zeraPortal/fuel_allocations.html', {'sord_allocations': sord_allocations})
+
+
+def sordactions(request, id):
+    sord_actions = SordActionsAuditTrail.objects.filter(sord_num=id).all()
+
+    if sord_actions:
+        sord_number = sord_actions[0].sord_num
+    else:
+        sord_number = "-"
+    return render(request, 'zeraPortal/sord_actions.html', {'sord_number': sord_number, 'sord_actions': sord_actions})
 
 
 def company_subsidiaries(request, id):
