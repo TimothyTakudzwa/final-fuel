@@ -99,17 +99,18 @@
                                     {% if subsidiary.license_num != None %}
                                     <button class="btn btn-purple btn-sm" data-toggle="modal"
                                         data-target="#edit_{{subsidiary.id}}">Update Licence</button>
+                                        {% if subsidiary.is_active == True %}
+                                        <button class="btn btn-danger btn-sm" data-toggle="modal"
+                                            data-target="#block_{{subsidiary.id}}">Cancel Licence</button>
+                                        {% else %}
+                                        <button class="btn btn-warning btn-sm" data-toggle="modal"
+                                            data-target="#unblock_{{subsidiary.id}}">Activate Licence</button>
+                                        {% endif %}
                                     {% else %}
                                     <button class="btn btn-primary btn-sm" data-toggle="modal"
                                         data-target="#approve_{{subsidiary.id}}">Add Licence</button>
                                     {% endif %}
-                                    {% if subsidiary.is_active == True %}
-                                    <button class="btn btn-danger btn-sm" data-toggle="modal"
-                                        data-target="#block_{{subsidiary.id}}">Cancel Licence</button>
-                                    {% else %}
-                                    <button class="btn btn-warning btn-sm" data-toggle="modal"
-                                        data-target="#unblock_{{subsidiary.id}}">Activate Licence</button>
-                                    {% endif %}
+                                   
 
 
                                 </div>
