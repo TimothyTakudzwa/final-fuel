@@ -83,11 +83,11 @@ def company_fuel(request):
     return render(request, 'zeraPortal/company_fuel.html', {'capacities': capacities})
 
 def allocations(request, id):
-    allocations = SordCompanyAuditTrail.objects.filter(company__id=id).all()
+    sord_allocations = SordCompanyAuditTrail.objects.filter(company__id=id).all()
     # allocations = FuelAllocation.objects.filter(company=company).all()
-    for allocation in allocations:
-        allocation.subsidiary = Subsidiaries.objects.filter(id=allocation.allocated_subsidiary_id).first()
-    return render(request, 'zeraPortal/fuel_allocations.html', {'allocations': allocations, 'company': company})
+    # for allocation in allocations:
+        # allocation.subsidiary = Subsidiaries.objects.filter(id=allocation.allocated_subsidiary_id).first()
+    return render(request, 'zeraPortal/fuel_allocations.html', {'sord_allocations': sord_allocations})
 
 
 def company_subsidiaries(request, id):
