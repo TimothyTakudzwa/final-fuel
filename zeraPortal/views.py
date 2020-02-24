@@ -69,6 +69,9 @@ def allocations(request, id):
 
 def subsidiaries(request):
     subsidiaries = Subsidiaries.objects.all()
+    for subsidiary in subsidiaries:
+        if subsidiary.license_num.strip() == "":
+            subsidiary.license_num = None
     return render(request, 'zeraPortal/subsidiaries.html', {'subsidiaries':subsidiaries})
 <<<<<<< HEAD
 =======
