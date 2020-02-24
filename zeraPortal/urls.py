@@ -12,6 +12,7 @@ urlpatterns = [
     path('report_generator', views.report_generator, name='report_generator'),
     path('statistics', views.statistics, name='statistics'),
     path('subsidiaries/', views.subsidiaries, name='subsidiaries'),
+    path('company-subsidiaries/<int:id>', views.company_subsidiaries, name='company-subsidiaries'),
     path('block_company/<int:id>', views.block_company, name='block_company'),
     path('unblock_company/<int:id>', views.unblock_company, name='unblock_company'),
     path('change_licence/<int:id>', views.change_licence, name='change_licence'),
