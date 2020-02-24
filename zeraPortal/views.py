@@ -100,7 +100,7 @@ def report_generator(request):
                                                    supplier__company=request.user.company, is_complete=True)
                 revs = {}
                 total_revenue = 0
-                trans_no = 0
+                trans_no =0
 
                 if trans:
                     for tran in trans:
