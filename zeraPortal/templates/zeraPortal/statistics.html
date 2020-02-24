@@ -320,61 +320,55 @@
         </div>
         <!-- End of Revenue section -->
 
-        <!-- Rating Section -->
+        <!-- Company Pop Section -->
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
                     <div class="statistic-box">
-                        <h2><span style="font-size: 20px;">{{average_rating}} / 5</span>
+                        <h2><span style="font-size: 20px;">{{number_of_companies}}</span>
                         </h2>
                     </div>
                     <div class="items pull-left">
-                        <i class="fa fa-star fa-2x"></i>
-                        <h4>Average Rating</h4>
+                        <i class="fa fa-building fa-2x"></i>
+                        <h4>Companies Pop.</h4>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- End of Rating section -->
+        <!-- End of Pop section -->
 
-        <!-- Requests Section -->
+        <!-- Depots Pop -->
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
                     <div class="statistic-box">
-                        <h2><span style="font-size: 20px;">{{new_orders}}</span>
+                        <h2><span style="font-size: 20px;">{{number_of_depots}}</span>
                         </h2>
                     </div>
                     <div class="items pull-left">
-                        <i class="fa fa-envelope fa-2x"></i>
-                        <h4> New Requests</h4>
+                        <i class="fa fa-book fa-2x"></i>
+                        <h4> Depots Pop.</h4>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- End of Rating section -->
+        <!-- End of Depots Pop section -->
 
         <!-- Staff section -->
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
                   <div class="items pull-left">
-                    <i class="fa fa-users fa-2x"></i>
-                    <h4>Current Staff</h4>
+                    <i class="fa fa-book fa-2x"></i>
+                    <h4>Service Stations Pop.</h4>
                     </div>
                     <div class="statistic-box">
-                      <div class="row" style="padding-bottom: 10px;">
-                        <h2 class="card-title" style="font-size: 1em;">Depot : 
-                          <span class="count-number">{{admin_staff}}</span>
-                          <small>L</small>
+                      <div>
+                        <h2 class="card-title" style="font-size: 1em;"> 
+                          {{number_of_s_stations}}
                         </h2>
                       </div> 
-                      <div class="row"> 
-                      <h2 class="card-title" style="font-size: 1em;">Stations : 
-                        <span class="count-number">{{other_staff}}</span>
-                        <small>L</small>
-                      </h2>
-                      </div>
+                      
                     
                     </div>
                     
@@ -400,17 +394,17 @@
         </div>
         <!-- End of Rating section -->
 
-        <!-- End of Our Offers section -->
+        <!-- End of Registration Completion section -->
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
                     <div class="statistic-box">
-                        <h2><span class="count-number" style="font-size: 20px;">{{offers}}</span>
+                        <h2><span style="font-size: 20px;">{{approval_percentage}}</span>
                         </h2>
                     </div>
                     <div class="items pull-left">
-                    <i class="fa fa-paper-plane fa-2x"></i>
-                    <h4>Our Offers</h4>
+                    <i class="fa fa-check fa-2x"></i>
+                    <h4>Approved Companies</h4>
                     </div>
                 </div>
             </div>
