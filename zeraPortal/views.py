@@ -319,4 +319,45 @@ def statistics(request):
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
                                                      'last_week_rev': last_week_rev, 'number_of_companies': number_of_companies,
                                                      'number_of_depots':number_of_depots, 'number_of_s_stations':number_of_s_stations,
-                                                     'approval_percentage': approval_percentage})    
+                                                     'approval_percentage': approval_percentage})
+    
+
+def clients_history(request, cid):
+    buyer = User.objects.filter(id=cid).first()
+    trans = []
+    state = 'All'
+
+    if request.method == "POST":
+
+        if request.POST.get('report_type') == 'Complete':
+            trns = Transaction.objects.filter(buyer=buyer, is_complete=True)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Complete'
+
+        if request.POST.get('report_type') == 'Incomplete':
+            trns = Transaction.objects.filter(buyer=buyer, is_complete=False)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Incomplete'
+
+        if request.POST.get('report_type') == 'All':
+            trns = Transaction.objects.filter(buyer=buyer)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'All'
+        return render(request, 'zeraPortal/clients_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
+
+    trns = Transaction.objects.filter(buyer=buyer)
+    trans = []
+    for tran in trns:
+        tran.revenue = tran.offer.request.amount * tran.offer.price
+        trans.append(tran)
+
+    return render(request, 'zeraPortal/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state})        

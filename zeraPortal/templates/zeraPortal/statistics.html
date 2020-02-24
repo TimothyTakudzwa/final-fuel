@@ -403,7 +403,7 @@
                         </h2>
                     </div>
                     <div class="items pull-left">
-                    <i class="fa fa-check fa-2x"></i>
+                    <i class="fa fa-check-circle fa-2x"></i>
                     <h4>Approved Companies</h4>
                     </div>
                 </div>
@@ -545,17 +545,17 @@
                             {% for client in clients%}
                             <tr>
                               <td>
-                                {{client.company.name}}
+                                {{client.name}}
                                 </td>
                               
-                              <td>{{client.company.address}}</td>
-                              <td>{{client.company.industry}}</td>
+                              <td>{{client.address}}</td>
+                              <td>{{client.industry}}</td>
                               <td>$ {{client.total_revenue|stringformat:".2f"}}</td>
                               <td>{{client.number_of_trans}}</td>
                               
                               <td style="width: 13%;">
                                   <div>
-                                        <form method="POST" action="{% url 'users:client_history' client.id %}">
+                                        <form method="POST" action="{% url 'zeraPortal:clients_history' client.id %}">
                                           {% csrf_token %}
                                           <input type="hidden" name="report_type" value="Complete">
                       
