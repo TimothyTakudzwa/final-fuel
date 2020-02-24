@@ -139,12 +139,12 @@
                         <a href="{% url 'zeraPortal:company_fuel' %}"><i class="fa fa-binoculars"></i><span>Fuel Audit Trail</span>
                         </a>
                     </li>
-                    <li class="nav-item ">
-                        <a href=""><i class="fa fa-line-chart"></i><span>Statistics</span>
+                    <li class="nav-item {% if request.path == '/zeraPortal/statistics/' %} active {% endif %}">
+                        <a href="{% url 'zeraPortal:statistics' %}"><i class="fa fa-line-chart"></i><span>Statistics</span>
                         </a>
                     </li>
-                    <li class="nav-item ">
-                        <a href=""><i class="fa fa-pie-chart"></i><span>Reports</span>
+                    <li class="nav-item {% if request.path == '/zeraPortal/report_generator/' %} active {% endif %} ">
+                        <a href="{% url 'zeraPortal:report_generator' %}"><i class="fa fa-pie-chart"></i><span>Reports</span>
                         </a>
                     </li>
                     <li class="nav-item">

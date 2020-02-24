@@ -1,0 +1,1787 @@
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="dns-prefetch" href="//s3.envato.com" />
+    <link rel="stylesheet" type="text/css"
+        href="https://timothytakudzwa.github.io/static/datatable/css/jquery.dataTables.min.css">
+    
+    <link rel="stylesheet" type="text/css"
+        href="https://timothytakudzwa.github.io/static/datatable/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://timothytakudzwa.github.io/static/datatable/css/style.css">
+
+    
+<script>window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","errorBeacon":"bam.nr-data.net","licenseKey":"fcf8d519de","applicationID":"13909","transactionName":"NTU0DRQNDwshOmIZBRM3dR8TDg84Nys/FRQYBSoLAxQKAjM=","queueTime":0,"applicationTime":23,"agent":"","atts":"DXgvW1wZQRQtPChSS1QOMhwLByUINi0+BFNaeCgcEAsQDismb0pTQGppSgABB0U5NQ=="}</script>
+<script>(window.NREUM||(NREUM={})).loader_config={licenseKey:"fcf8d519de",applicationID:"13909"};window.NREUM||(NREUM={}),__nr_require=function(n,e,t){function r(t){if(!e[t]){var i=e[t]={exports:{}};n[t][0].call(i.exports,function(e){var i=n[t][1][e];return r(i||e)},i,i.exports)}return e[t].exports}if("function"==typeof __nr_require)return __nr_require;for(var i=0;i<t.length;i++)r(t[i]);return r}({1:[function(n,e,t){function r(){}function i(n,e,t){return function(){return o(n,[u.now()].concat(f(arguments)),e?null:this,t),e?void 0:this}}var o=n("handle"),a=n(4),f=n(5),c=n("ee").get("tracer"),u=n("loader"),s=NREUM;"undefined"==typeof window.newrelic&&(newrelic=s);var p=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],d="api-",l=d+"ixn-";a(p,function(n,e){s[e]=i(d+e,!0,"api")}),s.addPageAction=i(d+"addPageAction",!0),s.setCurrentRouteName=i(d+"routeName",!0),e.exports=newrelic,s.interaction=function(){return(new r).get()};var m=r.prototype={createTracer:function(n,e){var t={},r=this,i="function"==typeof e;return o(l+"tracer",[u.now(),n,t],r),function(){if(c.emit((i?"":"no-")+"fn-start",[u.now(),r,i],t),i)try{return e.apply(this,arguments)}catch(n){throw c.emit("fn-err",[arguments,this,n],t),n}finally{c.emit("fn-end",[u.now()],t)}}}};a("actionText,setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(n,e){m[e]=i(l+e)}),newrelic.noticeError=function(n,e){"string"==typeof n&&(n=new Error(n)),o("err",[n,u.now(),!1,e])}},{}],2:[function(n,e,t){function r(n,e){var t=n.getEntries();t.forEach(function(n){"first-paint"===n.name?a("timing",["fp",Math.floor(n.startTime)]):"first-contentful-paint"===n.name&&a("timing",["fcp",Math.floor(n.startTime)])})}function i(n){if(n instanceof c&&!s){var e,t=Math.round(n.timeStamp);e=t>1e12?Date.now()-t:f.now()-t,s=!0,a("timing",["fi",t,{type:n.type,fid:e}])}}if(!("init"in NREUM&&"page_view_timing"in NREUM.init&&"enabled"in NREUM.init.page_view_timing&&NREUM.init.page_view_timing.enabled===!1)){var o,a=n("handle"),f=n("loader"),c=NREUM.o.EV;if("PerformanceObserver"in window&&"function"==typeof window.PerformanceObserver){o=new PerformanceObserver(r);try{o.observe({entryTypes:["paint"]})}catch(u){}}if("addEventListener"in document){var s=!1,p=["click","keydown","mousedown","pointerdown","touchstart"];p.forEach(function(n){document.addEventListener(n,i,!1)})}}},{}],3:[function(n,e,t){function r(n,e){if(!i)return!1;if(n!==i)return!1;if(!e)return!0;if(!o)return!1;for(var t=o.split("."),r=e.split("."),a=0;a<r.length;a++)if(r[a]!==t[a])return!1;return!0}var i=null,o=null,a=/Version\/(\S+)\s+Safari/;if(navigator.userAgent){var f=navigator.userAgent,c=f.match(a);c&&f.indexOf("Chrome")===-1&&f.indexOf("Chromium")===-1&&(i="Safari",o=c[1])}e.exports={agent:i,version:o,match:r}},{}],4:[function(n,e,t){function r(n,e){var t=[],r="",o=0;for(r in n)i.call(n,r)&&(t[o]=e(r,n[r]),o+=1);return t}var i=Object.prototype.hasOwnProperty;e.exports=r},{}],5:[function(n,e,t){function r(n,e,t){e||(e=0),"undefined"==typeof t&&(t=n?n.length:0);for(var r=-1,i=t-e||0,o=Array(i<0?0:i);++r<i;)o[r]=n[e+r];return o}e.exports=r},{}],6:[function(n,e,t){e.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],ee:[function(n,e,t){function r(){}function i(n){function e(n){return n&&n instanceof r?n:n?c(n,f,o):o()}function t(t,r,i,o){if(!d.aborted||o){n&&n(t,r,i);for(var a=e(i),f=v(t),c=f.length,u=0;u<c;u++)f[u].apply(a,r);var p=s[y[t]];return p&&p.push([b,t,r,a]),a}}function l(n,e){h[n]=v(n).concat(e)}function m(n,e){var t=h[n];if(t)for(var r=0;r<t.length;r++)t[r]===e&&t.splice(r,1)}function v(n){return h[n]||[]}function g(n){return p[n]=p[n]||i(t)}function w(n,e){u(n,function(n,t){e=e||"feature",y[t]=e,e in s||(s[e]=[])})}var h={},y={},b={on:l,addEventListener:l,removeEventListener:m,emit:t,get:g,listeners:v,context:e,buffer:w,abort:a,aborted:!1};return b}function o(){return new r}function a(){(s.api||s.feature)&&(d.aborted=!0,s=d.backlog={})}var f="nr@context",c=n("gos"),u=n(4),s={},p={},d=e.exports=i();d.backlog=s},{}],gos:[function(n,e,t){function r(n,e,t){if(i.call(n,e))return n[e];var r=t();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(n,e,{value:r,writable:!0,enumerable:!1}),r}catch(o){}return n[e]=r,r}var i=Object.prototype.hasOwnProperty;e.exports=r},{}],handle:[function(n,e,t){function r(n,e,t,r){i.buffer([n],r),i.emit(n,e,t)}var i=n("ee").get("handle");e.exports=r,r.ee=i},{}],id:[function(n,e,t){function r(n){var e=typeof n;return!n||"object"!==e&&"function"!==e?-1:n===window?0:a(n,o,function(){return i++})}var i=1,o="nr@id",a=n("gos");e.exports=r},{}],loader:[function(n,e,t){function r(){if(!x++){var n=E.info=NREUM.info,e=l.getElementsByTagName("script")[0];if(setTimeout(s.abort,3e4),!(n&&n.licenseKey&&n.applicationID&&e))return s.abort();u(y,function(e,t){n[e]||(n[e]=t)}),c("mark",["onload",a()+E.offset],null,"api");var t=l.createElement("script");t.src="https://"+n.agent,e.parentNode.insertBefore(t,e)}}function i(){"complete"===l.readyState&&o()}function o(){c("mark",["domContent",a()+E.offset],null,"api")}function a(){return O.exists&&performance.now?Math.round(performance.now()):(f=Math.max((new Date).getTime(),f))-E.offset}var f=(new Date).getTime(),c=n("handle"),u=n(4),s=n("ee"),p=n(3),d=window,l=d.document,m="addEventListener",v="attachEvent",g=d.XMLHttpRequest,w=g&&g.prototype;NREUM.o={ST:setTimeout,SI:d.setImmediate,CT:clearTimeout,XHR:g,REQ:d.Request,EV:d.Event,PR:d.Promise,MO:d.MutationObserver};var h=""+location,y={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1158.min.js"},b=g&&w&&w[m]&&!/CriOS/.test(navigator.userAgent),E=e.exports={offset:f,now:a,origin:h,features:{},xhrWrappable:b,userAgent:p};n(1),n(2),l[m]?(l[m]("DOMContentLoaded",o,!1),d[m]("load",r,!1)):(l[v]("onreadystatechange",i),d[v]("onload",r)),c("mark",["firstbyte",f],null,"api");var x=0,O=n(6)},{}],"wrap-function":[function(n,e,t){function r(n){return!(n&&n instanceof Function&&n.apply&&!n[a])}var i=n("ee"),o=n(5),a="nr@original",f=Object.prototype.hasOwnProperty,c=!1;e.exports=function(n,e){function t(n,e,t,i){function nrWrapper(){var r,a,f,c;try{a=this,r=o(arguments),f="function"==typeof t?t(r,a):t||{}}catch(u){d([u,"",[r,a,i],f])}s(e+"start",[r,a,i],f);try{return c=n.apply(a,r)}catch(p){throw s(e+"err",[r,a,p],f),p}finally{s(e+"end",[r,a,c],f)}}return r(n)?n:(e||(e=""),nrWrapper[a]=n,p(n,nrWrapper),nrWrapper)}function u(n,e,i,o){i||(i="");var a,f,c,u="-"===i.charAt(0);for(c=0;c<e.length;c++)f=e[c],a=n[f],r(a)||(n[f]=t(a,u?f+i:i,o,f))}function s(t,r,i){if(!c||e){var o=c;c=!0;try{n.emit(t,r,i,e)}catch(a){d([a,t,r,i])}c=o}}function p(n,e){if(Object.defineProperty&&Object.keys)try{var t=Object.keys(n);return t.forEach(function(t){Object.defineProperty(e,t,{get:function(){return n[t]},set:function(e){return n[t]=e,e}})}),e}catch(r){d([r])}for(var i in n)f.call(n,i)&&(e[i]=n[i]);return e}function d(e){try{n.emit("internal-error",e)}catch(t){}}return n||(n=i),t.inPlace=u,t.flag=a,t}},{}]},{},["loader"]);</script>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Fuel Admin</title>
+    <meta name="description" content="&amp;lt;p&amp;gt;Health Admin is a full functional HTML Template designed  for Health, medical, doctor an...">
+    <meta name="robots" content="noindex, follow" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1" />
+
+    <link rel="stylesheet" media="all" href="https://public-assets.envato-static.com/assets/market/core/index-9053762da6b2d4d3aa5e4cbfc07ad24a15a4547e7a4f57e03b173204e694bc0a.css" />
+    <link rel="stylesheet" media="all" href="https://public-assets.envato-static.com/assets/market/pages/preview/index-004d35cdd5d555cdd3e956d1b916825642de06529f0fe91fd9f390813761d2fc.css" />
+    <link rel="stylesheet" media="all" href="https://cookiebot-assets.envato-static.com/cookiebot.css" />
+
+      <link rel="apple-touch-icon-precomposed" type="image/x-icon" href="https://public-assets.envato-static.com/icons/themeforest.net/apple-touch-icon-72x72-precomposed.png" sizes="72x72" />
+  <link rel="apple-touch-icon-precomposed" type="image/x-icon" href="https://public-assets.envato-static.com/icons/themeforest.net/apple-touch-icon-114x114-precomposed.png" sizes="114x114" />
+  <link rel="apple-touch-icon-precomposed" type="image/x-icon" href="https://public-assets.envato-static.com/icons/themeforest.net/apple-touch-icon-144x144-precomposed.png" sizes="144x144" />
+<link rel="apple-touch-icon-precomposed" type="image/x-icon" href="https://public-assets.envato-static.com/icons/themeforest.net/apple-touch-icon-precomposed.png" />
+
+    <script src="https://public-assets.envato-static.com/assets/market/pages/full_screen_preview/index-1cc9e02a5e4e48ac2ba5b45a45c05b32584f9580c2fa432bcd2e40dd0b2a2ec2.js"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/chartJs/Chart.min.js" type="text/javascript"></script>
+
+    <script>
+      //function to fix height of iframe!
+      var calcHeight = function() {
+        var headerDimensions = $('.preview__header').height();
+        $('.full-screen-preview__frame').height($(window).height() - headerDimensions);
+      }
+
+      $(document).ready(function() {
+        calcHeight();
+      });
+
+      $(window).resize(function() {
+        calcHeight();
+      }).load(function() {
+        calcHeight();
+      });
+    </script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ title }}</title>
+
+    <link rel="shortcut icon" href="https://timothytakudzwa.github.io/static/new/assets/dist/img/ico/favicon.png" type="image/x-icon">
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
+    <link href="https://timothytakudzwa.github.io/static/new/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/lobipanel/lobipanel.min.css" rel="stylesheet" type="text/css"/>
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/pace/flash.css" rel="stylesheet" type="text/css"/>
+    <link href="https://timothytakudzwa.github.io/static/new/assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="https://timothytakudzwa.github.io/static/new/assets/pe-icon-7-stroke/css/pe-icon-7-stroke.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/css/demo.css">
+    <link rel="stylesheet" href="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/css/ns-default.css">
+    <link rel="stylesheet" href="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/css/ns-style-growl.css">
+    <link rel="stylesheet" href="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/css/ns-style-attached.css">
+    <link rel="stylesheet" href="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/css/ns-style-bar.css">
+    <link rel="stylesheet" href="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/css/ns-style-other.css">
+    <link rel="stylesheet" href="https://timothytakudzwa.github.io/static/new/assets/plugins/sweetalert/sweetalert.css">
+    <link href="https://timothytakudzwa.github.io/static/new/assets/themify-icons/themify-icons.css" rel="stylesheet" type="text/css"/>
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/toastr/toastr.css" rel="stylesheet" type="text/css"/>
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/emojionearea/emojionearea.min.css" rel="stylesheet" type="text/css"/>
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/monthly/monthly.css" rel="stylesheet" type="text/css"/>
+    <link href="https://timothytakudzwa.github.io/static/new/assets/dist/css/stylehealth.min.css" rel="stylesheet" type="text/css"/>
+    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet"
+        type="text/css" />
+
+    <!-- <script>
+        new Chartist.Line('.ct-chart', {
+            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+            series: [
+                [12, 9, 7, 8, 5],
+                [2, 1, 3.5, 7, 3],
+                [1, 3, 4, 5, 6]
+            ]
+            }, {
+            fullWidth: true,
+            chartPadding: {
+                right: 40
+            }
+            });
+    </script> -->
+    </head>
+
+    <body class="hold-transition sidebar-mini">
+        <!-- Site wrapper -->
+        <div class="wrapper">
+
+            
+            <header class="main-header">
+                <a href="{% url 'users:company_profile' %}" class="logo"> <!-- Logo -->
+                    <span class="logo-mini"> </span>
+                    <span class="logo-lg">
+
+                       <h3>Fuel Finder Zim</h3>
+
+                    </span>
+                </a>
+                <!-- Header Navbar -->
+                <nav class="navbar navbar-static-top ">
+                    <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"> <!-- Sidebar toggle button-->
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="fa fa-tasks"></span>
+                    </a>
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
+                      
+                            <!-- Notifications -->
+                            <li class="dropdown notifications-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="pe-7s-bell"></i>
+                                    <span class="label label-warning">0</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="header"><i class="fa fa-bell"></i>0 Notifications</li>
+                                    <li>
+                                        <ul class="menu">
+                                            <li>
+                                            <a href="#" class="border-gray"><i class="fa fa-inbox"></i> Inbox  <span class=" label-success label label-default pull-right">0</span></a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                   <li class="footer">
+                                   <a href="#"> See all Notifications <i class=" fa fa-arrow-right"></i></a>
+                                    </li>
+                                </ul>
+                            </li>
+                           
+                            <li class="dropdown dropdown-user admin-user">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"> 
+                                <div class="user-image">
+                                <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar4.png" class="img-circle" height="40" width="40" alt="User Image">
+                                </div>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{% url 'users:company_profile' %}"><i class="fa fa-users"></i> Company Profile</a></li>
+                                    <li><a href="{% url 'logout' %}?next=/login"><i class="fa fa-sign-out"></i> Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+
+            <!-- Left side column. contains the sidebar -->
+          <aside class="main-sidebar">
+                <!-- sidebar -->
+                <div class="sidebar">
+                    <!-- Sidebar user panel -->
+                    <div class="user-panel">
+                        <div class="image pull-left">
+                            <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar5.png" class="img-circle" alt="User Image">
+                        </div>
+                        <div class="info">
+                            <p class="mt-2 mb-2">{{request.user.company.name}}</p>
+                        </div>
+                    </div>
+                   
+                    <!-- sidebar menu -->
+                    <ul class="sidebar-menu">
+                        <li class="nav-item {% if request.path == '/zeraPortal/dashboard/' %} active {% endif %}">
+                            <a href="{% url 'zeraPortal:dashboard' %}"><i class="fa fa-book"></i><span>Fuel Companies</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href=""><i class="fa fa-book" aria-hidden="true"></i><span>Depots & Stations</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {% if request.path == '/zeraPortal/company_fuel/' %} active {% endif %}">
+                            <a href="{% url 'zeraPortal:company_fuel' %}"><i class="fa fa-binoculars"></i><span>Fuel Audit Trail</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {% if request.path == '/zeraPortal/statistics/' %} active {% endif %}">
+                            <a href="{% url 'zeraPortal:statistics' %}"><i class="fa fa-line-chart"></i><span>Statistics</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {% if request.path == '/zeraPortal/report_generator/' %} active {% endif %} ">
+                            <a href="{% url 'zeraPortal:report_generator' %}"><i class="fa fa-pie-chart"></i><span>Reports</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href=""><i class="fa fa-user"></i><span>User Profile</span>
+                            </a>
+                        </li>
+                        <li class="">
+                            <a class="nav-link" href="{% url 'logout' %}?next=/login/">
+                                <i class="fa fa-sign-out"></i><span>Logout</span>
+                            </a>
+                        </li>
+    
+    
+    
+                    </ul>
+        </div>
+          </aside>
+
+            <div class="content-wrapper">
+                <!-- Content Header (Page header) -->
+                <script>
+                    $("document").ready(function(){
+                    setTimeout(function(){
+                        $("div.alert").remove();
+                    }, 3000 ); // 3 secs
+    
+                    });
+                </script>            
+                <!--MainContent-->
+                
+
+                <main role="main">
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            
+            
+            
+                        </div>
+                        {% if messages %}
+            
+                                {% for message in messages %}
+                                    <div class="alert alert-{{ message.tags }}" style="text-align: center">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+            
+                            {% endif %}
+            
+
+                        
+
+
+                    </div>
+
+                    <!-- Content Header (Page header) -->
+                        <section class="content-header">
+                             <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+                                    <div class="input-group">
+                                    <input type="text" name="q" class="form-control" placeholder="Search...">
+                                        <span class="input-group-btn">
+                                            <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+                                        </span>
+                                    </div>
+                                </form>   
+                            <div class="header-icon">
+                                <i class="fa fa-clipboard" aria-hidden="true"></i>
+                            </div>
+                            <div class="header-title">
+                                <h1> Report Generator</h1>
+                                <small> Dashboard features</small>
+                                <ol class="breadcrumb hidden-xs">
+                                    <li><a href="index.html"><i class="pe-7s-home"></i> Home</a></li>
+                                    <li class="active">Report Generator</li>
+                                </ol>
+                            </div>
+        
+        
+                        </section>
+
+                                                <section class="content" style="min-height: 600px;">
+                        
+                            
+                        <button type="button" class="btn btn-labeled btn-success btn-lg"  data-toggle="modal" data-target="#report_modal"
+                        role="button" style="color: white; margin-left: 10px; margin-bottom: 30px;">
+                            <span class="btn-label"><i class="fa fa-cogs" aria-hidden="true"></i></span>Generate Report
+                        </button>        
+                                    
+                                    
+                            <div>
+                                <div class="modal fade modal-success in" id="report_modal" role="dialog">
+                                    <div class="modal-dialog" style="margin: 0">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <span class="modal-title" style="color:whitesmoke"> Generate Report</span>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            </div>
+                                            <div class="modal-body">
+                
+                                                <form method="POST" action="/zeraPortal/report_generator">
+                                                    {% csrf_token %}
+                                                    <div class="form-group">
+                                                        <select name="report_type" class="form-control form-control-sm " id="report_options">
+                                                            <option value="" selected disabled hidden>Choose here</option>
+                                                            <option selected>Transactions</option>
+                                                            <option selected>Companies - Verified</option>
+                                                            <option selected>Companies - Unverified</option>
+                                                            <option value="Requests">Requests</option>
+                                                            <option value="Stock">Stock</option>
+                                                            <option value="Allocations">Allocations</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="row report_dates" style="margin-bottom: 25px; margin-top: 25px">
+                                                        <div class="form-group col-md-6">
+                                                            <label for="exampleInputEmail1">Starting Date</label>
+                                                            <input name="start_date" type="date" class="form-control"
+                                                                id="exampleInputEmail1" aria-describedby="emailHelp"
+                                                                placeholder="Enter email">
+                                                            <small id="emailHelp" class="form-text text-muted">Please Pick A Starting
+                                                                Date.</small>
+                                                        </div>
+                
+                                                        <div class="form-group col-md-6">
+                                                            <label for="exampleInputEmail1">Ending Date</label>
+                                                            <input name="end_date" type="date" class="form-control" id="exampleInputEmail1"
+                                                                aria-describedby="emailHelp" placeholder="Enter email">
+                                                            <small id="emailHelp" class="form-text text-muted"
+                                                                style="color: lightslategray;">Please Pick A Ending Date.</small>
+                                                        </div>
+                                                    </div>    
+                
+                                                    <input class="btn btn-info" type="submit" value="Submit">
+                                                </form>
+                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <!--
+                            <div class="container" style="text-align: left;margin-left: 0;">
+                                <h3 class="display-3">Report Generator</h3>
+                                <hr class="my-2">
+        
+                            </div>
+                            -->
+                            <!-- 
+                            <p class="lead" style="padding-left: 15px;padding-top: 30px;">
+                                <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#report_modal"
+                                    role="button" style="color: white;">Generate Report</button>
+                                
+                                   
+                                <button class="btn btn-info btn-lg" data-toggle="modal" data-target="#trans_info_modal"
+                                    role="button" style="color: white;">View Quick Info</button> --
+        
+                            </p>
+                            -->
+        
+        
+                            
+                        </div>
+                    <!-- /.row -->
+                        <main role="main" class="content" style="margin-top: 0;padding: 0;">
+                            <!-- <div class="jumbotron jumbotron-fluid" style="background: linear-gradient(to right, #fdbb2d, #b21f1f, #1a2a6c);color: white;margin-bottom: 100px;"> -->
+
+                        
+                        {% if trans or revs or stock or allocations or requests or verified_companies or  unverified_companies%}
+
+                        <div class="container" style="margin-bottom: 30px">
+                            <blockquote class="quote-box">
+                              {% if trans or revs or allocations or requests %}
+                              <h1 style="color: #374767;font-size: 22px;">Showing results from <b>{{start}}</b> to <b>{{end}} </b> </h1>
+                              {% elif stock %}
+                              <h1 style="color: #374767;font-size: 22px;">Showing Current Stock Levels  - {{ request.user.company.name|title}}'s Subsidiaries </h1>
+                              {% elif verified_companies %}
+                              <h1 style="color: #374767;font-size: 22px;">Showing Current Verified Companies </h1>
+                              {% elif unverified_companies %}
+                              <h1 style="color: #374767;font-size: 22px;">Showing Current Unverified Companies </h1>
+
+                              {% endif %}
+                              <hr>
+                              <div class="blog-post-actions">
+                                <p class="blog-post-bottom pull-left" style="padding:20px;">
+                                  {% if trans %}
+                                  Transactions
+                                  {% elif revs %}
+                                  Revenue
+                                  {% elif stock%}
+                                  Stock
+                                  {% elif allocations %}
+                                  Fuel Allocations
+                                  {% elif requests %}
+                                  Requests
+                                  {% elif verified_companies %}
+                                  Verified Companies
+                                  {% elif unverified_companies %}
+                                  Unverified Companies
+                                  {% endif %}
+                                  Report
+                                </p>
+                                
+                              </div>
+                            </blockquote>
+                        </div>
+                        {% else %}
+                        <!--
+                        <div style="/* padding: 25px; */background-color:rgb(14, 80, 100);border: #fafbfb 2px solid;border-radius: 10px;padding-left: 15px;padding-top: 30px;padding-bottom: 30px;margin-left: 15px;margin-top: -89px;">
+                        </div>
+                        -->
+
+                        <div class="container col-md-12" style="margin-bottom: 30px">
+                            <blockquote class="quote-box">
+                              
+                              <h1 style="color: lightslategray;font-size: 22px; font-weight: 400;">No Data, Generate New Report Above </h1>
+
+                              <hr>
+                              <!-- <div class="blog-post-actions">
+                                <p class="blog-post-bottom pull-left" style="padding:20px;">
+                                  {% if trans %}
+                                  Transactions
+                                  {% elif revs %}
+                                  Revenue
+                                  {% elif stock%}
+                                  Stock
+                                  {% elif allocations %}
+                                  Fuel Allocations
+                                  {% elif requests %}
+                                  Requests
+                                  {% endif %}
+                                  Report
+                                </p>
+                                
+                              </div> -->
+                            </blockquote>
+                        </div>
+                        {%endif%}  
+
+                        {% if verified_companies %}
+                        <div class="col-md-12">
+                            <div class="mt-2 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+        
+                                <div class="panel-heading ui-sortable-handle">
+                                    <div class="btn-group">
+
+                                        <h4 class="card-title ">Companies (Verified) Report</h4>
+                                    </div>  
+                                    
+                                    <div class="dropdown">
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                
+                
+                                        </ul>
+                                        <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="container-fluid">
+                                        <div class="row" style="margin-bottom: 20px;">
+        
+        
+                                        </div>
+                                        <table id="verified_companies" class="table table-striped table-bordered" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Company</th>
+                                                    <th>Supplier Admin</th>
+                                                    <th>Address </th>
+                                                    <th>Licence Number</th>
+                                                    <th>Verified</th>
+
+                                                    
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for company in verified_companies %}
+                                                <tr>
+                                                    
+                                                    <td>{{company.name}}</td>
+                                                    <td>{{company.admin.first_name|title}} {{company.admin.last_name|title}}</td>
+                                                    <td>{{company.address}}</td>
+                                                    <td>{{company.license_number}}</td>
+                                                    
+                                                    <td>
+                                                    <i class="fa fa-check-circle" style="color: #2ecc71;" aria-hidden="true"></i>
+                                                    </td>
+        
+                                                </tr>
+        
+                                                {% endfor %}
+                                            </tbody>
+                                            <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
+                                                <tr>
+                                                    <th>Company</th>
+                                                    <th>Supplier Admin</th>
+                                                    <th>Address </th>
+                                                    <th>Licence Number</th>
+                                                    <th>Verified</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                        <!-- <table id="example" class="table table-striped table-bordered" style="width:100%">
+                                            <thead style="color:white; background:lightslategray">
+                                                <th style="color:white;">
+                                                    Date
+                                                </th>
+                                                <th style="color:white;">
+                                                    Time
+                                                </th>
+                                                <th style="color:white;">
+                                                    Buyer
+                                                </th>
+                                                <th style="color:white;">
+                                                    Status
+                                                </th>
+        
+        
+                                            <tbody>
+                                                {% for tran in trans %}
+                                                <tr>
+                                                    <td>{{tran.date}}</td>
+                                                    <td>{{tran.time}}</td>
+                                                    <td>{{tran.buyer}}</td>
+                                                    <td>
+                                                        {% if tran.complete %}
+                                                        <i class="material-icons" style="color: #2ecc71;">check_circle</i>
+                                                        {% else %}
+                                                        <i class="material-icons" style="color: #e74c3c;">report</i>
+                                                        {% endif %}
+                                                    </td>
+        
+                                                </tr>
+        
+                                                {% endfor %}
+        
+        
+                                            </tbody>
+                                        </table> -->
+        
+                                    </div>
+                                </div>
+                            </div>
+        
+                        </div>
+                        {% endif %}
+                    
+                        {% if unverified_companies %}
+                        <div class="col-md-12">
+                            <div class="mt-2 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+        
+                                <div class="panel-heading ui-sortable-handle">
+                                    <div class="btn-group">
+
+                                        <h4 class="card-title ">Companies (Unverified) Report</h4>
+                                    </div>  
+                                    
+                                    <div class="dropdown">
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                
+                
+                                        </ul>
+                                        <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="container-fluid">
+                                        <div class="row" style="margin-bottom: 20px;">
+        
+        
+                                        </div>
+                                        <table id="verified_companies" class="table table-striped table-bordered" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Company</th>
+                                                    <th>Supplier Admin</th>
+                                                    <th>Address </th>
+                                                    <th>Licence Number</th>
+                                                    <th>Verified</th>
+
+                                                    
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for company in unverified_companies %}
+                                                <tr>
+                                                    
+                                                    <td>{{company.name}}</td>
+                                                    <td>{{company.admin.first_name|title}} {{company.admin.last_name|title}}</td>
+                                                    <td>{{company.address}}</td>
+                                                    <td>{{company.license_number}}</td>
+                                                    
+                                                    <td>
+                                                    <i class="fa fa-times-circle" style="color: #e74c3c;" aria-hidden="true"></i>
+                                                    </td>
+        
+                                                </tr>
+        
+                                                {% endfor %}
+                                            </tbody>
+                                            <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
+                                                <tr>
+                                                    <th>Company</th>
+                                                    <th>Supplier Admin</th>
+                                                    <th>Address </th>
+                                                    <th>Licence Number</th>
+                                                    <th>Verified</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                        <!-- <table id="example" class="table table-striped table-bordered" style="width:100%">
+                                            <thead style="color:white; background:lightslategray">
+                                                <th style="color:white;">
+                                                    Date
+                                                </th>
+                                                <th style="color:white;">
+                                                    Time
+                                                </th>
+                                                <th style="color:white;">
+                                                    Buyer
+                                                </th>
+                                                <th style="color:white;">
+                                                    Status
+                                                </th>
+        
+        
+                                            <tbody>
+                                                {% for tran in trans %}
+                                                <tr>
+                                                    <td>{{tran.date}}</td>
+                                                    <td>{{tran.time}}</td>
+                                                    <td>{{tran.buyer}}</td>
+                                                    <td>
+                                                        {% if tran.complete %}
+                                                        <i class="material-icons" style="color: #2ecc71;">check_circle</i>
+                                                        {% else %}
+                                                        <i class="material-icons" style="color: #e74c3c;">report</i>
+                                                        {% endif %}
+                                                    </td>
+        
+                                                </tr>
+        
+                                                {% endfor %}
+        
+        
+                                            </tbody>
+                                        </table> -->
+        
+                                    </div>
+                                </div>
+                            </div>
+        
+                        </div>
+                        {% endif %}
+
+                        {%if trans%}
+                        <div class="col-md-12">
+                            <div class="mt-2 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+        
+                                <div class="panel-heading ui-sortable-handle">
+                                    <div class="btn-group">
+
+                                        <h4 class="card-title ">Transactions Report</h4>
+                                    </div>  
+                                    
+                                    <div class="dropdown">
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                
+                
+                                        </ul>
+                                        <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="container-fluid">
+                                        <div class="row" style="margin-bottom: 20px;">
+        
+        
+                                        </div>
+                                        <table id="maintable" class="table table-striped table-bordered" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Buying Company</th>
+                                                    <th>Selling Company</th>
+                                                    <th>Fuel Type</th>
+                                                    <th>Quantity (Litres) </th>
+                                                    <th>Price</th>
+                                                    <th>Contact Person</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for tran in trans %}
+                                                <tr>
+                                                    <td>{{tran.date}} <small style="margin-left: 10px;">{{tran.time}}</small>
+                                                    </td>
+                                                    <td>{{tran.buyer.company.name|title}}</td>
+                                                    <td>{{tran.supplier.company.name|title}}</td>
+                                                    <td>{{tran.offer.request.fuel_type|title}}</td>
+                                                    <td>{{tran.offer.quantity}}</td>
+                                                    <td>$ {{tran.offer.price|stringformat:".2f"}}</td>
+                                                    <td>{{tran.buyer.first_name}} {{tran.buyer.last_name }}</td>
+                                                    <td>
+                                                        {% if tran.is_complete %}
+                                                        <i class="fa fa-check-circle" style="color: #2ecc71;" aria-hidden="true"></i>
+                                                        {% else %}
+                                                        <i class="fa fa-times-circle" style="color: #e74c3c;"></i>
+                                                        {% endif %}
+                                                    </td>
+        
+                                                </tr>
+        
+                                                {% endfor %}
+                                            </tbody>
+                                            <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Buying Company</th>
+                                                    <th>Selling Company</th>
+                                                    <th>Fuel Type</th>
+                                                    <th>Quantity</th>
+                                                    <th>Price</th>
+                                                    <th>Contact Person</th>
+        
+                                                    <th>Status</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                        <!-- <table id="example" class="table table-striped table-bordered" style="width:100%">
+                                            <thead style="color:white; background:lightslategray">
+                                                <th style="color:white;">
+                                                    Date
+                                                </th>
+                                                <th style="color:white;">
+                                                    Time
+                                                </th>
+                                                <th style="color:white;">
+                                                    Buyer
+                                                </th>
+                                                <th style="color:white;">
+                                                    Status
+                                                </th>
+        
+        
+                                            <tbody>
+                                                {% for tran in trans %}
+                                                <tr>
+                                                    <td>{{tran.date}}</td>
+                                                    <td>{{tran.time}}</td>
+                                                    <td>{{tran.buyer}}</td>
+                                                    <td>
+                                                        {% if tran.complete %}
+                                                        <i class="material-icons" style="color: #2ecc71;">check_circle</i>
+                                                        {% else %}
+                                                        <i class="material-icons" style="color: #e74c3c;">report</i>
+                                                        {% endif %}
+                                                    </td>
+        
+                                                </tr>
+        
+                                                {% endfor %}
+        
+        
+                                            </tbody>
+                                        </table> -->
+        
+                                    </div>
+                                </div>
+                            </div>
+        
+                        </div>
+                        {%endif%}
+                        {% if stock %}
+                        <div class="col-md-12">
+                            <div class="mt-2 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+                                <div class="panel-heading ui-sortable-handle">
+                                    <div class="btn-group">
+                                        <h4 class="card-title ">Stock Report</h4>
+                                    </div>
+                                    <div class="dropdown">
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                
+                
+                                        </ul>
+                                        <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="container-fluid"> 
+                                      
+                                        <table id="stock" class="table table-striped table-bordered" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Last Update</th>
+                                                        <th>Station Type</th>
+                                                        <th>Station Name</th>
+                                                        <th>Petrol (Litres)</th>
+                                                        <th>Petrol Price</th>
+                                                        <th>Diesel (Litres)</th>
+                                                        <th>Diesel Price</th>
+                                                        
+                                                      
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {%for my_stock in stock %}
+                                                    <tr>
+                                                        
+                                                            <td>{{my_stock.last_updated}}</td>
+                                                            <td>{{my_stock.sub_type}}</td>
+                                                            <td>{{my_stock.subsidiary_name}}</td>
+                                                            <td>{{my_stock.petrol_quantity}} l</td>
+                                                            <td>{{my_stock.petrol_price}}</td>
+                                                            <td>{{my_stock.diesel_quantity}} l</td>
+                                                            <td>$ {{my_stock.diesel_price}}</td>
+                                                            
+                                                    </tr>
+                                                    {%endfor%}
+                                                  
+                            
+                                                </tbody>
+                                                <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
+                                                    <tr>
+                                                            <th>Last Update</th>
+                                                            <th>Station Type</th>
+                                                            <th>Station Name</th>
+                                                            <th>Diesel Quantity</th>
+                                                            <th>Petrol Price</th>
+                                                            <th>Diesel Quantity</th>
+                                                            <th>Diesel Price</th>
+                                                         
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                    </div>
+                                </div>
+                            </div>
+        
+                        </div>
+                        {% endif %}
+                        {% if requests %}
+                        <div class="col-md-12">
+                            <div class="mt-2 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+                                
+                                <div class="panel-heading ui-sortable-handle">
+                                    <div class="btn-group">
+
+                                        <h4 class="card-title ">Requests Report</h4>
+                                    </div>
+                                    
+                                    <div class="dropdown">
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                
+                
+                                        </ul>
+                                        <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="panel-body">
+                                <div class="container-fluid">
+                                                          
+        
+                                    <table id="requests" class="table table-striped table-bordered" style="width:100%">
+                                        <thead style="color:white; background:lightslategray">
+                                            <th style="color:white;">
+                                            Date
+                                            </th>
+                                            <th style="color:white;">
+                                            Time
+                                            </th>
+                                            
+                                            <th style="color:white;">
+                                            Name
+                                            </th>
+                                            <th style="color:white;">
+                                            Amount (Litres)
+                                            </th>
+                                            <th style="color:white;">
+                                            Fuel Type
+                                            </th>
+                                            <th style="color:white;">
+                                            Payment Method
+                                            </th>
+                                            
+                                                
+                                        <tbody>
+                                            {% for req in requests %}
+                                            <tr>
+                                                    <td>{{req.date}}</td>
+                                                    <td>{{req.time}}</td>
+                                                    <td>{{req.name|title}}</td>
+                                                    <td>$ {{req.amount|stringformat:".2f"}}</td>
+                                                    <td>{{req.fuel_type|title}}</td>
+                                                    <td>
+                                                        {%if req.cash%}<i class="fa fa-dollar"></i>{%endif%} {% if req.cash %}<img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL"> {%endif%} {%if req.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {%endif%} {%if req.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH"> {%endif%} {%if req.swipe%}<i class="fa fa-cc-visa"></i> {% endif%} {%if not req.cash and not req.ecocash and not req.swipe and not req.usd%}No Payment Method {%endif%}
+                                                    </td>
+                                                
+                                                    
+                                                </tr>
+                                        
+                                            {% endfor %}   
+                                        
+        
+                                        </tbody>
+                                        </table>
+        
+                                </div>
+                            </div>
+                            </div>
+                            
+                        </div>
+                        {% endif %}
+                        {% if allocations %}
+                        <div class="col-md-12">
+                                <div class="mt-2 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+                                    
+                                    <div class="panel-heading ui-sortable-handle">
+                                        <div class="btn-group">
+                                            <h4 class="card-title ">Allocations Report</h4>
+                                        </div>    
+                                        <div class="dropdown">
+                                            <ul class="dropdown-menu dropdown-menu-right">
+                    
+                    
+                                            </ul>
+                                            <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div class="panel-body">
+                                    <div class="container-fluid">
+                                                              
+            
+                                        <table id="allocations" class="table table-striped table-bordered" style="width:100%">
+                                            <thead style="color:white; background:lightslategray">
+                                                <th style="color:white;">
+                                                Date
+                                                </th>
+                                                <th style="color:white;">
+                                                Diesel Quantity (Litres)
+                                                </th>
+                                                <th style="color:white;">
+                                                Petrol Quantity (Litres)
+                                                </th>
+                                                <th style="color:white;">
+                                                Sub Type
+                                                </th>
+                                                <th style="color:white;">
+                                                Petrol Price
+                                                </th>
+                                                <th style="color:white;">
+                                                Diesel Price
+                                                </th>
+                                                
+                                                    
+                                            <tbody>
+                                                {% for allocation in allocations %}
+                                                <tr>
+                                                        <td>{{allocation.date}}</td>
+                                                        <td>{{allocation.petrol_quantity}} l</td>
+                                                        <td>{{allocation.diesel_quantity}} l</td>
+                                                        <td>{{allocation.sub_type}}</td>
+                                                        <td>$ {{allocation.petrol_price}}</td>
+                                                        <td>$ {{allocation.diesel_price}}</td>
+                                                    
+                                                        
+                                                    </tr>
+                                            
+                                                {% endfor %}   
+                                            
+            
+                                            </tbody>
+                                            </table>
+            
+                                    </div>
+                                </div>
+                                </div>
+                                
+                            </div>
+                        {% endif %}
+        
+                        {% if revs %}
+                        <div class="col-md-12">
+                            <div class="mt-2 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+                                
+                                <div class="panel-heading ui-sortable-handle">
+                                    <div class="btn-group">
+                                        <h4 class="card-title ">Revenue Report</h4>
+                                    </div>    
+                                </div>
+                            <div class="panel-body">
+                                <div class="container-fluid">
+                                                          
+        
+                                    <table id="revenue" class="table table-striped table-bordered" style="width:100%">
+                                        <thead style="color:white; background:lightslategray">
+                                            <th style="color:white;">
+                                            Date
+                                            </th>
+                                            <th style="color:white;">
+                                            Revenue
+                                            </th>
+                                            <th style="color:white;">
+                                            Transactions No.
+                                            </th>
+                                            
+                                            
+                                                
+                                        <tbody>
+                                            
+                                            <tr>
+                                                <td>{{revs.date}}</td>
+                                                <td>{{revs.revenue}}</td>
+                                                <td>{{revs.hits}}</td>                              
+                                            </tr>
+                                        
+                                        
+        
+                                        </tbody>
+                                        </table>
+        
+                                </div>
+                            </div>
+                            </div>
+                            
+                        </div>
+                        {% endif %}
+        
+        
+                        <!-- <table id="allocations" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>City</th>
+                                    <th>Age</th>
+                                    <th>Start Date</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Tiger Nixon</td>
+                                    <td>System Architecture</td>
+                                    <td>Edinburgh</td>
+                                    <td>61</td>
+                                    <td>2011/04/25</td>
+                                    <td>$320,800</td>
+                                </tr>
+        
+                                <tr>
+                                    <td> Harold Franklin</td>
+                                    <td> Financial Advisor</td>
+                                    <td> Tuwiri Wetan</td>
+                                    <td> 43</td>
+                                    <td> 06/18/2011</td>
+                                    <td> $159671.33</td>
+                                </tr>
+        
+                            </tbody>
+                            <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>City</th>
+                                    <th>Age</th>
+                                    <th>Start Date</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </tfoot>
+                        </table> -->
+                        <!-- 
+                        <table id="revenue" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>City</th>
+                                    <th>Age</th>
+                                    <th>Start Date</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Tiger Nixon</td>
+                                    <td>System Architecture</td>
+                                    <td>Edinburgh</td>
+                                    <td>61</td>
+                                    <td>2011/04/25</td>
+                                    <td>$320,800</td>
+                                </tr>
+        
+                                <tr>
+                                    <td> Harold Franklin</td>
+                                    <td> Financial Advisor</td>
+                                    <td> Tuwiri Wetan</td>
+                                    <td> 43</td>
+                                    <td> 06/18/2011</td>
+                                    <td> $159671.33</td>
+                                </tr>
+        
+                            </tbody>
+                            <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>City</th>
+                                    <th>Age</th>
+                                    <th>Start Date</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <table id="offers" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>City</th>
+                                    <th>Age</th>
+                                    <th>Start Date</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Tiger Nixon</td>
+                                    <td>System Architecture</td>
+                                    <td>Edinburgh</td>
+                                    <td>61</td>
+                                    <td>2011/04/25</td>
+                                    <td>$320,800</td>
+                                </tr>
+        
+                                <tr>
+                                    <td> Harold Franklin</td>
+                                    <td> Financial Advisor</td>
+                                    <td> Tuwiri Wetan</td>
+                                    <td> 43</td>
+                                    <td> 06/18/2011</td>
+                                    <td> $159671.33</td>
+                                </tr>
+        
+                            </tbody>
+                            <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>City</th>
+                                    <th>Age</th>
+                                    <th>Start Date</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <table id="staff" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>City</th>
+                                    <th>Age</th>
+                                    <th>Start Date</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Tiger Nixon</td>
+                                    <td>System Architecture</td>
+                                    <td>Edinburgh</td>
+                                    <td>61</td>
+                                    <td>2011/04/25</td>
+                                    <td>$320,800</td>
+                                </tr>
+        
+                                <tr>
+                                    <td> Harold Franklin</td>
+                                    <td> Financial Advisor</td>
+                                    <td> Tuwiri Wetan</td>
+                                    <td> 43</td>
+                                    <td> 06/18/2011</td>
+                                    <td> $159671.33</td>
+                                </tr>
+        
+                            </tbody>
+                            <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>City</th>
+                                    <th>Age</th>
+                                    <th>Start Date</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        -->
+                    
+                    <!-- Main content -->
+                        </section>
+                    
+                </main>
+
+
+            </div>
+
+            <!--footer-->
+
+            <footer class="main-footer">
+                <div class="pull-right hidden-xs"> <b>Version</b> 1.0</div>
+                <strong>Copyright &copy; 2019 <a href="#">Intelli Africa Solutions</a>.</strong> All rights reserved.
+            </footer>
+
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" type="text/javascript"></script>
+        <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" type="text/javascript"></script>
+
+        <script>
+            $(document).ready(function () {
+                $('#company_table').DataTable();
+                $('#fuel_allocations').DataTable();
+                $('#audit_table').DataTable();
+            });
+        </script>
+
+        <!-- <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/jQuery/jquery-1.12.4.min.js" type="text/javascript"></script> -->
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/lobipanel/lobipanel.min.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/pace/pace.min.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/fastclick/fastclick.min.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/dist/js/custom1.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/toastr/toastr.min.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/sparkline/sparkline.min.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/d3.min.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/topojson.min.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/datamaps.all.min.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/counterup/waypoints.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/counterup/jquery.counterup.min.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/chartJs/Chart.min.js" type="text/javascript"></script>
+        
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/emojionearea/emojionearea.min.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/monthly/monthly.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/d3.min.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/topojson.min.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/datamaps.all.min.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/js/modernizr.custom.js"></script>
+        
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/js/notificationFx.js" type="text/javascript"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/js/snap.svg-min.js" type="text/javascripy"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/sweetalert/sweetalert.min.js"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/js/classie.js"></script>
+        <script src="https://timothytakudzwa.github.io/static/new/assets/dist/js/custom.js" type="text/javascript"></script>
+
+        <script>
+
+
+            // $(document).ready(function() {
+            //   $('#example').DataTable({"order": [[ 0, "desc" ]]});
+            // } );
+        
+            $(document).ready(function() {
+              $('#subs_table').DataTable({"order": [[ 2, "desc" ]]});
+            } );
+        
+            $(document).ready(function() {
+              $('#clients_table').DataTable({"order": [[ 3, "desc" ]]});
+            } );
+        
+            $(document).ready(function() {
+              $('#myexample').DataTable({"order": [[ 0, "desc" ]]});
+            } );
+        
+            $(document).ready(function() {
+              $('#myexample2').DataTable({"order": [[ 0, "desc" ]]});
+            } );
+        
+        
+            $(document).ready(function() {
+              $('#myexample1').DataTable({"order": [[ 0, "desc" ]]});
+            } );
+
+            </script>
+
+
+        <script>
+            $(document).ready(function() {
+                var t = $('#example10').DataTable( {
+                    "columnDefs": [ {
+                        "searchable": false,
+                        "orderable": false,
+                        "targets": 0
+                    } ],
+                    "order": [[ 1, 'desc' ]]
+                } );
+             
+                t.on( 'order.dt search.dt', function () {
+                    t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                        cell.innerHTML = i+1;
+                    } );
+                } ).draw();
+            } );
+            </script>
+
+
+         <script>
+                "use strict"; // Start of use strict
+                // notification
+              
+
+                //counter
+                $('.count-number').counterUp({
+                    delay: 10,
+                    time: 5000
+                });
+
+                //data maps
+                var basic_choropleth = new Datamap({
+                    element: document.getElementById("map1"),
+                    projection: 'mercator',
+                    fills: {
+                        defaultFill: "#009688",
+                        authorHasTraveledTo: "#fa0fa0"
+                    },
+                    data: {
+                        USA: {fillKey: "authorHasTraveledTo"},
+                        JPN: {fillKey: "authorHasTraveledTo"},
+                        ITA: {fillKey: "authorHasTraveledTo"},
+                        CRI: {fillKey: "authorHasTraveledTo"},
+                        KOR: {fillKey: "authorHasTraveledTo"},
+                        DEU: {fillKey: "authorHasTraveledTo"}
+                    }
+                });
+
+                var colors = d3.scale.category10();
+
+                window.setInterval(function () {
+                    basic_choropleth.updateChoropleth({
+                        USA: colors(Math.random() * 10),
+                        RUS: colors(Math.random() * 100),
+                        AUS: {fillKey: 'authorHasTraveledTo'},
+                        BRA: colors(Math.random() * 50),
+                        CAN: colors(Math.random() * 50),
+                        ZAF: colors(Math.random() * 50),
+                        IND: colors(Math.random() * 50)
+                    });
+                }, 2000);
+
+        //bar chart
+                var ctx = document.getElementById("barChart");
+                var year = new Date().getFullYear()
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                        datasets: [
+                            {
+                                label: year,
+                                data: [{{monthly_rev.Jan}}, {{monthly_rev.Feb}}, {{monthly_rev.Mar}}, {{monthly_rev.Apr}}, {{monthly_rev.May}}, {{monthly_rev.Jun}}, {{monthly_rev.Jul}}, {{monthly_rev.Aug}}, {{monthly_rev.Sep}}, {{monthly_rev.Oct}}, {{monthly_rev.Nov}}, {{monthly_rev.Dec}}],
+                                borderColor: "#009688",
+                                borderWidth: "0",
+                                backgroundColor: "#009688"
+                            },
+                            {
+                                label: year - 1,
+                                data: [{{last_year_rev.Jan}}, {{last_year_rev.Feb}}, {{last_year_rev.Mar}}, {{last_year_rev.Apr}}, {{last_year_rev.May}}, {{last_year_rev.Jun}}, {{last_year_rev.Jul}}, {{last_year_rev.Aug}}, {{last_year_rev.Sep}}, {{last_year_rev.Oct}}, {{last_year_rev.Nov}}, {{last_year_rev.Dec}}],
+                                borderColor: "#db3737",
+                                borderWidth: "0",
+                                backgroundColor: "#db3737"
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                        }
+                    }
+                });
+                      //radar chart
+                var ctx = document.getElementById("radarChart");
+                var myChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: ["Subsidiary A", "Subsidiary B", "Subsidiary C", "Subsidiary D", "Subsidiary E", "Subsidiary F", "Subsidiary G"],
+                        datasets: [
+                            {
+                                label:`Year ${year}`,
+                                data: [65, 59, 66, 45, 56, 55, 40],
+                                borderColor: "#00968866",
+                                borderWidth: "1",
+                                backgroundColor: "rgba(0, 150, 136, 0.35)"
+                            },
+                            {
+                                label: `Year ${year-1}`,
+                                data: [28, 12, 40, 19, 63, 27, 87],
+                                borderColor: "red",
+                                borderWidth: "1",
+                                backgroundColor: "rgba(0, 150, 136, 0.35)"
+                            }
+                        ]
+                    },
+                    options: {
+                        legend: {
+                            position: 'top'
+                        },
+                        scale: {
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+                // Message
+                $('.message_inner').slimScroll({
+                    size: '3px',
+                    height: '320px'
+                });
+
+                //emojionearea
+                $(".emojionearea").emojioneArea({
+                    pickerPosition: "top",
+                    tonesStyle: "radio"
+                });
+
+                //monthly calender
+                $('#m_calendar').monthly({
+                    mode: 'event',
+                    //jsonUrl: 'events.json',
+                    //dataType: 'json'
+                    xmlUrl: 'events.xml'
+                });
+            
+            
+             //line chart
+                var ctx = document.getElementById("lineChart");
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                        datasets: [
+                            {
+                                label: "This Week",
+                                borderColor: "rgba(0,0,0,.09)",
+                                borderWidth: "1",
+                                backgroundColor: "rgba(0,0,0,.07)",
+                                data: [{{weekly_rev.Mon}}, {{weekly_rev.Tue}}, {{weekly_rev.Wed}}, {{weekly_rev.Thu}}, {{weekly_rev.Fri}}, {{weekly_rev.Sat}}, {{weekly_rev.Sun}}]
+                            },
+                            {
+                                label: "Last Week",
+                                borderColor: "#009688",
+                                borderWidth: "1",
+                                backgroundColor: "#009688",
+                                pointHighlightStroke: "#009688",
+                                data: [{{last_week_rev.Mon}}, {{last_week_rev.Tue}}, {{last_week_rev.Wed}}, {{last_week_rev.Thu}}, {{last_week_rev.Fri}}, {{last_week_rev.Sat}}, {{last_week_rev.Sun}}]
+
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        tooltips: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        hover: {
+                            mode: 'nearest',
+                            intersect: true
+                        }
+
+                    }
+                });
+
+
+        </script>
+
+<script type="text/javascript"
+src="https://timothytakudzwa.github.io/static/datatable/js/jquery-2.2.4.min.js"></script>
+<script type="text/javascript"
+src="https://timothytakudzwa.github.io/static/datatable/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript"
+src="https://timothytakudzwa.github.io/static/datatable/js/dataTables.buttons.min.js"></script>
+<script src="{% static 'finder/assets/js/core/bootstrap-material-design.min.js' %}"></script>
+<script src="{% static 'finder/assets/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
+<!-- Plugin for the momentJs  -->
+<script type="text/javascript" src="https://timothytakudzwa.github.io/static/datatable/js/jszip.min.js"></script>
+<script type="text/javascript" src="https://timothytakudzwa.github.io/static/datatable/js/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://timothytakudzwa.github.io/static/datatable/js/vfs_fonts.js"></script>
+<script type="text/javascript"
+src="https://timothytakudzwa.github.io/static/datatable/js/buttons.html5.min.js"></script>
+<script type="text/javascript"
+src="https://timothytakudzwa.github.io/static/datatable/js/buttons.print.min.js"></script>
+<script type="text/javascript" src="https://timothytakudzwa.github.io/static/datatable/js/app.js"></script>
+<script type="text/javascript"
+src="https://timothytakudzwa.github.io/static/datatable/js/jquery.mark.min.js"></script>
+<script type="text/javascript"
+src="https://timothytakudzwa.github.io/static/datatable/js/datatables.mark.js"></script>
+<script type="text/javascript"
+src="https://timothytakudzwa.github.io/static/datatable/js/buttons.colVis.min.js"></script>
+
+<script>
+        var table = $('#allocations').DataTable({
+            mark: true,
+            dom: 'Bfrtip',
+            lengthMenu: [
+                [10, 25, 50, 100, -1],
+                ['10 rows', '25 rows', '50 rows', '100 rows', 'Show All']
+            ],
+            buttons: [
+                'pageLength',
+                {
+                    extend: 'copyHtml5',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'csvHtml5',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'print',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    download: 'open',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                'colvis'
+            ],
+            columDefs: [{
+                targets: -1,
+                visible: false
+            }]
+        });
+
+        // 4) Search on Multiple Columns
+        $('#allocations tfoot th').each(function () {
+            var title = $('#allocations tfoot th').eq($(this).index()).text();
+            $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+        });
+
+        table.columns().eq(0).each(function (colIdx) {
+            $('input', table.column(colIdx).footer()).on('keyup change', function () {
+                table
+                    .column(colIdx)
+                    .search(this.value)
+                    .draw();
+            });
+        });
+        </script>
+
+<script>
+var table2 = $('#requests').DataTable({
+    mark: true,
+    dom: 'Bfrtip',
+    lengthMenu: [
+        [10, 25, 50, 100, -1],
+        ['10 rows', '25 rows', '50 rows', '100 rows', 'Show All']
+    ],
+    buttons: [
+        'pageLength',
+        {
+            extend: 'copyHtml5',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        {
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        {
+            extend: 'csvHtml5',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        {
+            extend: 'print',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        {
+            extend: 'pdfHtml5',
+            download: 'open',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        'colvis'
+    ],
+    columDefs: [{
+        targets: -1,
+        visible: false
+    }]
+});
+
+// 4) Search on Multiple Columns
+$('#requests tfoot th').each(function () {
+    var title = $('#requests tfoot th').eq($(this).index()).text();
+    $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+});
+
+table2.columns().eq(0).each(function (colIdx) {
+    $('input', table2.column(colIdx).footer()).on('keyup change', function () {
+        table2
+            .column(colIdx)
+            .search(this.value)
+            .draw();
+    });
+});
+
+
+</script>
+
+<script>
+var table5 = $('#verified_companies').DataTable({
+    mark: true,
+    dom: 'Bfrtip',
+    lengthMenu: [
+        [10, 25, 50, 100, -1],
+        ['10 rows', '25 rows', '50 rows', '100 rows', 'Show All']
+    ],
+    buttons: [
+        'pageLength',
+        {
+            extend: 'copyHtml5',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        {
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        {
+            extend: 'csvHtml5',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        {
+            extend: 'print',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        {
+            extend: 'pdfHtml5',
+            download: 'open',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        'colvis'
+    ],
+    columDefs: [{
+        targets: -1,
+        visible: false
+    }]
+});
+
+// 4) Search on Multiple Columns
+$('#verified_companies tfoot th').each(function () {
+    var title = $('#verified_companies tfoot th').eq($(this).index()).text();
+    $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+});
+
+table5.columns().eq(0).each(function (colIdx) {
+    $('input', table5.column(colIdx).footer()).on('keyup change', function () {
+        table5
+            .column(colIdx)
+            .search(this.value)
+            .draw();
+    });
+});
+
+</script>
+
+<script>
+var table5 = $('#stock').DataTable({
+    mark: true,
+    dom: 'Bfrtip',
+    lengthMenu: [
+        [10, 25, 50, 100, -1],
+        ['10 rows', '25 rows', '50 rows', '100 rows', 'Show All']
+    ],
+    buttons: [
+        'pageLength',
+        {
+            extend: 'copyHtml5',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        {
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        {
+            extend: 'csvHtml5',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        {
+            extend: 'print',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        {
+            extend: 'pdfHtml5',
+            download: 'open',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        'colvis'
+    ],
+    columDefs: [{
+        targets: -1,
+        visible: false
+    }]
+});
+
+// 4) Search on Multiple Columns
+$('#stock tfoot th').each(function () {
+    var title = $('#stock tfoot th').eq($(this).index()).text();
+    $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+});
+
+table5.columns().eq(0).each(function (colIdx) {
+    $('input', table5.column(colIdx).footer()).on('keyup change', function () {
+        table5
+            .column(colIdx)
+            .search(this.value)
+            .draw();
+    });
+});
+
+
+</script>
+
+
+<script>
+
+
+        
+    $('#report_options').change(function () {
+        var selected = $('#report_options option:selected').text();
+        if (selected == "Stock" || selected == "Companies - Verified" || selected == "Companies - Unverified" ){
+            $('.report_dates').hide();
+        }else{
+            $('.report_dates').show();
+        }
+    });
+
+</script>
+
+    </body>
+</html>
