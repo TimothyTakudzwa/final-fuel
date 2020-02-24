@@ -57,23 +57,19 @@
                                 Type
                              </th>
                              <th>
-                                City
+                                Location
                              </th>
-                             <th>
-                                Address
-                             </th>
+                             
                             
                             <th>
                                 License 
                              </th>
                              <th>
-                                PRAZ 
+                                Diesel (L) 
                              </th>
-                            <th>
-                               Bank
-                            </th>
-                            <th>
-                                Account
+                            
+                             <th>
+                                Petrol (L)
                              </th>
                              <th>
                                 Action
@@ -90,31 +86,29 @@
                             {% else %}
                             <td>Service Station</td>
                             {% endif %}
-                            <td>{{subsidiary.city}}</td>
-                            <td>{{subsidiary.location}}</td>
+                            <td>{{subsidiary.location}} {{subsidiary.city}}</td>
                             {% if subsidiary.license_num != None %}
                             <td>{{subsidiary.license_num}}</td>
                             {% else %}
                             <td>-</td>
                             {% endif %}
-                            <td>{{subsidiary.praz_reg_num}}</td>
-                            <td>{{subsidiary.destination_bank}}</td>
-                            <td>{{subsidiary.account_number}}</td>
-                            <td style="width: 25%;">
+                            <td>{{subsidiary.fuel.diesel_quantity}}</td>
+                            <td>{{subsidiary.fuel.petrol_quantity}}</td>
+                            <td>
                                 <div class="btn-group">
                                     {% if subsidiary.license_num != None %}
                                     <button class="btn btn-purple btn-sm" data-toggle="modal"
-                                        data-target="#edit_{{subsidiary.id}}">Change Licence</button>
+                                        data-target="#edit_{{subsidiary.id}}">Update Licence</button>
                                     {% else %}
-                                    <button class="btn btn-danger btn-sm" data-toggle="modal"
-                                        data-target="#approve_{{subsidiary.id}}">Approve & Add Licence</button>
+                                    <button class="btn btn-primary btn-sm" data-toggle="modal"
+                                        data-target="#approve_{{subsidiary.id}}">Add Licence</button>
                                     {% endif %}
                                     {% if subsidiary.is_active == True %}
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal"
-                                        data-target="#block_{{subsidiary.id}}">Block Licence</button>
+                                    <button class="btn btn-danger btn-sm" data-toggle="modal"
+                                        data-target="#block_{{subsidiary.id}}">Cancel Licence</button>
                                     {% else %}
                                     <button class="btn btn-warning btn-sm" data-toggle="modal"
-                                        data-target="#unblock_{{subsidiary.id}}">Unblock Licence</button>
+                                        data-target="#unblock_{{subsidiary.id}}">Activate Licence</button>
                                     {% endif %}
 
 
