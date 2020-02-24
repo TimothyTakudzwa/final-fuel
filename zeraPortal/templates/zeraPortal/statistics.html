@@ -403,7 +403,7 @@
                         </h2>
                     </div>
                     <div class="items pull-left">
-                    <i class="fa fa-check fa-2x"></i>
+                    <i class="fa fa-check-circle fa-2x"></i>
                     <h4>Approved Companies</h4>
                     </div>
                 </div>
@@ -501,7 +501,7 @@
     <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
       <div class="panel-heading ui-sortable-handle">
           <div class="btn-group"> 
-              <h4>Top Clients</h4> 
+              <h4>Top Buyers</h4> 
           </div>
       <div class="dropdown">
           <ul class="dropdown-menu dropdown-menu-right">
@@ -545,17 +545,17 @@
                             {% for client in clients%}
                             <tr>
                               <td>
-                                {{client.company.name}}
+                                {{client.name}}
                                 </td>
                               
-                              <td>{{client.company.address}}</td>
-                              <td>{{client.company.industry}}</td>
+                              <td>{{client.address}}</td>
+                              <td>{{client.industry}}</td>
                               <td>$ {{client.total_revenue|stringformat:".2f"}}</td>
                               <td>{{client.number_of_trans}}</td>
                               
                               <td style="width: 13%;">
                                   <div>
-                                        <form method="POST" action="{% url 'users:client_history' client.id %}">
+                                        <form method="POST" action="{% url 'zeraPortal:clients_history' client.id %}">
                                           {% csrf_token %}
                                           <input type="hidden" name="report_type" value="Complete">
                       
@@ -583,7 +583,7 @@
         <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
           <div class="panel-heading ui-sortable-handle">
               <div class="btn-group"> 
-                  <h4>Subsidiaries - {{ request.user.company.name|title}}</h4> 
+                  <h4>Subsidiaries - Top Depots</h4> 
               </div>
           <div class="dropdown">
               <ul class="dropdown-menu dropdown-menu-right">
@@ -638,7 +638,7 @@
                                     
                                     <td style="width: 13%;">
                                         <div>
-                                          <form method="POST" action="{% url 'users:subsidiary_transaction_history' sub.id %}">
+                                          <form method="POST" action="{% url 'zeraPortal:subsidiary_transaction_history' sub.id %}">
                                             {% csrf_token %}
                                             <input type="hidden" name="report_type" value="Complete">
                         

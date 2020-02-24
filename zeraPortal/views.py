@@ -43,6 +43,25 @@ def dashboard(request):
         return redirect('zeraPortal:dashboard')
     return render(request, 'zeraPortal/companies.html', {'companies': companies})
 
+
+def block_company(request, id):
+    company = Company.objects.filter(id=id).first()
+    if request.method == 'POST':
+        company.is_active = False
+        company.save()
+        messages.success(request, f'{company.name} Successfully Blocked')
+        return redirect('zeraPortal:dashboard')
+
+
+def unblock_company(request, id):
+    company = Company.objects.filter(id=id).first()
+    if request.method == 'POST':
+        company.is_active = True
+        company.save()
+        messages.success(request, f'{company.name} Successfully Unblocked')
+        return redirect('zeraPortal:dashboard')
+
+
 def company_fuel(request):
     capacities = CompanyFuelUpdate.objects.all()
     for fuel in capacities:
@@ -322,8 +341,90 @@ def statistics(request):
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
                                                      'last_week_rev': last_week_rev, 'number_of_companies': number_of_companies,
                                                      'number_of_depots':number_of_depots, 'number_of_s_stations':number_of_s_stations,
+                                                     'approval_percentage': approval_percentage})
+    
+
+def clients_history(request, cid):
+    buyer = User.objects.filter(id=cid).first()
+    trans = []
+    state = 'All'
+
+    if request.method == "POST":
+
+        if request.POST.get('report_type') == 'Complete':
+            trns = Transaction.objects.filter(buyer=buyer, is_complete=True)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Complete'
+
+        if request.POST.get('report_type') == 'Incomplete':
+            trns = Transaction.objects.filter(buyer=buyer, is_complete=False)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Incomplete'
+
+        if request.POST.get('report_type') == 'All':
+            trns = Transaction.objects.filter(buyer=buyer)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'All'
+        return render(request, 'zeraPortal/clients_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
+
+    trns = Transaction.objects.filter(buyer=buyer)
+    trans = []
+    for tran in trns:
+        tran.revenue = tran.offer.request.amount * tran.offer.price
+        trans.append(tran)
+
+    return render(request, 'zeraPortal/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state,      
                                                      'approval_percentage': approval_percentage})    
 
+
+@login_required
+def subsidiary_transaction_history(request, sid):
+    subsidiary = Subsidiaries.objects.filter(id=sid).first()
+    trans = []
+    state = 'All'
+
+    if request.method == "POST":
+
+        if request.POST.get('report_type') == 'Complete':
+            trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id, is_complete=True)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Complete'
+
+        if request.POST.get('report_type') == 'Incomplete':
+            trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id, is_complete=False)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'Incomplete'
+
+        if request.POST.get('report_type') == 'All':
+            trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.offer.request.amount * tran.offer.price
+                trans.append(tran)
+            state = 'All'
+        return render(request, 'zeraPortal/subsidiary_history.html', {'trans': trans, 'subsidiary': subsidiary, 'state': state})
+    
+    trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
+    for tran in trns:
+        tran.revenue = tran.offer.request.amount * tran.offer.price
+        trans.append(tran)
+
+    return render(request, 'zeraPortal/subsidiary_history.html', {'trans': trans, 'subsidiary': subsidiary})
 
 def profile(request):
     return render(request, 'zeraPortal/profile.html')
