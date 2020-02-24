@@ -18,6 +18,7 @@ from buyer.models import User, FuelRequest
 from company.models import Company, CompanyFuelUpdate
 from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, Transaction, Offer
 from fuelUpdates.models import SordCompanyAuditTrail
+from users.models import SordActionsAuditTrail
 
 user = get_user_model()
 
@@ -82,12 +83,20 @@ def company_fuel(request):
     
     return render(request, 'zeraPortal/company_fuel.html', {'capacities': capacities})
 
+
 def allocations(request, id):
     sord_allocations = SordCompanyAuditTrail.objects.filter(company__id=id).all()
-    # allocations = FuelAllocation.objects.filter(company=company).all()
-    # for allocation in allocations:
-        # allocation.subsidiary = Subsidiaries.objects.filter(id=allocation.allocated_subsidiary_id).first()
     return render(request, 'zeraPortal/fuel_allocations.html', {'sord_allocations': sord_allocations})
+
+
+def sordactions(request, id):
+    sord_actions = SordActionsAuditTrail.objects.filter(sord_num=id).all()
+
+    if sord_actions:
+        sord_number = sord_actions[0].sord_num
+    else:
+        sord_number = "-"
+    return render(request, 'zeraPortal/sord_actions.html', {'sord_number': sord_number, 'sord_actions': sord_actions})
 
 
 def company_subsidiaries(request, id):
