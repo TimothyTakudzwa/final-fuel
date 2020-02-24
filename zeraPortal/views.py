@@ -35,11 +35,32 @@ def dashboard(request):
         destination_bank = request.POST.get('destination_bank')
         iban_number = request.POST.get('iban_number')
         account_number = request.POST.get('account_number')
-        Company.objects.create(name=name, address=address, license_number=license_number, destination_bank=destination_bank,
+        new_company = Company.objects.create(name=name, address=address, license_number=license_number, destination_bank=destination_bank,
                                iban_number=iban_number, account_number=account_number, company_type='SUPPLIER', is_active=True)
+        new_company.save()
+        CompanyFuelUpdate.objects.create(company=new_company)
         messages.success(request, 'Company successfully registered')
         return redirect('zeraPortal:dashboard')
     return render(request, 'zeraPortal/companies.html', {'companies': companies})
+
+
+def block_company(request, id):
+    company = Company.objects.filter(id=id).first()
+    if request.method == 'POST':
+        company.is_active = False
+        company.save()
+        messages.success(request, f'{company.name} Successfully Blocked')
+        return redirect('zeraPortal:dashboard')
+
+
+def unblock_company(request, id):
+    company = Company.objects.filter(id=id).first()
+    if request.method == 'POST':
+        company.is_active = True
+        company.save()
+        messages.success(request, f'{company.name} Successfully Unblocked')
+        return redirect('zeraPortal:dashboard')
+
 
 def company_fuel(request):
     capacities = CompanyFuelUpdate.objects.all()
@@ -361,3 +382,8 @@ def clients_history(request, cid):
         trans.append(tran)
 
     return render(request, 'zeraPortal/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state})        
+                                                     'approval_percentage': approval_percentage})    
+
+
+def profile(request):
+    return render(request, 'zeraPortal/profile.html')

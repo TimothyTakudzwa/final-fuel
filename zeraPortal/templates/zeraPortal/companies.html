@@ -25,54 +25,59 @@
     data-index="0">
     <div class="panel-heading ui-sortable-handle">
         <div class="btn-group"> 
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#company_registration"style="background-color: #25d366;"><i class="" style="margin-right: 11px;"></i>
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#company_registration" style="background-color: #25d366;"><i class="" style="margin-right: 11px;"></i>
                 Register Company
             </button>  
         </div>
-        <!--Register Company Modal-->
-<div class="modal fade modal-success in" id="company_registration" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-aria-hidden="true">
-<div class="modal-dialog modal-notice">
-<div class="modal-content">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <h2 class="modal-title">Make Offer</h2>
-    </div>
-<div class="modal-body">
-<form method="POST" action="">
-    {% csrf_token %}
-    <div class="col-sm-12">
-        <label>Company Name</label>
-        <input type="text" name="company_name" class="form-control" required/>
-    </div>
 
-    <div class="col-sm-12">
-        <label>Company Address</label>
-        <input type="text" name="address" class="form-control" required/>
+<!-- Register Company Modal -->
+<div class="modal fade modal-success in" id="company_registration" tabindex="-1" role="dialog"
+aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+        
+        <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <span class="modal-title">Register Company </span>
     </div>
-    <div class="col-sm-12">
-        <label>License Number</label>
-        <input type="text" name="license_number" class="form-control" required/>
-    </div>
-    <div class="col-sm-12">
-      <label>Bank</label>
-      <input type="text" name="destination_bank" class="form-control" value="" />
-  </div>
-  <div class="col-sm-12">
-    <label>Account Number</label>
-    <input type="text" name="account_number" class="form-control" value="" />
+        <div class="modal-body">
+            <form action=""
+                method="POST">
+                {% csrf_token %}
+                <div class="col-sm-12">
+                    <label>Company Name</label>
+                    <input type="text" name="company_name" class="form-control" required/>
+                </div>
+            
+                <div class="col-sm-12">
+                    <label>Company Address</label>
+                    <input type="text" name="address" class="form-control" required/>
+                </div>
+                <div class="col-sm-12">
+                    <label>License Number</label>
+                    <input type="text" name="license_number" class="form-control" required/>
+                </div>
+                <div class="col-sm-12">
+                  <label>Bank</label>
+                  <input type="text" name="destination_bank" class="form-control" value="" />
+              </div>
+              <div class="col-sm-12">
+                <label>Account Number</label>
+                <input type="text" name="account_number" class="form-control" value="" />
+            </div>
+              <div class="col-sm-12">
+                <label>Iban Number</label>
+                <input type="text" name="iban_number" class="form-control" value="" />
+            </div>
+        <div class="form-group row mt-5" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+            <button type="button" class="btn btn-secondary col-sm-6"
+                data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary col-sm-6">Register</button>
+        </div>
+            </form>
 </div>
-  <div class="col-sm-12">
-    <label>Iban Number</label>
-    <input type="text" name="iban_number" class="form-control" value="" />
 </div>
 </div>
-<p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-primary">Register</button></p>
-</form>
-</div>
-</div>
-</div>
-<!--End Register Company Modal-->
         
         <div class="dropdown">
             <ul class="dropdown-menu dropdown-menu-right">
@@ -134,16 +139,68 @@ aria-hidden="true">
                         <td>{{company.account_number}}</td>
                         <td>{{company.num_of_depots}}</td>
                         <td>{{company.num_of_stations}}</td>
-                        {% if company.is_active != True %}
-                        <td>
-                            <div class="btn-group">
-                                <a class="btn btn-success btn-sm" data-toggle="modal" data-taget="verify">Verify</a>
-                            </div>
-                        </td>
+                        {% if company.is_active == True %}
+                        <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#block_{{company.id}}">Block</button></td>
                         {% else %}
-                        <td><i class="fa fa-check-square-o" style="font-size:25px;color:rgb(0, 225, 255)">Done</i></td>
+                        <td><button type="button" class="btn btn-warning" data-toggle="modal" data-target="#unblock_{{company.id}}">Unblock</button></td>
                         {% endif %}
                     </tr>
+
+                    <!-- Block Company Modal -->
+                    <div class="modal fade modal-success in" id="block_{{company.id}}" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            
+                            <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <span class="modal-title">Block Company </span>
+                        </div>
+                            <div class="modal-body">
+                                <form action="{% url 'zeraPortal:block_company' company.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <p>Are You Sure You Want To Block {{ company.name }}?</p>
+                                   
+                                
+                            <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                <button type="button" class="btn btn-secondary col-sm-6"
+                                    data-dismiss="modal">No</button>
+                                <button type="submit" class="btn btn-primary col-sm-6">Yes</button>
+                            </div>
+                                </form>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <!--End Block Company Modal-->
+
+                <!-- UnBlock Company Modal -->
+                <div class="modal fade modal-success in" id="unblock_{{company.id}}" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        
+                        <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <span class="modal-title">Unblock Company </span>
+                    </div>
+                        <div class="modal-body">
+                            <form action="{% url 'zeraPortal:unblock_company' company.id %}" method="POST">
+                                {% csrf_token %}
+                                <p>Are You Sure You Want To Unblock {{ company.name }}?</p>
+                               
+                            
+                        <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                            <button type="button" class="btn btn-secondary col-sm-6"
+                                data-dismiss="modal">No</button>
+                            <button type="submit" class="btn btn-primary col-sm-6">Yes</button>
+                        </div>
+                            </form>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <!--End unblock message modal-->
                     {% endfor %}
                 </tbody>
             </table>
@@ -152,7 +209,7 @@ aria-hidden="true">
         <p>No Companies Available</p>
         {% endif %}
 
-
+    </div>
     </div>
     </div>
     </div>
