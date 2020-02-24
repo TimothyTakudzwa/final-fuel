@@ -17,6 +17,7 @@ class Company(models.Model):
     amount = models.FloatField(default=0.00, blank=True, null=True)
     bp_num = models.CharField(max_length=100, blank=True, null=True)
     is_govnt_org = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
     application_form = models.FileField(upload_to='company_app_forms', null=True, blank=True)
 
     

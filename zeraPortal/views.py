@@ -28,6 +28,17 @@ def dashboard(request):
     for company in companies:
         company.num_of_depots = Subsidiaries.objects.filter(company=company, is_depot='True').count()
         company.num_of_stations = Subsidiaries.objects.filter(company=company, is_depot='False').count()
+    if request.method == 'POST':
+        name = request.POST.get('company_name')
+        address = request.POST.get('address')
+        license_number = request.POST.get('license_number')
+        destination_bank = request.POST.get('destination_bank')
+        iban_number = request.POST.get('iban_number')
+        account_number = request.POST.get('account_number')
+        Company.objects.create(name=name, address=address, license_number=license_number, destination_bank=destination_bank,
+                               iban_number=iban_number, account_number=account_number, company_type='SUPPLIER', is_active=True)
+        messages.success(request, 'Company successfully registered')
+        return redirect('zeraPortal:dashboard')
     return render(request, 'zeraPortal/companies.html', {'companies': companies})
 
 def company_fuel(request):
