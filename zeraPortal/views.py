@@ -28,6 +28,17 @@ def dashboard(request):
     for company in companies:
         company.num_of_depots = Subsidiaries.objects.filter(company=company, is_depot='True').count()
         company.num_of_stations = Subsidiaries.objects.filter(company=company, is_depot='False').count()
+    if request.method == 'POST':
+        name = request.POST.get('company_name')
+        address = request.POST.get('address')
+        license_number = request.POST.get('license_number')
+        destination_bank = request.POST.get('destination_bank')
+        iban_number = request.POST.get('iban_number')
+        account_number = request.POST.get('account_number')
+        Company.objects.create(name=name, address=address, license_number=license_number, destination_bank=destination_bank,
+                               iban_number=iban_number, account_number=account_number, company_type='SUPPLIER', is_active=True)
+        messages.success(request, 'Company successfully registered')
+        return redirect('zeraPortal:dashboard')
     return render(request, 'zeraPortal/companies.html', {'companies': companies})
 
 def company_fuel(request):
@@ -294,14 +305,16 @@ def statistics(request):
     #     trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
     # except:
     #     trans = 0    
-    trans_complete = get_aggregate_transactions_complete_percentage()
+    # trans_complete = get_aggregate_transactions_complete_percentage()
+    inactive_depots = Subsidiaries.objects.filter(is_active=False, is_depot=True).count()
+    inactive_stations = Subsidiaries.objects.filter(is_active=False, is_depot=False).count()
     approval_percentage = get_approved_company_complete_percentage()
 
     return render(request, 'zeraPortal/statistics.html', {'offers': offers,
                                                      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients,
                                                      'normal_requests': normal_requests,
                                                      'diesel': diesel, 'petrol': petrol, 'revenue': revenue,
-                                                     'new_orders': new_orders,'trans_complete': trans_complete,
+                                                     'inactive_stations': inactive_stations,'inactive_depots': inactive_depots,
                                                      'sorted_subs': sorted_subs,
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
                                                      'last_week_rev': last_week_rev, 'number_of_companies': number_of_companies,
