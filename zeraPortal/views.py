@@ -137,7 +137,7 @@ def report_generator(request):
                                                    supplier__company=request.user.company, is_complete=True)
                 revs = {}
                 total_revenue = 0
-                trans_no = 0
+                trans_no =0
 
                 if trans:
                     for tran in trans:
@@ -220,13 +220,15 @@ def statistics(request):
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
     weekly_rev = get_weekly_sales(True)
     last_week_rev = get_weekly_sales(False)
+    number_of_companies = Company.objects.all().count()
+    number_of_depots = Subsidiaries.objects.filter(is_depot=True).count()
+    number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()   
     last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1))
     offers = Offer.objects.all().count()
     bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
     normal_requests = FuelRequest.objects.filter(delivery_method="DELIVERY").count()  # Change these 2 items
     staff = ''
     new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
-    
     clients = []
     stock = get_aggregate_stock()
     diesel = stock['diesel']
@@ -290,6 +292,7 @@ def statistics(request):
     # except:
     #     trans = 0    
     trans_complete = get_aggregate_transactions_complete_percentage()
+    approval_percentage = get_approved_company_complete_percentage()
 
     return render(request, 'zeraPortal/statistics.html', {'offers': offers,
                                                      'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients,
@@ -298,4 +301,6 @@ def statistics(request):
                                                      'new_orders': new_orders,'trans_complete': trans_complete,
                                                      'sorted_subs': sorted_subs,
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
-                                                     'last_week_rev': last_week_rev})    
+                                                     'last_week_rev': last_week_rev, 'number_of_companies': number_of_companies,
+                                                     'number_of_depots':number_of_depots, 'number_of_s_stations':number_of_s_stations,
+                                                     'approval_percentage': approval_percentage})    

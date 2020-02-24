@@ -142,3 +142,14 @@ def get_aggregate_transactions_complete_percentage():
     except:
         trans = 0    
     return "{:,.1f}%".format(trans)
+
+
+def get_approved_company_complete_percentage():
+    '''
+    Get % of complete transactions
+    '''
+    try:
+        company_approval_percentage = (Company.objects.filter(is_verified=True).count()/Company.objects.all().count()) * 100
+    except:
+        company_approval_percentage = 0    
+    return "{:,.1f}%".format(company_approval_percentage)
