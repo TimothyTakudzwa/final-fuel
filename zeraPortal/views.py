@@ -17,6 +17,7 @@ from operator import attrgetter
 from buyer.models import User, FuelRequest
 from company.models import Company, CompanyFuelUpdate
 from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, Transaction, Offer, DeliverySchedule
+from .forms import ZeraProfileUpdateForm, ZeraImageUpdateForm
 from fuelUpdates.models import SordCompanyAuditTrail
 from users.models import SordActionsAuditTrail
 from accounts.models import AccountHistory
@@ -81,7 +82,7 @@ def company_fuel(request):
 
         fuel.diesel_capacity = '{:,}'.format(fuel.diesel_capacity)
         fuel.petrol_capacity = '{:,}'.format(fuel.petrol_capacity)
-    
+
     return render(request, 'zeraPortal/company_fuel.html', {'capacities': capacities})
 
 
@@ -247,12 +248,12 @@ def report_generator(request):
         if request.POST.get('report_type') == 'Companies - Verified':
             v_companies = Company.objects.filter(is_verified=True)
             verified_companies = []
-            
+
             for company in v_companies:
                 company.admin = User.objects.filter(company=company).first()
                 verified_companies.append(company)
-            
-            
+
+
             print(f'__________________{verified_companies}__________________________________')
             trans = None
             allocations = None
@@ -262,18 +263,18 @@ def report_generator(request):
         if request.POST.get('report_type') == 'Companies - Unverified':
             uv_companies = Company.objects.filter(is_verified=False)
             unverified_companies = []
-            
+
             for company in uv_companies:
                 company.admin = User.objects.filter(company=company).first()
                 unverified_companies.append(company)
-            
-            
+
+
             print(f'__________________{unverified_companies}__________________________________')
             trans = None
             allocations = None
             stock = None
             revs = None
-            verified_companies=None        
+            verified_companies=None
         if request.POST.get('report_type') == 'Allocations':
             print("__________________________I am in allocations____________________________")
             allocations = FuelAllocation.objects.all()
@@ -296,16 +297,16 @@ def report_generator(request):
     return render(request, 'zeraPortal/reports.html',
                   {'trans': trans, 'requests': requests, 'allocations': allocations,
                    'start': start_date, 'end': end_date, 'show': show, 'stock': stock})
-    
-    
+
+
 def statistics(request):
     yesterday = date.today() - timedelta(days=1)
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
     weekly_rev = get_weekly_sales(True)
     last_week_rev = get_weekly_sales(False)
-    number_of_companies = Company.objects.filter(company_type='SUPPLIER').all().count()
+    number_of_companies = Company.objects.all().count()
     number_of_depots = Subsidiaries.objects.filter(is_depot=True).count()
-    number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()   
+    number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()
     last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1))
     offers = Offer.objects.all().count()
     bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
@@ -374,9 +375,7 @@ def statistics(request):
     #     trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
     # except:
     #     trans = 0    
-    # trans_complete = get_aggregate_transactions_complete_percentage()
-    inactive_depots = Subsidiaries.objects.filter(is_active=False, is_depot=True).count()
-    inactive_stations = Subsidiaries.objects.filter(is_active=False, is_depot=False).count()
+    trans_complete = get_aggregate_transactions_complete_percentage()
     approval_percentage = get_approved_company_complete_percentage()
 
     return render(request, 'zeraPortal/statistics.html', {'offers': offers,
