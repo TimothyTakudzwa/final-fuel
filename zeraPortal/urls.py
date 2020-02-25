@@ -22,7 +22,9 @@ urlpatterns = [
     path('clients_history/<int:cid>', views.clients_history, name="clients_history"),
     path('subsidiary_transaction_history/<int:sid>', views.subsidiary_transaction_history, name="subsidiary_transaction_history"),
     path('profile/', views.profile, name='profile'),
-    path('sordactions/<id>', views.sordactions, name='sordactions')
+    path('sordactions/<id>', views.sordactions, name='sordactions'),
+    path('transactions/<int:id>', views.transactions, name='transactions'),
+    path('payment_and_schedules/<int:id>', views.payment_and_schedules, name='payment_and_schedules')
     
     
     

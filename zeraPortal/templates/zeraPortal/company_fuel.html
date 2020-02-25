@@ -86,7 +86,8 @@
                             <td>{{capacity.petrol_price}}</td>
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{% url 'zeraPortal:allocations' capacity.company.id %}">View Allocations</a>
+                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{% url 'zeraPortal:allocations' capacity.company.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Allocations</a>
+                                    <a class="btn btn-warning btn-sm" data-toggle="modal" href="{% url 'zeraPortal:transactions' capacity.company.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Transactions</a>
                                 </div>
                             </td>
 

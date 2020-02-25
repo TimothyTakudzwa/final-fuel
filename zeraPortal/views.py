@@ -16,9 +16,10 @@ from operator import attrgetter
 
 from buyer.models import User, FuelRequest
 from company.models import Company, CompanyFuelUpdate
-from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, Transaction, Offer
+from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, Transaction, Offer, DeliverySchedule
 from fuelUpdates.models import SordCompanyAuditTrail
 from users.models import SordActionsAuditTrail
+from accounts.models import AccountHistory
 
 user = get_user_model()
 
@@ -97,6 +98,32 @@ def sordactions(request, id):
     else:
         sord_number = "-"
     return render(request, 'zeraPortal/sord_actions.html', {'sord_number': sord_number, 'sord_actions': sord_actions})
+
+
+def transactions(request, id):
+    today = datetime.now().strftime("%m/%d/%y")
+    transporters = Company.objects.filter(company_type="TRANSPORTER").all()
+    transactions = []
+    for tran in Transaction.objects.filter(supplier__company__id=id).all():
+        delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
+        company = Company.objects.filter(id=tran.supplier.company.id).first()
+        tran.depot = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
+        if delivery_sched:
+            tran.delivery_sched = delivery_sched
+        transactions.append(tran)
+    context = {
+        'transactions': transactions,
+        'transporters': transporters,
+        'today': today,
+        'company': company
+    }
+    return render(request, 'zeraPortal/transactions.html', context=context)
+
+
+def payment_and_schedules(request, id):
+    transaction = Transaction.objects.filter(id=id).first()
+    payment_history = AccountHistory.objects.filter(transaction=transaction).all()
+    return render(request, 'zeraPortal/payment_and_schedules.html', {'payment_history': payment_history})
 
 
 def company_subsidiaries(request, id):
