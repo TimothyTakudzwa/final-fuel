@@ -166,6 +166,17 @@ def get_subsidiary_sales_volume_in_city(user,city):
                                                 is_complete=True)
             for sub_tran in sub_trans:
                 volume += sub_tran.offer.amount
+    return volume
+
+def get_subsidiary_sales_volume_in_location(user, location):
+    volume = 0
+    subs = Subsidiaries.objects.filter(id=user.subsidiary_id, location=location)
+    if subs:
+        for sub in subsidiaries:
+            sub_trans = Transaction.objects.filter(supplier__company=supplier.company, supplier__subsidiary_id=sub.id,
+                                                is_complete=True)
+            for sub_tran in sub_trans:
+                volume += sub_tran.offer.amount
     return volume        
 
 
@@ -174,21 +185,23 @@ def get_volume_sales_by_location():
     zimbabwean_towns = zimbabwean_towns[1:]
     sales_data_by_city = {}
     sales_data_by_location = {}
+    suppliers = User.objects.filter(user_type='S_ADMIN')
     
     for city in zimbabwean_towns:
-        for supplier in User.objects.filter(user_type='S_ADMIN'):
-            subsidiary_volume = get_subsidiary_sales_volume_in_city(supplier,city=city)                            
-        sales_data_by_city[city] = subsidiary_volume    
+        city_volume = 0
+        for supplier in suppliers:
+            city_volume += get_subsidiary_sales_volume_in_city(supplier,city=city)                    
+        sales_data_by_city[city] = city_volume    
             
-    # for location in major_cities:
-    #     location_sales_volume = 0
-    #     loc_index = 0
-    #     for loc in location[loc_index]:
-    #         for sales in Transaction.objects.filter(supplier__location=loc):
-    #             location_sales_volume += sales.offer.amount
-    #     sales_data_by_location[location + location[loc_index]] = location_sales_volume
-        
-    return sales_data_by_city
+    for major_city in major_cities:
+        for city, locations in major_city.items():
+            for location in locations:
+                loc_volume = 0
+                for supplier in suppliers:
+                    loc_volume += get_subsidiary_sales_volume_in_location(supplier,location=location)
+                sales_data_by_location[str(location) + ', ' +  str(city)] =  loc_volume
+             
+    return sales_data_by_location
 
 
 
