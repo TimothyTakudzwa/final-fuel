@@ -5,6 +5,8 @@ from supplier.models import Subsidiaries, Transaction, UserReview
 from buyer.models import User
 from company.models import CompanyFuelUpdate
 
+from .constants import zimbabwean_towns, major_cities
+
 
 def get_top_branches(count):
     '''
@@ -153,3 +155,54 @@ def get_approved_company_complete_percentage():
     except:
         company_approval_percentage = 0    
     return "{:,.1f}%".format(company_approval_percentage)
+
+
+def get_subsidiary_sales_volume_in_city(user,city):
+    volume = 0
+    subs = Subsidiaries.objects.filter(id=user.subsidiary_id, city=city)
+    if subs:
+        for sub in subsidiaries:
+            sub_trans = Transaction.objects.filter(supplier__company=supplier.company, supplier__subsidiary_id=sub.id,
+                                                is_complete=True)
+            for sub_tran in sub_trans:
+                volume += sub_tran.offer.amount
+    return volume        
+
+
+def get_volume_sales_by_location():
+    from .constants import zimbabwean_towns, major_cities
+    zimbabwean_towns = zimbabwean_towns[1:]
+    sales_data_by_city = {}
+    sales_data_by_location = {}
+    
+    for city in zimbabwean_towns:
+        for supplier in User.objects.filter(user_type='S_ADMIN'):
+            subsidiary_volume = get_subsidiary_sales_volume_in_city(supplier,city=city)                            
+        sales_data_by_city[city] = subsidiary_volume    
+            
+    # for location in major_cities:
+    #     location_sales_volume = 0
+    #     loc_index = 0
+    #     for loc in location[loc_index]:
+    #         for sales in Transaction.objects.filter(supplier__location=loc):
+    #             location_sales_volume += sales.offer.amount
+    #     sales_data_by_location[location + location[loc_index]] = location_sales_volume
+        
+    return sales_data_by_city
+
+
+
+
+                
+                
+                
+                
+                
+            
+            
+            
+                  
+            
+            
+    
+    
