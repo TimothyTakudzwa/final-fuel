@@ -161,22 +161,22 @@ def get_subsidiary_sales_volume_in_city(user,city):
     volume = 0
     subs = Subsidiaries.objects.filter(id=user.subsidiary_id, city=city)
     if subs:
-        for sub in subsidiaries:
-            sub_trans = Transaction.objects.filter(supplier__company=supplier.company, supplier__subsidiary_id=sub.id,
+        for sub in subs:
+            sub_trans = Transaction.objects.filter(supplier__company=user.company, supplier__subsidiary_id=sub.id,
                                                 is_complete=True)
             for sub_tran in sub_trans:
-                volume += sub_tran.offer.amount
+                volume += sub_tran.offer.quantity
     return volume
 
 def get_subsidiary_sales_volume_in_location(user, location):
     volume = 0
     subs = Subsidiaries.objects.filter(id=user.subsidiary_id, location=location)
     if subs:
-        for sub in subsidiaries:
-            sub_trans = Transaction.objects.filter(supplier__company=supplier.company, supplier__subsidiary_id=sub.id,
+        for sub in subs:
+            sub_trans = Transaction.objects.filter(supplier__company=user.company, supplier__subsidiary_id=sub.id,
                                                 is_complete=True)
             for sub_tran in sub_trans:
-                volume += sub_tran.offer.amount
+                volume += sub_tran.offer.quantity
     return volume        
 
 
@@ -185,7 +185,7 @@ def get_volume_sales_by_location():
     zimbabwean_towns = zimbabwean_towns[1:]
     sales_data_by_city = {}
     sales_data_by_location = {}
-    suppliers = User.objects.filter(user_type='S_ADMIN')
+    suppliers = User.objects.filter(user_type='SUPPLIER')
     
     for city in zimbabwean_towns:
         city_volume = 0
@@ -201,7 +201,7 @@ def get_volume_sales_by_location():
                     loc_volume += get_subsidiary_sales_volume_in_location(supplier,location=location)
                 sales_data_by_location[str(location) + ', ' +  str(city)] =  loc_volume
              
-    return sales_data_by_location
+    return  sales_data_by_city
 
 
 
