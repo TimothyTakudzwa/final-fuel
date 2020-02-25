@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, update_session_auth_hash, login, l
 from datetime import datetime, date
 from django.contrib import messages
 from django.db.models import Count
+from django.http import HttpResponse
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
@@ -21,6 +22,7 @@ from .forms import ZeraProfileUpdateForm, ZeraImageUpdateForm
 from fuelUpdates.models import SordCompanyAuditTrail
 from users.models import SordActionsAuditTrail
 from accounts.models import AccountHistory
+from users.views import message_is_sent
 
 user = get_user_model()
 
@@ -33,6 +35,7 @@ def dashboard(request):
     for company in companies:
         company.num_of_depots = Subsidiaries.objects.filter(company=company, is_depot='True').count()
         company.num_of_stations = Subsidiaries.objects.filter(company=company, is_depot='False').count()
+        company.check_admin = User.objects.filter(user_type='S_ADMIN', company__id=company.id).exists()
     if request.method == 'POST':
         license_number = request.POST.get('license_number')
         check_license = Company.objects.filter(company_type='SUPPLIER', license_number=license_number).exists()
@@ -52,6 +55,30 @@ def dashboard(request):
             messages.warning(request, 'License number already exists!!!')
             return redirect('zeraPortal:dashboard')
     return render(request, 'zeraPortal/companies.html', {'companies': companies})
+
+
+def add_supplier_admin(request, id):
+    company = Company.objects.filter(id=id).first()
+    first_name = request.POST['first_name']
+    last_name = request.POST['last_name']
+    email = request.POST['email']
+    phone_number = request.POST['phone_number']
+    check_email = User.objects.filter(email=email).exists()
+    if check_email:
+        messages.warning(request, f"Email already used in the system, please use a different email")
+        return redirect('zeraPortal:dashboard')
+    else:
+        i = 0
+        username = initial_username = first_name[0] + last_name
+        while User.objects.filter(username=username.lower()).exists():
+            username = initial_username + str(i)
+            i += 1
+        password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+        user = User.objects.create(company=company, first_name=first_name, last_name=last_name, email=email, phone_number=phone_number,
+        user_type='S_ADMIN', is_active=True, username=username.lower(), password=password)
+        message_is_sent(request, user)
+        messages.success(request, 'User successfully created')
+        return redirect ('zeraPortal:dashboard')
 
 
 def block_company(request, id):
@@ -130,6 +157,30 @@ def payment_and_schedules(request, id):
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
     return render(request, 'zeraPortal/payment_and_schedules.html', {'payment_history': payment_history})
+
+
+def view_confirmation_doc(request, id):
+    delivery = DeliverySchedule.objects.filter(id=id).first()
+    if delivery:
+        filename = delivery.confirmation_document.name.split('/')[-1]
+        response = HttpResponse(delivery.confirmation_document, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        redirect('zeraPortal:payment_and_schedules')
+    return response
+
+
+def view_supplier_doc(request, id):
+    delivery = DeliverySchedule.objects.filter(id=id).first()
+    if delivery:
+        filename = delivery.supplier_document.name.split('/')[-1]
+        response = HttpResponse(delivery.supplier_document, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        redirect('zeraPortal:payment_and_schedules')
+    return response
 
 
 def company_subsidiaries(request, id):

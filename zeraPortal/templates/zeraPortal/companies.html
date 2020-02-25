@@ -120,6 +120,9 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                             Subsidiaries
                         </th>
                         <th>
+                            Admin
+                        </th>
+                        <th>
                             Action
                         </th>
                         
@@ -136,6 +139,11 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <td>{{company.account_number}}</td>
                         <td><a class="btn btn-success btn-sm" href="{% url 'zeraPortal:company-subsidiaries' company.id %}"><i class="fa fa-eye" style="margin-right: 11px;"></i>
                             Subsidiaries</a></td>
+                        {% if company.check_admin %}
+                        <td>Active</td>
+                        {% else %}
+                        <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_user{{company.id}}">Assign Admin</button></td>
+                        {% endif %}
                         {% if company.is_active == True %}
                         <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#block_{{company.id}}">Block</button></td>
                         {% else %}
@@ -198,6 +206,58 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
             </div>
             </div>
             <!--End unblock message modal-->
+
+            <!--Add supplier admin Modal-->
+            <div class="modal fade modal-success in" id="add_user{{company.id}}" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            
+                            <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <span class="modal-title">{{company.name}} Administrator </span>
+                        </div>
+                            <div class="modal-body">
+                                <form action="{% url 'zeraPortal:add-supplier-admin' company.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <div class="row col-sm-12">
+                                        <div class="col-sm-6">
+                                        <label>First Name: </label>
+                                        <input type="text" name="first_name" class="form-control" required/>
+                                    </div>
+                                
+                                    <div class="col-sm-6">
+                                        <label>Last Name: </label>
+                                        <input type="text" name="last_name" class="form-control" required/>
+                                    </div>
+                                    </div>
+                                    <div class="row col-sm-12">
+                                        <div class="col-sm-6">
+                                        <label>Email Address: </label>
+                                        <input type="text" name="email" class="form-control" required/>
+                                    </div>
+                                
+                                    <div class="col-sm-6">
+                                        <label>Phone Number: </label>
+                                        <input type="text" placeholder="263772353696" name="phone_number" class="form-control" required/>
+                                    </div>
+                                    </div>
+                                    <div class="row col-sm-12">
+                                    <input type="hidden" name="company" value="{{company.id}}" class="form-control"/>
+                                    </div>
+                                   
+                                
+                            <div class="form-group row" style="margin-left: 2%; margin-right: 8%; margin-top: 8%; margin-bottom: 8%;">
+                                <button type="button" class="btn btn-secondary col-sm-6"
+                                    data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary col-sm-6">Save</button>
+                            </div>
+                                </form>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <!--End Add user modal-->
                     {% endfor %}
                 </tbody>
             </table>
