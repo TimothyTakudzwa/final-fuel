@@ -10,6 +10,7 @@ urlpatterns = [
     path('subsidiaries/', views.subsidiaries, name='subsidiaries'),
     path('company-subsidiaries/<int:id>', views.company_subsidiaries, name='company-subsidiaries'),
     path('block_company/<int:id>', views.block_company, name='block_company'),
+    path('add-supplier-admin/<int:id>', views.add_supplier_admin, name='add-supplier-admin'),
     path('unblock_company/<int:id>', views.unblock_company, name='unblock_company'),
     path('change_licence/<int:id>', views.change_licence, name='change_licence'),
     path('block_licence/<int:id>', views.block_licence, name='block_licence'),
