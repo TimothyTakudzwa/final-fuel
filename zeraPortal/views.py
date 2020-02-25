@@ -380,7 +380,9 @@ def statistics(request):
     #     trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
     # except:
     #     trans = 0    
-    trans_complete = get_aggregate_transactions_complete_percentage()
+    # trans_complete = get_aggregate_transactions_complete_percentage()
+    inactive_depots = Subsidiaries.objects.filter(is_active=False, is_depot=True).count()
+    inactive_stations = Subsidiaries.objects.filter(is_active=False, is_depot=False).count()
     approval_percentage = get_approved_company_complete_percentage()
 
     return render(request, 'zeraPortal/statistics.html', {'offers': offers,
