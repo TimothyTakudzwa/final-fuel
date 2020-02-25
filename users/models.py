@@ -22,6 +22,7 @@ class SordActionsAuditTrail(models.Model):
     allocated_to = models.CharField(max_length=150, blank=True, null=True)
     payment_type = models.CharField(max_length=150,default="RTGS")
     fuel_type = models.CharField(max_length=150, blank=True, null=True)
+    price = models.FloatField(default=0.00)
 
 
 class Audit_Trail(models.Model):

@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, update_session_auth_hash, login, l
 from datetime import datetime, date
 from django.contrib import messages
 from django.db.models import Count
+from django.http import HttpResponse
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
@@ -156,6 +157,30 @@ def payment_and_schedules(request, id):
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
     return render(request, 'zeraPortal/payment_and_schedules.html', {'payment_history': payment_history})
+
+
+def view_confirmation_doc(request, id):
+    delivery = DeliverySchedule.objects.filter(id=id).first()
+    if delivery:
+        filename = delivery.confirmation_document.name.split('/')[-1]
+        response = HttpResponse(delivery.confirmation_document, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        redirect('zeraPortal:payment_and_schedules')
+    return response
+
+
+def view_supplier_doc(request, id):
+    delivery = DeliverySchedule.objects.filter(id=id).first()
+    if delivery:
+        filename = delivery.supplier_document.name.split('/')[-1]
+        response = HttpResponse(delivery.supplier_document, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        redirect('zeraPortal:payment_and_schedules')
+    return response
 
 
 def company_subsidiaries(request, id):
