@@ -21,6 +21,7 @@ from .forms import ZeraProfileUpdateForm, ZeraImageUpdateForm
 from fuelUpdates.models import SordCompanyAuditTrail
 from users.models import SordActionsAuditTrail
 from accounts.models import AccountHistory
+from users.views import message_is_sent
 
 user = get_user_model()
 
@@ -33,6 +34,7 @@ def dashboard(request):
     for company in companies:
         company.num_of_depots = Subsidiaries.objects.filter(company=company, is_depot='True').count()
         company.num_of_stations = Subsidiaries.objects.filter(company=company, is_depot='False').count()
+        company.check_admin = User.objects.filter(user_type='S_ADMIN', company__id=company.id).exists()
     if request.method == 'POST':
         license_number = request.POST.get('license_number')
         check_license = Company.objects.filter(company_type='SUPPLIER', license_number=license_number).exists()
@@ -52,6 +54,30 @@ def dashboard(request):
             messages.warning(request, 'License number already exists!!!')
             return redirect('zeraPortal:dashboard')
     return render(request, 'zeraPortal/companies.html', {'companies': companies})
+
+
+def add_supplier_admin(request, id):
+    company = Company.objects.filter(id=id).first()
+    first_name = request.POST['first_name']
+    last_name = request.POST['last_name']
+    email = request.POST['email']
+    phone_number = request.POST['phone_number']
+    check_email = User.objects.filter(email=email).exists()
+    if check_email:
+        messages.warning(request, f"Email already used in the system, please use a different email")
+        return redirect('zeraPortal:dashboard')
+    else:
+        i = 0
+        username = initial_username = first_name[0] + last_name
+        while User.objects.filter(username=username.lower()).exists():
+            username = initial_username + str(i)
+            i += 1
+        password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+        user = User.objects.create(company=company, first_name=first_name, last_name=last_name, email=email, phone_number=phone_number,
+        user_type='S_ADMIN', is_active=True, username=username.lower(), password=password)
+        message_is_sent(request, user)
+        messages.success(request, 'User successfully created')
+        return redirect ('zeraPortal:dashboard')
 
 
 def block_company(request, id):
