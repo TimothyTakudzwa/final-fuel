@@ -34,18 +34,23 @@ def dashboard(request):
         company.num_of_depots = Subsidiaries.objects.filter(company=company, is_depot='True').count()
         company.num_of_stations = Subsidiaries.objects.filter(company=company, is_depot='False').count()
     if request.method == 'POST':
-        name = request.POST.get('company_name')
-        address = request.POST.get('address')
         license_number = request.POST.get('license_number')
-        destination_bank = request.POST.get('destination_bank')
-        iban_number = request.POST.get('iban_number')
-        account_number = request.POST.get('account_number')
-        new_company = Company.objects.create(name=name, address=address, license_number=license_number, destination_bank=destination_bank,
-                               iban_number=iban_number, account_number=account_number, company_type='SUPPLIER', is_active=True)
-        new_company.save()
-        CompanyFuelUpdate.objects.create(company=new_company)
-        messages.success(request, 'Company successfully registered')
-        return redirect('zeraPortal:dashboard')
+        check_license = Company.objects.filter(company_type='SUPPLIER', license_number=license_number).exists()
+        if not check_license:
+            name = request.POST.get('company_name')
+            address = request.POST.get('address')
+            destination_bank = request.POST.get('destination_bank')
+            iban_number = request.POST.get('iban_number')
+            account_number = request.POST.get('account_number')
+            new_company = Company.objects.create(name=name, address=address, license_number=license_number, destination_bank=destination_bank,
+                                iban_number=iban_number, account_number=account_number, company_type='SUPPLIER', is_active=True)
+            new_company.save()
+            CompanyFuelUpdate.objects.create(company=new_company)
+            messages.success(request, 'Company successfully registered')
+            return redirect('zeraPortal:dashboard')
+        else:
+            messages.warning(request, 'License number already exists!!!')
+            return redirect('zeraPortal:dashboard')
     return render(request, 'zeraPortal/companies.html', {'companies': companies})
 
 
