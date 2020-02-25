@@ -101,7 +101,7 @@
                     <span class="logo-mini"> </span>
                     <span class="logo-lg">
 
-                       <h3>Fuel Finder Zim</h3>
+                       <h3>Fuel Regulations Zim</h3>
 
                     </span>
                 </a>
@@ -171,12 +171,12 @@
                             <a href="{% url 'zeraPortal:dashboard' %}"><i class="fa fa-book"></i><span>Fuel Companies</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href=""><i class="fa fa-book" aria-hidden="true"></i><span>Depots & Stations</span>
+                        <li class="nav-item {% if request.path == '/zeraPortal/subsidiaries/' %} active {% endif %}">
+                            <a href="{% url 'zeraPortal:subsidiaries' %}"><i class="fa fa-book" aria-hidden="true"></i><span>Depots & Stations</span>
                             </a>
                         </li>
                         <li class="nav-item {% if request.path == '/zeraPortal/company_fuel/' %} active {% endif %}">
-                            <a href="{% url 'zeraPortal:company_fuel' %}"><i class="fa fa-binoculars"></i><span>Fuel Audit Trail</span>
+                            <a href="{% url 'zeraPortal:company_fuel' %}"><i class="fa fa-binoculars"></i><span>Fuel Allocations & Transactions</span>
                             </a>
                         </li>
                         <li class="nav-item {% if request.path == '/zeraPortal/statistics/' %} active {% endif %}">
@@ -187,8 +187,8 @@
                             <a href="{% url 'zeraPortal:report_generator' %}"><i class="fa fa-pie-chart"></i><span>Reports</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href=""><i class="fa fa-user"></i><span>User Profile</span>
+                        <li class="nav-item {% if request.path == '/zeraPortal/profile/' %} active {% endif %}">
+                            <a href="{% url 'zeraPortal:profile' %} "><i class="fa fa-user"></i><span>User Profile</span>
                             </a>
                         </li>
                         <li class="">

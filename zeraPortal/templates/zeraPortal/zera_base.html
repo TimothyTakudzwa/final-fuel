@@ -136,9 +136,10 @@
                         </a>
                     </li>
                     <li class="nav-item {% if request.path == '/zeraPortal/company_fuel/' %} active {% endif %}">
-                        <a href="{% url 'zeraPortal:company_fuel' %}"><i class="fa fa-binoculars"></i><span>Fuel Audit Trail</span>
+                        <a href="{% url 'zeraPortal:company_fuel' %}"><i class="fa fa-binoculars"></i><span>Fuel Allocations & Transactions</span>
                         </a>
                     </li>
+                   
                     <li class="nav-item {% if request.path == '/zeraPortal/statistics/' %} active {% endif %}">
                         <a href="{% url 'zeraPortal:statistics' %}"><i class="fa fa-line-chart"></i><span>Statistics</span>
                         </a>
@@ -238,6 +239,16 @@
     });
 </script>
 
+<script>
+    $(document).ready(function () {
+        $('#transactions').DataTable();
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#payments').DataTable();
+    });
+</script>
    <script>
         $(document).ready(function () {
             $('#allocations').DataTable();

@@ -16,7 +16,12 @@ from operator import attrgetter
 
 from buyer.models import User, FuelRequest
 from company.models import Company, CompanyFuelUpdate
-from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, Transaction, Offer
+from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, Transaction, Offer, DeliverySchedule
+from .forms import ZeraProfileUpdateForm, ZeraImageUpdateForm
+from fuelUpdates.models import SordCompanyAuditTrail
+from users.models import SordActionsAuditTrail
+from accounts.models import AccountHistory
+
 user = get_user_model()
 
 from .lib import *
@@ -77,20 +82,64 @@ def company_fuel(request):
 
         fuel.diesel_capacity = '{:,}'.format(fuel.diesel_capacity)
         fuel.petrol_capacity = '{:,}'.format(fuel.petrol_capacity)
-    
+
     return render(request, 'zeraPortal/company_fuel.html', {'capacities': capacities})
 
+
 def allocations(request, id):
-    company = Company.objects.filter(id=id).first()
-    allocations = FuelAllocation.objects.filter(company=company).all()
-    for allocation in allocations:
-        allocation.subsidiary = Subsidiaries.objects.filter(id=allocation.allocated_subsidiary_id).first()
-    return render(request, 'zeraPortal/fuel_allocations.html', {'allocations': allocations, 'company': company})
+    sord_allocations = SordCompanyAuditTrail.objects.filter(company__id=id).all()
+    return render(request, 'zeraPortal/fuel_allocations.html', {'sord_allocations': sord_allocations})
+
+
+def sordactions(request, id):
+    sord_actions = SordActionsAuditTrail.objects.filter(sord_num=id).all()
+
+    if sord_actions:
+        sord_number = sord_actions[0].sord_num
+    else:
+        sord_number = "-"
+    return render(request, 'zeraPortal/sord_actions.html', {'sord_number': sord_number, 'sord_actions': sord_actions})
+
+
+def transactions(request, id):
+    today = datetime.now().strftime("%m/%d/%y")
+    transporters = Company.objects.filter(company_type="TRANSPORTER").all()
+    transactions = []
+    for tran in Transaction.objects.filter(supplier__company__id=id).all():
+        delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
+        company = Company.objects.filter(id=tran.supplier.company.id).first()
+        tran.depot = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
+        if delivery_sched:
+            tran.delivery_sched = delivery_sched
+        transactions.append(tran)
+    context = {
+        'transactions': transactions,
+        'transporters': transporters,
+        'today': today,
+        'company': company
+    }
+    return render(request, 'zeraPortal/transactions.html', context=context)
+
+
+def payment_and_schedules(request, id):
+    transaction = Transaction.objects.filter(id=id).first()
+    payment_history = AccountHistory.objects.filter(transaction=transaction).all()
+    return render(request, 'zeraPortal/payment_and_schedules.html', {'payment_history': payment_history})
+
+
+def company_subsidiaries(request, id):
+    subsidiaries = Subsidiaries.objects.filter(company__id=id).all()
+    for subsidiary in subsidiaries:
+        subsidiary.fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
+        if subsidiary.license_num.strip() == "":
+            subsidiary.license_num = None
+    return render(request, 'zeraPortal/company_subsidiaries.html', {'subsidiaries':subsidiaries})
 
 
 def subsidiaries(request):
     subsidiaries = Subsidiaries.objects.all()
     for subsidiary in subsidiaries:
+        subsidiary.fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
         if subsidiary.license_num.strip() == "":
             subsidiary.license_num = None
     return render(request, 'zeraPortal/subsidiaries.html', {'subsidiaries':subsidiaries})
@@ -199,12 +248,12 @@ def report_generator(request):
         if request.POST.get('report_type') == 'Companies - Verified':
             v_companies = Company.objects.filter(is_verified=True)
             verified_companies = []
-            
+
             for company in v_companies:
                 company.admin = User.objects.filter(company=company).first()
                 verified_companies.append(company)
-            
-            
+
+
             print(f'__________________{verified_companies}__________________________________')
             trans = None
             allocations = None
@@ -214,18 +263,18 @@ def report_generator(request):
         if request.POST.get('report_type') == 'Companies - Unverified':
             uv_companies = Company.objects.filter(is_verified=False)
             unverified_companies = []
-            
+
             for company in uv_companies:
                 company.admin = User.objects.filter(company=company).first()
                 unverified_companies.append(company)
-            
-            
+
+
             print(f'__________________{unverified_companies}__________________________________')
             trans = None
             allocations = None
             stock = None
             revs = None
-            verified_companies=None        
+            verified_companies=None
         if request.POST.get('report_type') == 'Allocations':
             print("__________________________I am in allocations____________________________")
             allocations = FuelAllocation.objects.all()
@@ -248,16 +297,16 @@ def report_generator(request):
     return render(request, 'zeraPortal/reports.html',
                   {'trans': trans, 'requests': requests, 'allocations': allocations,
                    'start': start_date, 'end': end_date, 'show': show, 'stock': stock})
-    
-    
+
+
 def statistics(request):
     yesterday = date.today() - timedelta(days=1)
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
     weekly_rev = get_weekly_sales(True)
     last_week_rev = get_weekly_sales(False)
-    number_of_companies = Company.objects.filter(company_type='SUPPLIER').all().count()
+    number_of_companies = Company.objects.all().count()
     number_of_depots = Subsidiaries.objects.filter(is_depot=True).count()
-    number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()   
+    number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()
     last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1))
     offers = Offer.objects.all().count()
     bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
@@ -326,9 +375,7 @@ def statistics(request):
     #     trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
     # except:
     #     trans = 0    
-    # trans_complete = get_aggregate_transactions_complete_percentage()
-    inactive_depots = Subsidiaries.objects.filter(is_active=False, is_depot=True).count()
-    inactive_stations = Subsidiaries.objects.filter(is_active=False, is_depot=False).count()
+    trans_complete = get_aggregate_transactions_complete_percentage()
     approval_percentage = get_approved_company_complete_percentage()
 
     return render(request, 'zeraPortal/statistics.html', {'offers': offers,
