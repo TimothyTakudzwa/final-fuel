@@ -20,7 +20,9 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('sordactions/<id>', views.sordactions, name='sordactions'),
     path('transactions/<int:id>', views.transactions, name='transactions'),
-    path('payment_and_schedules/<int:id>', views.payment_and_schedules, name='payment_and_schedules')
+    path('payment_and_schedules/<int:id>', views.payment_and_schedules, name='payment_and_schedules'),
+    path('view_confirmation_doc/<int:id>', views.view_confirmation_doc, name='view_confirmation_doc'),
+    path('view_supplier_doc/<int:id>', views.view_supplier_doc, name='view_supplier_doc')
     
     
     

@@ -53,10 +53,7 @@
                             <th>
                                 Date
                             </th>
-                            <th>
-                                Account
-                            </th>
-
+                        
                             <th>
                                 Sord Number
                             </th>
@@ -82,54 +79,9 @@
                         <tr>
                             <td></td>
                             <td>{{payment.date}} - {{payment.time}}</td>
-                            <td>
-                                <div class="text-center">
-                                    <!--call modal-->
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{payment.id}}">
-                                        Account Details
-                                    </button>
-                                    <!--view details-->
-                                    <div class="modal fade modal-success in" id="view{{payment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header" style="background-color: #009688; color: white">
-                                                    <span class="modal-title" id="exampleModalLabel">Details For The Account</span>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="row">
-                                                        <!--buyer company-->
-                                                        <div class="col-md-12">
-                                                            <h4>Buyer Company &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.account.buyer_company }} </h4>
-                                                        </div>
-                                                        <!--supplier company-->
-                                                        <div class="col-md-12">
-                                                            <h4>Supplier Company &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.transaction.supplier.company}}</h4>
-                                                        </div>
-                                                        <!--applicant-->
-                                                        <div class="col-md-12">
-                                                            <h4>applied_by &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.account.applied_by }}</h4>
-                                                        </div>
-                                                         <!--acc #-->
-                                                         <div class="col-md-12">
-                                                            <h4>Account Number &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.account.account_number}}</h4>
-                                                        </div>
-                                                        <!--is_verified-->
-                                                        <div class="col-md-12">
-                                                            <h4>Verified &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.account.is_verified }}</h4>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
+              
                             <td>{{payment.sord_number}}</td>
                             <td>
-                                <div class="text-center">
                                     <!--call modal-->
                                     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#trans{{payment.id}}">
                                         Transaction Details
@@ -139,39 +91,59 @@
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header" style="background-color: #009688; color: white">
-                                                    <span class="modal-title" id="exampleModalLabel">Details For The Transaction</span>
+                                                    <span class="modal-title" id="exampleModalLabel">Details for the Transaction</span>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
+                                                    {% csrf_token %}
                                                     <div class="row">
-                                                        <!--buyer company-->
-                                                        <div class="col-md-12">
-                                                            <h4>Buyer &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.transaction.buyer.company }} </h4>
+                                                        <div class="form-group col-md-6">
+                                                            <lable><b> Buyer:</b></lable>
+                                                            &nbsp;{{payment.transaction.buyer.company}}
                                                         </div>
-                                                        <!--supplier company-->
-                                                        <div class="col-md-12">
-                                                            <h4>Fuel Type &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.transaction.offer.request.fuel_type}}</h4>
+                                                        <div class="form-group col-md-6">
+                                                            <lable><b>Supplier:</b></lable>
+                                                            &nbsp;{{payment.transaction.supplier.company}}
                                                         </div>
-                                                        <!--applicant-->
-                                                        <div class="col-md-12">
-                                                            <h4>Quantity Requested &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.transaction.offer.request.amount }}</h4>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <lable><b> Fuel Type:</b></lable>
+                                                            &nbsp;{{payment.transaction.offer.request.fuel_type}}
                                                         </div>
-                                                         <!--acc #-->
-                                                         <div class="col-md-12">
-                                                            <h4>Quantity Offered &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.transaction.offer.quantity}}</h4>
+                                                        <div class="form-group col-md-6">
+                                                            <lable><b>Quantity Requested:</b></lable>
+                                                            &nbsp;{{payment.transaction.offer.request.amount}}L
                                                         </div>
-                                                        <!--is_verified-->
-                                                        <div class="col-md-12">
-                                                            <h4>Price &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.transaction.offer.price }}</h4>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <lable><b> Quantity Offered:</b></lable>
+                                                            &nbsp;{{payment.transaction.offer.quantity}}L
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <lable><b>Price:</b></lable>
+                                                            &nbsp;{{payment.transaction.offer.price}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <lable><b> Expected:</b></lable>
+                                                            &nbsp;{{payment.transaction.expected}}L
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <lable><b>Paid:</b></lable>
+                                                            &nbsp;{{payment.transaction.paid}}
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                             </td>
                             <td>Approved</td>
                             <td>{{payment.value}}</td>
@@ -247,10 +219,49 @@
                                                 &nbsp;{{payment.delivery_schedule.delivery_quantity}}
                                             </div>
                                             {% if payment.delivery_schedule.confirmation_document %}
-                                            <b>Status:</b> <i style="color: rgb(54, 167, 219);">Buyer Received Fuel </i>
-                                                {% else %}
-                                                <b>Status:</b> <i style="color: brown;">waiting for buyer confirmation</i>
-                                                {% endif %}
+                                            <div class="form-group col-md-6">
+                                                <lable><b>Status:</b></lable>
+                                                &nbsp;<i style="color: rgb(54, 167, 219);">Buyer Received Fuel </i>
+                                            </div>
+                                            {% else %}
+                                            <div class="form-group col-md-6">
+                                                <lable><b>Status:</b></lable>
+                                                &nbsp;<i style="color: rgb(54, 167, 219);"><i style="color: brown;">waiting for buyer confirmation</i> </i>
+                                            </div>
+            
+                                            {% endif %}
+                                           </div>
+                                           <div class="row">
+    
+                                            <div class="form-group col-md-6">
+                                                <lable><b>Delivery Address:</b></lable>
+                                                &nbsp;{{payment.transaction.buyer.company.address }}
+                                            </div>
+
+                                            {% if payment.delivery_schedule.supplier_document %}
+                                            <div class="form-group col-md-6">
+                                                <lable><b>Supplier Release Note:</b></lable>
+                                                &nbsp;<a class="btn btn-info btn-sm" href="{% url 'zeraPortal:view_supplier_doc' payment.delivery_schedule.id %}" >Download Document </a>
+                                            </div>
+                                            {% else %}
+                                            <div class="form-group col-md-6">
+                                                <lable><b></b></lable>
+                                            </div>
+                                            
+                                            {%endif%} 
+                                        </div>
+                                        <div class="row">
+                                            {% if payment.delivery_schedule.confirmation_document %}
+                                            <div class="form-group col-md-6">
+                                                <lable><b>Buyer Confirmation Doc:</b></lable>
+                                                &nbsp;<a class="btn btn-info btn-sm" href="{% url 'zeraPortal:view_confirmation_doc' payment.delivery_schedule.id %}" >Download Document </a>
+                                            </div>
+                                            {% else %}
+                                            <div class="form-group col-md-6">
+                                                <lable><b></b></lable>
+                                            </div>
+                                            
+                                            {%endif%} 
                                         </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-default" style="background-color: lightslategray;" data-dismiss="modal" aria-label="Close">
