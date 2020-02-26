@@ -214,6 +214,7 @@ def allocated_fuel(request, sid):
                                                                         allocated_quantity=amount_cf,
                                                                         action_type = "Allocation",
                                                                         supplied_from = request.user.company.name,
+                                                                        price = fuel_updated.petrol_price,
                                                                         allocated_by=request.user.username,
                                                                         allocated_to=sub.name, fuel_type="Petrol",
                                                                         payment_type=fuel_updated.payment_type)
@@ -238,6 +239,7 @@ def allocated_fuel(request, sid):
                                                                         allocated_quantity=sord_allocation.end_quantity,
                                                                         allocated_by=request.user.username,
                                                                         action_type = "Allocation",
+                                                                        price = fuel_updated.petrol_price,
                                                                         supplied_from = request.user.company.name,
                                                                         allocated_to=sub.name, fuel_type="Petrol",
                                                                         payment_type=fuel_updated.payment_type)
@@ -276,6 +278,7 @@ def allocated_fuel(request, sid):
                                                                         allocated_quantity=amount_cf,
                                                                         allocated_by=request.user.username,
                                                                         action_type = "Allocation",
+                                                                        price = fuel_updated.diesel_price,
                                                                         supplied_from = request.user.company.name,
                                                                         allocated_to=sub.name, fuel_type="Diesel",
                                                                         payment_type=fuel_updated.payment_type)
@@ -300,6 +303,7 @@ def allocated_fuel(request, sid):
                                                                         allocated_quantity=sord_allocation.end_quantity,
                                                                         allocated_by=request.user.username,
                                                                         action_type = "Allocation",
+                                                                        price = fuel_updated.diesel_price,
                                                                         supplied_from = request.user.company.name,
                                                                         allocated_to=sub.name, fuel_type="Diesel",
                                                                         payment_type=fuel_updated.payment_type)
@@ -427,6 +431,7 @@ def allocation_update(request, id):
                                                                             allocated_quantity=amount_cf,
                                                                             allocated_by=request.user.username,
                                                                             action_type = "Allocation",
+                                                                            price = fuel_update.petrol_price,
                                                                             supplied_from = request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Petrol",
                                                                             payment_type=fuel_update.payment_type)
@@ -453,6 +458,7 @@ def allocation_update(request, id):
                                                                             allocated_quantity=sord_allocation.end_quantity,
                                                                             allocated_by=request.user.username,
                                                                             action_type = "Allocation",
+                                                                            price = fuel_update.petrol_price,
                                                                             supplied_from = request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Petrol",
                                                                             payment_type=fuel_update.payment_type)
@@ -493,6 +499,7 @@ def allocation_update(request, id):
                                                                             allocated_quantity=amount_cf,
                                                                             allocated_by=request.user.username,
                                                                             action_type = "Allocation",
+                                                                            price = fuel_update.diesel_price,
                                                                             supplied_from = request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Diesel",
                                                                             payment_type=fuel_update.payment_type)
@@ -519,6 +526,7 @@ def allocation_update(request, id):
                                                                             allocated_quantity=sord_allocation.end_quantity,
                                                                             allocated_by=request.user.username,
                                                                             action_type = "Allocation",
+                                                                            price = fuel_update.diesel_price,
                                                                             supplied_from = request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Diesel",
                                                                             payment_type=fuel_update.payment_type)
@@ -619,6 +627,7 @@ def allocation_update_main(request, id):
                                                                             allocated_quantity=amount_cf,
                                                                             allocated_by=request.user.username,
                                                                             action_type = "Allocation",
+                                                                            price = fuel_update.petrol_price,
                                                                             supplied_from = request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Petrol",
                                                                             payment_type="RTGS")
@@ -644,6 +653,7 @@ def allocation_update_main(request, id):
                                                                             allocated_quantity=sord_allocation.end_quantity,
                                                                             allocated_by=request.user.username,
                                                                             action_type = "Allocation",
+                                                                            price = fuel_update.petrol_price,
                                                                             supplied_from = request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Petrol",
                                                                             payment_type="RTGS")
@@ -682,6 +692,7 @@ def allocation_update_main(request, id):
                                                                             allocated_quantity=amount_cf,
                                                                             allocated_by=request.user.username,
                                                                             action_type = "Allocation",
+                                                                            price = fuel_update.diesel_price,
                                                                             supplied_from = request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Diesel",
                                                                             payment_type="RTGS")
@@ -707,6 +718,7 @@ def allocation_update_main(request, id):
                                                                             allocated_quantity=sord_allocation.end_quantity,
                                                                             allocated_by=request.user.username,
                                                                             action_type = "Allocation",
+                                                                            price = fuel_update.diesel_price,
                                                                             supplied_from = request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Diesel",
                                                                             payment_type="RTGS")
