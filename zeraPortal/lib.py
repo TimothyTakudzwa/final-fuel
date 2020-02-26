@@ -229,8 +229,7 @@ def calculate_desperate_areas():
     return desperate_areas      
             
         
-def desperate():
-    city = "Limpopo"
+def desperate(city):
     total_transactions = Transaction.objects.filter(buyer__company__address=city).all()
     num_trans_completed_within = 0
     num_trans_completed_outside = 0
@@ -255,7 +254,19 @@ def desperate():
 
         return is_desperate, deficit
     else:
-        pass
+        return None
+    
+    
+def get_desperate_cities():
+    desperate_cities = {}
+    
+    for city in major_cities:
+        desperate_city = desperate(city)
+        if desperate_city:
+            desperate_cities[city] = desperate_city[1]
+            
+    return desperate_cities    
+                
 
 
 
