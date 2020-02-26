@@ -138,6 +138,7 @@ def transactions(request, id):
     today = datetime.now().strftime("%m/%d/%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
     transactions = []
+    company = ""
     for tran in Transaction.objects.filter(supplier__company__id=id).all():
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
         company = Company.objects.filter(id=tran.supplier.company.id).first()
