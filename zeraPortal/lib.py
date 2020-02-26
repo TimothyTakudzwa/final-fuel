@@ -230,32 +230,34 @@ def calculate_desperate_areas():
             
         
 def desperate():
-    city = "Limpopo"
-    total_transactions = Transaction.objects.filter(buyer__company__address=city).all()
-    num_trans_completed_within = 0
-    num_trans_completed_outside = 0
-    is_desperate = False
-    
+    from .constants import zimbabwean_towns, major_cities
 
-    for transaction in total_transactions:  
-        suppliers = User.objects.filter(user_type='SUPPLIER').all()
-        for supplier in suppliers: 
-            if transaction.supplier == supplier:
-                subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
-                if subsidiary.city == city:
-                    num_trans_completed_within += 1
+    for city in zimbabwean_towns:
+        total_transactions = Transaction.objects.filter(buyer__company__city=city).all()
+        num_trans_completed_within = 0
+        num_trans_completed_outside = 0
+        is_desperate = False
+        
+
+        for transaction in total_transactions:  
+            suppliers = User.objects.filter(user_type='SUPPLIER').all()
+            for supplier in suppliers: 
+                if transaction.supplier == supplier:
+                    subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
+                    if subsidiary.city == city:
+                        num_trans_completed_within += 1
+                    else:
+                        num_trans_completed_outside += 1
                 else:
-                    num_trans_completed_outside += 1
-            else:
-                pass
+                    pass
 
-    if num_trans_completed_outside > num_trans_completed_within:
-        is_desperate = True
-        deficit = num_trans_completed_outside - num_trans_completed_within
+        if num_trans_completed_outside > num_trans_completed_within:
+            is_desperate = True
+            deficit = num_trans_completed_outside - num_trans_completed_within
 
-        return is_desperate, deficit
-    else:
-        pass
+            return is_desperate, deficit
+        else:
+            pass
 
 
 
@@ -263,8 +265,8 @@ def desperate():
 
 
 
-                
-                
+                    
+                    
                 
                 
                 

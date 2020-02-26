@@ -4,6 +4,7 @@ from buyer.constants2 import COMPANY_CHOICES, INDUSTRY_CHOICES
 
 class Company(models.Model):
     name = models.CharField(max_length=255, default='')
+    city = models.CharField(max_length=150, blank=True, null=True)
     address = models.CharField(max_length=255, default='')
     industry = models.CharField(max_length=255,  default='', choices=INDUSTRY_CHOICES)
     logo = models.ImageField(blank=True, null=True,default='default.png', upload_to='company_profile_logo')

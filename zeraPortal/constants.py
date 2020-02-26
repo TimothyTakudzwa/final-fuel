@@ -1,6 +1,6 @@
 zimbabwean_towns = ["Select City ---", "Harare", "Bulawayo", "Gweru", "Mutare", "Chirundu", "Bindura", "Beitbridge",
                     "Hwange", "Juliusdale", "Kadoma", "Kariba", "Karoi", "Kwekwe", "Marondera", "Masvingo",
-                    "Chinhoyi", "Mutoko", "Nyanga", "Victoria Falls"]
+                    "Chinhoyi", "Mutoko", "Nyanga", "Victoria Falls", "Limpopo"]
 
 major_cities = [{'Harare' : ['Avenues', 'Budiriro', 'Dzivaresekwa', 'Kuwadzana', 'Warren Park', 'Glen Norah', 'Glen View', 'Avondale',
                 'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park', 'Borrowdale', 'Chisipiti', 'Glen Lorne',
