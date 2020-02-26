@@ -553,10 +553,21 @@ def suspicious_behavior(request):
     schedules = DeliverySchedule.objects.filter(date__lt=datetime.today() + timedelta(days=1), confirmation_document='',
                                                     supplier_document='')
     late_schedules = []
+    suspicious_schedules = []
+    
+    for ds in DeliverySchedule.objects.all():
+        if ds.supplier_document and ds.confirmation_document:
+            account = AccountHistory.objects.filter(transaction=ds.transaction)
+            if not account:
+                suspicious_schedules.append(ds)
+                
+    
     for schedule in schedules:
         d1 = datetime.strptime(str(schedule.date), "%Y-%m-%d")
         d2 = datetime.strptime(str(datetime.today().date()), "%Y-%m-%d")
         schedule.days_late = abs((d2 - d1).days)
         late_schedules.append(schedule)
         
-    return render(request, 'zeraPortal/suspicious_behavior.html', {'late_schedules':late_schedules})
+        
+        
+    return render(request, 'zeraPortal/suspicious_behavior.html', {'late_schedules':late_schedules, 'suspicious_schedules':suspicious_schedules})
