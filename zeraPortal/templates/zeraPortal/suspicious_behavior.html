@@ -57,7 +57,7 @@
                     <tr>
                         <td></td>
                         <td>{{ delivery.transaction.buyer.company.name|title }}</td>
-                        <td>{{delivery.delivery_address}}</td>
+                        <td>{{delivery.transaction.buyer.company.address }}</td>
                         <td>{{ delivery.transaction.offer.request.fuel_type}}</td>
                         <td>{{ delivery.delivery_quantity }} </td>
                         <td>{{ delivery.transport_company}}</td>
@@ -346,6 +346,7 @@
                     <tr>
                         <td></td>
                         <th style="color: white;">Recipient</th>
+                        <th style="color: white;">Supplier</th>
                         <th style="color: white;">Address</th>
                         <th style="color: white;">Product</th>
                         <th style="color: white;">Quantity</th>
@@ -358,7 +359,8 @@
                     <tr>
                         <td></td>
                         <td>{{ delivery.transaction.buyer.company.name|title }}</td>
-                        <td>{{delivery.delivery_address}}</td>
+                        <td>{{ delivery.transaction.supplier.company.name|title }}</td>
+                        <td>{{delivery.transaction.buyer.company.address}}</td>
                         <td>{{ delivery.transaction.offer.request.fuel_type}}</td>
                         <td>{{ delivery.delivery_quantity }} </td>
                         <td>{{ delivery.transport_company}}</td>

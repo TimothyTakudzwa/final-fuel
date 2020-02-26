@@ -231,12 +231,15 @@ def calculate_desperate_areas():
         
 def desperate():
     from .constants import zimbabwean_towns, major_cities
+    
+    desperate_cities = {}
 
     for city in zimbabwean_towns:
         total_transactions = Transaction.objects.filter(buyer__company__city=city).all()
         num_trans_completed_within = 0
         num_trans_completed_outside = 0
         is_desperate = False
+        
         
 
         for transaction in total_transactions:  
@@ -254,10 +257,25 @@ def desperate():
         if num_trans_completed_outside > num_trans_completed_within:
             is_desperate = True
             deficit = num_trans_completed_outside - num_trans_completed_within
+            desperate_cities[city] = deficit
 
-            return is_desperate, deficit
+            # return is_desperate, deficit
+
         else:
-            pass
+            return None
+    
+    return desperate_cities  
+    
+def get_desperate_cities():
+    desperate_cities = {}
+    
+    for city in major_cities:
+        desperate_city = desperate(city)
+        if desperate_city:
+            desperate_cities[city] = desperate_city[1]
+            
+    return desperate_cities    
+                
 
 
 
