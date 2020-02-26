@@ -894,10 +894,10 @@
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            labels: ["Monday", "Tuesday", {{city_sales_volume.Harare}}, "Thursday", "Friday", "Saturday", "Sunday"],
             datasets: [
                 {
-                    label: "This Week",
+                    label: "This Week ",
                     borderColor: "rgba(0,0,0,.09)",
                     borderWidth: "1",
                     backgroundColor: "rgba(0,0,0,.07)",
@@ -929,7 +929,7 @@
     });
 
     var Harare = {{city_sales_volume.Harare}};
-    // console.log(Harare)
+    console.log('>>>>>>>>',Harare)
     var Bulawayo = {{city_sales_volume.Bulawayo}};
     var Gweru = {{city_sales_volume.Gweru}};
     var Mutare = {{city_sales_volume.Mutare}};
