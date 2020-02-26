@@ -235,7 +235,7 @@ def desperate():
     desperate_cities = {}
 
     for city in zimbabwean_towns:
-        total_transactions = Transaction.objects.filter(buyer__company__address=city).all()
+        total_transactions = Transaction.objects.filter(buyer__company__city=city).all()
         num_trans_completed_within = 0
         num_trans_completed_outside = 0
         is_desperate = False
