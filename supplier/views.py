@@ -909,6 +909,22 @@ def transaction_sord_update(request, user, quantity, action, fuel_type, payment_
                                                         quantity_sold=entry.end_quantity, end_quantity=0,
                                                         received_by=user, fuel_type=entry.fuel_type,
                                                         subsidiary=subsidiary, payment_type=payment_type)
+
+                sord_obj = SordCompanyAuditTrail.objects.filter(sord_no=entry.sord_no).first()
+                sord_obj2 = SordActionsAuditTrail.objects.filter(sord_num=entry.sord_no).first()
+                SordActionsAuditTrail.objects.create(sord_num=sord_obj.sord_no,
+                                                                        action_num=sord_obj.action_no + 1,
+                                                                        allocated_quantity=entry.end_quantity,
+                                                                        action_type = "Sale",
+                                                                        supplied_from = subsidiary.name,
+                                                                        price = sord_obj2.price,
+                                                                        allocated_by=request.user.username,
+                                                                        allocated_to=user,
+                                                                        fuel_type=entry.fuel_type,
+                                                                        payment_type=payment_type)
+                sord_obj.action_no += 1
+                sord_obj.save()
+
                 balance_brought_forward = balance_brought_forward - entry.end_quantity
                 account_sord_list.append(entry.sord_no)
             else:
@@ -918,6 +934,22 @@ def transaction_sord_update(request, user, quantity, action, fuel_type, payment_
                                                         end_quantity=entry.end_quantity - balance_brought_forward,
                                                         received_by=user, fuel_type=entry.fuel_type,
                                                         subsidiary=subsidiary, payment_type=payment_type)
+
+                sord_obj = SordCompanyAuditTrail.objects.filter(sord_no=entry.sord_no).first()
+                sord_obj2 = SordActionsAuditTrail.objects.filter(sord_num=entry.sord_no).first()
+                SordActionsAuditTrail.objects.create(sord_num=sord_obj.sord_no,
+                                                                        action_num=sord_obj.action_no + 1,
+                                                                        allocated_quantity=balance_brought_forward,
+                                                                        action_type = "Sale",
+                                                                        supplied_from = subsidiary.name,
+                                                                        price = sord_obj2.price,
+                                                                        allocated_by=request.user.username,
+                                                                        allocated_to=user,
+                                                                        fuel_type=entry.fuel_type,
+                                                                        payment_type=payment_type)
+                sord_obj.action_no += 1
+                sord_obj.save()
+
                 balance_brought_forward = 0
                 account_sord_list.append(entry.sord_no)
     account = AccountHistory.objects.filter(transaction=transaction, sord_number=None).first()
