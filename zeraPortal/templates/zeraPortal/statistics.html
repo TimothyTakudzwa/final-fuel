@@ -189,7 +189,7 @@
                             </a>
                         </li>
                         <li class="nav-item {% if request.path == '/zeraPortal/suspicious_behavior/' %} active {% endif %} ">
-                            <a href="{% url 'zeraPortal:suspicious_behavior' %}"><i class="fa fa-support"></i><span>~ Suspicious Activity</span>
+                            <a href="{% url 'zeraPortal:suspicious_behavior' %}"><i class="fa fa-support"></i><span> Suspicious Activity</span>
                             </a>
                         </li>
                         <li class="nav-item {% if request.path == '/zeraPortal/profile/' %} active {% endif %}">
@@ -409,7 +409,7 @@
                     </div>
                     <div class="items pull-left">
                     <i class="fa fa-check-circle fa-2x"></i>
-                    <h4>Approved Rate</h4>
+                    <h4>Approval Rate</h4>
                     </div>
                 </div>
             </div>
@@ -487,7 +487,7 @@
 
 <div class="row" style="margin-top: 50px;">
         <!-- Sales Volume By City -->
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6  lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="sWzF7tcsBv">  
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6  lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="sWzF7tcsBv" style="height:400px;">  
             <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="sWzF7tcsBv" data-index="0">
                 <div class="panel-heading ui-sortable-handle">
                     <div class="panel-title" style="max-width: calc(100% - 180px);">
@@ -626,12 +626,12 @@
                             {% for client in clients%}
                             <tr>
                               <td>
-                                {{client.name}}
+                                {{client.company.name}}
                                 </td>
                               
-                              <td>{{client.address}}</td>
-                              <td>{{client.industry}}</td>
-                              <td>$ {{client.total_revenue|stringformat:".2f"}}</td>
+                              <td>{{client.company.address}}</td>
+                              <td>{{client.company.industry}}</td>
+                              <td>$ {{clientbundleRenderer.renderToStreamtotal_revenue|stringformat:".2f"}}</td>
                               <td>{{client.number_of_trans}}</td>
                               
                               <td style="width: 13%;">
