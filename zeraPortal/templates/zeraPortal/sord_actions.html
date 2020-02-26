@@ -1,5 +1,7 @@
 {% extends "zeraPortal/zera_base.html" %} 
 {% block title %}Fuel Finder - ZERA {% endblock %} 
+{% load static %}
+{% load humanize %}
 {% block body %}
 <section class="content-header">
     <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
@@ -90,7 +92,7 @@
                             <td>{{sord.fuel_type}}</td>
                             <td>{{sord.payment_type}}</td>
                             <td>{{sord.action_type}}</td>
-                            <td>{{sord.allocated_quantity}}</td>
+                            <td>{{sord.allocated_quantity|intcomma}}</td>
                             <td>{{sord.price}}</td>
                             <td>{{sord.supplied_from}}</td>
                             <td>{{sord.allocated_by}}</td>

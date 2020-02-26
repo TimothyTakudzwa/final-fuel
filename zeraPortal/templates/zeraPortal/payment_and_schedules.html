@@ -140,14 +140,21 @@
                                                             &nbsp;{{payment.transaction.paid}}
                                                         </div>
                                                     </div>
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <lable><b> Delivery Address:</b></lable>
+                                                            &nbsp;{{payment.transaction.buyer.company.address}}
+                                                        </div>
+                                                       
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                             </td>
                             <td>Approved</td>
-                            <td>{{payment.value}}</td>
-                            <td>{{payment.balance}}</td>
+                            <td>{{payment.value|intcomma}}</td>
+                            <td>{{payment.balance|intcomma}}</td>
                             {% if payment.delivery_schedule != None %}
                             <td>
                                 <div class="btn-group">
@@ -180,6 +187,19 @@
                                                     &nbsp;{{payment.delivery_schedule.delivery_time }}
                                                 </div>
                                             </div>
+
+
+                                            <div class="row">
+    
+                                                <div class="form-group col-md-6">
+                                                    <lable><b>Transporter:</b></lable>
+                                                    &nbsp;{{payment.delivery_schedule.transport_company }}
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <lable><b>Delivery Address:</b></lable>
+                                                    &nbsp;{{payment.transaction.buyer.company.address }}
+                                                </div>
+                                            </div>
                                             <div class="row">
     
                                                 <div class="form-group col-md-6">
@@ -202,6 +222,8 @@
                                                     &nbsp;{{payment.delivery_schedule.vehicle_reg }}
                                                 </div>
                                             </div>
+
+
                                             <div class="row">
     
                                                 <div class="form-group col-md-6">
@@ -232,13 +254,7 @@
                                             {% endif %}
                                            </div>
                                            <div class="row">
-    
-                                            <div class="form-group col-md-6">
-                                                <lable><b>Delivery Address:</b></lable>
-                                                &nbsp;{{payment.transaction.buyer.company.address }}
-                                            </div>
-
-                                            {% if payment.delivery_schedule.supplier_document %}
+                                            {% if payment.delivery_schedule.confirmation_document %}
                                             <div class="form-group col-md-6">
                                                 <lable><b>Supplier Release Note:</b></lable>
                                                 &nbsp;<a class="btn btn-info btn-sm" href="{% url 'zeraPortal:view_supplier_doc' payment.delivery_schedule.id %}" >Download Document </a>
@@ -249,8 +265,7 @@
                                             </div>
                                             
                                             {%endif%} 
-                                        </div>
-                                        <div class="row">
+
                                             {% if payment.delivery_schedule.confirmation_document %}
                                             <div class="form-group col-md-6">
                                                 <lable><b>Buyer Confirmation Doc:</b></lable>
@@ -263,6 +278,7 @@
                                             
                                             {%endif%} 
                                         </div>
+                                      
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-default" style="background-color: lightslategray;" data-dismiss="modal" aria-label="Close">
                                                     Close
