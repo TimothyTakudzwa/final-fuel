@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from supplier.models import Subsidiaries, Transaction, UserReview
 # from company.models import Company, FuelUpdate
-from buyer.models import User
+from buyer.models import User, FuelRequest
 from company.models import CompanyFuelUpdate
 
 from .constants import zimbabwean_towns, major_cities
@@ -168,6 +168,18 @@ def get_subsidiary_sales_volume_in_city(user,city):
                 volume += sub_tran.offer.quantity
     return volume
 
+def get_subsidiary_requests_volume_in_city(user,city):
+    volume = 0
+    subs = Subsidiaries.objects.filter(id=user.subsidiary_id, city=city)
+    if subs:
+        for sub in subs:
+            sub_trans = Transaction.objects.filter(supplier__company=user.company, supplier__subsidiary_id=sub.id,
+                                                is_complete=True)
+            for sub_tran in sub_trans:
+                volume += sub_tran.request.amount.quantity
+    return volume
+
+
 def get_subsidiary_sales_volume_in_location(user, location):
     volume = 0
     subs = Subsidiaries.objects.filter(id=user.subsidiary_id, location=location)
@@ -202,6 +214,22 @@ def get_volume_sales_by_location():
                 sales_data_by_location[str(location) + ', ' +  str(city)] =  loc_volume
              
     return  sales_data_by_city
+
+
+def calculate_desperate_areas():
+    desperate_areas = {}
+    suppliers = User.objects.filter(user_type='SUPPLIER')
+    for city in zimbabwean_towns:
+        for supplier in suppliers:
+            sales_per_region = get_subsidiary_sales_volume_in_city(supplier,city=city)
+            requests_per_region = get_subsidiary_requests_volume_in_city(supplier,city=city)
+            # print(sales_per_region, requests_per_region)         
+            if  sales_per_region > requests_per_region :
+                desperate_areas[city] = get_subsidiary_sales_volume_in_city(supplier,city=city) - get_subsidiary_requests_volume_in_city(supplier,city=city)
+    return desperate_areas      
+            
+        
+    
 
 
 

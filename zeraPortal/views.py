@@ -1,4 +1,5 @@
 import secrets
+from datetime import datetime, timedelta
 
 from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404, redirect
@@ -548,4 +549,13 @@ def profile(request):
 
 
 def suspicious_behavior(request):
-    return render(request, 'zeraPortal/suspicious_behavior.html')
+    schedules = DeliverySchedule.objects.filter(date__lt=datetime.today() + timedelta(days=1), confirmation_document='',
+                                                    supplier_document='')
+    late_schedules = []
+    for schedule in schedules:
+        d1 = datetime.strptime(str(schedule.date), "%Y-%m-%d")
+        d2 = datetime.strptime(str(datetime.today().date()), "%Y-%m-%d")
+        schedule.days_late = abs((d2 - d1).days)
+        late_schedules.append(schedule)
+        
+    return render(request, 'zeraPortal/suspicious_behavior.html', {'late_schedules':late_schedules})
