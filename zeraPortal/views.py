@@ -582,3 +582,10 @@ def suspicious_behavior(request):
         
         
     return render(request, 'zeraPortal/suspicious_behavior.html', {'late_schedules':late_schedules, 'suspicious_schedules':suspicious_schedules})
+
+
+def desperate_regions(request):
+    context = {
+        'regions': desperate()
+    }
+    return render(request, 'zeraPortal/desperate_regions.html', context=context)

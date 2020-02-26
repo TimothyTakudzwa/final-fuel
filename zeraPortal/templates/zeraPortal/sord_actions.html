@@ -62,7 +62,7 @@
                              <th>
                                 Payment
                              </th>
-                             <th>
+                             <th style="color: rgb(13, 14, 13);">
                                 Event
                              </th>
                             <th>
@@ -91,7 +91,13 @@
                             <td>{{sord.action_num}}</td>
                             <td>{{sord.fuel_type}}</td>
                             <td>{{sord.payment_type}}</td>
-                            <td>{{sord.action_type}}</td>
+                            {% if sord.action_type == 'Allocation' %}
+                            <td style="background-color: rgb(102, 145, 102);color: white;">{{sord.action_type}}</td>
+                            {% elif sord.action_type == 'Sale' %}
+                            <td style="background-color: rgb(91, 125, 131);color: white;">{{sord.action_type}}</td>
+                            {% else %}
+                            <td style="background-color: rgb(38, 77, 112);color: white;">{{sord.action_type}}</td>
+                            {% endif %}
                             <td>{{sord.allocated_quantity|intcomma}}</td>
                             <td>{{sord.price}}</td>
                             <td>{{sord.supplied_from}}</td>

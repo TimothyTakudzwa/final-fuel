@@ -246,9 +246,11 @@ def desperate():
                 if transaction.supplier == supplier:
                     subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
                     if subsidiary.city == city:
-                        num_trans_completed_within += 1
+                        num_trans_completed_within += transaction.offer.quantity
                     else:
-                        num_trans_completed_outside += 1
+                        num_trans_completed_outside += transaction.offer.quantity
+
+
                 else:
                     pass
 
