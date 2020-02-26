@@ -70,9 +70,9 @@ def add_supplier_admin(request, id):
     if check_email:
         messages.warning(request, f"Email already used in the system, please use a different email")
         return redirect('zeraPortal:dashboard')
-    elif not is_valid:
-        messages.warning(request, 'The email is not valid, Please provide a valid email and try again')
-        return redirect('zeraPortal:dashboard')
+    # elif not is_valid:
+    #     messages.warning(request, 'The email is not valid, Please provide a valid email and try again')
+    #     return redirect('zeraPortal:dashboard')
     else:
         i = 0
         username = initial_username = first_name[0] + last_name
@@ -80,7 +80,7 @@ def add_supplier_admin(request, id):
             username = initial_username + str(i)
             i += 1
         password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
-        user = User.objects.create(company=company, first_name=first_name, last_name=last_name, email=email, phone_number=phone_number,
+        user = User.objects.create(company=company, first_name=first_name, last_name=last_name, email=email, phone_number=phone_number.replace(' ', ''),
         user_type='S_ADMIN', is_active=True, username=username.lower(), password=password)
         message_is_sent(request, user)
         messages.success(request, 'User successfully created')
