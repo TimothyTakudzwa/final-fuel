@@ -176,7 +176,7 @@ def get_subsidiary_requests_volume_in_city(user,city):
             sub_trans = Transaction.objects.filter(supplier__company=user.company, supplier__subsidiary_id=sub.id,
                                                 is_complete=True)
             for sub_tran in sub_trans:
-                volume += sub_tran.request.amount.quantity
+                volume += sub_tran.offer.request.amount
     return volume
 
 
@@ -224,12 +224,41 @@ def calculate_desperate_areas():
             sales_per_region = get_subsidiary_sales_volume_in_city(supplier,city=city)
             requests_per_region = get_subsidiary_requests_volume_in_city(supplier,city=city)
             # print(sales_per_region, requests_per_region)         
-            if  sales_per_region > requests_per_region :
+            if sales_per_region > requests_per_region :
                 desperate_areas[city] = get_subsidiary_sales_volume_in_city(supplier,city=city) - get_subsidiary_requests_volume_in_city(supplier,city=city)
     return desperate_areas      
             
         
+def desperate():
+    city = "Limpopo"
+    total_transactions = Transaction.objects.filter(buyer__company__address=city).all()
+    num_trans_completed_within = 0
+    num_trans_completed_outside = 0
+    is_desperate = False
     
+
+    for transaction in total_transactions:  
+        suppliers = User.objects.filter(user_type='SUPPLIER').all()
+        for supplier in suppliers: 
+            if transaction.supplier == supplier:
+                subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
+                if subsidiary.city == city:
+                    num_trans_completed_within += 1
+                else:
+                    num_trans_completed_outside += 1
+            else:
+                pass
+
+    if num_trans_completed_outside > num_trans_completed_within:
+        is_desperate = True
+        deficit = num_trans_completed_outside - num_trans_completed_within
+
+        return is_desperate, deficit
+    else:
+        pass
+
+
+
 
 
 

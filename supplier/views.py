@@ -847,6 +847,7 @@ def stock_sord_update(request, user, quantity, action, fuel_type, payment_type):
                                                         quantity_sold=entry.end_quantity, end_quantity=0,
                                                         received_by=user, fuel_type=entry.fuel_type,
                                                         subsidiary=subsidiary, payment_type=payment_type)
+                
                 balance_brought_forward = balance_brought_forward - entry.end_quantity
             else:
                 SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1,
