@@ -155,17 +155,19 @@ def create_company(request, id):
     user = User.objects.filter(id=id).first()
     user_type = user.user_type
     form.initial['company_name'] = user.company.name
+    zimbabwean_towns = ["Select City ---", "Harare", "Bulawayo", "Gweru", "Mutare", "Chirundu", "Bindura", "Beitbridge","Hwange", "Juliusdale", "Kadoma", "Kariba", "Karoi", "Kwekwe", "Marondera", "Masvingo", "Chinhoyi", "Mutoko", "Nyanga", "Victoria Falls"]
 
     if request.method == 'POST':
         form = CreateCompany(request.POST)
         if form.is_valid():
             if user_type == 'BUYER':
                 company_name = request.POST.get('company_name')
+                city = request.POST.get('city')
                 address = request.POST.get('address')
                 is_govnt_org = request.POST.get('is_govnt_org')
                 logo = request.FILES.get('logo')
                 company_name = user.company.name
-                Company.objects.filter(name=company_name).update(name=company_name, address=address, logo=logo,
+                Company.objects.filter(name=company_name).update(name=company_name, city=city, address=address, logo=logo,
                                                                  is_govnt_org=is_govnt_org)
                 return redirect('login')
 
@@ -182,7 +184,7 @@ def create_company(request, id):
                 CompanyFuelUpdate.objects.create(company=new_company)
                 return render(request, 'supplier/final_reg.html')
 
-    return render(request, 'supplier/create_company.html', {'form': form, 'user_type': user_type})
+    return render(request, 'supplier/create_company.html', {'form': form, 'user_type': user_type, 'zimbabwean_towns': zimbabwean_towns})
 
 
 '''

@@ -204,6 +204,14 @@
                                                                         {% csrf_token %}
                                                                             {% if user_type == 'BUYER' %}
                                                                                 {{ form.company_name|as_crispy_field }}
+                                                                                <div class="col-sm-12" name="city">
+                                                                                    <label>City</label>
+                                                                                    <select class="form-control" name="city">
+                                                                                        {% for citi in zimbabwean_towns %}
+                                                                                        <option >{{citi}}</option>
+                                                                                        {% endfor %}
+                                                                                    </select>
+                                                                                </div>
                                                                                 {{ form.address|as_crispy_field }}
                                                                                 {{ form.is_govnt_org|as_crispy_field }}
                                                                                 {{ form.logo|as_crispy_field }}

@@ -42,11 +42,11 @@
                         <thead>
                         <tr>
                             <th>Region</th>
-                            <th>Deficit</th>
+                            <th>Deficit <em>(L)</em> </th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for region, deficit in regions.item %}
+                        {% for region, deficit in regions.items %}
                             <tr>
                                 <td>{{ region }}</td>
                                 <td>{{ deficit }}</td>

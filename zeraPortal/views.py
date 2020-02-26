@@ -33,6 +33,7 @@ from .lib import *
 
 
 def dashboard(request):
+    zimbabwean_towns = ["Select City ---", "Harare", "Bulawayo", "Gweru", "Mutare", "Chirundu", "Bindura", "Beitbridge","Hwange", "Juliusdale", "Kadoma", "Kariba", "Karoi", "Kwekwe", "Marondera", "Masvingo", "Chinhoyi", "Mutoko", "Nyanga", "Victoria Falls"]
     companies = Company.objects.filter(company_type='SUPPLIER').all()
     for company in companies:
         company.num_of_depots = Subsidiaries.objects.filter(company=company, is_depot='True').count()
@@ -43,11 +44,12 @@ def dashboard(request):
         check_license = Company.objects.filter(company_type='SUPPLIER', license_number=license_number).exists()
         if not check_license:
             name = request.POST.get('company_name')
+            city = request.POST.get('city')
             address = request.POST.get('address')
             destination_bank = request.POST.get('destination_bank')
             iban_number = request.POST.get('iban_number')
             account_number = request.POST.get('account_number')
-            new_company = Company.objects.create(name=name, address=address, license_number=license_number, destination_bank=destination_bank,
+            new_company = Company.objects.create(name=name, city=city, address=address, license_number=license_number, destination_bank=destination_bank,
                                 iban_number=iban_number, account_number=account_number, company_type='SUPPLIER', is_active=True)
             new_company.save()
             CompanyFuelUpdate.objects.create(company=new_company)
@@ -56,7 +58,7 @@ def dashboard(request):
         else:
             messages.warning(request, 'License number already exists!!!')
             return redirect('zeraPortal:dashboard')
-    return render(request, 'zeraPortal/companies.html', {'companies': companies})
+    return render(request, 'zeraPortal/companies.html', {'companies': companies, 'zimbabwean_towns':zimbabwean_towns})
 
 
 def add_supplier_admin(request, id):
