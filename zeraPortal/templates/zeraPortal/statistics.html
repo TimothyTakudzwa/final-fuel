@@ -187,6 +187,10 @@
                             <a href="{% url 'zeraPortal:report_generator' %}"><i class="fa fa-pie-chart"></i><span>Reports</span>
                             </a>
                         </li>
+                        <li class="nav-item {% if request.path == '/zeraPortal/suspicious_behavior/' %} active {% endif %} ">
+                            <a href="{% url 'zeraPortal:suspicious_behavior' %}"><i class="fa fa-support"></i><span>Monitor Suspicious Activity</span>
+                            </a>
+                        </li>
                         <li class="nav-item {% if request.path == '/zeraPortal/profile/' %} active {% endif %}">
                             <a href="{% url 'zeraPortal:profile' %} "><i class="fa fa-user"></i><span>User Profile</span>
                             </a>
@@ -748,8 +752,15 @@
 -->
 
 <script>
+alert("{{city_sales_volume.Harare}}");   
+console.log({{city_sales_volume.Harare}});
+
+</script>
+
+<script>
     "use strict"; // Start of use strict
     // notification
+    
   
 
     //counter
