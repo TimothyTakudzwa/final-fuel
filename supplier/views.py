@@ -13,8 +13,9 @@ from accounts.models import Account, AccountHistory
 from buyer.forms import BuyerUpdateForm
 from buyer.utils import render_to_pdf
 from company.models import CompanyFuelUpdate
+from fuelUpdates.models import SordCompanyAuditTrail
 from notification.models import Notification
-from users.models import Audit_Trail
+from users.models import Audit_Trail, SordActionsAuditTrail
 from whatsapp.helper_functions import send_message
 from .forms import PasswordChange, CreateCompany, OfferForm
 from .lib import *
@@ -847,6 +848,20 @@ def stock_sord_update(request, user, quantity, action, fuel_type, payment_type):
                                                         quantity_sold=entry.end_quantity, end_quantity=0,
                                                         received_by=user, fuel_type=entry.fuel_type,
                                                         subsidiary=subsidiary, payment_type=payment_type)
+                sord_obj = SordCompanyAuditTrail.objects.filter(sord_no=entry.sord_no).first()
+                sord_obj2 = SordActionsAuditTrail.objects.filter(sord_num=entry.sord_no).first()
+                SordActionsAuditTrail.objects.create(sord_num=sord_obj.sord_no,
+                                                                        action_num=sord_obj.action_no + 1,
+                                                                        allocated_quantity=entry.end_quantity,
+                                                                        action_type = "Stock Update",
+                                                                        supplied_from = subsidiary.name,
+                                                                        price = sord_obj2.price,
+                                                                        allocated_by=request.user.username,
+                                                                        allocated_to=user,
+                                                                        fuel_type=entry.fuel_type,
+                                                                        payment_type=payment_type)
+                sord_obj.action_no += 1
+                sord_obj.save()
                 
                 balance_brought_forward = balance_brought_forward - entry.end_quantity
             else:
@@ -856,6 +871,20 @@ def stock_sord_update(request, user, quantity, action, fuel_type, payment_type):
                                                         end_quantity=entry.end_quantity - balance_brought_forward,
                                                         received_by=user, fuel_type=entry.fuel_type,
                                                         subsidiary=subsidiary, payment_type=payment_type)
+                sord_obj = SordCompanyAuditTrail.objects.filter(sord_no=entry.sord_no).first()
+                sord_obj2 = SordActionsAuditTrail.objects.filter(sord_num=entry.sord_no).first()
+                SordActionsAuditTrail.objects.create(sord_num=sord_obj.sord_no,
+                                                                        action_num=sord_obj.action_no + 1,
+                                                                        allocated_quantity=balance_brought_forward,
+                                                                        action_type = "Stock Update",
+                                                                        supplied_from = subsidiary.name,
+                                                                        price = sord_obj2.price,
+                                                                        allocated_by=request.user.username,
+                                                                        allocated_to=user,
+                                                                        fuel_type=entry.fuel_type,
+                                                                        payment_type=payment_type)
+                sord_obj.action_no += 1
+                sord_obj.save()
                 balance_brought_forward = 0
 
 
