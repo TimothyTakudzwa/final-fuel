@@ -478,7 +478,71 @@
                 </div>
             </div>
         </div>
-</div>        
+</div>
+
+<div class="row" style="margin-top: 50px;">
+        <!-- Sales Volume By City -->
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6  lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="sWzF7tcsBv">  
+            <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="sWzF7tcsBv" data-index="0">
+                <div class="panel-heading ui-sortable-handle">
+                    <div class="panel-title" style="max-width: calc(100% - 180px);">
+                        <h4>Sales By City</h4>
+                    </div>
+                <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="editTitle" data-tooltip="Edit title" data-toggle="tooltip" data-title="Edit title" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-pencil"></i><span class="control-title">Edit title</span></a></li><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="reload" data-tooltip="Reload" data-toggle="tooltip" data-title="Reload" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-reload"></i><span class="control-title">Reload</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li><li><a data-func="close" data-tooltip="Close" data-toggle="tooltip" data-title="Close" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-close"></i><span class="control-title">Close</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
+                <div class="panel-body"><iframe class="chartjs-hidden-iframe" tabindex="-1" style="display: block; overflow: hidden; border: 0px; margin: 0px; top: 0px; left: 0px; bottom: 0px; right: 0px; height: 100%; width: 100%; position: absolute; pointer-events: none; z-index: -1;"></iframe>
+                    <canvas id="salesChart" height="407" width="611" style="display: block; width: 611px; height: 407px;"></canvas>
+                </div>
+            </div>
+            
+        </div>
+        <!-- End of Sales Vol BY City -->
+        <!-- Desperate Areas -->
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6  lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="sWzF7tcsBv">  
+            <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="sWzF7tcsBv" data-index="0">
+                <div class="panel-heading ui-sortable-handle">
+                    <div class="panel-title" style="max-width: calc(100% - 180px);">
+                        <h4>Desperate Areas</h4>
+                    </div>
+                <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="editTitle" data-tooltip="Edit title" data-toggle="tooltip" data-title="Edit title" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-pencil"></i><span class="control-title">Edit title</span></a></li><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="reload" data-tooltip="Reload" data-toggle="tooltip" data-title="Reload" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-reload"></i><span class="control-title">Reload</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li><li><a data-func="close" data-tooltip="Close" data-toggle="tooltip" data-title="Close" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-close"></i><span class="control-title">Close</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
+                <div class="panel-body"><iframe class="chartjs-hidden-iframe" tabindex="-1" style="display: block; overflow: hidden; border: 0px; margin: 0px; top: 0px; left: 0px; bottom: 0px; right: 0px; height: 100%; width: 100%; position: absolute; pointer-events: none; z-index: -1;"></iframe>
+                <div class="row">   
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+                        <div class="panel panel-bd cardbox" style="background-color: #4c59a7;">
+                            <div class="panel-body">
+                              <div class="items pull-left">
+                                <i class="fa fa-suitcase fa-2x"></i>
+                                <h4>Current Stock</h4>
+                            </div>
+                            
+                                <div class="statistic-box">
+                                      <div class="row" style="padding-bottom: 10px;">
+                                        <h2 class="card-title" style="font-size: 1em;">Diesel : 
+                                          <span class="count-number">{{diesel}}</span>
+                                          <small>L</small>
+                                        </h2>
+                                      </div> 
+                                      <div class="row"> 
+                                      <h2 class="card-title" style="font-size: 1em;">Petrol : 
+                                        <span class="count-number">{{petrol}}</span>
+                                        <small>L</small>
+                                      </h2>
+                                      </div>
+                                    
+                                </div>
+                                
+                            </div>
+            
+                            
+                        </div> 
+                    </div>
+                </div>
+                </div>
+            </div>
+            
+
+        </div>
+        <!--  -->
+</div>
          <!-- Radar Chart -->
         <div class="col-xs-12 col-sm-12 col-md-6 lobipanel-parent-sortable ui-sortable hide" data-lobipanel-child-inner-id="Y7WIaCX9ws">
             <div class="panel panel-bd lobidisable lobipanel lobipanel-sortable" data-inner-id="Y7WIaCX9ws" data-index="0">
@@ -864,8 +928,68 @@
         }
     });
 
+    var Harare = {{city_sales_volume.Harare}};
+    // console.log(Harare)
+    var Bulawayo = {{city_sales_volume.Bulawayo}};
+    var Gweru = {{city_sales_volume.Gweru}};
+    var Mutare = {{city_sales_volume.Mutare}};
+    var Chirundu = {{city_sales_volume.Chirundu}};
+    var Bindura = {{city_sales_volume.Bindura}};
+    var Hwange = {{city_sales_volume.Hwange}};
+    var Juliusdale = {{city_sales_volume.Juliusdale}};
+    var Kadoma = {{city_sales_volume.Kadoma}};
+    var Kariba = {{city_sales_volume.Kariba}};
+    var Karoi = {{city_sales_volume.Karoi}};
+    var Kwekwe = {{city_sales_volume.Kwekwe}};
+    var Marondera = {{city_sales_volume.Marondera}};
+    var Masvingo = {{city_sales_volume.Masvingo}};
+    var Chinhoyi = {{city_sales_volume.Chinhoyi}};
+    var Mutoko = {{city_sales_volume.Mutoko}};
+    var Nyanga = {{city_sales_volume.Nyanga}};
+    var VictoriaFalls = {{city_sales_volume.VictoriaFalls}};
+
+    var ctx = document.getElementById("salesChart");
+    // var ctx = document.getElementById("lineChart");
+
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ["Harare", "Bulawayo", "Gweru", "Mutare", "Chirundu", "Bindura", "Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera","Masvingo","Chinhoyi","Mutoko","Nyanga","VictoriaFalls"],
+            datasets: [
+                {
+                    label: "Sales Volume By City",
+                    borderColor: "rgba(0,0,0,.09)",
+                    borderWidth: "1",
+                    backgroundColor: "rgba(0,0,0,.07)",
+                    data: [Harare, Bulawayo, Gweru, Mutare, Chirundu, Bindura, Hwange, Juliusdale, Kadoma, Kariba, Karoi, Kwekwe, Marondera, Masvingo, Chinhoyi, Mutoko, Nyanga, VictoriaFalls]
+
+                },
+                {
+                    label: "Last Week",
+                    borderColor: "#009688",
+                    borderWidth: "1",
+                    backgroundColor: "#009688",
+                    pointHighlightStroke: "#009688",
+                    data: [{{last_week_rev.Mon}}, {{last_week_rev.Tue}}, {{last_week_rev.Wed}}, {{last_week_rev.Thu}}, {{last_week_rev.Fri}}, {{last_week_rev.Sat}}, {{last_week_rev.Sun}}]
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            tooltips: {
+                mode: 'index',
+                intersect: false
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            }
+
+        }
+    });
 
 </script>
+
 
 
 
@@ -1554,8 +1678,6 @@ $('#m_calendar').monthly({
     xmlUrl: 'events.xml'
 });
 
-
-//line chart
 //line chart
 
 var monday = {{weekly_rev.Mon}};
@@ -1602,6 +1724,9 @@ var myChart = new Chart(ctx, {
 
     }
 });
+
+
+
 
 
 </script>

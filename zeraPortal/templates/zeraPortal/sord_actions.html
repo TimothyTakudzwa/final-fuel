@@ -1,5 +1,7 @@
 {% extends "zeraPortal/zera_base.html" %} 
 {% block title %}Fuel Finder - ZERA {% endblock %} 
+{% load static %}
+{% load humanize %}
 {% block body %}
 <section class="content-header">
     <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
@@ -29,7 +31,7 @@
     <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
         <div class="panel-heading ui-sortable-handle">
             <div class="btn-group">
-                <h4>Allocation on Sord {{sord_number}}</h4>
+                <h4>Allocations & Sales on Sord {{sord_number}}</h4>
             </div>
             <div class="dropdown">
                 <ul class="dropdown-menu dropdown-menu-right">
@@ -60,18 +62,24 @@
                              <th>
                                 Payment
                              </th>
+                             <th>
+                                Event
+                             </th>
                             <th>
-                               Amount Allocated
+                               Amount 
                             </th>
                             <th>
                                 Price
                              </th>
                             <th>
-                               Allocated By
+                               From
                             </th>
+                            <th>
+                                By
+                             </th>
 
                             <th>
-                                Allocated To
+                              To
                              </th>
                             
                         </tr>
@@ -83,8 +91,10 @@
                             <td>{{sord.action_num}}</td>
                             <td>{{sord.fuel_type}}</td>
                             <td>{{sord.payment_type}}</td>
-                            <td>{{sord.allocated_quantity}}</td>
+                            <td>{{sord.action_type}}</td>
+                            <td>{{sord.allocated_quantity|intcomma}}</td>
                             <td>{{sord.price}}</td>
+                            <td>{{sord.supplied_from}}</td>
                             <td>{{sord.allocated_by}}</td>
                             <td>{{sord.allocated_to}}</td>
                             

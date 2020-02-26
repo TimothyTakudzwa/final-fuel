@@ -212,6 +212,9 @@ def allocated_fuel(request, sid):
                     action_audit = SordActionsAuditTrail.objects.create(sord_num=sord_allocation.sord_no,
                                                                         action_num=sord_allocation.action_no,
                                                                         allocated_quantity=amount_cf,
+                                                                        action_type = "Allocation",
+                                                                        supplied_from = request.user.company.name,
+                                                                        price = fuel_updated.petrol_price,
                                                                         allocated_by=request.user.username,
                                                                         allocated_to=sub.name, fuel_type="Petrol",
                                                                         payment_type=fuel_updated.payment_type)
@@ -235,6 +238,9 @@ def allocated_fuel(request, sid):
                                                                         action_num=sord_allocation.action_no,
                                                                         allocated_quantity=sord_allocation.end_quantity,
                                                                         allocated_by=request.user.username,
+                                                                        action_type = "Allocation",
+                                                                        price = fuel_updated.petrol_price,
+                                                                        supplied_from = request.user.company.name,
                                                                         allocated_to=sub.name, fuel_type="Petrol",
                                                                         payment_type=fuel_updated.payment_type)
                     receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -271,6 +277,9 @@ def allocated_fuel(request, sid):
                                                                         action_num=sord_allocation.action_no,
                                                                         allocated_quantity=amount_cf,
                                                                         allocated_by=request.user.username,
+                                                                        action_type = "Allocation",
+                                                                        price = fuel_updated.diesel_price,
+                                                                        supplied_from = request.user.company.name,
                                                                         allocated_to=sub.name, fuel_type="Diesel",
                                                                         payment_type=fuel_updated.payment_type)
                     receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -293,6 +302,9 @@ def allocated_fuel(request, sid):
                                                                         action_num=sord_allocation.action_no,
                                                                         allocated_quantity=sord_allocation.end_quantity,
                                                                         allocated_by=request.user.username,
+                                                                        action_type = "Allocation",
+                                                                        price = fuel_updated.diesel_price,
+                                                                        supplied_from = request.user.company.name,
                                                                         allocated_to=sub.name, fuel_type="Diesel",
                                                                         payment_type=fuel_updated.payment_type)
                     receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -418,6 +430,9 @@ def allocation_update(request, id):
                                                                             action_num=sord_allocation.action_no,
                                                                             allocated_quantity=amount_cf,
                                                                             allocated_by=request.user.username,
+                                                                            action_type = "Allocation",
+                                                                            price = fuel_update.petrol_price,
+                                                                            supplied_from = request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Petrol",
                                                                             payment_type=fuel_update.payment_type)
                         receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -442,6 +457,9 @@ def allocation_update(request, id):
                                                                             action_num=sord_allocation.action_no,
                                                                             allocated_quantity=sord_allocation.end_quantity,
                                                                             allocated_by=request.user.username,
+                                                                            action_type = "Allocation",
+                                                                            price = fuel_update.petrol_price,
+                                                                            supplied_from = request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Petrol",
                                                                             payment_type=fuel_update.payment_type)
                         receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -480,6 +498,9 @@ def allocation_update(request, id):
                                                                             action_num=sord_allocation.action_no,
                                                                             allocated_quantity=amount_cf,
                                                                             allocated_by=request.user.username,
+                                                                            action_type = "Allocation",
+                                                                            price = fuel_update.diesel_price,
+                                                                            supplied_from = request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Diesel",
                                                                             payment_type=fuel_update.payment_type)
                         receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -504,6 +525,9 @@ def allocation_update(request, id):
                                                                             action_num=sord_allocation.action_no,
                                                                             allocated_quantity=sord_allocation.end_quantity,
                                                                             allocated_by=request.user.username,
+                                                                            action_type = "Allocation",
+                                                                            price = fuel_update.diesel_price,
+                                                                            supplied_from = request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Diesel",
                                                                             payment_type=fuel_update.payment_type)
                         receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -602,6 +626,9 @@ def allocation_update_main(request, id):
                                                                             action_num=sord_allocation.action_no,
                                                                             allocated_quantity=amount_cf,
                                                                             allocated_by=request.user.username,
+                                                                            action_type = "Allocation",
+                                                                            price = fuel_update.petrol_price,
+                                                                            supplied_from = request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Petrol",
                                                                             payment_type="RTGS")
                         receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -625,6 +652,9 @@ def allocation_update_main(request, id):
                                                                             action_num=sord_allocation.action_no,
                                                                             allocated_quantity=sord_allocation.end_quantity,
                                                                             allocated_by=request.user.username,
+                                                                            action_type = "Allocation",
+                                                                            price = fuel_update.petrol_price,
+                                                                            supplied_from = request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Petrol",
                                                                             payment_type="RTGS")
                         receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -661,6 +691,9 @@ def allocation_update_main(request, id):
                                                                             action_num=sord_allocation.action_no,
                                                                             allocated_quantity=amount_cf,
                                                                             allocated_by=request.user.username,
+                                                                            action_type = "Allocation",
+                                                                            price = fuel_update.diesel_price,
+                                                                            supplied_from = request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Diesel",
                                                                             payment_type="RTGS")
                         receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -684,6 +717,9 @@ def allocation_update_main(request, id):
                                                                             action_num=sord_allocation.action_no,
                                                                             allocated_quantity=sord_allocation.end_quantity,
                                                                             allocated_by=request.user.username,
+                                                                            action_type = "Allocation",
+                                                                            price = fuel_update.diesel_price,
+                                                                            supplied_from = request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Diesel",
                                                                             payment_type="RTGS")
                         receiver = User.objects.filter(subsidiary_id=sub.id).first()

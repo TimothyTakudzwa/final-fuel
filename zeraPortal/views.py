@@ -1,5 +1,6 @@
 import secrets
 from validate_email import validate_email
+from datetime import datetime, timedelta
 
 from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404, redirect
@@ -142,6 +143,7 @@ def transactions(request, id):
     today = datetime.now().strftime("%m/%d/%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
     transactions = []
+    company = ""
     for tran in Transaction.objects.filter(supplier__company__id=id).all():
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
         company = Company.objects.filter(id=tran.supplier.company.id).first()
@@ -377,6 +379,7 @@ def statistics(request):
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
     weekly_rev = get_weekly_sales(True)
     last_week_rev = get_weekly_sales(False)
+    city_sales_volume = get_volume_sales_by_location()
     number_of_companies = Company.objects.all().count()
     number_of_depots = Subsidiaries.objects.filter(is_depot=True).count()
     number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()
@@ -462,7 +465,7 @@ def statistics(request):
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
                                                      'last_week_rev': last_week_rev, 'number_of_companies': number_of_companies,
                                                      'number_of_depots':number_of_depots, 'number_of_s_stations':number_of_s_stations,
-                                                     'approval_percentage': approval_percentage})
+                                                     'approval_percentage': approval_percentage, 'city_sales_volume':city_sales_volume})
     
 
 def clients_history(request, cid):
@@ -549,3 +552,16 @@ def subsidiary_transaction_history(request, sid):
 
 def profile(request):
     return render(request, 'zeraPortal/profile.html')
+
+
+def suspicious_behavior(request):
+    schedules = DeliverySchedule.objects.filter(date__lt=datetime.today() + timedelta(days=1), confirmation_document='',
+                                                    supplier_document='')
+    late_schedules = []
+    for schedule in schedules:
+        d1 = datetime.strptime(str(schedule.date), "%Y-%m-%d")
+        d2 = datetime.strptime(str(datetime.today().date()), "%Y-%m-%d")
+        schedule.days_late = abs((d2 - d1).days)
+        late_schedules.append(schedule)
+        
+    return render(request, 'zeraPortal/suspicious_behavior.html', {'late_schedules':late_schedules})
