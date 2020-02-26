@@ -380,6 +380,11 @@ def statistics(request):
     weekly_rev = get_weekly_sales(True)
     last_week_rev = get_weekly_sales(False)
     city_sales_volume = get_volume_sales_by_location()
+    final_desperate_cities = []
+    desperate_cities = desperate()
+    for city, deficit in desperate_cities.items():
+        final_desperate_cities.append((city,deficit))
+        
     number_of_companies = Company.objects.all().count()
     number_of_depots = Subsidiaries.objects.filter(is_depot=True).count()
     number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()
@@ -465,7 +470,8 @@ def statistics(request):
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
                                                      'last_week_rev': last_week_rev, 'number_of_companies': number_of_companies,
                                                      'number_of_depots':number_of_depots, 'number_of_s_stations':number_of_s_stations,
-                                                     'approval_percentage': approval_percentage, 'city_sales_volume':city_sales_volume})
+                                                     'approval_percentage': approval_percentage, 'city_sales_volume':city_sales_volume,
+                                                     'final_desperate_cities':final_desperate_cities})
     
 
 def clients_history(request, cid):
