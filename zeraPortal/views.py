@@ -1,4 +1,5 @@
 import secrets
+from validate_email import validate_email
 
 from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404, redirect
@@ -64,8 +65,12 @@ def add_supplier_admin(request, id):
     email = request.POST['email']
     phone_number = request.POST['phone_number']
     check_email = User.objects.filter(email=email).exists()
+    is_valid = validate_email(email, verify=True)
     if check_email:
         messages.warning(request, f"Email already used in the system, please use a different email")
+        return redirect('zeraPortal:dashboard')
+    elif not is_valid:
+        messages.warning(request, 'The email is not valid, Please provide a valid email and try again')
         return redirect('zeraPortal:dashboard')
     else:
         i = 0
