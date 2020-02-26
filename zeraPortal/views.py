@@ -1,4 +1,5 @@
 import secrets
+from validate_email import validate_email
 from datetime import datetime, timedelta
 
 from django.shortcuts import render
@@ -65,9 +66,13 @@ def add_supplier_admin(request, id):
     email = request.POST['email']
     phone_number = request.POST['phone_number']
     check_email = User.objects.filter(email=email).exists()
+    is_valid = validate_email(email, verify=True)
     if check_email:
         messages.warning(request, f"Email already used in the system, please use a different email")
         return redirect('zeraPortal:dashboard')
+    # elif not is_valid:
+    #     messages.warning(request, 'The email is not valid, Please provide a valid email and try again')
+    #     return redirect('zeraPortal:dashboard')
     else:
         i = 0
         username = initial_username = first_name[0] + last_name
@@ -75,7 +80,7 @@ def add_supplier_admin(request, id):
             username = initial_username + str(i)
             i += 1
         password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
-        user = User.objects.create(company=company, first_name=first_name, last_name=last_name, email=email, phone_number=phone_number,
+        user = User.objects.create(company=company, first_name=first_name, last_name=last_name, email=email, phone_number=phone_number.replace(' ', ''),
         user_type='S_ADMIN', is_active=True, username=username.lower(), password=password)
         message_is_sent(request, user)
         messages.success(request, 'User successfully created')
@@ -553,10 +558,21 @@ def suspicious_behavior(request):
     schedules = DeliverySchedule.objects.filter(date__lt=datetime.today() + timedelta(days=1), confirmation_document='',
                                                     supplier_document='')
     late_schedules = []
+    suspicious_schedules = []
+    
+    for ds in DeliverySchedule.objects.all():
+        if ds.supplier_document and ds.confirmation_document:
+            account = AccountHistory.objects.filter(transaction=ds.transaction)
+            if not account:
+                suspicious_schedules.append(ds)
+                
+    
     for schedule in schedules:
         d1 = datetime.strptime(str(schedule.date), "%Y-%m-%d")
         d2 = datetime.strptime(str(datetime.today().date()), "%Y-%m-%d")
         schedule.days_late = abs((d2 - d1).days)
         late_schedules.append(schedule)
         
-    return render(request, 'zeraPortal/suspicious_behavior.html', {'late_schedules':late_schedules})
+        
+        
+    return render(request, 'zeraPortal/suspicious_behavior.html', {'late_schedules':late_schedules, 'suspicious_schedules':suspicious_schedules})
