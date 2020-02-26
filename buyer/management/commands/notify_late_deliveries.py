@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
@@ -22,6 +22,8 @@ class Command(BaseCommand):
 
     def process_delivery_schedules(self):
         schedules = DeliverySchedule.objects.filter(date__lt=datetime.today(), confirmation_document='',
+                                                    supplier_document='')
+        late_schedules = DeliverySchedule.objects.filter(date__lt=datetime.today() + timedelta(days=1), confirmation_document='',
                                                     supplier_document='')
         if schedules:
             for delivery in schedules:
@@ -50,5 +52,34 @@ class Command(BaseCommand):
             self.stdout.write(f"Sending Reminder To {delivery.transaction.supplier.username.title()} Regarding A Late "
                               f"Delivery Date As Of {delivery.date.strftime('%a')}")
             delivery.save()
+            
+        if late_schedules:
+            for delivery in late_schedules:
+                message = f'Please Note That Your Delivery To {delivery.transaction.buyer.company.name.title()} Has ' \
+                          f'Been Flagged For Being Extremely Late '
+
+                # send email
+                sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
+                title = f'Delivery Schedule Reminder'
+                message = f"Dear {delivery.transaction.supplier.first_name}, this is mail serves to inform you " \
+                          f"that the due date for the delivery of {delivery.transaction.offer.request.amount}L of {delivery.transaction.offer.request.fuel_type} to {delivery.transaction.buyer.company.name.title()} has exceeded the two day time limit. " \
+                          f"This delivery status will now been flagged. Kindly see to it that you notify the relevant parties to see the flag lifted \n\n" \
+                          f"Driver Details\n Name: {delivery.driver_name}\n Phone:{delivery.phone_number}"
+                f"You can extend due date on this page https://fuelfinderzim.com//supplier/delivery_schedules/"
+
+                # send email
+            try:
+                msg = EmailMultiAlternatives(title, message, sender, [delivery.transaction.supplier.email])
+                msg.send()
+            # if error occurs
+            except BadHeaderError:
+                pass
+                # error log should be created
+
+            # Notification.objects.create(message=message, reference_id=delivery.id, action="schedule_reminder")
+            self.stdout.write(f"Sending Reminder To {delivery.transaction.supplier.username.title()} Regarding A Late "
+                              f"Delivery Date As Of {delivery.date.strftime('%a')}")
+            delivery.save()
+               
         else:
             self.stdout.write("Nothing To Process")
