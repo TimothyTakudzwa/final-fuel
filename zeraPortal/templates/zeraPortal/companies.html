@@ -48,6 +48,16 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <label>Company Name</label>
                     <input type="text" name="company_name" class="form-control" required/>
                 </div>
+
+
+                <div class="col-sm-12" name="city">
+                    <label>City</label>
+                    <select class="form-control" name="city">
+                        {% for citi in zimbabwean_towns %}
+                        <option >{{citi}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
             
                 <div class="col-sm-12">
                     <label>Company Address</label>
