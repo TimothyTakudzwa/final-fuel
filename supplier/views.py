@@ -516,10 +516,12 @@ def offer(request, id):
                         offer.delivery_method = delivery_method
                     collection_address = request.POST.get('street_number') + " " + request.POST.get(
                         'street_name') + " " + request.POST.get('location')
-                    if not collection_address.strip() and delivery_method.lower() == 'self collection':
-                        offer.collection_address = subsidiary.location
-                    else:
+                    if delivery_method.lower() == 'self collection':
                         offer.collection_address = collection_address
+                    elif delivery_method.lower() == 'delivery' and fuel_request.delivery_address.replace(" ", "") is not None:
+                        offer.collection_address = fuel_request.delivery_address
+                    else:
+                        offer.collection_address = fuel_request.name.company.address
                     offer.pump_available = True if request.POST.get('pump_available') == "on" else False
                     offer.dipping_stick_available = True if request.POST.get(
                         'dipping_stick_available') == "on" else False
@@ -597,10 +599,12 @@ def edit_offer(request, id):
                     offer.delivery_method = delivery_method
                 collection_address = request.POST.get('street_number') + " " + request.POST.get(
                     'street_name') + " " + request.POST.get('location')
-                if not collection_address.strip() and delivery_method.lower() == 'self collection':
-                    offer.collection_address = subsidiary.location
-                else:
+                if delivery_method.lower() == 'self collection':
                     offer.collection_address = collection_address
+                elif delivery_method.lower() == 'delivery' and fuel_request.delivery_address.replace(" ", "") is not None:
+                    offer.collection_address = fuel_request.delivery_address
+                else:
+                    offer.collection_address = fuel_request.name.company.address
                 offer.pump_available = True if request.POST.get('pump_available') == "on" else False
                 offer.dipping_stick_available = True if request.POST.get('dipping_stick_available') == "on" else False
                 offer.meter_available = True if request.POST.get('meter_available') == "on" else False

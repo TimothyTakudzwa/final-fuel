@@ -24,7 +24,8 @@ urlpatterns = [
     path('payment_and_schedules/<int:id>', views.payment_and_schedules, name='payment_and_schedules'),
     path('view_confirmation_doc/<int:id>', views.view_confirmation_doc, name='view_confirmation_doc'),
     path('view_supplier_doc/<int:id>', views.view_supplier_doc, name='view_supplier_doc'),
-    path('suspicious_behavior/', views.suspicious_behavior, name='suspicious_behavior')
+    path('suspicious_behavior/', views.suspicious_behavior, name='suspicious_behavior'),
+    path('desperate-regions/', views.desperate_regions, name='desperate-regions')
     
     
     
