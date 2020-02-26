@@ -857,7 +857,7 @@ def stock_sord_update(request, user, quantity, action, fuel_type, payment_type):
                                                                         supplied_from = subsidiary.name,
                                                                         price = sord_obj2.price,
                                                                         allocated_by=request.user.username,
-                                                                        allocated_to=user,
+                                                                        allocated_to=user.company.name,
                                                                         fuel_type=entry.fuel_type,
                                                                         payment_type=payment_type)
                 sord_obj.action_no += 1
@@ -880,7 +880,7 @@ def stock_sord_update(request, user, quantity, action, fuel_type, payment_type):
                                                                         supplied_from = subsidiary.name,
                                                                         price = sord_obj2.price,
                                                                         allocated_by=request.user.username,
-                                                                        allocated_to=user,
+                                                                        allocated_to=user.company.name,
                                                                         fuel_type=entry.fuel_type,
                                                                         payment_type=payment_type)
                 sord_obj.action_no += 1
@@ -919,7 +919,7 @@ def transaction_sord_update(request, user, quantity, action, fuel_type, payment_
                                                                         supplied_from = subsidiary.name,
                                                                         price = sord_obj2.price,
                                                                         allocated_by=request.user.username,
-                                                                        allocated_to=user,
+                                                                        allocated_to=user.company.name,
                                                                         fuel_type=entry.fuel_type,
                                                                         payment_type=payment_type)
                 sord_obj.action_no += 1
@@ -944,7 +944,7 @@ def transaction_sord_update(request, user, quantity, action, fuel_type, payment_
                                                                         supplied_from = subsidiary.name,
                                                                         price = sord_obj2.price,
                                                                         allocated_by=request.user.username,
-                                                                        allocated_to=user,
+                                                                        allocated_to=user.company.name,
                                                                         fuel_type=entry.fuel_type,
                                                                         payment_type=payment_type)
                 sord_obj.action_no += 1

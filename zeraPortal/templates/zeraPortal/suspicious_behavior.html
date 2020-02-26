@@ -39,23 +39,23 @@
             <div class="panel-body">              
           
           <div class="table-responsive">
-            <table id="delivery_schedule" class="table table-striped table-bordered" style="width:100%">
+            <table id="allocations" class="table table-striped table-bordered" style="width:100%">
                 <thead style="background-color: lightslategray; color:white;">
                     <tr>
-                        <td></td>
+                  
                         <th style="color: white;">Recipient</th>
                         <th style="color: white;">Address</th>
                         <th style="color: white;">Product</th>
                         <th style="color: white;">Quantity</th>
                         <th style="color: white;">Transporter</th>
-                        <th style="color: white;">Days Late</th>></th>
+                        <th style="color: white;">Days Late</th>
                         <th style="color: white;">Add. Information</th>  
                     </tr>
                 </thead>
                 <tbody>
                     {% for delivery in late_schedules %}
                     <tr>
-                        <td></td>
+                   
                         <td>{{ delivery.transaction.buyer.company.name|title }}</td>
                         <td>{{delivery.transaction.buyer.company.address }}</td>
                         <td>{{ delivery.transaction.offer.request.fuel_type}}</td>
@@ -341,10 +341,10 @@
             <div class="panel-body">              
           
           <div class="table-responsive">
-            <table id="delivery_schedule" class="table table-striped table-bordered" style="width:100%">
+            <table id="allocations" class="table table-striped table-bordered" style="width:100%">
                 <thead style="background-color: lightslategray; color:white;">
                     <tr>
-                        <td></td>
+                      
                         <th style="color: white;">Recipient</th>
                         <th style="color: white;">Supplier</th>
                         <th style="color: white;">Address</th>
@@ -357,7 +357,7 @@
                 <tbody>
                     {% for delivery in suspicious_schedules %}
                     <tr>
-                        <td></td>
+                       
                         <td>{{ delivery.transaction.buyer.company.name|title }}</td>
                         <td>{{ delivery.transaction.supplier.company.name|title }}</td>
                         <td>{{delivery.transaction.buyer.company.address}}</td>
