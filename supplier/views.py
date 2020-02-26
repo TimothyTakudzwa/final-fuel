@@ -68,24 +68,26 @@ def verification(request, token, user_id):
                             if my_admin is not None:
                                 return render(request, 'supplier/final_registration.html', {'my_admin': my_admin})
                             else:
-                                user.is_active = True
-                                user.user_type = 'S_ADMIN'
-                                user.is_waiting = False
-                                user.stage = 'menu'
-                                user.save()
+                                # user.is_active = True
+                                # user.user_type = 'S_ADMIN'
+                                # user.is_waiting = False
+                                # user.stage = 'menu'
+                                # user.save()
                                 return render(request, 'supplier/final_reg.html', {'selected_company': selected_company})
                     else:
-                        selected_company = Company.objects.create(name=request.POST.get('company'))
-                        user.is_active = False
-                        user.is_waiting = True
                         if user.user_type == 'SUPPLIER':
-                            user.user_type = 'S_ADMIN'
-                        selected_company.save()
-                        user.company = selected_company
-                        user.is_waiting = True
-                        user.save()
-                        TokenAuthentication.objects.filter(user=user).update(used=True)
-                        return redirect('supplier:create_company', id=user.id)
+                            user.delete()
+                            return render(request, 'supplier/company_not_existing.html')
+                        else:
+                            selected_company = Company.objects.create(name=request.POST.get('company'))
+                            user.is_active = False
+                            user.is_waiting = True
+                            selected_company.save()
+                            user.company = selected_company
+                            user.is_waiting = True
+                            user.save()
+                            TokenAuthentication.objects.filter(user=user).update(used=True)
+                            return redirect('supplier:create_company', id=user.id)
 
             else:
                 return render(request, 'supplier/verify.html',
