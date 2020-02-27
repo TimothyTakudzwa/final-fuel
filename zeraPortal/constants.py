@@ -1,4 +1,4 @@
-zimbabwean_towns = ["Select City ---", "Harare", "Bulawayo", "Gweru", "Mutare", "Chirundu", "Bindura", "Beitbridge",
+zimbabwean_towns = ["Harare", "Bulawayo", "Gweru", "Mutare", "Chirundu", "Bindura", "Beitbridge",
                     "Hwange", "Juliusdale", "Kadoma", "Kariba", "Karoi", "Kwekwe", "Marondera", "Masvingo",
                     "Chinhoyi", "Mutoko", "Nyanga", "Victoria Falls", "Limpopo"]
 
