@@ -74,8 +74,13 @@
                                 <td>N/A</td>
                                 {% endif %}
                                 <td class="name truncate">{{transaction.offer.request.fuel_type}} {{transaction.offer.quantity}}L @ {{transaction.offer.price}}</td>
-                               
-                                <td class="name truncate">{{transaction.offer.transport_fee}}</td>
+                                {% if transaction.offer.transport_fee != None %}
+                                <td class="">
+                                    {{transaction.offer.transport_fee}}
+                                </td>
+                                {% else %}
+                                <td>N/A</td>
+                                {% endif %}
                                 <td class="name truncate">{{transaction.expected}}</td>
                                 <td class="name truncate">{{transaction.paid}}</td>
                                 {% if transaction.is_complete == True %}
@@ -157,17 +162,19 @@
                                         </div>
                                    
                                 </td>
-
+                            {% if transaction.offer.delivery_method == 'DELIVERY' %}
                             <td>
                                 <div class="btn-group">
-
-
-
-                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_history' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> History & Schedules</a>
-
+                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_history' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Schedules</a>
                                 </div>
                             </td>
-
+                            {% else %}
+                            <td>
+                                <div class="btn-group">
+                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_release_notes' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Release Notes</a>
+                                </div>
+                            </td>
+                            {% endif %}
                             {% if transaction.expected == transaction.paid %}
                                 {% if transaction.is_complete == True %}
                                     <td><i class="fa fa-check-square-o" style="font-size:25px;color:rgb(0, 225, 255)">Done</i></td>

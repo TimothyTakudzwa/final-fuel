@@ -55,11 +55,13 @@ def recommend(fuel_request):
             offer = Offer.objects.create(quantity=fuel_request.amount, supplier=user, request=fuel_request,
                                          price=price_object.petrol_price)
             if fuel_request.delivery_method.lower() == "self collection":
+                offer.delivery_method = "SELF COLLECTION"
                 address = str(selected_supply.location) + " " + str(selected_supply.city)
                 offer.collection_address = address
                 offer.save()
             else:
-                pass
+                offer.delivery_method = "DELIVERY"
+                offer.save()
             response_message = recommender_response.format(selected_supply.company.name, selected_supply.name,
                                                            fuel_request.fuel_type, fuel_request.amount,
                                                            price_object.petrol_price)
@@ -68,11 +70,13 @@ def recommend(fuel_request):
             offer = Offer.objects.create(quantity=fuel_request.amount, supplier=user, request=fuel_request,
                                          price=price_object.diesel_price)
             if fuel_request.delivery_method.lower() == "self collection":
+                offer.delivery_method = "SELF COLLECTION"
                 address = str(selected_supply.location) + " " + str(selected_supply.city)
                 offer.collection_address = address
                 offer.save()
             else:
-                pass
+                offer.delivery_method = "DELIVERY"
+                offer.save()
 
         response_message = recommender_response.format(selected_supply.company.name, selected_supply.name,
                                                        fuel_request.fuel_type, fuel_request.amount,
