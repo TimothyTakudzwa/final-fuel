@@ -82,33 +82,6 @@
                               {%endif%}
                             </tr>
                             <script>
-                                $(document).ready(function () {
-                                  $('#choices{{forloop.counter}}').hide();
-                                  $('#choices1{{forloop.counter}}').hide();
-                              
-                                  $('#delivery_method1{{forloop.counter}}').change(function () {
-                                    if ($('#delivery_method1{{forloop.counter}} option:selected').text() == "Delivery") {
-                                      $('#choices1{{forloop.counter}}').hide();
-                                    }
-                                    else {
-                                      $('#choices1{{forloop.counter}}').show();
-                                      $('#street_name').attr('required', '');
-                                      $('#street_number').attr('required', '');
-                                      $('#location').attr('required', '');
-                                    }
-                                  });
-                                  $('#delivery_method{{forloop.counter}}').change(function () {
-                                    if ($('#delivery_method{{forloop.counter}} option:selected').text() == "Self Collection") {
-                                      $('#choices{{forloop.counter}}').show();
-                                      $('#street_name').attr('required', '');
-                                      $('#street_number').attr('required', '');
-                                      $('#location').attr('required', '');
-                                    }
-                                    else {
-                                      $('#choices{{forloop.counter}}').hide();
-                                    }
-                                  });
-                                });
                               
                                 $('#pump_available').on('change', function () {
                                   $(this).val(this.checked ? "True" : "False");
