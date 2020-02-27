@@ -189,6 +189,14 @@
                             <a href="{% url 'zeraPortal:report_generator' %}"><i class="fa fa-pie-chart"></i><span>Reports</span>
                             </a>
                         </li>
+                        <li class="nav-item {% if request.path == '/zeraPortal/suspicious_behavior/' %} active {% endif %} ">
+                            <a href="{% url 'zeraPortal:suspicious_behavior' %}"><i class="fa fa-support"></i><span>Suspicious Activity</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {% if request.path == '/zeraPortal/desperate-regions/' %} active {% endif %} ">
+                            <a href="{% url 'zeraPortal:desperate-regions' %}"><i class="fa fa-sticky-note"></i><span>Desperate Regions</span>
+                            </a>
+                        </li>
                         <li class="nav-item {% if request.path == '/zeraPortal/profile/' %} active {% endif %}">
                             <a href="{% url 'zeraPortal:profile' %} "><i class="fa fa-user"></i><span>User Profile</span>
                             </a>

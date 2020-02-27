@@ -3,7 +3,7 @@ from buyer.models import User
 
 
 class Notification(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notification_name')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notification_name', blank = True, null= True)
     message = models.CharField(max_length=5000)
     action = models.CharField(max_length=30, choices=(('REQUEST' , 'REQUEST'), ('OFFER' , 'OFFER'), ('DELVERY','DELVERY')))
     reference_id = models.PositiveIntegerField(default=0)

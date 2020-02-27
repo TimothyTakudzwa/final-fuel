@@ -52,8 +52,8 @@
                         <tr>
                             <th style="color: white;"></th>
                             <th style="color: white;"> Date </th>
-                            <th style="color: white;">Buyer Name</th>
                             <th style="color: white;">Company</th>
+                            <th style="color: white;">Delivery Address</th>
                             <th style="color: white;">Fuel </th>
                             <th style="color: white;">Expected</th>
                             <th style="color: white;">Paid</th>
@@ -70,8 +70,12 @@
                             <tr>
                                 <td></td>
                                 <td>{{ transaction.date }}</td>
-                                <td>{{ transaction.buyer.first_name|lower|capfirst }} {{ transaction.buyer.last_name|lower|capfirst }}</td>
                                 <td>{{ transaction.buyer.company.name }}</td>
+                                {% if transaction.offer.request.delivery_address != None %}
+                                <td>{{transaction.offer.request.delivery_address}}</td>
+                                {% else %}
+                                <td>N/A</td>
+                                {% endif %}
                                 <td>{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
                                 <!-- <td>{{ transaction.offer.quantity |intcomma}}</td>
                                 <td>{{ transaction.offer.price }}</td> -->
@@ -93,7 +97,7 @@
                                 </td>
                                 {% if transaction.expected == transaction.paid %}
                                     {% if transaction.is_complete == True %} 
-                                    <td><i class="fa fa-check-square-o" style="font-size:25px;color:rgb(0, 225, 255)">Done</i></td>
+                                    <td><i class="fa fa-check-square-o" style="font-size:25px;margin-left: 25px; color:rgb(0, 225, 255)"></i></td>
                                     {% else %} 
                                         {% if transaction.proof_of_payment %}
                                         <td>

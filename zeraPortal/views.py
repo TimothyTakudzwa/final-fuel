@@ -194,11 +194,12 @@ def view_supplier_doc(request, id):
 
 def company_subsidiaries(request, id):
     subsidiaries = Subsidiaries.objects.filter(company__id=id).all()
+    company = Company.objects.get(id=id)
     for subsidiary in subsidiaries:
         subsidiary.fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
         if subsidiary.license_num.strip() == "":
             subsidiary.license_num = None
-    return render(request, 'zeraPortal/company_subsidiaries.html', {'subsidiaries':subsidiaries})
+    return render(request, 'zeraPortal/company_subsidiaries.html', {'subsidiaries':subsidiaries, 'company':company})
 
 
 def subsidiaries(request):
@@ -563,7 +564,8 @@ def subsidiary_transaction_history(request, sid):
     return render(request, 'zeraPortal/subsidiary_history.html', {'trans': trans, 'subsidiary': subsidiary})
 
 def profile(request):
-    return render(request, 'zeraPortal/profile.html')
+    user = request.user
+    return render(request, 'zeraPortal/profile.html', {'user':user})
 
 
 def suspicious_behavior(request):

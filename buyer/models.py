@@ -58,7 +58,7 @@ class FuelRequest(models.Model):
     amount = models.IntegerField(default=0)
     fuel_type = models.CharField(max_length=50)
     delivery_method = models.CharField(max_length=200)
-    delivery_address = models.CharField(max_length=200, default='', null=True)
+    delivery_address = models.CharField(max_length=200, blank=True, null=True)
     storage_tanks = models.CharField(max_length=20, default='', choices=STORAGE_TANKS)
     pump_required = models.BooleanField(default=False)
     dipping_stick_required = models.BooleanField(default=False)

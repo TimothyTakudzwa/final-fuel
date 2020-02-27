@@ -368,8 +368,8 @@ def fuel_request(request):
             buyer_request.no_equipments = True
         if buyer_request.cash == buyer_request.ecocash == buyer_request.swipe == buyer_request.usd == False:
             buyer_request.no_payment = True
-        if not buyer_request.delivery_address.strip():
-            buyer_request.delivery_address = f'N/A'
+        # if not buyer_request.delivery_address.strip():
+        #     buyer_request.delivery_address = f'N/A'
         if Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).exists():
             offer = Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).first()
             buyer_request.my_offer = f'{offer.quantity}ltrs @ ${offer.price}'
@@ -509,19 +509,12 @@ def offer(request, id):
                     offer.cash = True if request.POST.get('cash') == "on" else False
                     offer.ecocash = True if request.POST.get('ecocash') == "on" else False
                     offer.swipe = True if request.POST.get('swipe') == "on" else False
-                    delivery_method = request.POST.get('delivery_method')
-                    if not delivery_method.strip():
-                        offer.delivery_method = 'Delivery'
+                    offer.delivery_method = fuel_request.delivery_method
+                    if fuel_request.delivery_method.lower() == 'delivery':
+                        pass
                     else:
-                        offer.delivery_method = delivery_method
-                    collection_address = request.POST.get('street_number') + " " + request.POST.get(
-                        'street_name') + " " + request.POST.get('location')
-                    if delivery_method.lower() == 'self collection':
-                        offer.collection_address = collection_address
-                    elif delivery_method.lower() == 'delivery' and fuel_request.delivery_address.replace(" ", "") is not None:
-                        offer.collection_address = fuel_request.delivery_address
-                    else:
-                        offer.collection_address = fuel_request.name.company.address
+                        offer.collection_address = request.POST.get('street_number') + " " + request.POST.get(
+                            'street_name') + " " + request.POST.get('location')
                     offer.pump_available = True if request.POST.get('pump_available') == "on" else False
                     offer.dipping_stick_available = True if request.POST.get(
                         'dipping_stick_available') == "on" else False
@@ -576,7 +569,7 @@ def edit_offer(request, id):
                 available_fuel = fuel.petrol_quantity + fuel_reserve.petrol_quantity
             else:
                 available_fuel = fuel.petrol_quantity
-        elif fuel_request.fuel_type.lower() == 'diesel':
+        elif offer.request.fuel_type.lower() == 'diesel':
             if fuel_reserve is not None:
                 available_fuel = fuel.diesel_quantity + fuel_reserve.diesel_quantity
             else:
@@ -592,19 +585,12 @@ def edit_offer(request, id):
                 offer.cash = True if request.POST.get('cash') == "on" else False
                 offer.ecocash = True if request.POST.get('ecocash') == "on" else False
                 offer.swipe = True if request.POST.get('swipe') == "on" else False
-                delivery_method = request.POST.get('delivery_method1')
-                if not delivery_method.strip():
-                    offer.delivery_method = 'Delivery'
+                offer.delivery_method = offer.request.delivery_method
+                if offer.request.delivery_method.lower() == 'delivery':
+                    pass
                 else:
-                    offer.delivery_method = delivery_method
-                collection_address = request.POST.get('street_number') + " " + request.POST.get(
-                    'street_name') + " " + request.POST.get('location')
-                if delivery_method.lower() == 'self collection':
-                    offer.collection_address = collection_address
-                elif delivery_method.lower() == 'delivery' and fuel_request.delivery_address.replace(" ", "") is not None:
-                    offer.collection_address = fuel_request.delivery_address
-                else:
-                    offer.collection_address = fuel_request.name.company.address
+                    offer.collection_address = request.POST.get('street_number') + " " + request.POST.get(
+                        'street_name') + " " + request.POST.get('location')
                 offer.pump_available = True if request.POST.get('pump_available') == "on" else False
                 offer.dipping_stick_available = True if request.POST.get('dipping_stick_available') == "on" else False
                 offer.meter_available = True if request.POST.get('meter_available') == "on" else False
