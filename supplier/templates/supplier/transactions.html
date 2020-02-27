@@ -100,11 +100,19 @@
                                     <td><i class="fa fa-check-square-o" style="font-size:25px;margin-left: 25px; color:rgb(0, 225, 255)"></i></td>
                                     {% else %} 
                                         {% if transaction.proof_of_payment %}
+                                        {% if transaction.offer.delivery_method == 'DELIVERY'}
                                         <td>
                                             <div class="btn-group">
                                             <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button>
                                             </div>
                                         </td>
+                                        {% else %}
+                                        {% if transaction.release_note %}
+                                        <td>Released</td>
+                                        {% else %}
+                                        <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">Release Note</button></td>
+                                        {% endif %}
+                                        {% endif %}
                                         {% else %}
                                         <td>
                                             <div class="btn-group">
@@ -130,7 +138,11 @@
                                         </div>
                                     </td>
                                     {% else %}
-                                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">Release Note</button>
+                                    {% if transaction.release_note %}
+                                    <td>Released</td>
+                                    {%else%}
+                                    <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">Release Note</button></td>
+                                    {% endif %}
                                     {% endif %}
                                     {% endif %}
                                 {% else %}
