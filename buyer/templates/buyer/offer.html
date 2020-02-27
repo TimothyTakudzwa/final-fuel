@@ -57,7 +57,7 @@
                             <h6>Depot Name</h6>
                         </th>
                     <th>
-                        <h6>Supplier Address</h6>
+                        <h6>Collection Address</h6>
                     </th>
                     <th>
                         <h6>Fuel Requested </h6>
@@ -94,7 +94,7 @@
                                 {{offer.depot_name}}
                             </td>
                         <td>
-                            {{offer.depot_address}}
+                            {{offer.collection_address}}
                         </td>
                         <td>
                             {{offer.request.amount}} Litres
@@ -105,9 +105,13 @@
                         <td class="">
                             RTGS {{offer.price}}
                         </td>
+                        {% if offer.transport_fee != None %}
                         <td class="">
                             {{offer.transport_fee}}
                         </td>
+                        {% else %}
+                        <td>N/A</td>
+                        {% endif %}
                         <td class="">
                              {{offer.date}} -- {{offer.time}}
                         </td>
