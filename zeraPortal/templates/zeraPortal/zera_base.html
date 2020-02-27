@@ -189,12 +189,6 @@
         
             {% for message in messages %}
                 {%if message.tags == 'warning' %}
-                <script>
-                    $(document).ready(function () {
-                        swal("Success!");
-                    });
-                </script>
-                
                 <div class="alert alert-{{ message.tags }}" style="text-align: center">
                     {{ message }}
                 </div>
