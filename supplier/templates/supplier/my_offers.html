@@ -75,7 +75,7 @@
                     {%if offer.declined %}
                     <td>Declined</td>
                     {% else %}
-                    {% if offer.delivery_method = 'DELIVERY' %}
+                    {% if offer.delivery_method == 'DELIVERY' %}
                     <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_{{offer.id}}">Edit Offer</button></td>
                     {% else %}
                     <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_collection_{{offer.id}}">Edit Offer</button></td>
