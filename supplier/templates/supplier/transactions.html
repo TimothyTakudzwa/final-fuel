@@ -97,57 +97,56 @@
                                 </td>
                                 {% if transaction.expected == transaction.paid %}
                                     {% if transaction.is_complete == True %} 
-                                    <td><i class="fa fa-check-square-o" style="font-size:25px;margin-left: 25px; color:rgb(0, 225, 255)"></i></td>
+                                        <td><i class="fa fa-check-square-o" style="font-size:25px;margin-left: 25px; color:rgb(0, 225, 255)"></i></td>
                                     {% else %} 
                                         {% if transaction.proof_of_payment %}
-                                        {% if transaction.offer.delivery_method == 'DELIVERY'}
-                                        <td>
-                                            <div class="btn-group">
-                                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button>
-                                            </div>
-                                        </td>
+                                            {% if transaction.offer.delivery_method == 'DELIVERY'}
+                                                <td>
+                                                    <div class="btn-group">
+                                                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button>
+                                                    </div>
+                                                </td>
+                                            {% else %}
+                                                {% if transaction.release_note %}
+                                                    <td>Released</td>
+                                                {% else %}
+                                                    <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">Release Note</button></td>
+                                                {% endif %}
+                                            {% endif %}
                                         {% else %}
-                                        {% if transaction.release_note %}
-                                        <td>Released</td>
-                                        {% else %}
-                                        <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">Release Note</button></td>
-                                        {% endif %}
-                                        {% endif %}
-                                        {% else %}
-                                        <td>
-                                            <div class="btn-group">
-                                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'supplier:mark_completion' transaction.id %}" >Complete</a>
-                                            </div>
-                                        </td>
+                                            <td>
+                                                <div class="btn-group">
+                                                <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'supplier:mark_completion' transaction.id %}" >Complete</a>
+                                                </div>
+                                            </td>
                                         {% endif %}
                                     {% endif %}
                                 {% else %}
-                                {% if transaction.proof_of_payment %}
-                                    {% if transaction.proof_of_payment_approved == False %}
-                                    <td>
-                                        <div class="btn-group">
-                                        <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-proof' transaction.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a>
-                                        <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" data-target="#approve{{transaction.id}}" >Approve</a>
-                                        </div>
-                                    </td>
+                                    {% if transaction.proof_of_payment %}
+                                        {% if transaction.proof_of_payment_approved == False %}
+                                            <td>
+                                                <div class="btn-group">
+                                                <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-proof' transaction.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a>
+                                                <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" data-target="#approve{{transaction.id}}" >Approve</a>
+                                                </div>
+                                            </td>
+                                        {% else %}
+                                            {% if transaction.offer.delivery_method == 'DELIVERY' %}
+                                                <td>
+                                                    <div class="btn-group">
+                                                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button>
+                                                    </div>
+                                                </td>
+                                            {% else %}
+                                                {% if transaction.release_note %}
+                                                    <td>Released</td>
+                                                {%else%}
+                                                    <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">Release Note</button></td>
+                                                {% endif %}
+                                        {% endif %}
                                     {% else %}
-                                    {% if transaction.offer.delivery_method == 'DELIVERY' %}
-                                    <td>
-                                        <div class="btn-group">
-                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button>
-                                        </div>
-                                    </td>
-                                    {% else %}
-                                    {% if transaction.release_note %}
-                                    <td>Released</td>
-                                    {%else%}
-                                    <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">Release Note</button></td>
+                                        <td>Proof of Payment Pending</td>
                                     {% endif %}
-                                    {% endif %}
-                                    {% endif %}
-                                {% else %}
-                                <td>Proof of Payment Pending</td>
-                                {% endif %}
                                 {% endif %}
                                 <td>
                                   
