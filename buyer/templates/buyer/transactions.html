@@ -68,10 +68,13 @@
                         {% for transaction in transactions %}
                             <tr>
                                 <td class="name truncate">{{transaction.depot}}</td>
-                                <td class="name truncate">{{transaction.address}}</td>
+                                {% if transaction.offer.collection_address != None %}
+                                <td class="name truncate">{{transaction.offer.collection_address}}</td>
+                                {% else %}
+                                <td>N/A</td>
+                                {% endif %}
                                 <td class="name truncate">{{transaction.offer.request.fuel_type}} {{transaction.offer.quantity}}L @ {{transaction.offer.price}}</td>
-                                <!-- <td class="name truncate">{{transaction.offer.quantity}}</td>
-                            <td class="name truncate">{{transaction.offer.price}}</td> -->
+                               
                                 <td class="name truncate">{{transaction.offer.transport_fee}}</td>
                                 <td class="name truncate">{{transaction.expected}}</td>
                                 <td class="name truncate">{{transaction.paid}}</td>

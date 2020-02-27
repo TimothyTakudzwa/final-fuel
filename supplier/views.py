@@ -368,8 +368,8 @@ def fuel_request(request):
             buyer_request.no_equipments = True
         if buyer_request.cash == buyer_request.ecocash == buyer_request.swipe == buyer_request.usd == False:
             buyer_request.no_payment = True
-        if not buyer_request.delivery_address.strip():
-            buyer_request.delivery_address = f'N/A'
+        # if not buyer_request.delivery_address.strip():
+        #     buyer_request.delivery_address = f'N/A'
         if Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).exists():
             offer = Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).first()
             buyer_request.my_offer = f'{offer.quantity}ltrs @ ${offer.price}'

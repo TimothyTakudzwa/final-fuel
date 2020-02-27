@@ -117,7 +117,7 @@ class Offer(models.Model):
     swipe = models.BooleanField(default=False,  blank=True, null=True)
     usd = models.BooleanField(default=False,  blank=True, null=True)
     delivery_method = models.CharField(max_length=200, default='',  blank=True, null=True)
-    collection_address = models.CharField(max_length=200, default='',  blank=True, null=True)
+    collection_address = models.CharField(max_length=200,  blank=True, null=True)
     pump_available = models.BooleanField(default=False,  blank=True, null=True)
     dipping_stick_available = models.BooleanField(default=False,  blank=True, null=True)
     meter_available = models.BooleanField(default=False,  blank=True, null=True)

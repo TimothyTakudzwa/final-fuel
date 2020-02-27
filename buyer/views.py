@@ -397,8 +397,10 @@ def dashboard(request):
                 fuel_request_object.fuel_type = form.cleaned_data['fuel_type']
                 fuel_request_object.payment_method = request.POST.get('fuel_payment_method')
                 fuel_request_object.delivery_method = form.cleaned_data['delivery_method']
-                fuel_request_object.delivery_address = request.POST.get('s_number') + " " + request.POST.get(
-                    's_name') + " " + request.POST.get('s_town')
+                if fuel_request_object.delivery_method.lower() == "delivery":
+                    fuel_request_object.delivery_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+                else:
+                    pass
                 fuel_request_object.storage_tanks = request.POST.get('storage_tanks')
                 fuel_request_object.pump_required = True if request.POST.get('pump_required') == "on" else False
                 fuel_request_object.dipping_stick_required = True if request.POST.get(
@@ -411,8 +413,8 @@ def dashboard(request):
             messages.success(request, f'kindly note your request has been made ')
             message = f'{request.user.first_name} {request.user.last_name} made a request of ' \
                       f'{fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()}'
-            Notification.objects.create(message=message, user=current_user, reference_id=fuel_request_object.id,
-                                        action="new_request", id=request.user.id)
+            Notification.objects.create(message=message, user=request.user, reference_id=fuel_request_object.id,
+                                        action="new_request")
             return redirect('buyer-dashboard')
 
         if 'WaitForOffer' in request.POST:
@@ -423,8 +425,10 @@ def dashboard(request):
                 fuel_request_object.fuel_type = form.cleaned_data['fuel_type']
                 fuel_request_object.payment_method = request.POST.get('fuel_payment_method')
                 fuel_request_object.delivery_method = form.cleaned_data['delivery_method']
-                fuel_request_object.delivery_address = request.POST.get('s_number') + " " + request.POST.get(
-                    's_name') + " " + request.POST.get('s_town')
+                if fuel_request_object.delivery_method.lower() == "delivery":
+                    fuel_request_object.delivery_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+                else:
+                    pass
                 fuel_request_object.storage_tanks = request.POST.get('storage_tanks')
                 fuel_request_object.pump_required = True if request.POST.get('pump_required') == "True" else False
                 fuel_request_object.dipping_stick_required = True if request.POST.get(
@@ -450,6 +454,15 @@ def dashboard(request):
                 fuel_request_object.amount = amount
                 fuel_request_object.fuel_type = fuel_type
                 fuel_request_object.delivery_method = delivery_method
+                if fuel_request_object.delivery_method.lower() == "delivery":
+                    fuel_request_object.delivery_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+                else:
+                    pass
+                fuel_request_object.storage_tanks = request.POST.get('storage_tanks')
+                fuel_request_object.pump_required = True if request.POST.get('pump_required') == "True" else False
+                fuel_request_object.dipping_stick_required = True if request.POST.get(
+                    'dipping_stick_required') == "True" else False
+                fuel_request_object.meter_required = True if request.POST.get('meter_required') == "True" else False
                 fuel_request_object.save()
                 offer_id, response_message = recommend(fuel_request_object)
                 if not offer_id:
@@ -601,7 +614,7 @@ def transactions(request):
             transaction.delivery_object = None
         if subsidiary is not None:
             transaction.depot = subsidiary.name
-            transaction.address = subsidiary.location
+            # transaction.address = subsidiary.location
         from supplier.models import UserReview
         transaction.review = UserReview.objects.filter(transaction=transaction).first()
 
