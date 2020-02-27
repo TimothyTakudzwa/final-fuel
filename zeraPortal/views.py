@@ -194,11 +194,12 @@ def view_supplier_doc(request, id):
 
 def company_subsidiaries(request, id):
     subsidiaries = Subsidiaries.objects.filter(company__id=id).all()
+    company = Company.objects.get(id=id)
     for subsidiary in subsidiaries:
         subsidiary.fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
         if subsidiary.license_num.strip() == "":
             subsidiary.license_num = None
-    return render(request, 'zeraPortal/company_subsidiaries.html', {'subsidiaries':subsidiaries})
+    return render(request, 'zeraPortal/company_subsidiaries.html', {'subsidiaries':subsidiaries, 'company':company})
 
 
 def subsidiaries(request):
