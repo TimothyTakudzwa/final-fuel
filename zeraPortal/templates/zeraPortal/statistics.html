@@ -502,63 +502,46 @@
         </div>
         <!-- End of Sales Vol BY City -->
         <!-- Desperate Areas -->
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6  lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="sWzF7tcsBv">  
-            <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="sWzF7tcsBv" data-index="0">
+        <div class="col-xs-12 col-sm-6 lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="usihNsVGQE">
+            <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="usihNsVGQE" data-index="0" style="height: 349px;">
                 <div class="panel-heading ui-sortable-handle">
                     <div class="panel-title" style="max-width: calc(100% - 180px);">
-                        <h4>Desperate Areas</h4>
+                        <h4>Desperate Regions </h4>
                     </div>
                 <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="editTitle" data-tooltip="Edit title" data-toggle="tooltip" data-title="Edit title" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-pencil"></i><span class="control-title">Edit title</span></a></li><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="reload" data-tooltip="Reload" data-toggle="tooltip" data-title="Reload" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-reload"></i><span class="control-title">Reload</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li><li><a data-func="close" data-tooltip="Close" data-toggle="tooltip" data-title="Close" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-close"></i><span class="control-title">Close</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
-                <div class="panel-body"><iframe class="chartjs-hidden-iframe" tabindex="-1" style="display: block; overflow: hidden; border: 0px; margin: 0px; top: 0px; left: 0px; bottom: 0px; right: 0px; height: 100%; width: 100%; position: absolute; pointer-events: none; z-index: -1;"></iframe>
-                <div class="row">
-                     
-                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-12" style="height: 400px;">
-                        {% if final_desperate_cities%}
-                        {% for city, deficit in final_desperate_cities%}  
-
-                        <div class="panel panel-bd cardbox" style="background-color: lightslategray; color: whitesmoke;">
-                        <div class="panel-body">
-                            <div class="items pull-left">
-                            <i class="fa fa-suitcase fa-2x"></i>
-                            <h4>{{city}}</h4>
+                <div class="panel-body">
+                    <div class="row" style="margin-top: 2px;margin-bottom: 15px;">
+                        <div class="panel-title col-md-3" style="max-width: calc(100% - 180px);">
+                            <a href="{% url 'zeraPortal:desperate-regions'%}" class="btn btn-purple btn-sm" style="color: white;">View All </a>
                         </div>
-                        
-                            <div class="statistic-box">
-                                    <div class="row" style="padding-bottom: 10px;">
-                                    <h2 class="card-title" style="font-size: 1em;">Litres : 
-                                        <span class="count-number">{{deficit}}</span>
-                                        <small>L</small>
-                                    </h2>
-                                    </div> 
+                    </div>
+                    <div class="table-responsive">
+                        <table id="dataTableExample2" class="table table-bordered table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>City</th>
+                                    <th>Deficit</th>
                                     
-                                
-                            </div>
-                            
-                        </div>            
-                        </div> 
-                        {% endfor %}
-                        {% else %}
-                        <div class="statistic-box">
-                            <div class="row" style="padding-bottom: 10px;">
-                            <h2 class="card-title" style="font-size: 1em;">Litres : 
-                                No Data Available
-                            </h2>
-                            </div> 
-                            
-                        
-                        </div>
-                        {% endif %}
-
-
-
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if final_desperate_cities%}
+                                    {% for city, deficit in final_desperate_cities%}  
+                                        <td>{{city}}</td>
+                                        <td>{{deficit}}</td>
+                                    {% endfor %}
+                                {% else %}
+                                <p>No Data To Show</p>
+                                {% endif %}
+                                        
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                </div>
             </div>
-            
-
-        </div>
+         </div>
         <!--  -->
+
 </div>
          <!-- Radar Chart -->
         <div class="col-xs-12 col-sm-12 col-md-6 lobipanel-parent-sortable ui-sortable hide" data-lobipanel-child-inner-id="Y7WIaCX9ws">
@@ -569,10 +552,41 @@
                     </div>
                 <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
                 <div class="panel-body"><iframe class="chartjs-hidden-iframe" tabindex="-1" style="display: block; overflow: hidden; border: 0px; margin: 0px; top: 0px; left: 0px; bottom: 0px; right: 0px; height: 100%; width: 100%; position: absolute; pointer-events: none; z-index: -1;"></iframe>
-                    <canvas id="radarChart" height="407" width="611" style="display: block; width: 611px; height: 407px;"></canvas>
+                    <canvas id="radarChart" height="407" width="100%" style="display: block; width: 611px; height: 407px;"></canvas>
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="veKF9LUXFI">
+                <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="veKF9LUXFI" data-index="0">
+                    <div class="panel-heading ui-sortable-handle">
+                        <div class="panel-title" style="max-width: calc(100% - 180px);">
+                            <h4>Map Of Desperate Regions</h4>
+                        </div>
+                    <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="editTitle" data-tooltip="Edit title" data-toggle="tooltip" data-title="Edit title" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-pencil"></i><span class="control-title">Edit title</span></a></li><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="reload" data-tooltip="Reload" data-toggle="tooltip" data-title="Reload" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-reload"></i><span class="control-title">Reload</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li><li><a data-func="close" data-tooltip="Close" data-toggle="tooltip" data-title="Close" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-close"></i><span class="control-title">Close</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
+                    <div class="panel-body">
+                        <div class="embed-container">
+                            <iframe src="https://www.google.com/maps/d/embed?mid=1uT5Bwp20lTCRpTv3QuKjDrGSogooZrlj" width="640" height="480"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="veKF9LUXFI">
+                <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="veKF9LUXFI" data-index="0">
+                    <div class="panel-heading ui-sortable-handle">
+                        <div class="panel-title" style="max-width: calc(100% - 180px);">
+                            <h4>Service Station Per Regions</h4>
+                        </div>
+                    <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="editTitle" data-tooltip="Edit title" data-toggle="tooltip" data-title="Edit title" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-pencil"></i><span class="control-title">Edit title</span></a></li><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="reload" data-tooltip="Reload" data-toggle="tooltip" data-title="Reload" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-reload"></i><span class="control-title">Reload</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li><li><a data-func="close" data-tooltip="Close" data-toggle="tooltip" data-title="Close" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-close"></i><span class="control-title">Close</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
+                    <div class="panel-body">
+                        <div class="embed-container">
+                            <iframe src="https://www.google.com/maps/d/embed?mid=1uT5Bwp20lTCRpTv3QuKjDrGSogooZrlj" width="100%" height="480"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
         
     </div> <!-- /.row -->
 </section>
@@ -626,11 +640,11 @@
                             {% for client in clients%}
                             <tr>
                               <td>
-                                {{client.name}}
+                                {{client.company.name}}
                                 </td>
                               
-                              <td>{{client.address}}</td>
-                              <td>{{client.industry}}</td>
+                              <td>{{client.company.address}}</td>
+                              <td>{{client.company.industry}}</td>
                               <td>$ {{client.total_revenue|stringformat:".2f"}}</td>
                               <td>{{client.number_of_trans}}</td>
                               
