@@ -75,29 +75,14 @@
                     {%if offer.declined %}
                     <td>Declined</td>
                     {% else %}
-                    <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_{{offer.id}}">Edit</button></td>
+                    {% if offer.delivery_method = 'DELIVERY' %}
+                    <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_{{offer.id}}">Edit Offer</button></td>
+                    {% else %}
+                    <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_collection_{{offer.id}}">Edit Offer</button></td>
+                    {% endif %}
                     {%endif%}
                 </tr>
-                <script>
-                    $(document).ready(function () {
-                      $('#choices{{forloop.counter}}').hide();
-
-                      $('#delivery_method{{forloop.counter}}').change(function () {
-                        if ($('#delivery_method{{forloop.counter}} option:selected').text() == "Self Collection") {
-                          $('#choices{{forloop.counter}}').show();
-                          $('#street_name{{forloop.counter}}').attr('required', '');
-                          $('#street_number{{forloop.counter}}').attr('required', '');
-                          $('#location{{forloop.counter}}').attr('required', '');
-                        }
-                        else {
-                          $('#choices{{forloop.counter}}').hide();
-                          $('#street_name{{forloop.counter}}').removeAttr('required', '');
-                          $('#street_number{{forloop.counter}}').removeAttr('required', '');
-                          $('#location{{forloop.counter}}').removeAttr('required', '');
-                        }
-                      });
-                    });
-                  
+                <script>                  
                     $('#pump_available').on('change', function () {
                       $(this).val(this.checked ? "True" : "False");
                     });
@@ -123,7 +108,7 @@
                     });
                   </script>
 
-<!-- edit modal -->
+<!-- edit offer with delivery modal -->
 <div class="modal fade modal-success in" id="edit_{{offer.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
 aria-hidden="true">
 <div class="modal-dialog modal-notice">
@@ -136,34 +121,61 @@ aria-hidden="true">
  <form method="POST" action="{% url 'supplier:edit_offer' offer.id %}">
      {% csrf_token %}
      <div class=" row col-sm-12">
-     <div class="col-sm-3">
+     <div class="col-sm-6">
          <lable>Fuel Type</lable>
          <input type="text" name="fuel_type" class="form-control" value="{{offer.request.fuel_type}}" disabled/>
      </div>
 
-     <div class="col-sm-3">
+     <div class="col-sm-6">
          <lable>Fuel Quantity</lable>
          <input type="text" name="quantity" class="form-control" value="{{offer.quantity}}" />
      </div>
-     <div class="col-sm-3">
+    </div>
+     <div class=" row col-sm-12">
+     <div class="col-sm-6">
          <lable>Fuel Price</lable>
          <input type="text" name="price" class="form-control" value="{{offer.price}}" />
      </div>
-     <div class="col-sm-3">
+     <div class="col-sm-6">
       <lable>Transport Fee</lable>
       <input type="text" name="transport" class="form-control" value="{{offer.transport_fee}}" />
   </div>
      </div>
+</div>
+    <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-info btn-sm">Update Offer</button></p>
 
+</form>
+</div>
+</div>
+</div>
+<!-- end edit modal -->
 
-     <div class="row col-sm-12 form-group">
-         <label class="col-sm-12">Pick Up Method</label>
-         <div class="col-sm-12">
-         <select id="delivery_method{{forloop.counter}}" name="delivery_method" class="form-control">
-            <option value='DELIVERY'>Delivery</option>
-            <option value='SELF COLLECTION'>Self Collection</option>
-         </select>
-         </div>
+<!-- edit offer with self collection modal -->
+<div class="modal fade modal-success in" id="edit_collection_{{offer.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-notice">
+<div class="modal-content">
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <h2 class="modal-title">Edit Offer</h2>
+</div>
+<div class="modal-body">
+ <form method="POST" action="{% url 'supplier:edit_offer' offer.id %}">
+     {% csrf_token %}
+     <div class=" row col-sm-12">
+     <div class="col-sm-4">
+         <lable>Fuel Type</lable>
+         <input type="text" name="fuel_type" class="form-control" value="{{offer.request.fuel_type}}" disabled/>
+     </div>
+
+     <div class="col-sm-4">
+         <lable>Fuel Quantity</lable>
+         <input type="text" name="quantity" class="form-control" value="{{offer.quantity}}" />
+     </div>
+     <div class="col-sm-4">
+         <lable>Fuel Price</lable>
+         <input type="text" name="price" class="form-control" value="{{offer.price}}" />
+     </div>
      </div>
 
      <div class="form-group" name='choices' id='choices{{forloop.counter}}'>
@@ -171,17 +183,17 @@ aria-hidden="true">
          <div class=" row col-sm-12">                          
             <div class="togglebutton col-sm-4">
               <label for="">Street Number</label>
-              <input type="text" class="form-control" name="street_number" id="street_number{{forloop.counter}}" aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="street_number" aria-describedby="helpId" placeholder="" required/>
               
             </div>
             <div class="togglebutton col-sm-4">
               <label for="">Street Name</label>
-              <input type="text" class="form-control" name="street_name" id="street_name{{forloop.counter}}"aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="street_name" aria-describedby="helpId" placeholder="" required/>
               
             </div>
             <div class="togglebutton col-sm-4">
               <label for="">Location/Town</label>
-              <input type="text" class="form-control" name="location" id="location{{forloop.counter}}" aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="location" aria-describedby="helpId" placeholder="" required/>
             </div>
             </div>
         <p style="text-align: center;"><label>Available Equipments</label></p>
