@@ -385,6 +385,10 @@ def statistics(request):
     city_sales_volume = get_volume_sales_by_location()
     final_desperate_cities = []
     desperate_cities = desperate()
+    
+    while len(desperate_cities) > 5:
+        desperate_cities.popitem()
+    
     for city, deficit in desperate_cities.items():
         final_desperate_cities.append((city,deficit))
         

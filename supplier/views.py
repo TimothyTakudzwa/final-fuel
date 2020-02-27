@@ -1040,6 +1040,15 @@ def view_confirmation_doc(request, id):
     return response
 
 
+def upload_release_note(request, id):
+    transaction = Transaction.objects.filter(id=id).first()
+    if request.method == 'POST':
+        transaction.release_note = request.FILES.get('release_note')
+        transaction.save()
+        messages.success(request, 'Release note uploaded successfully')
+        return redirect('transaction')
+
+
 def view_supplier_doc(request, id):
     delivery = DeliverySchedule.objects.filter(id=id).first()
     if delivery:
