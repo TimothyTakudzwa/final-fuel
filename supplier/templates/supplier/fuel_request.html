@@ -88,47 +88,22 @@
                     <td>{% if req.dipping_stick_required %}Stick &nbsp;{% endif %}{% if req.pump_required %}Pump &nbsp;{% endif %}{% if req.meter_required %}Meter&nbsp;{% endif %}{% if req.no_equipments %}No Equipment Required{% endif %}</td>
                     <td>{{ req.my_offer }}</td>
                     {% if req.my_offer != 'No Offer' %}
+                    {% if req.delivery_method == 'DELIVERY' %}
                     <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal"
                             data-target="#edit_offer_{{req.id}}">Edit Offer</button></td>
                     {% else %}
+                    <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal"
+                      data-target="#edit_offer_collection_{{req.id}}">Edit Offer</button></td>
+                      {% endif %}
+                    {% else %}
+                    {% if req.delivery_method == 'DELIVERY' %}
                     <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#add_offer_{{req.id}}">Make Offer</button></td>
+                    {% else %}
+                    <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#add_offer_collection_{{req.id}}">Make Offer</button></td>
+                    {% endif %}
                     {% endif %}
                 </tr>
                 <script>
-                    $(document).ready(function () {
-                      $('#choices{{forloop.counter}}').hide();
-                      $('#choices1{{forloop.counter}}').hide();
-                  
-                      $('#delivery_method1{{forloop.counter}}').change(function () {
-                        if ($('#delivery_method1{{forloop.counter}} option:selected').text() == "Delivery") {
-                          $('#choices1{{forloop.counter}}').hide();
-                          $('#location1{{forloop.counter}}').removeAttr('required', '');
-                          $('#street_number1{{forloop.counter}}').removeAttr('required', '');
-                          $('#street_name1{{forloop.counter}}').removeAttr('required', '');
-                        }
-                        else {
-                          $('#choices1{{forloop.counter}}').show();
-                          $('#street_name1{{forloop.counter}}').attr('required', '');
-                          $('#street_number1{{forloop.counter}}').attr('required', '');
-                          $('#location1{{forloop.counter}}').attr('required', '');                                        
-                        }
-                      });
-                      $('#delivery_method{{forloop.counter}}').change(function () {
-                        if ($('#delivery_method{{forloop.counter}} option:selected').text() == "Self Collection") {
-                          $('#choices{{forloop.counter}}').show();
-                          $('#street_name{{forloop.counter}}').attr('required', '');
-                          $('#street_number{{forloop.counter}}').attr('required', '');
-                          $('#location{{forloop.counter}}').attr('required', '');
-                        }
-                        else {
-                          $('#choices{{forloop.counter}}').hide();
-                          $('#location{{forloop.counter}}').removeAttr('required', '');
-                          $('#street_number{{forloop.counter}}').removeAttr('required', '');
-                          $('#street_name{{forloop.counter}}').removeAttr('required', '');
-                        }
-                      });
-                    });
-                  
                     $('#pump_available').on('change', function () {
                       $(this).val(this.checked ? "True" : "False");
                     });
@@ -167,73 +142,26 @@ aria-hidden="true">
 <form method="POST" action="{% url 'supplier:supplier' req.id %}">
     {% csrf_token %}
     <div class=" row col-sm-12">
-    <div class="col-sm-3">
+    <div class="col-sm-6">
         <label>Fuel Type</label>
         <input type="text" name="fuel_type" class="form-control" value="{{req.fuel_type}}" disabled/>
     </div>
 
-    <div class="col-sm-3">
+    <div class="col-sm-6">
         <label>Fuel Quantity</label>
-        <input type="text" name="quantity" class="form-control" value="{{req.amount}}" required/>
+        <input type="number" step="0.01" name="quantity" class="form-control" value="{{req.amount}}" required/>
     </div>
-    <div class="col-sm-3">
+    </div>
+    <div class=" row col-sm-12">
+    <div class="col-sm-6">
         <label>Fuel Price</label>
-        <input type="text" name="price" class="form-control" value="{{req.price}}" required/>
+        <input type="number" step="0.01" name="price" class="form-control" value="{{req.price}}" required/>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-6">
       <label>Transport Fee</label>
-      <input type="text" name="transport" class="form-control" value="" />
+      <input type="number" step="0.01" name="transport" class="form-control" value="0.00" />
   </div>
     </div>
-
-
-    <div class="row col-sm-12 form-group" style="margin-top: 5;">
-        <label class="col-sm-12">Pick Up Method</label>
-        <div class="col-sm-12">
-        <select id="delivery_method{{forloop.counter}}" name="delivery_method" class="form-control">
-                <option value='DELIVERY'>Delivery</option>
-            <option value='SELF COLLECTION'>Self Collection</option>
-        </select>
-        </div>
-    </div>
-
-    <div class="form-group" name='choices' id='choices{{forloop.counter}}'>                
-        <p style="text-align: center;"><label>Collection Address</label></p>
-        <div class=" row col-sm-12">                            
-            <div class="togglebutton col-sm-4">
-              <label for="">Street Number</label>
-              <input type="text" class="form-control" name="street_number" id="street_number{{forloop.counter}}" aria-describedby="helpId" placeholder="">
-              
-            </div>
-            <div class="togglebutton col-sm-4">
-              <label for="">Street Name</label>
-              <input type="text" class="form-control" name="street_name" id="street_name{{forloop.counter}}" aria-describedby="helpId" placeholder="">
-              
-            </div>
-            <div class="togglebutton col-sm-4">
-              <label for="">Location/Town</label>
-              <input type="text" class="form-control" name="location" id="location{{forloop.counter}}" aria-describedby="helpId" placeholder="">
-             
-            </div>
-            </div>
-        <p style="text-align: center;"><label>Available Equipments</label></p>
-        <div class="col-sm-12">
-            <div class="col-sm-4">
-                <input class="form-control-md" type="checkbox" value="False" name="pump_available">
-                <label for="pump_available">Pump </label>
-                
-            </div>
-            <div class="col-sm-4">
-                <input class="form-control-md" type="checkbox" value="False" name="dipping_stick_available">
-                <label for="dipping_stick_available">Dipping Stick </label>
-            </div>
-
-            <div class="col-sm-4">
-                <input class="form-control-md" type="checkbox" value="False" name="meter_available">
-                <label for="meter_available">Meter</label>
-            </div>
-        </div>
-        </div>
 </div>
 <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-primary">Make Offer</button></p>
 </form>
@@ -241,6 +169,79 @@ aria-hidden="true">
 </div>
 </div>
 <!-- end make offer modal -->
+
+
+  <!-- make offer modal with self collection-->
+  <div class="modal fade modal-success in" id="add_offer_collection_{{req.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-notice">
+  <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h2 class="modal-title">Make Offer</h2>
+      </div>
+  <div class="modal-body">
+  <form method="POST" action="{% url 'supplier:supplier' req.id %}">
+      {% csrf_token %}
+      <div class=" row col-sm-12">
+      <div class="col-sm-4">
+          <label>Fuel Type</label>
+          <input type="text" name="fuel_type" class="form-control" value="{{req.fuel_type}}" disabled/>
+      </div>
+  
+      <div class="col-sm-4">
+          <label>Fuel Quantity</label>
+          <input type="number" step="0.01" name="quantity" class="form-control" value="{{req.amount}}" required/>
+      </div>
+      <div class="col-sm-4">
+          <label>Fuel Price</label>
+          <input type="number" step="0.01" name="price" class="form-control" value="{{req.price}}" required/>
+      </div>
+      </div>  
+      <div class="form-group" name='choices'>                
+          <p style="text-align: center;"><label>Collection Address</label></p>
+          <div class=" row col-sm-12">                            
+              <div class="togglebutton col-sm-4">
+                <label for="">Street Number</label>
+                <input type="text" class="form-control" name="street_number" aria-describedby="helpId" placeholder="" required>
+                
+              </div>
+              <div class="togglebutton col-sm-4">
+                <label for="">Street Name</label>
+                <input type="text" class="form-control" name="street_name" aria-describedby="helpId" placeholder="" required>
+                
+              </div>
+              <div class="togglebutton col-sm-4">
+                <label for="">Location/Town</label>
+                <input type="text" class="form-control" name="location" aria-describedby="helpId" placeholder="" required>
+               
+              </div>
+              </div>
+          <p style="text-align: center;"><label>Available Equipments</label></p>
+          <div class="col-sm-12">
+              <div class="col-sm-4">
+                  <input class="form-control-md" type="checkbox" value="False" name="pump_available">
+                  <label for="pump_available">Pump </label>
+                  
+              </div>
+              <div class="col-sm-4">
+                  <input class="form-control-md" type="checkbox" value="False" name="dipping_stick_available">
+                  <label for="dipping_stick_available">Dipping Stick </label>
+              </div>
+  
+              <div class="col-sm-4">
+                  <input class="form-control-md" type="checkbox" value="False" name="meter_available">
+                  <label for="meter_available">Meter</label>
+              </div>
+          </div>
+          </div>
+  </div>
+  <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-primary">Make Offer</button></p>
+  </form>
+  </div>
+  </div>
+  </div>
+  <!-- end make offer modal -->
 
 
 <!-- edit modal -->
@@ -256,52 +257,79 @@ aria-hidden="true">
  <form method="POST" action="{% url 'supplier:edit_offer' req.offer_id %}">
      {% csrf_token %}
      <div class=" row col-sm-12">
-     <div class="col-sm-3">
+     <div class="col-sm-6">
          <lable>Fuel Type</lable>
          <input type="text" name="fuel_type" class="form-control" value="{{req.fuel_type}}" disabled/>
      </div>
 
-     <div class="col-sm-3">
+     <div class="col-sm-6">
          <lable>Fuel Quantity</lable>
-         <input type="text" name="quantity" class="form-control" value="{{req.offer_quantity}}" />
+         <input type="number" step="0.01" name="quantity" class="form-control" value="{{req.offer_quantity}}" required/>
      </div>
-     <div class="col-sm-3">
+     </div>
+     <div class=" row col-sm-12">
+     <div class="col-sm-6">
          <lable>Fuel Price</lable>
-         <input type="text" name="price" class="form-control" value="{{req.offer_price}}"/>
+         <input type="number" step="0.01" name="price" class="form-control" value="{{req.offer_price}}" required/>
      </div>
-     <div class="col-sm-3">
+     <div class="col-sm-6">
       <lable>Transport Fee</lable>
-      <input type="text" name="transport" class="form-control" value="{{req.transport_fee}}"/>
+      <input type="number" step="0.01" name="transport" class="form-control" value="{{req.transport_fee}}" required/>
   </div>
      </div>
+</div>
+    <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-info btn-sm">Update Offer</button></p>
+</form>
+</div>
+</div>
+</div>
+<!-- end edit modal -->
 
 
-    <div class="row col-sm-12 form-group" style="margin-top: 5;">
-         <label class="col-sm-12">Pick Up Method</label>
-         <div class="col-sm-12">
-         <select id="delivery_method1{{forloop.counter}}" name="delivery_method1" class="form-control">
-            <option value='DELIVERY'>Delivery</option>
-            <option value='SELF COLLECTION'>Self Collection</option>
-         </select>
-         </div>
+<!-- edit offer with self collection modal -->
+<div class="modal fade modal-success in" id="edit_offer_collection_{{req.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-notice">
+<div class="modal-content">
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <h2 class="modal-title">Edit Offer</h2>
+</div>
+<div class="modal-body">
+ <form method="POST" action="{% url 'supplier:edit_offer' req.offer_id %}">
+     {% csrf_token %}
+     <div class=" row col-sm-12">
+     <div class="col-sm-4">
+         <lable>Fuel Type</lable>
+         <input type="text" name="fuel_type" class="form-control" value="{{req.fuel_type}}" disabled/>
      </div>
 
-     <div class="form-group" name='choices1' id='choices1{{forloop.counter}}'>
+     <div class="col-sm-4">
+         <lable>Fuel Quantity</lable>
+         <input type="number" step="0.01" name="quantity" class="form-control" value="{{req.offer_quantity}}" required/>
+     </div>
+     <div class="col-sm-4">
+         <lable>Fuel Price</lable>
+         <input type="number" step="0.01" name="price" class="form-control" value="{{req.offer_price}}" required/>
+     </div>
+     </div>
+
+     <div class="form-group" name='choices'>
         <p style="text-align: center;"><label>Collection Address</label></p>
          <div class=" row col-sm-12">                          
             <div class="togglebutton col-sm-4">
               <label for="">Street Number</label>
-              <input type="text" class="form-control" name="street_number" id="street_number1{{forloop.counter}}" aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="street_number" aria-describedby="helpId" placeholder="" required/>
               
             </div>
             <div class="togglebutton col-sm-4">
               <label for="">Street Name</label>
-              <input type="text" class="form-control" name="street_name" id="street_name1{{forloop.counter}}" aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="street_name" aria-describedby="helpId" placeholder="" required/>
               
             </div>
             <div class="togglebutton col-sm-4">
               <label for="">Location/Town</label>
-              <input type="text" class="form-control" name="location" id="location1{{forloop.counter}}" aria-describedby="helpId" placeholder="">
+              <input type="text" class="form-control" name="location" aria-describedby="helpId" placeholder="" required/>
             </div>
             </div>
         <p style="text-align: center;"><label>Available Equipments</label></p>

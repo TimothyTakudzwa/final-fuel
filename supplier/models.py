@@ -109,7 +109,7 @@ class Offer(models.Model):
     time = models.TimeField(auto_now_add=True)
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    transport_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    transport_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=True)
     supplier = models.ForeignKey(User, on_delete=models.CASCADE, related_name='offer')
     request = models.ForeignKey(FuelRequest, on_delete=models.DO_NOTHING, related_name='request')
     cash = models.BooleanField(default=False, blank=True, null=True)
