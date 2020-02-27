@@ -885,6 +885,30 @@ def proof_of_payment(request, id):
             pass
 
 
+def delivery_note(request, id):
+    if request.method == 'POST':
+        payment = AccountHistory.objects.filter(id=id).first()
+        if payment is not None:
+            account_history.delivery_note = request.FILES.get('d_note')
+            account_history.save()
+            
+            messages.success(request, 'Delivery note successfully uploaded')
+            return redirect('buyer:transactions')
+        else:
+            pass
+
+def download_release_note(request, id):
+    document = AccountHistory.objects.filter(id=id).first()
+    if document:
+        filename = document.release_note.name.split('/')[-1]
+        response = HttpResponse(document.release_note, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect('buyer:transactions')
+    return response
+
+
 """
 
 payment history
