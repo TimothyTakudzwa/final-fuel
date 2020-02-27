@@ -107,7 +107,7 @@ TYPE_CHOICES = (
     ('BUYER', 'Buyer'),
     ('SUPPLIER', 'Supplier'),
     ('SS_SUPPLIER', 'Service Station Rep'),
-    ('Transporter', 'Transporter'),
+    ('ZERA', 'ZERA'),
 
 )
 

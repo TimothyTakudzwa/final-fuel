@@ -54,6 +54,8 @@ def login_user(request):
             return redirect("fuel-request")
         elif current_user.user_type == 'S_ADMIN':
             return redirect("users:allocate")
+        elif current_user.user_type == 'ZERA':
+            return redirect("zeraPortal:dashboard")
     else:
         # signing in
         if request.method == 'POST':
@@ -81,6 +83,8 @@ def login_user(request):
                             return redirect("fuel-request")
                         elif current_user.user_type == 'S_ADMIN':
                             return redirect("users:allocate")
+                        elif current_user.user_type == 'ZERA':
+                            return redirect("zeraPortal:dashboard")
                         else:
                             return redirect("users:suppliers_list")
                     # wrong password
