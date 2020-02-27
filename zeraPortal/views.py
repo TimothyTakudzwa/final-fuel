@@ -560,7 +560,8 @@ def subsidiary_transaction_history(request, sid):
     return render(request, 'zeraPortal/subsidiary_history.html', {'trans': trans, 'subsidiary': subsidiary})
 
 def profile(request):
-    return render(request, 'zeraPortal/profile.html')
+    user = request.user
+    return render(request, 'zeraPortal/profile.html', {'user':user})
 
 
 def suspicious_behavior(request):
