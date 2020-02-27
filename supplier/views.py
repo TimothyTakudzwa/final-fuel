@@ -300,7 +300,7 @@ def fuel_request(request):
     sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     requests = []
     if sub.praz_reg_num != None:
-        all_requests = FuelRequest.objects.filter(is_deleted=False, wait=True, is_complete=False).all()
+        all_requests = FuelRequest.objects.filter(is_deleted=False, is_complete=False).all()
         for fuel_request in all_requests:
             if not fuel_request.is_direct_deal and not fuel_request.private_mode:
                 requests.append(fuel_request)
@@ -1038,6 +1038,15 @@ def view_confirmation_doc(request, id):
         messages.warning(request, 'Document Not Found')
         redirect('supplier:delivery_schedules')
     return response
+
+
+def upload_release_note(request, id):
+    transaction = Transaction.objects.filter(id=id).first()
+    if request.method == 'POST':
+        transaction.release_note = request.FILES.get('release_note')
+        transaction.save()
+        messages.success(request, 'Release note uploaded successfully')
+        return redirect('transaction')
 
 
 def view_supplier_doc(request, id):

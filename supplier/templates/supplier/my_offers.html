@@ -54,6 +54,7 @@
                     <th style="color: white;">Fuel</th>
                     <th style="color: white;">Offered</th>
                     <th style="color: white;">Price</th>
+                    <th style="color: white;">Delivery Method</th>
                     <th style="color: white;">Transport Fee</th>
                     <th style="color: white;">Payment</th>
                     <th style="color: white;">Equipment</th>
@@ -69,13 +70,18 @@
                     <td>{{ offer.request.fuel_type|lower|capfirst }}</td>
                     <td>{{ offer.quantity|intcomma }}</td>
                     <td>{{ offer.price|intcomma }}</td>
-                    <td>{{ offer.transport_fee|intcomma }}</td>                                
+                    <td>{{ offer.delivery_method|lower|capfirst}}</td>
+                    {% if offer.transport_fee != None %}
+                    <td>{{ offer.transport_fee|intcomma }}</td>
+                    {% else %}  
+                    <td>N/A</td>
+                    {% endif %}                              
                     <td>{{offer.request.payment_method}}</td>
                     <td>{% if offer.pump_available %}Pump &nbsp; {%endif%} {% if offer.dipping_stick_available %}Stick &nbsp; {%endif%} {% if offer.meter_available %}Meter&nbsp;{% endif %}{% if offer.no_equipments %}No Equipment{%endif%}</td>
                     {%if offer.declined %}
                     <td>Declined</td>
                     {% else %}
-                    {% if offer.delivery_method = 'DELIVERY' %}
+                    {% if offer.delivery_method == 'DELIVERY' %}
                     <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_{{offer.id}}">Edit Offer</button></td>
                     {% else %}
                     <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_collection_{{offer.id}}">Edit Offer</button></td>

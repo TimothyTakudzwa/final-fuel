@@ -165,6 +165,7 @@ class Transaction(models.Model):
     pending_proof_of_payment  = models.BooleanField(default=False) 
     paid_reserve = models.FloatField(default=0.00)
     fuel_money_reserve = models.FloatField(default=0.00)
+    release_note = models.FileField(upload_to='release_note', null=True, blank=True)
     
     
     class Meta:
