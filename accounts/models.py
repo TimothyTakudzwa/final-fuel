@@ -43,6 +43,8 @@ class AccountHistory(models.Model):
     time = models.TimeField(auto_now_add=True)
     delivery_schedule = models.ForeignKey(DeliverySchedule, on_delete=models.CASCADE, related_name='account_history',
                                           blank=True, null=True)
+    release_note = models.FileField(blank=True, null=True, upload_to='proof_of_payment')
+    delivery_note = models.FileField(blank=True, null=True, upload_to='delivery_note')
 
     class Meta:
         ordering = ['date', 'time']

@@ -204,19 +204,49 @@
                             <td>Approved</td>
                             <td>{{payment.value}}</td>
                             <td>{{payment.balance}}</td>
+                            {% if payment.release_note %}
                             <td>
                                 <div class="btn-group">
-                                <button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}"><i class="fa fa-download" style="font-size:20px"></i> Release Note</button>
+                                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'buyer:download_release_note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
                                 </div>
                             </td>
-                            
+                            {% else %}
+                            <td style="color: brown;">Pending</td>
+                            {% endif %}
+                            {% if payment.release_note %}
                             <td>
-                                    <div class="btn-group">
-                                    <button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}"><i class="fa fa-upload" style="font-size:20px"></i> Delivery Note</button>
-                                    </div>
+                                <a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#upload_{{payment.id}}">
+                                    <i class="fa fa-upload" style="font-size:20px"></i> Upload</a>  
                             </td>
-                           
+                            {% else %}
+                            <td style="color: rgb(65, 9, 9);">Release Note Pending</td>
+                            {% endif %}
+
                         </tr>
+                         <!--Upload Document-->
+                         <div class="modal fade modal-sucess in" id="upload_{{payment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color: #009688; color: white">
+                                        <span class="modal-title" id="exampleModalLabel">Upload Delivery Note</span>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <form method="POST" action="{% url 'buyer:delivery_note' payment.id %}" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="d_note" class="form-control-file" id="exampleFormControlFile1" required>
+                                            <br>
+                                            <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--End Upload Document-->
                         {% endfor %}
                     
                     </tbody>
