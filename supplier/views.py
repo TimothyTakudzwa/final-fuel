@@ -1069,10 +1069,9 @@ def upload_release_note(request, id):
 
 
 def payment_release_notes(request, id):
-    form1 = DeliveryScheduleForm()           
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
-    return render(request, 'supplier/payment_and_rnote.html', {'payment_history': payment_history, 'form1':form1})
+    return render(request, 'supplier/payment_and_rnote.html', {'payment_history': payment_history})
 
 
 def view_supplier_doc(request, id):
