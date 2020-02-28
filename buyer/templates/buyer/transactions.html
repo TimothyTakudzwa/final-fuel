@@ -418,24 +418,24 @@
                                                         <table id="fuel_updates" class="table table-striped table-bordered" style="width:100%">
                                                             <thead>
                                                             <tr>
+                                                                <th class="custom-table">Date</th>
+                                                                <th class="custom-table">Time</th>
                                                                 <th class="custom-table">Sord Number</th>
                                                                 <th class="custom-table">Quantity</th>
                                                                 <th class="custom-table">Fuel Type</th>
                                                                 <th class="custom-table">Price</th>
-                                                                <th class="custom-table">Date</th>
-                                                                <th class="custom-table">Time</th>
                                                             </tr>
                                                             </thead>
                                                             <tbody>
                                                             {% for t in all_transactions %}
                                                                 {% if t.transaction.id == transaction.id %}
                                                                     <tr>
+                                                                    <td>{{ t.transaction.date }}</td>
+                                                                        <td>{{ t.transaction.time }}</td>
                                                                         <td>{{ t.sord_number }}L</td>
                                                                         <td>{{ t.transaction.offer.quantity }}L</td>
                                                                         <td>{{ t.transaction.offer.request.fuel_type }}</td>
                                                                         <td>${{ t.transaction.offer.price }}</td>
-                                                                        <td>{{ t.transaction.date }}</td>
-                                                                        <td>{{ t.transaction.time }}</td>
                                                                     </tr>
                                                                 {% endif %}
                                                             {% endfor %}

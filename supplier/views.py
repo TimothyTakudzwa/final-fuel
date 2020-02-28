@@ -1040,6 +1040,17 @@ def view_confirmation_doc(request, id):
     return response
 
 
+def view_delivery_note(request, id):
+    delivery = AccountHistory.objects.filter(id=id).first()
+    if delivery:
+        filename = delivery.delivery_note.name.split('/')[-1]
+        response = HttpResponse(delivery.delivery_note, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        redirect('transactions')
+    return response
+
 def upload_release_note(request, id):
     transaction = Transaction.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -1055,6 +1066,13 @@ def upload_release_note(request, id):
         payment_history.save()
         messages.success(request, "Release Note Successfully Uploaded")
         return redirect('transaction')
+
+
+def payment_release_notes(request, id):
+    form1 = DeliveryScheduleForm()           
+    transaction = Transaction.objects.filter(id=id).first()
+    payment_history = AccountHistory.objects.filter(transaction=transaction).all()
+    return render(request, 'supplier/payment_and_rnote.html', {'payment_history': payment_history, 'form1':form1})
 
 
 def view_supplier_doc(request, id):
