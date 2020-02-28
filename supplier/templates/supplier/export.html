@@ -68,22 +68,20 @@
 
 <table style="padding-top: 20px">
     <tr>
+        <th>Date</th>
+        <th>Time</th>
         <th>Quantity</th>
         <th>Fuel Type</th>
         <th>Price</th>
-        <th>Date</th>
-        <th>Time</th>
     </tr>
 
     {% for transaction in transactions %}
         <tr>
-
+            <td>{{ transaction.transaction.date }}</td>
+            <td>{{ transaction.transaction.time }}</td>
             <td>{{ transaction.transaction.offer.quantity }}L</td>
             <td>{{ transaction.transaction.offer.request.fuel_type }}</td>
             <td>${{ transaction.transaction.offer.price }}</td>
-            <td>{{ transaction.transaction.date }}</td>
-            <td>{{ transaction.transaction.time }}</td>
-
         </tr>
     {% endfor %}
 
