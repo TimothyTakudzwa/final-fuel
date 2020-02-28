@@ -232,7 +232,7 @@
                                     </div>
                                     <div class="modal-body">
 
-                                        <form method="POST" action="{% url 'supplier:release-note' payment.id %}" enctype="multipart/form-data">
+                                        <form method="POST" action="{% url 'supplier:payment-and-release-notes' payment.transaction.id %}" enctype="multipart/form-data">
                                             {% csrf_token %}
                                             <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="d_note" class="form-control-file" id="exampleFormControlFile1" required>
                                             <br>
