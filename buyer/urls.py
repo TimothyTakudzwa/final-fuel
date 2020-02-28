@@ -21,7 +21,7 @@ urlpatterns = [
     path('reject/<int:id>', views.reject_offer, name='reject-offer'),
     path('transactions', views.transactions, name='buyer-transactions'),
     path('delivery-schedule/', views.delivery_schedules, name="delivery-schedule"),
-    path('delivery-schedule/<int:id>', views.delivery_schedule, name="delivery-schedule"),
+    # path('delivery-schedule/<int:id>', views.delivery_schedule, name="delivery-schedule"),
     path('proof-of-payment/<int:id>', views.proof_of_payment, name="proof-of-payment"),
     path('invoice/<int:id>', views.invoice, name='buyer-invoice'),
     path('view_invoice/<int:id>', views.view_invoice, name='view-invoice'),
@@ -30,6 +30,9 @@ urlpatterns = [
     path('make_direct_request', views.make_direct_request, name='make_direct_request'),
     path('make_private_request', views.make_private_request, name='make_private_request'),
     path('edit_account_details/<int:id>', views.edit_account_details, name="edit_account_details"),
+    path('payment_release_notes/<int:id>', views.payment_release_notes, name='payment_release_notes'),
+    path('delivery_note/<int:id>', views.delivery_note, name='delivery_note'),
+    path('download_release_note/<int:id>', views.download_release_note, name='download_release_note')
     
 
 ]

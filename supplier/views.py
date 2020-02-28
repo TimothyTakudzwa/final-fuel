@@ -300,7 +300,7 @@ def fuel_request(request):
     sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     requests = []
     if sub.praz_reg_num != None:
-        all_requests = FuelRequest.objects.filter(is_deleted=False, wait=True, is_complete=False).all()
+        all_requests = FuelRequest.objects.filter(is_deleted=False, is_complete=False).all()
         for fuel_request in all_requests:
             if not fuel_request.is_direct_deal and not fuel_request.private_mode:
                 requests.append(fuel_request)
@@ -708,7 +708,7 @@ def complete_transaction(request, id):
                 transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Petrol', payment_type,
                                         transaction)
 
-                messages.success(request, "Proof of Payment Approved!, Please create a delivery schedule for the buyer.")
+                messages.success(request, "Proof of Payment Approved!, Please create a delivery schedule for the buyer or upload a release note.")
                 return redirect('transaction')
             else:
                 messages.warning(request, "There is not enough petrol in stock to complete the transaction.")
@@ -1038,6 +1038,40 @@ def view_confirmation_doc(request, id):
         messages.warning(request, 'Document Not Found')
         redirect('supplier:delivery_schedules')
     return response
+
+
+def view_delivery_note(request, id):
+    delivery = AccountHistory.objects.filter(id=id).first()
+    if delivery:
+        filename = delivery.delivery_note.name.split('/')[-1]
+        response = HttpResponse(delivery.delivery_note, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        redirect('transactions')
+    return response
+
+def upload_release_note(request, id):
+    transaction = Transaction.objects.filter(id=id).first()
+    if request.method == 'POST':
+        transaction.release_note = request.FILES.get('release_note')
+
+        transaction.proof_of_payment = None
+        transaction.pending_proof_of_payment = False
+        transaction.save()
+        payment_history = AccountHistory.objects.filter(transaction=transaction, value=0.00).first()
+        payment_history.value += transaction.paid_reserve
+        payment_history.balance -= transaction.paid_reserve
+        payment_history.release_note = request.FILES.get('release_note')
+        payment_history.save()
+        messages.success(request, "Release Note Successfully Uploaded")
+        return redirect(f'/supplier/payment-and-release-notes/{id}')
+
+
+def payment_release_notes(request, id):
+    transaction = Transaction.objects.filter(id=id).first()
+    payment_history = AccountHistory.objects.filter(transaction=transaction).all()
+    return render(request, 'supplier/payment_and_rnote.html', {'payment_history': payment_history})
 
 
 def view_supplier_doc(request, id):

@@ -463,6 +463,7 @@ def dashboard(request):
                 fuel_request_object.dipping_stick_required = True if request.POST.get(
                     'dipping_stick_required') == "True" else False
                 fuel_request_object.meter_required = True if request.POST.get('meter_required') == "True" else False
+                fuel_request_object.is_complete = True
                 fuel_request_object.save()
                 offer_id, response_message = recommend(fuel_request_object)
                 if not offer_id:
@@ -525,7 +526,10 @@ def accept_offer(request, id):
     offer = Offer.objects.filter(id=id).first()
     account = Account.objects.filter(buyer_company=request.user.company,supplier_company=offer.supplier.company,is_verified=True).first()
     if account is not None:
-        expected = int(offer.quantity * offer.price) + int(offer.transport_fee)
+        if offer.transport_fee is not None:
+            expected = int(offer.quantity * offer.price) + int(offer.transport_fee)
+        else:
+            expected = int(offer.quantity * offer.price)
         Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier, is_complete=False,expected = expected)
         FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
         offer.is_accepted = True
@@ -881,6 +885,30 @@ def proof_of_payment(request, id):
             pass
 
 
+def delivery_note(request, id):
+    if request.method == 'POST':
+        payment = AccountHistory.objects.filter(id=id).first()
+        if payment is not None:
+            payment.delivery_note = request.FILES.get('d_note')
+            payment.save()
+            
+            messages.success(request, 'Delivery note successfully uploaded')
+            return redirect(f'/buyer/payment_release_notes/{payment.transaction.id}')
+        else:
+            pass
+
+def download_release_note(request, id):
+    document = AccountHistory.objects.filter(id=id).first()
+    if document:
+        filename = document.release_note.name.split('/')[-1]
+        response = HttpResponse(document.release_note, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect(f'/buyer:ayment_release_notes/{payment.transaction.id}')
+    return response
+
+
 """
 
 payment history
@@ -889,10 +917,16 @@ payment history
 
 def payment_history(request, id):
     form1 = DeliveryScheduleForm()           
-    print(request.user.company)
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
     return render(request, 'buyer/payment_history.html', {'payment_history': payment_history, 'form1':form1})
+
+
+def payment_release_notes(request, id):
+    form1 = DeliveryScheduleForm()           
+    transaction = Transaction.objects.filter(id=id).first()
+    payment_history = AccountHistory.objects.filter(transaction=transaction).all()
+    return render(request, 'buyer/payment_and_rnote.html', {'payment_history': payment_history, 'form1':form1})
 
 """
 
