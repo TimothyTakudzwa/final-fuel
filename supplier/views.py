@@ -1065,7 +1065,7 @@ def upload_release_note(request, id):
         payment_history.release_note = request.FILES.get('release_note')
         payment_history.save()
         messages.success(request, "Release Note Successfully Uploaded")
-        return redirect(f'/supplier/payment-and-release-notes/{transaction.id}')
+        return redirect(f'/supplier/payment-and-release-notes/{payment_history.id}')
 
 
 def payment_release_notes(request, id):
