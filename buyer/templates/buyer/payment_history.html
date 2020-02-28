@@ -264,10 +264,17 @@
                                                     <lable><b>Amount Paid:</b></lable>
                                                     &nbsp;{{payment.value }}
                                                 </div>
+                                                {% if payment.delivery_schedule != None %}
                                                 <div class="form-group col-md-6">
                                                     <lable><b>Transport Charge:</b></lable>
                                                     &nbsp;{{payment.value| sub:payment.delivery_schedule.amount_for_fuel}}
                                                 </div>
+                                                {% else %}
+                                                <div class="form-group col-md-6">
+                                                    <lable><b>Transport Charge:</b></lable>
+                                                    &nbsp;{{payment.value}}
+                                                </div>
+                                                {% endif %}
                                             </div>
                                             <div class="row">
                                             <div class="form-group col-md-6">
@@ -281,27 +288,19 @@
                                             </div>
                                            
                                                 {% else %}
-                                                <form method="POST" action="" enctype="multipart/form-data">
+                                                <div class="form-group col-md-6">
+                                                <form method="POST" action="{% url 'buyer:delivery-schedule' %}" enctype="multipart/form-data">
                                                     {% csrf_token %}
                                                     <input type="text" name="delivery_id" value="{{payment.delivery_schedule.id}}" hidden/>
-                                                    {{form|crispy}}
+                                                    {{form1|crispy}}
                                                     <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Confirm Delivery"></p>
+                                                </div>
                                                 </form>   
                                                
                                                 {% endif %}
                                         </div>
                                         <div class="row">
-                                            <!-- {% if payment.delivery_schedule.confirmation_document %}
-                                            <div class="form-group col-md-6">
-                                                <lable><b>Supplier Release Note:</b></lable>
-                                                &nbsp;<a class="btn btn-info btn-sm" href="{% url 'supplier:view_supplier_doc' payment.delivery_schedule.id %}" >Download Document </a>
-                                            </div>
-                                            {% else %}
-                                            <div class="form-group col-md-6">
-                                                <lable><b></b></lable>
-                                            </div>
-                                            
-                                            {%endif%}  -->
+                                        
 
                                             {% if payment.delivery_schedule.confirmation_document %}
                                             <div class="form-group col-md-6">
@@ -327,31 +326,7 @@
                                 </div>
                             </div>
                             <!--End View Modal-->
-                     <!-- Upload Document-->
-                    <!-- <div class="modal fade modal-sucess in" id="upload_{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header" style="background-color: #009688; color: white">
-                            <span class="modal-title" id="exampleModalLabel">Upload Document</span>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            </div>
-                            <div class="modal-body">
-                                    
-                                    <form method="POST" action="" enctype="multipart/form-data">
-                                        {% csrf_token %}
-                                        <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
-                                        {{form|crispy}}
-                                      <div class="modal-footer">  
-                                      <input class="btn btn-info" type="submit" value="Confirm Delivery">
-                                      </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-                    <!--End Upload Document -->
+                  
                         {% endfor %}
                     
                     </tbody>
