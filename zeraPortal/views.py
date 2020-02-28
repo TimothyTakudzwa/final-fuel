@@ -20,6 +20,7 @@ from operator import attrgetter
 from buyer.models import User, FuelRequest
 from company.models import Company, CompanyFuelUpdate
 from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, Transaction, Offer, DeliverySchedule
+from .constants import coordinates_towns
 from .forms import ZeraProfileUpdateForm, ZeraImageUpdateForm
 from fuelUpdates.models import SordCompanyAuditTrail
 from users.models import SordActionsAuditTrail
@@ -594,6 +595,7 @@ def suspicious_behavior(request):
 
 def desperate_regions(request):
     context = {
-        'regions': desperate()
+        'regions': desperate(),
+        'mapping': dict(zip(zimbabwean_towns, coordinates_towns))
     }
     return render(request, 'zeraPortal/desperate_regions.html', context=context)
