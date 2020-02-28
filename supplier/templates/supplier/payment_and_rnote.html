@@ -207,8 +207,9 @@
                             {% if payment.release_note %}
                             <td>Released</td>
                             {% else %}
+                            <td>
                             <a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#upload_{{payment.id}}">
-                                <i class="fa fa-upload" style="font-size:20px"></i> Upload</a>                            
+                                <i class="fa fa-upload" style="font-size:20px"></i> Upload</a></td>                           
                             {% endif %}
                             {% if payment.delivery_note %}
                             <td>
