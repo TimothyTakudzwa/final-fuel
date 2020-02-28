@@ -107,11 +107,7 @@
                                                     </div>
                                                 </td>
                                             {% else %}
-                                                {% if transaction.release_note %}
-                                                    <td>Released</td>
-                                                {% else %}
                                                     <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">Release Note</button></td>
-                                                {% endif %}
                                             {% endif %}
                                         {% else %}
                                             <td>
@@ -138,11 +134,10 @@
                                                     </div>
                                                 </td>
                                             {% else %}
-                                                {% if transaction.release_note %}
-                                                    <td>Released</td>
-                                                {%else%}
+                                                
+                                                
                                                     <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">Release Note</button></td>
-                                                {% endif %}
+                                                
                                             {% endif %}
                                             {% endif %}
                                     {% else %}
