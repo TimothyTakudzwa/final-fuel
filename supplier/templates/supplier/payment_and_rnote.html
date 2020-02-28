@@ -1,4 +1,4 @@
-{% extends "finder/buyer_base.html" %} 
+{% extends "supplier/supplier_base.html" %}
 {% load crispy_forms_tags %}
 {% load humanize %}
 {% load mathfilters %} 
@@ -18,7 +18,7 @@
     </div>
     <div class="header-title">
 
-        <h1> Fuel Payments  </h1>
+        <h1> Payment History </h1>
         <small>Fuel Finder Zimbabwe</small>
         <ol class="breadcrumb hidden-xs">
             <li><a href="{% url 'users:allocate' %}"><i class="pe-7s-home"></i> Home</a></li>
@@ -32,7 +32,7 @@
     <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
         <div class="panel-heading ui-sortable-handle">
             <div class="btn-group">
-                <h4>Payments Audit Trail</h4>
+                <h4>Payment Audit Trail</h4>
             </div>
             <div class="dropdown">
                 <ul class="dropdown-menu dropdown-menu-right">
@@ -54,7 +54,7 @@
                                 Date
                             </th>
                             <th>
-                                Contact
+                                Account
                             </th>
 
                             <th>
@@ -85,41 +85,49 @@
                         <tr>
                             <td>{{payment.date}} - {{payment.time}}</td>
                             <td>
-
-                                <!--call modal-->
-                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{transaction.id}}">
-                                    <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
-                                </button>
-                                <!--view details-->
-                                <div class="modal fade modal-success in" id="view{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header" style="background-color: #009688; color: white">
-                                                <span class="modal-title" id="exampleModalLabel">Details For {{ payment.transaction.supplier.company.name }} Contact Person</span>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="row">
-                                                    <!--name-->
-                                                    <div class="col-md-12">
-                                                        <h4>Name &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.transaction.supplier.first_name }} {{ payment.transaction.supplier.last_name }}</h4>
-                                                    </div>
-                                                    <!--email-->
-                                                    <div class="col-md-12">
-                                                        <h4>Email &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.transaction.supplier.email}}</h4>
-                                                    </div>
-                                                    <!--phone-->
-                                                    <div class="col-md-12">
-                                                        <h4>Phone &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.transaction.supplier.phone_number }}</h4>
+                               
+                                    <!--call modal-->
+                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{payment.id}}">
+                                        Account Details
+                                    </button>
+                                    <!--view details-->
+                                    <div class="modal fade modal-success in" id="view{{payment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="background-color: #009688; color: white">
+                                                    <span class="modal-title" id="exampleModalLabel">Details For The Account</span>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <!--buyer company-->
+                                                        <div class="col-md-12">
+                                                            <h4>Buyer Company &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.account.buyer_company }} </h4>
+                                                        </div>
+                                                        <!--supplier company-->
+                                                        <div class="col-md-12">
+                                                            <h4>Supplier Company &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.account.supplier_company}}</h4>
+                                                        </div>
+                                                        <!--applicant-->
+                                                        <div class="col-md-12">
+                                                            <h4>applied_by &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.account.applied_by }}</h4>
+                                                        </div>
+                                                         <!--acc #-->
+                                                         <div class="col-md-12">
+                                                            <h4>Account Number &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.account.account_number}}</h4>
+                                                        </div>
+                                                        <!--is_verified-->
+                                                        <div class="col-md-12">
+                                                            <h4>Verified &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.account.is_verified }}</h4>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
+                                
                             </td>
                             <td>{{payment.sord_number}}</td>
                             <td>
@@ -197,25 +205,18 @@
                             <td>{{payment.value}}</td>
                             <td>{{payment.balance}}</td>
                             {% if payment.release_note %}
+                            <td>Released</td>
+                            {% else %}
                             <td>
-                                <div class="btn-group">
-                                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'buyer:download_release_note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
-                                </div>
+                            <a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#upload_{{payment.id}}">
+                                <i class="fa fa-upload" style="font-size:20px"></i> Upload</a></td>                           
+                            {% endif %}
+                            {% if payment.delivery_note %}
+                            <td>
+                                <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-delivery-note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i>Delivery Note</a>  
                             </td>
                             {% else %}
-                            <td style="color: brown;">Pending</td>
-                            {% endif %}
-                            {% if payment.release_note %}
-                               {% if payment.delivery_note %}
-                               <td style="color: darkgreen;">Uploaded</td>
-                               {% else %}
-                                <td>
-                                    <a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#upload_{{payment.id}}">
-                                        <i class="fa fa-upload" style="font-size:20px"></i> Upload</a>  
-                                </td>
-                                {% endif %}
-                            {% else %}
-                            <td style="color: rgb(65, 9, 9);">Release Note Pending</td>
+                            <td style="color: rgb(65, 9, 9);">Pending</td>
                             {% endif %}
 
                         </tr>
@@ -231,7 +232,7 @@
                                     </div>
                                     <div class="modal-body">
 
-                                        <form method="POST" action="{% url 'buyer:delivery_note' payment.id %}" enctype="multipart/form-data">
+                                        <form method="POST" action="{% url 'supplier:payment-and-release-notes' payment.transaction.id %}" enctype="multipart/form-data">
                                             {% csrf_token %}
                                             <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="d_note" class="form-control-file" id="exampleFormControlFile1" required>
                                             <br>

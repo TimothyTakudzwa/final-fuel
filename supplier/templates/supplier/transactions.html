@@ -86,15 +86,15 @@
                                 {% else %}
                                     <td><p style="color:rgb(22, 20, 20)">Incomplete</p></td>
                                 {% endif %}
+                                {% if transaction.offer.delivery_method == 'DELIVERY' %}
                                 <td>
-                                    <div class="btn-group">
-
-
-
-                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'supplier:payment_history' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> History & Schedules</a>
-
-                                    </div>
+                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'supplier:payment_history' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Schedules</a>
                                 </td>
+                                {% else %}
+                                    <td>
+                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'supplier:payment-and-release-notes' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Release Notes</a>
+                                    </td>
+                                {% endif %}
                                 {% if transaction.expected == transaction.paid %}
                                     {% if transaction.is_complete == True %}
                                         <td><i class="fa fa-check-square-o" style="font-size:25px;margin-left: 25px; color:rgb(0, 225, 255)"></i></td>
@@ -107,11 +107,7 @@
                                                     </div>
                                                 </td>
                                             {% else %}
-                                                {% if transaction.release_note %}
-                                                    <td>Released</td>
-                                                {% else %}
                                                     <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">Release Note</button></td>
-                                                {% endif %}
                                             {% endif %}
                                         {% else %}
                                             <td>
@@ -138,11 +134,10 @@
                                                     </div>
                                                 </td>
                                             {% else %}
-                                                {% if transaction.release_note %}
-                                                    <td>Released</td>
-                                                {%else%}
+                                                
+                                                
                                                     <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">Release Note</button></td>
-                                                {% endif %}
+                                                
                                             {% endif %}
                                             {% endif %}
                                     {% else %}

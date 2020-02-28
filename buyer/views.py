@@ -889,11 +889,11 @@ def delivery_note(request, id):
     if request.method == 'POST':
         payment = AccountHistory.objects.filter(id=id).first()
         if payment is not None:
-            account_history.delivery_note = request.FILES.get('d_note')
-            account_history.save()
+            payment.delivery_note = request.FILES.get('d_note')
+            payment.save()
             
             messages.success(request, 'Delivery note successfully uploaded')
-            return redirect('buyer:transactions')
+            return redirect(f'/buyer/payment_release_notes/{payment.transaction.id}')
         else:
             pass
 
@@ -905,7 +905,7 @@ def download_release_note(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document Not Found')
-        return redirect('buyer:transactions')
+        return redirect(f'/buyer:ayment_release_notes/{payment.transaction.id}')
     return response
 
 
