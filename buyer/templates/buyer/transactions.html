@@ -51,14 +51,12 @@
                             <th>Depot</th>
                             <th>PickUp Address</th>
                             <th>Fuel</th>
-                            <th>Transport Fee</th>
-                            <th>Expected</th>
-                            <th>Paid</th>
+                            <th>Expected & Paid</th>
                             <th>Status</th>
-                            <th>Contact Person</th>
+                            <!-- <th>Contact Person</th> -->
                             <th>Banking Details</th>
                             <th>Payments</th>
-                            <th>Action</th>
+                            <th>Upload Payment Proof</th>
                             <th>Rating</th>
                             <th>Activity</th>
                         </tr>
@@ -74,49 +72,45 @@
                                     <td>N/A</td>
                                 {% endif %}
                                 <td class="name truncate">{{transaction.offer.request.fuel_type}} {{transaction.offer.quantity}}L @ {{transaction.offer.price}}</td>
-                                {% if transaction.offer.transport_fee != None %}
-                                <td class="">
-                                    {{transaction.offer.transport_fee}}
-                                </td>
-                                {% else %}
-                                <td>N/A</td>
-                                {% endif %}
-                                <td class="name truncate">{{transaction.expected}}</td>
-                                <td class="name truncate">{{transaction.paid}}</td>
-                                {% if transaction.is_complete == True %}
-                                    <td><p style="color:rgb(0, 68, 255)">Complete</p></td>
-                                {% else %}
-                                    <td><p style="color:rgb(22, 20, 20)">Incomplete</p></td>
-                                {% endif %}
+
                                 <td>
 
                                     <!--call modal-->
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{transaction.id}}">
+                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#expected{{transaction.id}}">
                                         <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
                                     </button>
                                     <!--view details-->
-                                    <div class="modal fade modal-success in" id="view{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal fade modal-success in" id="expected{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header" style="background-color: #009688; color: white">
-                                                    <span class="modal-title" id="exampleModalLabel">Details For {{ transaction.supplier.company.name }} Contact Person</span>
+                                                    <span class="modal-title" id="exampleModalLabel">Expected & Paid</span>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="row">
-                                                        <!--name-->
+                                                        <!--expected-->
                                                         <div class="col-md-12">
-                                                            <h4>Name &nbsp;&nbsp; : &nbsp;&nbsp; {{ transaction.supplier.first_name }} {{ transaction.supplier.last_name }}</h4>
+                                                            <h4>Expected &nbsp;&nbsp; : &nbsp;&nbsp; {{transaction.expected}}</h4>
                                                         </div>
-                                                        <!--email-->
-                                                        <div class="col-md-12">
-                                                            <h4>Email &nbsp;&nbsp; : &nbsp;&nbsp; {{ transaction.supplier.email}}</h4>
+                                                        {% if transaction.offer.delivery_method == 'DELIVERY' %}
+                                                         <!--transport-->
+                                                         <div class="col-md-12">
+                                                            <h4>Transport Fee &nbsp;&nbsp; : &nbsp;&nbsp;  {{transaction.offer.transport_fee}}</h4>
                                                         </div>
-                                                        <!--phone-->
+                                
+                                                        {% else %}
+                                                         <!--transport-->
+                                                         <div class="col-md-12">
+                                                            <h4>Transport Fee &nbsp;&nbsp; : &nbsp;&nbsp;  N/A</h4>
+                                                        </div>
+                                                        {% endif %}
+                                                       
+                                                        <!--paid-->
                                                         <div class="col-md-12">
-                                                            <h4>Phone &nbsp;&nbsp; : &nbsp;&nbsp; {{ transaction.supplier.phone_number }}</h4>
+                                                            <h4>Paid &nbsp;&nbsp; : &nbsp;&nbsp; {{transaction.paid}}</h4>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -125,6 +119,13 @@
                                     </div>
 
                                 </td>
+                                
+                                {% if transaction.is_complete == True %}
+                                    <td><p style="color:rgb(0, 68, 255)">Complete</p></td>
+                                {% else %}
+                                    <td><p style="color:rgb(22, 20, 20)">Incomplete</p></td>
+                                {% endif %}
+
                                 <td>
 
                                     <!--call modal-->
@@ -185,7 +186,7 @@
                                 {% endif %}
                             {% else %}
                                 <td><a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#proof_{{transaction.id}}">
-                                    <i class="fa fa-upload" style="font-size:20px"></i> Payment Proof</a></td>
+                                    <i class="fa fa-upload" style="font-size:20px"></i> Payment </a></td>
                             {% endif %}
                                 <td>
                                     {% if transaction.is_complete and not transaction.review %}
