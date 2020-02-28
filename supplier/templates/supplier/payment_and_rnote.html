@@ -225,16 +225,16 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header" style="background-color: #009688; color: white">
-                                        <span class="modal-title" id="exampleModalLabel">Upload Delivery Note</span>
+                                        <span class="modal-title" id="exampleModalLabel">Upload Release Note</span>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
 
-                                        <form method="POST" action="{% url 'supplier:payment-and-release-notes' payment.transaction.id %}" enctype="multipart/form-data">
+                                        <form method="POST" action="{% url 'supplier:release-note' payment.transaction.id %}" enctype="multipart/form-data">
                                             {% csrf_token %}
-                                            <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="d_note" class="form-control-file" id="exampleFormControlFile1" required>
+                                            <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="release_note" class="form-control-file" id="exampleFormControlFile1" required>
                                             <br>
                                             <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
 
