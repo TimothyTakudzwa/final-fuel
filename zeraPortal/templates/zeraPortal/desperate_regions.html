@@ -97,4 +97,34 @@
         </div>
     </section>
 
+    <section class="content">
+        <div class="col-xs-12 col-sm-12 lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="veKF9LUXFI">
+            <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="veKF9LUXFI" data-index="0">
+                <div class="panel-heading ui-sortable-handle">
+                    <div class="panel-title" style="max-width: calc(100% - 180px);">
+                        <h4>Map Of Desperate Regions</h4>
+                    </div>
+                <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="editTitle" data-tooltip="Edit title" data-toggle="tooltip" data-title="Edit title" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-pencil"></i><span class="control-title">Edit title</span></a></li><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="reload" data-tooltip="Reload" data-toggle="tooltip" data-title="Reload" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-reload"></i><span class="control-title">Reload</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li><li><a data-func="close" data-tooltip="Close" data-toggle="tooltip" data-title="Close" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-close"></i><span class="control-title">Close</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
+                <div class="panel-body">
+                    <div class="embed-container">
+                        <div class="mapouter">
+                            <div class="gmap_canvas">
+                                <iframe width="500" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q={% for location, place in mapping.items %} {% for region, deficit in regions.items %} {% if location == region %} {{place}}{% endif %}{% endfor %}{% endfor %}&hl=es&z=14&amp;output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0">
+                                </iframe>
+                            </div>
+                            <style>
+                            .mapouter{
+                                position:center;text-align:right;height:700px;width:1000px;
+                                }
+                            .gmap_canvas {
+                                overflow:hidden;background:none!important;height:700px;width:1000px;
+                                }
+                            </style>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 {% endblock %}
