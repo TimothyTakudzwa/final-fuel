@@ -161,6 +161,12 @@
                                 <button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">View Schedule</button>
                                 </div>
                             </td>
+                            {% elif payment.release_note != None %}
+                            <td>
+                                <div class="btn-group">
+                                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:download_release_note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
+                                </div>
+                            </td>
                             {% else %}
                             <td>Pending</td>
                             {% endif %}

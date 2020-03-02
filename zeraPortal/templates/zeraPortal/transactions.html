@@ -80,12 +80,20 @@
                                 {% else %}
                                 <td><p style="color:rgb(22, 20, 20)">Incomplete</p></td>
                                 {% endif %}
+
+                                {% if transaction.offer.delivery_method == 'DELIVERY' %}
                                 <td>
                                     <div class="btn-group">
-                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'zeraPortal:payment_and_schedules' transaction.id %}"><i class="fa fa-eye" style="font-size:20px;color:rgb(0, 225, 255)"></i> Payments & Schedules</a>
-    
+                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'zeraPortal:payment_and_schedules' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Schedules</a>
                                     </div>
                                 </td>
+                                {% else %}
+                                <td>
+                                    <div class="btn-group">
+                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'zeraPortal:payment_and_schedules' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Release Notes</a>
+                                    </div>
+                                </td>
+                                {% endif %}
                                 
                                 <td>
                                     <div class="text-center">

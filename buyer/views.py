@@ -905,7 +905,7 @@ def download_release_note(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document Not Found')
-        return redirect(f'/buyer:ayment_release_notes/{payment.transaction.id}')
+        return redirect(f'/buyer:ayment_release_notes/{document.transaction.id}')
     return response
 
 

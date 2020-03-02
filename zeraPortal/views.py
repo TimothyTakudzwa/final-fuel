@@ -142,6 +142,18 @@ def sordactions(request, id):
     return render(request, 'zeraPortal/sord_actions.html', {'sord_number': sord_number, 'sord_actions': sord_actions})
 
 
+def download_release_note(request,id):
+    document = AccountHistory.objects.filter(id=id).first()
+    if document:
+        filename = document.release_note.name.split('/')[-1]
+        response = HttpResponse(document.release_note, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect(f'/buyer:ayment_release_notes/{document.transaction.id}')
+    return response
+
+
 def transactions(request, id):
     today = datetime.now().strftime("%m/%d/%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
