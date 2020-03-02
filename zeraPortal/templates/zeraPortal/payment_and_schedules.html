@@ -230,10 +230,17 @@
                                                     <lable><b>Amount Paid:</b></lable>
                                                     &nbsp;{{payment.value }}
                                                 </div>
+                                                {% if payment.delivery_schedule != None %}
                                                 <div class="form-group col-md-6">
                                                     <lable><b>Transport Charge:</b></lable>
                                                     &nbsp;{{payment.value| sub:payment.delivery_schedule.amount_for_fuel}}
                                                 </div>
+                                                {% else %}
+                                                <div class="form-group col-md-6">
+                                                    <lable><b>Transport Charge:</b></lable>
+                                                    &nbsp;{{payment.value}}
+                                                </div>
+                                                {% endif %}
                                             </div>
                                             <div class="row">
                                             <div class="form-group col-md-6">
