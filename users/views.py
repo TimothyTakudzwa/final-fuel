@@ -839,8 +839,8 @@ def suppliers_list(request):
     form1 = SupplierContactForm()
     form = DepotContactForm()
 
-    subsidiaries = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
-    depots = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company).all()
+    subsidiaries = Subsidiaries.objects.filter(is_depot=False).filter(is_active=True).filter(company=request.user.company).all()
+    depots = Subsidiaries.objects.filter(is_depot=True).filter(is_active=True).filter(company=request.user.company).all()
     form1.fields['service_station'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in subsidiaries]
     form.fields['depot'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in depots]
 
