@@ -1314,7 +1314,7 @@ def suppliers_delete(request, sid):
         messages.success(request, 'user does not exists')
         return redirect('users:suppliers_list')
 
-
+# DO NOT DELETE DEPOT STAFF MANAGEMENT VIEWS!!!!!!!!!!!
 @login_required()
 def delete_depot_staff(request, id):
     supplier = User.objects.filter(id=id).first()
