@@ -25,7 +25,8 @@ urlpatterns = [
     path('view_confirmation_doc/<int:id>', views.view_confirmation_doc, name='view_confirmation_doc'),
     path('view_supplier_doc/<int:id>', views.view_supplier_doc, name='view_supplier_doc'),
     path('suspicious_behavior/', views.suspicious_behavior, name='suspicious_behavior'),
-    path('desperate-regions/', views.desperate_regions, name='desperate-regions')
+    path('desperate-regions/', views.desperate_regions, name='desperate-regions'),
+    path('download_release_note/<int:id>', views.download_release_note, name='download_release_note')
     
     
     
