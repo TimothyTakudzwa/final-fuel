@@ -39,8 +39,13 @@
                 <div class="text-center">
 
                 <button class="btn btn-success btn-small" data-toggle="modal" data-target="#new_user">
-                    Add User
+                    Add Station User
                 </button>
+
+                <button class="btn btn-info btn-md" data-toggle="modal" data-target="#new_depot_user">
+                    Add Depot User
+                </button>
+
                 </div>
 
                 <div class="modal fade modal-success in" id="new_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -94,12 +99,64 @@
                     </div>
                 </div>
 
+                <div class="modal fade modal-success in" id="new_depot_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document" style="margin: 0;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <span class="modal-title" id="exampleModalLabel">Add User </span>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            
+                            <div class="modal-body">
+
+                                {% load crispy_forms_tags %}
+                                <form action="{% url 'users:depot_staff' %}" method="POST">
+                                    <div class="row">
+                                        <div class="form-group col-md-6 mb-0">
+                                            {{ form.first_name|as_crispy_field }}
+                                        </div>
+                                        <div class="form-group col-md-6 mb-0">
+                                            {{ form.last_name|as_crispy_field }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-6 mb-0">
+                                            {{ form.phone_number|as_crispy_field }}
+                                        </div>
+                                        <div class="form-group col-md-6 mb-0">
+                                            {{ form.email|as_crispy_field }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-6 mb-0">
+                                            {{ form.depot|as_crispy_field }}
+                                        </div>
+                                        
+                                        <div class="form-group col-md-6 mb-0">
+                                        </div>
+                                    </div> 
+                                    {% csrf_token %}
+                                        <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                            <button type="button" class="btn btn-secondary col-sm-6"
+                                                data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary col-sm-6">Add User Profile</button>
+                                        </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
         </div>
 
         {% if suppliers %}
-            <div class="mt-3 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+              
+        <div class="mt-3 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0" style="width:95%">
                 <div class="panel-heading ui-sortable-handle">
                     <div class="btn-group">
                         <h4>{{request.user.company.name}} Staff</h4>
@@ -124,7 +181,8 @@
                             <th>Station</th>
                             <th>Phone</th>
                             <th>Email</th>
-                            <th>Action</th>
+                            <th style="wid">Action</th>
+                            <th>User Type</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -133,16 +191,30 @@
                                 <td>{{supplier.first_name}} {{supplier.last_name}}</td>
 
                                 <td>{{supplier.username}}</td>
-                                <td>{{supplier.subsidiary_name}}</td>
+                                <td>{{supplier.subsidiary.name}}</td>
                                 <td>{{supplier.phone_number}}</td>
                                 <td>{{supplier.email}}</td>
                                 <td style="width: 33%;">
                                     <div class="btn-group">
+
+                                    {% if supplier.subsidiary.is_depot %}
+                                        <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_depot_{{supplier.id}}">Edit</button>
+                                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete_depot_{{supplier.id}}">Delete</button>
+
+                                        
+                                    {% else %}
                                         <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_{{supplier.id}}">Edit</button>
                                         <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete_{{supplier.id}}">Delete</button>
                                         <!--<a href="{% url 'users:supplier_user_create' supplier.id %}" class="btn btn-info btn-sm">More Details</a>-->
-
+                                    {% endif %}
                                     </div>
+                                </td>
+                                <td>
+                                    {% if supplier.subsidiary.is_depot %}
+                                        Depot Staff
+                                    {% else %}    
+                                        Station Staff
+                                    {% endif %}
                                 </td>
 
 
@@ -173,7 +245,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Supplier Edit Modal -->
+                                <!-- Station User Edit Modal -->
                                 <div class="modal fade modal-success in" id="edit_{{supplier.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document" style="margin: 0;">
                                         <div class="modal-content">
@@ -222,8 +294,56 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Depot User Edit Modal -->
+                                <div class="modal fade modal-success in" id="edit_depot_{{supplier.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document" style="margin: 0;">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
 
-                                <!-- Supplier Delete Modal -->
+                                                <span class="modal-title" id="exampleModalLabel">Edit {{supplier.company.name|title}} </span>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{% url 'users:edit_depot_rep' supplier.id %}" method="POST">
+                                                    {% csrf_token %}
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                        <lable>First Name</lable>
+                                                        <input type="text" name="first_name" class="form-control"  value="{{ supplier.first_name}}" required/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <lable>Last Name</lable>
+                                                        <input type="text" name="last_name" class="form-control"  value="{{ supplier.last_name}}" required/>
+                                                    </div>
+                                                    </div>
+                                                    <div class="row">
+
+                                                    <div class="form-group col-md-6">
+                                                        <lable>Email</lable>
+                                                        <input type="email" name="email" class="form-control"  value="{{ supplier.email}}" required/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <lable>Phone Number</lable>
+                                                        <input type="telephone" name="phone_number" class="form-control"  value="{{ supplier.phone_number}}" required/>
+                                                    </div>
+                                                    </div>
+                                                        
+                                                        <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                                            <button type="button" class="btn btn-secondary col-sm-6"
+                                                                data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary col-sm-6">Add User Profile</button>
+                                                        </div>
+
+                                                </form>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Station User Delete Modal -->
                                 <div class="modal fade modal-success in" id="delete_{{supplier.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document" style="margin: 0;">
                                         <div class="modal-content">
@@ -242,6 +362,38 @@
                                                     <div class="modal-footer">
 
                                                         <button class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">No</button> <button class="btn btn-primary" type="submit">Yes</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Depot User Delete Modal -->
+                                <div class="modal fade modal-success in" id="delete_depot_{{supplier.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document"  style="margin: 0;">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <span class="modal-title" id="exampleModalLabel">Delete {{supplier.username|title}} </span>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                {% load crispy_forms_tags %}
+                                                <form action="{% url 'users:delete_depot_staff' supplier.id %}" method="POST">
+                                                    {{ delete_form }}
+                                                    {% csrf_token %}
+                                                    <p> Are You Sure You Want To Delete {{ supplier.username|title }}?</p>
+
+                                                    <div class="modal-footer">
+                                                        <div>
+
+                                                            
+                                        <button type="button" class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">No</button>
+                                                            
+                                                            <button class="btn btn-primary" type="submit">Yes</button>
+                                                        </div>
                                                     </div>
                                                 </form>
                                             </div>

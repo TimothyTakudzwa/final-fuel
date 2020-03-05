@@ -184,13 +184,13 @@
                             </a>
                         </li>
                         <li class="{% if request.path == '/users/suppliers/' %} active {% endif %}">
-                            <a href="{% url 'users:suppliers_list' %}"><i class="fa fa-sitemap"></i><span>Station Staff</span>
+                            <a href="{% url 'users:suppliers_list' %}"><i class="fa fa-sitemap"></i><span>Staff Management</span>
                             </a>
                         </li>
-                        <li class="{% if request.path == '/users/depot_staff/' %} active {% endif %}">
+                        <!-- <li class="{% if request.path == '/users/depot_staff/' %} active {% endif %}">
                             <a href="{% url 'users:depot_staff' %}"><i class="fa fa-address-card"></i><span>Depot Staff</span>
                             </a>
-                        </li>
+                        </li> -->
                         <li class="{% if request.path == '/users/audit_trail/' %} active {% endif %}">
                             <a href="{% url 'users:audit_trail' %}"><i class="fa fa-money"></i><span>Audit Trail</span>
                             </a>

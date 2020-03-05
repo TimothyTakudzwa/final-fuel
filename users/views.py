@@ -833,19 +833,24 @@ def stations(request):
 
 @login_required()
 def suppliers_list(request):
-    suppliers = User.objects.filter(company=request.user.company).filter(user_type='SS_SUPPLIER').all()
+    suppliers = User.objects.filter(company=request.user.company).all()
     if suppliers is not None:
         for supplier in suppliers:
             subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
             if subsidiary is not None:
-                supplier.subsidiary_name = subsidiary.name
+                supplier.subsidiary = subsidiary
             else:
                 pass
     else:
         suppliers = None
     form1 = SupplierContactForm()
-    subsidiaries = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
+    form = DepotContactForm()
+
+    subsidiaries = Subsidiaries.objects.filter(is_depot=False).filter(is_active=True).filter(company=request.user.company).all()
+    depots = Subsidiaries.objects.filter(is_depot=True).filter(is_active=True).filter(company=request.user.company).all()
     form1.fields['service_station'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in subsidiaries]
+    form.fields['depot'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in depots]
+
     if request.method == 'POST':
         form1 = SupplierContactForm(request.POST)
         first_name = request.POST.get('first_name')
@@ -874,8 +879,42 @@ def suppliers_list(request):
                 user.save()
             else:
                 messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+
+        form = DepotContactForm(request.POST)
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        sup = User.objects.filter(email=email).first()
+        if sup is not None:
+            messages.warning(request, f"{sup.email} already used in the system, please use a different email")
+            return redirect('users:suppliers_list')
+
+        password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+        phone_number = request.POST.get('phone_number')
+        subsidiary_id = request.POST.get('depot')
+        full_name = first_name + " " + last_name
+        i = 0
+        username = initial_username = first_name[0] + last_name
+        while User.objects.filter(username=username.lower()).exists():
+            username = initial_username + str(i)
+            i += 1
+        user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
+                                   first_name=first_name, last_name=last_name, user_type='SUPPLIER',
+                                   company=request.user.company, email=email, password=password,
+                                   phone_number=phone_number)
+        if message_is_send(request, user):
+            if user.is_active:
+                # messages.success(request, "You have been registered succesfully")
+                user.stage = 'menu'
+                user.save()
+
+                # return render(request, 'buyer/email_send.html')
+            else:
+                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+                # return render(request, 'buyer/email_send.html')
+        # messages.success(request, f"{username.lower()} Registered as Depot Rep Successfully")
         return redirect('users:suppliers_list')
-    return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1})
+    return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1, 'form':form})
 
 
 def get_pdf(request):
@@ -1289,10 +1328,10 @@ def delete_depot_staff(request, id):
     if request.method == 'POST':
         supplier.delete()
         messages.success(request, f"{supplier.username} deleted successfully")
-        return redirect('users:depot_staff')
+        return redirect('users:suppliers_list')
     else:
         messages.success(request, 'user does not exists')
-        return redirect('users:depot_staff')
+        return redirect('users:suppliers_list')
 
 
 @login_required()
@@ -1373,7 +1412,7 @@ def depot_staff(request):
         sup = User.objects.filter(email=email).first()
         if sup is not None:
             messages.warning(request, f"{sup.email} already used in the system, please use a different email")
-            return redirect('users:depot_staff')
+            return redirect('users:suppliers_list')
 
         password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
         phone_number = request.POST.get('phone_number')
@@ -1399,7 +1438,7 @@ def depot_staff(request):
                 messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
                 # return render(request, 'buyer/email_send.html')
         # messages.success(request, f"{username.lower()} Registered as Depot Rep Successfully")
-        return redirect('users:depot_staff')
+        return redirect('users:suppliers_list')
     '''
     else:
         messages.warning(request, f"The username has already been,please use another username to register")
@@ -1537,11 +1576,11 @@ def edit_depot_rep(request, id):
             user_update.phone_number = request.POST['phone_number']
             user_update.save()
             messages.success(request, 'User profile updated successfully')
-            return redirect('users:depot_staff')
+            return redirect('users:suppliers_list')
 
         else:
             messages.success(request, 'user does not exists')
-            return redirect('users:depot_staff')
+            return redirect('users:suppliers_list')
 
 
 def company_profile(request):
