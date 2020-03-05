@@ -47,11 +47,12 @@ def dashboard(request):
             name = request.POST.get('company_name')
             city = request.POST.get('city')
             address = request.POST.get('address')
-            destination_bank = request.POST.get('destination_bank')
-            iban_number = request.POST.get('iban_number')
+            vat_number = request.POST.get('vat_number')
+            contact_person = request.POST.get('contact_person')
             account_number = request.POST.get('account_number')
-            new_company = Company.objects.create(name=name, city=city, address=address, license_number=license_number, destination_bank=destination_bank,
-                                iban_number=iban_number, account_number=account_number, company_type='SUPPLIER', is_active=True)
+            phone_number = request.POST.get('phone_number')
+            new_company = Company.objects.create(name=name, city=city, address=address, license_number=license_number, vat_number=vat_number,
+                                contact_person=contact_person, account_number=account_number, company_type='SUPPLIER', phone_number=phone_number, is_active=True)
             new_company.save()
             CompanyFuelUpdate.objects.create(company=new_company)
             messages.success(request, 'Company successfully registered')
