@@ -210,10 +210,42 @@ def company_subsidiaries(request, id):
     company = Company.objects.get(id=id)
     for subsidiary in subsidiaries:
         subsidiary.fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
-        if subsidiary.license_num.strip() == "":
-            subsidiary.license_num = None
+        # if subsidiary.license_num.strip() == "":
+        #     subsidiary.license_num = None
     return render(request, 'zeraPortal/company_subsidiaries.html', {'subsidiaries':subsidiaries, 'company':company})
 
+def download_application(request, id):
+    subsidiary = Subsidiaries.objects.filter(id=id).first()
+    if subsidiary:
+        filename = subsidiary.application_form.name.split('/')[-1]
+        response = HttpResponse(subsidiary.application_form, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
+    return response
+
+def download_fire_brigade_doc(request, id):
+    subsidiary = Subsidiaries.objects.filter(id=id).first()
+    if subsidiary:
+        filename = subsidiary.fire_brigade.name.split('/')[-1]
+        response = HttpResponse(subsidiary.fire_brigade, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
+    return response
+
+def download_ema(request, id):
+    subsidiary = Subsidiaries.objects.filter(id=id).first()
+    if subsidiary:
+        filename = subsidiary.ema.name.split('/')[-1]
+        response = HttpResponse(subsidiary.ema, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
+    return response
 
 def subsidiaries(request):
     subsidiaries = Subsidiaries.objects.all()
@@ -264,6 +296,7 @@ def add_licence(request, id):
         check_license = Subsidiaries.objects.filter(license_num=license_num).exists()
         if not check_license:
             subsidiary.license_num = license_num
+            subsidiary.is_active = True
             subsidiary.save()
             messages.success(request, f'{subsidiary.name} Approved Successfully')
             return redirect('zeraPortal:subsidiaries')
