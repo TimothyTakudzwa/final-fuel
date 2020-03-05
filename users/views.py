@@ -82,7 +82,7 @@ def allocate(request):
     company_total_diesel_capacity = '{:,}'.format(company_total_diesel_capacity)
     company_total_petrol_capacity = '{:,}'.format(company_total_petrol_capacity)
 
-    subs = Subsidiaries.objects.filter(company=request.user.company).all()
+    subs = Subsidiaries.objects.filter(company=request.user.company, is_active=True).all()
     for sub in subs:
         allocates.append(SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first())
     allocations = FuelAllocation.objects.filter(company=request.user.company).all()
@@ -786,9 +786,7 @@ def stations(request):
         location = request.POST['location']
         destination_bank = request.POST['destination_bank']
         account_number = request.POST['account_number']
-        license_num = request.POST['licence']
         praz_reg_num = request.POST['praz']
-        bp_num = request.POST['bp']
         vat = request.POST['vat']
         if request.POST['is_depot'] == "Service Station":
             is_depot = False
@@ -796,24 +794,33 @@ def stations(request):
             is_depot = True
         opening_time = request.POST['opening_time']
         closing_time = request.POST['closing_time']
-        cash = request.POST['cash']
-        usd = request.POST['usd']
-        swipe = request.POST['swipe']
-        ecocash = request.POST['ecocash']
-        subsidiary = Subsidiaries.objects.create(license_num=license_num, praz_reg_num=praz_reg_num, bp_num=bp_num,
+        if request.POST['new'] == "New":
+            application_form = request.FILES.get('application_form')
+            fire_brigade = request.FILES.get('fire_brigade')
+            ema = request.FILES.get('ema')
+            is_active = False
+            license_num = None
+        else:
+            is_active = True
+            license_num = request.POST['licence']
+            application_form = None
+            fire_brigade = None
+            ema = None
+       
+        subsidiary = Subsidiaries.objects.create(is_active=is_active, application_form=application_form, fire_brigade=fire_brigade, ema=ema, license_num=license_num, praz_reg_num=praz_reg_num,
                                                  vat=vat, account_number=account_number,
                                                  destination_bank=destination_bank, city=city, location=location,
                                                  company=request.user.company, name=name, is_depot=is_depot,
                                                  opening_time=opening_time, closing_time=closing_time)
         subsidiary.save()
         if request.POST['is_depot'] == "Service Station":
-            fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=subsidiary, cash=cash, swipe=swipe, ecocash=ecocash,
+            fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=subsidiary,
                                                               limit=2000)
             fuel_update.save()
             messages.success(request, 'Subsidiary Created Successfully')
             return redirect('users:stations')
         else:
-            fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=subsidiary, cash=cash, swipe=swipe, ecocash=ecocash,
+            fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=subsidiary,
                                                               limit=2000)
             fuel_update.save()
             messages.success(request, 'Subsidiary Created Successfully')

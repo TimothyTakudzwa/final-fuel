@@ -334,6 +334,33 @@
                     
                     
                     </script>
+
+<script>
+    $(document).ready(function () {
+    $('#new').show();
+    $('#license').show();
+    $('#application_form').hide();
+    $('#fire_brigade').hide();
+    $('#ema').hide();
+    
+    
+    $('#new').change(function () {
+    if ($('#new option:selected').text() == "Existing") {
+    $('#license').show();
+    $('#application_form').hide();
+    $('#fire_brigade').hide();
+    $('#ema').hide();
+    
+    }
+    else if ($('#new option:selected').text() == "New") {
+    $('#license').hide();
+    $('#application_form').show();
+    $('#fire_brigade').show();
+    $('#ema').show();
+    }
+     });
+        });
+    </script>
  <div class="modal fade modal-success in" id="new_sub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document" style="margin: 0;">
        <div class="modal-content">
@@ -456,23 +483,45 @@
                        
                        <div class="row">
                           
-                        <div class="form-group col-md-6">
-                            <label><b>Licence Number</b></label>
-                            <input type="text" name="licence" class="form-control" value=" " />
+                        <div class="form-group col-md-6" name="new" id="new">
+                            <label><b>New / Existing</b></label>
+                            <select class="form-control" name="new">
+                                <option >Select ---</option>
+                                <option >New</option>
+                                <option >Existing</option>
+                            </select>
                         </div>
                
                    
-                    <div class="form-group col-md-6">
-                        <label>PRAZ Reg Number</label>
-                        <input type="text" name="praz" class="form-control" value=" " />
+                        <div class="form-group col-md-6" name="license" id="license">
+                            <label><b>Licence Number</b></label>
+                            <input type="text" name="licence" class="form-control" value=" " />
+                        </div>
+                   </div>
+                
+                    <div class="row">
+                          
+                        <div class="form-group col-md-4" name="application_form" id="application_form">
+                            <label>Application Form</label>
+                            <input type="file" accept=".pdf, .doc,.docx" name="application_form" class="form-control-file" id="exampleFormControlFile1">
+                        </div>
+               
+                   
+                    <div class="form-group col-md-4" name="fire_brigade" id="fire_brigade">
+                        <label>Fire Brigade</label>
+                        <input type="file" accept=".pdf, .doc,.docx" name="fire_brigade" class="form-control-file" id="exampleFormControlFile1">
+                    </div>
+                    <div class="form-group col-md-4" name="ema" id="ema">
+                        <label>EMA</label>
+                        <input type="file" accept=".pdf, .doc,.docx" name="ema" class="form-control-file" id="exampleFormControlFile1">
                     </div>
                 </div>
 
                 <div class="row">
                           
                     <div class="form-group col-md-6">
-                        <label><b>BP Number</b></label>
-                        <input type="text" name="bp" class="form-control" value=" " />
+                        <label>PRAZ Reg Number</label>
+                        <input type="text" name="praz" class="form-control" value=" " />
                     </div>
            
                
@@ -482,7 +531,7 @@
                 </div>
             </div>
 
-                   <div class="row">
+                   <!-- <div class="row">
                            <div class="col-md-6">
                              {{sub_create_form.cash|as_crispy_field}}
                            </div>
@@ -497,7 +546,7 @@
                            <div class="col-md-6">
                              {{sub_create_form.ecocash|as_crispy_field}}
                            </div>
-                           </div>
+                           </div> -->
 
                     <div class="row">
                    <div class="form-group col-md-6">

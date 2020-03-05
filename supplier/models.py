@@ -27,6 +27,9 @@ class Subsidiaries(models.Model):
     bp_num = models.CharField(max_length=150,blank=True,null=True)
     vat = models.CharField(max_length=150,blank=True,null=True)
     is_active = models.BooleanField(default=False)
+    ema = models.FileField(upload_to='subsidiary_docs', blank=True, null=True)
+    fire_brigade = models.FileField(upload_to='subsidiary_docs', blank=True, null=True)
+    application_form = models.FileField(upload_to='subsidiary_docs', blank=True, null=True)
     
 
 
