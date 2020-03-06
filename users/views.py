@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.db.models import Count
 from django.http import HttpResponse
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import get_template
 from django.template.loader import render_to_string
@@ -833,7 +834,7 @@ def stations(request):
 
 @login_required()
 def suppliers_list(request):
-    suppliers = User.objects.filter(company=request.user.company).all()
+    suppliers = User.objects.filter(company=request.user.company).filter(~Q(user_type='S_ADMIN')).all()
     if suppliers is not None:
         for supplier in suppliers:
             subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
