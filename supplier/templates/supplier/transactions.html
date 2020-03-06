@@ -122,7 +122,7 @@
                                         {% if transaction.proof_of_payment_approved == False %}
                                             <td>
                                                 <div class="btn-group">
-                                                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-proof' transaction.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a>
+                                                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-proof' transaction.id %}" > <i class="fa fa-download" style="font-size:15px"></i> Payment Proof</a>
                                                     <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" data-target="#approve{{transaction.id}}" >Approve</a>
                                                 </div>
                                             </td>

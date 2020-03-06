@@ -127,13 +127,13 @@
                         <tr style="background-color: gray;color: white;">
                             <th>Company Name</th>
                             <th>Depot</th>
+                            <th>Supplier Rating</th>
                             <th>Payment Type</th>
                             <th>Petrol Price</th>
                             <th>Diesel Price</th>
                             <th>Petrol Quantity</th>
                             <th>Diesel Quantity</th>
                             <th>Updated on</th>
-                            <th>Rating/5</th>
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -147,24 +147,7 @@
                                 <td>
                                     {{data.depot}}
                                 </td>
-                                <td>
-                                    {{data.payment_type}}
-                                </td>
-                                <td>
-                                    {{data.petrol_price}}
-                                </td>
-                                <td>
-                                    {{data.diesel_price}}
-                                </td>
-                                <td>
-                                    {{data.petrol_quantity}}
-                                </td>
-                                <td>
-                                    {{data.diesel_quantity}}
-                                </td>
-                                <td>
-                                    {{data.last_updated}}
-                                </td>
+
                                 <td>
                                     
                                     {% if data.rating == 0%}
@@ -193,6 +176,26 @@
 
                                     
                                 </td>
+
+                                <td>
+                                    {{data.payment_type}}
+                                </td>
+                                <td>
+                                    {{data.petrol_price}}
+                                </td>
+                                <td>
+                                    {{data.diesel_price}}
+                                </td>
+                                <td>
+                                    {{data.petrol_quantity}}
+                                </td>
+                                <td>
+                                    {{data.diesel_quantity}}
+                                </td>
+                                <td>
+                                    {{data.last_updated}}
+                                </td>
+                                
                                 <td>
 
                                     <button class="btn btn-primary btn-sm" data-toggle="modal"
