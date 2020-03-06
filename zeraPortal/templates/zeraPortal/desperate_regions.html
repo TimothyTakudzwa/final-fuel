@@ -11,10 +11,10 @@
              </span>
             </div>
         </form>
-        <div class="header-icon">
+        <!-- <div class="header-icon">
             <i class="fa fa-sticky-note"></i>
-        </div>
-        <div class="header-title">
+        </div> -->
+        <div class="header-title" style="margin-left: 0px;">
             <h1> ZERA  Portal</h1>
             <small>Desperate Regions</small>
 
@@ -43,7 +43,7 @@
                         <tr>
                             <th>Region</th>
                             <th>Deficit <em>(L)</em> </th>
-                            <th>Action</th>
+                            <!-- <th>Action</th> -->
                         </tr>
                         </thead>
                         <tbody>
@@ -51,13 +51,13 @@
                             <tr>
                                 <td>{{ region }}</td>
                                 <td>{{ deficit }}</td>
-                                <td>
+                                <!-- <td>
                                     <div class="text-center">
                                         <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{ forloop.counter }}">
                                             View On Map
                                         </button>
                                     </div>
-                                    <!--map modal-->
+                                    <!--map modal--
                                     <div class="modal fade modal-success in" id="view{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document" >
                                             <div class="modal-content">
@@ -87,7 +87,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </td>
+                                </td> -->
                             </tr>
                         {% endfor %}
                         </tbody>
