@@ -372,7 +372,7 @@
            <div class="modal-body">
 
                {% load crispy_forms_tags %}
-               <form action="{% url 'users:stations' %}" method="POST">
+               <form action="{% url 'users:stations' %}" method="POST" enctype="multipart/form-data">
                    {% csrf_token %}
                    <div class="row">
                    <div class="form-group col-md-6">
@@ -531,23 +531,6 @@
                 </div>
             </div>
 
-                   <!-- <div class="row">
-                           <div class="col-md-6">
-                             {{sub_create_form.cash|as_crispy_field}}
-                           </div>
-                           <div class="col-md-6">
-                             {{sub_create_form.usd|as_crispy_field}}
-                           </div>
-                         </div>
-                         <div class="row">
-                           <div class="col-md-6">
-                             {{sub_create_form.swipe|as_crispy_field}}
-                           </div>
-                           <div class="col-md-6">
-                             {{sub_create_form.ecocash|as_crispy_field}}
-                           </div>
-                           </div> -->
-
                     <div class="row">
                    <div class="form-group col-md-6">
                        <label>Opening Time</label>
@@ -564,12 +547,7 @@
                            <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
                        </div>
                </form>
-               <!-- <div class="modal-footer row col-md-12">
-                   <button type="button" class="btn" style="background-color: lightgray; color: #333;width: 35%;" data-dismiss="modal">Close</button>
-   
-                   <button style="width: 50%;" class="btn btn-primary"
-                       type="submit">Add</button>
-               </div>  -->
+              
 
        </div>
    </div>

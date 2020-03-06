@@ -26,7 +26,10 @@ urlpatterns = [
     path('view_supplier_doc/<int:id>', views.view_supplier_doc, name='view_supplier_doc'),
     path('suspicious_behavior/', views.suspicious_behavior, name='suspicious_behavior'),
     path('desperate-regions/', views.desperate_regions, name='desperate-regions'),
-    path('download_release_note/<int:id>', views.download_release_note, name='download_release_note')
+    path('download_release_note/<int:id>', views.download_release_note, name='download_release_note'),
+    path('download_application/<int:id>', views.download_application, name='download_application'),
+    path('download_fire_brigade_doc/<int:id>', views.download_fire_brigade_doc, name='download_fire_brigade_doc'),
+    path('download_ema/<int:id>', views.download_ema, name='download_ema')
     
     
     

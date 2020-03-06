@@ -86,7 +86,7 @@
                             {% if subsidiary.license_num != None %}
                             <td>{{subsidiary.license_num}}</td>
                             {% else %}
-                            <td>-</td>
+                            <td><b style="margin-left: 26px;">--</b></td>
                             {% endif %}
                             <td>{{subsidiary.fuel.diesel_quantity}}</td>
                             <td>{{subsidiary.fuel.petrol_quantity}}</td>
@@ -104,7 +104,7 @@
                                     {% endif %}
                                     {% else %}
                                     <button class="btn btn-primary btn-sm" data-toggle="modal"
-                                        data-target="#approve_{{subsidiary.id}}">Add Licence</button>
+                                        data-target="#approve_{{subsidiary.id}}">Approve & Add Licence</button>
                                     {% endif %}
                                     
 
@@ -226,11 +226,23 @@
                                    {% csrf_token %}
                                   
                                   
-                                   <div class="form-group col-md-6">
+                                   <div class="form-group col-md-12">
                                        <label>Licence Number</label>
                                        <input type="text" name="license_num" class="form-control" required/>
                                    </div>
-                                
+                                   <div class="form-group col-md-12">
+                                    <label>Application Form</label>
+                                    <a class="btn btn-info btn-sm" href="{% url 'zeraPortal:download_application' subsidiary.id %}" >Download</a>
+                                  </div>
+                                  <div class="form-group col-md-12">
+                                    <label>Fire Brigade Doc</label>
+                                    <a class="btn btn-info btn-sm" href="{% url 'zeraPortal:download_fire_brigade_doc' subsidiary.id %}" >Download</a>
+                                  </div>
+                                  <div class="form-group col-md-12">
+                                    <label>EMA Approval Doc</label>
+                                    <a class="btn btn-info btn-sm" href="{% url 'zeraPortal:download_ema' subsidiary.id %}" >Download</a>
+                                  </div>
+                                  
                                
                            <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
                                <button type="button" class="btn btn-secondary col-sm-6"
