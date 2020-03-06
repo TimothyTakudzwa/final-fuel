@@ -211,8 +211,7 @@ def company_subsidiaries(request, id):
     company = Company.objects.get(id=id)
     for subsidiary in subsidiaries:
         subsidiary.fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
-        # if subsidiary.license_num.strip() == "":
-        #     subsidiary.license_num = None
+       
     return render(request, 'zeraPortal/company_subsidiaries.html', {'subsidiaries':subsidiaries, 'company':company})
 
 def download_application(request, id):
@@ -252,8 +251,7 @@ def subsidiaries(request):
     subsidiaries = Subsidiaries.objects.all()
     for subsidiary in subsidiaries:
         subsidiary.fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
-        # if subsidiary.license_num.strip() == "":
-        #     subsidiary.license_num = None
+       
     return render(request, 'zeraPortal/subsidiaries.html', {'subsidiaries':subsidiaries})
 
 
@@ -266,10 +264,10 @@ def change_licence(request, id):
             subsidiary.license_num = license_num
             subsidiary.save()
             messages.success(request, f'{subsidiary.name} License updated successfully')
-            return redirect('zeraPortal:subsidiaries')
+            return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
         else:
             messages.warning(request, 'License number already exists!!')
-            return redirect('zeraPortal:subsidiaries')
+            return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
 
 
 def block_licence(request, id):
@@ -278,7 +276,7 @@ def block_licence(request, id):
         subsidiary.is_active = False
         subsidiary.save()
         messages.info(request, f'{subsidiary.name} License Blocked')
-        return redirect('zeraPortal:subsidiaries')
+        return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
 
 
 def unblock_licence(request, id):
@@ -287,7 +285,7 @@ def unblock_licence(request, id):
         subsidiary.is_active = True
         subsidiary.save()
         messages.success(request, f'{subsidiary.name} License unblocked successfully')
-        return redirect('zeraPortal:subsidiaries')
+        return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
 
 
 def add_licence(request, id):
@@ -300,10 +298,10 @@ def add_licence(request, id):
             subsidiary.is_active = True
             subsidiary.save()
             messages.success(request, f'{subsidiary.name} Approved Successfully')
-            return redirect('zeraPortal:subsidiaries')
+            return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
         else:
             messages.warning(request, 'License number already exists!!')
-            return redirect('zeraPortal:subsidiaries')
+            return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
 
 
 def report_generator(request):

@@ -178,23 +178,31 @@
                         <tr>
                             <th>Full Name</th>
                             <th>Username</th>
-                            <th>Station</th>
+                            <th>Subsidiary</th>
+                            <th>Type</th>
                             <th>Phone</th>
                             <th>Email</th>
-                            <th style="wid">Action</th>
-                            <th>User Type</th>
+                            <th>Action</th>
+                            
                         </tr>
                         </thead>
                         <tbody>
                         {% for supplier in suppliers %}
                             <tr>
-                                <td>{{supplier.first_name}} {{supplier.last_name}}</td>
+                                <td style="width: 15%;">{{supplier.first_name}} {{supplier.last_name}}</td>
 
                                 <td>{{supplier.username}}</td>
                                 <td>{{supplier.subsidiary.name}}</td>
+                                <td>
+                                    {% if supplier.subsidiary.is_depot %}
+                                        Depot 
+                                    {% else %}    
+                                        Service Station 
+                                    {% endif %}
+                                </td>
                                 <td>{{supplier.phone_number}}</td>
                                 <td>{{supplier.email}}</td>
-                                <td style="width: 33%;">
+                                <td>
                                     <div class="btn-group">
 
                                     {% if supplier.subsidiary.is_depot %}
@@ -209,13 +217,7 @@
                                     {% endif %}
                                     </div>
                                 </td>
-                                <td>
-                                    {% if supplier.subsidiary.is_depot %}
-                                        Depot Staff
-                                    {% else %}    
-                                        Station Staff
-                                    {% endif %}
-                                </td>
+                               
 
 
                                 <div class="modal fade" id="{{supplier.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
