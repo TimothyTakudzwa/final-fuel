@@ -14,10 +14,10 @@
             </span>
             </div>
         </form>
-        <div class="header-icon">
+        <!-- <div class="header-icon">
             <i class="fa fa-handshake-o"></i>
-        </div>
-        <div class="header-title">
+        </div> -->
+        <div class="header-title" style="margin-left: 0px;">
             <h1> Transactions</h1>
             <small> List of all completed transactions</small>
             <ol class="breadcrumb hidden-xs">
@@ -92,25 +92,25 @@
                                                 <div class="modal-body">
                                                     <div class="row">
                                                         <!--expected-->
-                                                        <div class="col-md-12">
-                                                            <h4>Expected &nbsp;&nbsp; : &nbsp;&nbsp; {{transaction.expected}}</h4>
+                                                        <div class="col-md-3">
+                                                            <h4 style="font-weight: lighter;font-size: 14px;">Expected &nbsp;&nbsp; : &nbsp;&nbsp; ${{transaction.expected|stringformat:".2f"}}</h4>
                                                         </div>
                                                         {% if transaction.offer.delivery_method == 'DELIVERY' %}
                                                          <!--transport-->
-                                                         <div class="col-md-12">
-                                                            <h4>Transport Fee &nbsp;&nbsp; : &nbsp;&nbsp;  {{transaction.offer.transport_fee}}</h4>
+                                                         <div class="col-md-3">
+                                                            <h4 style="font-weight: lighter;font-size: 14px;">Transport Fee &nbsp;&nbsp; : &nbsp;&nbsp;  ${{transaction.offer.transport_fee|stringformat:".2f"}}</h4>
                                                         </div>
                                 
                                                         {% else %}
                                                          <!--transport-->
-                                                         <div class="col-md-12">
-                                                            <h4>Transport Fee &nbsp;&nbsp; : &nbsp;&nbsp;  N/A</h4>
+                                                         <div class="col-md-3">
+                                                            <h4 style="font-weight: lighter;font-size: 14px;">Transport Fee &nbsp;&nbsp; : &nbsp;&nbsp;  N/A</h4>
                                                         </div>
                                                         {% endif %}
                                                        
                                                         <!--paid-->
-                                                        <div class="col-md-12">
-                                                            <h4>Paid &nbsp;&nbsp; : &nbsp;&nbsp; {{transaction.paid}}</h4>
+                                                        <div class="col-md-3">
+                                                            <h4 style="font-weight: lighter;font-size: 14px;">Paid &nbsp;&nbsp; : &nbsp;&nbsp; ${{transaction.paid|stringformat:".2f"}}</h4>
                                                         </div>
                                                     </div>
                                                 </div>
