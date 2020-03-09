@@ -78,6 +78,8 @@ class FuelRequest(models.Model):
     swipe = models.BooleanField(default=False)
     usd = models.BooleanField(default=False)
     private_mode = models.BooleanField(default=False)
+    transporter = models.CharField(max_length=150, blank=True, null=True)
+    truck_reg = models.CharField(max_length=150, blank=True, null=True)
 
     class Meta:
         ordering = ['date', 'time', 'name']
