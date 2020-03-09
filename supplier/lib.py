@@ -8,11 +8,17 @@ def get_customer_contributions(supplier_id, buyer_company):
     # buyer = User.objects.filter(id=buyer_id)
     total_transactions = Transaction.objects.filter(supplier=supplier)
     transactions_with_buyer = Transaction.objects.filter(supplier=supplier, buyer__company=buyer_company)
-    percentage = (float(transactions_with_buyer.count()/total_transactions.count())) * 100
+    try:
+        percentage = (float(transactions_with_buyer.count()/total_transactions.count())) * 100
+    except:
+        percentage = 0    
     percentage = str(percentage) + "%"
     cash_total_transactions = Transaction.objects.filter(supplier=supplier, is_complete=True)
     cash_transactions_with_buyer = Transaction.objects.filter(supplier=supplier, buyer__company=buyer_company, is_complete=True)
-    cash_percentage = cash_transactions_with_buyer.count()/cash_total_transactions.count()
+    try:
+        cash_percentage = cash_transactions_with_buyer.count()/cash_total_transactions.count()
+    except:
+        cash_percentage = 0
     cash_percentage = str(cash_percentage) + "%"
     return percentage, cash_percentage
 

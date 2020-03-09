@@ -306,7 +306,7 @@ aria-hidden="true">
      </div>
      <div class="col-sm-4">
          <lable>Fuel Price</lable>
-         <input type="number" step="0.01" name="price" class="form-control" value="{{req.offer_price}}" required/>
+         <input type="number" step="0.01" name="price" class="form-control" value="{{req.offer_price|stringformat:".2f"}}" required/>
      </div>
      </div>
 

@@ -61,14 +61,14 @@
                             <td>{{allocation.action}}</td>
                             {% if allocation.diesel_quantity != 0 %}
                             <td>{{allocation.diesel_quantity}}</td>
-                            <td>{{allocation.diesel_price}}</td>
+                            <td>{{allocation.diesel_price|stringformat:".2f"}}</td>
                             {% else %}
                             <td>N/A</td>
                             <td>N/A</td>
                             {% endif %}
                             {% if allocation.petrol_quantity != 0 %}
                             <td>{{allocation.petrol_quantity}}</td>
-                            <td>{{allocation.petrol_price}}</td>
+                            <td>{{allocation.petrol_price|stringformat:".2f"}}</td>
                             {% else %}
                             <td>N/A</td>
                             <td>N/A</td>
