@@ -689,7 +689,10 @@ def complete_transaction(request, id):
                 transaction.proof_of_payment_approved = True
                 transaction.paid += float(request.POST['received'])
                 transaction.paid_reserve = float(request.POST['received'])
-                transaction.fuel_money_reserve = float(request.POST['for_fuel'])
+                if transaction.offer.delivery_method == "DELIVERY":
+                    transaction.fuel_money_reserve = float(request.POST['received']) - float(request.POST['transport_charge'])
+                else:
+                    transaction.fuel_money_reserve = float(request.POST['received'])
                 transaction.save()
                 if transaction_quantity > fuel.petrol_quantity:
                     fuel_remainder = transaction_quantity - fuel.petrol_quantity
@@ -729,7 +732,10 @@ def complete_transaction(request, id):
                 transaction.proof_of_payment_approved = True
                 transaction.paid += float(request.POST['received'])
                 transaction.paid_reserve = float(request.POST['received'])
-                transaction.fuel_money_reserve = float(request.POST['for_fuel'])
+                if transaction.offer.delivery_method == "DELIVERY":
+                    transaction.fuel_money_reserve = float(request.POST['received']) - float(request.POST['transport_charge'])
+                else:
+                    transaction.fuel_money_reserve = float(request.POST['received'])
                 transaction.save()
                 if transaction_quantity > fuel.diesel_quantity:
                     fuel_remainder = transaction_quantity - fuel.diesel_quantity

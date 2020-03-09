@@ -52,13 +52,14 @@
                             <th>PickUp Address</th>
                             <th>Fuel</th>
                             <th>Expected & Paid</th>
+                            <th>Statement</th>
                             <th>Status</th>
                             <!-- <th>Contact Person</th> -->
                             <th>Banking Details</th>
                             <th>Payments</th>
                             <th>Upload Payment Proof</th>
                             <th>Rating</th>
-                            <th>Activity</th>
+                            
                         </tr>
                         </thead>
                         <tbody>
@@ -101,11 +102,7 @@
                                                             <h4 style="font-weight: lighter;font-size: 14px;">Transport Fee &nbsp;&nbsp; : &nbsp;&nbsp;  ${{transaction.offer.transport_fee|stringformat:".2f"}}</h4>
                                                         </div>
                                 
-                                                        {% else %}
-                                                         <!--transport-->
-                                                         <div class="col-md-3">
-                                                            <h4 style="font-weight: lighter;font-size: 14px;">Transport Fee &nbsp;&nbsp; : &nbsp;&nbsp;  N/A</h4>
-                                                        </div>
+                                        
                                                         {% endif %}
                                                        
                                                         <!--paid-->
@@ -119,6 +116,120 @@
                                     </div>
 
                                 </td>
+
+
+                <!--account statement with supplier-->
+                <td class="name truncate">
+                <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#activity{{ transaction.id }}"> <i class="fa fa-download" style="font-size:20px"></i> Statement
+                </button>
+
+
+                <!--statement modal-->
+                <div class="modal fade modal-success in" id="activity{{ transaction.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document" style="margin: 0;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <span class="modal-title" id="exampleModalLabel">Activity with {{ transaction.supplier.company.name }} </span>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="modal-body">
+
+                                <!--account details-->
+                                <div class="row">
+                                    <!--supplier-->
+                                    <div class="col-md-6">
+                                        <h2>Supplier</h2>
+                                        <!--name-->
+                                        <h5>{{ transaction.supplier.company.name }}</h5>
+                                        <!--address-->
+                                        <text class="text-muted">Address</text>
+                                        <h5>{{ transaction.supplier.company.address }}</h5>
+                                        <!--bank-->
+                                        <text class="text-muted">Bank</text>
+                                        <h5>{{ transaction.supplier.company.destination_bank }}</h5>
+                                        <!--account-->
+                                        <text class="text-muted">A/c</text>
+                                        <h5>{{ transaction.supplier.company.account_number }}</h5>
+                                        <!--vat number-->
+                                        <text class="text-muted">BPN</text>
+                                        <h5>{{ transaction.supplier.company.bp_num }}</h5>
+                                    </div>
+                                    <!--buyer-->
+                                    <div class="col-md-6">
+                                        <h2>Buyer</h2>
+                                        <!--name-->
+                                        <h5>{{ transaction.buyer.company.name }}</h5>
+                                        <!--address-->
+                                        <text class="text-muted">Address</text>
+                                        <h5>{{ transaction.buyer.company.address }}</h5>
+                                        <!--bank-->
+                                        <text class="text-muted">Bank</text>
+                                        <h5>{{ transaction.buyer.company.destination_bank }}</h5>
+                                        <!--account-->
+                                        <text class="text-muted">A/c</text>
+                                        <h5>{{ transaction.buyer.company.account_number }}</h5>
+                                        <!--vat number-->
+                                        <text class="text-muted">BPN</text>
+                                        <h5>{{ transaction.buyer.company.bp_num }}</h5>
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                                <!--statement details-->
+                                <div class="table-responsive">
+                                    <table id="fuel_updates" class="table table-striped table-bordered" style="width:100%">
+                                        <thead>
+                                        <tr>
+                                            <th class="custom-table">Date</th>
+                                            <th class="custom-table">Time</th>
+                                            <th class="custom-table">Sord Number</th>
+                                            <th class="custom-table">Quantity</th>
+                                            <th class="custom-table">Fuel Type</th>
+                                            <th class="custom-table">Price</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for t in all_transactions %}
+                                            {% if t.transaction.id == transaction.id %}
+                                                <tr>
+                                                <td>{{ t.transaction.date }}</td>
+                                                    <td>{{ t.transaction.time }}</td>
+                                                    <td>{{ t.sord_number }}L</td>
+                                                    <td>{{ t.transaction.offer.quantity }}L</td>
+                                                    <td>{{ t.transaction.offer.request.fuel_type }}</td>
+                                                    <td>${{ t.transaction.offer.price }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+
+
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" value="{{   transaction.buyer.company.id }}" name="buyer_id">
+                                        <input type="hidden" value="{{ transaction.supplier.company.id }}" name="supplier_id">
+                                        <input type="hidden" value="{{   transaction.buyer.username }}" name="buyer_name">
+                                        <button class="btn btn-info btn-md">
+                                            Generate Report
+                                        </button>
+
+                                    </form>
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </td>
                                 
                                 {% if transaction.is_complete == True %}
                                     <td><p style="color:rgb(0, 68, 255)">Complete</p></td>
@@ -149,6 +260,9 @@
                                                                 <!--name-->
                                                                 <div class="col-md-12">
                                                                     <h4>Bank Name &nbsp;&nbsp; : &nbsp;&nbsp; {{ subsidiary.destination_bank }}</h4>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <h4>Branch &nbsp;&nbsp; : &nbsp;&nbsp; {{ subsidiary.bank_branch }}</h4>
                                                                 </div>
                                                                 <!--account number-->
                                                                 <div class="col-md-12">
@@ -351,119 +465,7 @@
                                     <!--End Upload Document-->
 
 
-                                    <!--account statement with supplier-->
-                                <td class="name truncate">
-                                    <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#activity{{ transaction.id }}">
-                                        Activity
-                                    </button>
-
-
-                                    <!--statement modal-->
-                                    <div class="modal fade modal-success in" id="activity{{ transaction.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document" style="margin: 0;">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <span class="modal-title" id="exampleModalLabel">Activity with {{ transaction.supplier.company.name }} </span>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-
-                                                <div class="modal-body">
-
-                                                    <!--account details-->
-                                                    <div class="row">
-                                                        <!--supplier-->
-                                                        <div class="col-md-6">
-                                                            <h2>Supplier</h2>
-                                                            <!--name-->
-                                                            <h5>{{ transaction.supplier.company.name }}</h5>
-                                                            <!--address-->
-                                                            <text class="text-muted">Address</text>
-                                                            <h5>{{ transaction.supplier.company.address }}</h5>
-                                                            <!--bank-->
-                                                            <text class="text-muted">Bank</text>
-                                                            <h5>{{ transaction.supplier.company.destination_bank }}</h5>
-                                                            <!--account-->
-                                                            <text class="text-muted">A/c</text>
-                                                            <h5>{{ transaction.supplier.company.account_number }}</h5>
-                                                            <!--vat number-->
-                                                            <text class="text-muted">BPN</text>
-                                                            <h5>{{ transaction.supplier.company.bp_num }}</h5>
-                                                        </div>
-                                                        <!--buyer-->
-                                                        <div class="col-md-6">
-                                                            <h2>Buyer</h2>
-                                                            <!--name-->
-                                                            <h5>{{ transaction.buyer.company.name }}</h5>
-                                                            <!--address-->
-                                                            <text class="text-muted">Address</text>
-                                                            <h5>{{ transaction.buyer.company.address }}</h5>
-                                                            <!--bank-->
-                                                            <text class="text-muted">Bank</text>
-                                                            <h5>{{ transaction.buyer.company.destination_bank }}</h5>
-                                                            <!--account-->
-                                                            <text class="text-muted">A/c</text>
-                                                            <h5>{{ transaction.buyer.company.account_number }}</h5>
-                                                            <!--vat number-->
-                                                            <text class="text-muted">BPN</text>
-                                                            <h5>{{ transaction.buyer.company.bp_num }}</h5>
-                                                        </div>
-                                                    </div>
-
-                                                    <hr>
-
-                                                    <!--statement details-->
-                                                    <div class="table-responsive">
-                                                        <table id="fuel_updates" class="table table-striped table-bordered" style="width:100%">
-                                                            <thead>
-                                                            <tr>
-                                                                <th class="custom-table">Date</th>
-                                                                <th class="custom-table">Time</th>
-                                                                <th class="custom-table">Sord Number</th>
-                                                                <th class="custom-table">Quantity</th>
-                                                                <th class="custom-table">Fuel Type</th>
-                                                                <th class="custom-table">Price</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            {% for t in all_transactions %}
-                                                                {% if t.transaction.id == transaction.id %}
-                                                                    <tr>
-                                                                    <td>{{ t.transaction.date }}</td>
-                                                                        <td>{{ t.transaction.time }}</td>
-                                                                        <td>{{ t.sord_number }}L</td>
-                                                                        <td>{{ t.transaction.offer.quantity }}L</td>
-                                                                        <td>{{ t.transaction.offer.request.fuel_type }}</td>
-                                                                        <td>${{ t.transaction.offer.price }}</td>
-                                                                    </tr>
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                            </tbody>
-                                                        </table>
-
-
-                                                        <form method="POST">
-                                                            {% csrf_token %}
-                                                            <input type="hidden" value="{{   transaction.buyer.company.id }}" name="buyer_id">
-                                                            <input type="hidden" value="{{ transaction.supplier.company.id }}" name="supplier_id">
-                                                            <input type="hidden" value="{{   transaction.buyer.username }}" name="buyer_name">
-                                                            <button class="btn btn-info btn-md">
-                                                                Generate Report
-                                                            </button>
-
-                                                        </form>
-
-
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </td>
+             
                             </tr>
                         {%endfor%}
                         </tbody>

@@ -981,9 +981,9 @@ def upload_application(request, id):
         cr6 = request.FILES.get('cr6')
         cert_of_inco = request.FILES.get('cert_of_inco')
         tax_clearance = request.FILES.get('tax_clearance')
-        proof_of_payment = request.FILES.get('proof_of_payment')
+        proof_of_residence = request.FILES.get('proof_of_residence')
         Account.objects.create(supplier_company=supplier, buyer_company=buyer, application_document=application_form,
-                               id_document=ids, applied_by=request.user, proof_of_payment=proof_of_payment, cr14=cr14,
+                               id_document=ids, applied_by=request.user, proof_of_residence=proof_of_residence, cr14=cr14,
                                cr6=cr6, tax_clearance=tax_clearance, cert_of_inco=cert_of_inco)
         messages.success(request, 'Application successfully send')
     return redirect('accounts-status')

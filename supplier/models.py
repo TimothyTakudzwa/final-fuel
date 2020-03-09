@@ -30,6 +30,7 @@ class Subsidiaries(models.Model):
     ema = models.FileField(upload_to='subsidiary_docs', blank=True, null=True)
     fire_brigade = models.FileField(upload_to='subsidiary_docs', blank=True, null=True)
     application_form = models.FileField(upload_to='subsidiary_docs', blank=True, null=True)
+    bank_branch = models.CharField(max_length=500, null=True, blank=True)
     
 
 

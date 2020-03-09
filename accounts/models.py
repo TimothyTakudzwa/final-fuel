@@ -22,7 +22,7 @@ class Account(models.Model):
     cr6 = models.FileField(upload_to='id_documents', blank=True)
     cert_of_inco = models.FileField(upload_to='id_documents', blank=True)
     tax_clearance = models.FileField(upload_to='id_documents', blank=True)
-    proof_of_payment = models.FileField(upload_to='id_documents', blank=True)
+    proof_of_residence = models.FileField(upload_to='id_documents', blank=True)
 
     class Meta:
         ordering = ['date', 'time']

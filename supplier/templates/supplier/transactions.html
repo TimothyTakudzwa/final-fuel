@@ -387,23 +387,24 @@
 
                                                     <div class="form-group col-md-6">
                                                         <label>Expected Payment</label>
-                                                        <input type="text" name="expected" class="form-control" value="{{transaction.expected}}" disabled/>
+                                                        <input type="text" name="expected" class="form-control" value="${{transaction.expected|stringformat:.2f}}" disabled/>
                                                     </div>
                                                     <div class="form-group col-md-6">
-                                                        <label>Amount Received</label>
+                                                        <label>Total Received</label>
                                                         <input type="text" name="received" class="form-control"  value=" " required/>
                                                     </div>
                                                 </div>
                                                 <div class="row">
-
+                                                   {% if transaction.offer.delivery_method == 'DELIVERY' %}
                                                     <div class="form-group col-md-6">
                                                         <label>Transport Charge</label>
                                                         <input type="text" name="transport_charge" class="form-control"  required/>
                                                     </div>
-                                                    <div class="form-group col-md-6">
+                                                    {% endif %}
+                                                    <!-- <div class="form-group col-md-6">
                                                         <label>Amount for Fuel (Amount Received - Transport Charge)</label>
                                                         <input type="text" name="for_fuel" class="form-control"  value=" " required/>
-                                                    </div>
+                                                    </div> -->
                                                 </div>
 
 
