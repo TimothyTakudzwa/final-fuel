@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'zeraPortal.apps.ZeraportalConfig',
     'supplier.apps.SupplierConfig',
     'accounts.apps.AccountsConfig',
+    'noic.apps.NoicConfig',
     'finder.apps.FinderConfig',
     'notification.apps.NotificationConfig',
     'whatsapp.apps.WhatsappConfig',
