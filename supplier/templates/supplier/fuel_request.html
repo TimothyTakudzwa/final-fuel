@@ -155,7 +155,7 @@ aria-hidden="true">
     <div class=" row col-sm-12">
     <div class="col-sm-6">
         <label>Fuel Price</label>
-        <input type="number" step="0.01" name="price" class="form-control" value="{{req.price}}" required/>
+        <input type="number" step="0.01" name="price" class="form-control" value="{{req.price|stringformat:".2f"}}" required/>
     </div>
     <div class="col-sm-6">
       <label>Transport Fee</label>
@@ -195,7 +195,7 @@ aria-hidden="true">
       </div>
       <div class="col-sm-4">
           <label>Fuel Price</label>
-          <input type="number" step="0.01" name="price" class="form-control" value="{{req.price}}" required/>
+          <input type="number" step="0.01" name="price" class="form-control" value="{{req.price|stringformat:".2f"}}" required/>
       </div>
       </div>  
       <div class="form-group" name='choices'>                
@@ -270,11 +270,11 @@ aria-hidden="true">
      <div class=" row col-sm-12">
      <div class="col-sm-6">
          <lable>Fuel Price</lable>
-         <input type="number" step="0.01" name="price" class="form-control" value="{{req.offer_price}}" required/>
+         <input type="number" step="0.01" name="price" class="form-control" value="{{req.offer_price|stringformat:".2f"}}" required/>
      </div>
      <div class="col-sm-6">
       <lable>Transport Fee</lable>
-      <input type="number" step="0.01" name="transport" class="form-control" value="{{req.transport_fee}}" required/>
+      <input type="number" step="0.01" name="transport" class="form-control" value="{{req.transport_fee|stringformat:".2f"}}" required/>
   </div>
      </div>
 </div>
@@ -310,7 +310,7 @@ aria-hidden="true">
      </div>
      <div class="col-sm-4">
          <lable>Fuel Price</lable>
-         <input type="number" step="0.01" name="price" class="form-control" value="{{req.offer_price}}" required/>
+         <input type="number" step="0.01" name="price" class="form-control" value="{{req.offer_price|stringformat:".2f"}}" required/>
      </div>
      </div>
 

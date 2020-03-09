@@ -70,7 +70,7 @@
                                 <td>{{ transaction.buyer.company.name }}</td>
                                 <td>{{ transaction.offer.request.fuel_type|lower|capfirst }}</td>
                                 <td>{{ transaction.offer.quantity |intcomma}}</td>
-                                <td>{{ transaction.offer.price }}</td>
+                                <td>{{ transaction.offer.price|stringformat:".2f" }}</td>
                                 <td>{{ transaction.offer.quantity| mul:transaction.offer.price |intcomma}}</td>
                                 <td><a class="btn btn-primary btn-sm" href="{% url 'view_invoice' transaction.id %}" >Download</a></td>
                             </tr>
