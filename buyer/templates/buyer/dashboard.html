@@ -218,12 +218,16 @@
                                             $('#s_name1{{forloop.counter}}').attr('required', '');
                                             $('#s_number1{{forloop.counter}}').attr('required', '');
                                             $('#s_town1{{forloop.counter}}').attr('required', '');
+                                            $('#truck_reg1{{forloop.counter}}').hide();
+                                            $('#transporter1{{forloop.counter}}').hide();
                                         }
                                         else {
                                             $('#choices1{{forloop.counter}}').hide();
                                             $('#s_town1{{forloop.counter}}').removeAttr('required', '');
                                             $('#s_number1{{forloop.counter}}').removeAttr('required', '');
                                             $('#s_name1{{forloop.counter}}').removeAttr('required', '');
+                                            $('#truck_reg1{{forloop.counter}}').show();
+                                            $('#transporter1{{forloop.counter}}').show();
                                         }
                                     });
                                     $('#delivery_method{{forloop.counter}}').change(function () {
@@ -312,15 +316,15 @@
                                                     </div>
                                                 </div>
                                                 <div class="row form-group">
-                                                    <div class="col-sm-6">
+                                                    <div class="col-sm-6" id="transporter{{forloop.counter}}">
                                                         <label class="form-group">Transporter</label>
-                                                        <input type="text" class="form-control" name="transporter" id="transporter{{forloop.counter}}"
+                                                        <input type="text" class="form-control" name="transporter" 
                                                         aria-describedby="helpId" >
                                                     </div>
 
-                                                    <div class="col-sm-6">
-                                                        <label class="form-group">Truck Reg Num</label>
-                                                        <input type="text" class="form-control" name="truck_reg" id="truck_reg{{forloop.counter}}"
+                                                    <div class="col-sm-6" id="truck_reg{{forloop.counter}}">
+                                                        <label class="form-group">Vehicle Reg </label>
+                                                        <input type="text" class="form-control" name="truck_reg" 
                                                         aria-describedby="helpId">
                                                     </div>
                                                 </div>
@@ -425,6 +429,20 @@
                                                             </option>
                                                             <option value='DELIVERY'>Direct Delivery</option>
                                                         </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row form-group">
+                                                    <div class="col-sm-6" id="transporter1{{forloop.counter}}">
+                                                        <label class="form-group">Transporter</label>
+                                                        <input type="text" class="form-control" name="transporter" 
+                                                        aria-describedby="helpId" >
+                                                    </div>
+
+                                                    <div class="col-sm-6" id="truck_reg1{{forloop.counter}}">
+                                                        <label class="form-group">Vehicle Reg </label>
+                                                        <input type="text" class="form-control" name="truck_reg" 
+                                                        aria-describedby="helpId">
                                                     </div>
                                                 </div>
 
