@@ -19,6 +19,7 @@ urlpatterns = [
 
     path('buyer/', include('buyer.urls')),
     path('zeraPortal/', include(('zeraPortal.urls', 'zeraPortal'), namespace='zeraPortal')),
+    path('noic/', include(('noic.urls', 'noic'), namespace='noic')),
     path('api/', include('api.urls')),
     path('supplier/', include(('supplier.urls', 'supplier'), namespace='supplier')),
     path('serviceStation/', include(('serviceStation.urls', 'serviceStation'), namespace='serviceStation')),

@@ -79,7 +79,7 @@
                 </span>
                 <span class="logo-lg">
                     <!--<b>Admin</b>H-admin-->
-                    <h3>FMS Zim</h3>
+                    <h3>FMS Zim - NOIC</h3>
                 </span>
             </a>
             <!-- Header Navbar -->
@@ -129,6 +129,11 @@
                 <ul class="sidebar-menu">
                     <li class="nav-item {% if request.path == '/noic/dashboard/' %} active {% endif %}">
                         <a href="{% url 'noic:dashboard' %}"><i class="fa fa-book"></i><span>Dashboard</span>
+                        </a>
+                    </li>
+                   
+                    <li class="nav-item {% if request.path == '/noic/orders/' %} active {% endif %}">
+                        <a href="{% url 'noic:orders' %}"><i class="fa fa-book"></i><span>Company Orders</span>
                         </a>
                     </li>
                    
@@ -207,31 +212,10 @@
 
     <script>
         $(document).ready(function () {
-            $('#companies').DataTable();
+            $('#fuel_request').DataTable();
         });
     </script>
-    <script>
-        $(document).ready(function () {
-            $('#subsidiaries').DataTable();
-        });
-    </script>
-
-<script>
-    $(document).ready(function () {
-        $('#company_fuel').DataTable();
-    });
-</script>
-
-<script>
-    $(document).ready(function () {
-        $('#transactions').DataTable();
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $('#payments').DataTable();
-    });
-</script>
+   
    <script>
         $(document).ready(function () {
             $('#allocations').DataTable();
