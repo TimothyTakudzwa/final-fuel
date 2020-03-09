@@ -208,6 +208,9 @@
                                 $(document).ready(function () {
                                     $('#choices{{forloop.counter}}').hide();
                                     $('#choices1{{forloop.counter}}').hide();
+                                    $('#truck_reg{{forloop.counter}}').show();
+                                    $('#transporter{{forloop.counter}}').show();
+                                    
 
                                     $('#delivery_method1{{forloop.counter}}').change(function () {
                                         if ($('#delivery_method1{{forloop.counter}} option:selected').text() == "Direct Delivery") {
@@ -229,12 +232,16 @@
                                             $('#s_name{{forloop.counter}}').attr('required', '');
                                             $('#s_number{{forloop.counter}}').attr('required', '');
                                             $('#s_town{{forloop.counter}}').attr('required', '');
+                                            $('#truck_reg{{forloop.counter}}').hide();
+                                            $('#transporter{{forloop.counter}}').hide();
                                         }
                                         else {
                                             $('#choices{{forloop.counter}}').hide();
                                             $('#s_town{{forloop.counter}}').removeAttr('required', '');
                                             $('#s_number{{forloop.counter}}').removeAttr('required', '');
                                             $('#s_name{{forloop.counter}}').removeAttr('required', '');
+                                            $('#truck_reg{{forloop.counter}}').show();
+                                            $('#transporter{{forloop.counter}}').show();
                                         }
                                     });
                                 });
@@ -302,6 +309,19 @@
                                                             <option value='SELF COLLECTION'>Self Collection</option>
                                                             <option value='DELIVERY'>Delivery</option>
                                                         </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row form-group">
+                                                    <div class="col-sm-6">
+                                                        <label class="form-group">Transporter</label>
+                                                        <input type="text" class="form-control" name="transporter" id="transporter{{forloop.counter}}"
+                                                        aria-describedby="helpId" >
+                                                    </div>
+
+                                                    <div class="col-sm-6">
+                                                        <label class="form-group">Truck Reg Num</label>
+                                                        <input type="text" class="form-control" name="truck_reg" id="truck_reg{{forloop.counter}}"
+                                                        aria-describedby="helpId">
                                                     </div>
                                                 </div>
                                                 <div class="form-group" name='choices' id='choices{{forloop.counter}}'>
