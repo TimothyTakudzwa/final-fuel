@@ -22,6 +22,7 @@ from .forms import AllocationForm, SupplierContactForm, UsersUploadForm, ReportF
 from .models import AuditTrail, SordActionsAuditTrail
 from buyer.models import *
 from supplier.models import *
+from national.models import Order
 from users.models import *
 from accounts.models import Account, AccountHistory
 from buyer.forms import *
@@ -2002,3 +2003,15 @@ def upload_users(request):
                 return response
 
     return render(request, 'users/upload_users.html', context=context)
+
+
+def place_order(request):
+    if request.method == 'POST':
+        company = request.user.company
+        quantity = request.POST['quantity']
+        currency = request.POST['currency']
+        fuel_type = request.POST['fuel_type']
+        proof_of_payment = request.FILES.get('proof_of_payment')
+        Order.objects.create(company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+        messages.success(request,'placed order successfully')
+        return redirect('users:allocate')

@@ -400,7 +400,8 @@ def dashboard(request):
                 if fuel_request_object.delivery_method.lower() == "delivery":
                     fuel_request_object.delivery_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
                 else:
-                    pass
+                    fuel_request_object.transporter = request.POST.get('transporter')
+                    fuel_request_object.truck_reg = request.POST.get('truck_reg')
                 fuel_request_object.storage_tanks = request.POST.get('storage_tanks')
                 fuel_request_object.pump_required = True if request.POST.get('pump_required') == "on" else False
                 fuel_request_object.dipping_stick_required = True if request.POST.get(
@@ -428,7 +429,8 @@ def dashboard(request):
                 if fuel_request_object.delivery_method.lower() == "delivery":
                     fuel_request_object.delivery_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
                 else:
-                    pass
+                    fuel_request_object.transporter = request.POST.get('transporter')
+                    fuel_request_object.truck_reg = request.POST.get('truck_reg')
                 fuel_request_object.storage_tanks = request.POST.get('storage_tanks')
                 fuel_request_object.pump_required = True if request.POST.get('pump_required') == "True" else False
                 fuel_request_object.dipping_stick_required = True if request.POST.get(
@@ -457,7 +459,8 @@ def dashboard(request):
                 if fuel_request_object.delivery_method.lower() == "delivery":
                     fuel_request_object.delivery_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
                 else:
-                    pass
+                    fuel_request_object.transporter = request.POST.get('transporter')
+                    fuel_request_object.truck_reg = request.POST.get('truck_reg')
                 fuel_request_object.storage_tanks = request.POST.get('storage_tanks')
                 fuel_request_object.pump_required = True if request.POST.get('pump_required') == "True" else False
                 fuel_request_object.dipping_stick_required = True if request.POST.get(

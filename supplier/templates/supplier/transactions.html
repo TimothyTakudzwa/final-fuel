@@ -127,11 +127,37 @@
                                                         <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" data-target="#approve{{transaction.id}}" >Approve</a>
                                                     </div>
                                                 </td>
-                                            {% else %}
-                                                {% if transaction.offer.delivery_method == 'DELIVERY' %}
-                                                    <td>
-                                                        <div class="btn-group">
-                                                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button>
+                                            {% else %}                              
+                                                
+                                                    <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">Release Note</button></td>
+                                                
+                                            {% endif %}
+                                            {% endif %}
+                                    {% else %}
+                                        <td>Proof of Payment Pending</td>
+                                    {% endif %}
+                                {% endif %}
+                                <td>
+
+                                    <!--call modal-->
+                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{transaction.id}}">
+                                        <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
+                                    </button>
+                                    <!--view details-->
+                                    <div class="modal fade modal-success in" id="view{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="background-color: #009688; color: white">
+                                                    <span class="modal-title" id="exampleModalLabel">Details For {{ transaction.buyer.company.name }} Contact Person</span>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <!--name-->
+                                                        <div class="col-md-12">
+                                                            <h4>Name &nbsp;&nbsp; : &nbsp;&nbsp; {{ transaction.buyer.first_name }} {{ transaction.supplier.last_name }}</h4>
                                                         </div>
                                                     </td>
                                                 {% else %}
@@ -370,6 +396,102 @@
                                 </div>
 
 
+                            <!--Release note modal-->
+                            <div class="modal fade modal-sucess in" id="release_note{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color: #009688; color: white">
+                                            <span class="modal-title" id="exampleModalLabel">Release Note</span>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="{% url 'supplier:release-note' transaction.id%}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <label>Location</label>
+                                                        <input type="text" name="location" class="form-control"  required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <label>Driver Name</label>
+                                                        <input type="text" name="driver_name" class="form-control"  required/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>Date</label>
+                                                        <input id="date_field" type="date" name="release_date" class="form-control"  required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <label>Physical Address</label>
+                                                        <input type="text" name="physical_address" class="form-control"  required/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>Proforma Number</label>
+                                                        <input id="text" type="date" name="proforma_number" class="form-control"  required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <label>Contact Name in Full</label>
+                                                        <input type="text" name="contact_name" class="form-control"  required/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>Vat Number</label>
+                                                        <input type="text" name="vat_number" class="form-control"  required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <label>Product</label>
+                                                        <input type="text" name="product" class="form-control"  required/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>Quantity</label>
+                                                        <input type="text" name="quantity" class="form-control"  required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <label>Transporter</label>
+                                                        <input type="text" name="transporter" class="form-control"  required/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>Driver's Name</label>
+                                                        <input type="text" name="driver" class="form-control"  required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <label>Truck Registration</label>
+                                                        <input type="text" name="truck_reg" class="form-control"  required/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>ID Number</label>
+                                                        <input type="text" name="id_number" class="form-control"  required/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <div class="row pull-left">
+
+                                                        <button type="submit" class="btn btn-primary col-sm-12" style="margin-left: 15px;">Create Schedule</button>
+                                                    </div>
+                                                </div>
+
+
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!--End release note modal-->
+
 
                                 <div class="modal fade modal-sucess in" id="approve{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
@@ -423,6 +545,22 @@
                                         </div>
                                     </div>
                                 </div>
+<<<<<<< HEAD
+=======
+                            </div>
+
+                            <!--Upload Release Note-->
+                            <!-- <div class="modal fade modal-sucess in" id="release_note{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color: #009688; color: white">
+                                            <span class="modal-title" id="exampleModalLabel">Upload Release Note</span>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+>>>>>>> d5fea14da32f79da66213e7344ea57d1d24b136b
 
                                 <!--Upload Release Note-->
                                 <div class="modal fade modal-sucess in" id="release_note{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -447,7 +585,12 @@
                                         </div>
                                     </div>
                                 </div>
+<<<<<<< HEAD
                                 <!--End Upload Document-->
+=======
+                            </div> -->
+                            <!--End Upload Document-->
+>>>>>>> d5fea14da32f79da66213e7344ea57d1d24b136b
 
                             {%endfor%}
                         {% endif %}    

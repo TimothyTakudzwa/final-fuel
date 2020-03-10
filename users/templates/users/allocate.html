@@ -94,14 +94,14 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <span class="modal-title" id="exampleModalLongTitle">Place Order<i
-                                            style="color:azure"><small style="color: rgba(5, 5, 5, 0.911);"> pay for fuel and upload proof of payment</small></i></span>
+                                            style="color:azure"><small style="color: rgba(5, 5, 5, 0.911);"> pay for fuel to NOIC and upload proof of payment</small></i></span>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div>
                                     {% load crispy_forms_tags %}
-                                    <form action="" method="POST" enctype="multipart/form-data">
+                                    <form action="{% url 'users:place_order' %}" method="POST" enctype="multipart/form-data">
                                         {% csrf_token %}
                                      
                                         <div class="form-group row col-sm-12" style="margin-top: 5%;">
@@ -123,6 +123,17 @@
                                             </div>
                                         </div>
                                         <div class=" form-group row col-sm-12">
+                                            <div class="col-sm-6">
+
+                                                <label><b style='color:#009688'>Currency</b></label>
+                                                <select class="form-control" name="currency">
+
+                                                    <option>RTGS</option>
+                                                    <option>USD</option>
+
+
+                                                </select>
+                                            </div>
                                             <div class="col-sm-6">
                                                 <label><b style='color:#009688'>Payment Proof</b></label>
                                                 <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="proof_of_payment" class="form-control-file" id="exampleFormControlFile1" required>

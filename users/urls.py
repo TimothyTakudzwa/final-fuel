@@ -51,6 +51,7 @@ urlpatterns = [
     path('approval/<int:id>', views.approve_applicant, name="approval"),
     path('decline_applicant/<int:id>', views.decline_applicant, name="decline_applicant"),
     path('edit_allocation/<int:id>', views.edit_allocation, name="edit_allocation"),
-    path('upload_users/', views.upload_users, name='upload_users')
+    path('upload_users/', views.upload_users, name='upload_users'),
+    path('place_order/', views.place_order, name='place_order')
 
 ]
