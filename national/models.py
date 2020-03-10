@@ -25,18 +25,19 @@ class NationalFuelUpdate(models.Model):
 
 class SordNationalAuditTrail(models.Model):
     date = models.DateField(auto_now_add=True)
-    sord_no =  models.CharField(max_length=100)
-    action_no = models.PositiveIntegerField()
-    action = models.CharField(max_length=150)
+    sord_no =  models.CharField(max_length=100, blank=True, null=True)
+    action_no = models.PositiveIntegerField(blank=True, null=True)
+    action = models.CharField(max_length=150, blank=True, null=True)
     fuel_type = models.CharField(max_length=150, blank=True, null=True)
     currency = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS')))
     quantity = models.FloatField(default=0.00)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     initial_quantity = models.FloatField(default=0.0)
     quantity_allocated = models.FloatField(default=0.0)
     end_quantity = models.FloatField(default=0.0)
-    allocated_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='allocated_by_national')
-    allocated_to = models.ForeignKey(Company, on_delete=models.DO_NOTHING, related_name='allocated_to_national')
-    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, related_name='company_allocation_national')
+    allocated_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='allocated_by_national', blank=True, null=True)
+    allocated_to = models.ForeignKey(Company, on_delete=models.DO_NOTHING, related_name='allocated_to_national', blank=True, null=True)
+    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, related_name='company_allocation_national', blank=True, null=True)
 
     def __str__(self):
         return f'{self.id} -- SordNationalAuditTrail'

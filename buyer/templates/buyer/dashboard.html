@@ -210,6 +210,8 @@
                                     $('#choices1{{forloop.counter}}').hide();
                                     $('#truck_reg{{forloop.counter}}').show();
                                     $('#transporter{{forloop.counter}}').show();
+                                    $('#driver{{forloop.counter}}').show();
+                                    $('#driver_id{{forloop.counter}}').show();
                                     
 
                                     $('#delivery_method1{{forloop.counter}}').change(function () {
@@ -220,6 +222,8 @@
                                             $('#s_town1{{forloop.counter}}').attr('required', '');
                                             $('#truck_reg1{{forloop.counter}}').hide();
                                             $('#transporter1{{forloop.counter}}').hide();
+                                            $('#driver1{{forloop.counter}}').hide();
+                                            $('#driver_id1{{forloop.counter}}').hide();
                                         }
                                         else {
                                             $('#choices1{{forloop.counter}}').hide();
@@ -228,6 +232,8 @@
                                             $('#s_name1{{forloop.counter}}').removeAttr('required', '');
                                             $('#truck_reg1{{forloop.counter}}').show();
                                             $('#transporter1{{forloop.counter}}').show();
+                                            $('#driver1{{forloop.counter}}').show();
+                                            $('#driver_id1{{forloop.counter}}').show();
                                         }
                                     });
                                     $('#delivery_method{{forloop.counter}}').change(function () {
@@ -238,6 +244,8 @@
                                             $('#s_town{{forloop.counter}}').attr('required', '');
                                             $('#truck_reg{{forloop.counter}}').hide();
                                             $('#transporter{{forloop.counter}}').hide();
+                                            $('#driver{{forloop.counter}}').hide();
+                                            $('#driver_id{{forloop.counter}}').hide();
                                         }
                                         else {
                                             $('#choices{{forloop.counter}}').hide();
@@ -246,6 +254,8 @@
                                             $('#s_name{{forloop.counter}}').removeAttr('required', '');
                                             $('#truck_reg{{forloop.counter}}').show();
                                             $('#transporter{{forloop.counter}}').show();
+                                            $('#driver{{forloop.counter}}').show();
+                                            $('#driver_id{{forloop.counter}}').show();
                                         }
                                     });
                                 });
@@ -328,6 +338,19 @@
                                                         aria-describedby="helpId">
                                                     </div>
                                                 </div>
+                                                <div class="row form-group">
+                                                    <div class="col-sm-6" id="driver{{forloop.counter}}">
+                                                        <label class="form-group">Driver</label>
+                                                        <input type="text" class="form-control" name="driver" 
+                                                        aria-describedby="helpId" >
+                                                    </div>
+
+                                                    <div class="col-sm-6" id="driver_id{{forloop.counter}}">
+                                                        <label class="form-group">Driver ID </label>
+                                                        <input type="text" class="form-control" name="driver_id" 
+                                                        aria-describedby="helpId">
+                                                    </div>
+                                                </div>
                                                 <div class="form-group" name='choices' id='choices{{forloop.counter}}'>
                                                     <label>Delivery Address</label>
                                                     <div class="row form-group">
@@ -386,6 +409,14 @@
                                     </div>
                                 </div>
                             </div>
+                            <script>
+                                $('body').click(function (event) {
+                                    if(!$(event.target).closest('#generic_request').length && !$(event.target).is('#generic_request')) {
+                                        $("#generic_request").modal('hide');
+                                    }
+                                          
+                                });
+                            </script>
                             <div class="modal fade modal-success in" id="make_deal{{data.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                           aria-hidden="true">
                           <div class="modal-dialog modal-notice">
@@ -442,6 +473,20 @@
                                                     <div class="col-sm-6" id="truck_reg1{{forloop.counter}}">
                                                         <label class="form-group">Vehicle Reg </label>
                                                         <input type="text" class="form-control" name="truck_reg" 
+                                                        aria-describedby="helpId">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row col-sm-12">
+                                                    <div class="col-sm-6" id="driver1{{forloop.counter}}">
+                                                        <label class="form-group">Driver</label>
+                                                        <input type="text" class="form-control" name="driver" 
+                                                        aria-describedby="helpId" >
+                                                    </div>
+
+                                                    <div class="col-sm-6" id="driver_id1{{forloop.counter}}">
+                                                        <label class="form-group">Driver ID </label>
+                                                        <input type="text" class="form-control" name="driver_id" 
                                                         aria-describedby="helpId">
                                                     </div>
                                                 </div>
@@ -516,6 +561,15 @@
 
 
                             <!-- end notice modal -->
+                            
+                            <script>
+                                $('body').click(function (event) {
+                                    if(!$(event.target).closest('#make_deal{{data.id}}').length && !$(event.target).is('#make_deal{{data.id}}')) {
+                                        $("#make_deal{{data.id}}").modal('hide');
+                                    }
+                                          
+                                });
+                            </script>
 
                         {% endfor %}
 
