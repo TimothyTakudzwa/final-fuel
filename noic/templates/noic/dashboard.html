@@ -62,10 +62,10 @@
             <tr>
 
                 <td><b style='color:#009688'>{{capacity.currency}} </b></td>
-                <td>{{capacity.unallocated_petrol}} Litres {% if capacity.unallocated_petrol < 1000 %} <i
+                <td>{{capacity.unallocated_petrol|intcomma}} Litres {% if capacity.unallocated_petrol < 1000 %} <i
                         class="material-icons text-danger">Petrol quantity too low</i>{% endif %}</td>
                 <td> {{capacity.petrol_price}}</td>
-                <td>{{capacity.unallocated_diesel}} Litres {% if capacity.unallocated_diesel < 1000 %} <i
+                <td>{{capacity.unallocated_diesel|intcomma}} Litres {% if capacity.unallocated_diesel < 1000 %} <i
                         class="material-icons text-danger">Diesel quantity too low</i>{% endif %}</td>
                 <td> {{capacity.diesel_price}}</td>
 
