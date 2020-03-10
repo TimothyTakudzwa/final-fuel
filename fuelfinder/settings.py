@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'supplier.apps.SupplierConfig',
     'accounts.apps.AccountsConfig',
     'noic.apps.NoicConfig',
+    'noicDepot.apps.NoicdepotConfig',
     'finder.apps.FinderConfig',
     'notification.apps.NotificationConfig',
     'whatsapp.apps.WhatsappConfig',
