@@ -34,6 +34,13 @@
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_sub" style="margin-bottom: 10px; margin-top: 10px;">Add Subsidiary </button>
 
         </div>
+        <script>
+            $('body').click(function (event) {
+                if(!$(event.target).closest('#new_sub').length && !$(event.target).is('#new_sub')) {
+                    $("#new_sub").modal('hide');
+                }        
+            });
+        </script>
         
     <div class="dropdown">
         <ul class="dropdown-menu dropdown-menu-right">
@@ -239,6 +246,16 @@
 
 
                         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                        <script>
+                            $('body').click(function (event) {
+                                if(!$(event.target).closest('#delete_{{station.id}}').length && !$(event.target).is('#delete_{{station.id}}')) {
+                                    $("#delete_{{station.id}}").modal('hide');
+                                }
+                                if(!$(event.target).closest('#edit_{{station.id}}').length && !$(event.target).is('#edit_{{station.id}}')) {
+                                    $("#edit_{{station.id}}").modal('hide');
+                                }         
+                            });
+                        </script>
                        
                         
  

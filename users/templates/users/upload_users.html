@@ -183,6 +183,14 @@
                                     </div>
                                 </div>
 
+                                <script>
+                                    $('body').click(function (event) {
+                                        if(!$(event.target).closest('#activity{{ account.id }}').length && !$(event.target).is('#activity{{ account.id }}')) {
+                                            $("#activity{{ account.id }}").modal('hide');
+                                        }        
+                                    });
+                                </script>
+
                             </td>
                         </tr>
                     {% endfor %}
@@ -224,6 +232,14 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            $('body').click(function (event) {
+                if(!$(event.target).closest('#new_user').length && !$(event.target).is('#new_user')) {
+                    $("#new_user").modal('hide');
+                }        
+            });
+        </script>
 
     </div>
 
