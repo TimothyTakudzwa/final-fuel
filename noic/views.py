@@ -195,20 +195,10 @@ def statistics(request):
 
 
 def report_generator(request):
-    return render(request, 'noic/reports.html')
 
-
-def profile(request):
-    user = request.user
-    return render(request, 'noic/profile.html', {'user':user})
-
-
-@login_required()
-def report_generator(request):
     '''View to dynamically render form tables based on different criteria'''
-    form = ReportForm()
-    allocations = requests = trans = stock = None
-    # trans = Transaction.objects.filter(supplier__company=request.user.company).all()
+    allocations = requests = orders = stock = None
+    # orders = Transaction.objects.filter(supplier__company=request.user.company).all()
     start_date = start = "December 1 2019"
     end_date = end = "January 1 2019"
 
@@ -227,39 +217,133 @@ def report_generator(request):
 
             requests = None
             allocations = None
-            trans = None
+            orders = None
+            revs = None
+            verified_companies=None
+            unverified_companies=None
+        if request.POST.get('report_type') == 'Orders':
+            orders = Order.objects.filter(date__range=[start_date, end_date])
+            print('I am in orders')
+            requests = None
+            allocations = None
+            revs = None
+            verified_companies=None
+            unverified_companies=None
+        if request.POST.get('report_type') == 'Requests':
+            requests = FuelRequest.objects.filter(date__range=[start_date, end_date])
+            print(f'__________________{requests}__________________________________')
+            orders = None
+            allocations = None
+            stock = None
+            revs = None
+            verified_companies=None
+            unverified_companies=None
+        if request.POST.get('report_type') == 'Companies - Verified':
+            v_companies = Company.objects.filter(is_verified=True)
+            verified_companies = []
+
+            for company in v_companies:
+                company.admin = User.objects.filter(company=company).first()
+                verified_companies.append(company)
+
+
+            print(f'__________________{verified_companies}__________________________________')
+            orders = None
+            allocations = None
+            stock = None
+            revs = None
+            unverified_companies=None
+        if request.POST.get('report_type') == 'Companies - Unverified':
+            uv_companies = Company.objects.filter(is_verified=False)
+            unverified_companies = []
+
+            for company in uv_companies:
+                company.admin = User.objects.filter(company=company).first()
+                unverified_companies.append(company)
+
+
+            print(f'__________________{unverified_companies}__________________________________')
+            orders = None
+            allocations = None
+            stock = None
+            revs = None
+            verified_companies=None
+        if request.POST.get('report_type') == 'Allocations':
+            print("__________________________I am in allocations____________________________")
+            allocations = NationalFuelUpdate.objects.all()
+            print(f'________________________________{allocations}__________________________')
+            requests = None
+            revs = None
+            stock = None
+            verified_companies=None
+            unverified_companies=None
+        start = start_date
+        end = end_date
+    return render(request, 'noic/reports.html')
+
+
+def profile(request):
+    user = request.user
+    return render(request, 'noic/profile.html', {'user':user})
+
+
+def report_generator(request):
+    '''View to dynamically render form tables based on different criteria'''
+    allocations = requests = orders = stock = None
+    # orders = Transaction.objects.filter(supplier__company=request.user.company).all()
+    start_date = start = "December 1 2019"
+    end_date = end = "January 1 2019"
+
+    if request.method == "POST":
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        if start_date:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            start_date = start_date.date()
+        report_type = request.POST.get('report_type')
+        if end_date:
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')
+            end_date = end_date.date()
+        if request.POST.get('report_type') == 'Stock':
+            stock = CompanyFuelUpdate.objects.filter(company=request.user.company).all()
+
+            requests = None
+            allocations = None
+            orders = None
             revs = None
         if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':
-            trans = Transaction.objects.filter(date__range=[start_date, end_date],
+            orders = Transaction.objects.filter(date__range=[start_date, end_date],
                                                supplier__company=request.user.company)
             requests = None
             allocations = None
             revs = None
 
             if request.POST.get('report_type') == 'Revenue':
-                trans = Transaction.objects.filter(date__range=[start_date, end_date],
+                orders = Transaction.objects.filter(date__range=[start_date, end_date],
                                                    supplier__company=request.user.company, is_complete=True)
                 revs = {}
                 total_revenue = 0
                 trans_no = 0
 
-                if trans:
-                    for tran in trans:
+                if orders:
+                    for tran in orders:
                         total_revenue += (tran.offer.request.amount * tran.offer.price)
                         trans_no += 1
                     revs['revenue'] = '${:,.2f}'.format(total_revenue)
 
                     revs['hits'] = trans_no
                     revs['date'] = datetime.today().strftime('%D')
-                trans = None
+                orders = None
 
             requests = None
             allocations = None
             stock = None
-        if request.POST.get('report_type') == 'Requests':
-            requests = FuelRequest.objects.filter(date__range=[start_date, end_date])
+        if request.POST.get('report_type') == 'Orders':
+            orders = Order.objects.filter(date__range=[start_date, end_date])
             print(f'__________________{requests}__________________________________')
-            trans = None
+            print(f'__________________I am in Orders__________________________________')
+
+            requests = None
             allocations = None
             stock = None
             revs = None
@@ -275,14 +359,14 @@ def report_generator(request):
 
         # revs = 0
         return render(request, 'noic/reports.html',
-                      {'trans': trans, 'requests': requests, 'allocations': allocations, 'form': form,
-                       'start': start, 'end': end, 'revs': revs, 'stock': stock})
+                      {'orders': orders, 'requests': requests, 'allocations': allocations,
+                       'start': start, 'end': end, 'stock': stock})
 
     show = False
-    print(trans)
+    print(orders)
     return render(request, 'noic/reports.html',
-                  {'trans': trans, 'requests': requests, 'allocations': allocations, 'form': form,
-                   'start': start_date, 'end': end_date, 'show': show, 'stock': stock})
+                  {'orders': orders, 'requests': requests, 'allocations': allocations,'start': start_date,
+                   'end': end_date, 'show': show, 'stock': stock})
 
 # @login_required()
 def statistics(request):
