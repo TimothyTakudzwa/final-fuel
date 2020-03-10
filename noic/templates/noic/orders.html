@@ -55,6 +55,7 @@
                     <th style="color: white;">Quantity</th>
                     <th style="color: white;">Fuel</th>
                     <th style="color: white;">Currency</th>
+                    <th style="color: white;">Payment</th>
                     <th style="color: white;">Proof of Payment</th>
                     <th style="color: white;">Action</th>
                 </tr>
@@ -68,6 +69,46 @@
                     <td>{{ order.quantity|intcomma }}</td>
                     <td>{{ order.fuel_type|lower|capfirst }}</td>
                     <td>{{ order.currency}}</td> 
+                    <td>
+
+                        <!--call modal-->
+                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#payment{{order.id}}">
+                            <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
+                        </button>
+                        <!--view details-->
+                        <div class="modal fade modal-success in" id="payment{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color: #009688; color: white">
+                                        <span class="modal-title" id="exampleModalLabel">Payment Details</span>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h4 style="font-weight: lighter;font-size: 14px;">Sub Total &nbsp;&nbsp; : &nbsp;&nbsp; ${{order.amount_paid}}</h4>
+                                            </div>
+                                        </div>
+                                        <div class="row"> 
+                                             <div class="col-md-12">
+                                                <h4 style="font-weight: lighter;font-size: 14px;">Duty &nbsp;&nbsp; : &nbsp;&nbsp;  ${{order.duty}}</h4>
+                                            </div>
+                                        </div>
+                    
+                            
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h4 style="font-weight: lighter;font-size: 14px;">Vat &nbsp;&nbsp; : &nbsp;&nbsp; ${{order.vat}}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </td>
 
                     {% if order.payment_approved %}
                     <td><b style="color: rgb(59, 59, 139);">Payment Approved</b></td>
