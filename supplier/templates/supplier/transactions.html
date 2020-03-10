@@ -66,389 +66,391 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for transaction in transactions %}
-                            <tr>
-                                <td></td>
-                                <td>{{ transaction.date }}</td>
-                                <td>{{ transaction.buyer.company.name }}</td>
-                                {% if transaction.offer.request.delivery_address != None %}
-                                    <td>{{transaction.offer.request.delivery_address}}</td>
-                                {% else %}
-                                    <td>N/A</td>
-                                {% endif %}
-                                <td>{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
-                                <!-- <td>{{ transaction.offer.quantity |intcomma}}</td>
-                                <td>{{ transaction.offer.price }}</td> -->
-                                <td>{{ transaction.expected}}</td>
-                                <td>{{ transaction.paid }}</td>
-                                {% if transaction.is_complete == True %}
-                                    <td><p style="color:rgb(0, 225, 255)">Complete</p></td>
-                                {% else %}
-                                    <td><p style="color:rgb(22, 20, 20)">Incomplete</p></td>
-                                {% endif %}
-                                {% if transaction.offer.delivery_method == 'DELIVERY' %}
-                                <td>
-                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'supplier:payment_history' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Schedules</a>
-                                </td>
-                                {% else %}
-                                    <td>
-                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'supplier:payment-and-release-notes' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Release Notes</a>
-                                    </td>
-                                {% endif %}
-                                {% if transaction.expected == transaction.paid %}
+                        {% if transactions %}    
+                            {% for transaction in transactions %}
+                                <tr>
+                                    <td></td>
+                                    <td>{{ transaction.date }}</td>
+                                    <td>{{ transaction.buyer.company.name }}</td>
+                                    {% if transaction.offer.request.delivery_address != None %}
+                                        <td>{{transaction.offer.request.delivery_address}}</td>
+                                    {% else %}
+                                        <td>N/A</td>
+                                    {% endif %}
+                                    <td>{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
+                                    <!-- <td>{{ transaction.offer.quantity |intcomma}}</td>
+                                    <td>{{ transaction.offer.price }}</td> -->
+                                    <td>{{ transaction.expected}}</td>
+                                    <td>{{ transaction.paid }}</td>
                                     {% if transaction.is_complete == True %}
-                                        <td><i class="fa fa-check-square-o" style="font-size:25px;margin-left: 25px; color:rgb(0, 225, 255)"></i></td>
+                                        <td><p style="color:rgb(0, 225, 255)">Complete</p></td>
+                                    {% else %}
+                                        <td><p style="color:rgb(22, 20, 20)">Incomplete</p></td>
+                                    {% endif %}
+                                    {% if transaction.offer.delivery_method == 'DELIVERY' %}
+                                    <td>
+                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'supplier:payment_history' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Schedules</a>
+                                    </td>
+                                    {% else %}
+                                        <td>
+                                            <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'supplier:payment-and-release-notes' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Release Notes</a>
+                                        </td>
+                                    {% endif %}
+                                    {% if transaction.expected == transaction.paid %}
+                                        {% if transaction.is_complete == True %}
+                                            <td><i class="fa fa-check-square-o" style="font-size:25px;margin-left: 25px; color:rgb(0, 225, 255)"></i></td>
+                                        {% else %}
+                                            {% if transaction.proof_of_payment %}
+                                                {% if transaction.offer.delivery_method == 'DELIVERY' %}
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button>
+                                                        </div>
+                                                    </td>
+                                                {% else %}
+                                                        <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">Release Note</button></td>
+                                                {% endif %}
+                                            {% else %}
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'supplier:mark_completion' transaction.id %}" >Complete</a>
+                                                    </div>
+                                                </td>
+                                            {% endif %}
+                                        {% endif %}
                                     {% else %}
                                         {% if transaction.proof_of_payment %}
-                                            {% if transaction.offer.delivery_method == 'DELIVERY' %}
+                                            {% if transaction.proof_of_payment_approved == False %}
                                                 <td>
                                                     <div class="btn-group">
-                                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button>
+                                                        <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-proof' transaction.id %}" > <i class="fa fa-download" style="font-size:15px"></i> Payment Proof</a>
+                                                        <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" data-target="#approve{{transaction.id}}" >Approve</a>
                                                     </div>
                                                 </td>
                                             {% else %}
-                                                    <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">Release Note</button></td>
-                                            {% endif %}
+                                                {% if transaction.offer.delivery_method == 'DELIVERY' %}
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button>
+                                                        </div>
+                                                    </td>
+                                                {% else %}
+                                                    
+                                                    
+                                                        <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">Release Note</button></td>
+                                                    
+                                                {% endif %}
+                                                {% endif %}
                                         {% else %}
-                                            <td>
-                                                <div class="btn-group">
-                                                    <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'supplier:mark_completion' transaction.id %}" >Complete</a>
-                                                </div>
-                                            </td>
+                                            <td>Proof of Payment Pending</td>
                                         {% endif %}
                                     {% endif %}
-                                {% else %}
-                                    {% if transaction.proof_of_payment %}
-                                        {% if transaction.proof_of_payment_approved == False %}
-                                            <td>
-                                                <div class="btn-group">
-                                                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-proof' transaction.id %}" > <i class="fa fa-download" style="font-size:15px"></i> Payment Proof</a>
-                                                    <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" data-target="#approve{{transaction.id}}" >Approve</a>
-                                                </div>
-                                            </td>
-                                        {% else %}
-                                            {% if transaction.offer.delivery_method == 'DELIVERY' %}
-                                                <td>
-                                                    <div class="btn-group">
-                                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button>
-                                                    </div>
-                                                </td>
-                                            {% else %}
-                                                
-                                                
-                                                    <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">Release Note</button></td>
-                                                
-                                            {% endif %}
-                                            {% endif %}
-                                    {% else %}
-                                        <td>Proof of Payment Pending</td>
-                                    {% endif %}
-                                {% endif %}
-                                <td>
+                                    <td>
 
-                                    <!--call modal-->
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{transaction.id}}">
-                                        <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
-                                    </button>
-                                    <!--view details-->
-                                    <div class="modal fade modal-success in" id="view{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header" style="background-color: #009688; color: white">
-                                                    <span class="modal-title" id="exampleModalLabel">Details For {{ transaction.buyer.company.name }} Contact Person</span>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="row">
-                                                        <!--name-->
-                                                        <div class="col-md-12">
-                                                            <h4>Name &nbsp;&nbsp; : &nbsp;&nbsp; {{ transaction.buyer.first_name }} {{ transaction.supplier.last_name }}</h4>
-                                                        </div>
-                                                        <!--email-->
-                                                        <div class="col-md-12">
-                                                            <h4>Email &nbsp;&nbsp; : &nbsp;&nbsp; {{ transaction.buyer.email}}</h4>
-                                                        </div>
-                                                        <!--phone-->
-                                                        <div class="col-md-12">
-                                                            <h4>Phone &nbsp;&nbsp; : &nbsp;&nbsp; {{ transaction.buyer.phone_number }}</h4>
+                                        <!--call modal-->
+                                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{transaction.id}}">
+                                            <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
+                                        </button>
+                                        <!--view details-->
+                                        <div class="modal fade modal-success in" id="view{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header" style="background-color: #009688; color: white">
+                                                        <span class="modal-title" id="exampleModalLabel">Details For {{ transaction.buyer.company.name }} Contact Person</span>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <!--name-->
+                                                            <div class="col-md-12">
+                                                                <h4>Name &nbsp;&nbsp; : &nbsp;&nbsp; {{ transaction.buyer.first_name }} {{ transaction.supplier.last_name }}</h4>
+                                                            </div>
+                                                            <!--email-->
+                                                            <div class="col-md-12">
+                                                                <h4>Email &nbsp;&nbsp; : &nbsp;&nbsp; {{ transaction.buyer.email}}</h4>
+                                                            </div>
+                                                            <!--phone-->
+                                                            <div class="col-md-12">
+                                                                <h4>Phone &nbsp;&nbsp; : &nbsp;&nbsp; {{ transaction.buyer.phone_number }}</h4>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                </td>
-                            </tr>
-                            <!--New Schedule Modal-->
-                            <div class="modal fade modal-success in" id="schedule{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                                 aria-hidden="true" style="overflow-y: initial !important;">
-                                <div class="modal-dialog modal-notice">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                            <span class="modal-title">Delivery Schedule</span>
-                                        </div>
-                                        <div class="modal-body" style="padding: 30px;height: 400px;overflow-y: auto;">
-                                            <div class="row" style="padding: 10px;">
-                                                <p class="col-md-6" style="font-weight: bold;">Delivery Date/Time: </p>
-                                                <p class="col-md-6">{{ transaction.delivery_sched.date }} | {{ transaction.delivery_sched.delivery_time }}</p>
+                                    </td>
+                                </tr>
+                                <!--New Schedule Modal-->
+                                <div class="modal fade modal-success in" id="schedule{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                    aria-hidden="true" style="overflow-y: initial !important;">
+                                    <div class="modal-dialog modal-notice">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                <span class="modal-title">Delivery Schedule</span>
                                             </div>
-                                            <div class="row" style="padding: 10px;">
-                                                <p class="col-md-6" style="font-weight: bold;">Recipient: </p>
-                                                <p class="col-md-6">{{transaction.buyer.company.name|title }}</p>
-                                            </div>
-                                            <div class="row" style="padding: 10px;">
-                                                <p class="col-md-6" style="font-weight: bold;">Address: </p>
-                                                <p class="col-md-6">{{transaction.offer.collection_address}}</p>
-                                            </div>
-                                            <div class="row" style="padding: 10px;">
-                                                <p class="col-md-6" style="font-weight: bold;">Product: </p>
-                                                <p class="col-md-6">{{transaction.offer.request.fuel_type}}</p>
-                                            </div>
-                                            <div class="row" style="padding: 10px;">
-                                                <p class="col-md-6" style="font-weight: bold;">Transporter </p>
-                                                <p class="col-md-6">{{transaction.delivery_sched.transport_company}}</p>
-                                            </div>
-                                            <div class="row" style="padding: 10px;">
-                                                <p class="col-md-6" style="font-weight: bold;">Quantity: </p>
-                                                <p class="col-md-6">{{transaction.offer.request.amount}} (Litres)</p>
-                                            </div>
-                                            <div class="row" style="padding: 10px;">
-                                                <p class="col-md-6" style="font-weight: bold;">Contact Person: </p>
-                                                <p class="col-md-6">{{transaction.buyer.first_name|title}} {{transaction.delivery_sched.transaction.buyer.last_name|title}} </p>
-                                            </div>
-                                            <div class="row" style="padding: 10px;">
-                                                <p class="col-md-6" style="font-weight: bold;">Contact Phone: </p>
-                                                <p class="col-md-6">{{transaction.buyer.phone_number}}</p>
-                                            </div>
-                                            <div class="row" style="padding: 10px;">
-                                                <p class="col-md-6" style="font-weight: bold;">Driver Name: </p>
-                                                <p class="col-md-6">{{transaction.delivery_sched.driver_name}}</p>
-                                            </div>
-                                            <div class="row" style="padding: 10px;">
-                                                <p class="col-md-6" style="font-weight: bold;"> Driver Phone Number: </p>
-                                                <p class="col-md-6">{{transaction.delivery_sched.phone_number}}</p>
-                                            </div>
-                                            <div class="row" style="padding: 10px;">
-                                                <p class="col-md-6" style="font-weight: bold;">Id Number: </p>
-                                                <p class="col-md-6">{{transaction.delivery_sched.id_number}}</p>
-                                            </div>
-                                            <div class="row" style="padding: 10px;">
-                                                <p class="col-md-6" style="font-weight: bold;">Vehicle Reg: </p>
-                                                <p class="col-md-6">{{transaction.delivery_sched.vehicle_reg}}</p>
-                                            </div>
-                                            <div class="row" style="padding: 10px;">
-                                                <p class="col-md-6" style="font-weight: bold;">Tank Details: </p>
-                                                <p class="col-md-6">{{transaction.offer.request.storage_tanks}}</p>
-                                            </div>
+                                            <div class="modal-body" style="padding: 30px;height: 400px;overflow-y: auto;">
+                                                <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Delivery Date/Time: </p>
+                                                    <p class="col-md-6">{{ transaction.delivery_sched.date }} | {{ transaction.delivery_sched.delivery_time }}</p>
+                                                </div>
+                                                <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Recipient: </p>
+                                                    <p class="col-md-6">{{transaction.buyer.company.name|title }}</p>
+                                                </div>
+                                                <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Address: </p>
+                                                    <p class="col-md-6">{{transaction.offer.collection_address}}</p>
+                                                </div>
+                                                <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Product: </p>
+                                                    <p class="col-md-6">{{transaction.offer.request.fuel_type}}</p>
+                                                </div>
+                                                <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Transporter </p>
+                                                    <p class="col-md-6">{{transaction.delivery_sched.transport_company}}</p>
+                                                </div>
+                                                <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Quantity: </p>
+                                                    <p class="col-md-6">{{transaction.offer.request.amount}} (Litres)</p>
+                                                </div>
+                                                <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Contact Person: </p>
+                                                    <p class="col-md-6">{{transaction.buyer.first_name|title}} {{transaction.delivery_sched.transaction.buyer.last_name|title}} </p>
+                                                </div>
+                                                <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Contact Phone: </p>
+                                                    <p class="col-md-6">{{transaction.buyer.phone_number}}</p>
+                                                </div>
+                                                <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Driver Name: </p>
+                                                    <p class="col-md-6">{{transaction.delivery_sched.driver_name}}</p>
+                                                </div>
+                                                <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;"> Driver Phone Number: </p>
+                                                    <p class="col-md-6">{{transaction.delivery_sched.phone_number}}</p>
+                                                </div>
+                                                <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Id Number: </p>
+                                                    <p class="col-md-6">{{transaction.delivery_sched.id_number}}</p>
+                                                </div>
+                                                <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Vehicle Reg: </p>
+                                                    <p class="col-md-6">{{transaction.delivery_sched.vehicle_reg}}</p>
+                                                </div>
+                                                <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Tank Details: </p>
+                                                    <p class="col-md-6">{{transaction.offer.request.storage_tanks}}</p>
+                                                </div>
 
-                                            <div class="row" style="padding: 10px;">
-                                                <p class="col-md-6" style="font-weight: bold;">Equipment Available: </p>
-                                                <p class="col-md-6">
-                                                    {% if transaction.offer.request.pump_available %}
-                                                        Pump
-                                                    {% endif %}
-                                                    {% if transaction.offer.request.dipping_stick_available %}
-                                                        Dipping Stick
-                                                    {% endif %}
-                                                    {% if transaction.offer.request.meter_available %}
-                                                        Meter
-                                                    {% else %}
-                                                        N/A
-                                                    {% endif %}
-                                                </p>
-                                            </div>
-                                            <div class="row" style="padding: 10px;">
-                                                <p class="col-md-6" style="font-weight: bold;">Status: </p>
-                                                {% if transaction.delivery_sched.confirmation_document %}
+                                                <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Equipment Available: </p>
                                                     <p class="col-md-6">
-                                                        <a class="btn btn-purple btn-sm" href="{% url 'supplier:view_confirmation_doc' transaction.delivery_sched.id %}">View Confirmation Doc</a>
+                                                        {% if transaction.offer.request.pump_available %}
+                                                            Pump
+                                                        {% endif %}
+                                                        {% if transaction.offer.request.dipping_stick_available %}
+                                                            Dipping Stick
+                                                        {% endif %}
+                                                        {% if transaction.offer.request.meter_available %}
+                                                            Meter
+                                                        {% else %}
+                                                            N/A
+                                                        {% endif %}
                                                     </p>
-                                                {%else %}
-                                                    <p class="col-md-6">Status: Pending </p>
-                                                {% endif %}
+                                                </div>
+                                                <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Status: </p>
+                                                    {% if transaction.delivery_sched.confirmation_document %}
+                                                        <p class="col-md-6">
+                                                            <a class="btn btn-purple btn-sm" href="{% url 'supplier:view_confirmation_doc' transaction.delivery_sched.id %}">View Confirmation Doc</a>
+                                                        </p>
+                                                    {%else %}
+                                                        <p class="col-md-6">Status: Pending </p>
+                                                    {% endif %}
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                </div>
+                                <!--End Schedule Modal-->
+
+
+                                <div class="modal fade modal-sucess in" id="create_schedule{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="background-color: #009688; color: white">
+                                                <span class="modal-title" id="exampleModalLabel">Create Schedule</span>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{% url 'supplier:create_delivery_schedule' %}" method="POST">
+                                                    {% csrf_token %}
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <label>Delivery Date</label>
+                                                            <input id="date_field" type="date" name="delivery_date" class="form-control"  required/>
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <label>Delivery Time</label>
+                                                            <input type="time" name="delivery_time" class="form-control"  required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+
+                                                        <div class="form-group col-md-6">
+                                                            <label>Driver Name</label>
+                                                            <input type="text" name="driver_name" class="form-control"  required/>
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <label>Driver's Phone Number</label>
+                                                            <input type="telephone" name="phone_number" class="form-control"  value="{{ supplier.phone_number}}" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+
+                                                        <div class="form-group col-md-6">
+                                                            <label>Id Number</label>
+                                                            <input type="text" name="id_num" class="form-control"  required/>
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <label>Vehicle Reg</label>
+                                                            <input type="text" name="vehicle_reg" class="form-control"  value="{{ supplier.phone_number}}" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <label>Transporter Company</label>
+                                                            <input type="text" class="form-control" name="transport_company" class="transport_company" required/>
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <label>Amount Received <i style="color: rgb(38, 214, 226);">as per proof of payment</i></label>
+                                                            <input type="text" class="form-control" name="paid" class="paid" value="${{transaction.paid_reserve}}" disabled/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <label>Transport Fee</label>
+                                                            <input type="text" class="form-control" name="paid" class="paid" value="${{transaction.paid_reserve| sub:transaction.fuel_money_reserve}}" disabled/>
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <label>Amount for Fuel <i style="color: rgb(38, 214, 226);">amount received - transport fee</i></label>
+                                                            <input type="text" class="form-control" name="paid" class="paid" value="${{transaction.fuel_money_reserve}}" disabled/>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="row">
+                                                        <input type="hidden" name="transaction" class="form-control" value={{transaction.id}}  required/>
+
+
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <div class="row pull-left">
+
+                                                            <button type="submit" class="btn btn-primary col-sm-12" style="margin-left: 15px;">Create Schedule</button>
+                                                        </div>
+                                                    </div>
+
+
+                                                </form>
                                             </div>
 
                                         </div>
                                     </div>
-
                                 </div>
-                            </div>
-                            </div>
-                            <!--End Schedule Modal-->
 
 
-                            <div class="modal fade modal-sucess in" id="create_schedule{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header" style="background-color: #009688; color: white">
-                                            <span class="modal-title" id="exampleModalLabel">Create Schedule</span>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="{% url 'supplier:create_delivery_schedule' %}" method="POST">
-                                                {% csrf_token %}
-                                                <div class="row">
-                                                    <div class="form-group col-md-6">
-                                                        <label>Delivery Date</label>
-                                                        <input id="date_field" type="date" name="delivery_date" class="form-control"  required/>
+
+                                <div class="modal fade modal-sucess in" id="approve{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="background-color: #009688; color: white">
+                                                <span class="modal-title" id="exampleModalLabel">Approve Payment</span>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{% url 'complete-transaction' transaction.id %}" method="POST">
+                                                    {% csrf_token %}
+
+                                                    <div class="row">
+
+                                                        <div class="form-group col-md-6">
+                                                            <label>Expected Payment</label>
+                                                            <input type="text" name="expected" class="form-control" value="${{transaction.expected|stringformat:.2f}}" disabled/>
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <label>Total Received</label>
+                                                            <input type="text" name="received" class="form-control"  value=" " required/>
+                                                        </div>
                                                     </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label>Delivery Time</label>
-                                                        <input type="time" name="delivery_time" class="form-control"  required/>
+                                                    <div class="row">
+                                                    {% if transaction.offer.delivery_method == 'DELIVERY' %}
+                                                        <div class="form-group col-md-6">
+                                                            <label>Transport Charge</label>
+                                                            <input type="text" name="transport_charge" class="form-control"  required/>
+                                                        </div>
+                                                        {% endif %}
+                                                        <!-- <div class="form-group col-md-6">
+                                                            <label>Amount for Fuel (Amount Received - Transport Charge)</label>
+                                                            <input type="text" name="for_fuel" class="form-control"  value=" " required/>
+                                                        </div> -->
                                                     </div>
-                                                </div>
-                                                <div class="row">
 
-                                                    <div class="form-group col-md-6">
-                                                        <label>Driver Name</label>
-                                                        <input type="text" name="driver_name" class="form-control"  required/>
+
+                                                    <div class="modal-footer">
+                                                        <div class="row pull-left">
+
+                                                            <button type="submit" class="btn btn-primary col-sm-12" style="margin-left: 15px;">Approve</button>
+                                                        </div>
                                                     </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label>Driver's Phone Number</label>
-                                                        <input type="telephone" name="phone_number" class="form-control"  value="{{ supplier.phone_number}}" required/>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-
-                                                    <div class="form-group col-md-6">
-                                                        <label>Id Number</label>
-                                                        <input type="text" name="id_num" class="form-control"  required/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label>Vehicle Reg</label>
-                                                        <input type="text" name="vehicle_reg" class="form-control"  value="{{ supplier.phone_number}}" required/>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="form-group col-md-6">
-                                                        <label>Transporter Company</label>
-                                                        <input type="text" class="form-control" name="transport_company" class="transport_company" required/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label>Amount Received <i style="color: rgb(38, 214, 226);">as per proof of payment</i></label>
-                                                        <input type="text" class="form-control" name="paid" class="paid" value="${{transaction.paid_reserve}}" disabled/>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="form-group col-md-6">
-                                                        <label>Transport Fee</label>
-                                                        <input type="text" class="form-control" name="paid" class="paid" value="${{transaction.paid_reserve| sub:transaction.fuel_money_reserve}}" disabled/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label>Amount for Fuel <i style="color: rgb(38, 214, 226);">amount received - transport fee</i></label>
-                                                        <input type="text" class="form-control" name="paid" class="paid" value="${{transaction.fuel_money_reserve}}" disabled/>
-                                                    </div>
-                                                </div>
 
 
-                                                <div class="row">
-                                                    <input type="hidden" name="transaction" class="form-control" value={{transaction.id}}  required/>
+                                                </form>
+                                            </div>
 
-
-                                                </div>
-
-                                                <div class="modal-footer">
-                                                    <div class="row pull-left">
-
-                                                        <button type="submit" class="btn btn-primary col-sm-12" style="margin-left: 15px;">Create Schedule</button>
-                                                    </div>
-                                                </div>
-
-
-                                            </form>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
-
-
-                            <div class="modal fade modal-sucess in" id="approve{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header" style="background-color: #009688; color: white">
-                                            <span class="modal-title" id="exampleModalLabel">Approve Payment</span>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="{% url 'complete-transaction' transaction.id %}" method="POST">
-                                                {% csrf_token %}
-
-                                                <div class="row">
-
-                                                    <div class="form-group col-md-6">
-                                                        <label>Expected Payment</label>
-                                                        <input type="text" name="expected" class="form-control" value="${{transaction.expected|stringformat:.2f}}" disabled/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label>Total Received</label>
-                                                        <input type="text" name="received" class="form-control"  value=" " required/>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                   {% if transaction.offer.delivery_method == 'DELIVERY' %}
-                                                    <div class="form-group col-md-6">
-                                                        <label>Transport Charge</label>
-                                                        <input type="text" name="transport_charge" class="form-control"  required/>
-                                                    </div>
-                                                    {% endif %}
-                                                    <!-- <div class="form-group col-md-6">
-                                                        <label>Amount for Fuel (Amount Received - Transport Charge)</label>
-                                                        <input type="text" name="for_fuel" class="form-control"  value=" " required/>
-                                                    </div> -->
-                                                </div>
-
-
-                                                <div class="modal-footer">
-                                                    <div class="row pull-left">
-
-                                                        <button type="submit" class="btn btn-primary col-sm-12" style="margin-left: 15px;">Approve</button>
-                                                    </div>
-                                                </div>
-
-
-                                            </form>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!--Upload Release Note-->
-                            <div class="modal fade modal-sucess in" id="release_note{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header" style="background-color: #009688; color: white">
-                                            <span class="modal-title" id="exampleModalLabel">Upload Release Note</span>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-
-                                            <form method="POST" action="{% url 'supplier:release-note' transaction.id %}" enctype="multipart/form-data">
-                                                {% csrf_token %}
-                                                <input type="file" accept=".pdf, .doc,.docx,.jpeg,.png,.jpg" name="release_note" class="form-control-file" id="exampleFormControlFile1" required>
-                                                <br>
-                                                <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
-
-                                            </form>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!--End Upload Document-->
 
-                        {%endfor%}
+                                <!--Upload Release Note-->
+                                <div class="modal fade modal-sucess in" id="release_note{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="background-color: #009688; color: white">
+                                                <span class="modal-title" id="exampleModalLabel">Upload Release Note</span>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                <form method="POST" action="{% url 'supplier:release-note' transaction.id %}" enctype="multipart/form-data">
+                                                    {% csrf_token %}
+                                                    <input type="file" accept=".pdf, .doc,.docx,.jpeg,.png,.jpg" name="release_note" class="form-control-file" id="exampleFormControlFile1" required>
+                                                    <br>
+                                                    <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--End Upload Document-->
+
+                            {%endfor%}
+                        {% endif %}    
                 </tbody>
                 </table>
             </div>

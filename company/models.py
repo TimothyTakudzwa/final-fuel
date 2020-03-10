@@ -44,10 +44,10 @@ class CompanyFuelUpdate(models.Model):
     allocated_diesel = models.FloatField(default=0.00)
     unallocated_petrol = models.FloatField(default=0.00)
     unallocated_diesel = models.FloatField(default=0.00)
-    usd_diesel_price = models.FloatField(default=0.00)
-    usd_petrol_price = models.FloatField(default=0.00)
-    diesel_price = models.FloatField(default=0.00)
-    petrol_price = models.FloatField(default=0.00)
+    usd_diesel_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    usd_petrol_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    diesel_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    petrol_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
 
     def __str__(self):
         return f'{self.id} {self.company.name} -- Fuel Update'
