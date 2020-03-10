@@ -152,6 +152,7 @@
 
             </div>
 
+            
         </div>
 
         {% if suppliers %}
@@ -405,6 +406,25 @@
                                 </div>
                             </tr>
 
+                            <script>
+                                
+                                $('body').click(function (event) {
+                                    if(!$(event.target).closest('#edit_depot_{{supplier.id}}').length && !$(event.target).is('#edit_depot_{{supplier.id}}')) {
+                                        $("#edit_depot_{{supplier.id}}").modal('hide');
+                                    }
+                                    if(!$(event.target).closest('#edit_{{supplier.id}}').length && !$(event.target).is('#edit_{{supplier.id}}')) {
+                                        $("#edit_{{supplier.id}}").modal('hide');
+                                    }
+                                    if(!$(event.target).closest('#delete_depot_{{supplier.id}}').length && !$(event.target).is('#delete_depot_{{supplier.id}}')) {
+                                        $("#delete_depot_{{supplier.id}}").modal('hide');
+                                    }
+                                    if(!$(event.target).closest('#delete_{{supplier.id}}').length && !$(event.target).is('#delete_{{supplier.id}}')) {
+                                        $("#delete_{{supplier.id}}").modal('hide');
+                                    }        
+                                });
+
+                            </script>
+
                         {% endfor %}
 
                         </tbody>
@@ -421,4 +441,16 @@
         {% endif %}
 
     </div>
+
+    <script>
+        $('body').click(function (event) {
+            if(!$(event.target).closest('#new_user').length && !$(event.target).is('#new_user')) {
+                $("#new_user").modal('hide');
+            }
+            if(!$(event.target).closest('#new_depot_user').length && !$(event.target).is('#new_depot_user')) {
+                $("#new_depot_user").modal('hide');
+            }      
+        });
+    </script>
+
 {% endblock %}
