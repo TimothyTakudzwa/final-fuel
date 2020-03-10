@@ -55,7 +55,7 @@
                     <th style="color: white;">Quantity</th>
                     <th style="color: white;">Fuel</th>
                     <th style="color: white;">Currency</th>
-                    <th style="color: white;">Payment Proof</th>
+                    <th style="color: white;">Proof of Payment</th>
                     <th style="color: white;">Action</th>
                 </tr>
             </thead>
@@ -75,7 +75,7 @@
                     <td>
                         <div class="btn-group">
                             <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="" > <i class="fa fa-download" style="font-size:15px"></i> Payment Proof</a>
-                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" href="{% url 'noic:payment_approval' order.id %}" >Approve Payment</a>
+                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" href="{% url 'noic:payment_approval' order.id %}" >Approve</a>
                         </div>
                     </td>
                     {% endif %}
@@ -84,7 +84,7 @@
                     {% if order.allocated_fuel %}
                     <td>
                         <div class="btn-group">
-                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal"  data-target="#allocate{{order.id}}" >View Allocation</a>
+                            <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"  href="{% url 'noic:allocations' %}" >View Allocation</a>
                             </div>
                     </td>
                     {% else %}

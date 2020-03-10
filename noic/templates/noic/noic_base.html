@@ -79,7 +79,7 @@
                 </span>
                 <span class="logo-lg">
                     <!--<b>Admin</b>H-admin-->
-                    <h3>FMS Zim - NOIC</h3>
+                    <h4>Fuel Management System</h4>
                 </span>
             </a>
             <!-- Header Navbar -->
@@ -139,6 +139,15 @@
                    
                     <li class="nav-item {% if request.path == '/noic/allocations/' %} active {% endif %}">
                         <a href="{% url 'noic:allocations' %}"><i class="fa fa-binoculars"></i><span>Allocations</span>
+                        </a>
+                    </li>
+
+                    <li class="{% if request.path == '/noic/statistics/' %} active {% endif %}">
+                        <a href="{% url 'noic:statistics' %}"><i class="fa fa-line-chart"></i><span>Statistics</span>
+                        </a>
+                    </li>
+                    <li class="{% if request.path == '/noic/report_generator/' %} active {% endif %}">
+                        <a href="{% url 'noic:report_generator' %}"><i class="fa fa-pie-chart"></i><span>Report Generator</span>
                         </a>
                     </li>
                    
