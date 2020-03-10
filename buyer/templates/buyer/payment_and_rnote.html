@@ -196,10 +196,10 @@
                             <td>Approved</td>
                             <td>{{payment.value}}</td>
                             <td>{{payment.balance}}</td>
-                            {% if payment.release_note %}
+                            {% if payment.transaction.release_date %}
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'buyer:download_release_note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
+                                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'buyer:release-note' payment.transaction.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
                                 </div>
                             </td>
                             {% else %}

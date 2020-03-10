@@ -16,6 +16,7 @@ class Order(models.Model):
     amount_paid = models.DecimalField(max_digits=20, default=0.00, decimal_places=2)
     duty = models.DecimalField(max_digits=20, default=0.00, decimal_places=2)
     vat = models.DecimalField(max_digits=20, default=0.00, decimal_places=2)
+
 class NationalFuelUpdate(models.Model):
     date = models.DateField(auto_now_add=True)
     allocated_petrol = models.FloatField(default=0.00)
