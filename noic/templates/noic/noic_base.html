@@ -142,6 +142,11 @@
                         <a href="{% url 'noic:statistics' %}"><i class="fa fa-line-chart"></i><span>Statistics</span>
                         </a>
                     </li>
+
+                    <li class="nav-item {% if request.path == '/noic/reports/' %} active {% endif %}">
+                        <a href="{% url 'noic:report_generator' %}"><i class="fa fa-cogs"></i><span>Reports</span>
+                        </a>
+                    </li>
                    
                     <li class="nav-item {% if request.path == '/noic/allocations/' %} active {% endif %}">
                         <a href="{% url 'noic:allocations' %}"><i class="fa fa-binoculars"></i><span>Allocations</span>

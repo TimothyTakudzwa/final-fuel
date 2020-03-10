@@ -2010,11 +2010,8 @@ def place_order(request):
         company = request.user.company
         quantity = request.POST['quantity']
         currency = request.POST['currency']
-        amount_paid = request.POST['fuel_paid']
-        duty = request.POST['duty_paid']
-        vat = request.POST['vat']
         fuel_type = request.POST['fuel_type']
         proof_of_payment = request.FILES.get('proof_of_payment')
-        Order.objects.create(amount_paid=amount_paid, duty=duty, vat=vat, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+        Order.objects.create(company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
         messages.success(request,'placed order successfully')
         return redirect('users:allocate')
