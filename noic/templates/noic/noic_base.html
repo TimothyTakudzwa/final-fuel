@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 {% load crispy_forms_tags %}
@@ -136,6 +137,11 @@
                         <a href="{% url 'noic:orders' %}"><i class="fa fa-book"></i><span>Company Orders</span>
                         </a>
                     </li>
+
+                    <li class="nav-item {% if request.path == '/noic/statistics/' %} active {% endif %}">
+                        <a href="{% url 'noic:statistics' %}"><i class="fa fa-line-chart"></i><span>Statistics</span>
+                        </a>
+                    </li>
                    
                     <li class="nav-item {% if request.path == '/noic/allocations/' %} active {% endif %}">
                         <a href="{% url 'noic:allocations' %}"><i class="fa fa-binoculars"></i><span>Allocations</span>
@@ -224,6 +230,12 @@
             $('#fuel_request').DataTable();
         });
     </script>
+
+<script>
+    $(document).ready(function () {
+        $('#depots').DataTable();
+    });
+</script>
    
    <script>
         $(document).ready(function () {
@@ -295,9 +307,198 @@
         =====================================================================-->
     <!-- Dashboard js -->
     <script src="https://timothytakudzwa.github.io/static/new/assets/dist/js/custom.js" type="text/javascript"></script>
+    <script src="{% static 'finder/assets/js/datatables.js' %}"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/js/notificationFx.js" type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/js/snap.svg-min.js" type="text/javascripy"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/js/classie.js"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/dist/js/custom.js" type="text/javascript"></script>
 
     <!-- End Theme label Script
         =====================================================================-->
+        <script>
+            "use strict"; // Start of use strict
+            // notification
+
+
+            //counter
+            $('.count-number').counterUp({
+                delay: 10,
+                time: 5000
+            });
+
+            //data maps
+            var basic_choropleth = new Datamap({
+                element: document.getElementById("map1"),
+                projection: 'mercator',
+                fills: {
+                    defaultFill: "#009688",
+                    authorHasTraveledTo: "#fa0fa0"
+                },
+                data: {
+                    USA: {fillKey: "authorHasTraveledTo"},
+                    JPN: {fillKey: "authorHasTraveledTo"},
+                    ITA: {fillKey: "authorHasTraveledTo"},
+                    CRI: {fillKey: "authorHasTraveledTo"},
+                    KOR: {fillKey: "authorHasTraveledTo"},
+                    DEU: {fillKey: "authorHasTraveledTo"}
+                }
+            });
+
+            var colors = d3.scale.category10();
+
+            window.setInterval(function () {
+                basic_choropleth.updateChoropleth({
+                    USA: colors(Math.random() * 10),
+                    RUS: colors(Math.random() * 100),
+                    AUS: {fillKey: 'authorHasTraveledTo'},
+                    BRA: colors(Math.random() * 50),
+                    CAN: colors(Math.random() * 50),
+                    ZAF: colors(Math.random() * 50),
+                    IND: colors(Math.random() * 50)
+                });
+            }, 2000);
+
+    //bar chart
+            var ctx = document.getElementById("barChart");
+            var year = new Date().getFullYear()
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                    datasets: [
+                        {
+                            label: year,
+                            data: [{{monthly_date.Jan}}, {{monthly_date.Feb}}, {{monthly_date.Mar}}, {{monthly_date.Apr}}, {{monthly_date.May}}, {{monthly_date.Jun}}, {{monthly_date.Jul}}, {{monthly_date.Aug}}, {{monthly_date.Sep}}, {{monthly_date.Oct}}, {{monthly_date.Nov}}, {{monthly_date.Dec}}],
+                            borderColor: "#009688",
+                            borderWidth: "0",
+                            backgroundColor: "#009688"
+                        },
+                        {
+                            label: year - 1,
+                            data: [{{last_year_rev.Jan}}, {{last_year_rev.Feb}}, {{last_year_rev.Mar}}, {{last_year_rev.Apr}}, {{last_year_rev.May}}, {{last_year_rev.Jun}}, {{last_year_rev.Jul}}, {{last_year_rev.Aug}}, {{last_year_rev.Sep}}, {{last_year_rev.Oct}}, {{last_year_rev.Nov}}, {{last_year_rev.Dec}}],
+                            borderColor: "#db3737",
+                            borderWidth: "0",
+                            backgroundColor: "#db3737"
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                    }
+                }
+            });
+                  //radar chart
+            var ctx = document.getElementById("radarChart");
+            var myChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ["Subsidiary A", "Subsidiary B", "Subsidiary C", "Subsidiary D", "Subsidiary E", "Subsidiary F", "Subsidiary G"],
+                    datasets: [
+                        {
+                            label:`Year ${year}`,
+                            data: [65, 59, 66, 45, 56, 55, 40],
+                            borderColor: "#00968866",
+                            borderWidth: "1",
+                            backgroundColor: "rgba(0, 150, 136, 0.35)"
+                        },
+                        {
+                            label: `Year ${year-1}`,
+                            data: [28, 12, 40, 19, 63, 27, 87],
+                            borderColor: "red",
+                            borderWidth: "1",
+                            backgroundColor: "rgba(0, 150, 136, 0.35)"
+                        }
+                    ]
+                },
+                options: {
+                    legend: {
+                        position: 'top'
+                    },
+                    scale: {
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Message
+            $('.message_inner').slimScroll({
+                size: '3px',
+                height: '320px'
+            });
+
+            //emojionearea
+            $(".emojionearea").emojioneArea({
+                pickerPosition: "top",
+                tonesStyle: "radio"
+            });
+
+            //monthly calender
+            $('#m_calendar').monthly({
+                mode: 'event',
+                //jsonUrl: 'events.json',
+                //dataType: 'json'
+                xmlUrl: 'events.xml'
+            });
+
+
+         //line chart
+            //line chart
+
+            var monday = {{weekly_rev.Mon}};
+            var tuesday = {{weekly_rev.Tue}};
+            var wednesday = {{weekly_rev.Wed}};
+            var thursday = {{weekly_rev.Thu}};
+            var friday = {{weekly_rev.Fri}};
+            var saturday = {{weekly_rev.Sat}};
+            var sunday = {{weekly_rev.Sun}};
+            var ctx = document.getElementById("lineChart");
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                    datasets: [
+                        {
+                            label: "This Week",
+                            borderColor: "rgba(0,0,0,.09)",
+                            borderWidth: "1",
+                            backgroundColor: "rgba(0,0,0,.07)",
+                            data: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
+
+                        },
+                        {
+                            label: "Last Week",
+                            borderColor: "#009688",
+                            borderWidth: "1",
+                            backgroundColor: "#009688",
+                            pointHighlightStroke: "#009688",
+                            data: [{{last_week_rev.Mon}}, {{last_week_rev.Tue}}, {{last_week_rev.Wed}}, {{last_week_rev.Thu}}, {{last_week_rev.Fri}}, {{last_week_rev.Sat}}, {{last_week_rev.Sun}}]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    }
+
+                }
+            });
+
+
+    </script>
 
     <script>
         "use strict"; // Start of use strict

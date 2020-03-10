@@ -1,6 +1,7 @@
 from django.db import models
 from company.models import Company
 from buyer.models import User
+from supplier.constants import Zimbabwean_Towns
 
 
 class Order(models.Model):
@@ -12,6 +13,10 @@ class Order(models.Model):
     proof_of_payment = models.FileField(upload_to='proof_of_payment', null=True, blank=True)
     payment_approved = models.BooleanField(default=False)
     allocated_fuel = models.BooleanField(default=False)
+    amount_paid = models.DecimalField(max_digits=20, default=0.00, decimal_places=2)
+    duty = models.DecimalField(max_digits=20, default=0.00, decimal_places=2)
+    vat = models.DecimalField(max_digits=20, default=0.00, decimal_places=2)
+
 class NationalFuelUpdate(models.Model):
     date = models.DateField(auto_now_add=True)
     allocated_petrol = models.FloatField(default=0.00)
@@ -41,4 +46,38 @@ class SordNationalAuditTrail(models.Model):
 
     def __str__(self):
         return f'{self.id} -- SordNationalAuditTrail'
+
+
+class NoicDepot(models.Model):
+    name = models.CharField(max_length=150, blank=True, null=True)
+    address = models.CharField(max_length=200, help_text='Harare, Livingstone Street')   
+    city = models.CharField(max_length=200, default='', choices=Zimbabwean_Towns)
+    has_fuel = models.BooleanField(default=False)    
+    opening_time = models.CharField(max_length=100, default='08:00')
+    closing_time = models.CharField(max_length=100, default='22:00')
+    destination_bank = models.CharField(max_length=100, default="")
+    account_number = models.CharField(max_length=100, default="")
+    logo = models.ImageField(default='default.png', upload_to='subsidiary_profile_logo')
+    license_num = models.CharField(max_length=150,blank=True,null=True)
+    praz_reg_num = models.CharField(max_length=150,blank=True,null=True)
+    bp_num = models.CharField(max_length=150,blank=True,null=True)
+    vat = models.CharField(max_length=150,blank=True,null=True)
+    is_active = models.BooleanField(default=False)
+    ema = models.FileField(upload_to='subsidiary_docs', blank=True, null=True)
+    fire_brigade = models.FileField(upload_to='subsidiary_docs', blank=True, null=True)
+    application_form = models.FileField(upload_to='subsidiary_docs', blank=True, null=True)
+    bank_branch = models.CharField(max_length=500, null=True, blank=True)
+
+
+class DepotFuelUpdate(models.Model):
+    depot = models.ForeignKey(NoicDepot, on_delete=models.CASCADE, blank=True, null=True)
+    usd_petrol = models.FloatField(default=0.0, blank=True, null=True)
+    usd_diesel = models.FloatField(default=0.0, blank=True, null=True)
+    rtgs_petrol = models.FloatField(default=0.00, blank=True, null=True)
+    rtgs_diesel = models.FloatField(default=0.00, blank=True, null=True)
+    rtgs_diesel_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    rtgs_petrol_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    usd_diesel_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    usd_petrol_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=1000, blank=True, null=True)
 
