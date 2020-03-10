@@ -12,6 +12,7 @@ urlpatterns = [
     path('accounts-status', views.account_application, name='accounts-status'),
     path('download-application/<int:id>', views.download_application, name='download-application'),
     path('upload-application/<int:id>', views.upload_application, name='upload-application'),
+    path('release-note/<int:id>', views.view_release_note, name='release-note'),
     path('', views.dashboard, name='buyer-dashboard'),
     path('fuel', views.fuel_request, name='buyer-fuel-request'),
     path('offers/<int:id>', views.offers, name='fuel-offers'),

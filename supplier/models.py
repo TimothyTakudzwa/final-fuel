@@ -170,6 +170,7 @@ class Transaction(models.Model):
     paid_reserve = models.FloatField(default=0.00)
     fuel_money_reserve = models.FloatField(default=0.00)
     release_note = models.FileField(upload_to='release_note', null=True, blank=True)
+    release_date = DateField(auto_now_add=False)
     
     
     class Meta:
