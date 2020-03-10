@@ -53,25 +53,23 @@
                 <table border="0" cellspacing="0" cellpadding="0">
                     <thead>
                         <tr>
-                            <th class="text-right">DATE</th>
+                            <th class="text-left">DATE</th>
                             <th class="text-left">PRODUCT</th>
-                            <th class="text-right">QUANTITY</th>
-                            <th class="text-right">TRANSPORTER</th>
-                            <th class="text-right">QUANTITY</th>
-                            <th class="text-right">TRANSPORTER</th>
-                            <th class="text-right">DRIVER</th>
-                            <th class="text-right">DRIVER ID</th>
-                            <th class="text-right">TRUCK REG</th>
+                            <th class="text-left">QUANTITY</th>
+                            <th class="text-left">TRANSPORTER</th>
+                            <th class="text-left">DRIVER</th>
+                            <th class="text-left">DRIVER ID</th>
+                            <th class="text-left">TRUCK REG</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="date">{{transaction.transaction.release_date}}</td>
+                            <td class="date">{{transaction.release_date}}</td>
                             <td class="unit">{{transaction.offer.request.fuel_type}} </td>
                             <td class="qty">{{transaction.offer.quantity|intcomma}} Litres</td>
                             <td class="trans">{{transaction.offer.request.transporter}}</td>
-                            <td class="trans">{{transaction.offer.request.driver}}</td>
-                            <td class="trans">{{transaction.offer.request.driver_id}}</td>
+                            <td class="driver">{{transaction.offer.request.driver}}</td>
+                            <td class="ID">{{transaction.offer.request.driver_id}}</td>
                             <td class="truck">{{transaction.offer.request.truck_reg}}</td>
                         </tr>
                         

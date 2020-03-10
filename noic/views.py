@@ -18,13 +18,14 @@ from itertools import chain
 from operator import attrgetter
 
 from buyer.models import User, FuelRequest
+from users.forms import DepotContactForm
 from company.models import Company, CompanyFuelUpdate
 from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, Transaction, Offer, DeliverySchedule
 from fuelUpdates.models import SordCompanyAuditTrail
 from users.models import SordActionsAuditTrail
 from accounts.models import AccountHistory
 from users.views import message_is_sent
-from national.models import Order, NationalFuelUpdate, SordNationalAuditTrail, DepotFuelUpdate
+from national.models import Order, NationalFuelUpdate, SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
 
 from .lib import get_current_stock, get_total_allocations, get_complete_orders_percentage, orders_made_this_week, total_orders, get_monthly_orders
 
@@ -33,7 +34,11 @@ user = get_user_model()
 # Create your views here.
 def orders(request):
     orders = Order.objects.all()
-    return render(request, 'noic/orders.html', {'orders': orders})
+    form1 = DepotContactForm()
+    depots = NoicDepot.objects.all()
+    form1.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots]
+
+    return render(request, 'noic/orders.html', {'orders': orders, 'form1': form1})
 
 def dashboard(request):
     capacities = NationalFuelUpdate.objects.all()
@@ -100,6 +105,7 @@ def payment_approval(request, id):
 
 def allocate_fuel(request, id):
     order = Order.objects.filter(id=id).first()
+   
     if request.method == 'POST':
         if request.POST['fuel_type'].lower() == 'petrol':
             if request.POST['currency'] == 'USD':

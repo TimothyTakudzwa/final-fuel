@@ -702,6 +702,13 @@ def view_invoice(request, id):
     return render(request, 'buyer/invoice2.html', context)
 
 
+def view_release_note(request, id):
+    context = {
+        'transaction': Transaction.objects.filter(id=id).first()
+    }
+    return render(request, 'buyer/release_note.html', context)
+
+
 @login_required
 def delivery_schedules(request):
     schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user)
