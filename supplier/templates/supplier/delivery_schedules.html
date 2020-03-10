@@ -316,6 +316,21 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <script>
+                        $('body').click(function (event) {
+                            if(!$(event.target).closest('#state_{{delivery.id}}').length && !$(event.target).is('#state_{{delivery.id}}')) {
+                                $("#state_{{delivery.id}}").modal('hide');
+                            }
+                            if(!$(event.target).closest('#edit_delivery_{{delivery.id}}').length && !$(event.target).is('#edit_delivery_{{delivery.id}}')) {
+                                $("#edit_delivery_{{delivery.id}}").modal('hide');
+                            }
+                            if(!$(event.target).closest('#additonal_information{{delivery.id}}').length && !$(event.target).is('#additonal_information{{delivery.id}}')) {
+                                $("#additonal_information{{delivery.id}}").modal('hide');
+                            }         
+                        });
+                    </script>
+                    
 
 
                     
@@ -330,6 +345,7 @@
     </div>
     </div>
 </section>  
+
 
 
   

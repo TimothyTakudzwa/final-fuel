@@ -455,6 +455,16 @@
                     </div>
                     </div>
 
+                    <script>
+                        $('body').click(function (event) {
+                            if(!$(event.target).closest('#order_{{account.id}}').length && !$(event.target).is('#order_{{account.id}}')) {
+                                $("#order_{{account.id}}").modal('hide');
+                            }
+                            if(!$(event.target).closest('#edit_account_details{{account.id}}').length && !$(event.target).is('#edit_account_details{{account.id}}')) {
+                                $("#edit_account_details{{account.id}}").modal('hide');
+                            }        
+                        });
+                    </script>
 
                     
 

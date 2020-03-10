@@ -286,7 +286,8 @@
                         <button type="button" class="btn btn-labeled btn-success btn-lg"  data-toggle="modal" data-target="#report_modal"
                         role="button" style="color: white; margin-left: 10px; margin-bottom: 30px;">
                             <span class="btn-label"><i class="fa fa-cogs" aria-hidden="true"></i></span>Generate Report
-                        </button>        
+                        </button> 
+                              
                                     
                                     
                             <div>
@@ -356,7 +357,9 @@
         
         
                             
-                        </div>
+                            </div>
+
+                            
                     <!-- /.row -->
                         <main role="main" class="content" style="margin-top: 0;padding: 0;">
                             <!-- <div class="jumbotron jumbotron-fluid" style="background: linear-gradient(to right, #fdbb2d, #b21f1f, #1a2a6c);color: white;margin-bottom: 100px;"> -->
@@ -1495,6 +1498,14 @@ table5.columns().eq(0).each(function (colIdx) {
     });
 
 </script>
+
+<!-- <script>
+    $('body').click(function (event) {
+        if(!$(event.target).closest('#report_modal').length && !$(event.target).is('#report_modal')) {
+            $("#report_modal").modal('hide');
+        }        
+    });
+</script> -->
 
     </body>
 </html>

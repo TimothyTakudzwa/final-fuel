@@ -116,6 +116,13 @@
                     </div>
                     </div>
                     <!-- end edit modal -->
+                    <script>
+                        $('body').click(function (event) {
+                            if(!$(event.target).closest('#docs_{{client.id}}').length && !$(event.target).is('#docs_{{client.id}}')) {
+                                $("#docs_{{client.id}}").modal('hide');
+                            }      
+                        });
+                    </script>
                     {%endfor%}
                 {%else%}
                 <!-- <p>No Client Data Available</p> -->
