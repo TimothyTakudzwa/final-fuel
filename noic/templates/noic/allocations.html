@@ -74,7 +74,7 @@
                             </th>
 
                             <th>
-                               Action
+                                Assigned Depot
                             </th>
                         </tr>
                     </thead>
@@ -88,15 +88,7 @@
                             <td>{{sord.currency}}</td>
                             <td>{{sord.quantity|intcomma}}</td>
                             <td>{{sord.price}}</td>
-                            {% if sord.release_note %}
-                            <td>Sent</td>
-                            {% else %}
-                            <td >
-                                <div class="btn-group">
-                                    <a class="btn btn-success btn-sm" data-toggle="modal" href=""> <i class="fa fa-upload" style="font-size:20px"></i> Release Note</a>
-                                </div>
-                            </td>
-                            {% endif %}
+                            <td><b style="color: rgb(7, 194, 163);">{{sord.assigned_depot.name}}</b></td>
                         </tr>
                         {% endfor %}
                     </tbody>
