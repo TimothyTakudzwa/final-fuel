@@ -12,6 +12,7 @@ class Order(models.Model):
     proof_of_payment = models.FileField(upload_to='proof_of_payment', null=True, blank=True)
     payment_approved = models.BooleanField(default=False)
     allocated_fuel = models.BooleanField(default=False)
+
 class NationalFuelUpdate(models.Model):
     date = models.DateField(auto_now_add=True)
     allocated_petrol = models.FloatField(default=0.00)
