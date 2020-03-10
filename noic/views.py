@@ -24,7 +24,7 @@ from fuelUpdates.models import SordCompanyAuditTrail
 from users.models import SordActionsAuditTrail
 from accounts.models import AccountHistory
 from users.views import message_is_sent
-from national.models import Order, NationalFuelUpdate, SordNationalAuditTrail
+from national.models import Order, NationalFuelUpdate, SordNationalAuditTrail, DepotFuelUpdate
 
 user = get_user_model()
 
@@ -35,7 +35,8 @@ def orders(request):
 
 def dashboard(request):
     capacities = NationalFuelUpdate.objects.all()
-    return render(request, 'noic/dashboard.html', {'capacities': capacities})
+    depots = DepotFuelUpdate.objects.all()
+    return render(request, 'noic/dashboard.html', {'capacities': capacities, 'depots': depots})
 
 
 def allocations(request):
