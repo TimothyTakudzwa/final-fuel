@@ -402,6 +402,8 @@ def dashboard(request):
                 else:
                     fuel_request_object.transporter = request.POST.get('transporter')
                     fuel_request_object.truck_reg = request.POST.get('truck_reg')
+                    fuel_request_object.driver = request.POST.get('driver')
+                    fuel_request_object.driver_id = request.POST.get('driver_id')
                 fuel_request_object.storage_tanks = request.POST.get('storage_tanks')
                 fuel_request_object.pump_required = True if request.POST.get('pump_required') == "on" else False
                 fuel_request_object.dipping_stick_required = True if request.POST.get(
@@ -431,6 +433,8 @@ def dashboard(request):
                 else:
                     fuel_request_object.transporter = request.POST.get('transporter')
                     fuel_request_object.truck_reg = request.POST.get('truck_reg')
+                    fuel_request_object.driver = request.POST.get('driver')
+                    fuel_request_object.driver_id = request.POST.get('driver_id')
                 fuel_request_object.storage_tanks = request.POST.get('storage_tanks')
                 fuel_request_object.pump_required = True if request.POST.get('pump_required') == "True" else False
                 fuel_request_object.dipping_stick_required = True if request.POST.get(
@@ -461,6 +465,8 @@ def dashboard(request):
                 else:
                     fuel_request_object.transporter = request.POST.get('transporter')
                     fuel_request_object.truck_reg = request.POST.get('truck_reg')
+                    fuel_request_object.driver = request.POST.get('driver')
+                    fuel_request_object.driver_id = request.POST.get('driver_id')
                 fuel_request_object.storage_tanks = request.POST.get('storage_tanks')
                 fuel_request_object.pump_required = True if request.POST.get('pump_required') == "True" else False
                 fuel_request_object.dipping_stick_required = True if request.POST.get(

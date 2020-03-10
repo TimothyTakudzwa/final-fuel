@@ -92,11 +92,13 @@
                             <td>{{sord.initial_quantity}}</td>
                             <td>{{sord.quantity_allocated}}</td>
                             <td>{{sord.end_quantity}}</td>
+                            {% if sord.allocated_to == None %}
+                            <td><B style="margin-left: 25px;">--</B></td>
+                            {% else %}
                             <td>{{sord.allocated_to}}</td>
+                            {% endif %}
                             <td style="width: 25%;">
                                 <div class="btn-group">
-
-
                                     
                                     <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'users:sordactions' sord.sord_no %}">View All Actions</a>
 

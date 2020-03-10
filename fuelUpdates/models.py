@@ -6,9 +6,9 @@ from supplier.models import Subsidiaries
 
 class SordCompanyAuditTrail(models.Model):
     date = models.DateField(auto_now_add=True)
-    sord_no =  models.CharField(max_length=100)
-    action_no = models.PositiveIntegerField()
-    action = models.CharField(max_length=150)
+    sord_no =  models.CharField(max_length=100, blank=True, null=True)
+    action_no = models.PositiveIntegerField(blank=True, null=True)
+    action = models.CharField(max_length=150, blank=True, null=True)
     fuel_type = models.CharField(max_length=150, blank=True, null=True)
     payment_type = models.CharField(max_length=150,default="RTGS")
     initial_quantity = models.FloatField(default=0.0)

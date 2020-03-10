@@ -210,6 +210,8 @@
                                     $('#choices1{{forloop.counter}}').hide();
                                     $('#truck_reg{{forloop.counter}}').show();
                                     $('#transporter{{forloop.counter}}').show();
+                                    $('#driver{{forloop.counter}}').show();
+                                    $('#driver_id{{forloop.counter}}').show();
                                     
 
                                     $('#delivery_method1{{forloop.counter}}').change(function () {
@@ -220,6 +222,8 @@
                                             $('#s_town1{{forloop.counter}}').attr('required', '');
                                             $('#truck_reg1{{forloop.counter}}').hide();
                                             $('#transporter1{{forloop.counter}}').hide();
+                                            $('#driver1{{forloop.counter}}').hide();
+                                            $('#driver_id1{{forloop.counter}}').hide();
                                         }
                                         else {
                                             $('#choices1{{forloop.counter}}').hide();
@@ -228,6 +232,8 @@
                                             $('#s_name1{{forloop.counter}}').removeAttr('required', '');
                                             $('#truck_reg1{{forloop.counter}}').show();
                                             $('#transporter1{{forloop.counter}}').show();
+                                            $('#driver1{{forloop.counter}}').show();
+                                            $('#driver_id1{{forloop.counter}}').show();
                                         }
                                     });
                                     $('#delivery_method{{forloop.counter}}').change(function () {
@@ -238,6 +244,8 @@
                                             $('#s_town{{forloop.counter}}').attr('required', '');
                                             $('#truck_reg{{forloop.counter}}').hide();
                                             $('#transporter{{forloop.counter}}').hide();
+                                            $('#driver{{forloop.counter}}').hide();
+                                            $('#driver_id{{forloop.counter}}').hide();
                                         }
                                         else {
                                             $('#choices{{forloop.counter}}').hide();
@@ -246,6 +254,8 @@
                                             $('#s_name{{forloop.counter}}').removeAttr('required', '');
                                             $('#truck_reg{{forloop.counter}}').show();
                                             $('#transporter{{forloop.counter}}').show();
+                                            $('#driver{{forloop.counter}}').show();
+                                            $('#driver_id{{forloop.counter}}').show();
                                         }
                                     });
                                 });
@@ -325,6 +335,19 @@
                                                     <div class="col-sm-6" id="truck_reg{{forloop.counter}}">
                                                         <label class="form-group">Vehicle Reg </label>
                                                         <input type="text" class="form-control" name="truck_reg" 
+                                                        aria-describedby="helpId">
+                                                    </div>
+                                                </div>
+                                                <div class="row form-group">
+                                                    <div class="col-sm-6" id="driver{{forloop.counter}}">
+                                                        <label class="form-group">Driver</label>
+                                                        <input type="text" class="form-control" name="driver" 
+                                                        aria-describedby="helpId" >
+                                                    </div>
+
+                                                    <div class="col-sm-6" id="driver_id{{forloop.counter}}">
+                                                        <label class="form-group">Driver ID </label>
+                                                        <input type="text" class="form-control" name="driver_id" 
                                                         aria-describedby="helpId">
                                                     </div>
                                                 </div>
@@ -450,6 +473,20 @@
                                                     <div class="col-sm-6" id="truck_reg1{{forloop.counter}}">
                                                         <label class="form-group">Vehicle Reg </label>
                                                         <input type="text" class="form-control" name="truck_reg" 
+                                                        aria-describedby="helpId">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row col-sm-12">
+                                                    <div class="col-sm-6" id="driver1{{forloop.counter}}">
+                                                        <label class="form-group">Driver</label>
+                                                        <input type="text" class="form-control" name="driver" 
+                                                        aria-describedby="helpId" >
+                                                    </div>
+
+                                                    <div class="col-sm-6" id="driver_id1{{forloop.counter}}">
+                                                        <label class="form-group">Driver ID </label>
+                                                        <input type="text" class="form-control" name="driver_id" 
                                                         aria-describedby="helpId">
                                                     </div>
                                                 </div>
