@@ -703,10 +703,12 @@ def view_invoice(request, id):
 
 
 def view_release_note(request, id):
+    payment = AccountHistory.objects.filter(id=id).first()
+    payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
     context = {
-        'transaction': Transaction.objects.filter(id=id).first()
+        'payment': payment
     }
-    return render(request, 'buyer/release_note.html', context)
+    return render(request, 'buyer/release_note.html', context=context)
 
 
 @login_required
