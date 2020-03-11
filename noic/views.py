@@ -1,13 +1,12 @@
 import secrets
 from validate_email import validate_email
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
-from datetime import datetime, date
 from django.contrib import messages
 from django.db.models import Count
 from django.http import HttpResponse
@@ -313,7 +312,7 @@ def report_generator(request):
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
             stock = type('test', (object,), {})()
-            stock.date = datetime.today()
+            stock.date = datetime.datetime.today()
             stock.usd, stock.zwl = get_current_usd_stock(), get_current_zwl_stock()
 
             allocations_per_supplier = None
