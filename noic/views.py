@@ -399,7 +399,7 @@ def report_generator(request):
             allocations = FuelAllocation.objects.all()
             supplier_allocations = User.objects.filter(user_type='S_ADMIN')
             allocations_per_supplier=[]
-            for supplier in allocations:
+            for supplier in supplier_allocations:
                 order_count = 0
                 order_quantity = 0
                 for order in SordNationalAuditTrail.objects.filter(company=supplier.company):
