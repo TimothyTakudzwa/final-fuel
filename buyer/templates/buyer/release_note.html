@@ -28,11 +28,11 @@
                     </div>
                     <div class="col company-details">
                         <h2 class="name">
-                            {{transaction.buyer.first_name}} {{transaction.buyer.last_name}}                          
+                            {{payment.transaction.buyer.first_name}} {{payment.transaction.buyer.last_name}}                          
                         </h2>
-                        <div>{{transaction.buyer.company.name}}</div>
-                        <div>{{transaction.buyer.phone_number}}</div>
-                        <div>{{transaction.buyer.email}}</div>
+                        <div>{{payment.transaction.buyer.company.name}}</div>
+                        <div>{{payment.transaction.buyer.phone_number}}</div>
+                        <div>{{payment.transaction.buyer.email}}</div>
                     </div>
                 </div>
             </header>
@@ -40,20 +40,21 @@
                 <div class="row contacts">
                     <div class="col invoice-to">
                         <div class="text-gray-light"><h3>Release Note From:</h3></div>
-                        <h4 class="to">{{transaction.supplier.company}}</h4>
-                        <h5 class="to">{{transaction.depot}}</h5>
-                        <div class="address">{{transaction.collection_address}}</div>
-                        <div class="email"><a href="mailto:{{transaction.buyer.email}}">{{transaction.buyer.email}}</a></div>
+                        <h4 class="to">{{payment.transaction.supplier.company}}</h4>
+                        <h5 class="to">{{payment.transaction.depot}}</h5>
+                        <div class="address">{{payment.offer.transaction.collection_address}}</div>
+                        <div class="email"><a href="mailto:{{transaction.buyer.email}}">{{payment.transaction.buyer.email}}</a></div>
                     </div>
                     <div class="col invoice-details">
-                        <h1 class="invoice-id">REF {{transaction.id}}</h1>
-                        <div class="date">Generated : {{transaction.offer.date}} -- {{transaction.offer.time}}</div>
+                        <h1 class="invoice-id">REF {{payment.id}}</h1>
+                        <div class="date">Generated : {{payment.transaction.offer.date}} -- {{payment.transaction.offer.time}}</div>
                     </div>
                 </div>
                 <table border="0" cellspacing="0" cellpadding="0">
                     <thead>
                         <tr>
                             <th class="text-left">DATE</th>
+                            <th class="text-left">COLLECTION ADDRESS</th>
                             <th class="text-left">PRODUCT</th>
                             <th class="text-left">QUANTITY</th>
                             <th class="text-left">TRANSPORTER</th>
@@ -64,13 +65,14 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="date">{{transaction.release_date}}</td>
-                            <td class="unit">{{transaction.offer.request.fuel_type}} </td>
-                            <td class="qty">{{transaction.offer.quantity|intcomma}} Litres</td>
-                            <td class="trans">{{transaction.offer.request.transporter}}</td>
-                            <td class="driver">{{transaction.offer.request.driver}}</td>
-                            <td class="ID">{{transaction.offer.request.driver_id}}</td>
-                            <td class="truck">{{transaction.offer.request.truck_reg}}</td>
+                            <td class="date">{{payment.release_date}}</td>
+                            <td class="date">{{payment.transaction.offer.collection_address}}</td>            
+                            <td class="unit">{{payment.transaction.offer.request.fuel_type}} </td>
+                            <td class="qty">{{payment.quantity|intcomma}} Litres</td>
+                            <td class="trans">{{payment.transaction.offer.request.transporter}}</td>
+                            <td class="driver">{{payment.transaction.offer.request.driver}}</td>
+                            <td class="ID">{{payment.transaction.offer.request.driver_id}}</td>
+                            <td class="truck">{{payment.transaction.offer.request.truck_reg}}</td>
                         </tr>
                         
                     </tbody>
