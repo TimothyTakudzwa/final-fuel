@@ -348,7 +348,7 @@ def report_generator(request):
     end_date = end = "January 1 2019"
 
     if request.method == "POST":
-        start_date = request.POST.get('start_date')
+        start_date = request.POST.get('start_date') 
         end_date = request.POST.get('end_date')
         if start_date:
             start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
