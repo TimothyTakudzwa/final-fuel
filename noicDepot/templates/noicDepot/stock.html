@@ -48,8 +48,9 @@
       <div class="table-responsive">
         <table id="depots" class="table table-striped table-bordered" style="width:100%">
             <tr>
-                <td height="50"> Fuel Station Name</td>
-                <td height="50"> {{subsidiary}}</td>
+                <td height="50"> USD Diesel</td>
+                <td height="50"> {{fuel.usd_diesel|intcomma}} {% if fuel.usd_diesel < 1000 %} <i
+                    class="material-icons text-danger">Diesel quantity too low</i>{% endif %}</td>
               </tr>
         <tr>
             <td height="50">Petrol Quantity</td>
@@ -63,10 +64,10 @@
               <td height="50">{{updates.petrol_price}}</td>
             </tr>
             <tr>
-                <td height="50">Diesel Quantity</td>
+                <td height="50">USD Price</td>
                 
                 <td height="50">
-                   {{updates.diesel_quantity}} {% if updates.diesel_quantity < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 10px; color:#cc3300;" aria-hidden="true"></i><a href="#pablo" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
+                    {{fuel.usd_diesel_price}}
                 </td>
               </tr>
               <tr>
