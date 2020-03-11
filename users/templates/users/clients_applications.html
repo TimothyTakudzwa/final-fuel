@@ -58,8 +58,7 @@
                     <th style="color: white;">User</th>
                     <th style="color: white;">Contact</th>
                     <th style="color: white;">Email</th>
-                    <th style="color: white;">Application</th>
-                    <th style="color: white;">Company Docs</th>
+                    <th style="color: white;">Documents</th>
                     <th style="color: white;">Action</th>
                 </tr>
             </thead>
@@ -71,13 +70,12 @@
                     <td>{{ client.applied_by.first_name }} {{client.applied_by.lastname}}</td>
                     <td>{{client.applied_by.phone_number}}</td>                    
                     <td>{{ client.applied_by.email }}</td>
-                    <td><a class="btn btn-info btn-sm" href="{% url 'users:download-application' client.id %}" >Download</a></td>
-                    <td><a class="btn btn-warning btn-sm" href="{% url 'users:download-document' client.id %}">Download</a></td>
+                    <td><a class="btn btn-info btn-sm" data-toggle="modal" data-target="documents_{{client.id}}" >Download</a></td>
                     <td><a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#approve{{client.id}}">Approve</a></td>
                 </tr>
 
                 <!-- Documents -->
-                <div class="modal fade modal-success in" id="approve_{{client.id}}" tabindex="-1" role="dialog"
+                <div class="modal fade modal-success in" id="documents_{{client.id}}" tabindex="-1" role="dialog"
                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document" >
                     <div class="modal-content">
