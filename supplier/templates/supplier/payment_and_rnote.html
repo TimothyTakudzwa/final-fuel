@@ -234,7 +234,10 @@
 
                                         <form method="POST" action="{% url 'supplier:release-note' payment.id %}" enctype="multipart/form-data">
                                             {% csrf_token %}
-                                            <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="release_note" class="form-control-file" id="exampleFormControlFile1" required>
+                                            <div class="form-group col-md-6">
+                                                <label>Release Date</label>
+                                                <input type="date" name="release_date" class="form-control"  required/>
+                                            </div>
                                             <br>
                                             <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
 
