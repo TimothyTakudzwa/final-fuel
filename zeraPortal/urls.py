@@ -29,9 +29,9 @@ urlpatterns = [
     path('download_release_note/<int:id>', views.download_release_note, name='download_release_note'),
     path('download_application/<int:id>', views.download_application, name='download_application'),
     path('download_fire_brigade_doc/<int:id>', views.download_fire_brigade_doc, name='download_fire_brigade_doc'),
-    path('download_ema/<int:id>', views.download_ema, name='download_ema')
-    
-    
+    path('download_ema/<int:id>', views.download_ema, name='download_ema'),
+    path('download_council/<int:id>', views.download_council, name='download_council'),
+    path('download_pop/<int:id>', views.download_pop, name='download_pop'),
     
     
 ]
