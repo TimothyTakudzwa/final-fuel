@@ -138,6 +138,20 @@
                         </a>
                     </li>
 
+                    
+                   
+                    <li class="nav-item {% if request.path == '/noic/allocations/' %} active {% endif %}">
+                        <a href="{% url 'noic:allocations' %}"><i class="fa fa-binoculars"></i><span>Allocations</span>
+                        </a>
+                    </li>
+
+                    
+
+                    <li class="{% if request.path == '/noic/staff/' %} active {% endif %}">
+                        <a href="{% url 'noic:staff' %}"><i class="fa fa-pie-chart"></i><span>Staff Management</span>
+                        </a>
+                    </li>
+
                     <li class="nav-item {% if request.path == '/noic/statistics/' %} active {% endif %}">
                         <a href="{% url 'noic:statistics' %}"><i class="fa fa-line-chart"></i><span>Statistics</span>
                         </a>
@@ -147,21 +161,8 @@
                         <a href="{% url 'noic:report_generator' %}"><i class="fa fa-cogs"></i><span>Reports</span>
                         </a>
                     </li>
-                   
-                    <li class="nav-item {% if request.path == '/noic/allocations/' %} active {% endif %}">
-                        <a href="{% url 'noic:allocations' %}"><i class="fa fa-binoculars"></i><span>Allocations</span>
-                        </a>
-                    </li>
 
-                    <li class="{% if request.path == '/noic/statistics/' %} active {% endif %}">
-                        <a href="{% url 'noic:statistics' %}"><i class="fa fa-line-chart"></i><span>Statistics</span>
-                        </a>
-                    </li>
-                    <li class="{% if request.path == '/noic/report_generator/' %} active {% endif %}">
-                        <a href="{% url 'noic:report_generator' %}"><i class="fa fa-pie-chart"></i><span>Report Generator</span>
-                        </a>
-                    </li>
-                   
+
                     <li class="nav-item {% if request.path == '/noic/profile/' %} active {% endif %}">
                         <a href="{% url 'noic:profile' %} "><i class="fa fa-user"></i><span>User Profile</span>
                         </a>
@@ -239,6 +240,11 @@
 <script>
     $(document).ready(function () {
         $('#depots').DataTable();
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#staff').DataTable();
     });
 </script>
    

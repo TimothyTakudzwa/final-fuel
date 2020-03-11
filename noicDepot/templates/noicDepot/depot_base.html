@@ -133,6 +133,12 @@
                         </a>
                     </li>
                    
+
+                    <ul class="sidebar-menu">
+                        <li class="nav-item {% if request.path == '/noicDepot/dashboard/' %} active {% endif %}">
+                            <a href="{% url 'noicDepot:dashboard' %}"><i class="fa fa-book"></i><span>Fuel Stocks</span>
+                            </a>
+                        </li>
                    
                     <li class="nav-item {% if request.path == '/noicDepot/profile/' %} active {% endif %}">
                         <a href="{% url 'noicDepot:profile' %} "><i class="fa fa-user"></i><span>User Profile</span>

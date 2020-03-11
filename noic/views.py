@@ -200,6 +200,53 @@ def statistics(request):
     return render(request, 'noic/statistics.html')
 
 
+def staff(request):
+    staffs = User.objects.filter(user_type='NOIC_STAFF').all()
+    for staff in staffs:
+        depot = NoicDepot.objects.filter(id=staff.subsidiary_id).first()
+        if depot:
+            depot.name = depot.name
+    form1 = DepotContactForm()
+    depots = NoicDepot.objects.all()
+    form1.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots]
+
+    # if request.method == 'POST':
+
+        # form1 = DepotContactForm(request.POST)
+        # first_name = request.POST.get('first_name')
+        # last_name = request.POST.get('last_name')
+        # email = request.POST.get('email')
+        # sup = User.objects.filter(email=email).first()
+        # if sup is not None:
+        #     messages.warning(request, f"{sup.email} already used in the system, please use a different email")
+        #     return redirect('users:suppliers_list')
+
+        # password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+        # phone_number = request.POST.get('phone_number')
+        # subsidiary_id = request.POST.get('depot')
+        # full_name = first_name + " " + last_name
+        # i = 0
+        # username = initial_username = first_name[0] + last_name
+        # while User.objects.filter(username=username.lower()).exists():
+        #     username = initial_username + str(i)
+        #     i += 1
+        # user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
+        #                            first_name=first_name, last_name=last_name, user_type='SUPPLIER',
+        #                            company=request.user.company, email=email, password=password,
+        #                            phone_number=phone_number)
+        # if message_is_send(request, user):
+        #     if user.is_active:
+        #         user.stage = 'menu'
+        #         user.save()
+
+        #     else:
+        #         messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+        # return redirect('users:suppliers_list')
+
+    return render(request, 'noic/staff.html', {'depots': depots, 'form1': form1})
+
+
+
 def report_generator(request):
 
     '''View to dynamically render form tables based on different criteria'''
