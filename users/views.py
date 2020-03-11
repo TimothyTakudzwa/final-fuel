@@ -1724,6 +1724,66 @@ def download_application(request, id):
     return response
 
 
+def download_tax_clearance(request, id):
+    application = Account.objects.filter(id=id).first()
+    if application:
+        filename = application.tax_clearance.name.split('/')[-1]
+        response = HttpResponse(application.tax_clearance, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect('users:client-application')
+    return response
+
+
+def download_cr14(request, id):
+    application = Account.objects.filter(id=id).first()
+    if application:
+        filename = application.cr14.name.split('/')[-1]
+        response = HttpResponse(application.cr14, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect('users:client-application')
+    return response
+
+
+def download_cr6(request, id):
+    application = Account.objects.filter(id=id).first()
+    if application:
+        filename = application.cr6.name.split('/')[-1]
+        response = HttpResponse(application.cr6, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect('users:client-application')
+    return response
+
+
+def download_proof_of_residence(request, id):
+    application = Account.objects.filter(id=id).first()
+    if application:
+        filename = application.proof_of_residence.name.split('/')[-1]
+        response = HttpResponse(application.proof_of_residence, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect('users:client-application')
+    return response
+
+
+def download_cert_of_inc(request, id):
+    application = Account.objects.filter(id=id).first()
+    if application:
+        filename = application.cert_of_inc.name.split('/')[-1]
+        response = HttpResponse(application.cert_of_inc, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect('users:client-application')
+    return response
+
+
 def download_document(request, id):
     document = Account.objects.filter(id=id).first()
     if document:
