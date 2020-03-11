@@ -342,7 +342,8 @@ def profile(request):
 
 def report_generator(request):
     '''View to dynamically render form tables based on different criteria'''
-    allocations = requests = orders = stock = None
+    orders = pending_orders = complete_orders = stock = allocations_per_supplier = None
+
     # orders = Transaction.objects.filter(supplier__company=request.user.company).all()
     start_date = start = "December 1 2019"
     end_date = end = "January 1 2019"
@@ -358,68 +359,74 @@ def report_generator(request):
             end_date = datetime.strptime(end_date, '%Y-%m-%d')
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
-            stock = CompanyFuelUpdate.objects.filter(company=request.user.company).all()
+            stock = type('test', (object,), {})()
+            stock.date = datetime.today()
+            stock.diesel_quantity, stock.petrol_quantity = get_current_stock()
 
-            requests = None
-            allocations = None
+            allocations_per_supplier = None
+            pending_orders = None
             orders = None
-            revs = None
-        if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':
-            orders = Transaction.objects.filter(date__range=[start_date, end_date],
-                                               supplier__company=request.user.company)
-            requests = None
-            allocations = None
-            revs = None
+            complete_orders = None    
 
-            if request.POST.get('report_type') == 'Revenue':
-                orders = Transaction.objects.filter(date__range=[start_date, end_date],
-                                                   supplier__company=request.user.company, is_complete=True)
-                revs = {}
-                total_revenue = 0
-                trans_no = 0
-
-                if orders:
-                    for tran in orders:
-                        total_revenue += (tran.offer.request.amount * tran.offer.price)
-                        trans_no += 1
-                    revs['revenue'] = '${:,.2f}'.format(total_revenue)
-
-                    revs['hits'] = trans_no
-                    revs['date'] = datetime.today().strftime('%D')
-                orders = None
-
-            requests = None
-            allocations = None
+        if request.POST.get('report_type') == 'Pending Orders':
+            pending_orders = Order.objects.filter(date__range=[start_date, end_date],
+                                               payment_approved=False)
             stock = None
-        if request.POST.get('report_type') == 'Orders':
+            allocations_per_supplier = None
+            orders = None
+            complete_orders = None    
+
+        if request.POST.get('report_type') == 'All Orders':
             orders = Order.objects.filter(date__range=[start_date, end_date])
-            print(f'__________________{requests}__________________________________')
+            print(f'__________________{orders}__________________________________')
             print(f'__________________I am in Orders__________________________________')
 
-            requests = None
-            allocations = None
+            pending_orders = None
+            allocations_per_supplier = None
             stock = None
-            revs = None
-        if request.POST.get('report_type') == 'Allocations':
-            print("__________________________I am in allocations____________________________")
+            complete_orders = None    
+
+        if request.POST.get('report_type') == 'Completed Orders':
+            complete_orders = Order.objects.filter(date__range=[start_date, end_date], payment_approved=True)
+            print(f'__________________{complete_orders}__________________________________')
+            print(f'__________________I am in complete_orders__________________________________')
+
+            pending_orders = None
+            allocations_per_supplier = None
+            stock = None
+            orders = None    
+        if request.POST.get('report_type') == 'Allocations Per Supplier':
+            print("__________________________I am in allocations per supplier____________________________")
             allocations = FuelAllocation.objects.all()
-            print(f'________________________________{allocations}__________________________')
-            requests = None
-            revs = None
+            supplier_allocations = User.objects.filter(user_type='SUPPLIER')
+            allocations_per_supplier=[]
+            for supplier in allocations:
+                order_count = 0
+                order_quantity = 0
+                for order in SordNationalAuditTrail.objects.filter(company=supplier.company):
+                    order_count += 1
+                    order_quantity += order.quantity
+                supplier.order_count = order_count
+                supplier.order_quantity = order_quantity
+                allocations_per_supplier.append(supplier)      
+
+            print(f'________________________________{allocations_per_supplier}__________________________')
+            pending_orders = None
+            orders = None
+            complete_orders = None    
             stock = None
         start = start_date
         end = end_date
 
         # revs = 0
         return render(request, 'noic/reports.html',
-                      {'orders': orders, 'requests': requests, 'allocations': allocations,
-                       'start': start, 'end': end, 'stock': stock})
+                      {'orders': orders, 'pending_orders': pending_orders, 'complete_orders': complete_orders,
+                       'start': start, 'end': end, 'stock': stock, 'allocations_per_supplier':allocations_per_supplier})
 
     show = False
-    print(orders)
     return render(request, 'noic/reports.html',
-                  {'orders': orders, 'requests': requests, 'allocations': allocations,'start': start_date,
-                   'end': end_date, 'show': show, 'stock': stock})
+                  {'orders': orders, 'pending_orders': pending_orders, 'complete_orders': complete_orders,
+                       'start': start, 'end': end, 'stock': stock})
 
 # @login_required()
 def statistics(request):
