@@ -575,13 +575,6 @@
                                                     <td>{{order.fuel_type}}</td>
                                                     <td>{{order.currency}}</td>
                                                     <td>{{order.amount_paid}}</td>
-
-
-                                                    
-                                                    <td>
-                                                    <i class="fa fa-times-circle" style="color: #e74c3c;" aria-hidden="true"></i>
-                                                    </td>
-        
                                                 </tr>
         
                                                 {% endfor %}
@@ -855,16 +848,13 @@
                                             <th style="color:white;">
                                             Order Quantity
                                             </th>
-                                            <th style="color:white;">
-                                            Allocated By
-                                            </th>
                                             
                                                 
                                         <tbody>
                                             {% for supplier in allocations_per_supplier %}
                                             <tr>
                                                 <td>{{supplier.company.name|title}}</td>
-                                                <td>{{supplier.address}}</td>
+                                                <td>{{supplier.company.address}}</td>
                                                 <td>{{supplier.first_name|title}} {{supplier.last_name|title }}</td>
                                                 <td>{{supplier.order_count}}</td>
                                                 <td>{{ supplier.order_quantity}}</td> 

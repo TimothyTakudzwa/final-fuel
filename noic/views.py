@@ -304,11 +304,11 @@ def report_generator(request):
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
         if start_date:
-            start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
             start_date = start_date.date()
         report_type = request.POST.get('report_type')
         if end_date:
-            end_date = datetime.strptime(end_date, '%Y-%m-%d')
+            end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
             stock = type('test', (object,), {})()
@@ -350,7 +350,7 @@ def report_generator(request):
         if request.POST.get('report_type') == 'Allocations Per Supplier':
             print("__________________________I am in allocations per supplier____________________________")
             allocations = FuelAllocation.objects.all()
-            supplier_allocations = User.objects.filter(user_type='SUPPLIER')
+            supplier_allocations = User.objects.filter(user_type='S_ADMIN')
             allocations_per_supplier=[]
             for supplier in allocations:
                 order_count = 0
@@ -360,7 +360,8 @@ def report_generator(request):
                     order_quantity += order.quantity
                 supplier.order_count = order_count
                 supplier.order_quantity = order_quantity
-                allocations_per_supplier.append(supplier)      
+                if supplier not in allocations_per_supplier:
+                    allocations_per_supplier.append(supplier)      
 
             print(f'________________________________{allocations_per_supplier}__________________________')
             pending_orders = None
