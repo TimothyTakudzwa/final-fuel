@@ -302,12 +302,11 @@
                                                     <div class="form-group">
                                                         <select name="report_type" class="form-control form-control-sm " id="report_options">
                                                             <option value="" selected disabled hidden>Choose here</option>
-                                                            <option selected>Orders</option>
-                                                            <option selected>Total Inventory</option>
-                                                            <option selected>Companies - Unverified</option>
-                                                            <option value="Requests">Requests</option>
-                                                            <option value="Stock">Stock</option>
-                                                            <option value="Allocations">Allocations</option>
+                                                            <option selected>All Orders</option>
+                                                            <option selected>Pending Orders</option>
+                                                            <option selected>Allocations Per Supplier</option>
+                                                            <option>Completed Orders</option>
+                                                            <option>Stock</option>
                                                         </select>
                                                     </div>
                                                     <div class="row report_dates" style="margin-bottom: 25px; margin-top: 25px">
@@ -363,37 +362,29 @@
                             <!-- <div class="jumbotron jumbotron-fluid" style="background: linear-gradient(to right, #fdbb2d, #b21f1f, #1a2a6c);color: white;margin-bottom: 100px;"> -->
 
                         
-                        {% if trans or revs or stock or allocations or requests or verified_companies or  unverified_companies%}
+                        {% if orders or pending_orders or stock or complete_orders or allocations_per_supplier %}
 
                         <div class="container" style="margin-bottom: 30px">
                             <blockquote class="quote-box">
-                              {% if trans or revs or allocations or requests %}
+                              {% if orders or pending_orders or allocations_per_supplier or complete_orders %}
                               <h1 style="color: #374767;font-size: 22px;">Showing results from <b>{{start}}</b> to <b>{{end}} </b> </h1>
                               {% elif stock %}
-                              <h1 style="color: #374767;font-size: 22px;">Showing Current Stock Levels  - {{ request.user.company.name|title}}'s Subsidiaries </h1>
-                              {% elif verified_companies %}
-                              <h1 style="color: #374767;font-size: 22px;">Showing Current Verified Companies </h1>
-                              {% elif unverified_companies %}
-                              <h1 style="color: #374767;font-size: 22px;">Showing Current Unverified Companies </h1>
+                              <h1 style="color: #374767;font-size: 22px;">Showing Current Stock Levels</h1>
 
                               {% endif %}
                               <hr>
                               <div class="blog-post-actions">
                                 <p class="blog-post-bottom pull-left" style="padding:20px;">
-                                  {% if trans %}
-                                  Transactions
-                                  {% elif revs %}
-                                  Revenue
+                                  {% if orders %}
+                                  Orders
+                                  {% elif pending_orders %}
+                                  Pending Orders
                                   {% elif stock%}
                                   Stock
-                                  {% elif allocations %}
-                                  Fuel Allocations
-                                  {% elif requests %}
-                                  Requests
-                                  {% elif verified_companies %}
-                                  Verified Companies
-                                  {% elif unverified_companies %}
-                                  Unverified Companies
+                                  {% elif allocations_per_supplier %}
+                                  Allocations Per Supplier
+                                  {% elif complete_orders %}
+                                  Complete Orders
                                   {% endif %}
                                   Report
                                 </p>
@@ -434,14 +425,14 @@
                         </div>
                         {%endif%}  
 
-                        {% if verified_companies %}
+                        {% if pending_orders %}
                         <div class="col-md-12">
                             <div class="mt-2 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
         
                                 <div class="panel-heading ui-sortable-handle">
                                     <div class="btn-group">
 
-                                        <h4 class="card-title ">Companies (Verified) Report</h4>
+                                        <h4 class="card-title ">Orders (Pending) Report</h4>
                                     </div>  
                                     
                                     <div class="dropdown">
@@ -462,27 +453,22 @@
                                         <table id="verified_companies" class="table table-striped table-bordered" style="width:100%">
                                             <thead>
                                                 <tr>
+                                                    <th>Date</th>
                                                     <th>Company</th>
-                                                    <th>Supplier Admin</th>
-                                                    <th>Address </th>
-                                                    <th>Licence Number</th>
-                                                    <th>Verified</th>
-
-                                                    
+                                                    <th>Quantity </th>
+                                                    <th>Fuel Type</th>
+                                                    <th>Currency</th>  
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for company in verified_companies %}
+                                                {% for order in pending_orders %}
                                                 <tr>
                                                     
-                                                    <td>{{company.name}}</td>
-                                                    <td>{{company.admin.first_name|title}} {{company.admin.last_name|title}}</td>
-                                                    <td>{{company.address}}</td>
-                                                    <td>{{company.license_number}}</td>
-                                                    
-                                                    <td>
-                                                    <i class="fa fa-check-circle" style="color: #2ecc71;" aria-hidden="true"></i>
-                                                    </td>
+                                                    <td>{{order.date}}</td>
+                                                    <td>{{order.company.name|title}}</td>
+                                                    <td>{{order.quantity}}</td>
+                                                    <td>{{order.fuel_type}}</td>
+                                                    <td>{{order.currency}}</td>
         
                                                 </tr>
         
@@ -490,11 +476,11 @@
                                             </tbody>
                                             <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
                                                 <tr>
+                                                    <th>Date</th>
                                                     <th>Company</th>
-                                                    <th>Supplier Admin</th>
-                                                    <th>Address </th>
-                                                    <th>Licence Number</th>
-                                                    <th>Verified</th>
+                                                    <th>Quantity </th>
+                                                    <th>Fuel Type</th>
+                                                    <th>Currency</th>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -543,14 +529,14 @@
                         </div>
                         {% endif %}
                     
-                        {% if unverified_companies %}
+                        {% if complete_orders %}
                         <div class="col-md-12">
                             <div class="mt-2 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
         
                                 <div class="panel-heading ui-sortable-handle">
                                     <div class="btn-group">
 
-                                        <h4 class="card-title ">Companies (Unverified) Report</h4>
+                                        <h4 class="card-title ">Orders (Complete) Report</h4>
                                     </div>  
                                     
                                     <div class="dropdown">
@@ -571,23 +557,26 @@
                                         <table id="verified_companies" class="table table-striped table-bordered" style="width:100%">
                                             <thead>
                                                 <tr>
+                                                    <th>Date</th>
                                                     <th>Company</th>
-                                                    <th>Supplier Admin</th>
-                                                    <th>Address </th>
-                                                    <th>Licence Number</th>
-                                                    <th>Verified</th>
-
-                                                    
+                                                    <th>Quantity </th>
+                                                    <th>Fuel Type</th>
+                                                    <th>Currency</th>
+                                                    <th>Amount Paid</th> 
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for company in unverified_companies %}
+                                                {% for order in complete_orders %}
                                                 <tr>
                                                     
-                                                    <td>{{company.name}}</td>
-                                                    <td>{{company.admin.first_name|title}} {{company.admin.last_name|title}}</td>
-                                                    <td>{{company.address}}</td>
-                                                    <td>{{company.license_number}}</td>
+                                                    <td>{{order.date}}</td>
+                                                    <td>{{order.company.name|title}}</td>
+                                                    <td>{{order.quantity}}</td>
+                                                    <td>{{order.fuel_type}}</td>
+                                                    <td>{{order.currency}}</td>
+                                                    <td>{{order.amount_paid}}</td>
+
+
                                                     
                                                     <td>
                                                     <i class="fa fa-times-circle" style="color: #e74c3c;" aria-hidden="true"></i>
@@ -599,11 +588,12 @@
                                             </tbody>
                                             <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
                                                 <tr>
+                                                    <th>Date</th>
                                                     <th>Company</th>
-                                                    <th>Supplier Admin</th>
-                                                    <th>Address </th>
-                                                    <th>Licence Number</th>
-                                                    <th>Verified</th>
+                                                    <th>Quantity </th>
+                                                    <th>Fuel Type</th>
+                                                    <th>Currency</th>
+                                                    <th>Amount Paid</th>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -787,43 +777,34 @@
                                         <table id="stock" class="table table-striped table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr>
-                                                        <th>Last Update</th>
-                                                        <th>Station Type</th>
-                                                        <th>Station Name</th>
-                                                        <th>Petrol (Litres)</th>
-                                                        <th>Petrol Price</th>
-                                                        <th>Diesel (Litres)</th>
-                                                        <th>Diesel Price</th>
+                                                        <th>Currency</th>
+                                                        <th>Date</th>
+                                                        <th>Diesel Quantity (<i style="font-weight: lighter;">l</i>)</th>
+                                                        <th>Petrol Quantity (<i style="font-weight: lighter;">l</i>)</th>
                                                         
                                                       
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {%for my_stock in stock %}
                                                     <tr>
-                                                        
-                                                            <td>{{my_stock.last_updated}}</td>
-                                                            <td>{{my_stock.sub_type}}</td>
-                                                            <td>{{my_stock.subsidiary_name}}</td>
-                                                            <td>{{my_stock.petrol_quantity}} l</td>
-                                                            <td>{{my_stock.petrol_price}}</td>
-                                                            <td>{{my_stock.diesel_quantity}} l</td>
-                                                            <td>$ {{my_stock.diesel_price}}</td>
-                                                            
+                                                        <td>USD</td>
+                                                        <td>{{stock.date|date:"M d, Y"}}</td>
+                                                        <td>{{stock.usd.diesel_quantity}}</td>
+                                                        <td>{{stock.usd.petrol_quantity}}</td>   
                                                     </tr>
-                                                    {%endfor%}
-                                                  
-                            
+                                                    <tr>
+                                                        <td>ZWL</td>
+                                                        <td>{{stock.date|date:"M d, Y"}}</td>
+                                                        <td>{{stock.zwl.diesel_quantity}}</td>
+                                                        <td>{{stock.zwl.petrol_quantity}}</td>   
+                                                    </tr>
                                                 </tbody>
                                                 <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
                                                     <tr>
-                                                            <th>Last Update</th>
-                                                            <th>Station Type</th>
-                                                            <th>Station Name</th>
-                                                            <th>Diesel Quantity</th>
-                                                            <th>Petrol Price</th>
-                                                            <th>Diesel Quantity</th>
-                                                            <th>Diesel Price</th>
+                                                        <th>Currency</th>
+                                                        <th>Date</th>
+                                                        <th>Diesel Quantity (<i style="font-weight: lighter;">l</i>)</th>
+                                                        <th>Petrol Quantity (<i style="font-weight: lighter;">l</i>)</th>
                                                          
                                                     </tr>
                                                 </tfoot>
@@ -834,14 +815,14 @@
         
                         </div>
                         {% endif %}
-                        {% if requests %}
+                        {% if allocations_per_supplier %}
                         <div class="col-md-12">
                             <div class="mt-2 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
                                 
                                 <div class="panel-heading ui-sortable-handle">
                                     <div class="btn-group">
 
-                                        <h4 class="card-title ">Requests Report</h4>
+                                        <h4 class="card-title ">Allocations Per Supplier Report</h4>
                                     </div>
                                     
                                     <div class="dropdown">
@@ -860,40 +841,34 @@
                                     <table id="requests" class="table table-striped table-bordered" style="width:100%">
                                         <thead style="color:white; background:lightslategray">
                                             <th style="color:white;">
-                                            Date
+                                            Company
                                             </th>
                                             <th style="color:white;">
-                                            Time
-                                            </th>
-                                            
+                                            Address
+                                            </th>  
                                             <th style="color:white;">
-                                            Name
-                                            </th>
-                                            <th style="color:white;">
-                                            Amount (Litres)
+                                            Contact Person
                                             </th>
                                             <th style="color:white;">
-                                            Fuel Type
+                                            Order Count
                                             </th>
                                             <th style="color:white;">
-                                            Payment Method
+                                            Order Quantity
+                                            </th>
+                                            <th style="color:white;">
+                                            Allocated By
                                             </th>
                                             
                                                 
                                         <tbody>
-                                            {% for req in requests %}
+                                            {% for supplier in allocations_per_supplier %}
                                             <tr>
-                                                    <td>{{req.date}}</td>
-                                                    <td>{{req.time}}</td>
-                                                    <td>{{req.name|title}}</td>
-                                                    <td>$ {{req.amount|stringformat:".2f"}}</td>
-                                                    <td>{{req.fuel_type|title}}</td>
-                                                    <td>
-                                                        {%if req.cash%}<i class="fa fa-dollar"></i>{%endif%} {% if req.cash %}<img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL"> {%endif%} {%if req.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {%endif%} {%if req.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH"> {%endif%} {%if req.swipe%}<i class="fa fa-cc-visa"></i> {% endif%} {%if not req.cash and not req.ecocash and not req.swipe and not req.usd%}No Payment Method {%endif%}
-                                                    </td>
-                                                
-                                                    
-                                                </tr>
+                                                <td>{{supplier.company.name|title}}</td>
+                                                <td>{{supplier.address}}</td>
+                                                <td>{{supplier.first_name|title}} {{supplier.last_name|title }}</td>
+                                                <td>{{supplier.order_count}}</td>
+                                                <td>{{ supplier.order_quantity}}</td> 
+                                            </tr>
                                         
                                             {% endfor %}   
                                         
