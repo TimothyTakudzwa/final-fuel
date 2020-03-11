@@ -205,7 +205,12 @@
                             <td>{{payment.value}}</td>
                             <td>{{payment.balance}}</td>
                             {% if payment.release_date %}
-                            <td>Released</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a class="btn btn-primary btn-sm" style="color: white;" href="{% url 'supplier:view-release-note' payment.id %}">View</a>
+                                    <a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#edit_{{payment.id}}">Edit</a>  
+                                </div>
+                            </td>
                             {% else %}
                             <td>
                             <a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#upload_{{payment.id}}">
@@ -225,7 +230,7 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header" style="background-color: #009688; color: white">
-                                        <span class="modal-title" id="exampleModalLabel">Upload Release Note</span>
+                                        <span class="modal-title" id="exampleModalLabel">Add Release Date</span>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -233,6 +238,35 @@
                                     <div class="modal-body">
 
                                         <form method="POST" action="{% url 'supplier:release-note' payment.id %}" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <div class="form-group col-md-6">
+                                                <label>Release Date</label>
+                                                <input type="date" name="release_date" class="form-control"  required/>
+                                            </div>
+                                            <br>
+                                            <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--End Upload Document-->
+
+
+                        <!--Upload Document-->
+                        <div class="modal fade modal-sucess in" id="edit_{{payment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color: #009688; color: white">
+                                        <span class="modal-title" id="exampleModalLabel">Change Release Date</span>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <form method="POST" action="{% url 'supplier:edit-release-note' payment.id %}" enctype="multipart/form-data">
                                             {% csrf_token %}
                                             <div class="form-group col-md-6">
                                                 <label>Release Date</label>
