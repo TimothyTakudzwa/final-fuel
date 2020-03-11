@@ -18,7 +18,7 @@
         <i class="fa fa-binoculars"></i>
     </div> -->
     <div class="header-title" style="margin-left: 0px;">
-        <h1>NOIC Available Fuel</h1>
+        <h1>{{depot.name}} Available Fuel</h1>
         <small>Fuel Management System</small>
         <ol class="breadcrumb hidden-xs">
             <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
@@ -30,7 +30,7 @@
 <div class="content">
     <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
         data-index="0">
-        <div class="panel-heading ui-sortable-handle"><b>NOIC Depots</b>
+        <div class="panel-heading ui-sortable-handle"><b>Fuel Stocks</b>
            
             
             <div class="dropdown">
@@ -47,45 +47,74 @@
       
       <div class="table-responsive">
         <table id="depots" class="table table-striped table-bordered" style="width:100%">
+            <tr>
+                <td height="50"> Fuel Station Name</td>
+                <td height="50"> {{subsidiary}}</td>
+              </tr>
+        <tr>
+            <td height="50">Petrol Quantity</td>
+            <td height="50">
+            {{updates.petrol_quantity}} {% if updates.petrol_quantity < 1000 %} 
+            <i class="fa fa-exclamation-triangle" style="margin-left: 10px; color:#cc3300;" aria-hidden="true"></i><a href="#pablo" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
+          </td>
+          </tr>
+          <tr>
+              <td height="50">Petrol Price</td>
+              <td height="50">{{updates.petrol_price}}</td>
+            </tr>
+            <tr>
+                <td height="50">Diesel Quantity</td>
+                
+                <td height="50">
+                   {{updates.diesel_quantity}} {% if updates.diesel_quantity < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 10px; color:#cc3300;" aria-hidden="true"></i><a href="#pablo" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
+                </td>
+              </tr>
+              <tr>
+                  <td height="50">Diesel Price</td>
+                  <td height="50">{{updates.diesel_price}}</td>
+                </tr>
+                <tr>
+                  <td height="50">Payment Method</td>
+                  <td><b>{%if updates.cash%}Cash {% else%} {%endif%} {%if updates.usd%}USD {% else%} {%endif%} {%if updates.ecocash%}Ecocash {% else%} {%endif%} {%if updates.swipe%}Swipe {% else%} {%endif%}  </b> </td>
+                </tr>
+                <tr>
+                  <td height="50">Queue Size</td>
+                  <td height="50">{{updates.queue_length}}</td>
+                </tr>
+                <tr>
+                    <td height="50">Status</td>
+                    <td height="50">{{updates.status}}</td>
+                  </tr>
             <thead style="background-color: lightslategray; color:white;">
                 <tr>
-                    <th style="color: white;">Currency</th>
-                    <th style="color: white;">Petrol Quantity</th>
-                    <th style="color: white;">Petrol Price</th>
-                    <th style="color: white;">Diesel Quantity</th>
-                    <th style="color: white;">Diesel Price</th>
-                    <th style="color: white;">Action</th>
+                    <th style="color: white;">USD Diesel</th>
+                    <th style="color: white;">USD Price</th>
+                    <th style="color: white;">RTGS Diesel</th>
+                    <th style="color: white;">RTGS Price</th>
+                    <th style="color: white;">USD Petrol </th>
+                    <th style="color: white;">USD Price</th>
+                    <th style="color: white;">RTGS Petrol </th>
+                    <th style="color: white;">RTGS Price</th>
                 </tr>
             </thead>
             <tbody>
                 {% for fuel in depot_stock %}
             <tr>
-
-                <td><b style='color:#009688'>{{fuel.currency}} </b></td>
-                <td>{{fuel.unallocated_petrol|intcomma}} Litres {% if fuel.unallocated_petrol < 1000 %} <i
-                        class="material-icons text-danger">Petrol quantity too low</i>{% endif %}</td>
-                <td> {{fuel.petrol_price}}</td>
-                <td>{{fuel.unallocated_diesel|intcomma}} Litres {% if fuel.unallocated_diesel < 1000 %} <i
+                <td>{{fuel.usd_diesel|intcomma}} {% if fuel.usd_diesel < 1000 %} <i
                         class="material-icons text-danger">Diesel quantity too low</i>{% endif %}</td>
-                <td> {{fuel.diesel_price}}</td>
-
-                <td>
-                    <div class="btn-group">
-                        {% if capacity.currency == 'USD'%}
-                        <button class="btn btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal"
-                            data-target="#add_usd_fuel{{fuel.id}}"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp; | Add USD Fuel</button>&nbsp;&nbsp;
-                        <button class="btn btn-danger btn-sm" style="font-size: 12px;" data-toggle="modal"
-                            data-target="#edit_{{fuel.id}}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp; | Edit Price</button>
-                        {%else%}
-                        <button class="btn btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal"
-                            data-target="#add_rtgs_fuel{{fuel.id}}"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp; | Add RTGS Fuel</button>&nbsp;&nbsp;
-                        <button class="btn btn-danger btn-sm" style="font-size: 12px;" data-toggle="modal"
-                            data-target="#edit_{{fuel.id}}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp; | Edit Price</button>
-                        
-                        {%endif%}
-                    </div>
-                </td>
+                <td>{{fuel.usd_diesel_price}}</td>
+                <td>{{fuel.rtgs_diesel|intcomma}} {% if fuel.rtgs_diesel < 1000 %} <i
+                    class="material-icons text-danger">Diesel quantity too low</i>{% endif %}</td>
+                <td>{{fuel.rtgs_diesel_price}}</td>
+                <td>{{fuel.usd_petrol|intcomma}} {% if fuel.usd_petrol < 1000 %} <i
+                    class="material-icons text-danger">Petrol quantity too low</i>{% endif %}</td>
+                <td>{{fuel.usd_petrol_price}}</td>
+                <td>{{fuel.rtgs_petrol|intcomma}} {% if fuel.rtgs_petrol < 1000 %} <i
+                    class="material-icons text-danger">Petrol quantity too low</i>{% endif %}</td>
+                <td>{{fuel.rtgs_petrol_price}}</td>
+                
             </tr>
+
 
         <div class="modal fade modal-success in" id="edit_{{fuel.id}}" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
