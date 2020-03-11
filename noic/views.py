@@ -27,7 +27,7 @@ from accounts.models import AccountHistory
 from users.views import message_is_sent
 from national.models import Order, NationalFuelUpdate, SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
 
-from .lib import get_current_stock, get_total_allocations, get_complete_orders_percentage, orders_made_this_week, total_orders, get_monthly_orders
+from .lib import *
 
 user = get_user_model()
 
@@ -314,7 +314,7 @@ def report_generator(request):
         if request.POST.get('report_type') == 'Stock':
             stock = type('test', (object,), {})()
             stock.date = datetime.today()
-            stock.diesel_quantity, stock.petrol_quantity = get_current_stock()
+            stock.usd, stock.zwl = get_current_usd_stock(), get_current_zwl_stock()
 
             allocations_per_supplier = None
             pending_orders = None

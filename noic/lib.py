@@ -2,16 +2,32 @@ import datetime
 
 from national.models import NationalFuelUpdate, SordNationalAuditTrail, Order
 
-def get_current_stock():
-    stock = NationalFuelUpdate.objects.all().first()
-    if stock:
-        unallocated_diesel = stock.unallocated_diesel
-        unallocated_petrol = stock.unallocated_petrol
+def get_current_usd_stock():
+    inventory_usd = type('test', (object,), {})()
+    stock_usd = NationalFuelUpdate.objects.filter(currency='USD').first()
+    
+    if stock_usd:
+        inventory_usd.diesel_quantity = stock_usd.unallocated_diesel
+        inventory_usd.petrol_quantity  = stock_usd.unallocated_petrol
     else:
-        unallocated_diesel = 0.0
-        unallocated_petrol = 0.0
+        inventory_usd.diesel_quantity = 0.0
+        inventory_usd.petrol_quantity  = 0.0
 
-    return unallocated_diesel, unallocated_petrol
+    return inventory_usd
+
+def get_current_zwl_stock():
+    inventory_zwl = type('test', (object,), {})()
+    stock_zwl = NationalFuelUpdate.objects.filter(currency='ZWL').first()
+    if stock_zwl:
+        inventory_zwl.diesel_quantity = stock_zwl.unallocated_diesel
+        inventory_zwl.petrol_quantity  = stock_zwl.unallocated_petrol
+    else:
+        inventory_zwl.diesel_quantity = 0.0
+        inventory_zwl.petrol_quantity  = 0.0
+    return inventory_zwl    
+
+
+
 
 def get_total_allocations():
 
