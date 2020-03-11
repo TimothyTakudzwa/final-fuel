@@ -80,7 +80,7 @@
                 </span>
                 <span class="logo-lg">
                     <!--<b>Admin</b>H-admin-->
-                    <h4>Fuel Management System</h4>
+                    <h4>Fuel Management System Zim Noic Depot</h4>
                 </span>
             </a>
             <!-- Header Navbar -->
@@ -128,43 +128,20 @@
              
                 <!-- sidebar menu -->
                 <ul class="sidebar-menu">
-                    <li class="nav-item {% if request.path == '/noic/dashboard/' %} active {% endif %}">
-                        <a href="{% url 'noic:dashboard' %}"><i class="fa fa-book"></i><span>Dashboard</span>
+                    <li class="nav-item {% if request.path == '/noicDepot/dashboard/' %} active {% endif %}">
+                        <a href="{% url 'noicDepot:dashboard' %}"><i class="fa fa-book"></i><span>Dashboard</span>
                         </a>
                     </li>
                    
-                    <li class="nav-item {% if request.path == '/noic/orders/' %} active {% endif %}">
-                        <a href="{% url 'noic:orders' %}"><i class="fa fa-book"></i><span>Company Orders</span>
-                        </a>
-                    </li>
 
-                    
+                    <ul class="sidebar-menu">
+                        <li class="nav-item {% if request.path == '/noicDepot/stock/' %} active {% endif %}">
+                            <a href="{% url 'noicDepot:stock' %}"><i class="fa fa-binoculars"></i><span>Fuel Stocks</span>
+                            </a>
+                        </li>
                    
-                    <li class="nav-item {% if request.path == '/noic/allocations/' %} active {% endif %}">
-                        <a href="{% url 'noic:allocations' %}"><i class="fa fa-binoculars"></i><span>Allocations</span>
-                        </a>
-                    </li>
-
-                    
-
-                    <li class="{% if request.path == '/noic/staff/' %} active {% endif %}">
-                        <a href="{% url 'noic:staff' %}"><i class="fa fa-user"></i><span>Staff Management</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item {% if request.path == '/noic/statistics/' %} active {% endif %}">
-                        <a href="{% url 'noic:statistics' %}"><i class="fa fa-line-chart"></i><span>Statistics</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item {% if request.path == '/noic/reports/' %} active {% endif %}">
-                        <a href="{% url 'noic:report_generator' %}"><i class="fa fa-cogs"></i><span>Reports</span>
-                        </a>
-                    </li>
-
-
-                    <li class="nav-item {% if request.path == '/noic/profile/' %} active {% endif %}">
-                        <a href="{% url 'noic:profile' %} "><i class="fa fa-users"></i><span>User Profile</span>
+                    <li class="nav-item {% if request.path == '/noicDepot/profile/' %} active {% endif %}">
+                        <a href="{% url 'noicDepot:profile' %} "><i class="fa fa-user"></i><span>User Profile</span>
                         </a>
                     </li>
                     <li class="">
@@ -240,11 +217,6 @@
 <script>
     $(document).ready(function () {
         $('#depots').DataTable();
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $('#staff').DataTable();
     });
 </script>
    

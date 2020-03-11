@@ -15,6 +15,7 @@ urlpatterns = [
     path('allocate_fuel/<int:id>', views.allocate_fuel, name='allocate_fuel'),
     path('reports/', views.report_generator, name="report_generator"),
     path('statistics/', views.statistics, name="statistics"),
+    path('staff/', views.staff, name='staff')
 
 
 ]
