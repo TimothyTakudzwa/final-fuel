@@ -430,8 +430,11 @@ def report_generator(request):
 
 # @login_required()
 def statistics(request):
-    unallocated_diesel = get_current_stock()[0]
-    unallocated_petrol = get_current_stock()[1]
+    unallocated_diesel_usd = get_current_usd_stock().diesel_quantity
+    unallocated_petrol_usd = get_current_usd_stock().petrol_quantity
+    unallocated_diesel_zwl = get_current_zwl_stock().diesel_quantity
+    unallocated_petrol_zwl = get_current_zwl_stock().petrol_quantity
+
     total_allocations_quantity = get_total_allocations()
     orders_complete_percentage = get_complete_orders_percentage
     orders_this_week_count = orders_made_this_week() 
@@ -462,7 +465,7 @@ def statistics(request):
 
     clients = sorted(all_clients, key=lambda x: x.total_revenue, reverse=True)
     
-    return render(request, 'noic/statistics.html', {'unallocated_diesel':unallocated_diesel,'unallocated_petrol': unallocated_petrol,
+    return render(request, 'noic/statistics.html', {'unallocated_diesel_usd':unallocated_diesel_usd,'unallocated_petrol_usd': unallocated_petrol_usd,
                             'total_allocations_quantity':total_allocations_quantity, 'orders_complete_percentage': orders_complete_percentage,
                             'orders_this_week_count':orders_this_week_count, 'orders_number':orders_number, 'monthly_rev': monthly_rev,
-                             'clients':clients})
+                             'clients':clients, 'unallocated_diesel_zwl':unallocated_diesel_zwl, 'unallocated_petrol_zwl': unallocated_petrol_zwl })
