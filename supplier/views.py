@@ -1052,14 +1052,14 @@ def view_delivery_note(request, id):
     return response
 
 def upload_release_note(request, id):
-    transaction = Transaction.objects.filter(id=id).first()
+    payment_history = AccountHistory.objects.filter(id=id).first()
+    transaction = Transaction.objects.filter(id=payment_history.transaction.id).first()
     if request.method == 'POST':
         transaction.release_date = request.POST['release_date']
 
         transaction.proof_of_payment = None
         transaction.pending_proof_of_payment = False
         transaction.save()
-        payment_history = AccountHistory.objects.filter(transaction=transaction, value=0.00).first()
         payment_history.value += transaction.paid_reserve
         payment_history.balance -= transaction.paid_reserve
         payment_history.release_note = request.POST['release_date']

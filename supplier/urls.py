@@ -41,13 +41,4 @@ urlpatterns = [
     path('client_transaction_history/<int:id>', views.client_transaction_history, name="client_transaction_history")
 
 
-
-
-
-
-
-
-
-
-
 ]
