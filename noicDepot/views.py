@@ -55,6 +55,7 @@ def upload_release_note(request, id):
 def view_release_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     allocation.admin = User.objects.filter(company=allocation.company).filter(user_type='S_ADMIN').first()
+    allocation.rep = request.user
     context = {
         'allocation': allocation
     }
