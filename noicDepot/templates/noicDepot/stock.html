@@ -51,45 +51,45 @@
             
             <tr>
                 <td height="35"> USD Diesel Quantity</td>
-                <td height="35"> {{fuel.usd_diesel|intcomma}} {% if fuel.usd_diesel < 1000 %} <i
+                <td height="35"> {{fuel.usd_diesel|intcomma}}L {% if fuel.usd_diesel < 1000 %} <i
                     class="material-icons text-danger">Diesel quantity too low</i>{% endif %}</td>
               </tr>
               <tr>
                 <td height="35">USD Diesel Price</td>
                 
                 <td height="35">
-                    {{fuel.usd_diesel_price}}
+                    ${{fuel.usd_diesel_price}}
                 </td>
               </tr>
         <tr>
             <td height="35">RTGS Diesel Quantity</td>
             <td height="35">
-                {{fuel.rtgs_diesel|intcomma}} {% if fuel.rtgs_diesel < 1000 %} <i
+                {{fuel.rtgs_diesel|intcomma}}L {% if fuel.rtgs_diesel < 1000 %} <i
                 class="material-icons text-danger">Diesel quantity too low</i>{% endif %}
           </td>
           </tr>
           <tr>
               <td height="35">RTGS Diesel Price</td>
-              <td height="35">{{fuel.rtgs_diesel_price}}</td>
+              <td height="35">${{fuel.rtgs_diesel_price}}</td>
             </tr>
            
               <tr>
                   <td height="35">USD Petrol Quantity</td>
-                  <td height="35">{{fuel.usd_petrol|intcomma}} {% if fuel.usd_petrol < 1000 %} <i
+                  <td height="35">{{fuel.usd_petrol|intcomma}}L {% if fuel.usd_petrol < 1000 %} <i
                     class="material-icons text-danger">Petrol quantity too low</i>{% endif %}</td>
                 </tr>
                 <tr>
                   <td height="35">USD Petrol Price</td>
-                  <td>{{fuel.usd_petrol_price}}</td>
+                  <td>${{fuel.usd_petrol_price}}</td>
                 </tr>
                 <tr>
                   <td height="35">RTGS Petrol Quantity</td>
-                  <td height="35">{{fuel.rtgs_petrol|intcomma}} {% if fuel.rtgs_petrol < 1000 %} <i
+                  <td height="35">{{fuel.rtgs_petrol|intcomma}}L {% if fuel.rtgs_petrol < 1000 %} <i
                     class="material-icons text-danger">Petrol quantity too low</i>{% endif %}</td>
                 </tr>
                 <tr>
                     <td height="35">RTGS Petrol Price</td>
-                    <td height="35">{{fuel.rtgs_petrol_price}}</td>
+                    <td height="35">${{fuel.rtgs_petrol_price}}</td>
                   </tr>
         
             </table>

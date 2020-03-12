@@ -42,54 +42,63 @@ def orders(request):
 def dashboard(request):
     capacities = NationalFuelUpdate.objects.all()
     depots = DepotFuelUpdate.objects.all()
-    return render(request, 'noic/dashboard.html', {'capacities': capacities, 'depots': depots})
+    noic_usd_diesel = 0
+    noic_rtgs_diesel = 0
+    noic_usd_petrol = 0
+    noic_rtgs_petrol = 0
+    for depot in depots:
+        noic_usd_diesel += depot.usd_diesel
+        noic_rtgs_diesel += depot.rtgs_diesel
+        noic_usd_petrol += depot.usd_petrol
+        noic_rtgs_petrol += depot.rtgs_petrol
+
+    return render(request, 'noic/dashboard.html', {'capacities': capacities, 'depots': depots, 'noic_usd_diesel':noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel, 'noic_usd_petrol': noic_usd_petrol, 'noic_rtgs_petrol': noic_rtgs_petrol})
 
 
 def allocations(request):
     allocations = SordNationalAuditTrail.objects.all()
     return render(request, 'noic/allocations.html', {'allocations': allocations})
-
-def rtgs_update(request, id):
-    capacity = NationalFuelUpdate.objects.filter(id=id).first()
-    if request.method == 'POST':
-        if request.POST['fuel_type'].lower() == 'petrol':
-            capacity.unallocated_petrol += float(request.POST['quantity'])
-            capacity.petrol_price = request.POST['price']
-            capacity.save()
-            messages.success(request, 'updated petrol quantity successfully')
-            return redirect('noic:dashboard')
-            
-        else:
-            capacity.unallocated_diesel += float(request.POST['quantity'])
-            capacity.diesel_price = request.POST['price']
-            capacity.save()
-            messages.success(request, 'updated diesel quantity successfully')
-            return redirect('noic:dashboard')
     
 
-def usd_update(request, id):
-    capacity = NationalFuelUpdate.objects.filter(id=id).first()
+def fuel_update(request, id):
+    fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
     if request.method == 'POST':
         if request.POST['fuel_type'].lower() == 'petrol':
-            capacity.unallocated_petrol += float(request.POST['quantity'])
-            capacity.petrol_price = request.POST['price']
-            capacity.save()
-            messages.success(request, 'updated petrol quantity successfully')
-            return redirect('noic:dashboard')
+            if request.POST['currency'] == 'USD':
+                fuel_update.usd_petrol += float(request.POST['quantity'])
+                fuel_update.usd_petrol_price = request.POST['price']
+                fuel_update.save()
+                messages.success(request, 'updated petrol quantity successfully')
+                return redirect('noic:dashboard')
+            else:
+                fuel_update.rtgs_petrol += float(request.POST['quantity'])
+                fuel_update.rtgs_petrol_price = request.POST['price']
+                fuel_update.save()
+                messages.success(request, 'updated petrol quantity successfully')
+                return redirect('noic:dashboard')
             
         else:
-            capacity.unallocated_diesel += float(request.POST['quantity'])
-            capacity.diesel_price = request.POST['price']
-            capacity.save()
-            messages.success(request, 'updated diesel quantity successfully')
-            return redirect('noic:dashboard')
+            if request.POST['currency'] == 'USD':
+                fuel_update.usd_diesel += float(request.POST['quantity'])
+                fuel_update.usd_diesel_price = request.POST['price']
+                fuel_update.save()
+                messages.success(request, 'updated diesel quantity successfully')
+                return redirect('noic:dashboard')
+            else:
+                fuel_update.rtgs_diesel += float(request.POST['quantity'])
+                fuel_update.rtgs_diesel_price = request.POST['price']
+                fuel_update.save()
+                messages.success(request, 'updated diesel quantity successfully')
+                return redirect('noic:dashboard')
 
 def edit_prices(request, id):
-    capacity = NationalFuelUpdate.objects.filter(id=id).first()
+    fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
     if request.method == 'POST':
-        capacity.petrol_price = request.POST['petrol_price']
-        capacity.diesel_price = request.POST['diesel_price']
-        capacity.save()
+        fuel_update.usd_petrol_price = request.POST['usd_petrol_price']
+        fuel_update.usd_diesel_price = request.POST['usd_diesel_price']
+        fuel_update.rtgs_petrol_price = request.POST['rtgs_petrol_price']
+        fuel_update.rtgs_diesel_price = request.POST['rtgs_diesel_price']
+        fuel_update.save()
         messages.success(request, 'updated prices successfully')
         return redirect('noic:dashboard')
 
@@ -202,9 +211,7 @@ def statistics(request):
 def staff(request):
     staffs = User.objects.filter(user_type='NOIC_STAFF').all()
     for staff in staffs:
-        depot = NoicDepot.objects.filter(id=staff.subsidiary_id).first()
-        if depot:
-            depot.name = depot.name
+        staff.depot = NoicDepot.objects.filter(id=staff.subsidiary_id).first()
     form1 = DepotContactForm()
     depots = NoicDepot.objects.all()
     form1.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots]
@@ -241,7 +248,7 @@ def staff(request):
                 messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
         return redirect('noic:staff')
 
-    return render(request, 'noic/staff.html', {'depots': depots, 'form1': form1})
+    return render(request, 'noic/staff.html', {'depots': depots, 'form1': form1, 'staffs': staffs})
 
 
 

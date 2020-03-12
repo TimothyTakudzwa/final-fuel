@@ -32,12 +32,12 @@ user = get_user_model()
 
 # Create your views here.
 def dashboard(request):
-    depot = NoicDepot.objects.filter(id=1).first()
+    depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders = SordNationalAuditTrail.objects.filter(assigned_depot=depot).all()
     return render(request, 'noicDepot/dashboard.html', {'orders': orders})
 
 def stock(request):
-    depot = NoicDepot.objects.filter(id=1).first()
+    depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     depot_stock = DepotFuelUpdate.objects.filter(depot=depot).all()
     return render(request, 'noicDepot/stock.html', {'depot_stock': depot_stock, 'depot': depot})
 
