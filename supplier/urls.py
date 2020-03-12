@@ -38,7 +38,8 @@ urlpatterns = [
     path('download-proof/<int:id>', views.download_proof, name="download-proof"),
     path('view_client_id_document/<int:id>', views.view_client_id_document, name="view_client_id_document"),
     path('view_client_application_document/<int:id>', views.view_application_id_document, name="view_application_id_document"),
-    path('client_transaction_history/<int:id>', views.client_transaction_history, name="client_transaction_history")
+    path('client_transaction_history/<int:id>', views.client_transaction_history, name="client_transaction_history"),
+    path('supplier_release_note/<int:id>', views.supplier_release_note, name='supplier_release_note')
 
 
 ]
