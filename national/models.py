@@ -65,6 +65,8 @@ class SordNationalAuditTrail(models.Model):
     allocated_to = models.ForeignKey(Company, on_delete=models.DO_NOTHING, related_name='allocated_to_national', blank=True, null=True)
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, related_name='company_allocation_national', blank=True, null=True)
     assigned_depot = models.ForeignKey(NoicDepot, on_delete=models.DO_NOTHING, related_name='company_allocation_national', blank=True, null=True)
+    release_date = models.DateField(auto_now_add=False, null=True, blank=True)
+    release_note = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.id} -- SordNationalAuditTrail'
