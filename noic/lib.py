@@ -17,7 +17,7 @@ def get_current_usd_stock():
 
 def get_current_zwl_stock():
     inventory_zwl = type('test', (object,), {})()
-    stock_zwl = NationalFuelUpdate.objects.filter(currency='ZWL').first()
+    stock_zwl = NationalFuelUpdate.objects.filter(currency='RTGS').first()
     if stock_zwl:
         inventory_zwl.diesel_quantity = stock_zwl.unallocated_diesel
         inventory_zwl.petrol_quantity  = stock_zwl.unallocated_petrol
