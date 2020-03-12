@@ -1066,7 +1066,7 @@ def upload_release_note(request, id):
         payment_history.release_activated = True
         payment_history.save()
         messages.success(request, "Release Note Successfully created")
-        return redirect(f'/supplier/payment-and-release-notes/{id}')
+        return redirect(f'/supplier/payment-and-release-notes/{transaction.id}')
 
 
 def edit_release_note(request, id):
@@ -1075,7 +1075,7 @@ def edit_release_note(request, id):
         release.release_date = request.POST['release_date']
         release.release_activated = True
         release.save()
-        return redirect(f'/supplier/payment-and-release-notes/{id}')
+        return redirect(f'/supplier/payment-and-release-notes/{release.transaction.id}')
 
 def payment_release_notes(request, id):
     transaction = Transaction.objects.filter(id=id).first()
