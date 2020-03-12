@@ -1102,6 +1102,22 @@ def del_supplier_doc(request, id):
     messages.success(request, 'Document Removed Successfully')
     return redirect('supplier:delivery_schedules')
 
+def supplier_release_note(request, id):
+    transaction = Transaction.objects.filter(id=id).first()
+    if request.method == 'POST':
+        transaction.release_note = request.FILES.get('release_note')
+
+        transaction.proof_of_payment = None
+        transaction.pending_proof_of_payment = False
+        transaction.save()
+        payment_history = AccountHistory.objects.filter(transaction=transaction, value=0.00).first()
+        payment_history.value += transaction.paid_reserve
+        payment_history.balance -= transaction.paid_reserve
+        payment_history.release_note = request.FILES.get('release_note')
+        payment_history.save()
+        messages.success(request, "Release Note Successfully Uploaded")
+        return redirect(f'/supplier/payment-and-release-notes/{id}')
+
 
 """
 

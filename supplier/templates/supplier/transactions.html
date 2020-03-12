@@ -431,7 +431,7 @@
                                         </div>
                                         <div class="modal-body">
 
-                                            <form method="POST" action="{% url 'supplier:release-note' transaction.id %}" enctype="multipart/form-data">
+                                            <form method="POST" action="{% url 'supplier:supplier_release_note' transaction.id %}" enctype="multipart/form-data">
                                                 {% csrf_token %}
                                                 <div class="form-group col-md-6">
                                                     <label>Release Date</label>

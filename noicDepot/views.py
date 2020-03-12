@@ -52,6 +52,15 @@ def upload_release_note(request, id):
         return redirect('noicDepot:dashboard')
 
 
+def view_release_note(request, id):
+    allocation = SordNationalAuditTrail.objects.filter(id=id).first()
+    allocation.admin = User.objects.filter(company=allocation.company).filter(user_type='S_ADMIN').first()
+    context = {
+        'allocation': allocation
+    }
+    return render(request, 'noicDepot/release_note.html', context=context)
+
+
 def profile(request):
     user = request.user
     return render(request, 'noicDepot/profile.html', {'user': user})

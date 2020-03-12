@@ -16,6 +16,10 @@ class Order(models.Model):
     amount_paid = models.DecimalField(max_digits=20, default=0.00, decimal_places=2)
     duty = models.DecimalField(max_digits=20, default=0.00, decimal_places=2)
     vat = models.DecimalField(max_digits=20, default=0.00, decimal_places=2)
+    transporter = models.CharField(max_length=150, blank=True, null=True)
+    truck_reg = models.CharField(max_length=150, blank=True, null=True)
+    driver = models.CharField(max_length=150, blank=True, null=True)
+    driver_id = models.CharField(max_length=150, blank=True, null=True)
 
 class NationalFuelUpdate(models.Model):
     date = models.DateField(auto_now_add=True)
@@ -50,6 +54,7 @@ class NoicDepot(models.Model):
 
 
 class SordNationalAuditTrail(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.DO_NOTHING, related_name='company_order', blank=True, null=True)
     date = models.DateField(auto_now_add=True)
     sord_no =  models.CharField(max_length=100, blank=True, null=True)
     action_no = models.PositiveIntegerField(blank=True, null=True)

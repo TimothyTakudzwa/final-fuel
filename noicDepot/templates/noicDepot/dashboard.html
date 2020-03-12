@@ -90,8 +90,12 @@
                             <td>{{sord.price}}</td>
                             {% if sord.release_note %}
                             <td>
-                                <a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#edit_{{sord.id}}" class="glyphicon glyphicon-pencil">
-                                     Edit Release Note</a>
+                                <div class="btn-group">
+                                    <a class="btn btn-primary btn-sm" style="color: white;" href="{% url 'noic:view_release_note' sord.id %}">View</a>
+                                    <a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#edit_{{sord.id}}" class="glyphicon glyphicon-pencil">
+                                        Edit Release Note</a>
+                                </div>
+                                
                             </td> 
                             {% else %}
                             <td>
