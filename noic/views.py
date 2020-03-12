@@ -42,54 +42,63 @@ def orders(request):
 def dashboard(request):
     capacities = NationalFuelUpdate.objects.all()
     depots = DepotFuelUpdate.objects.all()
-    return render(request, 'noic/dashboard.html', {'capacities': capacities, 'depots': depots})
+    noic_usd_diesel = 0
+    noic_rtgs_diesel = 0
+    noic_usd_petrol = 0
+    noic_rtgs_petrol = 0
+    for depot in depots:
+        noic_usd_diesel += depot.usd_diesel
+        noic_rtgs_diesel += depot.rtgs_diesel
+        noic_usd_petrol += depot.usd_petrol
+        noic_rtgs_petrol += depot.rtgs_petrol
+
+    return render(request, 'noic/dashboard.html', {'capacities': capacities, 'depots': depots, 'noic_usd_diesel':noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel, 'noic_usd_petrol': noic_usd_petrol, 'noic_rtgs_petrol': noic_rtgs_petrol})
 
 
 def allocations(request):
     allocations = SordNationalAuditTrail.objects.all()
     return render(request, 'noic/allocations.html', {'allocations': allocations})
-
-def rtgs_update(request, id):
-    capacity = NationalFuelUpdate.objects.filter(id=id).first()
-    if request.method == 'POST':
-        if request.POST['fuel_type'].lower() == 'petrol':
-            capacity.unallocated_petrol += float(request.POST['quantity'])
-            capacity.petrol_price = request.POST['price']
-            capacity.save()
-            messages.success(request, 'updated petrol quantity successfully')
-            return redirect('noic:dashboard')
-            
-        else:
-            capacity.unallocated_diesel += float(request.POST['quantity'])
-            capacity.diesel_price = request.POST['price']
-            capacity.save()
-            messages.success(request, 'updated diesel quantity successfully')
-            return redirect('noic:dashboard')
     
 
-def usd_update(request, id):
-    capacity = NationalFuelUpdate.objects.filter(id=id).first()
+def fuel_update(request, id):
+    fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
     if request.method == 'POST':
         if request.POST['fuel_type'].lower() == 'petrol':
-            capacity.unallocated_petrol += float(request.POST['quantity'])
-            capacity.petrol_price = request.POST['price']
-            capacity.save()
-            messages.success(request, 'updated petrol quantity successfully')
-            return redirect('noic:dashboard')
+            if request.POST['currency'] == 'USD':
+                fuel_update.usd_petrol += float(request.POST['quantity'])
+                fuel_update.usd_petrol_price = request.POST['price']
+                fuel_update.save()
+                messages.success(request, 'updated petrol quantity successfully')
+                return redirect('noic:dashboard')
+            else:
+                fuel_update.rtgs_petrol += float(request.POST['quantity'])
+                fuel_update.rtgs_petrol_price = request.POST['price']
+                fuel_update.save()
+                messages.success(request, 'updated petrol quantity successfully')
+                return redirect('noic:dashboard')
             
         else:
-            capacity.unallocated_diesel += float(request.POST['quantity'])
-            capacity.diesel_price = request.POST['price']
-            capacity.save()
-            messages.success(request, 'updated diesel quantity successfully')
-            return redirect('noic:dashboard')
+            if request.POST['currency'] == 'USD':
+                fuel_update.usd_diesel += float(request.POST['quantity'])
+                fuel_update.usd_diesel_price = request.POST['price']
+                fuel_update.save()
+                messages.success(request, 'updated diesel quantity successfully')
+                return redirect('noic:dashboard')
+            else:
+                fuel_update.rtgs_diesel += float(request.POST['quantity'])
+                fuel_update.rtgs_diesel_price = request.POST['price']
+                fuel_update.save()
+                messages.success(request, 'updated diesel quantity successfully')
+                return redirect('noic:dashboard')
 
 def edit_prices(request, id):
-    capacity = NationalFuelUpdate.objects.filter(id=id).first()
+    fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
     if request.method == 'POST':
-        capacity.petrol_price = request.POST['petrol_price']
-        capacity.diesel_price = request.POST['diesel_price']
-        capacity.save()
+        fuel_update.usd_petrol_price = request.POST['usd_petrol_price']
+        fuel_update.usd_diesel_price = request.POST['usd_diesel_price']
+        fuel_update.rtgs_petrol_price = request.POST['rtgs_petrol_price']
+        fuel_update.rtgs_diesel_price = request.POST['rtgs_diesel_price']
+        fuel_update.save()
         messages.success(request, 'updated prices successfully')
         return redirect('noic:dashboard')
 
@@ -202,49 +211,61 @@ def statistics(request):
 def staff(request):
     staffs = User.objects.filter(user_type='NOIC_STAFF').all()
     for staff in staffs:
-        depot = NoicDepot.objects.filter(id=staff.subsidiary_id).first()
-        if depot:
-            depot.name = depot.name
+        staff.depot = NoicDepot.objects.filter(id=staff.subsidiary_id).first()
     form1 = DepotContactForm()
     depots = NoicDepot.objects.all()
     form1.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots]
 
-    # if request.method == 'POST':
+    if request.method == 'POST':
 
-        # form1 = DepotContactForm(request.POST)
-        # first_name = request.POST.get('first_name')
-        # last_name = request.POST.get('last_name')
-        # email = request.POST.get('email')
-        # sup = User.objects.filter(email=email).first()
-        # if sup is not None:
-        #     messages.warning(request, f"{sup.email} already used in the system, please use a different email")
-        #     return redirect('users:suppliers_list')
+        form1 = DepotContactForm(request.POST)
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        sup = User.objects.filter(email=email).first()
+        if sup is not None:
+            messages.warning(request, f"{sup.email} already used in the system, please use a different email")
+            return redirect('users:suppliers_list')
 
-        # password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
-        # phone_number = request.POST.get('phone_number')
-        # subsidiary_id = request.POST.get('depot')
-        # full_name = first_name + " " + last_name
-        # i = 0
-        # username = initial_username = first_name[0] + last_name
-        # while User.objects.filter(username=username.lower()).exists():
-        #     username = initial_username + str(i)
-        #     i += 1
-        # user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
-        #                            first_name=first_name, last_name=last_name, user_type='SUPPLIER',
-        #                            company=request.user.company, email=email, password=password,
-        #                            phone_number=phone_number)
-        # if message_is_send(request, user):
-        #     if user.is_active:
-        #         user.stage = 'menu'
-        #         user.save()
+        password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+        phone_number = request.POST.get('phone_number')
+        subsidiary_id = request.POST.get('depot')
+        full_name = first_name + " " + last_name
+        i = 0
+        username = initial_username = first_name[0] + last_name
+        while User.objects.filter(username=username.lower()).exists():
+            username = initial_username + str(i)
+            i += 1
+        user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
+                                   first_name=first_name, last_name=last_name, user_type='NOIC_STAFF', email=email, password=password,
+                                   phone_number=phone_number)
+        if message_is_send(request, user):
+            if user.is_active:
+                user.stage = 'menu'
+                user.save()
 
-        #     else:
-        #         messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
-        # return redirect('users:suppliers_list')
+            else:
+                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+        return redirect('noic:staff')
 
-    return render(request, 'noic/staff.html', {'depots': depots, 'form1': form1})
+    return render(request, 'noic/staff.html', {'depots': depots, 'form1': form1, 'staffs': staffs})
 
 
+
+def message_is_send(request, user):
+    sender = "intelliwhatsappbanking@gmail.com"
+    subject = 'Fuel Finder Registration'
+    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: 12345 \n\nPlease login on Fuel Management System Website and access your assigned Depot & don't forget to change your password on user profile. \n. "
+    try:
+        msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
+        msg.send()
+        messages.success(request, f"{user.first_name}  {user.last_name} Registered Successfully")
+        return True
+    except Exception as e:
+        messages.warning(request,
+                         f"Oops , Something Wen't Wrong sending email, Please make sure you have Internet access")
+        return False
+    return render(request, 'buyer/send_email.html')
 
 def report_generator(request):
 
@@ -399,7 +420,7 @@ def report_generator(request):
             allocations = FuelAllocation.objects.all()
             supplier_allocations = User.objects.filter(user_type='S_ADMIN')
             allocations_per_supplier=[]
-            for supplier in allocations:
+            for supplier in supplier_allocations:
                 order_count = 0
                 order_quantity = 0
                 for order in SordNationalAuditTrail.objects.filter(company=supplier.company):

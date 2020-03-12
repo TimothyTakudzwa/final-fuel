@@ -56,6 +56,10 @@ def login_user(request):
             return redirect("users:allocate")
         elif current_user.user_type == 'ZERA':
             return redirect("zeraPortal:dashboard")
+        elif current_user.user_type == 'NOIC_STAFF':
+            return redirect("noicDepot:dashboard")
+        elif current_user.user_type == 'NOIC_ADMIN':
+            return redirect("noic:dashboard")
     else:
         # signing in
         if request.method == 'POST':
@@ -85,8 +89,10 @@ def login_user(request):
                             return redirect("users:allocate")
                         elif current_user.user_type == 'ZERA':
                             return redirect("zeraPortal:dashboard")
-                        else:
-                            return redirect("users:suppliers_list")
+                        elif current_user.user_type == 'NOIC_STAFF':
+                            return redirect("noicDepot:dashboard")
+                        elif current_user.user_type == 'NOIC_ADMIN':
+                            return redirect("noic:dashboard")
                     # wrong password
                     else:
                         messages.info(request, 'Wrong password')

@@ -32,13 +32,25 @@ user = get_user_model()
 
 # Create your views here.
 def dashboard(request):
-    depot = NoicDepot.objects.filter(id=1).first()
+    depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders = SordNationalAuditTrail.objects.filter(assigned_depot=depot).all()
     return render(request, 'noicDepot/dashboard.html', {'orders': orders})
 
 def stock(request):
-    depot_stock = DepotFuelUpdate.objects.all()
-    return render(request, 'noicDepot/stock.html', {'depot_stock': depot_stock})
+    depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+    depot_stock = DepotFuelUpdate.objects.filter(depot=depot).all()
+    return render(request, 'noicDepot/stock.html', {'depot_stock': depot_stock, 'depot': depot})
+
+
+def upload_release_note(request, id):
+    allocation = SordNationalAuditTrail.objects.filter(id=id).first()
+    if request.method == 'POST':
+        allocation.release_date = request.POST['release_date']
+        allocation.release_note = True
+        allocation.save()
+        messages.success(request, "Release Note Successfully created")
+        return redirect('noicDepot:dashboard')
+
 
 def profile(request):
     user = request.user

@@ -682,10 +682,7 @@ def complete_transaction(request, id):
             else:
                 available_fuel = fuel.petrol_quantity
             if transaction_quantity <= available_fuel:
-                # if transaction.expected == transaction.paid:
-                #     transaction.is_complete = True
-                # else:
-                #     pass
+                
                 transaction.proof_of_payment_approved = True
                 transaction.paid += float(request.POST['received'])
                 transaction.paid_reserve = float(request.POST['received'])
@@ -725,10 +722,7 @@ def complete_transaction(request, id):
             else:
                 available_fuel = fuel.diesel_quantity
             if transaction_quantity <= available_fuel:
-                # if transaction.expected == transaction.paid:
-                #     transaction.is_complete = True
-                # else:
-                #     pass
+                
                 transaction.proof_of_payment_approved = True
                 transaction.paid += float(request.POST['received'])
                 transaction.paid_reserve = float(request.POST['received'])
@@ -1058,21 +1052,30 @@ def view_delivery_note(request, id):
     return response
 
 def upload_release_note(request, id):
-    transaction = Transaction.objects.filter(id=id).first()
+    payment_history = AccountHistory.objects.filter(id=id).first()
+    transaction = Transaction.objects.filter(id=payment_history.transaction.id).first()
     if request.method == 'POST':
         transaction.release_date = request.POST['release_date']
 
         transaction.proof_of_payment = None
         transaction.pending_proof_of_payment = False
         transaction.save()
-        payment_history = AccountHistory.objects.filter(transaction=transaction, value=0.00).first()
         payment_history.value += transaction.paid_reserve
         payment_history.balance -= transaction.paid_reserve
         payment_history.release_note = request.POST['release_date']
+        payment_history.release_activated = True
         payment_history.save()
         messages.success(request, "Release Note Successfully created")
-        return redirect(f'/supplier/payment-and-release-notes/{id}')
+        return redirect(f'/supplier/payment-and-release-notes/{transaction.id}')
 
+
+def edit_release_note(request, id):
+    release = AccountHistory.objects.filter(id=id).first()
+    if request.method == 'POST':
+        release.release_date = request.POST['release_date']
+        release.release_activated = True
+        release.save()
+        return redirect(f'/supplier/payment-and-release-notes/{release.transaction.id}')
 
 def payment_release_notes(request, id):
     transaction = Transaction.objects.filter(id=id).first()
@@ -1120,3 +1123,12 @@ def mark_completion(request, id):
     
     messages.success(request, 'Transaction is now complete')
     return redirect('transaction')
+
+
+def view_release_note(request, id):
+    payment = AccountHistory.objects.filter(id=id).first()
+    payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
+    context = {
+        'payment': payment
+    }
+    return render(request, 'supplier/release_note.html', context=context)

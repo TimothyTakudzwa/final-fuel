@@ -22,6 +22,8 @@ urlpatterns = [
     path('change_password/', views.change_password, name='change_password'),
     path('view_invoice/<int:id>', views.view_invoice, name='view_invoice'),
     path('release-note/<int:id>', views.upload_release_note, name='release-note'),
+    path('view-release-note/<int:id>', views.view_release_note, name='view-release-note'),
+    path('edit-release-note/<int:id>', views.edit_release_note, name='edit-release-note'),
     path('payment-and-release-notes/<int:id>', views.payment_release_notes, name='payment-and-release-notes'),
     path('download-delivery-note/<int:id>', views.view_delivery_note, name='download-delivery-note'),
     path('create-company/<int:id>', views.create_company, name='create_company'),
@@ -37,15 +39,6 @@ urlpatterns = [
     path('view_client_id_document/<int:id>', views.view_client_id_document, name="view_client_id_document"),
     path('view_client_application_document/<int:id>', views.view_application_id_document, name="view_application_id_document"),
     path('client_transaction_history/<int:id>', views.client_transaction_history, name="client_transaction_history")
-
-
-
-
-
-
-
-
-
 
 
 ]

@@ -45,6 +45,7 @@ class AccountHistory(models.Model):
                                           blank=True, null=True)
     delivery_note = models.FileField(blank=True, null=True, upload_to='delivery_note')
     release_date = models.DateField(auto_now_add=False, null=True, blank=True)
+    release_activated = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['date', 'time']

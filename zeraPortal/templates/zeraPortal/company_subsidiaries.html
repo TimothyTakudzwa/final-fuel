@@ -237,6 +237,14 @@
                                     <a class="btn btn-info btn-sm" href="{% url 'zeraPortal:download_ema' subsidiary.id %}" >Download</a>
                                   </div>
                                   <div class="form-group col-md-6">
+                                    <label>Council Approval Doc</label>
+                                    <a class="btn btn-info btn-sm" href="{% url 'zeraPortal:download_council' subsidiary.id %}" >Download</a>
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label>Proof of Paymnet</label>
+                                    <a class="btn btn-info btn-sm" href="{% url 'zeraPortal:download_pop' subsidiary.id %}" >Download</a>
+                                  </div>
+                                  <div class="form-group col-md-6">
                                     <input type="text" name="license_num" placeholder="License Number" class="form-control" required/>
                                 </div>
                                   

@@ -30,6 +30,8 @@ class Subsidiaries(models.Model):
     ema = models.FileField(upload_to='subsidiary_docs', blank=True, null=True)
     fire_brigade = models.FileField(upload_to='subsidiary_docs', blank=True, null=True)
     application_form = models.FileField(upload_to='subsidiary_docs', blank=True, null=True)
+    council_approval = models.FileField(upload_to='subsidiary_docs', blank=True, null=True)
+    proof_of_payment = models.FileField(upload_to='subsidiary_docs', blank=True, null=True)
     bank_branch = models.CharField(max_length=500, null=True, blank=True)
     
 
@@ -163,8 +165,8 @@ class Transaction(models.Model):
     time = models.TimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)
     proof_of_payment = models.FileField(upload_to='proof_of_payment', null=True, blank=True)
-    expected = models.FloatField(default=0.00)
-    paid = models.FloatField(default=0.00)
+    expected = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    paid = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     proof_of_payment_approved = models.BooleanField(default=False)
     pending_proof_of_payment  = models.BooleanField(default=False) 
     paid_reserve = models.FloatField(default=0.00)

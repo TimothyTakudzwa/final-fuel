@@ -225,6 +225,31 @@ def download_application(request, id):
         return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
     return response
 
+
+def download_council(request, id):
+    subsidiary = Subsidiaries.objects.filter(id=id).first()
+    if subsidiary:
+        filename = subsidiary.council_approval.name.split('/')[-1]
+        response = HttpResponse(subsidiary.council_approval, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
+    return response
+
+
+def download_pop(request, id):
+    subsidiary = Subsidiaries.objects.filter(id=id).first()
+    if subsidiary:
+        filename = subsidiary.proof_of_payment.name.split('/')[-1]
+        response = HttpResponse(subsidiary.proof_of_payment, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
+    return response
+    
+
 def download_fire_brigade_doc(request, id):
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if subsidiary:

@@ -18,7 +18,7 @@
         <i class="fa fa-binoculars"></i>
     </div> -->
     <div class="header-title" style="margin-left: 0px;">
-        <h1>NOIC Available Fuel</h1>
+        <h1>{{depot.name}} Available Fuel</h1>
         <small>Fuel Management System</small>
         <ol class="breadcrumb hidden-xs">
             <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
@@ -30,7 +30,7 @@
 <div class="content">
     <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
         data-index="0">
-        <div class="panel-heading ui-sortable-handle"><b>NOIC Depots</b>
+        <div class="panel-heading ui-sortable-handle"><b>Fuel Stocks</b>
            
             
             <div class="dropdown">
@@ -46,190 +46,54 @@
         <div class="panel-body">              
       
       <div class="table-responsive">
+        {% for fuel in depot_stock %}
         <table id="depots" class="table table-striped table-bordered" style="width:100%">
-            <thead style="background-color: lightslategray; color:white;">
-                <tr>
-                    <th style="color: white;">Depot</th>
-                    <th style="color: white;">USD Diesel</th>
-                    <th style="color: white;">Price</th>
-                    <th style="color: white;">RTGS Diesel</th>
-                    <th style="color: white;">Price</th>
-                    <th style="color: white;">USD Petrol </th>
-                    <th style="color: white;">Price</th>
-                    <th style="color: white;">RTGS Petrol </th>
-                    <th style="color: white;">Price</th>
-                    <th style="color: white;">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for fuel in depot_stock %}
+            
             <tr>
-                <td>{{fuel.depot.name}}</td>
-                <td>{{fuel.usd_diesel|intcomma}} {% if fuel.usd_diesel < 1000 %} <i
-                        class="material-icons text-danger">Diesel quantity too low</i>{% endif %}</td>
-                <td>{{fuel.usd_diesel_price}}</td>
-                <td>{{fuel.rtgs_diesel|intcomma}} {% if fuel.rtgs_diesel < 1000 %} <i
+                <td height="35"> USD Diesel Quantity</td>
+                <td height="35"> {{fuel.usd_diesel|intcomma}}L {% if fuel.usd_diesel < 1000 %} <i
                     class="material-icons text-danger">Diesel quantity too low</i>{% endif %}</td>
-                <td>{{fuel.rtgs_diesel_price}}</td>
-                <td>{{fuel.usd_petrol|intcomma}} {% if fuel.usd_petrol < 1000 %} <i
-                    class="material-icons text-danger">Petrol quantity too low</i>{% endif %}</td>
-                <td>{{fuel.usd_petrol_price}}</td>
-                <td>{{fuel.rtgs_petrol|intcomma}} {% if fuel.rtgs_petrol < 1000 %} <i
-                    class="material-icons text-danger">Petrol quantity too low</i>{% endif %}</td>
-                <td>{{fuel.rtgs_petrol_price}}</td>
-                <td>
-                    <div class="btn-group">
-                        
-                        <button class="btn btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal"
-                            data-target="#add_usd_fuel{{fuel.id}}"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp; | Add Fuel</button>&nbsp;&nbsp;
-                        <button class="btn btn-danger btn-sm" style="font-size: 12px;" data-toggle="modal"
-                            data-target="#edit_{{fuel.id}}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp; | Edit Prices</button>
-                        
-                        
-                    </div>
+              </tr>
+              <tr>
+                <td height="35">USD Diesel Price</td>
+                
+                <td height="35">
+                    ${{fuel.usd_diesel_price}}
                 </td>
+              </tr>
+        <tr>
+            <td height="35">RTGS Diesel Quantity</td>
+            <td height="35">
+                {{fuel.rtgs_diesel|intcomma}}L {% if fuel.rtgs_diesel < 1000 %} <i
+                class="material-icons text-danger">Diesel quantity too low</i>{% endif %}
+          </td>
+          </tr>
+          <tr>
+              <td height="35">RTGS Diesel Price</td>
+              <td height="35">${{fuel.rtgs_diesel_price}}</td>
             </tr>
-
-
-        <div class="modal fade modal-success in" id="edit_{{fuel.id}}" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document"> 
-            <div class="modal-content">
-                <div class="modal-header" >
-
-                    <span class="modal-title" id="exampleModalLabel" > Edit Prices</span>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    {% load crispy_forms_tags %}
-                    <form action="" method="POST">
-                        {% csrf_token %}
-
-
-                        <div class="form-group">
-                            <lable>Petrol Price</lable>
-                            <input type="text" name="petrol_price" class="form-control"
-                                value="{{capacity.petrol_price}}" />
-                        </div>
-
-                        <div class="form-group">
-                            <lable>Diesel Price</lable>
-                            <input type="text" name="diesel_price" value="{{capacity.diesel_price}}"
-                                class="form-control" />
-                        </div>
-
-                       
-                </div>
-                <div class="modal-footer">
-                    <div>
-                        <button class="btn" style="background-color: lightgray; color: #333;"
-                            data-dismiss="modal">No</button> <button type="submit"
-                            class="btn btn-primary ">Submit</button>
-                    </div>
-                    </form>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-            <div class="modal fade modal-success in" id="add_usd_fuel{{fuel.id}}" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class=" modal-dialog" role="document" >
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <span class="modal-title" id="exampleModalLongTitle">Add USD Fuel- <i
-                                style="color:azure"><small>Please Note the fuel you are entering is to be
-                                    sold in United States Dollars</small></i></span>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div>
-                        {% load crispy_forms_tags %}
-                        <form action="" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" value="USD" name="currency" />
-                            <div class="form-group row col-sm-12" style="margin-top: 5%;">
-                                <div class="col-sm-6">
-
-                                    <label><b style='color:#009688'>Fuel Type</b></label>
-                                    <select class="form-control" name="fuel_type">
-
-                                        <option>Petrol</option>
-                                        <option>Diesel</option>
-
-
-                                    </select>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label><b style='color:#009688'>Quantity</b></label>
-                                    <input type="text" name="quantity" class="form-control"
-                                        placeholder="In Litres" required />
-                                </div>
-                            </div>
-                            <div class=" form-group row col-sm-12">
-                                <div class="col-sm-6">
-                                    <label><b style='color:#009688'>Price</b></label>
-                                    <input type="text" name="price" class="form-control"
-                                        placeholder="In United States Dollars" required />
-                                </div>
-                                <input type="hidden" name="cash" value="0" />
-                                <input type="hidden" name="swipe" value="0">
-                                <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
-                                    <label><b style='color:#009688'>Payment Method</b></label>
-                                    <div class="col-sm-12 row">
-                                        <input type="checkbox" class=" col-sm-6" name="cash" value="1">
-                                        Cash<br>
-                                        <input type="checkbox" id="fca{{forloop.counter}}"
-                                            class="col-sm-6" value="1" name="swipe">FCA<br>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="col-sm-12 form-group" name="bank" id="bank{{forloop.counter}}">
-                                <label><b style='color:#009688'>Bank</b></label>
-                                <select class="form-control" name="destination_bank">
-
-                                    <option>CBZ</option>
-                                    <option>BancABC</option>
-                                    <option>First Capital</option>
-                                    <option>Agribank</option>
-                                    <option>Ecobank</option>
-                                    <option>FBC</option>
-                                    <option>Nedbank</option>
-                                    <option>Metbank</option>
-                                    <option>NMB</option>
-                                    <option>Standard Chatered</option>
-                                    <option>Steward Bank</option>
-                                    <option>ZB Bank</option>
-                                    <option>CABS</option>
-                                    <option>POSB</option>
-
-
-                                </select>
-                            </div>
-
-
-
-                    </div>
-                    <div class="form-group row"
-                        style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                        <button type="button" class="btn btn-secondary col-sm-6"
-                            data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
-                    </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-            {% endfor %}
-            </tbody>
+           
+              <tr>
+                  <td height="35">USD Petrol Quantity</td>
+                  <td height="35">{{fuel.usd_petrol|intcomma}}L {% if fuel.usd_petrol < 1000 %} <i
+                    class="material-icons text-danger">Petrol quantity too low</i>{% endif %}</td>
+                </tr>
+                <tr>
+                  <td height="35">USD Petrol Price</td>
+                  <td>${{fuel.usd_petrol_price}}</td>
+                </tr>
+                <tr>
+                  <td height="35">RTGS Petrol Quantity</td>
+                  <td height="35">{{fuel.rtgs_petrol|intcomma}}L {% if fuel.rtgs_petrol < 1000 %} <i
+                    class="material-icons text-danger">Petrol quantity too low</i>{% endif %}</td>
+                </tr>
+                <tr>
+                    <td height="35">RTGS Petrol Price</td>
+                    <td height="35">${{fuel.rtgs_petrol_price}}</td>
+                  </tr>
+        
             </table>
+            {% endfor %}
 
 
            
