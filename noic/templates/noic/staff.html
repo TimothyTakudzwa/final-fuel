@@ -128,16 +128,14 @@
                             <tr>
                                 <td>{{staff.first_name}} {{staff.last_name}}</td>
                                 <td>{{staff.username}}</td>
-                                <td>{{staff.subsidiary_name}}</td>
+                                <td>{{staff.depot.name}}</td>
                                
                                 <td>{{staff.phone_number}}</td>
                                 <td>{{staff.email}}</td>
                                 <td style="width: 25%;">
                                     <div class="btn-group">
-                                        <!-- <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#{{supplier.id}}">View Details</button> -->
-                                        <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_{{staff.id}}">Edit</button>
-                                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete_{{staff.id}}">Delete</button>
-                                        <!--<a href="{% url 'users:supplier_user_create' supplier.id %}" class="btn btn-info btn-sm">More Details</a>-->
+                                        <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_{{staff.id}}">Edit User</button>
+                                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete_{{staff.id}}">Delete User</button>
 
                                     </div>
                                 </td>

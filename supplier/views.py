@@ -682,10 +682,7 @@ def complete_transaction(request, id):
             else:
                 available_fuel = fuel.petrol_quantity
             if transaction_quantity <= available_fuel:
-                # if transaction.expected == transaction.paid:
-                #     transaction.is_complete = True
-                # else:
-                #     pass
+                
                 transaction.proof_of_payment_approved = True
                 transaction.paid += float(request.POST['received'])
                 transaction.paid_reserve = float(request.POST['received'])
@@ -725,10 +722,7 @@ def complete_transaction(request, id):
             else:
                 available_fuel = fuel.diesel_quantity
             if transaction_quantity <= available_fuel:
-                # if transaction.expected == transaction.paid:
-                #     transaction.is_complete = True
-                # else:
-                #     pass
+                
                 transaction.proof_of_payment_approved = True
                 transaction.paid += float(request.POST['received'])
                 transaction.paid_reserve = float(request.POST['received'])
