@@ -22,7 +22,7 @@ from .forms import AllocationForm, SupplierContactForm, UsersUploadForm, ReportF
 from .models import AuditTrail, SordActionsAuditTrail
 from buyer.models import *
 from supplier.models import *
-from national.models import Order
+from national.models import Order, SordNationalAuditTrail
 from users.models import *
 from accounts.models import Account, AccountHistory
 from buyer.forms import *
@@ -2075,3 +2075,25 @@ def place_order(request):
         Order.objects.create(company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
         messages.success(request,'placed order successfully')
         return redirect('users:allocate')
+
+
+def orders(request):
+    orders = Order.objects.filter(company=request.user.company).all()
+    for order in orders:
+        sord = SordNationalAuditTrail.objects.filter(order=order).first()
+        if sord is not None:
+            order.allocation = sord
+        else:
+            order.allocation = None
+
+    return render(request, 'users/orders.html', {'orders': orders})
+
+
+def view_release_note(request, id):
+    allocation = SordNationalAuditTrail.objects.filter(id=id).first()
+    allocation.admin = request.user
+    allocation.rep = User.objects.filter(subsidiary_id=allocation.assigned_depot.id).first()
+    context = {
+        'allocation': allocation
+    }
+    return render(request, 'noicDepot/release_note.html', context=context)

@@ -57,6 +57,8 @@ urlpatterns = [
     path('decline_applicant/<int:id>', views.decline_applicant, name="decline_applicant"),
     path('edit_allocation/<int:id>', views.edit_allocation, name="edit_allocation"),
     path('upload_users/', views.upload_users, name='upload_users'),
-    path('place_order/', views.place_order, name='place_order')
+    path('place_order/', views.place_order, name='place_order'),
+    path('orders/', views.orders, name='orders'),
+    path('view_release_note/<int:id>', views.view_release_note, name='view_release_note')
 
 ]
