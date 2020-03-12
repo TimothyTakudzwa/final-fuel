@@ -1074,6 +1074,13 @@ def upload_release_note(request, id):
         return redirect(f'/supplier/payment-and-release-notes/{id}')
 
 
+def edit_release_note(request, id):
+    release = AccountHistory.objects.filter(id=id).first()
+    if request.method == 'POST':
+        release.release_date = request.POST['release_date']
+        release.save()
+        return redirect(f'/supplier/payment-and-release-notes/{id}')
+
 def payment_release_notes(request, id):
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
@@ -1120,3 +1127,12 @@ def mark_completion(request, id):
     
     messages.success(request, 'Transaction is now complete')
     return redirect('transaction')
+
+
+def view_release_note(request, id):
+    payment = AccountHistory.objects.filter(id=id).first()
+    payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
+    context = {
+        'payment': payment
+    }
+    return render(request, 'supplier/release_note.html', context=context)
