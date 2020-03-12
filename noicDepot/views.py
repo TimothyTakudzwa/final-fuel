@@ -41,6 +41,17 @@ def stock(request):
     depot_stock = DepotFuelUpdate.objects.filter(depot=depot).all()
     return render(request, 'noicDepot/stock.html', {'depot_stock': depot_stock, 'depot': depot})
 
+
+def upload_release_note(request, id):
+    allocation = SordNationalAuditTrail.objects.filter(id=id).first()
+    if request.method == 'POST':
+        allocation.release_date = request.POST['release_date']
+        allocation.release_note = True
+        allocation.save()
+        messages.success(request, "Release Note Successfully created")
+        return redirect('noicDepot:dashboard')
+
+
 def profile(request):
     user = request.user
     return render(request, 'noicDepot/profile.html', {'user': user})
