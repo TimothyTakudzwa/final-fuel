@@ -2097,3 +2097,17 @@ def view_release_note(request, id):
         'allocation': allocation
     }
     return render(request, 'noicDepot/release_note.html', context=context)
+
+
+
+def delivery_note(request, id):
+    allocation = SordNationalAuditTrail.objects.filter(id=id).first()
+    if request.method == 'POST':
+        if allocation is not None:
+            allocation.delivery_note = request.FILES.get('d_note')
+            allocation.save()
+            
+            messages.success(request, 'Delivery note successfully uploaded')
+            return redirect('users:orders')
+        else:
+            pass

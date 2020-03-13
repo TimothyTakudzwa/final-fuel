@@ -54,6 +54,7 @@
                         <tr>
                             <th class="text-left">DATE</th>
                             <th class="text-left">COLLECTION ADDRESS</th>
+                            <th class="text-left">SORD</th>
                             <th class="text-left">PRODUCT</th>
                             <th class="text-left">QUANTITY</th>
                             <th class="text-left">TRANSPORTER</th>
@@ -66,6 +67,7 @@
                         <tr>
                             <td class="date">{{allocation.release_date}}</td>
                             <td class="date">{{allocation.assigned_depot.address}} {{allocation.assigned_depot.city}}</td>            
+                            <td class="unit">{{allocation.sord_no}} </td>
                             <td class="unit">{{allocation.fuel_type}} </td>
                             <td class="qty">{{allocation.quantity|intcomma}} Litres</td>
                             <td class="trans">{{allocation.order.transporter}}</td>
