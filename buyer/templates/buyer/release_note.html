@@ -67,7 +67,7 @@
                         <tr>
                             <td class="date">{{payment.release_date}}</td>
                             <td class="date">{{payment.transaction.offer.collection_address}}</td>            
-                            <td class="unit">{{payment.transaction.offer.request.fuel_type}} </td>
+                            <td class="unit">{{payment.transaction.offer.request.fuel_type}}|S-ORD{{payment.sord_number}}</td>
                             <td class="qty">{{payment.quantity|intcomma}} Litres</td>
                             <td class="trans">{{payment.transaction.offer.request.transporter}}</td>
                             <td class="driver">{{payment.transaction.offer.request.driver}}</td>
