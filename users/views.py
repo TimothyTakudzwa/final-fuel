@@ -22,7 +22,7 @@ from .forms import AllocationForm, SupplierContactForm, UsersUploadForm, ReportF
 from .models import AuditTrail, SordActionsAuditTrail
 from buyer.models import *
 from supplier.models import *
-from national.models import Order
+from national.models import Order, SordNationalAuditTrail
 from users.models import *
 from accounts.models import Account, AccountHistory
 from buyer.forms import *
@@ -1148,7 +1148,6 @@ def subsidiary_transaction_history(request, sid):
 @login_required()
 def myaccount(request):
     staff = user.objects.get(id=request.user.id)
-    print(staff.username)
     if request.method == 'POST':
         staff.email = request.POST['email']
         staff.phone_number = request.POST['phone_number']
@@ -1214,15 +1213,12 @@ def report_generator(request):
             stock = None
         if request.POST.get('report_type') == 'Requests':
             requests = FuelRequest.objects.filter(date__range=[start_date, end_date])
-            print(f'__________________{requests}__________________________________')
             trans = None
             allocations = None
             stock = None
             revs = None
         if request.POST.get('report_type') == 'Allocations':
-            print("__________________________I am in allocations____________________________")
             allocations = FuelAllocation.objects.all()
-            print(f'________________________________{allocations}__________________________')
             requests = None
             revs = None
             stock = None
@@ -1235,7 +1231,6 @@ def report_generator(request):
                        'start': start, 'end': end, 'revs': revs, 'stock': stock})
 
     show = False
-    print(trans)
     return render(request, 'users/reports.html',
                   {'trans': trans, 'requests': requests, 'allocations': allocations, 'form': form,
                    'start': start_date, 'end': end_date, 'show': show, 'stock': stock})
@@ -1268,7 +1263,6 @@ def approve_applicant(request, id):
             applicant.is_waiting = False
             applicant.is_active = True
             selected_id = request.POST['subsidiary']
-            print(selected_id)
             selected_subsidiary = Subsidiaries.objects.filter(id=selected_id).first()
             applicant.subsidiary_id = selected_subsidiary.id
             applicant.save()
@@ -2081,3 +2075,39 @@ def place_order(request):
         Order.objects.create(company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
         messages.success(request,'placed order successfully')
         return redirect('users:allocate')
+
+
+def orders(request):
+    orders = Order.objects.filter(company=request.user.company).all()
+    for order in orders:
+        sord = SordNationalAuditTrail.objects.filter(order=order).first()
+        if sord is not None:
+            order.allocation = sord
+        else:
+            order.allocation = None
+
+    return render(request, 'users/orders.html', {'orders': orders})
+
+
+def view_release_note(request, id):
+    allocation = SordNationalAuditTrail.objects.filter(id=id).first()
+    allocation.admin = request.user
+    allocation.rep = User.objects.filter(subsidiary_id=allocation.assigned_depot.id).first()
+    context = {
+        'allocation': allocation
+    }
+    return render(request, 'noicDepot/release_note.html', context=context)
+
+
+
+def delivery_note(request, id):
+    allocation = SordNationalAuditTrail.objects.filter(id=id).first()
+    if request.method == 'POST':
+        if allocation is not None:
+            allocation.delivery_note = request.FILES.get('d_note')
+            allocation.save()
+            
+            messages.success(request, 'Delivery note successfully uploaded')
+            return redirect('users:orders')
+        else:
+            pass

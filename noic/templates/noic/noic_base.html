@@ -145,13 +145,16 @@
                         </a>
                     </li>
 
-                    
+                    <li class="nav-item">
+                        <a href=""><i  class="fa fa-book"></i><span>Depots</span>
+                        </a>
+                    </li>
 
                     <li class="{% if request.path == '/noic/staff/' %} active {% endif %}">
                         <a href="{% url 'noic:staff' %}"><i class="fa fa-user"></i><span>Staff Management</span>
                         </a>
                     </li>
-
+                    
                     <li class="nav-item {% if request.path == '/noic/statistics/' %} active {% endif %}">
                         <a href="{% url 'noic:statistics' %}"><i class="fa fa-line-chart"></i><span>Statistics</span>
                         </a>
@@ -161,7 +164,6 @@
                         <a href="{% url 'noic:report_generator' %}"><i class="fa fa-cogs"></i><span>Reports</span>
                         </a>
                     </li>
-
 
                     <li class="nav-item {% if request.path == '/noic/profile/' %} active {% endif %}">
                         <a href="{% url 'noic:profile' %} "><i class="fa fa-users"></i><span>User Profile</span>
