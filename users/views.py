@@ -1142,7 +1142,6 @@ def subsidiary_transaction_history(request, sid):
 @login_required()
 def myaccount(request):
     staff = user.objects.get(id=request.user.id)
-    print(staff.username)
     if request.method == 'POST':
         staff.email = request.POST['email']
         staff.phone_number = request.POST['phone_number']
@@ -1208,15 +1207,12 @@ def report_generator(request):
             stock = None
         if request.POST.get('report_type') == 'Requests':
             requests = FuelRequest.objects.filter(date__range=[start_date, end_date])
-            print(f'__________________{requests}__________________________________')
             trans = None
             allocations = None
             stock = None
             revs = None
         if request.POST.get('report_type') == 'Allocations':
-            print("__________________________I am in allocations____________________________")
             allocations = FuelAllocation.objects.all()
-            print(f'________________________________{allocations}__________________________')
             requests = None
             revs = None
             stock = None
@@ -1229,7 +1225,6 @@ def report_generator(request):
                        'start': start, 'end': end, 'revs': revs, 'stock': stock})
 
     show = False
-    print(trans)
     return render(request, 'users/reports.html',
                   {'trans': trans, 'requests': requests, 'allocations': allocations, 'form': form,
                    'start': start_date, 'end': end_date, 'show': show, 'stock': stock})
@@ -1262,7 +1257,6 @@ def approve_applicant(request, id):
             applicant.is_waiting = False
             applicant.is_active = True
             selected_id = request.POST['subsidiary']
-            print(selected_id)
             selected_subsidiary = Subsidiaries.objects.filter(id=selected_id).first()
             applicant.subsidiary_id = selected_subsidiary.id
             applicant.save()
