@@ -19,6 +19,7 @@ from users.models import Audit_Trail, SordActionsAuditTrail
 from whatsapp.helper_functions import send_message
 from .forms import PasswordChange, CreateCompany, OfferForm
 from .lib import *
+from decimal import *
 
 User = get_user_model()
 
@@ -676,7 +677,12 @@ def complete_transaction(request, id):
     if fuel_type == 'petrol':
         if request.method == 'POST':
             # transaction_quantity = transaction.offer.quantity
-            transaction_quantity = int(float(request.POST['for_fuel']) / float(transaction.offer.price))
+            if transaction.offer.delivery_method == "DELIVERY":
+                fuel_charge = float(request.POST['received']) - float(request.POST['transport_charge'])
+                transaction_quantity = fuel_charge / float(transaction.offer.price)
+            else:
+                transaction_quantity = float(request.POST['received'])
+            # transaction_quantity = int(float(request.POST['for_fuel']) / float(transaction.offer.price))
             if fuel_reserve is not None:
                 available_fuel = fuel.petrol_quantity + fuel_reserve.petrol_quantity
             else:
@@ -684,7 +690,7 @@ def complete_transaction(request, id):
             if transaction_quantity <= available_fuel:
                 
                 transaction.proof_of_payment_approved = True
-                transaction.paid += float(request.POST['received'])
+                transaction.paid += Decimal(request.POST['received'])
                 transaction.paid_reserve = float(request.POST['received'])
                 if transaction.offer.delivery_method == "DELIVERY":
                     transaction.fuel_money_reserve = float(request.POST['received']) - float(request.POST['transport_charge'])
@@ -716,7 +722,12 @@ def complete_transaction(request, id):
     elif fuel_type == 'diesel':
         if request.method == 'POST':
             # transaction_quantity = transaction.offer.quantity
-            transaction_quantity = int(float(request.POST['for_fuel']) / float(transaction.offer.price))
+            if transaction.offer.delivery_method == "DELIVERY":
+                fuel_charge = float(request.POST['received']) - float(request.POST['transport_charge'])
+                transaction_quantity = fuel_charge / float(transaction.offer.price)
+            else:
+                transaction_quantity = float(request.POST['received'])
+            # transaction_quantity = int(float(request.POST['for_fuel']) / float(transaction.offer.price))
             if fuel_reserve is not None:
                 available_fuel = fuel.diesel_quantity + fuel_reserve.diesel_quantity
             else:
@@ -724,7 +735,7 @@ def complete_transaction(request, id):
             if transaction_quantity <= available_fuel:
                 
                 transaction.proof_of_payment_approved = True
-                transaction.paid += float(request.POST['received'])
+                transaction.paid += Decimal(request.POST['received'])
                 transaction.paid_reserve = float(request.POST['received'])
                 if transaction.offer.delivery_method == "DELIVERY":
                     transaction.fuel_money_reserve = float(request.POST['received']) - float(request.POST['transport_charge'])
