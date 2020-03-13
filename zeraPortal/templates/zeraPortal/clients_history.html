@@ -106,6 +106,9 @@
               Buyer
               </th>
               <th>
+                Delivery Address
+              </th>
+              <th>
                 Supplier
                 </th>
               <th>
@@ -125,6 +128,7 @@
                       <td>{{tran.date}}</td>
                       <td>{{tran.time}}</td>
                       <td>{{tran.buyer}}</td>
+                      <td>{{tran.offer.request.delivery_address}}</td>
                       <td>{{tran.supplier}}</td>
                       <td>{{tran.offer.request.amount}} l</td>
                       <td>$ {{tran.revenue|stringformat:".2f"}}</td>
