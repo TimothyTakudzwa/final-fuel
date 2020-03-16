@@ -46,7 +46,7 @@
 </div>
 
 <div class="modal fade modal-success in" id="state_modal" role="dialog">
-    <div class="modal-dialog" style="margin: 0;">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title" style="color:whitesmoke"> Filter By State</span>
@@ -120,6 +120,9 @@
               <th>
               Status
               </th>
+              <th>
+                
+              </th>
                           </tr>
                       </thead>
                       <tbody>
@@ -139,6 +142,49 @@
                          <i class="fa fa-times-circle-o" style="color: #e74c3c;" aria-hidden="true"></i>
                          {% endif %}
                       </td>
+                      <td>
+                          <button class="btn-sm btn-success" data-toggle="modal" data-target="#acc_history_{{tran.id}}"
+                          role="button">View Sord Numbers</button>
+                      </td>
+                      <div class="modal fade modal-success in" id="acc_history_{{tran.id}}" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                
+                                <div class="modal-header" style="margin-bottom: 0;">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                <span class="modal-title" style="margin-bottom: 0;">Sord Numbers {{tran.id}}</span>
+                            </div>
+                                <div class="modal-body" style="padding-top: 0;">
+                                    <div class="row fixed-top" style="margin-top: 0; color: white;background-color: lightslategray; padding-top: 15px; padding-bottom: 10px;margin-bottom: 5px;
+                                    font-weight: bolder; font-size: 16px;">
+                                        <div class="col-md-6">
+                                            Date
+                                        </div>
+                                        <div class="col-md-6">
+                                            Sord Number
+                                        </div>
+                                    </div>
+                                    {% if tran.account_history %}
+                                        {% for payment in tran.account_history%}
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    {{ payment.date }}
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ payment.sord_number }}
+                                                </div>
+
+                                            </div>
+                                        {% endfor %}    
+                                    {% else %}
+                                    No Data Available For This Transaction
+                                    {% endif %}
+                                    
+                            </div>
+                        </div>
+                    </div>
+                        </div>
                       
                   </tr>
              
