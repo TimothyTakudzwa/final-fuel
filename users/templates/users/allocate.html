@@ -85,7 +85,62 @@
                             </div>
                             </td>
                         </tr>
+                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                        <script>
+                            $(document).ready(function () {
+                            $('#fuel_type').show();
+                            $('#currency').show();
+                            $('#diesel_rtgs_price').hide();
+                            $('#diesel_usd_price').hide();
+                            $('#petrol_rtgs_price').show();
+                            $('#petrol_usd_price').hide();
+                           
+                            
+                            
+                            $('#fuel_type').change(function () {
+                            if ($('#fuel_type option:selected').text() == "Diesel") {
+                                if ($('#currency option:selected').text() == "USD") {
+                                    $('#currency').show();
+                                    $('#diesel_rtgs_price').hide();
+                                    $('#diesel_usd_price').show();
+                                    $('#petrol_rtgs_price').hide();
+                                    $('#petrol_usd_price').hide();
+                                
+                                 }
 
+                                else {
+                                    $('#currency').show();
+                                    $('#diesel_rtgs_price').show();
+                                    $('#diesel_usd_price').hide();
+                                    $('#petrol_rtgs_price').hide();
+                                    $('#petrol_usd_price').hide();
+                                }
+
+                            }
+
+                            else {
+                                if ($('#currency option:selected').text() == "USD") {
+                                    $('#currency').show();
+                                    $('#diesel_rtgs_price').hide();
+                                    $('#diesel_usd_price').hide();
+                                    $('#petrol_rtgs_price').hide();
+                                    $('#petrol_usd_price').show();
+                                
+                                 }
+
+                                else {
+                                    $('#currency').show();
+                                    $('#diesel_rtgs_price').hide();
+                                    $('#diesel_usd_price').hide();
+                                    $('#petrol_rtgs_price').show();
+                                    $('#petrol_usd_price').hide();
+                                }
+
+                            }
+                         
+                             });
+                                });
+                            </script>
 
 
                         <div class="modal fade modal-success in" id="place_order{{company_capacity.id}}" tabindex="-1" role="dialog"
@@ -105,7 +160,7 @@
                                         {% csrf_token %}
                                      
                                         <div class="form-group row col-sm-12" style="margin-top: 5%;">
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-6" id="fuel_type">
 
                                                 <label><b style='color:#009688'>Fuel Type</b></label>
                                                 <select class="form-control" name="fuel_type">
@@ -116,14 +171,15 @@
 
                                                 </select>
                                             </div>
-                                            <div class="col-sm-6">
-                                                <label><b style='color:#009688'>Quantity</b></label>
-                                                <input type="text" name="quantity" class="form-control"
-                                                    placeholder="In Litres" required />
+                                            <div class="col-sm-6" id="fuel_paid">
+                                                <label><b style='color:#009688'>Sub Total <i style="color: black;">(payment)</i></b></label>
+                                                <input type="text" id="fuel_paid" name="fuel_paid" class="form-control"
+                                                    placeholder="$0.00" required />
                                             </div>
+                                           
                                         </div>
                                         <div class=" form-group row col-sm-12">
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-6" id="currency">
 
                                                 <label><b style='color:#009688'>Currency</b></label>
                                                 <select class="form-control" name="currency">
@@ -134,15 +190,35 @@
 
                                                 </select>
                                             </div>
-                                            <div class="col-sm-6">
-                                                <label><b style='color:#009688'>Sub Total</b></label>
-                                                <input type="text" name="fuel_paid" class="form-control"
-                                                    placeholder="$" required />
+                                            <div class="col-sm-6" id="diesel_rtgs_price">
+                                                <label><b style='color:#009688'>Price</b></label>
+                                                <input type="text" name="price" class="form-control"
+                                                    value="{{diesel_rtgs_price}}" required />
+                                            </div>
+                                            <div class="col-sm-6" id="diesel_usd_price">
+                                                <label><b style='color:#009688'>Price</b></label>
+                                                <input type="text" name="price" class="form-control"
+                                                    value="{{diesel_usd_price}}" required />
+                                            </div>
+                                            <div class="col-sm-6" id="petrol_rtgs_price">
+                                                <label><b style='color:#009688'>Price</b></label>
+                                                <input type="text" name="price" class="form-control"
+                                                    value="{{petrol_rtgs_price}}" required />
+                                            </div>
+                                            <div class="col-sm-6" id="petrol_usd_price">
+                                                <label><b style='color:#009688'>Price</b></label>
+                                                <input type="text" name="price" class="form-control"
+                                                    value="{{petrol_usd_price}}" required />
                                             </div>
 
                                         </div>
 
                                         <div class=" form-group row col-sm-12">
+                                            <div class="col-sm-6" id=quantity>
+                                                <label><b style='color:#009688'>Quantity</b></label>
+                                                <input type="text" name="quantity" class="form-control"
+                                                    vallue="{{price}}" id="quantity" disabled />
+                                            </div>
                                             <div class="col-sm-6">
 
                                                 <label><b style='color:#009688'>Duty</b></label>
@@ -150,22 +226,52 @@
                                                 placeholder="$" required />
                                             </div>
 
+                                            
+                                            
+                                        </div>
+                                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                                        <script>
+                                        $("#fuel_paid").keyup(function(){
+                                            update();
+                                        });
+                                        
+                                        function update() {
+                                          $("#quantity").val($('#fuel_paid').val());
+                                        }
+                                    </script>
+                                        <div class=" form-group row col-sm-12">
+
                                             <div class="col-sm-6">
 
                                                 <label><b style='color:#009688'>VAT</b></label>
                                                 <input type="text" name="vat" class="form-control"
                                                 placeholder="$" required />
                                             </div>
+                                            <div class="col-sm-6">
+
+                                                <label><b style='color:#009688'>Depot</b></label>
+
+                                                    <select class="form-control" name="depots">
+                                                        {% for depot in depots %}
+                                                        <option >{{depot.name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+
+                                            </div>
+                                            
+                                           
+                                         
                                             
                                         </div>
+
                                         <div class=" form-group row col-sm-12">
-                                            
+
                                             <div class="col-sm-6">
                                                 <label><b style='color:#009688'>Payment Proof</b></label>
                                                 <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="proof_of_payment" class="form-control-file" id="exampleFormControlFile1" required>
                                             </div>
-                                         
                                             
+                                           
                                         </div>
                                 </div>
                                 <div class="form-group row"

@@ -35,97 +35,200 @@
                 <a class="btn btn-info btn-sm" data-toggle="modal"
                     data-target="#place_order">Place Order</a>
             </div>
+
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                $('#fuel_type').show();
+                $('#currency').show();
+                $('#diesel_rtgs_price').hide();
+                $('#diesel_usd_price').hide();
+                $('#petrol_rtgs_price').show();
+                $('#petrol_usd_price').hide();
+               
+                
+                
+                $('#fuel_type').change(function () {
+                if ($('#fuel_type option:selected').text() == "Diesel") {
+                    if ($('#currency option:selected').text() == "USD") {
+                        $('#currency').show();
+                        $('#diesel_rtgs_price').hide();
+                        $('#diesel_usd_price').show();
+                        $('#petrol_rtgs_price').hide();
+                        $('#petrol_usd_price').hide();
+                    
+                     }
+
+                    else {
+                        $('#currency').show();
+                        $('#diesel_rtgs_price').show();
+                        $('#diesel_usd_price').hide();
+                        $('#petrol_rtgs_price').hide();
+                        $('#petrol_usd_price').hide();
+                    }
+
+                }
+
+                else {
+                    if ($('#currency option:selected').text() == "USD") {
+                        $('#currency').show();
+                        $('#diesel_rtgs_price').hide();
+                        $('#diesel_usd_price').hide();
+                        $('#petrol_rtgs_price').hide();
+                        $('#petrol_usd_price').show();
+                    
+                     }
+
+                    else {
+                        $('#currency').show();
+                        $('#diesel_rtgs_price').hide();
+                        $('#diesel_usd_price').hide();
+                        $('#petrol_rtgs_price').show();
+                        $('#petrol_usd_price').hide();
+                    }
+
+                }
+             
+                 });
+                    });
+                </script>
            
-            <div class="modal fade modal-success in" id="place_order" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class=" modal-dialog" role="document" style="margin: 0;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <span class="modal-title" id="exampleModalLongTitle">Place Order<i
-                                style="color:azure"><small style="color: rgba(5, 5, 5, 0.911);"> pay for fuel to NOIC and upload proof of payment</small></i></span>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div>
-                        {% load crispy_forms_tags %}
-                        <form action="{% url 'users:place_order' %}" method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}
-                         
-                            <div class="form-group row col-sm-12" style="margin-top: 5%;">
-                                <div class="col-sm-6">
+            
+           <div class="modal fade modal-success in" id="place_order{{company_capacity.id}}" tabindex="-1" role="dialog"
+           aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+           <div class=" modal-dialog" role="document" style="margin: 0;">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <span class="modal-title" id="exampleModalLongTitle">Place Order<i
+                               style="color:azure"><small style="color: rgba(5, 5, 5, 0.911);"> pay for fuel to NOIC and upload proof of payment</small></i></span>
+                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                           <span aria-hidden="true">&times;</span>
+                       </button>
+                   </div>
+                   <div>
+                       {% load crispy_forms_tags %}
+                       <form action="{% url 'users:place_order' %}" method="POST" enctype="multipart/form-data">
+                           {% csrf_token %}
+                        
+                           <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                               <div class="col-sm-6" id="fuel_type">
 
-                                    <label><b style='color:#009688'>Fuel Type</b></label>
-                                    <select class="form-control" name="fuel_type">
+                                   <label><b style='color:#009688'>Fuel Type</b></label>
+                                   <select class="form-control" name="fuel_type">
 
-                                        <option>Petrol</option>
-                                        <option>Diesel</option>
+                                       <option>Petrol</option>
+                                       <option>Diesel</option>
 
 
+                                   </select>
+                               </div>
+                               <div class="col-sm-6" id="fuel_paid">
+                                   <label><b style='color:#009688'>Sub Total <i style="color: black;">(payment)</i></b></label>
+                                   <input type="text" id="fuel_paid" name="fuel_paid" class="form-control"
+                                       placeholder="$0.00" required />
+                               </div>
+                              
+                           </div>
+                           <div class=" form-group row col-sm-12">
+                               <div class="col-sm-6" id="currency">
+
+                                   <label><b style='color:#009688'>Currency</b></label>
+                                   <select class="form-control" name="currency">
+
+                                       <option>RTGS</option>
+                                       <option>USD</option>
+
+
+                                   </select>
+                               </div>
+                               <div class="col-sm-6" id="diesel_rtgs_price">
+                                   <label><b style='color:#009688'>Price</b></label>
+                                   <input type="text" name="price" class="form-control"
+                                       value="{{diesel_rtgs_price}}" required />
+                               </div>
+                               <div class="col-sm-6" id="diesel_usd_price">
+                                   <label><b style='color:#009688'>Price</b></label>
+                                   <input type="text" name="price" class="form-control"
+                                       value="{{diesel_usd_price}}" required />
+                               </div>
+                               <div class="col-sm-6" id="petrol_rtgs_price">
+                                   <label><b style='color:#009688'>Price</b></label>
+                                   <input type="text" name="price" class="form-control"
+                                       value="{{petrol_rtgs_price}}" required />
+                               </div>
+                               <div class="col-sm-6" id="petrol_usd_price">
+                                   <label><b style='color:#009688'>Price</b></label>
+                                   <input type="text" name="price" class="form-control"
+                                       value="{{petrol_usd_price}}" required />
+                               </div>
+
+                           </div>
+
+                           <div class=" form-group row col-sm-12">
+                               <div class="col-sm-6" id=quantity>
+                                   <label><b style='color:#009688'>Quantity</b></label>
+                                   <input type="text" name="quantity" class="form-control"
+                                       vallue="{{price}}" id="quantity" disabled />
+                               </div>
+                               <div class="col-sm-6">
+
+                                   <label><b style='color:#009688'>Duty</b></label>
+                                   <input type="text" name="duty_paid" class="form-control"
+                                   placeholder="$" required />
+                               </div>
+
+                               
+                               
+                           </div>
+                           <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                           <script>
+                           $("#fuel_paid").keyup(function(){
+                               update();
+                           });
+                           
+                           function update() {
+                             $("#quantity").val($('#fuel_paid').val());
+                           }
+                       </script>
+                           <div class=" form-group row col-sm-12">
+
+                               <div class="col-sm-6">
+
+                                   <label><b style='color:#009688'>VAT</b></label>
+                                   <input type="text" name="vat" class="form-control"
+                                   placeholder="$" required />
+                               </div>
+                               
+                               <div class="col-sm-6">
+
+                                <label><b style='color:#009688'>Depot</b></label>
+    
+                                    <select class="form-control" name="depots">
+                                        {% for depot in depots %}
+                                        <option >{{depot.name}}</option>
+                                        {% endfor %}
                                     </select>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label><b style='color:#009688'>Quantity</b></label>
-                                    <input type="text" name="quantity" class="form-control"
-                                        placeholder="In Litres" required />
-                                </div>
+    
                             </div>
-                            <div class=" form-group row col-sm-12">
-                                <div class="col-sm-6">
-
-                                    <label><b style='color:#009688'>Currency</b></label>
-                                    <select class="form-control" name="currency">
-
-                                        <option>RTGS</option>
-                                        <option>USD</option>
-
-
-                                    </select>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label><b style='color:#009688'>Sub Total</b></label>
-                                    <input type="text" name="fuel_paid" class="form-control"
-                                        placeholder="$" required />
-                                </div>
-
-                            </div>
-
-                            <div class=" form-group row col-sm-12">
-                                <div class="col-sm-6">
-
-                                    <label><b style='color:#009688'>Duty</b></label>
-                                    <input type="text" name="duty_paid" class="form-control"
-                                    placeholder="$" required />
-                                </div>
-
-                                <div class="col-sm-6">
-
-                                    <label><b style='color:#009688'>VAT</b></label>
-                                    <input type="text" name="vat" class="form-control"
-                                    placeholder="$" required />
-                                </div>
-                                
-                            </div>
-                            <div class=" form-group row col-sm-12">
-                                
-                                <div class="col-sm-6">
-                                    <label><b style='color:#009688'>Payment Proof</b></label>
-                                    <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="proof_of_payment" class="form-control-file" id="exampleFormControlFile1" required>
-                                </div>
-                             
-                                
-                            </div>
-                    </div>
-                    <div class="form-group row"
-                        style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                        <button type="button" class="btn btn-secondary col-sm-6"
-                            data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
-                    </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+                            
+                               
+                           </div>
+                          
+                        <div class="col-sm-6">
+                            <label><b style='color:#009688'>Payment Proof</b></label>
+                            <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="proof_of_payment" class="form-control-file" id="exampleFormControlFile1" required>
+                        </div>
+                   </div>
+                   <div class="form-group row"
+                       style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                       <button type="button" class="btn btn-secondary col-sm-6"
+                           data-dismiss="modal">Close</button>
+                       <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                   </div>
+                   </form>
+               </div>
+           </div>
+       </div>
             
             <div class="dropdown">
                 <ul class="dropdown-menu dropdown-menu-right">
@@ -235,40 +338,40 @@
 
                      {% if order.allocation != None %}
                             {% if order.allocation.d_note %}
-                            <td>Uploaded</td>
+                            <td><i style="color: blue;">Uploaded</i></td>
                            
                             {% else %}
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-warning btn-sm" style="color: white;" data-target="#upload_{{order.allocation.id}}" >Upload D-Note</a>
+                                    <a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#upload_{{order.allocation.id}}" >Upload D-Note</a>
                                    
                                 </div>
 
                              </td>
-                              <!--Upload Document-->
-                      <div class="modal fade modal-sucess in" id="upload_{{order.allocation.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header" style="background-color: #009688; color: white">
-                                    <span class="modal-title" id="exampleModalLabel">Upload Delivery Note</span>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-
-                                    <form method="POST" action="{% url 'users:delivery_note' order.allocation.id %}" enctype="multipart/form-data">
-                                        {% csrf_token %}
-                                        <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="d_note" class="form-control-file" id="exampleFormControlFile1" required>
-                                        <br>
-                                        <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
-
-                                    </form>
+                            <!--Upload Document-->
+                            <div class="modal fade modal-sucess in" id="upload_{{order.allocation.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color: #009688; color: white">
+                                            <span class="modal-title" id="exampleModalLabel">Upload Delivery Note</span>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+        
+                                            <form method="POST" action="{% url 'users:delivery_note' order.allocation.id %}" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="d_note" class="form-control-file" id="exampleFormControlFile1" required>
+                                                <br>
+                                                <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+        
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!--End Upload Document-->
+                            <!--End Upload Document-->
                             {% endif %}
 
                     {% else %}
@@ -280,7 +383,7 @@
                     
                      
                 </tr>
-           
+                                  
                 {%endfor%}
             </tbody>
             </table>
