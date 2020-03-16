@@ -182,14 +182,20 @@
                            </div>
                            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
                            <script>
-                           $("#fuel_paid").keyup(function(){
-                               update();
-                           });
-                           
-                           function update() {
-                             $("#quantity").val($('#fuel_paid').val());
-                           }
-                       </script>
+                               $( "#fuel_paid" ).keyup(function() {
+                                console.log( "Handler for .keyup() called." );
+                                });
+                                                            
+
+                                function update() {
+                                    $('input[name="quantity"]').val($('input[name="fuel_paid"]').val());
+                                }
+
+                                $("#fuel_paid").keyup(function(){
+                                    update();
+                                
+                                });
+                            </script>
                            <div class=" form-group row col-sm-12">
 
                                <div class="col-sm-6">
