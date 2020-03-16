@@ -556,6 +556,7 @@ def clients_history(request, cid):
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Complete'
 
@@ -564,6 +565,7 @@ def clients_history(request, cid):
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Incomplete'
 
