@@ -2078,13 +2078,13 @@ def upload_users(request):
 def place_order(request):
     if request.method == 'POST':
         company = request.user.company
-        quantity = request.POST['quantity']
+        quantity = 500
         currency = request.POST['currency']
         fuel_type = request.POST['fuel_type']
         proof_of_payment = request.FILES.get('proof_of_payment')
         noic_depot = NoicDepot.objects.filter(name=request.POST['depots']).first()
-        amount_paid = request.POST['amount_paid']
-        duty = request.POST['duty']
+        amount_paid = request.POST['fuel_paid']
+        duty = request.POST['duty_paid']
         vat = request.POST['vat']
         amount_paid
         Order.objects.create(noic_depot=noic_depot, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
