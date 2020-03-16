@@ -22,7 +22,7 @@ from .forms import AllocationForm, SupplierContactForm, UsersUploadForm, ReportF
 from .models import AuditTrail, SordActionsAuditTrail
 from buyer.models import *
 from supplier.models import *
-from national.models import Order, SordNationalAuditTrail
+from national.models import Order, SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
 from users.models import *
 from accounts.models import Account, AccountHistory
 from buyer.forms import *
@@ -70,6 +70,12 @@ functions for allocating fuel to depots and stations
 @login_required()
 def allocate(request):
     allocates = []
+    fuel_object = DepotFuelUpdate.objects.first()
+    diesel_rtgs_price = fuel_object.rtgs_diesel_price
+    diesel_usd_price = fuel_object.usd_diesel_price
+    petrol_rtgs_price = fuel_object.rtgs_petrol_price
+    petrol_usd_price = fuel_object.usd_petrol_price
+    depots = NoicDepot.objects.all()
     company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
     subs_total_diesel_capacity = 0
     subs_total_petrol_capacity = 0
@@ -103,7 +109,7 @@ def allocate(request):
     else:
         allocations = allocations
     return render(request, 'users/allocate.html',
-                  {'allocates': allocates, 'allocations': allocations, 'company_capacity': company_capacity,
+                  {'depots': depots, 'diesel_rtgs_price': diesel_rtgs_price, 'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price, 'petrol_usd_price': petrol_usd_price, 'allocates': allocates, 'allocations': allocations, 'company_capacity': company_capacity,
                    'company_total_diesel_capacity': company_total_diesel_capacity,
                    'company_total_petrol_capacity': company_total_petrol_capacity})
 
@@ -2066,12 +2072,23 @@ def place_order(request):
         currency = request.POST['currency']
         fuel_type = request.POST['fuel_type']
         proof_of_payment = request.FILES.get('proof_of_payment')
-        Order.objects.create(company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+        noic_depot = NoicDepot.objects.filter(name=request.POST['depots']).first()
+        amount_paid = request.POST['amount_paid']
+        duty = request.POST['duty']
+        vat = request.POST['vat']
+        amount_paid
+        Order.objects.create(noic_depot=noic_depot, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
         messages.success(request,'placed order successfully')
         return redirect('users:allocate')
 
 
 def orders(request):
+    fuel_object = DepotFuelUpdate.objects.first()
+    diesel_rtgs_price = fuel_object.rtgs_diesel_price
+    diesel_usd_price = fuel_object.usd_diesel_price
+    petrol_rtgs_price = fuel_object.rtgs_petrol_price
+    petrol_usd_price = fuel_object.usd_petrol_price
+    depots = NoicDepot.objects.all()
     orders = Order.objects.filter(company=request.user.company).all()
     for order in orders:
         sord = SordNationalAuditTrail.objects.filter(order=order).first()
@@ -2080,7 +2097,7 @@ def orders(request):
         else:
             order.allocation = None
 
-    return render(request, 'users/orders.html', {'orders': orders})
+    return render(request, 'users/orders.html', {'depots': depots, 'diesel_rtgs_price': diesel_rtgs_price, 'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price, 'petrol_usd_price': petrol_usd_price,'orders': orders})
 
 
 def view_release_note(request, id):
@@ -2098,7 +2115,7 @@ def delivery_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     if request.method == 'POST':
         if allocation is not None:
-            allocation.delivery_note = request.FILES.get('d_note')
+            allocation.d_note = request.FILES.get('d_note')
             allocation.save()
             
             messages.success(request, 'Delivery note successfully uploaded')
