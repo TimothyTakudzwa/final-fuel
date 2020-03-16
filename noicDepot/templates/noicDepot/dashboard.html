@@ -74,7 +74,10 @@
                             </th>
 
                             <th>
-                                Action
+                                Release Note
+                            </th>
+                            <th>
+                                D-Note
                             </th>
                         </tr>
                     </thead>
@@ -93,7 +96,7 @@
                                 <div class="btn-group">
                                     <a class="btn btn-primary btn-sm" style="color: white;" href="{% url 'noic:view_release_note' sord.id %}">View</a>
                                     <a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#edit_{{sord.id}}" class="glyphicon glyphicon-pencil">
-                                        Edit Release Note</a>
+                                        Edit Note</a>
                                 </div>
                                 
                             </td> 
@@ -101,6 +104,20 @@
                             <td>
                                 <a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#upload_{{sord.id}}">
                                     <i class="fa fa-upload" style="font-size:20px"></i> Release Note</a>
+                            </td>
+                            {% endif %} 
+                            
+                            {% if sord.d_note %}
+                            <td>
+                                <div class="btn-group">
+                                    <a class="btn btn-primary btn-sm" style="color: white;" href="{% url 'noic:view_release_note' sord.id %}">Download D-Note</a>
+                                    
+                                </div>
+                                
+                            </td> 
+                            {% else %}
+                            <td>
+                                <i style="color: brown;">Pending</i>
                             </td>
                             {% endif %} 
                          </tr>
