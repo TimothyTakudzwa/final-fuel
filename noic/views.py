@@ -27,6 +27,7 @@ from users.views import message_is_sent
 from national.models import Order, NationalFuelUpdate, SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
 
 from .lib import *
+from zeraPortal.lib import *
 
 user = get_user_model()
 
@@ -205,7 +206,14 @@ def allocate_fuel(request, id):
 
 
 def statistics(request):
-    return render(request, 'noic/statistics.html')
+    yesterday = date.today() - timedelta(days=1)
+    monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
+    weekly_rev = get_weekly_sales(True)
+    last_week_rev = get_weekly_sales(False)
+    city_sales_volume = get_volume_sales_by_location()
+    final_desperate_cities = []
+    desperate_cities = desperate()
+    return render(request, 'noic/statistics.html', {'monthly_rev':monthly_rev,'weekly_rev':weekly_rev,'last_week_rev': last_week_rev, 'city_sales_volume': city_sales_volume })
 
 
 def staff(request):
@@ -451,6 +459,13 @@ def report_generator(request):
 
 # @login_required()
 def statistics(request):
+    yesterday = date.today() - timedelta(days=1)
+    monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
+    weekly_rev = get_weekly_sales(True)
+    last_week_rev = get_weekly_sales(False)
+    city_sales_volume = get_volume_sales_by_location()
+    final_desperate_cities = []
+    desperate_cities = desperate()
     unallocated_diesel_usd = get_current_usd_stock().diesel_quantity
     unallocated_petrol_usd = get_current_usd_stock().petrol_quantity
     unallocated_diesel_zwl = get_current_zwl_stock().diesel_quantity
