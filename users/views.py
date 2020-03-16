@@ -1070,11 +1070,12 @@ def client_history(request, cid):
 
     if request.method == "POST":
 
-        if request.POST.get('report_type') == 'Complete':
+        if request.POST.get('report_type') == 'Completed':
             trns = Transaction.objects.filter(buyer=buyer, is_complete=True)
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Complete'
 
@@ -1083,22 +1084,27 @@ def client_history(request, cid):
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Incomplete'
+
 
         if request.POST.get('report_type') == 'All':
             trns = Transaction.objects.filter(buyer=buyer)
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'All'
+
         return render(request, 'users/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
 
     trns = Transaction.objects.filter(buyer=buyer)
     trans = []
     for tran in trns:
         tran.revenue = tran.offer.request.amount * tran.offer.price
+        tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
         trans.append(tran)
 
     return render(request, 'users/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
@@ -1117,6 +1123,7 @@ def subsidiary_transaction_history(request, sid):
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Complete'
 
@@ -1125,6 +1132,7 @@ def subsidiary_transaction_history(request, sid):
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Incomplete'
 
@@ -1133,6 +1141,7 @@ def subsidiary_transaction_history(request, sid):
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'All'
         return render(request, 'users/subs_history.html', {'trans': trans, 'subsidiary': subsidiary, 'state': state})
@@ -1140,6 +1149,7 @@ def subsidiary_transaction_history(request, sid):
     trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
     for tran in trns:
         tran.revenue = tran.offer.request.amount * tran.offer.price
+        tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
         trans.append(tran)
 
     return render(request, 'users/subs_history.html', {'trans': trans, 'subsidiary': subsidiary})

@@ -462,19 +462,19 @@ def statistics(request):
     for city, deficit in desperate_cities.items():
         final_desperate_cities.append((city,deficit))
         
-    number_of_companies = Company.objects.all().count()
-    number_of_depots = Subsidiaries.objects.filter(is_depot=True).count()
-    number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()
+    # number_of_companies = Company.objects.all().count()
+    # number_of_depots = Subsidiaries.objects.filter(is_depot=True).count()
+    # number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()
     last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1))
-    offers = Offer.objects.all().count()
-    bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
-    normal_requests = FuelRequest.objects.filter(delivery_method="DELIVERY").count()  # Change these 2 items
+    # offers = Offer.objects.all().count()
+    # bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
+    # normal_requests = FuelRequest.objects.filter(delivery_method="DELIVERY").count()  # Change these 2 items
     staff = ''
-    new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
-    clients = []
-    stock = get_aggregate_stock()
-    diesel = stock['diesel']
-    petrol = stock['petrol']
+    # new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
+    # clients = []
+    # stock = get_aggregate_stock()
+    # diesel = stock['diesel']
+    # petrol = stock['petrol']
 
     trans = Transaction.objects.filter(is_complete=True).annotate(
         number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
@@ -525,8 +525,8 @@ def statistics(request):
     # clients = [company for company in  companies]
 
     # revenue = round(float(sum(value)))
-    revenue = get_aggregate_total_revenue()
-    revenue = '${:,.2f}'.format(revenue)
+    # revenue = get_aggregate_total_revenue()
+    # revenue = '${:,.2f}'.format(revenue)
     # revenue = str(revenue) + '.00'
 
     # try:
@@ -534,20 +534,13 @@ def statistics(request):
     # except:
     #     trans = 0    
     # trans_complete = get_aggregate_transactions_complete_percentage()
-    inactive_depots = Subsidiaries.objects.filter(is_active=False, is_depot=True).count()
-    inactive_stations = Subsidiaries.objects.filter(is_active=False, is_depot=False).count()
-    approval_percentage = get_approved_company_complete_percentage()
+    # inactive_depots = Subsidiaries.objects.filter(is_active=False, is_depot=True).count()
+    # inactive_stations = Subsidiaries.objects.filter(is_active=False, is_depot=False).count()
+    # approval_percentage = get_approved_company_complete_percentage()
 
-    return render(request, 'zeraPortal/statistics.html', {'offers': offers,
-                                                     'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients,
-                                                     'normal_requests': normal_requests,
-                                                     'diesel': diesel, 'petrol': petrol, 'revenue': revenue,
-                                                     'inactive_stations': inactive_stations,'inactive_depots': inactive_depots,
-                                                     'sorted_subs': sorted_subs,
+    return render(request, 'zeraPortal/statistics.html', { 'trans': trans, 'clients': clients,
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
-                                                     'last_week_rev': last_week_rev, 'number_of_companies': number_of_companies,
-                                                     'number_of_depots':number_of_depots, 'number_of_s_stations':number_of_s_stations,
-                                                     'approval_percentage': approval_percentage, 'city_sales_volume':city_sales_volume,
+                                                     'last_week_rev': last_week_rev,'city_sales_volume':city_sales_volume,
                                                      'final_desperate_cities':final_desperate_cities})
     
 
@@ -563,6 +556,7 @@ def clients_history(request, cid):
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Complete'
 
@@ -571,6 +565,7 @@ def clients_history(request, cid):
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Incomplete'
 
@@ -589,8 +584,7 @@ def clients_history(request, cid):
         tran.revenue = tran.offer.request.amount * tran.offer.price
         trans.append(tran)
 
-    return render(request, 'zeraPortal/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state,      
-                                                     'approval_percentage': approval_percentage})    
+    return render(request, 'zeraPortal/clients_history.html', {'trans': trans, 'buyer': buyer, 'state': state})    
 
 
 @login_required
