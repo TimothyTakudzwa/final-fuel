@@ -2078,7 +2078,7 @@ def upload_users(request):
 def place_order(request):
     if request.method == 'POST':
         company = request.user.company
-        quantity = 500
+        quantity = request.POST['quantity']
         currency = request.POST['currency']
         fuel_type = request.POST['fuel_type']
         proof_of_payment = request.FILES.get('proof_of_payment')
@@ -2086,10 +2086,14 @@ def place_order(request):
         amount_paid = request.POST['fuel_paid']
         duty = request.POST['duty_paid']
         vat = request.POST['vat']
-        amount_paid
-        Order.objects.create(noic_depot=noic_depot, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+        transporter = request.POST['transporter']
+        truck_reg = request.POST['truck_reg']
+        trailer_reg = request.POST['trailer_reg']
+        driver = request.POST['driver']
+        driver_id = request.POST['driver_id']
+        Order.objects.create(transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, noic_depot=noic_depot, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
         messages.success(request,'placed order successfully')
-        return redirect('users:allocate')
+        return redirect('users:orders')
 
 
 def orders(request):
