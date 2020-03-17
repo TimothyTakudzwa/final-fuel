@@ -91,10 +91,14 @@
              
                  });
                     });
+
+                    
+
+                    
                 </script>
            
             
-           <div class="modal fade modal-success in" id="place_order{{company_capacity.id}}" tabindex="-1" role="dialog"
+        <div class="modal fade modal-success in" id="place_order" tabindex="-1" role="dialog"
            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
            <div class=" modal-dialog" role="document" style="margin: 0;">
                <div class="modal-content">
@@ -143,22 +147,22 @@
                                </div>
                                <div class="col-sm-6" id="diesel_rtgs_price">
                                    <label><b style='color:#009688'>Price</b></label>
-                                   <input type="text" name="price" class="form-control"
+                                   <input type="text" name="diesel_rtgs_price" class="form-control"
                                        value="{{diesel_rtgs_price}}" required />
                                </div>
                                <div class="col-sm-6" id="diesel_usd_price">
                                    <label><b style='color:#009688'>Price</b></label>
-                                   <input type="text" name="price" class="form-control"
+                                   <input type="text" name="diesel_usd_price" class="form-control"
                                        value="{{diesel_usd_price}}" required />
                                </div>
                                <div class="col-sm-6" id="petrol_rtgs_price">
                                    <label><b style='color:#009688'>Price</b></label>
-                                   <input type="text" name="price" class="form-control"
+                                   <input type="text" name="petrol_rtgs_price" class="form-control"
                                        value="{{petrol_rtgs_price}}" required />
                                </div>
                                <div class="col-sm-6" id="petrol_usd_price">
                                    <label><b style='color:#009688'>Price</b></label>
-                                   <input type="text" name="price" class="form-control"
+                                   <input type="text" name="petrol_usd_price" class="form-control"
                                        value="{{petrol_usd_price}}" required />
                                </div>
 
@@ -188,7 +192,20 @@
                                                             
 
                                 function update() {
-                                    $('input[name="quantity"]').val($('input[name="fuel_paid"]').val()/$('input[name="price"]').val());
+                                    if ($('#fuel_type option:selected').text() == "Diesel"){
+                                        if ($('#currency option:selected').text() == "USD") {
+                                            $('input[name="quantity"]').val($('input[name="fuel_paid"]').val()/$('input[name="diesel_usd_price"]').val());
+                                        }else if ($('#currency option:selected').text() == "RTGS") {
+                                            $('input[name="quantity"]').val($('input[name="fuel_paid"]').val()/$('input[name="diesel_rtgs_price"]').val());
+                                        }
+                                    }else{
+                                        if ($('#currency option:selected').text() == "USD") {
+                                            $('input[name="quantity"]').val($('input[name="fuel_paid"]').val()/$('input[name="petrol_usd_price"]').val());
+                                        }else if ($('#currency option:selected').text() == "RTGS"){
+                                            $('input[name="quantity"]').val($('input[name="fuel_paid"]').val()/$('input[name="petrol_rtgs_price"]').val());
+                                        }
+
+                                    }    
                                 }
 
                                 $("#fuel_paid").keyup(function(){
@@ -235,6 +252,18 @@
                </div>
            </div>
        </div>
+
+       <script>
+        $('body').click(function (event) {
+            if(!$(event.target).closest('#place_order').length && !$(event.target).is('#place_order')) {
+                $("#place_order").modal('hide');
+            }
+            if(!$(event.target).closest('#new_depot_user').length && !$(event.target).is('#new_depot_user')) {
+                $("#new_depot_user").modal('hide');
+            }      
+        });
+    </script>
+       
             
             <div class="dropdown">
                 <ul class="dropdown-menu dropdown-menu-right">
@@ -389,6 +418,18 @@
                     
                      
                 </tr>
+
+                <script>
+                    $('body').click(function (event) {
+                        if(!$(event.target).closest('#payment{{order.id}}').length && !$(event.target).is('#payment{{order.id}}')) {
+                            $("#payment{{order.id}}").modal('hide');
+                        }
+                        if(!$(event.target).closest('#new_depot_user').length && !$(event.target).is('#new_depot_user')) {
+                            $("#new_depot_user").modal('hide');
+                        }      
+                    });
+                </script>
+                   
                                   
                 {%endfor%}
             </tbody>
