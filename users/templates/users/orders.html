@@ -188,7 +188,7 @@
                                                             
 
                                 function update() {
-                                    $('input[name="quantity"]').val($('input[name="fuel_paid"]').val());
+                                    $('input[name="quantity"]').val($('input[name="fuel_paid"]').val()/$('input[name="price"]').val());
                                 }
 
                                 $("#fuel_paid").keyup(function(){
