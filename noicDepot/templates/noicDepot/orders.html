@@ -115,8 +115,8 @@
                     {% else %}
                     <td>
                         <div class="btn-group">
-                            <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="" > <i class="fa fa-download" style="font-size:15px"></i> Payment Proof</a>
-                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" href="{% url 'noic:payment_approval' order.id %}" >Approve</a>
+                            <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'noicDepot:download_proof' order.id %}" > <i class="fa fa-download" style="font-size:15px"></i> Payment Proof</a>
+                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" href="{% url 'noicDepot:payment_approval' order.id %}" >Approve</a>
                         </div>
                     </td>
                     {% endif %}
@@ -125,7 +125,7 @@
                     {% if order.allocated_fuel %}
                     <td>
                         <div class="btn-group">
-                            <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"  href="{% url 'noic:allocations' %}" >View Allocation</a>
+                            <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"  href="{% url 'noicDepot:dashboard' %}" >View Allocation</a>
                             </div>
                     </td>
                     {% else %}
@@ -152,7 +152,7 @@
                         </div>
                         <div>
                             {% load crispy_forms_tags %}
-                            <form action="{% url 'noic:allocate_fuel' order.id %}" method="POST">
+                            <form action="{% url 'noicDepot:allocate_fuel' order.id %}" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" value="{{order.fuel_type}}" name="fuel_type" />
                                 <input type="hidden" value="{{order.quantity}}" name="quantity" />

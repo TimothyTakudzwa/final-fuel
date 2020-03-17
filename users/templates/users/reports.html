@@ -106,7 +106,7 @@
                     <span class="logo-mini"> </span>
                     <span class="logo-lg">
 
-                        <h4>Fuel Management System</h4>
+                        <h4>Fuel Management System Zim Supplier Admin</h4>
 
                     </span>
                 </a>
@@ -176,16 +176,20 @@
                             <a href="{% url 'users:allocate' %}"><i class="fa fa-clipboard"></i><span>Fuel Allocations</span>
                             </a>
                         </li>
+                        <li class="{% if request.path == '/users/orders/' %} active {% endif %}">
+                            <a href="{% url 'users:orders' %}"><i class="fa fa-clipboard"></i><span>NOIC Orders</span>
+                            </a>
+                        </li>
                         <li class="{% if request.path == '/users/sord_allocations/' %} active {% endif %}">
-                            <a href="{% url 'users:sord_allocations' %}"><i class="fa fa-clipboard"></i><span>Sord Allocations</span>
+                            <a href="{% url 'users:sord_allocations' %}"><i class="fa fa-clipboard"></i><span>Sord Allocations Audit</span>
+                            </a>
+                        </li>
+                        <li class="{% if request.path == '/users/sord_station_sales/' %} active {% endif %}">
+                            <a href="{% url 'users:sord_station_sales' %}"><i class="fa fa-clipboard"></i><span>Sord Subsidiary Sales</span>
                             </a>
                         </li>
                         <li class="{% if request.path == '/users/suppliers/' %} active {% endif %}">
-                            <a href="{% url 'users:suppliers_list' %}"><i class="fa fa-sitemap"></i><span>Service Stations</span>
-                            </a>
-                        </li>
-                        <li class="{% if request.path == '/users/depot_staff/' %} active {% endif %}">
-                            <a href="{% url 'users:depot_staff' %}"><i class="fa fa-address-card"></i><span>Depot Staff</span>
+                            <a href="{% url 'users:suppliers_list' %}"><i class="fa fa-sitemap"></i><span>Staff Management</span>
                             </a>
                         </li>
                         <li class="{% if request.path == '/users/audit_trail/' %} active {% endif %}">
@@ -204,10 +208,18 @@
                             <a href="{% url 'users:report_generator' %}"><i class="fa fa-pie-chart"></i><span>Report Generator</span>
                             </a>
                         </li>
-                        <li class="{% if request.path == '/users/waiting_for_approval/' %} active {% endif %}">
-                            <a href="{% url 'users:waiting_for_approval' %}"><i class="fa fa-users"></i><span>Staff Applications</span>
+                        <li class="{% if request.path == '/users/client-application/' %} active {% endif %}">
+                            <a href="{% url 'users:client-application' %}"><i class="fa fa-clipboard"></i><span>Client Applications</span>
                             </a>
                         </li>
+                          <li class="{% if request.path == '/users/waiting_for_approval/' %} active {% endif %}">
+                              <a href="{% url 'users:waiting_for_approval' %}"><i class="fa fa-users"></i><span>Staff Applications</span>
+                              </a>
+                          </li>
+                          <li class="{% if request.path == '/users/upload_users/' %} active {% endif %}">
+                              <a href="{% url 'users:upload_users' %}"><i class="fa fa-upload"></i><span>Accounts</span>
+                              </a>
+                          </li>
                         <li class="nav-item">
                             <a href="/logout/?next=/login"><i class="fa fa-sign-out"></i><span>Logout</span>
                             </a>

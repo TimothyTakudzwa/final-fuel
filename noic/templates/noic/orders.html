@@ -18,8 +18,8 @@
         <i class="fa fa-binoculars"></i>
     </div> -->
     <div class="header-title" style="margin-left: 0px;">
-        <h1>NOIC Portal</h1>
-        <small>Company Fuel Orders</small>
+        <h1>Company Fuel Orders</h1>
+        <small>Fuel Management System</small>
         <ol class="breadcrumb hidden-xs">
             <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
             <li class="active">Orders</li>
@@ -56,7 +56,6 @@
                     <th style="color: white;">Quantity</th>
                     <th style="color: white;">Currency</th>
                     <th style="color: white;">Payment</th>
-                    <th style="color: white;">Proof of Payment</th>
                     <th style="color: white;">Action</th>
                 </tr>
             </thead>
@@ -110,29 +109,17 @@
 
                     </td>
 
-                    {% if order.payment_approved %}
-                    <td><b style="color: rgb(59, 59, 139);">Payment Approved</b></td>
-                    {% else %}
-                    <td>
-                        <div class="btn-group">
-                            <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="" > <i class="fa fa-download" style="font-size:15px"></i> Payment Proof</a>
-                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" href="{% url 'noic:payment_approval' order.id %}" >Approve</a>
-                        </div>
-                    </td>
-                    {% endif %}
                     
                     {% if order.payment_approved %}
                     {% if order.allocated_fuel %}
                     <td>
                         <div class="btn-group">
-                            <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"  href="{% url 'noic:allocations' %}" >View Allocation</a>
+                            <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"  href="{% url 'noic:allocations' %}" >View Allocations</a>
                             </div>
                     </td>
                     {% else %}
                    <td>
-                   <div class="btn-group">
-                    <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal"  data-target="#allocate{{order.id}}" >Allocate Fuel</a>
-                    </div>
+                  <i style="color: brown;">Pending</i> 
                 </td>
                   {% endif %}
                    {% else %}

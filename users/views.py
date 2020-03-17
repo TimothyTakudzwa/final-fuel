@@ -2117,7 +2117,7 @@ def view_release_note(request, id):
     context = {
         'allocation': allocation
     }
-    return render(request, 'noicDepot/release_note.html', context=context)
+    return render(request, 'users/release_note.html', context=context)
 
 
 

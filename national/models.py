@@ -39,6 +39,7 @@ class Order(models.Model):
     vat = models.DecimalField(max_digits=20, default=0.00, decimal_places=2)
     transporter = models.CharField(max_length=150, blank=True, null=True)
     truck_reg = models.CharField(max_length=150, blank=True, null=True)
+    trailer_reg = models.CharField(max_length=150, blank=True, null=True)
     driver = models.CharField(max_length=150, blank=True, null=True)
     driver_id = models.CharField(max_length=150, blank=True, null=True)
     noic_depot = models.ForeignKey(NoicDepot, on_delete=models.DO_NOTHING, related_name='company_allocation', blank=True, null=True)

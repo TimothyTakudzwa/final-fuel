@@ -1,0 +1,565 @@
+{% extends "noic/noic_base.html" %}
+{% block body %}
+
+<section class="content-header">
+    <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+           <div class="input-group">
+           <input type="text" name="q" class="form-control" placeholder="Search...">
+               <span class="input-group-btn">
+                   <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+               </span>
+           </div>
+       </form>   
+   <!-- <div class="header-icon">
+       <i class="fa fa-book"></i>
+   </div> -->
+   <div class="header-title" style="margin-left: 0px;">
+  
+       <h1> NOIC Depots</h1>
+       <small>Fuel Management System</small>
+       <ol class="breadcrumb hidden-xs">
+           <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
+           <li class="active">Depots</li>
+       </ol>
+  
+   </div>
+  
+  </section>
+
+  <section class="content">
+    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+    <div class="panel-heading ui-sortable-handle">
+        <div class="btn-group"> 
+            <h4>NOIC Depots</h4> 
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_sub" style="margin-bottom: 10px; margin-top: 10px;">Add Depot </button>
+
+        </div>
+        <script>
+            $('body').click(function (event) {
+                if(!$(event.target).closest('#new_sub').length && !$(event.target).is('#new_sub')) {
+                    $("#new_sub").modal('hide');
+                }        
+            });
+        </script>
+        
+    <div class="dropdown">
+        <ul class="dropdown-menu dropdown-menu-right">
+           
+          
+        </ul>
+        <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+        </div>
+        </div>
+        </div>       
+        <div class="panel-body">
+      
+                {% if depots %}
+                <div class="table-responsive">
+                    <table id="depots" class="table table-striped table-bordered" style="width:100%">
+                      <thead>
+                          <tr>
+                            <th>
+                                Name
+                            </th>
+    
+                            <th>
+                                Type
+                            </th>
+                            <th>
+                                 City
+                                </th>
+                            <th>
+                                Address
+                            </th>
+                            <th>
+                                    Bank
+                                </th>
+                                <th>
+                                     Account
+                                    </th>
+                            <th>
+                                Opens
+                            </th>
+                            <th>
+                                Closes
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                               
+                          </tr>
+                      </thead>
+                      <tbody>
+                        {% for station in depots %}  
+                        <tr>
+                            <td>{{station.name}}</td>
+                            {% if station.is_depot == False %}
+                            <td>Service Station</td>
+                            {% else  %}
+                            <td>Depot</td>
+                            {% endif %}
+                            <td>{{station.city}}</td>
+                            <td>{{station.address}}</td>
+                            <td>{{station.destination_bank}}</td>
+                            <td>{{station.account_number}}</td>
+                            <td>{{station.opening_time}}</td>
+                            <td>{{station.closing_time}}</td>
+
+                            <td style="width: 25%;">
+                                <div class="btn-group">
+                                  
+                                    <button class="btn btn-danger btn-sm" data-toggle="modal"
+                                        data-target="#edit_{{station.id}}">Edit Depot</button>
+                                    <button class="btn btn-primary btn-sm" data-toggle="modal"
+                                        data-target="#delete_{{station.id}}">Delete Depot</button>
+
+
+                                </div>
+                            </td>
+
+                            
+                                <!-- Supplier Delete Modal -->
+                                <div class="modal fade modal-success in" id="delete_{{station.id}}" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document" >
+                                    <div class="modal-content">
+                                        
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                            <span class="modal-title" style="">Delete {{station.name|title}}</span>
+                                        </div>
+                                        <div class="modal-body">
+                                            {% load crispy_forms_tags %}
+                                            <form action="{% url 'noic:delete_depot' station.id %}" method="POST">
+                                                {{ delete_form }}
+                                                {% csrf_token %}
+                                                <p>Are You Sure You Want To Delete {{ station.name }} ?</p>
+
+                                                <div class="modal-footer">
+                                                    <div >
+                                                            <button class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">No</button> <button class="btn btn-primary" type="submit">Yes</button>
+                                                            
+        
+                                                        </div>
+                                            </div>
+                                                
+                                            </form>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                             <!-- Supplier Edit Modal -->
+                            <div class="modal fade modal-success in" id="edit_{{station.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                        aria-hidden="true" style="overflow-y: initial !important;">
+                        <div class="modal-dialog modal-notice" >
+                                 <div class="modal-content">
+                                     
+                                     <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        <span class="modal-title">Edit {{station.name}} </span>
+                                    </div>
+                                     <div class="modal-body">
+                                         <form action="{% url 'noic:edit_depot' station.id %}"
+                                             method="POST">
+                                             {% csrf_token %}
+                                             <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label>Name</label>
+                                                    <input type="text" name="name" class="form-control" value="{{station.name}}" required/>
+                                                </div>
+                                                
+                                                <div class="form-group col-md-6">
+                                                    <label>Location</label>
+                                                    <input type="text" name="address" class="form-control" value="{{station.location}}" required/>
+                                                </div>
+                                            </div>    
+                                            
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label>Opening Time</label>
+                                                    <input type="time"  name="opening_time"  value="{{station.opening_time}}" class="form-control" required/>
+                                                </div>
+
+                                             <div class="form-group col-md-6">
+                                                 <label>Closing Time</label>
+                                                 <input type="time" name="closing_time" value="{{station.closing_time}}" class="form-control" required/>
+                                             </div>
+                                            </div>
+
+                                            
+                                       
+                                     </div>
+                                        <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                            <button type="button" class="btn btn-secondary col-sm-6"
+                                                data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                                        </div>
+                                             </form>
+                                         </form>
+                                 </div>
+                             </div>
+                            </div>
+
+                            
+                            <div class="modal fade" id="{{station.id}}" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">{{station.company}}</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Subsidiary Name: {{station.name}}</p>
+                                            <p>Location: {{station.address}}</p>
+                                            <p>Is Depot: {{station.is_depot}}</p>
+                                            <p>Opening Time: {{station.opening_time}}</p>
+                                            <p>Closing Time: {{station.closing_time}}</p>
+
+
+
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                           
+
+                        
+                        </tr>
+
+
+                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                        <script>
+                            $('body').click(function (event) {
+                                if(!$(event.target).closest('#delete_{{station.id}}').length && !$(event.target).is('#delete_{{station.id}}')) {
+                                    $("#delete_{{station.id}}").modal('hide');
+                                }
+                                if(!$(event.target).closest('#edit_{{station.id}}').length && !$(event.target).is('#edit_{{station.id}}')) {
+                                    $("#edit_{{station.id}}").modal('hide');
+                                }         
+                            });
+                        </script>
+                       
+                        
+ 
+                        {% endfor %}
+
+
+                      </tbody>
+                      </table>
+                </div>
+                {% else %}
+                <p>No Data Availabel</p>
+                {% endif %}
+                <script>
+                    $(document).ready(function () {
+                    $('#harare').show();
+                    $('#harare :input').prop('disabled',false);
+                    $('#bulawayo').hide();
+                    $('#mutare').hide();
+                    $('#gweru').hide();
+                    $('#default_location').hide();
+                    
+                    $('#city').change(function () {
+                    if ($('#city option:selected').text() == "Harare") {
+                    $('#harare').show();
+                    $('#bulawayo').hide();
+                    $('#mutare').hide();
+                    $('#gweru').hide();
+                    $('#default_location').hide();
+                    $('#harare :input').prop('disabled',false);
+                    $('#bulawayo :input').prop('disabled',true);
+                    $('#mutare :input').prop('disabled',true);
+                    $('#gweru :input').prop('disabled',true);
+                    $('#default_location :input').prop('disabled',true);
+                    
+                    
+                    }
+                    else if ($('#city option:selected').text() == "Bulawayo") {
+                    $('#harare').hide();
+                    $('#mutare').hide();
+                    $('#gweru').hide();
+                    $('#default_location').hide();
+                    $('#bulawayo').show();
+                    $('#bulawayo :input').prop('disabled',false);
+                    $('#harare :input').prop('disabled',true);
+                    $('#mutare :input').prop('disabled',true);
+                    $('#gweru :input').prop('disabled',true);
+                    $('#default_location :input').prop('disabled',true);
+                    
+                    
+                    }
+                    else if ($('#city option:selected').text() == "Mutare") {
+                    $('#harare').hide();
+                    $('#mutare').show();
+                    $('#gweru').hide();
+                    $('#default_location').hide();
+                    $('#bulawayo').hide();
+                    $('#mutare :input').prop('disabled',false);
+                    $('#harare :input').prop('disabled',true);
+                    $('#gweru :input').prop('disabled',true);
+                    $('#default_location :input').prop('disabled',true);
+                    $('#bulawayo :input').prop('disabled',true);
+                    
+                    }
+                    else if ($('#city option:selected').text() == "Gweru") {
+                    $('#harare').hide();
+                    $('#bulawayo').hide();
+                    $('#mutare').hide();
+                    $('#gweru').show();
+                    $('#default_location').hide();
+                    $('#gweru :input').prop('disabled',false);
+                    $('#harare :input').prop('disabled',true);
+                    $('#mutare :input').prop('disabled',true);
+                    $('#default_location :input').prop('disabled',true);
+                    $('#bulawayo :input').prop('disabled',true);
+                    
+                    }
+                    else {
+                    $('#harare').hide();
+                    $('#bulawayo').hide();
+                    $('#mutare').hide();
+                    $('#gweru').hide();
+                    $('#default_location').show();
+                    $('#default_location :input').prop('disabled',false);
+                    $('#harare :input').prop('disabled',false);
+                    $('#harare :input').prop('disabled',true);
+                    $('#bulawayo :input').prop('disabled',true);
+                    $('#mutare :input').prop('disabled',true);
+                    $('#gweru :input').prop('disabled',true);
+                    
+                    }
+                    });
+                    });
+                    
+                    
+                    </script>
+
+<script>
+    $(document).ready(function () {
+    $('#new').show();
+    $('#license').show();
+    $('#application_form').hide();
+    $('#fire_brigade').hide();
+    $('#ema').hide();
+    $('#council').hide();
+    $('#payment').hide();
+    
+    
+    $('#new').change(function () {
+    if ($('#new option:selected').text() == "Existing") {
+    $('#license').show();
+    $('#application_form').hide();
+    $('#fire_brigade').hide();
+    $('#ema').hide();
+    $('#council').hide();
+    $('#payment').hide();
+    
+    }
+    else if ($('#new option:selected').text() == "New") {
+    $('#license').hide();
+    $('#application_form').show();
+    $('#fire_brigade').show();
+    $('#ema').show();
+    $('#council').show();
+    $('#payment').show();
+    }
+     });
+        });
+    </script>
+ <div class="modal fade modal-success in" id="new_sub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" >
+       <div class="modal-content">
+           <div class="modal-header" style="width: 100%;">
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+               <span class="modal-title" id="exampleModalLabel" style="color:white;">Add Depot </span>
+               
+           </div>
+           <div class="modal-body">
+
+               {% load crispy_forms_tags %}
+               <form action="{% url 'users:stations' %}" method="POST" enctype="multipart/form-data">
+                   {% csrf_token %}
+                   <div class="row">
+                   <div class="form-group col-md-6">
+                           <label>Name</label>
+                           <input type="text" name="name" class="form-control" value=" " />
+                       </div>
+
+                       <div class="form-group col-md-6" name="license" id="license">
+                        <label><b>Licence Number</b></label>
+                        <input type="text" name="licence" class="form-control" value=" " />
+                    </div>
+
+                      
+                   </div>
+                      
+                       <div class="row">
+                       <div class="form-group col-md-6" name="city" id="city">
+                               <label><b>City</b></label>
+                               <select class="form-control" name="city">
+                                   {% for citi in zimbabwean_towns %}
+                                   <option >{{citi}}</option>
+                                   {% endfor %}
+                               </select>
+                           </div>
+
+
+                   <div class="form-group col-md-6" name="harare" id="harare">
+                           <label><b>Location</b></label>
+                           <select class="form-control" name="location">
+                               {% for location in Harare %}
+                               <option >{{location}}</option>
+                               {% endfor %}
+                           </select>
+                       </div>
+
+               <div class="form-group col-md-6" name="bulawayo" id="bulawayo">
+                       <label><b>Location</b></label>
+                       <select class="form-control" name="location">
+                           {% for locationn in Bulawayo %}
+                           <option >{{locationn}}</option>
+                           {% endfor %}
+                       </select>
+                   </div>
+
+                   <div class="form-group col-md-6" name="mutare" id="mutare">
+                           <label><b>Location</b></label>
+                           <select class="form-control" name="location">
+                               {% for loc in Mutare %}
+                               <option >{{loc}}</option>
+                               {% endfor %}
+                           </select>
+                       </div>
+
+                       <div class="form-group col-md-6" name="gweru" id="gweru">
+                               <label><b>Location</b></label>
+                               <select class="form-control" name="location">
+                                   {% for locationy in Gweru %}
+                                   <option >{{locationy}}</option>
+                                   {% endfor %}
+                               </select>
+                           </div>
+                           <div class="form-group col-md-6" id="default_location">
+                                   <label>Location</label>
+                                   <input type="text" name="location" class="form-control" value=" " />
+                               </div>
+                           </div>
+
+                       <div class="row">
+                          
+                               <div class="form-group col-md-6">
+                                   <label><b>Bank</b></label>
+                                   <select class="form-control" name="destination_bank">
+                               
+                                       <option >CBZ</option>
+                                       <option >BancABC</option>
+                                       <option >First Capital</option>
+                                       <option >Agribank</option>
+                                       <option >Ecobank</option>
+                                       <option >FBC</option>
+                                       <option >Nedbank</option>
+                                       <option >Metbank</option>
+                                       <option >NMB</option>
+                                       <option >Standard Chatered</option>
+                                       <option >Steward Bank</option>
+                                       <option >ZB Bank</option>
+                                       <option >CABS</option>
+                                       <option >POSB</option>
+                            
+                                       
+                                   </select>
+                               </div>
+                      
+                          
+                           <div class="form-group col-md-6">
+                               <label>Account</label>
+                               <input type="text" name="account_number" class="form-control" value=" " />
+                           </div>
+                       </div>
+
+                <div class="row">
+                          
+                    <div class="form-group col-md-6">
+                        <label>PRAZ Reg Number</label>
+                        <input type="text" name="praz" class="form-control" value=" " />
+                    </div>
+           
+               
+                <div class="form-group col-md-6">
+                    <label>VAT Number</label>
+                    <input type="text" name="vat" class="form-control" value=" " />
+                </div>
+            </div>
+
+                    <div class="row">
+                   <div class="form-group col-md-6">
+                       <label>Opening Time</label>
+                       <input type="time" name="opening_time" class="form-control" />
+                   </div>
+                   <div class="form-group col-md-6">
+                       <label>Closing Time</label>
+                       <input type="time" name="closing_time" class="form-control" />
+                   </div>
+                   </div> 
+                                
+            
+            
+                <div class="row">
+                      
+                    <div class="form-group col-md-6" name="application_form" id="application_form">
+                        <label>Application Form</label>
+                        <input type="file" accept=".pdf, .doc,.docx" name="application_form" class="form-control-file" id="exampleFormControlFile1">
+                    </div>
+           
+               
+                <div class="form-group col-md-6" name="fire_brigade" id="fire_brigade">
+                    <label>Fire Brigade</label>
+                    <input type="file" accept=".pdf, .doc,.docx" name="fire_brigade" class="form-control-file" id="exampleFormControlFile1">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6" name="ema" id="ema">
+                    <label>EMA Approval Doc</label>
+                    <input type="file" accept=".pdf, .doc,.docx" name="ema" class="form-control-file" id="exampleFormControlFile1">
+                </div>
+                <div class="form-group col-md-6" name="council" id="council">
+                    <label>Council Approval Doc</label>
+                    <input type="file" accept=".pdf, .doc,.docx" name="council" class="form-control-file" id="exampleFormControlFile1">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6" name="payment" id="payment">
+                    <label>Proof of Payment</label>
+                    <input type="file" accept=".pdf, .doc,.docx" name="payment" class="form-control-file" id="exampleFormControlFile1">
+                </div>
+            </div>                                                       
+                       <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                           <button type="button" class="btn btn-secondary col-sm-6"
+                               data-dismiss="modal">Close</button>
+                           <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                       </div>
+               </form>
+              
+
+       </div>
+   </div>
+</div>
+</div>
+
+        </div>
+    </div> 
+  </section>   
+
+
+
+{% endblock %}
