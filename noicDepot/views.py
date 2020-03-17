@@ -36,6 +36,11 @@ def dashboard(request):
     orders = SordNationalAuditTrail.objects.filter(assigned_depot=depot).all()
     return render(request, 'noicDepot/dashboard.html', {'orders': orders})
 
+def orders(request):
+    depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+    orders = Order.objects.filter(noic_depot=depot).all()
+    return render(request, 'noicDepot/orders.html', {'orders': orders})
+
 def stock(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     depot_stock = DepotFuelUpdate.objects.filter(depot=depot).all()
@@ -51,6 +56,12 @@ def upload_release_note(request, id):
         messages.success(request, "Release Note Successfully created")
         return redirect('noicDepot:dashboard')
 
+def payment_approval(request, id):
+    order = Order.objects.filter(id=id).first()
+    order.payment_approved = True
+    order.save()
+    messages.success(request, 'payment approved successfully')
+    return redirect('noicDepot:orders')
 
 def view_release_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
@@ -60,6 +71,126 @@ def view_release_note(request, id):
         'allocation': allocation
     }
     return render(request, 'noicDepot/release_note.html', context=context)
+
+
+def allocate_fuel(request, id):
+    order = Order.objects.filter(id=id).first()
+   
+    if request.method == 'POST':
+        if request.POST['fuel_type'].lower() == 'petrol':
+            if request.POST['currency'] == 'USD':
+                depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+                noic_capacity = DepotFuelUpdate.objects.filter(depot=depot).first()
+                if float(request.POST['quantity']) > noic_capacity.usd_petrol:
+                    messages.warning(request, f'you cannot allocate fuel more than your capacity of {noic_capacity.usd_petrol}L')
+                    return redirect('noicDepot:orders')
+                else:
+                    noic_capacity.usd_petrol -= float(request.POST['quantity'])
+                    noic_capacity.save()
+                    sord_object = SordNationalAuditTrail.objects.create(assigned_depot=depot, company=order.company, fuel_type=request.POST['fuel_type'], currency=request.POST['currency'], quantity=float(request.POST['quantity']))
+                    sord_object.sord_no = sord_object.id
+                    sord_object.save()
+                    SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no, action_no=0, action='Receiving Fuel',fuel_type=sord_object.fuel_type, payment_type=sord_object.currency, initial_quantity=float(request.POST['quantity']), end_quantity=float(request.POST['quantity']))
+                    company_update = CompanyFuelUpdate.objects.filter(company=order.company).first()
+                    company_update.unallocated_petrol += float(request.POST['quantity'])
+                    company_update.usd_petrol_price = noic_capacity.usd_petrol_price
+                    company_update.save()
+                    order.allocated_fuel = True
+                    order.save()
+                    messages.success(request, 'fuel allocated successfully')
+                    return redirect('noicDepot:orders')
+            
+            else:
+                depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+                noic_capacity = DepotFuelUpdate.objects.filter(depot=depot).first()
+                if float(request.POST['quantity']) > noic_capacity.rtgs_petrol:
+                    messages.warning(request, f'you cannot allocate fuel more than your capacity of {noic_capacity.rtgs_petrol}L')
+                    return redirect('noicDepot:orders')
+                else:
+                    noic_capacity.rtgs_petrol -= float(request.POST['quantity'])
+                    noic_capacity.save()
+                    sord_object = SordNationalAuditTrail.objects.create(assigned_depot=depot, company=order.company, fuel_type=request.POST['fuel_type'], currency=request.POST['currency'], quantity=float(request.POST['quantity']))
+                    sord_object.sord_no = sord_object.id
+                    sord_object.save()
+                    SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no, action_no=0, action='Receiving Fuel',fuel_type=sord_object.fuel_type, payment_type=sord_object.currency, initial_quantity=float(request.POST['quantity']), end_quantity=float(request.POST['quantity']))
+                    company_update = CompanyFuelUpdate.objects.filter(company=order.company).first()
+                    company_update.unallocated_petrol += float(request.POST['quantity'])
+                    company_update.petrol_price = noic_capacity.rtgs_petrol_price
+                    company_update.save()
+                    order.allocated_fuel = True
+                    order.save()
+                    messages.success(request, 'fuel allocated successfully')
+                    return redirect('noicDepot:orders')
+            
+
+        else:
+            if request.POST['currency'] == 'USD':
+                depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+                noic_capacity = DepotFuelUpdate.objects.filter(depot=depot).first()
+                if float(request.POST['quantity']) > noic_capacity.usd_diesel:
+                    messages.warning(request, f'you cannot allocate fuel more than your capacity of {noic_capacity.usd_diesel}L')
+                    return redirect('noicDepot:orders')
+                else:
+                    noic_capacity.usd_diesel -= float(request.POST['quantity'])
+                    noic_capacity.save()
+                    sord_object = SordNationalAuditTrail.objects.create(assigned_depot=depot, company=order.company, fuel_type=request.POST['fuel_type'], currency=request.POST['currency'], quantity=float(request.POST['quantity']))
+                    sord_object.sord_no = sord_object.id
+                    sord_object.save()
+                    SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no, action_no=0, action='Receiving Fuel',fuel_type=sord_object.fuel_type, payment_type=sord_object.currency, initial_quantity=float(request.POST['quantity']), end_quantity=float(request.POST['quantity']))
+                    company_update = CompanyFuelUpdate.objects.filter(company=order.company).first()
+                    company_update.unallocated_petrol += float(request.POST['quantity'])
+                    company_update.usd_diesel_price = noic_capacity.usd_diesel_price
+                    company_update.save()
+                    order.allocated_fuel = True
+                    order.save()
+                    messages.success(request, 'fuel allocated successfully')
+                    return redirect('noicDepot:orders')
+            
+            
+            else:
+                depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+                noic_capacity = DepotFuelUpdate.objects.filter(depot=depot).first()
+                if float(request.POST['quantity']) > noic_capacity.rtgs_diesel:
+                    messages.warning(request, f'you cannot allocate fuel more than your capacity of {noic_capacity.rtgs_diesel}L')
+                    return redirect('noicDepot:orders')
+                else:
+                    noic_capacity.rtgs_diesel -= float(request.POST['quantity'])
+                    noic_capacity.save()
+                    sord_object = SordNationalAuditTrail.objects.create(assigned_depot=depot, company=order.company, fuel_type=request.POST['fuel_type'], currency=request.POST['currency'], quantity=float(request.POST['quantity']))
+                    sord_object.sord_no = sord_object.id
+                    sord_object.save()
+                    SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no, action_no=0, action='Receiving Fuel',fuel_type=sord_object.fuel_type, payment_type=sord_object.currency, initial_quantity=float(request.POST['quantity']), end_quantity=float(request.POST['quantity']))
+                    company_update = CompanyFuelUpdate.objects.filter(company=order.company).first()
+                    company_update.unallocated_petrol += float(request.POST['quantity'])
+                    company_update.diesel_price = noic_capacity.rtgs_diesel_price
+                    company_update.save()
+                    order.allocated_fuel = True
+                    order.save()
+                    messages.success(request, 'fuel allocated successfully')
+                    return redirect('noicDepot:orders')
+
+def download_proof(request, id):
+    order = Order.objects.filter(id=id).first()
+    if order:
+        filename = order.proof_of_payment.name.split('/')[-1]
+        response = HttpResponse(order.proof_of_payment, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect('noicDepot:orders')
+    return response
+
+
+def download_d_note(request, id):
+    allocation = SordNationalAuditTrail.objects.filter(id=id).first()
+    if allocation:
+        filename = allocation.d_note.name.split('/')[-1]
+        response = HttpResponse(allocation.d_note, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect('noicDepot:dashboard')
+    return response
 
 
 def profile(request):

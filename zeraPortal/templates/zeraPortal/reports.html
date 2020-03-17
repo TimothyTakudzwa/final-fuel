@@ -283,6 +283,13 @@
                         role="button" style="color: white; margin-left: 10px; margin-bottom: 30px;padding-left: 12px;">
                             <span class="btn-label"><i class="fa fa-cogs" aria-hidden="true"></i></span>Generate Report
                         </button>        
+                        <script>
+                            $('body').click(function (event) {
+                                if(!$(event.target).closest('#report_modal').length && !$(event.target).is('#report_modal')) {
+                                    $("#report_modal").modal('hide');
+                                }      
+                            });
+                        </script> 
                                     
                                     
                             <div>

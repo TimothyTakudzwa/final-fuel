@@ -22,7 +22,7 @@ from .forms import AllocationForm, SupplierContactForm, UsersUploadForm, ReportF
 from .models import AuditTrail, SordActionsAuditTrail
 from buyer.models import *
 from supplier.models import *
-from national.models import Order, SordNationalAuditTrail
+from national.models import Order, SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
 from users.models import *
 from accounts.models import Account, AccountHistory
 from buyer.forms import *
@@ -70,6 +70,12 @@ functions for allocating fuel to depots and stations
 @login_required()
 def allocate(request):
     allocates = []
+    fuel_object = DepotFuelUpdate.objects.first()
+    diesel_rtgs_price = fuel_object.rtgs_diesel_price
+    diesel_usd_price = fuel_object.usd_diesel_price
+    petrol_rtgs_price = fuel_object.rtgs_petrol_price
+    petrol_usd_price = fuel_object.usd_petrol_price
+    depots = NoicDepot.objects.all()
     company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
     subs_total_diesel_capacity = 0
     subs_total_petrol_capacity = 0
@@ -103,7 +109,7 @@ def allocate(request):
     else:
         allocations = allocations
     return render(request, 'users/allocate.html',
-                  {'allocates': allocates, 'allocations': allocations, 'company_capacity': company_capacity,
+                  {'depots': depots, 'diesel_rtgs_price': diesel_rtgs_price, 'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price, 'petrol_usd_price': petrol_usd_price, 'allocates': allocates, 'allocations': allocations, 'company_capacity': company_capacity,
                    'company_total_diesel_capacity': company_total_diesel_capacity,
                    'company_total_petrol_capacity': company_total_petrol_capacity})
 
@@ -1064,11 +1070,12 @@ def client_history(request, cid):
 
     if request.method == "POST":
 
-        if request.POST.get('report_type') == 'Complete':
+        if request.POST.get('report_type') == 'Completed':
             trns = Transaction.objects.filter(buyer=buyer, is_complete=True)
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Complete'
 
@@ -1077,22 +1084,27 @@ def client_history(request, cid):
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Incomplete'
+
 
         if request.POST.get('report_type') == 'All':
             trns = Transaction.objects.filter(buyer=buyer)
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'All'
+
         return render(request, 'users/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
 
     trns = Transaction.objects.filter(buyer=buyer)
     trans = []
     for tran in trns:
         tran.revenue = tran.offer.request.amount * tran.offer.price
+        tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
         trans.append(tran)
 
     return render(request, 'users/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
@@ -1111,6 +1123,7 @@ def subsidiary_transaction_history(request, sid):
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Complete'
 
@@ -1119,6 +1132,7 @@ def subsidiary_transaction_history(request, sid):
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Incomplete'
 
@@ -1127,6 +1141,7 @@ def subsidiary_transaction_history(request, sid):
             trans = []
             for tran in trns:
                 tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'All'
         return render(request, 'users/subs_history.html', {'trans': trans, 'subsidiary': subsidiary, 'state': state})
@@ -1134,6 +1149,7 @@ def subsidiary_transaction_history(request, sid):
     trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
     for tran in trns:
         tran.revenue = tran.offer.request.amount * tran.offer.price
+        tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
         trans.append(tran)
 
     return render(request, 'users/subs_history.html', {'trans': trans, 'subsidiary': subsidiary})
@@ -2066,12 +2082,27 @@ def place_order(request):
         currency = request.POST['currency']
         fuel_type = request.POST['fuel_type']
         proof_of_payment = request.FILES.get('proof_of_payment')
-        Order.objects.create(company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+        noic_depot = NoicDepot.objects.filter(name=request.POST['depots']).first()
+        amount_paid = request.POST['fuel_paid']
+        duty = request.POST['duty_paid']
+        vat = request.POST['vat']
+        transporter = request.POST['transporter']
+        truck_reg = request.POST['truck_reg']
+        trailer_reg = request.POST['trailer_reg']
+        driver = request.POST['driver']
+        driver_id = request.POST['driver_id']
+        Order.objects.create(transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, noic_depot=noic_depot, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
         messages.success(request,'placed order successfully')
-        return redirect('users:allocate')
+        return redirect('users:orders')
 
 
 def orders(request):
+    fuel_object = DepotFuelUpdate.objects.first()
+    diesel_rtgs_price = fuel_object.rtgs_diesel_price
+    diesel_usd_price = fuel_object.usd_diesel_price
+    petrol_rtgs_price = fuel_object.rtgs_petrol_price
+    petrol_usd_price = fuel_object.usd_petrol_price
+    depots = NoicDepot.objects.all()
     orders = Order.objects.filter(company=request.user.company).all()
     for order in orders:
         sord = SordNationalAuditTrail.objects.filter(order=order).first()
@@ -2080,7 +2111,7 @@ def orders(request):
         else:
             order.allocation = None
 
-    return render(request, 'users/orders.html', {'orders': orders})
+    return render(request, 'users/orders.html', {'depots': depots, 'diesel_rtgs_price': diesel_rtgs_price, 'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price, 'petrol_usd_price': petrol_usd_price,'orders': orders})
 
 
 def view_release_note(request, id):
@@ -2090,7 +2121,7 @@ def view_release_note(request, id):
     context = {
         'allocation': allocation
     }
-    return render(request, 'noicDepot/release_note.html', context=context)
+    return render(request, 'users/release_note.html', context=context)
 
 
 
@@ -2098,7 +2129,7 @@ def delivery_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     if request.method == 'POST':
         if allocation is not None:
-            allocation.delivery_note = request.FILES.get('d_note')
+            allocation.d_note = request.FILES.get('d_note')
             allocation.save()
             
             messages.success(request, 'Delivery note successfully uploaded')

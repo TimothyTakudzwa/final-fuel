@@ -4,34 +4,6 @@ from buyer.models import User
 from supplier.constants import Zimbabwean_Towns
 
 
-class Order(models.Model):
-    date = models.DateField(auto_now_add=True)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    quantity = models.FloatField(default=0.00)
-    fuel_type = models.CharField(max_length=150, blank=True, null=True)
-    currency = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS')))
-    proof_of_payment = models.FileField(upload_to='proof_of_payment', null=True, blank=True)
-    payment_approved = models.BooleanField(default=False)
-    allocated_fuel = models.BooleanField(default=False)
-    amount_paid = models.DecimalField(max_digits=20, default=0.00, decimal_places=2)
-    duty = models.DecimalField(max_digits=20, default=0.00, decimal_places=2)
-    vat = models.DecimalField(max_digits=20, default=0.00, decimal_places=2)
-    transporter = models.CharField(max_length=150, blank=True, null=True)
-    truck_reg = models.CharField(max_length=150, blank=True, null=True)
-    driver = models.CharField(max_length=150, blank=True, null=True)
-    driver_id = models.CharField(max_length=150, blank=True, null=True)
-
-class NationalFuelUpdate(models.Model):
-    date = models.DateField(auto_now_add=True)
-    allocated_petrol = models.FloatField(default=0.00)
-    allocated_diesel = models.FloatField(default=0.00)
-    unallocated_petrol = models.FloatField(default=0.00)
-    unallocated_diesel = models.FloatField(default=0.00)
-    diesel_price = models.DecimalField(max_digits=10, default=0.00, decimal_places=2)
-    petrol_price = models.DecimalField(max_digits=10, default=0.00, decimal_places=2)
-    currency = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS')))
-
-
 class NoicDepot(models.Model):
     name = models.CharField(max_length=150, blank=True, null=True)
     address = models.CharField(max_length=200, help_text='Harare, Livingstone Street')   
@@ -51,6 +23,37 @@ class NoicDepot(models.Model):
     fire_brigade = models.FileField(upload_to='subsidiary_docs', blank=True, null=True)
     application_form = models.FileField(upload_to='subsidiary_docs', blank=True, null=True)
     bank_branch = models.CharField(max_length=500, null=True, blank=True)
+
+
+class Order(models.Model):
+    date = models.DateField(auto_now_add=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    quantity = models.FloatField(default=0.00)
+    fuel_type = models.CharField(max_length=150, blank=True, null=True)
+    currency = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS')))
+    proof_of_payment = models.FileField(upload_to='proof_of_payment', null=True, blank=True)
+    payment_approved = models.BooleanField(default=False)
+    allocated_fuel = models.BooleanField(default=False)
+    amount_paid = models.DecimalField(max_digits=20, default=0.00, decimal_places=2)
+    duty = models.DecimalField(max_digits=20, default=0.00, decimal_places=2)
+    vat = models.DecimalField(max_digits=20, default=0.00, decimal_places=2)
+    transporter = models.CharField(max_length=150, blank=True, null=True)
+    truck_reg = models.CharField(max_length=150, blank=True, null=True)
+    trailer_reg = models.CharField(max_length=150, blank=True, null=True)
+    driver = models.CharField(max_length=150, blank=True, null=True)
+    driver_id = models.CharField(max_length=150, blank=True, null=True)
+    noic_depot = models.ForeignKey(NoicDepot, on_delete=models.DO_NOTHING, related_name='company_allocation', blank=True, null=True)
+
+
+class NationalFuelUpdate(models.Model):
+    date = models.DateField(auto_now_add=True)
+    allocated_petrol = models.FloatField(default=0.00)
+    allocated_diesel = models.FloatField(default=0.00)
+    unallocated_petrol = models.FloatField(default=0.00)
+    unallocated_diesel = models.FloatField(default=0.00)
+    diesel_price = models.DecimalField(max_digits=10, default=0.00, decimal_places=2)
+    petrol_price = models.DecimalField(max_digits=10, default=0.00, decimal_places=2)
+    currency = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS')))
 
 
 class SordNationalAuditTrail(models.Model):

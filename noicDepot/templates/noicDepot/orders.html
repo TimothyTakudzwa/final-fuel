@@ -1,4 +1,4 @@
-{% extends "noic/noic_base.html" %}
+{% extends "noicDepot/depot_base.html" %}
 {% load static %}
 {% load humanize %}
 
@@ -18,8 +18,8 @@
         <i class="fa fa-binoculars"></i>
     </div> -->
     <div class="header-title" style="margin-left: 0px;">
-        <h1>Company Fuel Orders</h1>
-        <small>Fuel Management System</small>
+        <h1>NOIC Portal</h1>
+        <small>Company Fuel Orders</small>
         <ol class="breadcrumb hidden-xs">
             <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
             <li class="active">Orders</li>
@@ -56,6 +56,7 @@
                     <th style="color: white;">Quantity</th>
                     <th style="color: white;">Currency</th>
                     <th style="color: white;">Payment</th>
+                    <th style="color: white;">Proof of Payment</th>
                     <th style="color: white;">Action</th>
                 </tr>
             </thead>
@@ -109,17 +110,29 @@
 
                     </td>
 
+                    {% if order.payment_approved %}
+                    <td><b style="color: rgb(59, 59, 139);">Payment Approved</b></td>
+                    {% else %}
+                    <td>
+                        <div class="btn-group">
+                            <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'noicDepot:download_proof' order.id %}" > <i class="fa fa-download" style="font-size:15px"></i> Payment Proof</a>
+                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" href="{% url 'noicDepot:payment_approval' order.id %}" >Approve</a>
+                        </div>
+                    </td>
+                    {% endif %}
                     
                     {% if order.payment_approved %}
                     {% if order.allocated_fuel %}
                     <td>
                         <div class="btn-group">
-                            <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"  href="{% url 'noic:allocations' %}" >View Allocations</a>
+                            <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"  href="{% url 'noicDepot:dashboard' %}" >View Allocation</a>
                             </div>
                     </td>
                     {% else %}
                    <td>
-                  <i style="color: brown;">Pending</i> 
+                   <div class="btn-group">
+                    <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal"  data-target="#allocate{{order.id}}" >Allocate Fuel</a>
+                    </div>
                 </td>
                   {% endif %}
                    {% else %}
@@ -139,7 +152,7 @@
                         </div>
                         <div>
                             {% load crispy_forms_tags %}
-                            <form action="{% url 'noic:allocate_fuel' order.id %}" method="POST">
+                            <form action="{% url 'noicDepot:allocate_fuel' order.id %}" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" value="{{order.fuel_type}}" name="fuel_type" />
                                 <input type="hidden" value="{{order.quantity}}" name="quantity" />
@@ -163,9 +176,7 @@
                                         <input type="text" name="currency1" class="form-control"
                                             value="{{order.currency}}" disabled />
                                     </div>
-                                    <div class="form-group col-md-6 mb-0">
-                                        {{ form1.depot|as_crispy_field }}
-                                    </div>
+                                   
                                    
                                 </div>
                                 

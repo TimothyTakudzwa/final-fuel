@@ -27,6 +27,7 @@ from users.views import message_is_sent
 from national.models import Order, NationalFuelUpdate, SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
 
 from .lib import *
+from zeraPortal.lib import *
 
 user = get_user_model()
 
@@ -59,6 +60,88 @@ def allocations(request):
     allocations = SordNationalAuditTrail.objects.all()
     return render(request, 'noic/allocations.html', {'allocations': allocations})
     
+    
+def depots(request):
+    depots = NoicDepot.objects.all()
+    zimbabwean_towns = ["Select City ---", "Harare", "Bulawayo", "Gweru", "Mutare", "Chirundu", "Bindura", "Beitbridge",
+                        "Hwange", "Juliusdale", "Kadoma", "Kariba", "Karoi", "Kwekwe", "Marondera", "Masvingo",
+                        "Chinhoyi", "Mutoko", "Nyanga", "Victoria Falls"]
+    Harare = ['Avenues', 'Budiriro', 'Dzivaresekwa', 'Kuwadzana', 'Warren Park', 'Glen Norah', 'Glen View', 'Avondale',
+              'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park', 'Borrowdale', 'Chisipiti', 'Glen Lorne',
+              'Greendale', 'Greystone Park', 'Helensvale', 'Highlands', 'Mandara', 'Manresa', 'Msasa', 'Newlands',
+              'The Grange', 'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft',
+              'Hatcliffe', 'Mabelreign', 'Marlborough', 'Meyrick Park', 'Mount Pleasant', 'Pomona', 'Tynwald',
+              'Vainona', 'Arcadia', 'Braeside', 'CBD', 'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale',
+              'Sunningdale', 'Epworth', 'Highfield' 'Kambuzuma', 'Southerton', 'Warren Park', 'Southerton', 'Mabvuku',
+              'Tafara', 'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park', 'Marimba Park', 'Mufakose']
+    Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane',
+                'North End', 'Northvale', 'North Lynne', 'Northlea', 'North Trenance', 'Ntaba Moyo', 'Ascot',
+                'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont',
+                'Bradfield']
+    Mutare = ['Murambi', 'Hillside', 'Fairbridge Park', 'Morningside', 'Tigers Kloof', 'Yeovil', 'Westlea', 'Florida',
+              'Chikanga', 'Garikai', 'Sakubva', 'Dangamvura', 'Weirmouth', 'Fern Valley', 'Palmerstone', 'Avenues',
+              'Utopia', 'Darlington', 'Greeside', 'Greenside Extension', 'Toronto', 'Bordervale', 'Natview Park',
+              'Mai Maria', 'Gimboki', 'Musha Mukadzi']
+    Gweru = ['Gweru East', 'Woodlands Park', 'Kopje', 'Mtausi Park', 'Nashville', 'Senga', 'Hertifordshire', 'Athlone',
+             'Daylesford', 'Mkoba', 'Riverside', 'Southview', 'Nehosho', 'Clydesdale Park', 'Lundi Park', 'Montrose',
+             'Ascot', 'Ridgemont', 'Windsor Park', 'Ivene', 'Haben Park', 'Bata', 'ThornHill Air Field' 'Green Dale',
+             'Bristle', 'Southdowns']
+    if request.method == 'POST':
+        name = request.POST['name']
+        city = request.POST['city']
+        location = request.POST['location']
+        destination_bank = request.POST['destination_bank']
+        account_number = request.POST['account_number']
+        praz_reg_num = request.POST['praz']
+        vat = request.POST['vat']
+        opening_time = request.POST['opening_time']
+        closing_time = request.POST['closing_time']
+        license_num = request.POST['licence']
+        depot = NoicDepot.objects.create(is_active=True, license_num=license_num, praz_reg_num=praz_reg_num,
+                                                 vat=vat, account_number=account_number,
+                                                 destination_bank=destination_bank, city=city, address=location,
+                                                name=name,
+                                                 opening_time=opening_time, closing_time=closing_time)
+        depot.save()
+        
+        fuel_update = DepotFuelUpdate.objects.create(depot=depot)
+        fuel_update.save()
+        messages.success(request, 'Depot Created Successfully')
+        return redirect('noic:depots')
+       
+
+    return render(request, 'noic/depots.html',
+                  {'depots': depots, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
+                   'Mutare': Mutare, 'Gweru': Gweru})
+
+
+def edit_depot(request, id):
+    if request.method == 'POST':
+        if NoicDepot.objects.filter(id=id).exists():
+            depot_update = NoicDepot.objects.filter(id=id).first()
+            depot_update.name = request.POST['name']
+            depot_update.address = request.POST['address']
+            depot_update.opening_time = request.POST['opening_time']
+            depot_update.closing_time = request.POST['closing_time']
+            depot_update.save()
+            messages.success(request, 'Depot updated successfully')
+            return redirect('noic:depots')
+        else:
+            messages.success(request, 'Depot does not exists')
+            return redirect('noic:depots')
+
+
+def delete_depot(request, id):
+    if request.method == 'POST':
+        if NoicDepot.objects.filter(id=id).exists():
+            depot_update = NoicDepot.objects.filter(id=id).first()
+            depot_update.delete()
+            messages.success(request, 'Depot deleted successfully')
+            return redirect('noic:depots')
+
+        else:
+            messages.success(request, 'Depot does not exists')
+            return redirect('noic:depots')
 
 def fuel_update(request, id):
     fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
@@ -205,7 +288,14 @@ def allocate_fuel(request, id):
 
 
 def statistics(request):
-    return render(request, 'noic/statistics.html')
+    yesterday = date.today() - timedelta(days=1)
+    monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
+    weekly_rev = get_weekly_sales(True)
+    last_week_rev = get_weekly_sales(False)
+    city_sales_volume = get_volume_sales_by_location()
+    final_desperate_cities = []
+    desperate_cities = desperate()
+    return render(request, 'noic/statistics.html', {'monthly_rev':monthly_rev,'weekly_rev':weekly_rev,'last_week_rev': last_week_rev, 'city_sales_volume': city_sales_volume })
 
 
 def staff(request):
@@ -451,6 +541,13 @@ def report_generator(request):
 
 # @login_required()
 def statistics(request):
+    yesterday = date.today() - timedelta(days=1)
+    monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
+    weekly_rev = get_weekly_sales(True)
+    last_week_rev = get_weekly_sales(False)
+    city_sales_volume = get_volume_sales_by_location()
+    final_desperate_cities = []
+    desperate_cities = desperate()
     unallocated_diesel_usd = get_current_usd_stock().diesel_quantity
     unallocated_petrol_usd = get_current_usd_stock().petrol_quantity
     unallocated_diesel_zwl = get_current_zwl_stock().diesel_quantity

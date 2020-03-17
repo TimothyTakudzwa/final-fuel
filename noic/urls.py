@@ -14,6 +14,9 @@ urlpatterns = [
     path('allocate_fuel/<int:id>', views.allocate_fuel, name='allocate_fuel'),
     path('reports/', views.report_generator, name="report_generator"),
     path('statistics/', views.statistics, name="statistics"),
+    path('depots/', views.depots, name='depots'),
+    path('edit_depot/<int:id>', views.edit_depot, name='edit_depot'),
+    path('delete_depot/<int:id>', views.delete_depot, name='delete_depot'),
     path('staff/', views.staff, name='staff')
 
 
