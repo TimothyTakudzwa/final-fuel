@@ -1,5 +1,5 @@
 {% extends "zeraPortal/zera_base.html" %}
-
+{% load humanize %}
 {% block body %}
 
     <section class="content-header">
@@ -50,7 +50,7 @@
                         {% for region, deficit in regions.items %}
                             <tr>
                                 <td>{{ region }}</td>
-                                <td>{{ deficit }}</td>
+                                <td>{{ deficit|intcomma }}</td>
                                 <!-- <td>
                                     <div class="text-center">
                                         <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{ forloop.counter }}">
