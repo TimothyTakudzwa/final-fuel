@@ -1,4 +1,7 @@
-{% extends "users/base.html" %} {% block title %}Fuel Finder - Statistics {% endblock %} {% block body %}
+{% extends "users/base.html" %} 
+{% block title %}Fuel Finder - sord sales {% endblock %} 
+{% load humanize %}
+{% block body %}
 <section class="content-header">
     <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
         <div class="input-group">
@@ -74,7 +77,7 @@
                                 Quantity Sold
                             </th>
                             <th>
-                                End Quantity
+                                Balance
                             </th>
 
 
@@ -93,9 +96,9 @@
                             <td>{{sord.action}}</td>
                             <td>{{sord.fuel_type}}</td>
                             <td>{{sord.payment_type}}</td>
-                            <td>{{sord.initial_quantity}}</td>
-                            <td>{{sord.quantity_sold}}</td>
-                            <td>{{sord.end_quantity}}</td>
+                            <td>{{sord.initial_quantity|intcomma}}</td>
+                            <td>{{sord.quantity_sold|intcomma}}</td>
+                            <td>{{sord.end_quantity|intcomma}}</td>
                             <td>{{sord.received_by}}</td>
                            
 

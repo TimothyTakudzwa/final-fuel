@@ -1,5 +1,6 @@
 {% extends "zeraPortal/zera_base.html" %} 
 {% block title %}Fuel Finder - ZERA {% endblock %} 
+{% load humanize %}
 {% block body %}
 <section class="content-header">
     <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
@@ -88,8 +89,8 @@
                             {% else %}
                             <td><b style="margin-left: 26px;">--</b></td>
                             {% endif %}
-                            <td>{{subsidiary.fuel.diesel_quantity}}</td>
-                            <td>{{subsidiary.fuel.petrol_quantity}}</td>
+                            <td>{{subsidiary.fuel.diesel_quantity|intcomma}}</td>
+                            <td>{{subsidiary.fuel.petrol_quantity|intcomma}}</td>
                             <td>
                                 <div class="btn-group">
                                     {% if subsidiary.license_num != None %}

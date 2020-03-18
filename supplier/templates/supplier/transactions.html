@@ -79,8 +79,8 @@
                                 <td>{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
                                 <!-- <td>{{ transaction.offer.quantity |intcomma}}</td>
                                 <td>{{ transaction.offer.price }}</td> -->
-                                <td>{{ transaction.expected}}</td>
-                                <td>{{ transaction.paid }}</td>
+                                <td>${{ transaction.expected|intcomma}}</td>
+                                <td>${{ transaction.paid|intcomma }}</td>
                                 {% if transaction.is_complete == True %}
                                     <td><p style="color:rgb(0, 225, 255)">Complete</p></td>
                                 {% else %}
