@@ -117,14 +117,10 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                             License Number
                         </th>
                         <th>
-                        IBN Number
+                            Contact Person
                         </th>
                         <th>
-                        Bank
-                        </th>
-
-                        <th>
-                            Account
+                            Phone Number
                         </th>
                         <th>
                             Subsidiaries
@@ -144,9 +140,8 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <td>{{company.name}}</td>
                         <td>{{company.address}}</td>
                         <td>{{company.license_number}}</td>
-                        <td>{{company.iban_number}}</td>
-                        <td>{{company.destination_bank}}</td>
-                        <td>{{company.account_number}}</td>
+                        <td>{{company.contact_person}}</td>
+                        <td>{{company.phone_number}}</td>
                         <td><a class="btn btn-success btn-sm" href="{% url 'zeraPortal:company-subsidiaries' company.id %}"><i class="fa fa-eye" style="margin-right: 11px;"></i>
                             Subsidiaries</a></td>
                         {% if company.check_admin %}
@@ -157,7 +152,11 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                         {% if company.is_active == True %}
                         <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#block_{{company.id}}">Block</button></td>
                         {% else %}
-                        <td><button type="button" class="btn btn-warning" data-toggle="modal" data-target="#unblock_{{company.id}}">Unblock</button></td>
+                        <td>
+                            <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#unblock_{{company.id}}">Unblock</button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit_{{company.id}}">Edit</button>
+                        </td>
                         {% endif %}
                     </tr>
 
@@ -268,6 +267,66 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                 </div>
                 </div>
                 <!--End Add user modal-->
+
+                <!-- Edit Company Modal -->
+                <div class="modal fade modal-success in" id="edit_{{company.id}}" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        
+                        <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <span class="modal-title">Edit Company Details</span>
+                    </div>
+                        <div class="modal-body">
+                            <form action="{% url 'zeraPortal:edit-company-details' company.id %}" method="POST">
+                                {% csrf_token %}
+                                <div class="col-sm-12">
+                                    <label>Company Name</label>
+                                    <input type="text" name="company_name" value="{{company.name}}" class="form-control" required/>
+                                </div>
+
+
+                                <div class="col-sm-12" name="city">
+                                    <label>City</label>
+                                    <select class="form-control" name="city">
+                                        {% for city in zimbabwean_towns %}
+                                        <option >{{city}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            
+                                <div class="col-sm-12">
+                                    <label>Company Address</label>
+                                    <input type="text" name="address" value="{{company.address}}" class="form-control" required/>
+                                </div>
+                                <div class="col-sm-12">
+                                    <label>License Number</label>
+                                    <input type="text" name="license_number" value="{{company.license_number}}" class="form-control" required/>
+                                </div>
+                                <div class="col-sm-12">
+                                <label>VAT Number</label>
+                                <input type="text" name="vat_number" value="{{company.vat_number}}" class="form-control" value="" />
+                            </div>
+                            <div class="col-sm-12">
+                                <label>Contact Person Name</label>
+                                <input type="text" name="contact_person" value="{{company.contact_person}}" class="form-control" value="" />
+                            </div>
+                            <div class="col-sm-12">
+                                <label>Phone Number</label>
+                                <input type="text" name="phone_number" value="{{company.phone_number}}" class="form-control" value="" />
+                            </div>
+                        <div class="form-group row mt-5" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                            <button type="button" class="btn btn-secondary col-sm-6"
+                                data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary col-sm-6">Save</button>
+                        </div>
+                            </form>
+                </div>
+                </div>
+                </div>
+                </div>
+                <!--End edit modal-->
                     {% endfor %}
                 </tbody>
             </table>

@@ -13,11 +13,11 @@ Custom User Model
 
 
 class User(AbstractUser):
-    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, null=True)
+    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, null=True, blank=True)
     fuel_request = models.PositiveIntegerField(default=0)
     phone_number = models.CharField(max_length=20, default='263')
     stage = models.CharField(max_length=20, default='registration')
-    company_position = models.CharField(max_length=100, default='')
+    company_position = models.CharField(max_length=100, default='', null=True)
     position = models.IntegerField(default=0)
     user_type = models.CharField(max_length=20, default='', choices=TYPE_CHOICES)
     image = models.ImageField(default='default.png', upload_to='buyer_profile_pics')

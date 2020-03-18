@@ -901,7 +901,7 @@ def proof_of_payment(request, id):
                 account_history.save()
                 transaction.proof_of_payment = request.FILES.get('proof_of_payment')
                 transaction.proof_of_payment_approved = False
-                transaction.pending_proof_of_payment == True
+                transaction.pending_proof_of_payment = True
                 transaction.save()
                 messages.success(request, 'Proof of payment successfully uploaded')
                 return redirect('buyer-transactions')

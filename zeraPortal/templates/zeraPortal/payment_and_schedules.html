@@ -60,9 +60,7 @@
                             <th>
                                 Transaction Summary
                              </th>
-                             <th>
-                                Proof of Payment
-                             </th>
+                             
                             <th>
                                Amount Paid ($)
                             </th>
@@ -132,18 +130,18 @@
                                                             &nbsp;{{payment.transaction.offer.quantity}}L
                                                         </div>
                                                         <div class="form-group col-md-6">
-                                                            <label><b>Price:</b></label>
-                                                            &nbsp;{{payment.transaction.offer.price}}
+                                                            <lable><b>Price:</b></lable>
+                                                            &nbsp;${{payment.transaction.offer.price}}
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
-                                                            <label><b> Expected:</b></label>
-                                                            &nbsp;{{payment.transaction.expected}}L
+                                                            <lable><b> Expected:</b></lable>
+                                                            &nbsp;${{payment.transaction.expected}}
                                                         </div>
                                                         <div class="form-group col-md-6">
-                                                            <label><b>Paid:</b></label>
-                                                            &nbsp;{{payment.transaction.paid}}
+                                                            <lable><b>Paid:</b></lable>
+                                                            &nbsp;${{payment.transaction.paid}}
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -158,7 +156,7 @@
                                         </div>
                                     </div>
                             </td>
-                            <td>Approved</td>
+                           
                             <td>{{payment.value|intcomma}}</td>
                             <td>{{payment.balance|intcomma}}</td>
                             {% if payment.delivery_schedule != None %}
@@ -177,7 +175,7 @@
                                 </div>
                             </td>
                             {% else %}
-                            <td>Pending</td>
+                            <td style="color: chocolate;">Documents Pending</td>
                             {% endif %}
                         </tr>
                               <!--view modal-->

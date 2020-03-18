@@ -167,20 +167,24 @@
                                                         </div>
                                                         <div class="form-group col-md-6">
                                                             <lable><b>Price:</b></lable>
-                                                            &nbsp;{{payment.transaction.offer.price}}
+                                                            &nbsp;${{payment.transaction.offer.price}}
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
                                                             <lable><b> Expected:</b></lable>
-                                                            &nbsp;{{payment.transaction.expected}}L
+                                                            &nbsp;${{payment.transaction.expected}}
                                                         </div>
                                                         <div class="form-group col-md-6">
                                                             <lable><b>Paid:</b></lable>
-                                                            &nbsp;{{payment.transaction.paid}}
+                                                            &nbsp;${{payment.transaction.paid}}
                                                         </div>
                                                     </div>
                                                     <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <lable><b>Delivery Quantity:</b></lable>
+                                                            &nbsp;{{payment.transaction.paid| div:payment.transaction.offer.price|floatformat}}L
+                                                        </div>
                                                         <div class="form-group col-md-6">
                                                             <lable><b> Delivery Address:</b></lable>
                                                             &nbsp;{{payment.transaction.buyer.company.address}}
@@ -196,10 +200,10 @@
                             <td>Approved</td>
                             <td>{{payment.value}}</td>
                             <td>{{payment.balance}}</td>
-                            {% if payment.transaction.release_date %}
+                            {% if payment.release_date %}
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'buyer:release-note' payment.transaction.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
+                                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'buyer:release-note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
                                 </div>
                             </td>
                             {% else %}
