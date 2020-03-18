@@ -60,9 +60,7 @@
                             <th>
                                 Transaction Summary
                              </th>
-                             <th>
-                                Proof of Payment
-                             </th>
+                             
                             <th>
                                Amount Paid ($)
                             </th>
@@ -100,49 +98,55 @@
                                                     {% csrf_token %}
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
-                                                            <lable><b> Buyer:</b></lable>
+                                                            <label><b> Buyer:</b></label>
                                                             &nbsp;{{payment.transaction.buyer.company}}
                                                         </div>
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Supplier:</b></lable>
+                                                            <label><b>Supplier:</b></label>
                                                             &nbsp;{{payment.transaction.supplier.company}}
                                                         </div>
                                                     </div>
 
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
-                                                            <lable><b> Fuel Type:</b></lable>
-                                                            &nbsp;{{payment.transaction.offer.request.fuel_type}}
+                                                            <label><b> Fuel Type:</b></label>
+                                                            {% if payment.transaction.offer.request.fuel_type == 'Diesel'%}
+                                                            <b style="color: #009688; padding-left: 5px;">{{payment.transaction.offer.request.fuel_type}}</b>
+                                                            {% elif payment.transaction.offer.request.fuel_type == 'Petrol'%}
+                                                            <b style="color: #ffb61e; padding-left: 5px;">{{payment.transaction.offer.request.fuel_type}}</b>
+                                                            {% else %}
+                                                            <b>{{payment.transaction.offer.request.fuel_type}}</b>
+                                                            {% endif %}
                                                         </div>
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Quantity Requested:</b></lable>
+                                                            <label><b>Quantity Requested:</b></label>
                                                             &nbsp;{{payment.transaction.offer.request.amount}}L
                                                         </div>
                                                     </div>
 
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
-                                                            <lable><b> Quantity Offered:</b></lable>
+                                                            <label><b> Quantity Offered:</b></label>
                                                             &nbsp;{{payment.transaction.offer.quantity}}L
                                                         </div>
                                                         <div class="form-group col-md-6">
                                                             <lable><b>Price:</b></lable>
-                                                            &nbsp;{{payment.transaction.offer.price}}
+                                                            &nbsp;${{payment.transaction.offer.price}}
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
                                                             <lable><b> Expected:</b></lable>
-                                                            &nbsp;{{payment.transaction.expected}}L
+                                                            &nbsp;${{payment.transaction.expected}}
                                                         </div>
                                                         <div class="form-group col-md-6">
                                                             <lable><b>Paid:</b></lable>
-                                                            &nbsp;{{payment.transaction.paid}}
+                                                            &nbsp;${{payment.transaction.paid}}
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
-                                                            <lable><b> Delivery Address:</b></lable>
+                                                            <label><b> Delivery Address:</b></label>
                                                             &nbsp;{{payment.transaction.buyer.company.address}}
                                                         </div>
                                                        
@@ -152,7 +156,7 @@
                                         </div>
                                     </div>
                             </td>
-                            <td>Approved</td>
+                           
                             <td>{{payment.value|intcomma}}</td>
                             <td>{{payment.balance|intcomma}}</td>
                             {% if payment.delivery_schedule != None %}
@@ -171,7 +175,7 @@
                                 </div>
                             </td>
                             {% else %}
-                            <td>Pending</td>
+                            <td style="color: chocolate;">Documents Pending</td>
                             {% endif %}
                         </tr>
                               <!--view modal-->
@@ -188,11 +192,11 @@
                                             {% csrf_token %}
                                             <div class="row">
                                                 <div class="form-group col-md-6">
-                                                    <lable><b> Delivery Date:</b></lable>
+                                                    <label><b> Delivery Date:</b></label>
                                                     &nbsp;{{payment.delivery_schedule.date }}
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Delivery Time:</b></lable>
+                                                    <label><b>Delivery Time:</b></label>
                                                     &nbsp;{{payment.delivery_schedule.delivery_time }}
                                                 </div>
                                             </div>
@@ -201,33 +205,33 @@
                                             <div class="row">
     
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Transporter:</b></lable>
+                                                    <label><b>Transporter:</b></label>
                                                     &nbsp;{{payment.delivery_schedule.transport_company }}
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Delivery Address:</b></lable>
+                                                    <label><b>Delivery Address:</b></label>
                                                     &nbsp;{{payment.transaction.buyer.company.address }}
                                                 </div>
                                             </div>
                                             <div class="row">
     
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Driver Name:</b></lable>
+                                                    <label><b>Driver Name:</b></label>
                                                     &nbsp;{{payment.delivery_schedule.driver_name }}
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Phone Number:</b></lable>
+                                                    <label><b>Phone Number:</b></label>
                                                     &nbsp;{{payment.delivery_schedule.phone_number }}
                                                 </div>
                                             </div>
                                             <div class="row">
     
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Id Number:</b></lable>
+                                                    <label><b>Id Number:</b></label>
                                                     &nbsp;{{payment.delivery_schedule.id_number }}
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Vehicle Reg:</b></lable>
+                                                    <label><b>Vehicle Reg:</b></label>
                                                     &nbsp;{{payment.delivery_schedule.vehicle_reg }}
                                                 </div>
                                             </div>
@@ -236,34 +240,34 @@
                                             <div class="row">
     
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Amount Paid:</b></lable>
+                                                    <label><b>Amount Paid:</b></label>
                                                     &nbsp;{{payment.value }}
                                                 </div>
                                                 {% if payment.delivery_schedule != None %}
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Transport Charge:</b></lable>
+                                                    <label><b>Transport Charge:</b></label>
                                                     &nbsp;{{payment.value| sub:payment.delivery_schedule.amount_for_fuel}}
                                                 </div>
                                                 {% else %}
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Transport Charge:</b></lable>
+                                                    <label><b>Transport Charge:</b></label>
                                                     &nbsp;{{payment.value}}
                                                 </div>
                                                 {% endif %}
                                             </div>
                                             <div class="row">
                                             <div class="form-group col-md-6">
-                                                <lable><b>Delivery Quantity:</b></lable>
+                                                <label><b>Delivery Quantity:</b></label>
                                                 &nbsp;{{payment.delivery_schedule.delivery_quantity}}
                                             </div>
                                             {% if payment.delivery_schedule.confirmation_document %}
                                             <div class="form-group col-md-6">
-                                                <lable><b>Status:</b></lable>
+                                                <label><b>Status:</b></label>
                                                 &nbsp;<i style="color: rgb(54, 167, 219);">Buyer Received Fuel </i>
                                             </div>
                                             {% else %}
                                             <div class="form-group col-md-6">
-                                                <lable><b>Status:</b></lable>
+                                                <label><b>Status:</b></label>
                                                 &nbsp;<i style="color: rgb(54, 167, 219);"><i style="color: brown;">waiting for buyer confirmation</i> </i>
                                             </div>
             
@@ -272,24 +276,24 @@
                                            <div class="row">
                                             {% if payment.delivery_schedule.supplier_document %}
                                             <div class="form-group col-md-6">
-                                                <lable><b>Supplier Release Note:</b></lable>
+                                                <label><b>Supplier Release Note:</b></label>
                                                 &nbsp;<a class="btn btn-info btn-sm" href="{% url 'zeraPortal:view_supplier_doc' payment.delivery_schedule.id %}" >Download Document </a>
                                             </div>
                                             {% else %}
                                             <div class="form-group col-md-6">
-                                                <lable><b></b></lable>
+                                                <label><b></b></label>
                                             </div>
                                             
                                             {%endif%} 
 
                                             {% if payment.delivery_schedule.confirmation_document %}
                                             <div class="form-group col-md-6">
-                                                <lable><b>Buyer Confirmation Doc:</b></lable>
+                                                <label><b>Buyer Confirmation Doc:</b></label>
                                                 &nbsp;<a class="btn btn-info btn-sm" href="{% url 'zeraPortal:view_confirmation_doc' payment.delivery_schedule.id %}" >Download Document </a>
                                             </div>
                                             {% else %}
                                             <div class="form-group col-md-6">
-                                                <lable><b></b></lable>
+                                                <label><b></b></label>
                                             </div>
                                             
                                             {%endif%} 
@@ -312,7 +316,7 @@
                 </table>
             </div>
             {% else %}
-            <p>No History Available</p>
+            <p>No History Availabel</p>
             {% endif %}
 
 

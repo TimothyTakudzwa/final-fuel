@@ -52,15 +52,16 @@
                             </th>
 
                             <th>
-                                Diesel 
-                            </th>
-                            <th>
                                 USD Price
                             </th>
                             <th>
                                RTGS Price
                             </th>
-                            <th>
+                            
+                            <th style="color: #009688;">
+                                Diesel 
+                            </th>
+                            <th style="color: #ffb61e;">
                                 Petrol 
                             </th>
                             <th>
@@ -78,10 +79,10 @@
                         {% for capacity in capacities %}
                         <tr>
                             <td>{{capacity.company.name}}</td>
-                            <td>{{capacity.diesel_capacity}}</td>
                             <td>{{capacity.usd_diesel_price}}</td>
                             <td>{{capacity.diesel_price}}</td>
-                            <td>{{capacity.petrol_capacity}}</td>
+                            <td style="color: #009688;">{{capacity.diesel_capacity}}</td>
+                            <td style="color: #ffb61e;">{{capacity.petrol_capacity}}</td>
                             <td>{{capacity.usd_petrol_price}}</td>
                             <td>{{capacity.petrol_price}}</td>
                             <td>

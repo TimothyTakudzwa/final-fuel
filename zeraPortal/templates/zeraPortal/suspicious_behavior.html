@@ -58,7 +58,14 @@
                    
                         <td>{{ delivery.transaction.buyer.company.name|title }}</td>
                         <td>{{delivery.transaction.buyer.company.address }}</td>
-                        <td>{{ delivery.transaction.offer.request.fuel_type}}</td>
+                        {% if delivery.transaction.offer.request.fuel_type == 'Diesel' %}
+                            <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type}}</td>
+                        {% elif delivery.transaction.offer.request.fuel_type == 'Petrol' %}
+                            <td style="color: #ffb61e;">{{ delivery.transaction.offer.request.fuel_type}}</td>
+                        {% else %}    
+                            <td>{{ delivery.transaction.offer.request.fuel_type}}</td>
+                        {% endif %}    
+
                         <td>{{ delivery.delivery_quantity }} </td>
                         <td>{{ delivery.transport_company}}</td>
                         <td>{{ delivery.days_late }} </td>
@@ -154,7 +161,16 @@
                                     </div>
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Product: </p>
-                                        <p class="col-md-6">{{delivery.transaction.offer.request.fuel_type}}</p>
+                                        
+                                        {% if delivery.transaction.offer.request.fuel_type == 'Diesel' %}
+                                            <p style="color: #009688;" class="col-md-6">{{delivery.transaction.offer.request.fuel_type}}</p>
+                                        {% elif delivery.transaction.offer.request.fuel_type == 'Petrol' %}
+                                            <p style="color: #ffb61e;" class="col-md-6">{{delivery.transaction.offer.request.fuel_type}}</p>
+                                        {% else %}
+                                            <p class="col-md-6">{{delivery.transaction.offer.request.fuel_type}}</p>
+                                        {% endif %}    
+
+
                                     </div>
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Transporter </p>
