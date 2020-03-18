@@ -1116,7 +1116,7 @@ def del_supplier_doc(request, id):
 def supplier_release_note(request, id):
     transaction = Transaction.objects.filter(id=id).first()
     if request.method == 'POST':
-        transaction.release_note = request.FILES.get('release_note')
+        transaction.release_date = request.POST['release_date']
 
         transaction.proof_of_payment = None
         transaction.pending_proof_of_payment = False
@@ -1125,6 +1125,7 @@ def supplier_release_note(request, id):
         payment_history.value += transaction.paid_reserve
         payment_history.balance -= transaction.paid_reserve
         payment_history.release_note = request.FILES.get('release_note')
+        payment_history.release_activated = True
         payment_history.save()
         messages.success(request, "Release Note Successfully Uploaded")
         return redirect(f'/supplier/payment-and-release-notes/{id}')

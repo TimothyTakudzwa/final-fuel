@@ -110,7 +110,7 @@
                                                         </div>
                                                         <!--applicant-->
                                                         <div class="col-md-12">
-                                                            <h4>applied_by &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.account.applied_by }}</h4>
+                                                            <h4>Applied_by &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.account.applied_by }}</h4>
                                                         </div>
                                                          <!--acc #-->
                                                          <div class="col-md-12">
@@ -173,17 +173,17 @@
                                                         </div>
                                                         <div class="form-group col-md-6">
                                                             <lable><b>Price:</b></lable>
-                                                            &nbsp;{{payment.transaction.offer.price}}
+                                                            &nbsp;${{payment.transaction.offer.price}}
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
                                                             <lable><b> Expected:</b></lable>
-                                                            &nbsp;{{payment.transaction.expected}}L
+                                                            &nbsp;${{payment.transaction.expected}}
                                                         </div>
                                                         <div class="form-group col-md-6">
                                                             <lable><b>Paid:</b></lable>
-                                                            &nbsp;{{payment.transaction.paid}}
+                                                            &nbsp;${{payment.transaction.paid}}
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -272,24 +272,24 @@
     
                                                 <div class="form-group col-md-6">
                                                     <lable><b>Amount Paid:</b></lable>
-                                                    &nbsp;{{payment.value }}
+                                                    &nbsp;${{payment.value }}
                                                 </div>
                                                 {% if payment.delivery_schedule != None %}
                                                 <div class="form-group col-md-6">
                                                     <lable><b>Transport Charge:</b></lable>
-                                                    &nbsp;{{payment.value| sub:payment.delivery_schedule.amount_for_fuel}}
+                                                    &nbsp;${{payment.value| sub:payment.delivery_schedule.amount_for_fuel}}
                                                 </div>
                                                 {% else %}
                                                 <div class="form-group col-md-6">
                                                     <lable><b>Transport Charge:</b></lable>
-                                                    &nbsp;{{payment.value}}
+                                                    &nbsp;${{payment.value}}
                                                 </div>
                                                 {% endif %}
                                             </div>
                                             <div class="row">
                                             <div class="form-group col-md-6">
                                                 <lable><b>Delivery Quantity:</b></lable>
-                                                &nbsp;{{payment.delivery_schedule.delivery_quantity}}
+                                                &nbsp;{{payment.delivery_schedule.delivery_quantity}}L
                                             </div>
                                             {% if payment.delivery_schedule.confirmation_document %}
                                             <div class="form-group col-md-6">
