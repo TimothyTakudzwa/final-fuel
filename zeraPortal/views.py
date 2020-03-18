@@ -327,6 +327,18 @@ def block_licence(request, id):
 def noic_fuel(request):
     return render(request, 'zeraPortal/noic_fuel.html')
 
+
+def download_proof(request, id):
+    document = AccountHistory.objects.filter(id=id).first()
+    if document:
+        filename = document.proof_of_payment.name.split('/')[-1]
+        response = HttpResponse(document.proof_of_payment, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect(f'/zeraPortal/payment_and_schedules/{document.transaction.id}')
+    return response
+
 def unblock_licence(request, id):
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if request.method == 'POST':
