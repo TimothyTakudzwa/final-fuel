@@ -18,7 +18,7 @@
     <div class="header-title">
 
         <h1> Payments & Schedules </h1>
-        <small>Fuel Finder Zimbabwe</small>
+        <small>Fuel Management System</small>
         <ol class="breadcrumb hidden-xs">
             <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
             <li class="active">Payment History</li>
@@ -65,8 +65,11 @@
                                Amount Paid ($)
                             </th>
                             <th>
-                               Balance ($)
+                               Proof of Payment
                             </th>
+                            <th>
+                                Balance ($)
+                             </th>
                             <th>
                                 Action
                              </th>
@@ -158,20 +161,23 @@
                             </td>
                            
                             <td>{{payment.value|intcomma}}</td>
+                            <td>
+                                <a class="btn btn-warning btn-sm" href="{% url 'zeraPortal:download_proof' payment.id %}" > <i class="fa fa-download" style="font-size:16px"></i> Payment Proof </a>
+                            </td>
                             <td>{{payment.balance|intcomma}}</td>
                             {% if payment.delivery_schedule != None %}
                             <td>
                                 <div class="btn-group">
-                                <button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">View Schedule</button>
-                                <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:download_release_note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Delivery Note</a>
+                                <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">View Schedule</a>
+                                <a class="btn btn-warning btn-sm" href="{% url 'zeraPortal:view_confirmation_doc' payment.delivery_schedule.id %}" > <i class="fa fa-download" style="font-size:16px"></i> Delivery Note </a>
 
                                 </div>
                             </td>
-                            {% elif payment.release_note != None %}
+                            {% elif payment.release_date != None %}
                             <td>
                                 <div class="btn-group">
                                     <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:download_release_note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
-                                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:download_release_note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Delivery Note</a>
+                                    <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:download_release_note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Delivery Note</a>
                                 </div>
                             </td>
                             {% else %}
@@ -274,7 +280,7 @@
                                             {% endif %}
                                            </div>
                                            <div class="row">
-                                            {% if payment.delivery_schedule.supplier_document %}
+                                            <!-- {% if payment.delivery_schedule.supplier_document %}
                                             <div class="form-group col-md-6">
                                                 <label><b>Supplier Release Note:</b></label>
                                                 &nbsp;<a class="btn btn-info btn-sm" href="{% url 'zeraPortal:view_supplier_doc' payment.delivery_schedule.id %}" >Download Document </a>
@@ -284,7 +290,7 @@
                                                 <label><b></b></label>
                                             </div>
                                             
-                                            {%endif%} 
+                                            {%endif%}  -->
 
                                             {% if payment.delivery_schedule.confirmation_document %}
                                             <div class="form-group col-md-6">
