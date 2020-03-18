@@ -33,5 +33,7 @@ urlpatterns = [
     path('download_council/<int:id>', views.download_council, name='download_council'),
     path('download_pop/<int:id>', views.download_pop, name='download_pop'),
     path('noic_fuel/', views.noic_fuel, name='noic_fuel'),
+    path('edit-company-details/<int:id>', views.edit_company, name='edit-company-details'),
+    
     
 ]

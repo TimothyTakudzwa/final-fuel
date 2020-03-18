@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
 from datetime import datetime, date
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
@@ -62,6 +62,26 @@ def dashboard(request):
             return redirect('zeraPortal:dashboard')
     return render(request, 'zeraPortal/companies.html', {'companies': companies, 'zimbabwean_towns':zimbabwean_towns})
 
+
+def edit_company(request, id):
+    company = Company.objects.filter(id=id).first()
+    license_number = request.POST.get('license_number')
+    check_license = Company.objects.filter(~Q(id=id), company_type='SUPPLIER', license_number=license_number).exists()
+    if not check_license:
+        company.name = request.POST.get('company_name')
+        company.city = request.POST.get('city')
+        company.address = request.POST.get('address')
+        company.vat_number = request.POST.get('vat_number')
+        company.contact_person = request.POST.get('contact_person')
+        company.account_number = request.POST.get('account_number')
+        company.phone_number = request.POST.get('phone_number')
+        company.license_number = license_number
+        company.save()
+        messages.success(request, 'Company details updated successfully')
+        return redirect('zeraPortal:dashboard')
+    else:
+        messages.warning(request, 'License number already exists!!!')
+        return redirect('zeraPortal:dashboard')
 
 def add_supplier_admin(request, id):
     company = Company.objects.filter(id=id).first()
