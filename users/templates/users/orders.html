@@ -346,7 +346,15 @@
                 <tr>
                     <td>{{ order.date }}</td>
                     <td>NOIC</td>
-                    <td>{{ order.fuel_type|lower|capfirst }}</td>
+
+                    {% if order.fuel_type == 'Diesel' %}
+                        <td style="color: #009688;">{{ order.fuel_type|lower|capfirst }}</td>
+                    {% elif order.fuel_type == 'Diesel' %}
+                        <td style="color: #ffb61e;">{{ order.fuel_type|lower|capfirst }}</td>
+                    {% else %}    
+                        <td>{{ order.fuel_type|lower|capfirst }}</td>
+                    {% endif %}    
+
                     <td>{{ order.quantity|intcomma }}</td>
                     <td>{{ order.currency}}</td> 
                     <td>
@@ -361,7 +369,7 @@
 
 
                         <div class="modal fade modal-success in" id="payment{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
+                            <div class="modal-dialog" role="document" style="margin: 0;">
                                 <div class="modal-content">
                                     <div class="modal-header" style="background-color: #009688; color: white">
                                         <span class="modal-title" id="exampleModalLabel">Payment Details</span>
@@ -373,31 +381,39 @@
                                         {% csrf_token %}
                                         <div class="row">
                                             <div class="form-group col-md-6">
-                                                <lable><b> Fuel Type:</b></lable>
-                                                &nbsp;{{order.fuel_type}}
+                                                <label><b> Fuel Type:</b></label>
+                                                
+                                                {% if  order.fuel_type == 'Diesel' %}
+                                                    <b style="color: #009688;">{{order.fuel_type}}</b>
+                                                {% elif order.fuel_type == 'Petrol' %}
+                                                    <b style="color: #ffb61e;">{{order.fuel_type}}</b>
+                                                {% else %}    
+                                                    <b>{{order.fuel_type}}</b>
+                                                {% endif %}    
+
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <lable><b>Price:</b></lable>
+                                                <label><b>Price:</b></label>
                                                 &nbsp;$24
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-md-6">
-                                                <lable><b> Sub Total:</b></lable>
+                                                <label><b> Sub Total:</b></label>
                                                 &nbsp;${{order.amount_paid}}
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <lable><b>Duty:</b></lable>
+                                                <label><b>Duty:</b></label>
                                                 &nbsp;${{order.duty}}
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-md-6">
-                                                <lable><b> Vat:</b></lable>
+                                                <label><b> Vat:</b></label>
                                                 &nbsp;${{order.vat}}
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <lable><b>Quantiy:</b></lable>
+                                                <label><b>Quantiy:</b></label>
                                                 &nbsp;{{order.quantity}}L
                                             </div>
                                         </div>

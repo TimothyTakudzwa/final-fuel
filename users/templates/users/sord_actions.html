@@ -82,7 +82,15 @@
                         <tr>
                             <td>{{sord.date}}</td>
                             <td>{{sord.action_num}}</td>
-                            <td>{{sord.fuel_type}}</td>
+
+                            {% if sord.fuel_type == 'Diesel' %}
+                                <td style="color: #009688;">{{sord.fuel_type}}</td>
+                            {% if sord.fuel_type == 'Petrol' %}
+                                <td style="color: #ffb61e;">{{sord.fuel_type}}</td>
+                            {% else %}    
+                                <td>{{sord.fuel_type}}</td>
+                            {% endif %}    
+
                             <td>{{sord.payment_type}}</td>
                             <td>{{sord.allocated_quantity|intcomma}}</td>
                             <td>{{sord.price}}</td>
