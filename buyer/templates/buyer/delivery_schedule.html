@@ -61,7 +61,15 @@
                         <td>{{ schedule.date }}</td>
                         <td>{{ schedule.delivery_time }}</td>
                         <td>{{ schedule.delivery_address }}</td>
-                        <td>{{ schedule.transaction.offer.request.fuel_type }}</td>
+
+                        {% if schedule.transaction.offer.request.fuel_type == 'Diesel' %}
+                            <td style="color: #009688;">{{ schedule.transaction.offer.request.fuel_type }}</td>
+                        {% if schedule.transaction.offer.request.fuel_type == 'Petrol' %}
+                            <td style="color: #ffb61e;">{{ schedule.transaction.offer.request.fuel_type }}</td>
+                        {% else %}
+                            <td>{{ schedule.transaction.offer.request.fuel_type }}</td>
+                        {% endif %}
+
                         <td>{{ schedule.delivery_quantity }}</td>
                         <td>
                             {% if schedule.transaction.offer.pump_available %} Pump &nbsp; {% endif %}
@@ -126,7 +134,7 @@
                                     </div>
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Transporter: </p>
-                                        <p class="col-md-6">{{schedule.transport_company}</p>
+                                        <p class="col-md-6">{{schedule.transport_company}}</p>
                                     </div>   
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Driver Name: </p>
