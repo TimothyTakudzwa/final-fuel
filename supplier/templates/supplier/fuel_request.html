@@ -77,7 +77,18 @@
                     <td>{{ req.date }}</td>
                     <td>{{ req.name.company.name|lower|title }}</td>
                     <td>{{ req.amount|intcomma }}</td>
-                    <td>{{ req.fuel_type|lower|capfirst }}</td>
+                    
+                    {% if req.fuel_type == 'Diesel' %}
+                        <td style="color: #009688;">{{ req.fuel_type|lower|capfirst }}</td>
+                    {% elif req.fuel_type == 'Petrol' %}
+                        <td style="color: #ffb61e;">{{ req.fuel_type|lower|capfirst }}</td>
+                    {% else %}    
+                        <td>{{ req.fuel_type|lower|capfirst }}</td>
+                    {% endif %}    
+
+
+
+
                     <td>{{ req.payment_method}}</td>                    
                     <td>{{ req.delivery_method|lower|capfirst }}</td>
                     {% if req.delivery_address != None %}

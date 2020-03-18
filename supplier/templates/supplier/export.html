@@ -80,7 +80,15 @@
             <td>{{ transaction.transaction.date }}</td>
             <td>{{ transaction.transaction.time }}</td>
             <td>{{ transaction.transaction.offer.quantity }}L</td>
-            <td>{{ transaction.transaction.offer.request.fuel_type }}</td>
+
+            {% if transaction.transaction.offer.request.fuel_type == 'Diesel' %}
+                <td style="color: #009688;">{{ transaction.transaction.offer.request.fuel_type }}</td>
+            {% elif transaction.transaction.offer.request.fuel_type == 'Diesel' %}
+                <td style="color: #ffb61e;">{{ transaction.transaction.offer.request.fuel_type }}</td>
+            {% else %}    
+                <td>{{ transaction.transaction.offer.request.fuel_type }}</td>
+            {% endif %}    
+
             <td>${{ transaction.transaction.offer.price }}</td>
         </tr>
     {% endfor %}
