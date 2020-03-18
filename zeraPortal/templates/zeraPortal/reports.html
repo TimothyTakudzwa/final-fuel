@@ -702,7 +702,13 @@
                                                     </td>
                                                     <td>{{tran.buyer.company.name|title}}</td>
                                                     <td>{{tran.supplier.company.name|title}}</td>
-                                                    <td>{{tran.offer.request.fuel_type|title}}</td>
+                                                    {% if tran.offer.request.fuel_type == 'Diesel' %}
+                                                        <td style="color: #009688;">{{tran.offer.request.fuel_type|title}}</td>
+                                                    {% elif tran.offer.request.fuel_type == 'Petrol' %}
+                                                        <td style="color: #ffb61e;">{{tran.offer.request.fuel_type|title}}</td>
+                                                    {% else %}
+                                                        <td>{{tran.offer.request.fuel_type|title}}</td>
+                                                    {% endif %}
                                                     <td>{{tran.offer.quantity}}</td>
                                                     <td>$ {{tran.offer.price|stringformat:".2f"}}</td>
                                                     <td>{{tran.buyer.first_name}} {{tran.buyer.last_name }}</td>
@@ -801,10 +807,10 @@
                                                         <th>Last Update</th>
                                                         <th>Station Type</th>
                                                         <th>Station Name</th>
-                                                        <th>Petrol (Litres)</th>
-                                                        <th>Petrol Price</th>
-                                                        <th>Diesel (Litres)</th>
-                                                        <th>Diesel Price</th>
+                                                        <th style="color: #ffb61e;">Petrol (Litres)</th>
+                                                        <th style="color: #ffb61e;">Petrol Price</th>
+                                                        <th style="color: #009688;">Diesel (Litres)</th>
+                                                        <th style="color: #009688;">Diesel Price</th>
                                                         
                                                       
                                                     </tr>
@@ -816,10 +822,10 @@
                                                             <td>{{my_stock.last_updated}}</td>
                                                             <td>{{my_stock.sub_type}}</td>
                                                             <td>{{my_stock.subsidiary_name}}</td>
-                                                            <td>{{my_stock.petrol_quantity}} l</td>
-                                                            <td>{{my_stock.petrol_price}}</td>
-                                                            <td>{{my_stock.diesel_quantity}} l</td>
-                                                            <td>$ {{my_stock.diesel_price}}</td>
+                                                            <td style="color: #ffb61e;">{{my_stock.petrol_quantity}} l</td>
+                                                            <td style="color: #ffb61e;">{{my_stock.petrol_price}}</td>
+                                                            <td style="color: #009688;">{{my_stock.diesel_quantity}} l</td>
+                                                            <td style="color: #009688;">$ {{my_stock.diesel_price}}</td>
                                                             
                                                     </tr>
                                                     {%endfor%}
@@ -831,10 +837,10 @@
                                                             <th>Last Update</th>
                                                             <th>Station Type</th>
                                                             <th>Station Name</th>
-                                                            <th>Diesel Quantity</th>
-                                                            <th>Petrol Price</th>
-                                                            <th>Diesel Quantity</th>
-                                                            <th>Diesel Price</th>
+                                                            <th style="color: #ffb61e;">Diesel Quantity</th>
+                                                            <th style="color: #ffb61e;">Petrol Price</th>
+                                                            <th style="color: #009688;">Diesel Quantity</th>
+                                                            <th style="color: #009688;">Diesel Price</th>
                                                          
                                                     </tr>
                                                 </tfoot>
@@ -898,7 +904,16 @@
                                                     <td>{{req.time}}</td>
                                                     <td>{{req.name|title}}</td>
                                                     <td>$ {{req.amount|stringformat:".2f"}}</td>
-                                                    <td>{{req.fuel_type|title}}</td>
+                                                    {% if req.fuel_type == 'Petrol' %}
+                                                        <td style="color: #ffb61e;">{{req.fuel_type|title}}</td>
+                                                    {% elif req.fuel_type == 'Diesel' %}
+                                                        <td style="color: #009688;">{{req.fuel_type|title}}</td>
+                                                    {% else %}   
+                                                        <td>{{req.fuel_type|title}}</td>
+                                                    {% endif %}    
+
+
+
                                                     <td>
                                                         {%if req.cash%}<i class="fa fa-dollar"></i>{%endif%} {% if req.cash %}<img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL"> {%endif%} {%if req.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {%endif%} {%if req.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH"> {%endif%} {%if req.swipe%}<i class="fa fa-cc-visa"></i> {% endif%} {%if not req.cash and not req.ecocash and not req.swipe and not req.usd%}No Payment Method {%endif%}
                                                     </td>
