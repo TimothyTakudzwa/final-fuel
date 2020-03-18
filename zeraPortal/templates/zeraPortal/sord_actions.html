@@ -31,7 +31,7 @@
     <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
         <div class="panel-heading ui-sortable-handle">
             <div class="btn-group">
-                <h4>Allocations & Sales on Sord {{sord_number}}</h4>
+                <h4>Allocations & Sales on <b style="color: brown;">Sord {{sord_number}} </b></h4>
             </div>
             <div class="dropdown">
                 <ul class="dropdown-menu dropdown-menu-right">
@@ -66,7 +66,7 @@
                                 Event
                              </th>
                             <th>
-                               Quantity 
+                               Quantity (L)
                             </th>
                             <th>
                                 Price
@@ -98,8 +98,8 @@
                             {% else %}
                             <td style="background-color: rgb(38, 77, 112);color: white;">{{sord.action_type}}</td>
                             {% endif %}
-                            <td>{{sord.allocated_quantity|intcomma}}</td>
-                            <td>{{sord.price}}</td>
+                            <td>{{sord.allocated_quantity|intcomma|floatformat}}</td>
+                            <td>${{sord.price}}</td>
                             <td>{{sord.supplied_from}}</td>
                             <td>{{sord.allocated_by}}</td>
                             <td>{{sord.allocated_to}}</td>

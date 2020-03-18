@@ -304,6 +304,9 @@ def block_licence(request, id):
         return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
 
 
+def noic_fuel(request):
+    return render(request, 'zeraPortal/noic_fuel.html')
+
 def unblock_licence(request, id):
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if request.method == 'POST':
