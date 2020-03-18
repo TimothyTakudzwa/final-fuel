@@ -150,9 +150,19 @@
                                 {{fuel_request.payment_method}}
                                 
                             </td>
-                            <td class="">
-                                {{fuel_request.fuel_type}}
-                            </td>
+
+                            {% if fuel_request.fuel_type == 'Diesel' %}
+                                <td style="color: #009688;" class="">{{fuel_request.fuel_type}}</td>
+                            {% elif fuel_request.fuel_type == 'Petrol' %}
+                                <td style="color: #ffb61e;" class="">{{fuel_request.fuel_type}}</td>
+                            {% else %}
+                                <td class="">{{fuel_request.fuel_type}}</td>
+                            {% endif %}
+
+
+
+
+
                             <td class="">
                                 {{fuel_request.amount|intcomma}} Litres
                             </td>
@@ -397,7 +407,7 @@
                                                 <div class="form-group col-md-6">
                                                     <label>Fuel Type</label>
                                                     <select class="form-control" name="fuel_type" id="">
-                                                        <option>Petrol</option>
+                                                        <option style="color: #ffb61e;">Petrol</option>
                                                         <option>Diesel</option>
                                                     </select>
                                                 </div>

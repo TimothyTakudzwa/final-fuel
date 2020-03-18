@@ -62,7 +62,15 @@
                         <!--<td>{{ delivery.date }}</td>
                         <td>{{ delivery.delivery_time }}</td>-->
                         <td>{{ delivery.delivery_address }}</td>
-                        <td>{{ delivery.transaction.offer.request.fuel_type }}</td>
+                        
+                        {% if delivery.transaction.offer.request.fuel_type == 'Diesel' %}
+                            <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type }}</td>
+                        {% elif delivery.transaction.offer.request.fuel_type == 'Petrol' %}
+                            <td style="color: #ffb61e;">{{ delivery.transaction.offer.request.fuel_type }}</td>
+                        {% else %}
+                            <td>{{ delivery.transaction.offer.request.fuel_type }}</td>
+                        {% endif %}
+
                         <td>{{ delivery.delivery_quantity }}</td>
                         <td>
                             {% if delivery.transaction.offer.pump_available %} Pump &nbsp; {% endif %}
