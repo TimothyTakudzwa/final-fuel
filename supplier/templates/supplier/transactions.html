@@ -79,7 +79,7 @@
                                 
                                 {% if transaction.offer.request.fuel_type == 'Diesel' %}
                                 <td style="color: #009688;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
-                                {% if transaction.offer.request.fuel_type == 'Petrol' %}
+                                {% else if transaction.offer.request.fuel_type == 'Petrol' %}
                                 <td style="color: #ffb61e;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
                                 {% else %}
                                 <td>{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
@@ -151,6 +151,7 @@
                                         <td>Proof of Payment Pending</td>
                                     {% endif %}
                                 {% endif %}
+                                
                                 <td>
 
                                     <!--call modal-->
@@ -450,7 +451,7 @@
                                 </div>
                             </div>
                             <!--End Upload Document-->
-
+                      
                         {%endfor%}
                 </tbody>
                 </table>
