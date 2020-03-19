@@ -147,13 +147,54 @@
                                                             &nbsp;${{payment.transaction.paid}}
                                                         </div>
                                                     </div>
+                                                    {% if payment.transaction.offer.delivery_method == 'DELIVERY' %}
                                                     <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <lable><b>Delivery Quantity:</b></lable>
+                                                            &nbsp;{{payment.transaction.paid| div:payment.transaction.offer.price|floatformat}}L
+                                                        </div>
                                                         <div class="form-group col-md-6">
                                                             <label><b> Delivery Address:</b></label>
                                                             &nbsp;{{payment.transaction.buyer.company.address}}
                                                         </div>
                                                        
                                                     </div>
+                                                    
+                                                    {% else %}
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <lable><b>Delivery Quantity:</b></lable>
+                                                            &nbsp;{{payment.transaction.paid| div:payment.transaction.offer.price|floatformat}}L
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <lable><b> Delivery Address:</b></lable>
+                                                            &nbsp;{{payment.transaction.buyer.company.address}}
+                                                        </div>
+                                                       
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <lable><b>Transporter:</b></lable>
+                                                            &nbsp;{{payment.transaction.offer.request.transporter}}
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <lable><b> Truck Reg:</b></lable>
+                                                            &nbsp;{{payment.transaction.offer.request.truck_reg}}
+                                                        </div>
+                                                       
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <lable><b>Driver:</b></lable>
+                                                            &nbsp;{{payment.transaction.offer.request.driver}}
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <lable><b> Driver ID:</b></lable>
+                                                            &nbsp;{{payment.transaction.offer.request.driver_id}}
+                                                        </div>
+                                                       
+                                                    </div>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>

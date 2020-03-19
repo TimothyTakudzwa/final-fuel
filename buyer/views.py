@@ -782,13 +782,14 @@ Buyer Accounts
 
 
 def accounts(request):
+    form = FuelRequestForm(request.POST)
     accounts_available = Account.objects.filter(buyer_company=request.user.company).all()
     fuel_orders = FuelRequest.objects.filter(private_mode=True).all().order_by('date')
     order_nums, latest_orders = total_requests(request.user.company)
     total_costs = transactions_total_cost(request.user)
     offers_count_all, offers_count_today = total_offers(request.user)
     return render(request, 'buyer/accounts.html',
-                  {'accounts': accounts_available, 'fuel_orders': fuel_orders, 'order_nums': order_nums,
+                  {'form': form, 'accounts': accounts_available, 'fuel_orders': fuel_orders, 'order_nums': order_nums,
                    'latest_orders': latest_orders, 'total_costs': total_costs, 'offers_count_all': offers_count_all,
                    'offers_count_today': offers_count_today})
 
