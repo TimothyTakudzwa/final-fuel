@@ -650,6 +650,7 @@ def transaction(request):
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
         if delivery_sched:
             tran.delivery_sched = delivery_sched
+        tran.review = UserReview.objects.filter(transaction=tran)    
         transactions.append(tran)
     context = {
         'transactions': transactions,

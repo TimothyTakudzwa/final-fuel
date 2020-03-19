@@ -61,6 +61,9 @@
                             <th style="color: white;">Payments History</th>
                             <th style="color: white;width: 190px;">Action</th>
                             <th style="color: white;">Contact Person</th>
+                            <th style="color: white;">Action</th>
+
+
 
 
                         </tr>
@@ -79,7 +82,7 @@
                                 
                                 {% if transaction.offer.request.fuel_type == 'Diesel' %}
                                 <td style="color: #009688;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
-                                {% if transaction.offer.request.fuel_type == 'Petrol' %}
+                                {% elif transaction.offer.request.fuel_type == 'Petrol' %}
                                 <td style="color: #ffb61e;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
                                 {% else %}
                                 <td>{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
@@ -151,6 +154,7 @@
                                         <td>Proof of Payment Pending</td>
                                     {% endif %}
                                 {% endif %}
+                                
                                 <td>
 
                                     <!--call modal-->
@@ -187,6 +191,9 @@
                                         </div>
                                     </div>
 
+                                </td>
+                                <td>
+                                    
                                 </td>
                             </tr>
                             <!--New Schedule Modal-->
@@ -287,7 +294,7 @@
                             </div>
                             <!--End Schedule Modal-->
 
-
+z
                             <div class="modal fade modal-sucess in" id="create_schedule{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -450,7 +457,7 @@
                                 </div>
                             </div>
                             <!--End Upload Document-->
-
+                      
                         {%endfor%}
                 </tbody>
                 </table>
