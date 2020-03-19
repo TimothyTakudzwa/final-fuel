@@ -90,7 +90,7 @@ def allocate_fuel(request, id):
                     sord_object = SordNationalAuditTrail.objects.create(order=order, assigned_depot=depot, company=order.company, fuel_type=request.POST['fuel_type'], currency=request.POST['currency'], quantity=float(request.POST['quantity']))
                     sord_object.sord_no = sord_object.id
                     sord_object.save()
-                    SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no, action_no=0, action='Receiving Fuel',fuel_type=sord_object.fuel_type, payment_type=sord_object.currency, initial_quantity=float(request.POST['quantity']), end_quantity=float(request.POST['quantity']))
+                    SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no, action_no=0, action='Receiving from NOIC',fuel_type=sord_object.fuel_type, payment_type=sord_object.currency, initial_quantity=float(request.POST['quantity']), end_quantity=float(request.POST['quantity']))
                     company_update = CompanyFuelUpdate.objects.filter(company=order.company).first()
                     company_update.unallocated_petrol += float(request.POST['quantity'])
                     company_update.usd_petrol_price = noic_capacity.usd_petrol_price
