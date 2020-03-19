@@ -65,7 +65,17 @@
                     <td>{{ order.date }}</td>
                     <td>{{ order.company.name|lower|title }}</td>
                     <td>{{ order.company.address|lower|title }}</td>
-                    <td>{{ order.fuel_type|lower|capfirst }}</td>
+
+
+                    {% if order.fuel_type == 'Diesel' %}
+                        <td style="color: #009688;">{{ order.fuel_type|lower|capfirst }}</td>
+                    {% if order.fuel_type == 'Petrol' %}
+                        <td style="color: #ffb61e;">{{ order.fuel_type|lower|capfirst }}</td>
+                    {% else %}    
+                        <td>{{ order.fuel_type|lower|capfirst }}</td>
+                    {% endif %}    
+
+
                     <td>{{ order.quantity|intcomma }}</td>
                     <td>{{ order.currency}}</td> 
                     <td>

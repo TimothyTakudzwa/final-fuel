@@ -1,0 +1,251 @@
+{% extends "zeraPortal/zera_base.html" %}
+{% block body %}
+
+<section class="content-header">
+    <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+           <div class="input-group">
+           <input type="text" name="q" class="form-control" placeholder="Search...">
+               <span class="input-group-btn">
+                   <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+               </span>
+           </div>
+       </form>   
+   <!-- <div class="header-icon">
+       <i class="fa fa-binoculars"></i>
+   </div> -->
+   <div class="header-title" style="margin-left: 0px;">
+       <h1> Comments</h1>
+       <small>Stations</small>
+       
+   </div>
+</section>
+
+<section class="content">
+    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+        <div class="panel-heading ui-sortable-handle">
+            <div class="btn-group">
+                <h4>Comments Per Service Stations</h4>
+            </div>
+            <div class="dropdown">
+                <ul class="dropdown-menu dropdown-menu-right">
+
+
+                </ul>
+                <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+
+            {% if subsidiaries %}
+            <div class="table-responsive">
+                <table id="subsidiaries" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>
+                             Subsidiary
+                             </th>
+                             <th>
+                                Location
+                             </th>
+                                                    
+                            <th>
+                                License 
+                             </th>
+                           
+                             <th>
+                                View Comments
+                             </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for subsidiary in subsidiaries %}
+                        <tr>
+                            <td>{{subsidiary.name}}</td>
+                            <td>{{subsidiary.location}} {{subsidiary.city}}</td>
+                            {% if subsidiary.license_num != None %}
+                            <td>{{subsidiary.license_num}}</td>
+                            {% else %}
+                            <td><b style="margin-left: 26px;">--</b></td>
+                            {% endif %}
+
+                            <td>
+                            <button class="btn btn-primary btn-sm" data-toggle="modal"
+                            data-target="#comments_{{subsidiary.id}}">View Comments</button>
+                            </td>
+                           
+                        </tr>
+ 
+                        <!-- Licence Edit Modal -->
+                        <div class="modal fade modal-success in" id="edit_{{subsidiary.id}}" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document" >
+                            <div class="modal-content">
+                                
+                                <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                <span class="modal-title">Update {{subsidiary.name}}'s Licence </span>
+                            </div>
+                                <div class="modal-body">
+                                    <form action="{% url 'zeraPortal:change_licence' subsidiary.id %}"
+                                        method="POST">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <label>Old Licence</label>
+                                            <input type="text" name="license_num" class="form-control" value="{{subsidiary.license_num}}" disabled/>
+                                        </div>
+                                        
+                                        <div class="form-group col-md-6">
+                                            <label>New Licence</label>
+                                            <input type="text" name="license_num" class="form-control" required/>
+                                        </div>
+                                    </div>    
+                                    
+                                <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                    <button type="button" class="btn btn-secondary col-sm-6"
+                                        data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary col-sm-6">Update</button>
+                                </div>
+                                        </form>
+                                    </form>
+                            </div>
+                        </div>
+                    </div>
+                        </div>
+
+
+                    <!-- Block License Modal -->
+                    <div class="modal fade modal-success in" id="block_{{subsidiary.id}}" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document" >
+                        <div class="modal-content">
+                            
+                            <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <span class="modal-title">Block {{subsidiary.name}}'s Licence </span>
+                        </div>
+                            <div class="modal-body">
+                                <form action="{% url 'zeraPortal:block_licence' subsidiary.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <p>Are You Sure You Want To Block {{ subsidiary.name }}'s Licence?</p>
+                                   
+                                
+                            <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                <button type="button" class="btn btn-secondary col-sm-6"
+                                    data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary col-sm-6">Block</button>
+                            </div>
+                                    </form>
+                                </form>
+                        </div>
+                    </div>
+                </div>
+                </div> 
+
+                    <!-- Unblock License Modal -->
+                    <div class="modal fade modal-success in" id="unblock_{{subsidiary.id}}" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document" >
+                        <div class="modal-content">
+                            
+                            <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <span class="modal-title">Unblock {{subsidiary.name}}'s Licence </span>
+                        </div>
+                            <div class="modal-body">
+                                <form action="{% url 'zeraPortal:unblock_licence' subsidiary.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <p>Are You Sure You Want To Unblock {{ subsidiary.name }}'s Licence?</p>
+                                    
+                                
+                            <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                <button type="button" class="btn btn-secondary col-sm-6"
+                                    data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary col-sm-6">Unblock</button>
+                            </div>
+                                    </form>
+                                </form>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+
+                   <!-- Approve & Add Licence Modal -->
+                   <div class="modal fade modal-success in" id="comments_{{subsidiary.id}}" tabindex="-1" role="dialog"
+                   aria-labelledby="exampleModalLabel" aria-hidden="true">
+                   <div class="modal-dialog" role="document" >
+                       <div class="modal-content" style="min-height: 700px;">
+                           
+                           <div class="modal-header">
+                           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                           <span class="modal-title">Comments </span>
+                       </div>
+                           <div class="modal-body" style="min-height: 20px;">
+                               <div class="col-md-12">
+                                    
+                                    <div style="background-color: mintcream; padding-top: 10px; padding-bottom: 30px;margin-bottom: 10px;">
+                                        <div class="col-md-4">
+                                            <b style="color: #009688;">Time</b>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <b style="color: #009688;">User</b>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <b style="color: #009688;">Comment</b>
+                                        </div>
+                                    </div>    
+                                {% for comment in subsidiary.comments %}
+                                    <div class="col-md-4">
+                                        {{ comment.date|date:"M d Y"  }} {{ comment.time }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ comment.user.username|title }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ comment.comment|truncatechars:100 }}
+                                        t
+                                    </div>
+
+                                
+                                {% endfor %}
+                               </div>
+                            </div>
+                            <div class="text-center" style="margin-top: 30px;">
+                            <a href="{% url 'zeraPortal:sub_comments' subsidiary.id %}" type="button" class="btn btn-labeled btn-success m-b-5">
+                                <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span>View All Comments
+                            </a>
+                                
+                            </div>
+                   </div>
+               </div>
+               </div>
+               <!-- <script>
+                $('body').click(function (event) {
+                    if(!$(event.target).closest('#edit_{{subsidiary.id}}').length && !$(event.target).is('#edit_{{subsidiary.id}}')) {
+                        $("#edit_{{subsidiary.id}}").modal('hide');
+                    }
+                    if(!$(event.target).closest('#new_depot_user').length && !$(event.target).is('#new_depot_user')) {
+                        $("#new_depot_user").modal('hide');
+                    }      
+                });
+                </script> -->
+
+
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>No Comments Available</p>
+            {% endif %}
+
+
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}
