@@ -304,7 +304,7 @@
 
                                             {% if payment.delivery_schedule.confirmation_document %}
                                             <div class="form-group col-md-6">
-                                                <lable><b>Buyer Confirmation Doc:</b></lable>
+                                                <lable><b>Delivery Note:</b></lable>
                                                 &nbsp;<a class="btn btn-info btn-sm" href="{% url 'zeraPortal:view_confirmation_doc' payment.delivery_schedule.id %}" >Download Document </a>
                                             </div>
                                             {% else %}
