@@ -18,6 +18,7 @@ from itertools import chain
 from operator import attrgetter
 
 from buyer.models import User, FuelRequest
+from comments.models import Comment
 from company.models import Company, CompanyFuelUpdate
 from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, Transaction, Offer, DeliverySchedule
 from .constants import coordinates_towns
@@ -697,3 +698,22 @@ def desperate_regions(request):
         'mapping': dict(zip(zimbabwean_towns, coordinates_towns))
     }
     return render(request, 'zeraPortal/desperate_regions.html', context=context)
+
+
+def comments(request):
+    subsidiaries = []
+
+    for sub in Subsidiaries.objects.filter(is_depot=False):
+        sub.comments = Comment.objects.filter(station=sub)
+        sub.comments = sub.comments[:5]
+        if sub.comments:
+            subsidiaries.append(sub)
+
+    return render(request, 'zeraPortal/comments.html', {'subsidiaries':subsidiaries})
+
+
+def sub_comments(request, id):
+    sub = Subsidiaries.objects.filter(id=id).first()
+    comments = Comment.objects.filter(station=sub)
+    return render(request, 'zeraPortal/sub_comments.html', {'comments':comments, 'sub': sub})
+

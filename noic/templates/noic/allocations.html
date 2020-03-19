@@ -84,7 +84,15 @@
                             <td>{{sord.date}}</td>
                             <td>{{sord.sord_no}}</td>
                             <td>{{sord.company}}</td>
-                            <td>{{sord.fuel_type}}</td>
+
+                            {% if sord.fuel_type == 'Diesel' %}
+                                <td style="color: #009688;">{{sord.fuel_type}}</td>
+                            {% elif sord.fuel_type == 'Diesel' %}
+                                <td style="color: #ffb61e;">{{sord.fuel_type}}</td>
+                            {% else %}    
+                                <td>{{sord.fuel_type}}</td>
+                            {% endif %}
+
                             <td>{{sord.currency}}</td>
                             <td>{{sord.quantity|intcomma}}</td>
                             <td>{{sord.price}}</td>
