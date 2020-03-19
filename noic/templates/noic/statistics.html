@@ -105,7 +105,8 @@
                     <span class="logo-mini"> </span>
                     <span class="logo-lg">
 
-                        <h4>Fuel Management System</h4>
+                       <h3>Fuel Regulations Zim</h3>
+
                     </span>
                 </a>
                 <!-- Header Navbar -->
@@ -155,48 +156,57 @@
             </header>
 
             <!-- Left side column. contains the sidebar -->
-          <aside class="main-sidebar">
+            <aside class="main-sidebar">
                 <!-- sidebar -->
                 <div class="sidebar">
                     <!-- Sidebar user panel -->
-                    <!-- <div class="user-panel">
+                    <div class="user-panel">
                         <div class="image pull-left">
-                            <img src="{% static 'finder/assets/img/fuel.jpg' %}" class="img-circle" alt="User Image">
+                            <!-- <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar5.png"
+                                class="img-circle" alt="User Image"> -->
                         </div>
                         <div class="info">
-                            <p class="mt-2 mb-2">{{request.user.company.name}}</p>
+                            <h4>Welcome</h4>
+                            <p>{{ request.user.first_name }} {{ request.user.last_name}}</p>
                         </div>
-                    </div> -->
-
+                    </div>
+                 
                     <!-- sidebar menu -->
                     <ul class="sidebar-menu">
-                        <li class="nav-item {% if request.path == '/zeraPortal/dashboard/' %} active {% endif %}">
-                            <a href="{% url 'zeraPortal:dashboard' %}"><i class="fa fa-book"></i><span>Fuel Companies</span>
+                        <li class="nav-item {% if request.path == '/noic/dashboard/' %} active {% endif %}">
+                            <a href="{% url 'noic:dashboard' %}"><i class="fa fa-book"></i><span>Dashboard</span>
                             </a>
                         </li>
                        
-                        <li class="nav-item {% if request.path == '/zeraPortal/company_fuel/' %} active {% endif %}">
-                            <a href="{% url 'zeraPortal:company_fuel' %}"><i class="fa fa-binoculars"></i><span>Fuel Allocations & Transactions</span>
+                        <li class="nav-item {% if request.path == '/noic/orders/' %} active {% endif %}">
+                            <a href="{% url 'noic:orders' %}"><i class="fa fa-book"></i><span>Company Orders</span>
                             </a>
                         </li>
-                        <li class="nav-item {% if request.path == '/zeraPortal/statistics/' %} active {% endif %}">
-                            <a href="{% url 'zeraPortal:statistics' %}"><i class="fa fa-line-chart"></i><span>Statistics</span>
+    
+                       
+                       
+                        <li class="nav-item {% if request.path == '/noic/allocations/' %} active {% endif %}">
+                            <a href="{% url 'noic:allocations' %}"><i class="fa fa-binoculars"></i><span>Allocations</span>
                             </a>
                         </li>
-                        <li class="nav-item {% if request.path == '/zeraPortal/report_generator/' %} active {% endif %} ">
-                            <a href="{% url 'zeraPortal:report_generator' %}"><i class="fa fa-pie-chart"></i><span>Reports</span>
+
+                        <li class="{% if request.path == '/noic/staff/' %} active {% endif %}">
+                            <a href="{% url 'noic:staff' %}"><i class="fa fa-users"></i><span>Staff Management</span>
                             </a>
                         </li>
-                        <li class="nav-item {% if request.path == '/zeraPortal/suspicious_behavior/' %} active {% endif %} ">
-                            <a href="{% url 'zeraPortal:suspicious_behavior' %}"><i class="fa fa-support"></i><span>Suspicious Activity</span>
+
+                        <li class="nav-item {% if request.path == '/noic/statistics/' %} active {% endif %}">
+                            <a href="{% url 'noic:statistics' %}"><i class="fa fa-line-chart"></i><span>Statistics</span>
                             </a>
                         </li>
-                        <li class="nav-item {% if request.path == '/zeraPortal/desperate-regions/' %} active {% endif %} ">
-                            <a href="{% url 'zeraPortal:desperate-regions' %}"><i class="fa fa-sticky-note"></i><span>Desperate Regions</span>
+
+                        <li class="nav-item {% if request.path == '/noic/reports/' %} active {% endif %}">
+                            <a href="{% url 'noic:report_generator' %}"><i class="fa fa-cogs"></i><span>Reports</span>
                             </a>
                         </li>
-                        <li class="nav-item {% if request.path == '/zeraPortal/profile/' %} active {% endif %}">
-                            <a href="{% url 'zeraPortal:profile' %} "><i class="fa fa-user"></i><span>User Profile</span>
+                       
+                        <li class="nav-item {% if request.path == '/noic/profile/' %} active {% endif %}">
+                            <a href="{% url 'noic:profile' %} "><i class="fa fa-user"></i><span>User Profile</span>
                             </a>
                         </li>
                         <li class="">
@@ -208,9 +218,8 @@
     
     
                     </ul>
-                    
-        </div>
-    </aside>
+                </div> <!-- /.sidebar -->
+            </aside>
 
 
 
@@ -280,24 +289,24 @@
     <!-- Begining of Stats Cards Box  -->
     <div class="row">
         <!-- Stock Section -->
-        <!-- <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
                   <div class="items pull-left">
                     <i class="fa fa-suitcase fa-2x"></i>
-                    <h4>Current Stock</h4>
+                    <h4>Current Stock <i style="font-weight: bolder;font-size:15px;">(USD)</i></h4>
                 </div>
                 
                     <div class="statistic-box">
                           <div class="row" style="padding-bottom: 10px;">
                             <h2 class="card-title" style="font-size: 1em;">Diesel : 
-                              <span class="count-number">{{diesel}}</span>
+                              <span class="count-number">{{unallocated_diesel_usd}}</span>
                               <small>L</small>
                             </h2>
                           </div> 
                           <div class="row"> 
                           <h2 class="card-title" style="font-size: 1em;">Petrol : 
-                            <span class="count-number">{{petrol}}</span>
+                            <span class="count-number">{{unallocated_petrol_usd}}</span>
                             <small>L</small>
                           </h2>
                           </div>
@@ -308,133 +317,141 @@
 
                 
             </div> 
-        </div> -->
+        </div>
         <!-- End of Stock section -->
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+            <div class="panel panel-bd cardbox">
+                <div class="panel-body">
+                  <div class="items pull-left">
+                    <i class="fa fa-suitcase fa-2x"></i>
+                    <h4>Current Stock <i style="font-weight: bolder; font-size: 15px;">(ZWL)</i></h4>
+                </div>
+                
+                    <div class="statistic-box">
+                          <div class="row" style="padding-bottom: 10px;">
+                            <h2 class="card-title" style="font-size: 1em;">Diesel : 
+                              <span class="count-number">{{unallocated_diesel_zwl}}</span>
+                              <small>L</small>
+                            </h2>
+                          </div> 
+                          <div class="row"> 
+                          <h2 class="card-title" style="font-size: 1em;">Petrol : 
+                            <span class="count-number">{{unallocated_petrol_zwl}}</span>
+                            <small>L</small>
+                          </h2>
+                          </div>
+                        
+                    </div>
+                    
+                </div>
+
+                
+            </div> 
+        </div>
         
         <!-- Revenue Section -->
-        <!-- <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
                     <div class="statistic-box">
-                        <h2><span style="font-size: 20px;">{{revenue}}</span>
+                        <h2><span style="font-size: 20px;">{{total_allocations_quantity}}<i style="font-size:14px; font-weight:bolder;">(l)</i></span>
                         </h2>
                     </div>
                     <div class="items pull-left">
-                        <i class="fa fa-money fa-2x"></i>
-                        <h4>Revenue</h4>
+                         <i class="fa fa-flag fa-2x" aria-hidden="true"></i>
+                        <h4>Allocations</h4>
                     </div>
                 </div>
             </div>
-        </div> -->
+        </div>
         <!-- End of Revenue section -->
 
-        <!-- Company Pop Section -->
-        <!-- <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+        
+
+        
+
+       
+
+        <!-- Transaction Completion section -->
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
                     <div class="statistic-box">
-                        <h2><span style="font-size: 20px;">{{number_of_companies}}</span>
+                        <h2><span style="font-size: 20px;">{{orders_complete_percentage}}</span>
                         </h2>
                     </div>
                     <div class="items pull-left">
-                        <i class="fa fa-building fa-2x"></i>
-                        <h4>Companies Pop.</h4>
+                    <i class="fa fa-percent fa-2x"></i>
+                    <h4>Orders Fulfilled</h4>
                     </div>
                 </div>
             </div>
-        </div> -->
-        <!-- End of Pop section -->
+        </div>
+        <!-- End of Rating section -->
 
-        <!-- Depots Pop -->
-        <!-- <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+        <!-- End of Our Offers section -->
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
                     <div class="statistic-box">
-                        <h2><span style="font-size: 20px;">{{number_of_depots}}</span>
+                        <h2><span class="count-number" style="font-size: 20px;">{{orders_this_week_count}}</span>
                         </h2>
                     </div>
                     <div class="items pull-left">
-                        <i class="fa fa-book fa-2x"></i>
-                        <h4> Depots Pop.</h4>
+                    <i class="fa fa-paper-plane fa-2x"></i>
+                    <h4>Orders<i style="font-weight: lighter;"> (This Week)</i>
+                    </h4>
                     </div>
                 </div>
             </div>
-        </div> -->
-        <!-- End of Depots Pop section -->
+        </div>
+        <!-- End of Offer section -->
 
-        <!-- Staff section -->
+        <!-- End of New Orders section -->
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+            <div class="panel panel-bd cardbox">
+                <div class="panel-body">
+                    <div class="statistic-box">
+                        <h2><span class="count-number" style="font-size: 20px;">{{orders_number}}</span>
+                        </h2>
+                    </div>
+                    <div class="items pull-left">
+                    <i class="fa fa-paper-plane fa-2x"></i>
+                    <h4>Orders<i style="font-weight: lighter;"> (Total)</i></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Rating section -->
+
         <!-- <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
             <div class="panel panel-bd cardbox">
                 <div class="panel-body">
                   <div class="items pull-left">
-                    <i class="fa fa-book fa-2x"></i>
-                    <h4>Service Stations Pop.</h4>
-                    </div>
+                    <i class="fa fa-suitcase fa-2x"></i>
+                    <h4>Current Stock (<i style="font-weight: bolder;">ZWL)</i></h4>
+                </div>
+                
                     <div class="statistic-box">
-                      <div>
-                        <h2 class="card-title" style="font-size: 1em;"> 
-                          {{number_of_s_stations}}
-                        </h2>
-                      </div> 
-                      
+                          <div class="row" style="padding-bottom: 10px;">
+                            <h2 class="card-title" style="font-size: 1em;">Diesel : 
+                              <span class="count-number">{{unallocated_diesel_zwl}}</span>
+                              <small>L</small>
+                            </h2>
+                          </div> 
+                          <div class="row"> 
+                          <h2 class="card-title" style="font-size: 1em;">Petrol : 
+                            <span class="count-number">{{unallocated_petrol_zwl}}</span>
+                            <small>L</small>
+                          </h2>
+                          </div>
+                        
+                    </div>
                     
-                    </div>
-                    
                 </div>
-            </div>
+                
+            </div> 
         </div> -->
-        <!-- End of Staff section -->
-
-        <!-- Transaction Completion section -->
-        <!-- <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
-            <div class="panel panel-bd cardbox">
-                <div class="panel-body">
-                    <div class="statistic-box">
-                        <h2><span style="font-size: 20px;">{{inactive_depots}}</span>
-                        </h2>
-                    </div>
-                    <div class="items pull-left">
-                    <i class="fa fa-book fa-2x"></i>
-                    <h4>Inactive Depots</h4>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        <!-- End of Rating section -->
-
-        <!-- End of Registration Completion section -->
-        <!-- <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
-            <div class="panel panel-bd cardbox">
-                <div class="panel-body">
-                    <div class="statistic-box">
-                        <h2><span style="font-size: 20px;">{{approval_percentage}}</span>
-                        </h2>
-                    </div>
-                    <div class="items pull-left">
-                    <i class="fa fa-check-circle fa-2x"></i>
-                    <h4>Approval Rate</h4>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        <!-- End of Offer section -->
-
-        <!-- End of New Orders section -->
-        <!-- <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
-            <div class="panel panel-bd cardbox">
-                <div class="panel-body">
-                    <div class="statistic-box">
-                        <h2><span class="count-number" style="font-size: 20px;">{{inactive_stations}}</span>
-                        </h2>
-                    </div>
-                    <div class="items pull-left">
-                    <i class="fa fa-book fa-2x"></i>
-                    <h4>Inactive Stations</h4>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        <!-- End of Rating section -->
 
     </div>
     <!-- End Of Stats Card -->
@@ -459,7 +476,7 @@
     
 <div class="row" style="margin-top: 50px;">
         <!-- datamap -->
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6  lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="sWzF7tcsBv">  
+        <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6  lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="sWzF7tcsBv">  
             <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="sWzF7tcsBv" data-index="0">
                 <div class="panel-heading ui-sortable-handle">
                     <div class="panel-title" style="max-width: calc(100% - 180px);">
@@ -471,14 +488,14 @@
                 </div>
             </div>
             
-        </div>
+        </div> -->
         
         <!-- Bar Chart -->
-        <div class="col-xs-12 col-sm-12 col-md-6 lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="Xm8QfpR2Ps">
+        <div class="col-xs-12 col-sm-12 col-md-12 lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="Xm8QfpR2Ps">
             <div class="panel panel-bd lobidisable lobipanel lobipanel-sortable" data-inner-id="Xm8QfpR2Ps" data-index="0">
                 <div class="panel-heading ui-sortable-handle">
                     <div class="panel-title" style="max-width: calc(100% - 90px);">
-                        <h4>Monthly Sales</h4>
+                        <h4>Monthly Orders </h4>
                     </div>
                 <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
                 <div class="panel-body"><iframe class="chartjs-hidden-iframe" tabindex="-1" style="display: block; overflow: hidden; border: 0px; margin: 0px; top: 0px; left: 0px; bottom: 0px; right: 0px; height: 100%; width: 100%; position: absolute; pointer-events: none; z-index: -1;"></iframe>
@@ -488,77 +505,8 @@
         </div>
 </div>
 
-<div class="row" style="margin-top: 50px;">
-        <!-- Sales Volume By City -->
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6  lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="sWzF7tcsBv">  
-            <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="sWzF7tcsBv" data-index="0">
-                <div class="panel-heading ui-sortable-handle">
-                    <div class="panel-title" style="max-width: calc(100% - 180px);">
-                        <h4>Sales By City</h4>
-                    </div>
-                <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="editTitle" data-tooltip="Edit title" data-toggle="tooltip" data-title="Edit title" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-pencil"></i><span class="control-title">Edit title</span></a></li><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="reload" data-tooltip="Reload" data-toggle="tooltip" data-title="Reload" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-reload"></i><span class="control-title">Reload</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li><li><a data-func="close" data-tooltip="Close" data-toggle="tooltip" data-title="Close" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-close"></i><span class="control-title">Close</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
-                <div class="panel-body"><iframe class="chartjs-hidden-iframe" tabindex="-1" style="display: block; overflow: hidden; border: 0px; margin: 0px; top: 0px; left: 0px; bottom: 0px; right: 0px; height: 100%; width: 100%; position: absolute; pointer-events: none; z-index: -1;"></iframe>
-                    <canvas id="salesChart" height="407" width="611" style="display: block; width: 611px; height: 407px;"></canvas>
-                </div>
-            </div>
-            
-        </div>
-        <!-- End of Sales Vol BY City -->
-        <!-- Desperate Areas -->
-        <div class="col-xs-12 col-sm-6 lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="usihNsVGQE">
-            <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="usihNsVGQE" data-index="0" style="height: 349px;">
-                <div class="panel-heading ui-sortable-handle">
-                    <div class="panel-title" style="max-width: calc(100% - 180px);">
-                        <h4>Desperate Regions </h4>
-                    </div>
-                <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="editTitle" data-tooltip="Edit title" data-toggle="tooltip" data-title="Edit title" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-pencil"></i><span class="control-title">Edit title</span></a></li><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="reload" data-tooltip="Reload" data-toggle="tooltip" data-title="Reload" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-reload"></i><span class="control-title">Reload</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li><li><a data-func="close" data-tooltip="Close" data-toggle="tooltip" data-title="Close" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-close"></i><span class="control-title">Close</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
-                <div class="panel-body">
-                    <div class="row" style="margin-top: 2px;margin-bottom: 15px;">
-                        <div class="panel-title col-md-3" style="max-width: calc(100% - 180px);">
-                            <a href="{% url 'zeraPortal:desperate-regions'%}" class="btn btn-purple btn-sm" style="color: white;">View All </a>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table id="dataTableExample2" class="table table-bordered table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th>City</th>
-                                    <th>Deficit</th>
-                                    
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% if final_desperate_cities%}
-                                    {% for city, deficit in final_desperate_cities%}  
-                                        <td>{{city}}</td>
-                                        <td>{{deficit}}</td>
-                                    {% endfor %}
-                                {% else %}
-                                <p>No Data To Show</p>
-                                {% endif %}
-                                        
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-         </div>
-        <!--  -->
 
-</div>
-         <!-- Radar Chart -->
-        <div class="col-xs-12 col-sm-12 col-md-6 lobipanel-parent-sortable ui-sortable hide" data-lobipanel-child-inner-id="Y7WIaCX9ws">
-            <div class="panel panel-bd lobidisable lobipanel lobipanel-sortable" data-inner-id="Y7WIaCX9ws" data-index="0">
-                <div class="panel-heading ui-sortable-handle">
-                    <div class="panel-title" style="max-width: calc(100% - 90px);">
-                        <h4>Top Contributors</h4>
-                    </div>
-                <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
-                <div class="panel-body"><iframe class="chartjs-hidden-iframe" tabindex="-1" style="display: block; overflow: hidden; border: 0px; margin: 0px; top: 0px; left: 0px; bottom: 0px; right: 0px; height: 100%; width: 100%; position: absolute; pointer-events: none; z-index: -1;"></iframe>
-                    <canvas id="radarChart" height="407" width="100%" style="display: block; width: 611px; height: 407px;"></canvas>
-                </div>
-            </div>
-        </div>
+         
 
         <div class="row">
             <!-- <div class="col-xs-12 col-sm-12 lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="veKF9LUXFI">
@@ -575,7 +523,7 @@
                     </div>
                 </div>
             </div> -->
-            <div class="col-xs-12 col-sm-12 lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="veKF9LUXFI">
+            <!-- <div class="col-xs-12 col-sm-12 lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="veKF9LUXFI">
                 <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="veKF9LUXFI" data-index="0">
                     <div class="panel-heading ui-sortable-handle">
                         <div class="panel-title" style="max-width: calc(100% - 180px);">
@@ -626,7 +574,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div> 
         
     </div> <!-- /.row -->
@@ -634,92 +582,12 @@
   
   <section class="content">
       
-    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
-      <div class="panel-heading ui-sortable-handle">
-          <div class="btn-group"> 
-              <h4>Top Commercial Buyers</h4> 
-          </div>
-      <div class="dropdown">
-          <ul class="dropdown-menu dropdown-menu-right">
-             
-            
-          </ul>
-          <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
-          </div>
-          </div>
-          </div>       
-          <div class="panel-body">
-        
-                  {% if clients %}
-                  <div class="table-responsive">
-                    <table id="clients_table" class="table table-striped table-bordered" style="width:100%">
-                        <thead>
-                            <tr>
-                              <th>
-                                Name
-                              </th>
-                              
-                              <th>
-                                  Address 
-                                </th>
-                                
-                                  <th>
-                                    Industry
-                                  </th>
-                                <th>
-                                    Total Value 
-                                  </th>
-                                <th>
-                                  No Of Transactions
-                                  </th>
-                                  <th>
-                                    
-                                  </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for client in clients%}
-                            <tr>
-                              <td>
-                                {{client.company.name}}
-                                </td>
-                              
-                              <td>{{client.company.address}}</td>
-                              <td>{{client.company.industry}}</td>
-                              <td>$ {{client.total_revenue|stringformat:".2f"}}</td>
-                              <td>{{client.number_of_trans}}</td>
-                              
-                              <td style="width: 13%;">
-                                  <div>
-                                        <form method="POST" action="{% url 'zeraPortal:clients_history' client.id %}">
-                                          {% csrf_token %}
-                                          <input type="hidden" name="report_type" value="Complete">
-                      
-
-                                          <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
-                                            View History
-                                          </button>
-                                        </form>
-                                      
-                                  </div>
-                                </td>
-                          </tr>
-                            {% endfor %}
-                        </tbody>
-                        </table>
-                  </div>
-                  {% else %}
-                  <p>No Data Available</p>
-                  {% endif %}
-
-
-          </div>
-    </div>
+    
 
         <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
           <div class="panel-heading ui-sortable-handle">
               <div class="btn-group"> 
-                  <h4>Top Stations</h4> 
+                  <h4>National - Top Depots</h4> 
               </div>
           <div class="dropdown">
               <ul class="dropdown-menu dropdown-menu-right">
@@ -732,7 +600,7 @@
               </div>       
               <div class="panel-body">
             
-                      {% if sorted_subs %}
+                      {% if clients %}
                       <div class="table-responsive">
                         <table id="subsidiaries_transactions" class="table table-striped table-bordered" style="width:100%">
                             <thead>
@@ -755,8 +623,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                              {% for sub in sorted_subs %}
-                              {% if sub.tran_value > 0 %}
+                              {% for sub in clients %}
+                              {% if sub.total_revenue > 0 %}
                                 <tr>
                                     <td>
                                       {% if forloop.counter == 1%}
@@ -769,8 +637,8 @@
                                     </td>
                                     
                                     <td>{{sub.location}}</td>
-                                    <td>$ {{sub.tran_value|stringformat:".2f"}}</td>
-                                    <td>{{sub.tran_count}}</td>
+                                    <td>$ {{sub.total_revenue|stringformat:".2f"}}</td>
+                                    <td>{{sub.number_of_orders}}</td>
                                     
                                     <td style="width: 13%;">
                                         <div>
@@ -790,7 +658,7 @@
                                 </tr>
                               {% else %}
                               <p  style="padding-bottom: 10px; color: #4c59a7;">
-                                Non Cash Transaction
+                                No Complete Orders
                               </p>    
                               {% endif %}  
                             
@@ -799,7 +667,7 @@
                             </table>
                       </div>
                       {% else %}
-                      <p>No Sales Data Available</p>
+                      <p>No Data Available</p>
                       {% endif %}
     
     
