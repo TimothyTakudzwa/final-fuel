@@ -171,14 +171,20 @@
                     <!-- sidebar menu -->
                     <ul class="sidebar-menu">
                         <li class="nav-item {% if request.path == '/zeraPortal/dashboard/' %} active {% endif %}">
-                            <a href="{% url 'zeraPortal:dashboard' %}"><i class="fa fa-book"></i><span>Fuel Companies</span>
+                            <a href="{% url 'zeraPortal:dashboard' %}"><i class="fa fa-book"></i><span>Dashboard</span>
+                            </a>
+                        </li>
+    
+                        <li class="nav-item {% if request.path == '/zeraPortal/noic_fuel/' %} active {% endif %}">
+                            <a href="{% url 'zeraPortal:noic_fuel' %}"><i class="fa fa-binoculars"></i><span>NOIC Capacity & Allocations </span>
                             </a>
                         </li>
                        
                         <li class="nav-item {% if request.path == '/zeraPortal/company_fuel/' %} active {% endif %}">
-                            <a href="{% url 'zeraPortal:company_fuel' %}"><i class="fa fa-binoculars"></i><span>Fuel Allocations & Transactions</span>
+                            <a href="{% url 'zeraPortal:company_fuel' %}"><i class="fa fa-binoculars"></i><span>Company Allocations & Sales</span>
                             </a>
                         </li>
+                       
                         <li class="nav-item {% if request.path == '/zeraPortal/statistics/' %} active {% endif %}">
                             <a href="{% url 'zeraPortal:statistics' %}"><i class="fa fa-line-chart"></i><span>Statistics</span>
                             </a>
@@ -264,7 +270,7 @@
 <div class="header-title" style="margin-left: 0px;">
 
     <h1> Statistics </h1>
-    <small>Fuel Finder Zimbabwe</small>
+    <small>Fuel Management System</small>
     <ol class="breadcrumb hidden-xs">
         <li><a href="{% url 'users:allocate' %}"><i class="pe-7s-home"></i> Home</a></li>
         <li class="active">Statistics</li>

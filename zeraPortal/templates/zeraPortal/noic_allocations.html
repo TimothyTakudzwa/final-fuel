@@ -30,7 +30,7 @@
     <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
         <div class="panel-heading ui-sortable-handle">
             <div class="btn-group">
-                <h4>NOIC Sord Allocations</h4>
+                <h4>NOIC Sord Allocations for {{depot.name}}</h4>
             </div>
             <div class="dropdown">
                 <ul class="dropdown-menu dropdown-menu-right">
@@ -88,14 +88,28 @@
                             <td>{{sord.currency}}</td>
                             <td>{{sord.quantity|intcomma}}</td>
                             <td>{{sord.price}}</td>
-                            <td>
-                                
-                            <div class="btn-group">
-                                <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
-                                <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="" > <i class="fa fa-download" style="font-size:20px"></i> Delivery Note</a>
-                            </div>
-                                
-                            </td>
+                            {% if sord.release_date %}
+                                {% if sord.d_note %}
+                                <td>
+                                    
+                                <div class="btn-group">
+                                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:noic_release_note' sord.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
+                                    <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:noic_delivery_note' sord.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Delivery Note</a>
+                                </div>
+                                    
+                                </td>
+                                {% else %}
+                                <td>
+                                    
+                                    <div class="btn-group">
+                                        <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:noic_release_note' sord.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
+                                    </div>
+                                        
+                                    </td>
+                                {% endif %}
+                            {% else %}
+                            <td style="color: brown;">Documents Pending</td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>

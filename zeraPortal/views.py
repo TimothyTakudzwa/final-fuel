@@ -82,7 +82,7 @@ def noic_fuel(request):
 def noic_allocations(request, id):
     depot = NoicDepot.objects.filter(id=id).first()
     allocations = SordNationalAuditTrail.objects.filter(assigned_depot=depot).all()
-    return render(request, 'zeraPortal/noic_allocations.html', {'allocations': allocations})
+    return render(request, 'zeraPortal/noic_allocations.html', {'allocations': allocations, 'depot': depot})
 
 
 def edit_company(request, id):
@@ -366,7 +366,7 @@ def view_delivery_note(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document Not Found')
-        redirect('transactions')
+        redirect(f'/zeraPortal/payment_and_schedules/{delivery.transaction.id}')
     return response
 
 
@@ -378,6 +378,28 @@ def view_release_note(request, id):
         'payment': payment
     }
     return render(request, 'zeraPortal/release_note.html', context=context)
+
+
+def noic_release_note(request, id):
+    allocation = SordNationalAuditTrail.objects.filter(id=id).first()
+    allocation.admin = User.objects.filter(company=allocation.company).filter(user_type='S_ADMIN').first()
+    allocation.rep = request.user
+    context = {
+        'allocation': allocation
+    }
+    return render(request, 'zeraPortal/noic_release_note.html', context=context)
+
+
+def noic_delivery_note(request, id):
+    delivery = SordNationalAuditTrail.objects.filter(id=id).first()
+    if delivery:
+        filename = delivery.d_note.name.split('/')[-1]
+        response = HttpResponse(delivery.d_note, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        redirect(f'/zeraPortal/noic_allocations/{delivery.assigned_depot.id}')
+    return response
 
 def unblock_licence(request, id):
     subsidiary = Subsidiaries.objects.filter(id=id).first()
