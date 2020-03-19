@@ -130,6 +130,46 @@
                                         method="POST">
                                         {% csrf_token %}
                                         <div class="row">
+                                            <div class="form-group col-md-6">
+                                             <label>Application Form</label>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                             <a class="btn btn-info btn-sm" href="{% url 'zeraPortal:download_application' subsidiary.id %}" >Download</a>
+                                           </div>
+                                            </div>
+                                            <div class="row">
+                                           <div class="form-group col-md-6">
+                                             <label>Fire Brigade Doc</label>
+                                             </div>
+                                             <div class="form-group col-md-6">
+                                             <a class="btn btn-info btn-sm" href="{% url 'zeraPortal:download_fire_brigade_doc' subsidiary.id %}" >Download</a>
+                                           </div>
+                                            </div>
+                                            <div class="row">
+                                           <div class="form-group col-md-6">
+                                             <label>EMA Approval Doc</label>
+                                             </div>
+                                             <div class="form-group col-md-6">
+                                             <a class="btn btn-info btn-sm" href="{% url 'zeraPortal:download_ema' subsidiary.id %}" >Download</a>
+                                           </div>
+                                            </div>
+                                            <div class="row">
+                                           <div class="form-group col-md-6">
+                                             <label>Council Approval Doc</label>
+                                             </div>
+                                             <div class="form-group col-md-6">
+                                             <a class="btn btn-info btn-sm" href="{% url 'zeraPortal:download_council' subsidiary.id %}" >Download</a>
+                                           </div>
+                                            </div>
+                                            <div class="row">
+                                           <div class="form-group col-md-6">
+                                             <label>Proof of Paymnet</label>
+                                             </div>
+                                             <div class="form-group col-md-6">
+                                             <a class="btn btn-info btn-sm" href="{% url 'zeraPortal:download_pop' subsidiary.id %}" >Download</a>
+                                           </div>
+                                            </div>
+                                        <div class="row">
                                         <div class="form-group col-md-6">
                                             <label>Old Licence</label>
                                             <input type="text" name="license_num" class="form-control" value="{{subsidiary.license_num}}" disabled/>
@@ -225,27 +265,47 @@
                                <form action="{% url 'zeraPortal:add_licence' subsidiary.id %}"
                                    method="POST">
                                    {% csrf_token %}
+                                   <div class="row">
                                    <div class="form-group col-md-6">
                                     <label>Application Form</label>
+                                   </div>
+                                   <div class="form-group col-md-6">
                                     <a class="btn btn-info btn-sm" href="{% url 'zeraPortal:download_application' subsidiary.id %}" >Download</a>
                                   </div>
+                                   </div>
+                                   <div class="row">
                                   <div class="form-group col-md-6">
                                     <label>Fire Brigade Doc</label>
+                                    </div>
+                                    <div class="form-group col-md-6">
                                     <a class="btn btn-info btn-sm" href="{% url 'zeraPortal:download_fire_brigade_doc' subsidiary.id %}" >Download</a>
                                   </div>
+                                   </div>
+                                   <div class="row">
                                   <div class="form-group col-md-6">
                                     <label>EMA Approval Doc</label>
+                                    </div>
+                                    <div class="form-group col-md-6">
                                     <a class="btn btn-info btn-sm" href="{% url 'zeraPortal:download_ema' subsidiary.id %}" >Download</a>
                                   </div>
+                                   </div>
+                                   <div class="row">
                                   <div class="form-group col-md-6">
                                     <label>Council Approval Doc</label>
+                                    </div>
+                                    <div class="form-group col-md-6">
                                     <a class="btn btn-info btn-sm" href="{% url 'zeraPortal:download_council' subsidiary.id %}" >Download</a>
                                   </div>
+                                   </div>
+                                   <div class="row">
                                   <div class="form-group col-md-6">
                                     <label>Proof of Paymnet</label>
+                                    </div>
+                                    <div class="form-group col-md-6">
                                     <a class="btn btn-info btn-sm" href="{% url 'zeraPortal:download_pop' subsidiary.id %}" >Download</a>
                                   </div>
-                                  <div class="form-group col-md-6">
+                                   </div>
+                                  <div class="form-group col-md-12">
                                     <input type="text" name="license_num" placeholder="License Number" class="form-control" required/>
                                 </div>
                                   
@@ -256,7 +316,6 @@
                                <button type="submit" class="btn btn-primary col-sm-6">Approve</button>
                            </div>
                                    </form>
-                               </form>
                        </div>
                    </div>
                </div>
