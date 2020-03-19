@@ -27,6 +27,7 @@ from fuelUpdates.models import SordCompanyAuditTrail
 from users.models import SordActionsAuditTrail
 from accounts.models import AccountHistory
 from users.views import message_is_sent
+from national.models import DepotFuelUpdate, NoicDepot, SordNationalAuditTrail
 
 user = get_user_model()
 
@@ -62,6 +63,27 @@ def dashboard(request):
             messages.warning(request, 'License number already exists!!!')
             return redirect('zeraPortal:dashboard')
     return render(request, 'zeraPortal/companies.html', {'companies': companies, 'zimbabwean_towns':zimbabwean_towns})
+
+
+def noic_fuel(request):
+    # capacities = NationalFuelUpdate.objects.all()
+    depots = DepotFuelUpdate.objects.all()
+    noic_usd_diesel = 0
+    noic_rtgs_diesel = 0
+    noic_usd_petrol = 0
+    noic_rtgs_petrol = 0
+    for depot in depots:
+        noic_usd_diesel += depot.usd_diesel
+        noic_rtgs_diesel += depot.rtgs_diesel
+        noic_usd_petrol += depot.usd_petrol
+        noic_rtgs_petrol += depot.rtgs_petrol
+
+    return render(request, 'zeraPortal/noic_fuel.html', {'depots': depots, 'noic_usd_diesel':noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel, 'noic_usd_petrol': noic_usd_petrol, 'noic_rtgs_petrol': noic_rtgs_petrol})
+
+def noic_allocations(request, id):
+    depot = NoicDepot.objects.filter(id=id).first()
+    allocations = SordNationalAuditTrail.objects.filter(assigned_depot=depot).all()
+    return render(request, 'zeraPortal/noic_allocations.html', {'allocations': allocations, 'depot': depot})
 
 
 def edit_company(request, id):
@@ -325,10 +347,6 @@ def block_licence(request, id):
         return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
 
 
-def noic_fuel(request):
-    return render(request, 'zeraPortal/noic_fuel.html')
-
-
 def download_proof(request, id):
     document = AccountHistory.objects.filter(id=id).first()
     if document:
@@ -338,6 +356,50 @@ def download_proof(request, id):
     else:
         messages.warning(request, 'Document Not Found')
         return redirect(f'/zeraPortal/payment_and_schedules/{document.transaction.id}')
+    return response
+
+
+def view_delivery_note(request, id):
+    delivery = AccountHistory.objects.filter(id=id).first()
+    if delivery:
+        filename = delivery.delivery_note.name.split('/')[-1]
+        response = HttpResponse(delivery.delivery_note, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        redirect(f'/zeraPortal/payment_and_schedules/{delivery.transaction.id}')
+    return response
+
+
+
+def view_release_note(request, id):
+    payment = AccountHistory.objects.filter(id=id).first()
+    payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
+    context = {
+        'payment': payment
+    }
+    return render(request, 'zeraPortal/release_note.html', context=context)
+
+
+def noic_release_note(request, id):
+    allocation = SordNationalAuditTrail.objects.filter(id=id).first()
+    allocation.admin = User.objects.filter(company=allocation.company).filter(user_type='S_ADMIN').first()
+    allocation.rep = request.user
+    context = {
+        'allocation': allocation
+    }
+    return render(request, 'zeraPortal/noic_release_note.html', context=context)
+
+
+def noic_delivery_note(request, id):
+    delivery = SordNationalAuditTrail.objects.filter(id=id).first()
+    if delivery:
+        filename = delivery.d_note.name.split('/')[-1]
+        response = HttpResponse(delivery.d_note, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        redirect(f'/zeraPortal/noic_allocations/{delivery.assigned_depot.id}')
     return response
 
 def unblock_licence(request, id):

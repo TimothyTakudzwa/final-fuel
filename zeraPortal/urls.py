@@ -37,5 +37,9 @@ urlpatterns = [
     path('noic_fuel/', views.noic_fuel, name='noic_fuel'),
     path('edit-company-details/<int:id>', views.edit_company, name='edit-company-details'),
     path('download_proof/<int:id>', views.download_proof, name='download_proof'),
-    
+    path('view_delivery_note/<int:id>', views.view_delivery_note, name='view_delivery_note'),
+    path('view_release_note/<int:id>', views.view_release_note, name='view_release_note'),
+    path('noic_allocations/<int:id>', views.noic_allocations, name='noic_allocations'),
+    path('noic_release_note/<int:id>', views.noic_release_note, name='noic_release_note'),
+    path('noic_delivery_note/<int:id>', views.noic_delivery_note, name='noic_delivery_note')
 ]
