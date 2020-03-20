@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
+from supplier.models import UserReview
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -643,6 +644,20 @@ Transactions Operations
 
 @login_required
 def transaction(request):
+    if request.method == "POST":
+        tran = Transaction.objects.get(id=request.POST.get('transaction_id'))
+        UserReview.objects.create(
+            rater=request.user,
+            rating=int(request.POST.get('rating')),
+            company_type = 'SUPPLIER',
+            company=tran.supplier.company,
+            transaction=tran,
+            depot=Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
+            comment=request.POST.get('comment')
+        )
+        messages.success(request, 'Transaction Successfully Reviewed')
+        return redirect('transaction')
+
     today = datetime.now().strftime("%m/%d/%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
     transactions = []
@@ -650,7 +665,7 @@ def transaction(request):
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
         if delivery_sched:
             tran.delivery_sched = delivery_sched
-        tran.review = UserReview.objects.filter(transaction=tran)    
+        tran.review = UserReview.objects.filter(transaction=tran).first()   
         transactions.append(tran)
     context = {
         'transactions': transactions,

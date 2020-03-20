@@ -61,7 +61,7 @@
                             <th style="color: white;">Payments History</th>
                             <th style="color: white;width: 190px;">Action</th>
                             <th style="color: white;">Contact Person</th>
-                            <th style="color: white;">Action</th>
+                            <th style="color: white;">Rating</th>
 
 
 
@@ -102,7 +102,9 @@
                                 </td>
                                 {% else %}
                                     <td>
-                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'supplier:payment-and-release-notes' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Release Notes</a>
+                                     <a href="{%url 'supplier:payment-and-release-notes' transaction.id %}" type="button" class="btn btn-labeled btn-success m-b-5 btn-sm">
+                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Release & Notes
+                                        </a>
                                     </td>
                                 {% endif %}
                                 {% if transaction.expected == transaction.paid %}
@@ -158,8 +160,9 @@
                                 <td>
 
                                     <!--call modal-->
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{transaction.id}}">
-                                        <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
+                                    
+                                    <button  type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{transaction.id}}">
+                                        <span class="btn-label"><i class="fa fa-eye"></i></span>Details
                                     </button>
                                     <!--view details-->
                                     <div class="modal fade modal-success in" id="view{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -193,8 +196,75 @@
 
                                 </td>
                                 <td>
-                                    
+                                    {% if transaction.is_complete and not transaction.review %}
+                                        <a class="btn btn-danger btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
+                                            Rate {{transaction.supplier.company.name}}
+                                        </a>
+                                    {% elif not transaction.is_complete %}
+                                        Incomplete
+                                    {% else %}
+                                        {% if transaction.review.rating == 0%}
+                                            <p style="text-align: center;">-</p>
+                                        {% elif transaction.review.rating == 1%}
+                                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        {% elif transaction.review.rating == 2%}
+                                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        {% elif transaction.review.rating == 3%}
+                                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        {% elif transaction.review.rating == 4%}
+                                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        {% elif transaction.review.rating == 5%}
+                                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                                        
+                                        {% endif%}
+                                    {% endif %}
+
                                 </td>
+
+                                <div class="modal fade modal-success in" id="review_{{transaction.id}}" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <span class="modal-title" style= "color:whitesmoke" >Review {{transaction.supplier}}</span>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            </div>
+                                            <div class="modal-body" style= "background:white">
+
+                                                <form method="POST" action="">
+                                                    {% csrf_token %}
+                                                    <input type="text" name="transaction_id" value="{{transaction.id}}" hidden/>
+                                                    <div class="form-group">
+                                                        <label>Rating</label>
+                                                        <select class="form-control" name="rating" class="browser-default custom-select" id="report_options">
+                                                            <option value="1" style="color: goldenrod;">*</option>
+                                                            <option value="2">**</option>
+                                                            <option value="3">***</option>
+                                                            <option value="4">****</option>
+                                                            <option value="5">*****</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Comment</label>
+                                                        <input type="text" name="comment" class="form-control"/>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <input class="btn btn-info" type="submit" value="Submit">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </tr>
                             <!--New Schedule Modal-->
                             <div class="modal fade modal-success in" id="schedule{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -294,7 +364,7 @@
                             </div>
                             <!--End Schedule Modal-->
 
-z
+
                             <div class="modal fade modal-sucess in" id="create_schedule{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">

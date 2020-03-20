@@ -612,6 +612,7 @@ def transactions(request):
             UserReview.objects.create(
                 rater=request.user,
                 rating=int(request.POST.get('rating')),
+                company_type = 'SUPPLIER',
                 company=tran.supplier.company,
                 transaction=tran,
                 depot=Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
