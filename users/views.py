@@ -71,10 +71,15 @@ functions for allocating fuel to depots and stations
 def allocate(request):
     allocates = []
     fuel_object = DepotFuelUpdate.objects.first()
-    diesel_rtgs_price = fuel_object.rtgs_diesel_price
-    diesel_usd_price = fuel_object.usd_diesel_price
-    petrol_rtgs_price = fuel_object.rtgs_petrol_price
-    petrol_usd_price = fuel_object.usd_petrol_price
+    diesel_rtgs_price = 0
+    diesel_usd_price = 0
+    petrol_rtgs_price = 0
+    petrol_usd_price = 0
+    if fuel_object is not None:
+        diesel_rtgs_price = fuel_object.rtgs_diesel_price
+        diesel_usd_price = fuel_object.usd_diesel_price
+        petrol_rtgs_price = fuel_object.rtgs_petrol_price
+        petrol_usd_price = fuel_object.usd_petrol_price
     depots = NoicDepot.objects.all()
     company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
     subs_total_diesel_capacity = 0

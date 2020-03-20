@@ -11,5 +11,8 @@ urlpatterns = [
     path('payment_approval/<int:id>', views.payment_approval, name='payment_approval'),
     path('download_proof/<int:id>', views.download_proof, name='download_proof'),
     path('download_d_note/<int:id>', views.download_d_note, name='download_d_note'),
-    path('profile/', views.profile, name='profile')
+    path('profile/', views.profile, name='profile'),
+    path('report_generator/', views.report_generator, name='report_generator'),
+    path('statistics/', views.statistics, name='statistics'),
+
 ]
