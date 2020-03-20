@@ -387,7 +387,7 @@
            <div class="modal-body">
 
                {% load crispy_forms_tags %}
-               <form action="{% url 'users:stations' %}" method="POST" enctype="multipart/form-data">
+               <form action="{% url 'noic:depots' %}" method="POST" enctype="multipart/form-data">
                    {% csrf_token %}
                    <div class="row">
                    <div class="form-group col-md-6">
