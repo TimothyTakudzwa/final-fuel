@@ -71,6 +71,10 @@ functions for allocating fuel to depots and stations
 def allocate(request):
     allocates = []
     fuel_object = DepotFuelUpdate.objects.first()
+    diesel_rtgs_price = 0
+    diesel_usd_price = 0
+    petrol_rtgs_price = 0
+    petrol_usd_price = 0
     if fuel_object is not None:
         diesel_rtgs_price = fuel_object.rtgs_diesel_price
         diesel_usd_price = fuel_object.usd_diesel_price
