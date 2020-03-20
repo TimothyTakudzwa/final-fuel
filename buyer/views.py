@@ -783,13 +783,14 @@ Buyer Accounts
 
 
 def accounts(request):
+    form = FuelRequestForm(request.POST)
     accounts_available = Account.objects.filter(buyer_company=request.user.company).all()
     fuel_orders = FuelRequest.objects.filter(private_mode=True).all().order_by('date')
     order_nums, latest_orders = total_requests(request.user.company)
     total_costs = transactions_total_cost(request.user)
     offers_count_all, offers_count_today = total_offers(request.user)
     return render(request, 'buyer/accounts.html',
-                  {'accounts': accounts_available, 'fuel_orders': fuel_orders, 'order_nums': order_nums,
+                  {'form': form, 'accounts': accounts_available, 'fuel_orders': fuel_orders, 'order_nums': order_nums,
                    'latest_orders': latest_orders, 'total_costs': total_costs, 'offers_count_all': offers_count_all,
                    'offers_count_today': offers_count_today})
 
@@ -812,13 +813,25 @@ def make_direct_request(request):
                 name=request.user,
                 is_direct_deal=True,
                 fuel_type=request.POST.get('fuel_type'),
-                amount=request.POST.get('quantity'),
+                amount=request.POST.get('amount'),
                 payment_method=request.POST.get('currency'),
                 delivery_method=request.POST.get('delivery_method'),
                 supplier_company=supplier.company,
                 wait=True,
                 private_mode=True,
             )
+            if fuel_request_object.delivery_method.lower() == "delivery":
+                fuel_request_object.delivery_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+            else:
+                fuel_request_object.transporter = request.POST.get('transporter')
+                fuel_request_object.truck_reg = request.POST.get('truck_reg')
+                fuel_request_object.driver = request.POST.get('driver')
+                fuel_request_object.driver_id = request.POST.get('driver_id')
+            fuel_request_object.storage_tanks = request.POST.get('storage_tanks')
+            fuel_request_object.pump_required = True if request.POST.get('pump_required') == "on" else False
+            fuel_request_object.dipping_stick_required = True if request.POST.get('dipping_stick_required') == "on" else False
+            fuel_request_object.meter_required = True if request.POST.get('meter_required') == "on" else False
+            fuel_request_object.save()
             messages.success(request, f"Successfully Made An Order to {supplier.company.name}")
             message = f'{request.user.company.name.title()} made a request of ' \
                       f'{fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()}'
@@ -864,13 +877,25 @@ def make_private_request(request):
             name=request.user,
             is_direct_deal=False,
             fuel_type=request.POST.get('fuel_type'),
-            amount=request.POST.get('quantity'),
+            amount=request.POST.get('amount'),
             payment_method=request.POST.get('currency'),
             delivery_method=request.POST.get('delivery_method'),
             # supplier=account.supplier_company,
             private_mode=True,
             wait=True,
         )
+        if fuel_request_object.delivery_method.lower() == "delivery":
+            fuel_request_object.delivery_address = request.POST.get('s_number') + " " + request.POST.get('s_name') + " " + request.POST.get('s_town')
+        else:
+            fuel_request_object.transporter = request.POST.get('transporter')
+            fuel_request_object.truck_reg = request.POST.get('truck_reg')
+            fuel_request_object.driver = request.POST.get('driver')
+            fuel_request_object.driver_id = request.POST.get('driver_id')
+        fuel_request_object.storage_tanks = request.POST.get('storage_tanks')
+        fuel_request_object.pump_required = True if request.POST.get('pump_required') == "on" else False
+        fuel_request_object.dipping_stick_required = True if request.POST.get('dipping_stick_required') == "on" else False
+        fuel_request_object.meter_required = True if request.POST.get('meter_required') == "on" else False
+        fuel_request_object.save()
         message = f'{request.user.company.name.title()} made a private request of' \
                   f' {fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()} '
         # Notification.objects.create(user=supplier,message=message, reference_id=fuel_request.id, action="new_request")

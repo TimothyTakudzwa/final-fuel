@@ -46,7 +46,7 @@
            
             <div class="table-responsive">
                 <table id="allocations" class="table table-striped table-bordered" style="width:100%">
-                    <thead>
+                    <thead style="background-color: grey;color: honeydew;">
                         <tr>
                             <th>
                                Date 
@@ -82,7 +82,7 @@
                         {% for sord in allocations%}
                         <tr>
                             <td>{{sord.date}}</td>
-                            <td>{{sord.sord_no}}</td>
+                            <td style="width: 8%;">{{sord.sord_no}}</td>
                             <td>{{sord.company}}</td>
 
                             {% if sord.fuel_type == 'Diesel' %}
@@ -96,7 +96,7 @@
                             <td>{{sord.currency}}</td>
                             <td>{{sord.quantity|intcomma}}</td>
                             <td>{{sord.price}}</td>
-                            <td><b style="color: rgb(7, 194, 163);">{{sord.assigned_depot.name}}</b></td>
+                            <td><b style="color: rgb(7, 194, 163);width: 8%;">{{sord.assigned_depot.name}}</b></td>
                         </tr>
                         {% endfor %}
                     </tbody>

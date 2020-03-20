@@ -1,4 +1,5 @@
 {% extends "finder/buyer_base.html" %}
+{% load crispy_forms_tags %}
 {% load humanize %}
 {% block body %}
 <section class="content-header">
@@ -46,78 +47,209 @@
     
             <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#private_order_form" style="margin-bottom: 20px;">Make Private Request</button>
 
-            <div class="modal fade modal-success in" id="private_order_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                          aria-hidden="true">
-                        <div class="modal-dialog modal-notice">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                    <span class="modal-title">Make Order Private Order</span>
-                                </div>
-                                <div class="modal-body" style="margin-bottom: 15px;">
-                                    <div class="row" style="padding-left: 15px;padding-right: 15px;">
-                                        <form action="{% url 'make_private_request' %}"
-                                             method="POST">
-                                             {% csrf_token %}
-                                             <div class="row">
-                                                <div class="form-group col-md-6">
-                                                    <label>Fuel Type</label>
-                                                    <select class="form-control" name="fuel_type" id="">
-                                                        <option>Petrol</option>
-                                                        <option>Diesel</option>
-                                                    </select>
-                                                </div>
-                                                
-                                                <div class="form-group col-md-6">
-                                                    <label>Quantity</label>
-                                                    <input type="text" name="quantity" class="form-control"  required/>
-                                                </div>
-                                            </div>    
-                                            
-                                            <div class="row">
-                                                <div class="form-group col-md-6">
-                                                    <label>Select Payment Currency</label>
-                                                    <select  name="currency" class="form-control" required>
-                                                        <option>USD</option>
-                                                        <option>RTGS</option>
-                                                        <option>Either</option>
-                                                    </select>    
-                                                </div>
+            <script>
+                $(document).ready(function () {
+                    $('#choices{{forloop.counter}}').hide();
+                    $('#choices1{{forloop.counter}}').hide();
+                    $('#truck_reg{{forloop.counter}}').show();
+                    $('#transporter{{forloop.counter}}').show();
+                    $('#driver{{forloop.counter}}').show();
+                    $('#driver_id{{forloop.counter}}').show();
+                    
 
-                                             <div class="form-group col-md-6">
-                                                <label>Pick Up Method</label>
-                                                <select  name="delivery_method" class="form-control" required>
-                                                    <option>Self Collection</option>
-                                                    <option>Delivery</option>
-                                                </select> 
-                                             </div>
+                    $('#delivery_method1{{forloop.counter}}').change(function () {
+                        if ($('#delivery_method1{{forloop.counter}} option:selected').text() == "Direct Delivery") {
+                            $('#choices1{{forloop.counter}}').show();
+                            $('#s_name1{{forloop.counter}}').attr('required', '');
+                            $('#s_number1{{forloop.counter}}').attr('required', '');
+                            $('#s_town1{{forloop.counter}}').attr('required', '');
+                            $('#truck_reg1{{forloop.counter}}').hide();
+                            $('#transporter1{{forloop.counter}}').hide();
+                            $('#driver1{{forloop.counter}}').hide();
+                            $('#driver_id1{{forloop.counter}}').hide();
+                        }
+                        else {
+                            $('#choices1{{forloop.counter}}').hide();
+                            $('#s_town1{{forloop.counter}}').removeAttr('required', '');
+                            $('#s_number1{{forloop.counter}}').removeAttr('required', '');
+                            $('#s_name1{{forloop.counter}}').removeAttr('required', '');
+                            $('#truck_reg1{{forloop.counter}}').show();
+                            $('#transporter1{{forloop.counter}}').show();
+                            $('#driver1{{forloop.counter}}').show();
+                            $('#driver_id1{{forloop.counter}}').show();
+                        }
+                    });
+                    $('#delivery_method{{forloop.counter}}').change(function () {
+                        if ($('#delivery_method{{forloop.counter}} option:selected').text() == "Delivery") {
+                            $('#choices{{forloop.counter}}').show();
+                            $('#s_name{{forloop.counter}}').attr('required', '');
+                            $('#s_number{{forloop.counter}}').attr('required', '');
+                            $('#s_town{{forloop.counter}}').attr('required', '');
+                            $('#truck_reg{{forloop.counter}}').hide();
+                            $('#transporter{{forloop.counter}}').hide();
+                            $('#driver{{forloop.counter}}').hide();
+                            $('#driver_id{{forloop.counter}}').hide();
+                        }
+                        else {
+                            $('#choices{{forloop.counter}}').hide();
+                            $('#s_town{{forloop.counter}}').removeAttr('required', '');
+                            $('#s_number{{forloop.counter}}').removeAttr('required', '');
+                            $('#s_name{{forloop.counter}}').removeAttr('required', '');
+                            $('#truck_reg{{forloop.counter}}').show();
+                            $('#transporter{{forloop.counter}}').show();
+                            $('#driver{{forloop.counter}}').show();
+                            $('#driver_id{{forloop.counter}}').show();
+                        }
+                    });
+                });
+
+                $('#pump_required').on('change', function () {
+                    $(this).val(this.checked ? "True" : "False");
+                });
+                $('#swipe').on('change', function () {
+                    $(this).val(this.checked ? "True" : "False");
+                });
+                $('#ecocash').on('change', function () {
+                    $(this).val(this.checked ? "True" : "False");
+                });
+                $('#cash').on('change', function () {
+                    $(this).val(this.checked ? "True" : "False");
+                });
+                $('#usd').on('change', function () {
+                    $(this).val(this.checked ? "True" : "False");
+                });
+
+                $('#dipping_stick_required').on('change', function () {
+                    $(this).val(this.checked ? "True" : "False");
+                });
+
+                $('#meter_required').on('change', function () {
+                    $(this).val(this.checked ? "True" : "False");
+                });
+            </script>
+                                        <div class="modal fade modal-success in" id="private_order_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog modal-notice">
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                                        <span class="modal-title" id="myModalLabel">Find Fuel</span>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form method="POST" action="{% url 'make_private_request' %}">
+                                                            {% csrf_token %}
+                                                            <div class="row form-group">
+                                                                <div class="col-sm-6">
+                                                                    {{ form.fuel_type|as_crispy_field }}
+                                                                </div>
+            
+                                                                <div class="col-sm-6">
+                                                                    {{ form.amount|as_crispy_field }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="row form-group">
+                                                                <div class="col-sm-6">
+                                                                    <label class="form-group">Select Payment Method</label>
+                                                                    <select class="form-control" name="currency">
+                                                                        <option value="USD">USD</option>
+                                                                        <option value="RTGS">RTGS</option>
+                                                                    </select>
+                                                                </div>
+            
+                                                                <div class="col-sm-6">
+                                                                    <label class="form-group">Pick Up Method</label>
+                                                                    <select id="delivery_method{{forloop.counter}}"
+                                                                            name="delivery_method" class="form-control">
+                                                                        <option value='SELF COLLECTION'>Self Collection</option>
+                                                                        <option value='DELIVERY'>Delivery</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row form-group">
+                                                                <div class="col-sm-6" id="transporter{{forloop.counter}}">
+                                                                    <label class="form-group">Transporter</label>
+                                                                    <input type="text" class="form-control" name="transporter" 
+                                                                    aria-describedby="helpId" >
+                                                                </div>
+            
+                                                                <div class="col-sm-6" id="truck_reg{{forloop.counter}}">
+                                                                    <label class="form-group">Vehicle Reg </label>
+                                                                    <input type="text" class="form-control" name="truck_reg" 
+                                                                    aria-describedby="helpId">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row form-group">
+                                                                <div class="col-sm-6" id="driver{{forloop.counter}}">
+                                                                    <label class="form-group">Driver</label>
+                                                                    <input type="text" class="form-control" name="driver" 
+                                                                    aria-describedby="helpId" >
+                                                                </div>
+            
+                                                                <div class="col-sm-6" id="driver_id{{forloop.counter}}">
+                                                                    <label class="form-group">Driver ID </label>
+                                                                    <input type="text" class="form-control" name="driver_id" 
+                                                                    aria-describedby="helpId">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" name='choices' id='choices{{forloop.counter}}'>
+                                                                <label>Delivery Address</label>
+                                                                <div class="row form-group">
+                                                                    <div class="togglebutton form-group col-sm-4">
+                                                                        <label for="">Street Number</label>
+                                                                        <input type="text" class="form-control" name="s_number" id="s_number{{forloop.counter}}"
+                                                                               aria-describedby="helpId" placeholder="">
+            
+                                                                    </div>
+                                                                    <div class="togglebutton form-group col-sm-4">
+                                                                        <label for="">Street Name</label>
+                                                                        <input type="text" class="form-control" name="s_name" id="s_name{{forloop.counter}}"
+                                                                               aria-describedby="helpId" placeholder="">
+            
+                                                                    </div>
+                                                                    <div class="togglebutton form-group col-sm-4">
+                                                                        <label for="">Location/Town</label>
+                                                                        <input type="text" class="form-control" name="s_town" id="s_town{{forloop.counter}}"
+                                                                               aria-describedby="helpId" placeholder="">
+            
+                                                                    </div>
+            
+                                                                </div>
+            
+                                                                {{ form.storage_tanks|as_crispy_field }}
+                                                                <br>
+                                                                <label>Required Equipments</label>
+                                                                <div class="row">
+                                                                    <div class="col-sm-4">
+                                                                        <input class="form-control-md" type="checkbox"
+                                                                               id="pump_required" name="pump_required">
+                                                                        <label for="pump_required">Pump </label>
+            
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <input class="form-control-md" type="checkbox"
+                                                                               id="dipping_stick_required" name="dipping_stick_required">
+                                                                        <label for="dipping_stick_required">Dipping Stick </label>
+                                                                    </div>
+            
+                                                                    <div class="col-sm-4">
+                                                                        <input class="form-control-md" type="checkbox"
+                                                                               id="meter_required" name="meter_required">
+                                                                        <label for="meter_required">Meter</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+            
+            
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="submit" name="WaitForOffer" class="btn btn-info btn-sm">Submit</button>
+                                                    </div>
+                                                    </form>
+                                                </div>
                                             </div>
-                                                                                        
-                                       
-                                     </div>
-                                        <!-- <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                                            <button type="button" class="btn btn-secondary col-sm-6"
-                                                data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
-                                        </div> -->
-                                    </div>
-                                    <div class="modal-footer">
-                                    <button type="submit" class="btn btn-info" >Make Order</button>
-
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
-                                    </div>
-                                </form>
-
-
-                                </div>
-
-
-
-
-                            </div>
-            </div>
-
+                                        </div>
             <div class="table-responsive">
                 <table id="fuel_updates" class="table table-striped table-bordered" style="width:100%">
                     <thead>
@@ -194,6 +326,8 @@
                                 {% endif %}
                             </td>
                         </tr>
+
+                       
                         {% endfor %}
     
                     </tbody>
@@ -389,80 +523,230 @@
                             </div>
                         </div>
                     </div> 
+                    
+            <script>
+                $(document).ready(function () {
+                    $('#choices{{forloop.counter}}').hide();
+                    $('#choices1{{forloop.counter}}').hide();
+                    $('#truck_reg{{forloop.counter}}').show();
+                    $('#transporter{{forloop.counter}}').show();
+                    $('#driver{{forloop.counter}}').show();
+                    $('#driver_id{{forloop.counter}}').show();
+                    
 
+                    $('#delivery_method1{{forloop.counter}}').change(function () {
+                        if ($('#delivery_method1{{forloop.counter}} option:selected').text() == "Direct Delivery") {
+                            $('#choices1{{forloop.counter}}').show();
+                            $('#s_name1{{forloop.counter}}').attr('required', '');
+                            $('#s_number1{{forloop.counter}}').attr('required', '');
+                            $('#s_town1{{forloop.counter}}').attr('required', '');
+                            $('#truck_reg1{{forloop.counter}}').hide();
+                            $('#transporter1{{forloop.counter}}').hide();
+                            $('#driver1{{forloop.counter}}').hide();
+                            $('#driver_id1{{forloop.counter}}').hide();
+                        }
+                        else {
+                            $('#choices1{{forloop.counter}}').hide();
+                            $('#s_town1{{forloop.counter}}').removeAttr('required', '');
+                            $('#s_number1{{forloop.counter}}').removeAttr('required', '');
+                            $('#s_name1{{forloop.counter}}').removeAttr('required', '');
+                            $('#truck_reg1{{forloop.counter}}').show();
+                            $('#transporter1{{forloop.counter}}').show();
+                            $('#driver1{{forloop.counter}}').show();
+                            $('#driver_id1{{forloop.counter}}').show();
+                        }
+                    });
+                    $('#delivery_method{{forloop.counter}}').change(function () {
+                        if ($('#delivery_method{{forloop.counter}} option:selected').text() == "Delivery") {
+                            $('#choices{{forloop.counter}}').show();
+                            $('#s_name{{forloop.counter}}').attr('required', '');
+                            $('#s_number{{forloop.counter}}').attr('required', '');
+                            $('#s_town{{forloop.counter}}').attr('required', '');
+                            $('#truck_reg{{forloop.counter}}').hide();
+                            $('#transporter{{forloop.counter}}').hide();
+                            $('#driver{{forloop.counter}}').hide();
+                            $('#driver_id{{forloop.counter}}').hide();
+                        }
+                        else {
+                            $('#choices{{forloop.counter}}').hide();
+                            $('#s_town{{forloop.counter}}').removeAttr('required', '');
+                            $('#s_number{{forloop.counter}}').removeAttr('required', '');
+                            $('#s_name{{forloop.counter}}').removeAttr('required', '');
+                            $('#truck_reg{{forloop.counter}}').show();
+                            $('#transporter{{forloop.counter}}').show();
+                            $('#driver{{forloop.counter}}').show();
+                            $('#driver_id{{forloop.counter}}').show();
+                        }
+                    });
+                });
+
+                $('#pump_required').on('change', function () {
+                    $(this).val(this.checked ? "True" : "False");
+                });
+                $('#swipe').on('change', function () {
+                    $(this).val(this.checked ? "True" : "False");
+                });
+                $('#ecocash').on('change', function () {
+                    $(this).val(this.checked ? "True" : "False");
+                });
+                $('#cash').on('change', function () {
+                    $(this).val(this.checked ? "True" : "False");
+                });
+                $('#usd').on('change', function () {
+                    $(this).val(this.checked ? "True" : "False");
+                });
+
+                $('#dipping_stick_required').on('change', function () {
+                    $(this).val(this.checked ? "True" : "False");
+                });
+
+                $('#meter_required').on('change', function () {
+                    $(this).val(this.checked ? "True" : "False");
+                });
+            </script>
                     <div class="modal fade modal-success in" id="order_{{account.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                          aria-hidden="true">
-                        <div class="modal-dialog modal-notice">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                    <span class="modal-title">Make Order With {{account.supplier_company.name|title}} </span>
-                                </div>
-                                <div class="modal-body" style="margin-bottom: 15px;">
-                                    <div class="row" style="padding-left: 15px;padding-right: 15px;">
-                                        <form action="{% url 'make_direct_request' %}"
-                                             method="POST">
-                                             {% csrf_token %}
-                                             <div class="row">
-                                                <div class="form-group col-md-6">
-                                                    <label>Fuel Type</label>
-                                                    <select class="form-control" name="fuel_type" id="">
-                                                        <option style="color: #ffb61e;">Petrol</option>
-                                                        <option>Diesel</option>
-                                                    </select>
-                                                </div>
-                                                
-                                                <div class="form-group col-md-6">
-                                                    <label>Quantity</label>
-                                                    <input type="text" name="quantity" class="form-control"  required/>
-                                                </div>
-                                            </div>    
-                                            
-                                            <div class="row">
-                                                <div class="form-group col-md-6">
-                                                    <label>Select Payment Currency</label>
-                                                    <select  name="currency" class="form-control" required>
-                                                        <option>USD</option>
-                                                        <option>RTGS</option>
-                                                        <option>Either</option>
-                                                    </select>    
-                                                </div>
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-notice">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                                  <span class="modal-title" id="myModalLabel">Make a deal</span>
+                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                      <i class="fa fa-close" aria-hidden="true"></i>
+                                  </button>
+                              </div>
+                              <div class="modal-body">
+                                  <div method="POST">
+                                      <form  action = "{% url 'make_direct_request' %}" method="POST">
+                                          {% csrf_token %}
+                                          <input type="hidden" name="supplier_id" value="{{account.supplier_company.id}}" class="form-control"  hidden/>
+                                          <div class=" row col-sm-12">
+                                              <div class="col-sm-6">
+                                                  {{ form.fuel_type|as_crispy_field }}
+                                              </div>
 
-                                             <div class="form-group col-md-6">
-                                                <label>Pick Up Method</label>
-                                                <select  name="delivery_method" class="form-control" required>
-                                                    <option>Self Collection</option>
-                                                    <option>Delivery</option>
-                                                </select> 
-                                             </div>
-                                            </div>
-                                            
-                                            <input type="hidden" name="supplier_id" value="{{account.supplier_company.id}}" class="form-control"  hidden/>
-                                            
-                                       
-                                     </div>
-                                        <!-- <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                                            <button type="button" class="btn btn-secondary col-sm-6"
-                                                data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
-                                        </div> -->
-                                    </div>
-                                    <div class="modal-footer">
-                                    <button type="submit" class="btn btn-info" >Make Order</button>
+                                              <div class="col-sm-6">
+                                                  {{ form.amount|as_crispy_field }}
+                                              </div>
+                                          </div>
+                                          <div class="row col-sm-12">
+                                              <div class="col-sm-6 form-group">
 
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                  <label for="payment_method" class="form-group">Payment Method</label>
+                                                  <select id="payment_method" name="currency" class="form-control">
+                                                      <option value='USD'>USD</option>
+                                                      <option value='RTGS'>RTGS</option>
+                                                  </select>
 
-                                    </div>
-                                </form>
+                                              </div>
 
+                                              <div class="col-sm-6 form-group">
+                                                  <label class="form-group">Pick Up Method</label>
+                                                  <select id="delivery_method1{{forloop.counter}}"
+                                                          name="delivery_method" class="form-control">
+                                                      <option value='SELF COLLECTION'>Self Collection
+                                                      </option>
+                                                      <option value='DELIVERY'>Direct Delivery</option>
+                                                  </select>
+                                              </div>
+                                          </div>
 
-                                </div>
+                                          <div class="row col-sm-12">
+                                              <div class="col-sm-6" id="transporter1{{forloop.counter}}">
+                                                  <label class="form-group">Transporter</label>
+                                                  <input type="text" class="form-control" name="transporter" 
+                                                  aria-describedby="helpId" >
+                                              </div>
 
+                                              <div class="col-sm-6" id="truck_reg1{{forloop.counter}}">
+                                                  <label class="form-group">Vehicle Reg </label>
+                                                  <input type="text" class="form-control" name="truck_reg" 
+                                                  aria-describedby="helpId">
+                                              </div>
+                                          </div>
 
+                                          <div class="row col-sm-12">
+                                              <div class="col-sm-6" id="driver1{{forloop.counter}}">
+                                                  <label class="form-group">Driver</label>
+                                                  <input type="text" class="form-control" name="driver" 
+                                                  aria-describedby="helpId" >
+                                              </div>
 
+                                              <div class="col-sm-6" id="driver_id1{{forloop.counter}}">
+                                                  <label class="form-group">Driver ID </label>
+                                                  <input type="text" class="form-control" name="driver_id" 
+                                                  aria-describedby="helpId">
+                                              </div>
+                                          </div>
 
-                            </div>
-                    </div>
+                                          <div class="form-group" name='choices' id='choices1{{forloop.counter}}'>
+                                              <label>Delivery Address</label>
+                                              <div class="row form-group">
+                                                  <div class="togglebutton form-group col-sm-4">
+                                                      <label for="">Street Number</label>
+                                                      <input type="text" class="form-control" name="s_number"
+                                                             id="s_number1{{forloop.counter}}" aria-describedby="helpId" placeholder="">
+
+                                                  </div>
+                                                  <div class="togglebutton form-group col-sm-4">
+                                                      <label for="">Street Name</label>
+                                                      <input type="text" class="form-control" name="s_name" id="s_name1{{forloop.counter}}"
+                                                             aria-describedby="helpId" placeholder="">
+
+                                                  </div>
+                                                  <div class="togglebutton form-group col-sm-4">
+                                                      <label for="">Location/Town</label>
+                                                      <input type="text" class="form-control" name="s_town" id="s_town1{{forloop.counter}}"
+                                                             aria-describedby="helpId" placeholder="">
+
+                                                  </div>
+
+                                              </div>
+
+                                              {{ form.storage_tanks|as_crispy_field }}
+                                              <br>
+                                              <label>Required Equipments</label>
+                                              <div class="row">
+                                                  <div class="col-sm-4">
+                                                      <input class="form-control-md" type="hidden" value='False'
+                                                             id="pump_required" name="pump_required">
+                                                      <input class="form-control-md" type="checkbox"
+                                                             id="pump_required" name="pump_required">
+                                                      <label for="pump_required">Pump </label>
+
+                                                  </div>
+                                                  <div class="col-sm-4">
+                                                      <input class="form-control-md" type="hidden" value="False"
+                                                             id="dipping_stick_required"
+                                                             name="dipping_stick_required">
+                                                      <input class="form-control-md" type="checkbox"
+                                                             id="dipping_stick_required"
+                                                             name="dipping_stick_required">
+                                                      <label for="dipping_stick_required">Dipping
+                                                          Stick </label>
+                                                  </div>
+
+                                                  <div class="col-sm-4">
+                                                      <input class="form-control-md" type="hidden" value='False'
+                                                             id="meter_required" name="meter_required">
+                                                      <input class="form-control-md" type="checkbox"
+                                                             id="meter_required" name="meter_required">
+                                                      <label for="meter_required">Meter</label>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <input type="hidden" value="{{data.subsidiary.id}}" name="company_id" />
+                                  </div>
+                                  <div class="modal-footer justify-content-center">
+                                      <button type="submit" name="MakeDeal" class="btn btn-primary ">Submit
+                                          Request</button>
+                                      </form>
+                                  </div>
+
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
                     </div>
 
                     <script>
