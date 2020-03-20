@@ -746,11 +746,11 @@ def delivery_schedules(request):
                'schedules': schedules
                }
     if request.method == 'POST':
-        confirmation_document = request.FILES.get('confirmation_document')
+        confirmation_document = request.FILES.get('delivery_date')
         delivery_id = request.POST.get('delivery_id')
 
         schedule = DeliverySchedule.objects.get(id=delivery_id)
-        schedule.confirmation_document = confirmation_document
+        schedule.confirmation_date = confirmation_date
         schedule.save()
         messages.success(request, 'Delivery successfully confirmed!!!')
         message = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
