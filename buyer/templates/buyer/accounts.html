@@ -152,10 +152,9 @@
                                                             <div class="row form-group">
                                                                 <div class="col-sm-6">
                                                                     <label class="form-group">Select Payment Method</label>
-                                                                    <select class="form-control" name="fuel_payment_method">
+                                                                    <select class="form-control" name="currency">
                                                                         <option value="USD">USD</option>
                                                                         <option value="RTGS">RTGS</option>
-                                                                        <option value="USD & RTGS">Either</option>
                                                                     </select>
                                                                 </div>
             
@@ -619,6 +618,7 @@
                                   <div method="POST">
                                       <form  action = "{% url 'make_direct_request' %}" method="POST">
                                           {% csrf_token %}
+                                          <input type="hidden" name="supplier_id" value="{{account.supplier_company.id}}" class="form-control"  hidden/>
                                           <div class=" row col-sm-12">
                                               <div class="col-sm-6">
                                                   {{ form.fuel_type|as_crispy_field }}
@@ -632,10 +632,9 @@
                                               <div class="col-sm-6 form-group">
 
                                                   <label for="payment_method" class="form-group">Payment Method</label>
-                                                  <select id="payment_method" name="fuel_payment_method" class="form-control">
+                                                  <select id="payment_method" name="currency" class="form-control">
                                                       <option value='USD'>USD</option>
                                                       <option value='RTGS'>RTGS</option>
-                                                      <option value='USD & RTGS'>USD & RTGS</option>
                                                   </select>
 
                                               </div>

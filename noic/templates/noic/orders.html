@@ -69,7 +69,7 @@
 
                     {% if order.fuel_type == 'Diesel' %}
                         <td style="color: #009688;">{{ order.fuel_type|lower|capfirst }}</td>
-                    {% if order.fuel_type == 'Petrol' %}
+                    {% elif order.fuel_type == 'Petrol' %}
                         <td style="color: #ffb61e;">{{ order.fuel_type|lower|capfirst }}</td>
                     {% else %}    
                         <td>{{ order.fuel_type|lower|capfirst }}</td>
