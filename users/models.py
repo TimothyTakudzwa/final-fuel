@@ -17,7 +17,7 @@ class SordActionsAuditTrail(models.Model):
     date = models.DateField(auto_now_add=True)
     sord_num = models.CharField(max_length=150, blank=True, null=True)
     action_num = models.IntegerField(default=0)
-    allocated_quantity = models.FloatField(default=0.0)
+    allocated_quantity = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     allocated_by = models.CharField(max_length=150, blank=True, null=True)
     allocated_to = models.CharField(max_length=150, blank=True, null=True)
     payment_type = models.CharField(max_length=150,default="RTGS")

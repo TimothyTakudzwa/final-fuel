@@ -40,10 +40,10 @@ class Company(models.Model):
    
 class CompanyFuelUpdate(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='company_fuel_update')
-    allocated_petrol = models.FloatField(default=0.00)
-    allocated_diesel = models.FloatField(default=0.00)
-    unallocated_petrol = models.FloatField(default=0.00)
-    unallocated_diesel = models.FloatField(default=0.00)
+    allocated_petrol = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    allocated_diesel = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    unallocated_petrol = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    unallocated_diesel = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     usd_diesel_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     usd_petrol_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     diesel_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
