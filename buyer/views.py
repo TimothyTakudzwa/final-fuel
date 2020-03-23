@@ -19,7 +19,7 @@ from buyer.recommend import recommend
 from buyer.utils import render_to_pdf
 from company.models import Company
 from notification.models import Notification
-from supplier.forms import DeliveryScheduleForm
+#from supplier.forms import DeliveryScheduleForm
 from supplier.lib import total_requests, transactions_total_cost, total_offers
 from supplier.models import Offer, Subsidiaries, DeliverySchedule, Transaction, TokenAuthentication, \
     UserReview, SuballocationFuelUpdate
@@ -57,7 +57,7 @@ def login_user(request):
         elif current_user.user_type == 'ZERA':
             return redirect("zeraPortal:dashboard")
         elif current_user.user_type == 'NOIC_STAFF':
-            return redirect("noicDepot:dashboard")
+            return redirect("noicDepot:orders")
         elif current_user.user_type == 'NOIC_ADMIN':
             return redirect("noic:dashboard")
     else:
@@ -90,7 +90,7 @@ def login_user(request):
                         elif current_user.user_type == 'ZERA':
                             return redirect("zeraPortal:dashboard")
                         elif current_user.user_type == 'NOIC_STAFF':
-                            return redirect("noicDepot:dashboard")
+                            return redirect("noicDepot:orders")
                         elif current_user.user_type == 'NOIC_ADMIN':
                             return redirect("noic:dashboard")
                     # wrong password
