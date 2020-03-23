@@ -2085,33 +2085,74 @@ def upload_users(request):
 
 
 def place_order(request):
+    fuel_object = DepotFuelUpdate.objects.first()
+    diesel_rtgs_price = 0
+    diesel_usd_price = 0
+    petrol_rtgs_price = 0
+    petrol_usd_price = 0
+    if fuel_object is not None:
+        diesel_rtgs_price = fuel_object.rtgs_diesel_price
+        diesel_usd_price = fuel_object.usd_diesel_price
+        petrol_rtgs_price = fuel_object.rtgs_petrol_price
+        petrol_usd_price = fuel_object.usd_petrol_price
+    else:
+        pass
     if request.method == 'POST':
         company = request.user.company
         quantity = request.POST['quantity']
         currency = request.POST['currency']
         fuel_type = request.POST['fuel_type']
-        proof_of_payment = request.FILES.get('proof_of_payment')
-        noic_depot = NoicDepot.objects.filter(name=request.POST['depots']).first()
-        amount_paid = request.POST['fuel_paid']
-        duty = request.POST['duty_paid']
-        vat = request.POST['vat']
-        transporter = request.POST['transporter']
-        truck_reg = request.POST['truck_reg']
-        trailer_reg = request.POST['trailer_reg']
-        driver = request.POST['driver']
-        driver_id = request.POST['driver_id']
-        Order.objects.create(amount_paid=amount_paid, duty=duty, vat=vat, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, noic_depot=noic_depot, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
-        messages.success(request,'placed order successfully')
-        return redirect('users:orders')
+        if fuel_type.lower() == 'petrol':
+            if currency == 'USD':
+                price = petrol_usd_price
+            else:
+                price = petrol_rtgs_price
+            proof_of_payment = request.FILES.get('proof_of_payment')
+            noic_depot = NoicDepot.objects.filter(name=request.POST['depots']).first()
+            amount_paid = request.POST['fuel_paid']
+            transporter = request.POST['transporter']
+            truck_reg = request.POST['truck_reg']
+            trailer_reg = request.POST['trailer_reg']
+            driver = request.POST['driver']
+            driver_id = request.POST['driver_id']
+            Order.objects.create(price=price, amount_paid=amount_paid, duty=duty, vat=vat, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, noic_depot=noic_depot, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+            messages.success(request,'placed order successfully')
+            return redirect('users:orders')
+        else:
+            if currency == 'USD':
+                price = diesel_usd_price
+            else:
+                price = diesel_rtgs_price
+            proof_of_payment = request.FILES.get('proof_of_payment')
+            noic_depot = NoicDepot.objects.filter(name=request.POST['depots']).first()
+            amount_paid = request.POST['fuel_paid']
+            transporter = request.POST['transporter']
+            truck_reg = request.POST['truck_reg']
+            trailer_reg = request.POST['trailer_reg']
+            driver = request.POST['driver']
+            driver_id = request.POST['driver_id']
+            Order.objects.create(price=price, amount_paid=amount_paid, duty=duty, vat=vat, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, noic_depot=noic_depot, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+            messages.success(request,'placed order successfully')
+            return redirect('users:orders')
+
 
 
 def orders(request):
     fuel_object = DepotFuelUpdate.objects.first()
+    diesel_rtgs_price = 0
+    diesel_usd_price = 0
+    petrol_rtgs_price = 0
+    petrol_usd_price = 0
+    if fuel_object is not None:
+        diesel_rtgs_price = fuel_object.rtgs_diesel_price
+        diesel_usd_price = fuel_object.usd_diesel_price
+        petrol_rtgs_price = fuel_object.rtgs_petrol_price
+        petrol_usd_price = fuel_object.usd_petrol_price
     diesel_rtgs_price = fuel_object.rtgs_diesel_price
     diesel_usd_price = fuel_object.usd_diesel_price
     petrol_rtgs_price = fuel_object.rtgs_petrol_price
     petrol_usd_price = fuel_object.usd_petrol_price
-    depots = NoicDepot.objects.all()
+    depots = NoicDepot.objects.filter(is_active=True).all()
     orders = Order.objects.filter(company=request.user.company).all()
     for order in orders:
         sord = SordNationalAuditTrail.objects.filter(order=order).first()
