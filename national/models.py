@@ -31,6 +31,7 @@ class Order(models.Model):
     quantity = models.FloatField(default=0.00)
     fuel_type = models.CharField(max_length=150, blank=True, null=True)
     currency = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS')))
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     proof_of_payment = models.FileField(upload_to='proof_of_payment', null=True, blank=True)
     payment_approved = models.BooleanField(default=False)
     allocated_fuel = models.BooleanField(default=False)

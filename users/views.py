@@ -2084,8 +2084,6 @@ def place_order(request):
         proof_of_payment = request.FILES.get('proof_of_payment')
         noic_depot = NoicDepot.objects.filter(name=request.POST['depots']).first()
         amount_paid = request.POST['fuel_paid']
-        duty = request.POST['duty_paid']
-        vat = request.POST['vat']
         transporter = request.POST['transporter']
         truck_reg = request.POST['truck_reg']
         trailer_reg = request.POST['trailer_reg']
@@ -2102,7 +2100,7 @@ def orders(request):
     diesel_usd_price = fuel_object.usd_diesel_price
     petrol_rtgs_price = fuel_object.rtgs_petrol_price
     petrol_usd_price = fuel_object.usd_petrol_price
-    depots = NoicDepot.objects.all()
+    depots = NoicDepot.objects.filter(is_active=True).all()
     orders = Order.objects.filter(company=request.user.company).all()
     for order in orders:
         sord = SordNationalAuditTrail.objects.filter(order=order).first()

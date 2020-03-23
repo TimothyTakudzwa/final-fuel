@@ -320,6 +320,7 @@ def staff(request):
         password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
         phone_number = request.POST.get('phone_number')
         subsidiary_id = request.POST.get('depot')
+        
         full_name = first_name + " " + last_name
         i = 0
         username = initial_username = first_name[0] + last_name
@@ -329,6 +330,9 @@ def staff(request):
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
                                    first_name=first_name, last_name=last_name, user_type='NOIC_STAFF', email=email, password=password,
                                    phone_number=phone_number)
+        depot = NoicDepot.objects.filter0(id=subsidiary_id).first()
+        depot.is_active = True
+        depot.save()
         if message_is_send(request, user):
             if user.is_active:
                 user.stage = 'menu'
