@@ -80,7 +80,7 @@
                         </td>
                         <!-- <td>{{delivery.transport_company}}</td> -->
                         <td><button class="btn btn-purple btn-sm" data-toggle="modal" data-target="#additonal_information{{delivery.id}}">View Information</button></td>                      
-                        {% if not delivery.confirmation_document %}
+                        {% if not delivery.confirmation_date %}
                         <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#upload_{{delivery.id}}">Confirm Delivery</button></td>
                         {% else %}
                         <td>Received</td>
@@ -92,7 +92,7 @@
                       <div class="modal-dialog" role="document">
                       <div class="modal-content">
                           <div class="modal-header" style="background-color: #009688; color: white">
-                          <span class="modal-title" id="exampleModalLabel">Upload Document</span>
+                          <span class="modal-title" id="exampleModalLabel">Confirm Delivery</span>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                           </button>
@@ -102,7 +102,10 @@
                                   <form method="POST" action="" enctype="multipart/form-data">
                                       {% csrf_token %}
                                       <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
-                                      {{form|crispy}}
+                                      <div class="form-group col-md-6">
+                                        <label>Delivery Date</label>
+                                        <input type="date" name="delivery_date" class="form-control"  required/>
+                                    </div>
                                     <div class="modal-footer">  
                                     <input class="btn btn-info" type="submit" value="Confirm Delivery">
                                     </div>

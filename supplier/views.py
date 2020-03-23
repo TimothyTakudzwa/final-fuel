@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
+from supplier.models import UserReview
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -643,6 +644,20 @@ Transactions Operations
 
 @login_required
 def transaction(request):
+    if request.method == "POST":
+        tran = Transaction.objects.get(id=request.POST.get('transaction_id'))
+        UserReview.objects.create(
+            rater=request.user,
+            rating=int(request.POST.get('rating')),
+            company_type = 'SUPPLIER',
+            company=tran.supplier.company,
+            transaction=tran,
+            depot=Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
+            comment=request.POST.get('comment')
+        )
+        messages.success(request, 'Transaction Successfully Reviewed')
+        return redirect('transaction')
+
     today = datetime.now().strftime("%m/%d/%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
     transactions = []
@@ -650,7 +665,7 @@ def transaction(request):
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
         if delivery_sched:
             tran.delivery_sched = delivery_sched
-        tran.review = UserReview.objects.filter(transaction=tran)    
+        tran.review = UserReview.objects.filter(transaction=tran).first()   
         transactions.append(tran)
     context = {
         'transactions': transactions,
@@ -1041,15 +1056,12 @@ def view_delivery_schedule(request, id):
 
 
 def view_confirmation_doc(request, id):
-    delivery = DeliverySchedule.objects.filter(id=id).first()
-    if delivery:
-        filename = delivery.confirmation_document.name.split('/')[-1]
-        response = HttpResponse(delivery.confirmation_document, content_type='text/plain')
-        response['Content-Disposition'] = 'attachment; filename=%s' % filename
-    else:
-        messages.warning(request, 'Document Not Found')
-        redirect('supplier:delivery_schedules')
-    return response
+    payment = AccountHistory.objects.filter(delivery_schedule__id=id).first()
+    payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
+    context = {
+        'payment': payment
+    }
+    return render(request, 'supplier/delivery_note.html', context=context)
 
 
 def view_delivery_note(request, id):

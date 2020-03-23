@@ -202,7 +202,7 @@ class DeliverySchedule(models.Model):
     id_number = models.CharField(max_length=150, blank=True, null=True)
     vehicle_reg = models.CharField(max_length=150, blank=True, null=True)
     delivery_time = models.CharField(max_length=150, blank=True, null=True)
-    confirmation_document = models.FileField(null=True, upload_to='documents')
+    confirmation_date = models.DateField(null=True)
     supplier_document = models.FileField(null=True, upload_to='documents')
     transport_company = models.CharField(max_length=150, blank=True, null=True)
     date_edit_count = models.PositiveIntegerField(default=0)

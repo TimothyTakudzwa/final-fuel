@@ -138,7 +138,7 @@ def allocate_fuel(request, id):
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no, action_no=0, action='Receiving Fuel',fuel_type=sord_object.fuel_type, payment_type=sord_object.currency, initial_quantity=float(request.POST['quantity']), end_quantity=float(request.POST['quantity']))
                     company_update = CompanyFuelUpdate.objects.filter(company=order.company).first()
-                    company_update.unallocated_petrol += float(request.POST['quantity'])
+                    company_update.unallocated_diesel += float(request.POST['quantity'])
                     company_update.usd_diesel_price = noic_capacity.usd_diesel_price
                     company_update.save()
                     order.allocated_fuel = True
@@ -161,7 +161,7 @@ def allocate_fuel(request, id):
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no, action_no=0, action='Receiving Fuel',fuel_type=sord_object.fuel_type, payment_type=sord_object.currency, initial_quantity=float(request.POST['quantity']), end_quantity=float(request.POST['quantity']))
                     company_update = CompanyFuelUpdate.objects.filter(company=order.company).first()
-                    company_update.unallocated_petrol += float(request.POST['quantity'])
+                    company_update.unallocated_diesel += float(request.POST['quantity'])
                     company_update.diesel_price = noic_capacity.rtgs_diesel_price
                     company_update.save()
                     order.allocated_fuel = True
@@ -196,3 +196,215 @@ def download_d_note(request, id):
 def profile(request):
     user = request.user
     return render(request, 'noicDepot/profile.html', {'user': user})
+
+
+def report_generator(request):
+    '''View to dynamically render form tables based on different criteria'''
+    allocations = requests = trans = stock = None
+    # trans = Transaction.objects.filter(supplier__company=request.user.company).all()
+    start_date = start = "December 1 2019"
+    end_date = end = "January 1 2019"
+
+    if request.method == "POST":
+        start_date = request.POST.get('start_date') 
+        end_date = request.POST.get('end_date')
+        if start_date:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            start_date = start_date.date()
+        report_type = request.POST.get('report_type')
+        if end_date:
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')
+            end_date = end_date.date()
+        if request.POST.get('report_type') == 'Stock':
+            depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+            stock = DepotFuelUpdate.objects.filter(depot=depot).first()
+
+            print('______________________{stock}_________________')
+            print('______________________Im in stock_________________')
+
+
+
+            allocations = None
+            pending_orders = None
+            orders = None
+            complete_orders = None    
+
+        if request.POST.get('report_type') == 'Pending Orders':
+            depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+            pending_orders = Order.objects.filter(date__range=[start_date, end_date],
+                                               payment_approved=False, noic_depot=depot)
+            print(f'__________________{pending_orders}__________________________________')
+            print(f'__________________I am in Pending Orders__________________________________')
+
+
+            stock = None
+            allocations = None
+            orders = None
+            complete_orders = None
+        
+        if request.POST.get('report_type') == 'Allocations':
+            depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+            allocations = []
+            if depot:
+                allocations = SordNationalAuditTrail.objects.filter(assigned_depot=depot)
+            # allocations = SordNationalAuditTrail.objects.all()
+            print(f'__________________{allocations[0].price}__________________________________')
+            print(f'__________________I am in Allocations ')
+
+
+            stock = None
+            orders = None
+            complete_orders = None       
+            pending_orders = None
+
+
+        if request.POST.get('report_type') == 'All Orders':
+            depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+            orders = Order.objects.filter(date__range=[start_date, end_date], noic_depot=depot)
+            print(f'__________________{orders}__________________________________')
+            print(f'__________________I am in Orders__________________________________')
+
+            pending_orders = None
+            allocations = None
+            stock = None
+            complete_orders = None    
+
+        if request.POST.get('report_type') == 'Completed Orders':
+            depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+            complete_orders = Order.objects.filter(date__range=[start_date, end_date], payment_approved=True, noic_depot=depot)
+            print(f'__________________{complete_orders}__________________________________')
+            print(f'__________________I am in complete_orders__________________________________')
+
+            pending_orders = None
+            allocations = None
+            stock = None
+            orders = None    
+        if request.POST.get('report_type') == 'Allocations Per Supplier':
+            print("__________________________I am in allocations per supplier____________________________")
+            allocations = FuelAllocation.objects.all()
+            supplier_allocations = User.objects.filter(user_type='S_ADMIN')
+            allocations = []
+            for supplier in supplier_allocations:
+                order_count = 0
+                order_quantity = 0
+                for order in SordNationalAuditTrail.objects.filter(company=supplier.company):
+                    order_count += 1
+                    order_quantity += order.quantity
+                supplier.order_count = order_count
+                supplier.order_quantity = order_quantity
+                if supplier not in allocations:
+                    allocations.append(supplier) 
+
+            print(f'________________________________{allocations}__________________________')
+            pending_orders = None
+            orders = None
+            complete_orders = None    
+            stock = None
+        start = start_date
+        end = end_date
+
+        # revs = 0
+        return render(request, 'noicDepot/reports.html',
+                      {'trans': trans, 'requests': requests, 'allocations': allocations, 'orders':orders,
+                       'complete_orders':complete_orders,'pending_orders': pending_orders,'start': start, 'end': end, 'stock': stock})
+
+    show = False
+    print(trans)
+    return render(request, 'noicDepot/reports.html',
+                  {'trans': trans, 'requests': requests, 'allocations': allocations,
+                   'start': start_date, 'end': end_date, 'show': show, 'stock': stock})
+
+
+def statistics(request):
+    # yesterday = date.today() - timedelta(days=1)
+    # monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
+    # weekly_rev = get_weekly_sales(True)
+    # last_week_rev = get_weekly_sales(False)
+    # city_sales_volume = get_volume_sales_by_location()
+    # final_desperate_cities = []
+    # desperate_cities = desperate()
+    
+    # while len(desperate_cities) > 5:
+    #     desperate_cities.popitem()
+    
+    # for city, deficit in desperate_cities.items():
+    #     final_desperate_cities.append((city,deficit))
+        
+    # # number_of_companies = Company.objects.all().count()
+    # # number_of_depots = Subsidiaries.objects.filter(is_depot=True).count()
+    # # number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()
+    # last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1))
+    # # offers = Offer.objects.all().count()
+    # # bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
+    # # normal_requests = FuelRequest.objects.filter(delivery_method="DELIVERY").count()  # Change these 2 items
+    # staff = ''
+    # # new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
+    # # clients = []
+    # # stock = get_aggregate_stock()
+    # # diesel = stock['diesel']
+    # # petrol = stock['petrol']
+
+    # trans = Transaction.objects.filter(is_complete=True).annotate(
+    #     number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
+    # buyers = [client.buyer for client in trans]
+
+    # branches = Subsidiaries.objects.filter(is_depot=True)
+
+    # subs = []
+
+    # for sub in branches:
+    #     tran_amount = 0
+    #     sub_trans = Transaction.objects.filter(supplier__subsidiary_id=sub.id,
+    #                                            is_complete=True)
+    #     for sub_tran in sub_trans:
+    #         tran_amount += (sub_tran.offer.request.amount * sub_tran.offer.price)
+    #     sub.tran_count = sub_trans.count()
+    #     sub.tran_value = tran_amount
+    #     subs.append(sub)
+
+    # # sort subsidiaries by transaction value
+    # sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True)
+
+    # new_buyers = []
+    # for buyer in buyers:
+    #     total_transactions = buyers.count(buyer)
+    #     buyers.remove(buyer)
+    #     new_buyer_transactions = Transaction.objects.filter(is_complete=True).all()
+    #     total_value = 0
+    #     purchases = []
+    #     number_of_trans = 0
+    #     for tran in new_buyer_transactions:
+    #         total_value += (tran.offer.request.amount * tran.offer.price)
+    #         purchases.append(tran)
+    #         number_of_trans += 1
+    #     buyer.total_revenue = total_value
+    #     buyer.purchases = purchases
+    #     buyer.number_of_trans = total_transactions
+    #     if buyer not in new_buyers:
+    #         new_buyers.append(buyer)
+
+    # clients = sorted(new_buyers, key=lambda x: x.total_revenue, reverse=True)
+
+    # for company in companies:
+    #     company.total_value = value[counter]
+    #     company.num_transactions = num_trans[counter]
+    #     counter += 1
+
+    # clients = [company for company in  companies]
+
+    # revenue = round(float(sum(value)))
+    # revenue = get_aggregate_total_revenue()
+    # revenue = '${:,.2f}'.format(revenue)
+    # revenue = str(revenue) + '.00'
+
+    # try:
+    #     trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
+    # except:
+    #     trans = 0    
+    # trans_complete = get_aggregate_transactions_complete_percentage()
+    # inactive_depots = Subsidiaries.objects.filter(is_active=False, is_depot=True).count()
+    # inactive_stations = Subsidiaries.objects.filter(is_active=False, is_depot=False).count()
+    # approval_percentage = get_approved_company_complete_percentage()
+
+    return render(request, 'noicDepot/statistics.html', {})
+    
