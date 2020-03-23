@@ -28,6 +28,7 @@ from accounts.models import Account, AccountHistory
 from buyer.forms import *
 from company.lib import *
 from fuelUpdates.models import SordCompanyAuditTrail
+from fuelfinder.helper_functions import random_password
 from users.models import *
 from .forms import SupplierContactForm, UsersUploadForm, ReportForm, ProfileEditForm, ActionForm, DepotContactForm
 
@@ -873,7 +874,7 @@ def suppliers_list(request):
         if sup is not None:
             messages.warning(request, f"{sup.email} already used in the system, please use a different email")
             return redirect('users:suppliers_list')
-        password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+        password = random_password()
         phone_number = request.POST.get('phone_number')
         subsidiary_id = request.POST.get('service_station')
         full_name = first_name + " " + last_name
@@ -884,9 +885,10 @@ def suppliers_list(request):
             i += 1
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
                                    first_name=first_name, last_name=last_name, user_type='SS_SUPPLIER',
-                                   company=request.user.company, email=email, password=password,
+                                   company=request.user.company, email=email,
                                    phone_number=phone_number)
-        if message_is_send(request, user):
+        user.set_password(password)
+        if message_is_send(request, user, password):
             if user.is_active:
                 user.stage = 'menu'
                 user.save()
@@ -902,7 +904,7 @@ def suppliers_list(request):
             messages.warning(request, f"{sup.email} already used in the system, please use a different email")
             return redirect('users:suppliers_list')
 
-        password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+        password = random_password()
         phone_number = request.POST.get('phone_number')
         subsidiary_id = request.POST.get('depot')
         full_name = first_name + " " + last_name
@@ -913,9 +915,10 @@ def suppliers_list(request):
             i += 1
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
                                    first_name=first_name, last_name=last_name, user_type='SUPPLIER',
-                                   company=request.user.company, email=email, password=password,
+                                   company=request.user.company, email=email,
                                    phone_number=phone_number)
-        if message_is_send(request, user):
+        user.set_password(password)
+        if message_is_send(request, user, password):
             if user.is_active:
                 # messages.success(request, "You have been registered succesfully")
                 user.stage = 'menu'
@@ -1296,10 +1299,10 @@ def decline_applicant(request, id):
     return redirect('users:waiting_for_approval')
 
 
-def message_is_send(request, user):
+def message_is_send(request, user, password):
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
-    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: 12345 \n\nPlease login on Fuel Finder Website and access your assigned Station & don't forget to change your password on user profile. \n. "
+    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: {password} \n\nPlease login on Fuel Finder Website and access your assigned Station & don't forget to change your password on user profile. \n. "
     try:
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
         msg.send()
@@ -1312,10 +1315,10 @@ def message_is_send(request, user):
     return render(request, 'buyer/send_email.html')
 
 
-def message_is_sent(request, user):
+def message_is_sent(request, user, password):
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
-    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: 12345 \n\nPlease download the Fuel Finder mobile app on PlayStore and login to start looking for fuel. \n. "
+    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: {password} \n\nPlease download the Fuel Finder mobile app on PlayStore and login to start looking for fuel. \n. "
     try:
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
         msg.send()
@@ -1431,7 +1434,7 @@ def depot_staff(request):
             messages.warning(request, f"{sup.email} already used in the system, please use a different email")
             return redirect('users:suppliers_list')
 
-        password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+        password = random_password()
         phone_number = request.POST.get('phone_number')
         subsidiary_id = request.POST.get('depot')
         full_name = first_name + " " + last_name
@@ -1442,9 +1445,10 @@ def depot_staff(request):
             i += 1
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
                                    first_name=first_name, last_name=last_name, user_type='SUPPLIER',
-                                   company=request.user.company, email=email, password=password,
+                                   company=request.user.company, email=email,
                                    phone_number=phone_number)
-        if message_is_send(request, user):
+        user.set_password(password)
+        if message_is_send(request, user, password):
             if user.is_active:
                 # messages.success(request, "You have been registered succesfully")
                 user.stage = 'menu'
