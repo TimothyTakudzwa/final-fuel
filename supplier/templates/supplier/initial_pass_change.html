@@ -501,49 +501,7 @@
             }, 1300);
             console.log("Tapinda")
         }    
-    </script>    
-    <script>
-        $(document).ready(function () {
-          var logged_user = {{request.user.id}};
-          var socket = io.connect('https://dreamhub.co.zw/new_offer');
-        console.log(socket)
-
-        socket.on('offer_rejected', function (msg) {
-            if (logged_user == msg.user_id) {
-                MyFunction(msg);
-                console.log("Testing New Notification");
-            }
-         
-        });
-
-        socket.on('offer_accepted', function (msg) {
-            if (logged_user == msg.user_id) {
-                MyFunction(msg);
-                console.log("Testing New Notification");
-            }
-         
-        });
-
-        socket.on('new_request', function (msg) {
-            MyFunction(msg);
-            console.log("Testing New Notification");
- 
-        });
-
-        socket.on('DELIVERY', function (msg) {
-            MyFunction(msg);
-            console.log("Testing New Notification");
- 
-        });
-
-        socket.on('schedule_reminder', function (msg) {
-            MyFunction(msg);
-            console.log("Testing New Notification");
- 
-        });
-
-             });
-      </script>
+    </script>
 
 
 </body>
