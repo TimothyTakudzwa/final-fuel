@@ -57,7 +57,7 @@ def login_user(request):
         elif current_user.user_type == 'ZERA':
             return redirect("zeraPortal:dashboard")
         elif current_user.user_type == 'NOIC_STAFF':
-            return redirect("noicDepot:dashboard")
+            return redirect("noicDepot:orders")
         elif current_user.user_type == 'NOIC_ADMIN':
             return redirect("noic:dashboard")
     else:
@@ -90,7 +90,7 @@ def login_user(request):
                         elif current_user.user_type == 'ZERA':
                             return redirect("zeraPortal:dashboard")
                         elif current_user.user_type == 'NOIC_STAFF':
-                            return redirect("noicDepot:dashboard")
+                            return redirect("noicDepot:orders")
                         elif current_user.user_type == 'NOIC_ADMIN':
                             return redirect("noic:dashboard")
                     # wrong password
