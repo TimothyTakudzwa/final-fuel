@@ -28,6 +28,7 @@ from accounts.models import Account, AccountHistory
 from buyer.forms import *
 from company.lib import *
 from fuelUpdates.models import SordCompanyAuditTrail
+from fuelfinder.helper_functions import random_password
 from users.models import *
 from .forms import SupplierContactForm, UsersUploadForm, ReportForm, ProfileEditForm, ActionForm, DepotContactForm
 
@@ -873,7 +874,7 @@ def suppliers_list(request):
         if sup is not None:
             messages.warning(request, f"{sup.email} already used in the system, please use a different email")
             return redirect('users:suppliers_list')
-        password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+        password = random_password()
         phone_number = request.POST.get('phone_number')
         subsidiary_id = request.POST.get('service_station')
         full_name = first_name + " " + last_name
@@ -884,9 +885,10 @@ def suppliers_list(request):
             i += 1
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
                                    first_name=first_name, last_name=last_name, user_type='SS_SUPPLIER',
-                                   company=request.user.company, email=email, password=password,
+                                   company=request.user.company, email=email,
                                    phone_number=phone_number)
-        if message_is_send(request, user):
+        user.set_password(password)
+        if message_is_send(request, user, password):
             if user.is_active:
                 user.stage = 'menu'
                 user.save()
@@ -902,7 +904,7 @@ def suppliers_list(request):
             messages.warning(request, f"{sup.email} already used in the system, please use a different email")
             return redirect('users:suppliers_list')
 
-        password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+        password = random_password()
         phone_number = request.POST.get('phone_number')
         subsidiary_id = request.POST.get('depot')
         full_name = first_name + " " + last_name
@@ -913,9 +915,10 @@ def suppliers_list(request):
             i += 1
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
                                    first_name=first_name, last_name=last_name, user_type='SUPPLIER',
-                                   company=request.user.company, email=email, password=password,
+                                   company=request.user.company, email=email,
                                    phone_number=phone_number)
-        if message_is_send(request, user):
+        user.set_password(password)
+        if message_is_send(request, user, password):
             if user.is_active:
                 # messages.success(request, "You have been registered succesfully")
                 user.stage = 'menu'
@@ -1296,10 +1299,10 @@ def decline_applicant(request, id):
     return redirect('users:waiting_for_approval')
 
 
-def message_is_send(request, user):
+def message_is_send(request, user, password):
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
-    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: 12345 \n\nPlease login on Fuel Finder Website and access your assigned Station & don't forget to change your password on user profile. \n. "
+    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: {password} \n\nPlease login on Fuel Finder Website and access your assigned Station & don't forget to change your password on user profile. \n. "
     try:
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
         msg.send()
@@ -1312,10 +1315,10 @@ def message_is_send(request, user):
     return render(request, 'buyer/send_email.html')
 
 
-def message_is_sent(request, user):
+def message_is_sent(request, user, password):
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
-    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: 12345 \n\nPlease download the Fuel Finder mobile app on PlayStore and login to start looking for fuel. \n. "
+    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: {password} \n\nPlease download the Fuel Finder mobile app on PlayStore and login to start looking for fuel. \n. "
     try:
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
         msg.send()
@@ -1431,7 +1434,7 @@ def depot_staff(request):
             messages.warning(request, f"{sup.email} already used in the system, please use a different email")
             return redirect('users:suppliers_list')
 
-        password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+        password = random_password()
         phone_number = request.POST.get('phone_number')
         subsidiary_id = request.POST.get('depot')
         full_name = first_name + " " + last_name
@@ -1442,9 +1445,10 @@ def depot_staff(request):
             i += 1
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
                                    first_name=first_name, last_name=last_name, user_type='SUPPLIER',
-                                   company=request.user.company, email=email, password=password,
+                                   company=request.user.company, email=email,
                                    phone_number=phone_number)
-        if message_is_send(request, user):
+        user.set_password(password)
+        if message_is_send(request, user, password):
             if user.is_active:
                 # messages.success(request, "You have been registered succesfully")
                 user.stage = 'menu'
@@ -2081,33 +2085,74 @@ def upload_users(request):
 
 
 def place_order(request):
+    fuel_object = DepotFuelUpdate.objects.first()
+    diesel_rtgs_price = 0
+    diesel_usd_price = 0
+    petrol_rtgs_price = 0
+    petrol_usd_price = 0
+    if fuel_object is not None:
+        diesel_rtgs_price = fuel_object.rtgs_diesel_price
+        diesel_usd_price = fuel_object.usd_diesel_price
+        petrol_rtgs_price = fuel_object.rtgs_petrol_price
+        petrol_usd_price = fuel_object.usd_petrol_price
+    else:
+        pass
     if request.method == 'POST':
         company = request.user.company
         quantity = request.POST['quantity']
         currency = request.POST['currency']
         fuel_type = request.POST['fuel_type']
-        proof_of_payment = request.FILES.get('proof_of_payment')
-        noic_depot = NoicDepot.objects.filter(name=request.POST['depots']).first()
-        amount_paid = request.POST['fuel_paid']
-        duty = request.POST['duty_paid']
-        vat = request.POST['vat']
-        transporter = request.POST['transporter']
-        truck_reg = request.POST['truck_reg']
-        trailer_reg = request.POST['trailer_reg']
-        driver = request.POST['driver']
-        driver_id = request.POST['driver_id']
-        Order.objects.create(amount_paid=amount_paid, duty=duty, vat=vat, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, noic_depot=noic_depot, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
-        messages.success(request,'placed order successfully')
-        return redirect('users:orders')
+        if fuel_type.lower() == 'petrol':
+            if currency == 'USD':
+                price = petrol_usd_price
+            else:
+                price = petrol_rtgs_price
+            proof_of_payment = request.FILES.get('proof_of_payment')
+            noic_depot = NoicDepot.objects.filter(name=request.POST['depots']).first()
+            amount_paid = request.POST['fuel_paid']
+            transporter = request.POST['transporter']
+            truck_reg = request.POST['truck_reg']
+            trailer_reg = request.POST['trailer_reg']
+            driver = request.POST['driver']
+            driver_id = request.POST['driver_id']
+            Order.objects.create(price=price, amount_paid=amount_paid, duty=duty, vat=vat, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, noic_depot=noic_depot, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+            messages.success(request,'placed order successfully')
+            return redirect('users:orders')
+        else:
+            if currency == 'USD':
+                price = diesel_usd_price
+            else:
+                price = diesel_rtgs_price
+            proof_of_payment = request.FILES.get('proof_of_payment')
+            noic_depot = NoicDepot.objects.filter(name=request.POST['depots']).first()
+            amount_paid = request.POST['fuel_paid']
+            transporter = request.POST['transporter']
+            truck_reg = request.POST['truck_reg']
+            trailer_reg = request.POST['trailer_reg']
+            driver = request.POST['driver']
+            driver_id = request.POST['driver_id']
+            Order.objects.create(price=price, amount_paid=amount_paid, duty=duty, vat=vat, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, noic_depot=noic_depot, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+            messages.success(request,'placed order successfully')
+            return redirect('users:orders')
+
 
 
 def orders(request):
     fuel_object = DepotFuelUpdate.objects.first()
+    diesel_rtgs_price = 0
+    diesel_usd_price = 0
+    petrol_rtgs_price = 0
+    petrol_usd_price = 0
+    if fuel_object is not None:
+        diesel_rtgs_price = fuel_object.rtgs_diesel_price
+        diesel_usd_price = fuel_object.usd_diesel_price
+        petrol_rtgs_price = fuel_object.rtgs_petrol_price
+        petrol_usd_price = fuel_object.usd_petrol_price
     diesel_rtgs_price = fuel_object.rtgs_diesel_price
     diesel_usd_price = fuel_object.usd_diesel_price
     petrol_rtgs_price = fuel_object.rtgs_petrol_price
     petrol_usd_price = fuel_object.usd_petrol_price
-    depots = NoicDepot.objects.all()
+    depots = NoicDepot.objects.filter(is_active=True).all()
     orders = Order.objects.filter(company=request.user.company).all()
     for order in orders:
         sord = SordNationalAuditTrail.objects.filter(order=order).first()

@@ -19,7 +19,7 @@ from buyer.recommend import recommend
 from buyer.utils import render_to_pdf
 from company.models import Company
 from notification.models import Notification
-from supplier.forms import DeliveryScheduleForm
+#from supplier.forms import DeliveryScheduleForm
 from supplier.lib import total_requests, transactions_total_cost, total_offers
 from supplier.models import Offer, Subsidiaries, DeliverySchedule, Transaction, TokenAuthentication, \
     UserReview, SuballocationFuelUpdate
@@ -57,7 +57,7 @@ def login_user(request):
         elif current_user.user_type == 'ZERA':
             return redirect("zeraPortal:dashboard")
         elif current_user.user_type == 'NOIC_STAFF':
-            return redirect("noicDepot:dashboard")
+            return redirect("noicDepot:orders")
         elif current_user.user_type == 'NOIC_ADMIN':
             return redirect("noic:dashboard")
     else:
@@ -76,6 +76,8 @@ def login_user(request):
                     # user has entered details correctly
                     if auth_status:
                         current_user = User.objects.get(username=username)
+                        if not current_user.last_login:
+                            first_login = True
                         # starting session
                         login(request, current_user)
                         # redirecting to the necessary pages
@@ -84,13 +86,16 @@ def login_user(request):
                         elif current_user.user_type == 'SS_SUPPLIER':
                             return redirect("serviceStation:home")
                         elif current_user.user_type == 'SUPPLIER':
-                            return redirect("fuel-request")
+                            if first_login:
+                                return redirect("supplier:initial-password-change")
+                            else:
+                                return redirect("fuel-request")
                         elif current_user.user_type == 'S_ADMIN':
                             return redirect("users:allocate")
                         elif current_user.user_type == 'ZERA':
                             return redirect("zeraPortal:dashboard")
                         elif current_user.user_type == 'NOIC_STAFF':
-                            return redirect("noicDepot:dashboard")
+                            return redirect("noicDepot:orders")
                         elif current_user.user_type == 'NOIC_ADMIN':
                             return redirect("noic:dashboard")
                     # wrong password
