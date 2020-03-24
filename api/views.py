@@ -103,20 +103,22 @@ Registration for individual buyer
 @csrf_exempt
 @api_view(['POST'])
 def register(request):
+    global username
     if request.method == 'POST':
         # fetch details
-        username = request.POST.get('username')
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
         phone = request.POST.get('phone')
         password = request.POST.get('password')
+        username = first_name[0] + last_name
         # checking for existing details
         email_check = User.objects.filter(email=email)
         username_check = User.objects.filter(username=username)
         # username check
         if username_check.exists():
-            return HttpResponse(status=409)
+            username = first_name[0] + last_name + today.strftime('%S')
+
         # email check
         elif email_check.exists():
             return HttpResponse(status=406)

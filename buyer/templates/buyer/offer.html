@@ -1,5 +1,6 @@
 {% extends "finder/buyer_base.html" %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block body%}
 
@@ -83,7 +84,7 @@
                     </th>
                 </tr>
                 </thead>
-                <tbody>
+                <tboddy>
                     {% for offer in offers %}
                     <tr>
                         
@@ -121,7 +122,7 @@
                             </a>
                         </td>
                         <td class="text-primary">
-                         <a class="btn btn-primary btn-sm" href="{% url 'reject-offer' offer.id %}" >
+                         <a class="btn btn-warning btn-sm" href="{% url 'reject-offer' offer.id %}" >
                                 <i class="material-icons"></i>Reject Offer 
                             </a>
                         </td>
@@ -135,25 +136,188 @@
                 <span class="modal-title" style= "color:whitesmoke; font-size: 15px;" >Accept the Offer</span>   
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
+            {% if offer.account and offer.account.is_verified %}
+                <div class="modal-body">
+                    <h4 style="color: #374767">By clicking <strong>YES</strong> you are confirming to accepting an offer from {{offer.supplier.company}}, 
+                    {{offer.depot_name}} Depot
+                    </h4>
+                    
+                </div>
+
+                <div class="modal-footer">
+                    <a href="{% url 'accept-offer' offer.id %}" class="btn btn-warning">
+                        Yes
+                    </a>    
+                    
+                    <a class="btn btn-success"   data-dismiss="modal">
+                            No
+                    </a>
+                </div>
+            {% elif offer.account and not offer.account.is_verified%}
             <div class="modal-body">
-                <h4 style="color: #374767">By clicking <strong>YES</strong> you are confirming to accepting an offer from {{offer.supplier.company}}, 
-                {{offer.depot_name}} Depot
-                </h4>
-                
+
+                <h4 style="color: #374767">Your Application For An Account With {{offer.supplier.company.name|title}} is Still <strong style="color: #d9534f;">Pending</strong></h4>
             </div>
 
             <div class="modal-footer">
-                <a href="{% url 'accept-offer' offer.id %}" class="btn btn-warning">
-                    Yes
-                </a>    
                 
-                <a class="btn btn-success"   data-dismiss="modal">
-                        No
+                <a class="btn btn-default" data-dismiss="modal" style="background-color: lightslategray;color:white">
+                        Close
                 </a>
             </div>
+
+            {% else %}
+            <div class="modal-body">
+                <div class="">
+                    <div class="">
+                        <div style="padding: 28px;background-color: mintcream;">
+                            <h3 class="text-center" id="title">Create Account With 
+                                <b style="color: cadetblue;">
+                                    {{offer.supplier.company.name|title }}
+                                </b>    
+                            
+                            </h3>
+                        </div>    
+                         <p class="text-center">
+                            <small id="passwordHelpInline" class="text-muted" style="color: lightslategray;">
+                            To Accept This Offer    .
+                            </small>
+                        </p>
+                        <hr>
+
+                        <div class="">
+                        <div id="logo_image_{{ offer.id}}">    
+                            <button onclick="toggle_applications()">
+                                <img class="img-responsive"  src="https://corelpro.com/wp-content/uploads/2019/09/Corporate-Logo-Design-1.jpg" alt="..." 
+                                style="filter: contrast(0.5)">
+                            <div class="carousel-caption">
+                                <h1>Click Here To Create Account.</h1>
+                            </div>
+                        </button>
+
+
+                            
+                          </div>
+                        </div>  
+
+                        <div class="row justify-content-center" id="open_applications__{{offer.id}}" style="width: 66%;margin: auto;text-align: center;display: block;">
+                            <div class="col-md-12" style="padding-top: 40px;border: #3455e521 solid 1px;padding-bottom: 40px;margin-bottom: 0px;border-radius: 12px;">
+                                <form role="form" method="post" action="{% url 'upload-application' offer.id %}" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <fieldset>
+                                        <div class="col-md-12">                   
+                                            <div class="form-group col-md-6">
+                                                <label for=""> Cert Of Income Document</label>
+                                            </div>
+                
+                                            <div class="form-group col-md-6">
+                                                <input type="file" name="cert_of_income_doc" id="email" class="form-control input-sm" placeholder="Email Address">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">                   
+                                            <div class="form-group col-md-6">
+                                                <label for=""> Proof Of Residence Document</label>
+                                            </div>
+                
+                                            <div class="form-group col-md-6">
+                                                <input type="file" name="proof_of_res_docs" id="email" class="form-control input-sm" placeholder="Email Address">
+                                            </div>
+                                        </div>    
+                                        <div class="col-md-12">                   
+                                            <div class="form-group col-md-6">
+                                                <label for=""> Tax Clearance Document</label>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <input type="file" name="tax_clearance_doc" id="password" class="form-control input-sm" placeholder="Password">
+                                            </div>
+                                        </div>    
+
+                                        <div class="col-md-12">                   
+
+                                            <div class="form-group col-md-6">
+                                                <label for=""> ID Document</label>
+                                            </div>
+                                                <div class="form-group col-md-6">
+                                                <input type="file" name="id_document" id="password2" class="form-control input-sm" placeholder="Password2">
+                                            </div>
+                                        </div>    
+
+                                        <div class="col-md-12">                   
+                                
+                                            <div class="form-group col-md-6">
+                                                <label for=""> Application Document</label>
+                                            </div>
+                                                <div class="form-group col-md-6">
+                                                <input type="file" name="file" id="password2" class="form-control input-sm" placeholder="Password2">
+                                            </div>
+                                        </div>    
+
+                                        <div class="col-md-12">                   
+
+                                            <div class="form-group col-md-6">
+                                                <label for=""> CR14 Document</label>
+                                            </div>
+                                                <div class="form-group col-md-6">
+                                                <input type="file" name="cr14_document" id="password2" class="form-control input-sm" placeholder="Password2">
+                                            </div>
+                                        </div>    
+
+                                        <div class="col-md-12">                   
+
+                                            <div class="form-group col-md-6">
+                                                <label for=""> CR6 Document</label>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <input type="file" name="cr6_document" id="password2" class="form-control input-sm" placeholder="Password2">
+                                            </div>
+                                        </div>    
+
+                                       
+                                        </div>
+                                    </fieldset>
+                            </div>
+                            
+                            
+
+                        </div>
+                    </div>
+                    
+                </div>
+            
+                <div class="modal-footer">
+                
+                    
+                    <button class="btn btn-outline-info" type="submit">Create Account </button>
+                    
+                    
+                    <a class="btn btn-default"   data-dismiss="modal">
+                            Cancel
+                    </a>
+                </div>
+            </form>
+
+            
+                
+            </div>
+
+            
+
+            {% endif %}    
         </div>
     </div>
 </div>
+<script>
+    $("#open_applications__{{offer.id}}").hide()
+    function toggle_applications(){
+        $("#open_applications__{{offer.id}}").fadeIn()
+        $("#open_applications__{{offer.id}}").fadeIn("slow");
+        $("#open_applications__{{offer.id}}").fadeIn(18000)
+
+
+        $("#logo_image_{{ offer.id}}").hide()
+        console.log("Chamhanya");
+    }
+</script> 
                 {% endfor %}
                 </tbody>
             </table>
@@ -173,6 +337,8 @@
 
 </div>
 
+
+   
 {% endblock %}
 
 

@@ -76,6 +76,8 @@ def login_user(request):
                     # user has entered details correctly
                     if auth_status:
                         current_user = User.objects.get(username=username)
+                        if not current_user.last_login:
+                            first_login = True
                         # starting session
                         login(request, current_user)
                         # redirecting to the necessary pages
@@ -84,7 +86,10 @@ def login_user(request):
                         elif current_user.user_type == 'SS_SUPPLIER':
                             return redirect("serviceStation:home")
                         elif current_user.user_type == 'SUPPLIER':
-                            return redirect("fuel-request")
+                            if first_login:
+                                return redirect("supplier:initial-password-change")
+                            else:
+                                return redirect("fuel-request")
                         elif current_user.user_type == 'S_ADMIN':
                             return redirect("users:allocate")
                         elif current_user.user_type == 'ZERA':
@@ -508,9 +513,12 @@ def offers(request, id):
     offers = Offer.objects.filter(request=selected_request).filter(declined=False).all()
     for offer in offers:
         depot = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
+        account = Account.objects.filter(buyer_company=request.user.company, supplier_company=offer.supplier.company).first()
         if depot:
             offer.depot_name = depot.name
             offer.depot_address = depot.location
+        if account:
+            offer.account = account    
 
     return render(request, 'buyer/offer.html', {'offers': offers})
 

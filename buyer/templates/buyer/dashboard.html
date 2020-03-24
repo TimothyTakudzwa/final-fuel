@@ -193,7 +193,11 @@
                                     {{data.diesel_quantity|intcomma}}
                                 </td>
                                 <td>
+                                    {% if not data.last_updated %}
+                                    <p style="color: lightslategray;">Yet To Be Updated</p>
+                                    {% else %}
                                     {{data.last_updated}}
+                                    {% endif %}
                                 </td>
                                 
                                 <td>

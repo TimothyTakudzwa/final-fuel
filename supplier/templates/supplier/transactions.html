@@ -92,9 +92,9 @@
                                 <td>${{ transaction.expected|intcomma}}</td>
                                 <td>${{ transaction.paid|intcomma }}</td>
                                 {% if transaction.is_complete == True %}
-                                    <td><p style="color:rgb(0, 225, 255)">Complete</p></td>
+                                    <td> <i class="fa fa-check-circle-o" style="color: #009688; font-size: 25px;" aria-hidden="true"></i></td>
                                 {% else %}
-                                    <td><p style="color:rgb(22, 20, 20)">Incomplete</p></td>
+                                    <td><i class="fa fa-times-circle-o" style="color: crimson; font-size: 25px;" aria-hidden="true"></i></td>
                                 {% endif %}
                                 {% if transaction.offer.delivery_method == 'DELIVERY' %}
                                 <td>
