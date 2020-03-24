@@ -886,7 +886,7 @@ def suppliers_list(request):
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
                                    first_name=first_name, last_name=last_name, user_type='SS_SUPPLIER',
                                    company=request.user.company, email=email,
-                                   phone_number=phone_number)
+                                   phone_number=phone_number, password_reset=True)
         user.set_password(password)
         if message_is_send(request, user, password):
             if user.is_active:
@@ -916,7 +916,7 @@ def suppliers_list(request):
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
                                    first_name=first_name, last_name=last_name, user_type='SUPPLIER',
                                    company=request.user.company, email=email,
-                                   phone_number=phone_number)
+                                   phone_number=phone_number, password_reset=True)
         user.set_password(password)
         if message_is_send(request, user, password):
             if user.is_active:
@@ -1446,7 +1446,7 @@ def depot_staff(request):
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
                                    first_name=first_name, last_name=last_name, user_type='SUPPLIER',
                                    company=request.user.company, email=email,
-                                   phone_number=phone_number)
+                                   phone_number=phone_number, password_reset=True)
         user.set_password(password)
         if message_is_send(request, user, password):
             if user.is_active:
@@ -1467,6 +1467,35 @@ def depot_staff(request):
     '''
 
     return render(request, 'users/depot_staff.html', {'suppliers': suppliers, 'form1': form1})
+
+
+@login_required
+def initial_password_change(request):
+    if request.method == 'POST':
+        password1 = request.POST['new_password1']
+        password2 = request.POST['new_password2']
+        if password1 != password2:
+            messages.warning(request, "Passwords Don't Match")
+            return redirect('users:initial-password-change')
+        elif len(password1) < 8:
+            messages.warning(request, "Password is too short")
+            return redirect('users:initial-password-change')
+        elif password1.isnumeric():
+            messages.warning(request, "Password can not be entirely numeric!")
+            return redirect('users:initial-password-change')
+        elif not password1.isalnum():
+            messages.warning(request, "Password should be alphanumeric")
+            return redirect('users:initial-password-change')
+        else:
+            user = request.user
+            user.set_password(password1)
+            user.password_reset = False
+            user.save()
+            update_session_auth_hash(request, user)
+
+            messages.success(request, 'Password Successfully Changed')
+            return redirect('users:allocate')
+    return render(request, 'users/initial_pass_change.html')
 
 
 @login_required()

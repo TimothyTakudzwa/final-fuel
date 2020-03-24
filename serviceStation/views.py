@@ -21,6 +21,36 @@ from national.models import NationalFuelUpdate
 from itertools import chain
 from operator import attrgetter
 
+
+@login_required
+def initial_password_change(request):
+    if request.method == 'POST':
+        password1 = request.POST['new_password1']
+        password2 = request.POST['new_password2']
+        if password1 != password2:
+            messages.warning(request, "Passwords Don't Match")
+            return redirect('serviceStation:initial-password-change')
+        elif len(password1) < 8:
+            messages.warning(request, "Password is too short")
+            return redirect('serviceStation:initial-password-change')
+        elif password1.isnumeric():
+            messages.warning(request, "Password can not be entirely numeric!")
+            return redirect('serviceStation:initial-password-change')
+        elif not password1.isalnum():
+            messages.warning(request, "Password should be alphanumeric")
+            return redirect('serviceStation:initial-password-change')
+        else:
+            user = request.user
+            user.set_password(password1)
+            user.password_reset = False
+            user.save()
+            update_session_auth_hash(request, user)
+
+            messages.success(request, 'Password Successfully Changed')
+            return redirect('serviceStation:home')
+    return render(request, 'serviceStation/initial_pass_change.html')
+
+
 @login_required()
 def fuel_updates(request):
     updates = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).first()

@@ -32,13 +32,15 @@
         data-index="0">
         <div class="panel-heading ui-sortable-handle">
             <div class="btn-group"> 
-                <a class="btn btn-success" href="{% url 'activate_whatsapp' %}" style="background-color: #25d366;"><i class="fa fa-whatsapp" style="margin-right: 11px;"></i>
+
+                <a href="{% url 'activate_whatsapp' %}" style="background-color: #25d366;" class="btn btn-success btn-labeled" type="button" class="btn btn-labeled btn-success m-b-5">
+                    <span class="btn-label"><i class="fa fa-whatsapp"></i></span>
                     {% if request.user.activated_for_whatsapp %}
                         Deactivate Whatsapp
                     {% else %}
                         Activate Whatsapp
                     {% endif %}
-                </a>  
+                </a>
             </div>
             
             <div class="dropdown">
@@ -147,12 +149,12 @@ aria-hidden="true">
 <div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <h2 class="modal-title">Make Offer</h2>
+        <span class="modal-title">Make Offer</span>
     </div>
 <div class="modal-body">
 <form method="POST" action="{% url 'supplier:supplier' req.id %}">
     {% csrf_token %}
-    <div class=" row col-sm-12">
+    <div class=" row">
     <div class="col-sm-6">
         <label>Fuel Type</label>
         <input type="text" name="fuel_type" class="form-control" value="{{req.fuel_type}}" disabled/>
@@ -163,7 +165,7 @@ aria-hidden="true">
         <input type="number" step="0.01" name="quantity" class="form-control" value="{{req.amount}}" required/>
     </div>
     </div>
-    <div class=" row col-sm-12">
+    <div class=" row">
     <div class="col-sm-6">
         <label>Fuel Price</label>
         <input type="number" step="0.01" name="price" class="form-control" value="{{req.price|stringformat:".2f"}}" required/>
@@ -174,7 +176,10 @@ aria-hidden="true">
   </div>
     </div>
 </div>
-<p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-primary">Make Offer</button></p>
+<div class="modal-footer">  
+    <button type="submit" class="btn btn-primary ">Make Offer</button>
+    <button class="btn btn-default" data-dismiss="modal" >Close</button>
+</div> 
 </form>
 </div>
 </div>
@@ -189,7 +194,7 @@ aria-hidden="true">
   <div class="modal-content">
       <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-          <h2 class="modal-title">Make Offer</h2>
+          <span class="modal-title">Make Offer</span>
       </div>
   <div class="modal-body">
   <form method="POST" action="{% url 'supplier:supplier' req.id %}">
@@ -229,7 +234,7 @@ aria-hidden="true">
               </div>
               </div>
           <p style="text-align: center;"><label>Available Equipments</label></p>
-          <div class="col-sm-12">
+          <div class="row" style="padding-left: 15px;">
               <div class="col-sm-4">
                   <input class="form-control-md" type="checkbox" value="False" name="pump_available">
                   <label for="pump_available">Pump </label>
@@ -247,7 +252,10 @@ aria-hidden="true">
           </div>
           </div>
   </div>
-  <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-primary">Make Offer</button></p>
+  <div class="modal-footer">  
+    <button type="submit" class="btn btn-primary ">Make Offer</button>
+    <button class="btn btn-default" data-dismiss="modal" >Close</button>
+</div> 
   </form>
   </div>
   </div>
