@@ -2131,7 +2131,7 @@ def place_order(request):
             trailer_reg = request.POST['trailer_reg']
             driver = request.POST['driver']
             driver_id = request.POST['driver_id']
-            Order.objects.create(price=price, amount_paid=amount_paid, duty=duty, vat=vat, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, noic_depot=noic_depot, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+            Order.objects.create(price=price, amount_paid=amount_paid, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, noic_depot=noic_depot, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
             messages.success(request,'placed order successfully')
             return redirect('users:orders')
 
@@ -2186,3 +2186,15 @@ def delivery_note(request, id):
             return redirect('users:orders')
         else:
             pass
+
+
+def download_proof(request, id):
+    document = Order.objects.filter(id=id).first()
+    if document:
+        filename = document.proof_of_payment.name.split('/')[-1]
+        response = HttpResponse(document.proof_of_payment, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect('users:orders')
+    return response

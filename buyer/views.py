@@ -1045,3 +1045,23 @@ def upload_application(request, id):
                                cr6=cr6, tax_clearance=tax_clearance, cert_of_inco=cert_of_inco)
         messages.success(request, 'Application successfully send')
     return redirect('accounts-status')
+
+
+
+def company_profile(request):
+    compan = Company.objects.filter(id=request.user.company.id).first()
+
+    if request.method == 'POST':
+        
+        compan.name = request.POST['name']
+        compan.address = request.POST['address']
+        compan.industry = request.POST['industry']
+        compan.iban_number = request.POST['iban_number']
+        compan.licence_number = request.POST['licence_number']
+        compan.destination_bank = request.POST['destination_bank']
+        compan.account_number = request.POST['account_number']
+        compan.save()
+        messages.success(request, 'Company Profile updated successfully')
+        return redirect('buyer:company_profile')
+
+    return render(request, 'buyer/company_profile.html', {'compan': compan})

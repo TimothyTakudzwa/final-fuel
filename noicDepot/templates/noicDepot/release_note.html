@@ -56,6 +56,9 @@
                             <th class="text-left">COLLECTION ADDRESS</th>
                             <th class="text-left">PRODUCT</th>
                             <th class="text-left">QUANTITY</th>
+                            <th class="text-left">VAT</th>
+                            <th class="text-left">DUTY</th>
+                            <th class="text-left">TOTAL PRICE</th>
                             <th class="text-left">TRANSPORTER</th>
                             <th class="text-left">DRIVER</th>
                             <th class="text-left">DRIVER ID</th>
@@ -64,14 +67,17 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="date">{{allocation.release_date}}</td>
-                            <td class="date">{{allocation.assigned_depot.address}} {{allocation.assigned_depot.city}}</td>            
-                            <td class="unit">{{allocation.fuel_type}} </td>
-                            <td class="qty">{{allocation.quantity|intcomma}} Litres</td>
-                            <td class="trans">{{allocation.order.transporter}}</td>
-                            <td class="driver">{{allocation.order.driver}}</td>
-                            <td class="ID">{{allocation.order.driver_id}}</td>
-                            <td class="truck">{{allocation.order.truck_reg}}</td>
+                            <td class="">{{allocation.release_date}}</td>
+                            <td class="">{{allocation.assigned_depot.address}} {{allocation.assigned_depot.city}}</td>            
+                            <td class="">{{allocation.fuel_type}}|S-ORD {{allocation.sord_no}} </td>
+                            <td class="">{{allocation.quantity|intcomma}} Litres</td>
+                            <td class="">{{allocation.order.vat}}</td>
+                            <td class="">{{allocation.order.duty}}</td>
+                            <td class="">{{allocation.order.price}}</td>
+                            <td class="">{{allocation.order.transporter}}</td>
+                            <td class="">{{allocation.order.driver}}</td>
+                            <td class="">{{allocation.order.driver_id}}</td>
+                            <td class="">{{allocation.order.truck_reg}}</td>
                         </tr>
                         
                     </tbody>
