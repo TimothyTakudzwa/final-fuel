@@ -55,7 +55,7 @@ class FuelRequest(models.Model):
     """
     name = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     supplier_company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, blank=True, null=True)
-    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    amount = models.FloatField(default=0.00)
     fuel_type = models.CharField(max_length=50)
     delivery_method = models.CharField(max_length=200)
     delivery_address = models.CharField(max_length=200, blank=True, null=True)

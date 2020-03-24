@@ -310,7 +310,7 @@
         <div class="panel-body">              
       
       <div class="table-responsive">
-        <table id="fuel_request" class="table table-striped table-bordered" style="width:100%">
+        <table id="audit_trail" class="table table-striped table-bordered" style="width:100%">
             <thead style="background-color: lightslategray; color:white;">
                 <tr>
                     <th style="color: white;">Date</th>
@@ -409,13 +409,15 @@
 
                     </td>
 
-                    {% if order.payment_approved %}
-                    <td><b style="color: rgb(59, 59, 139);">Payment Approved</b></td>
-                    {% else %}
+                   
                     <td>
-                       Approval Pending
-                    </td>
-                    {% endif %}
+                        <div class="btn-group">
+                            <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'users:download_proof' order.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a>
+                        </div>
+                        </td>
+                    
+                  
+                   
                     {% if order.allocation != None %}
                             {% if order.allocation.release_note %}
                             <td>

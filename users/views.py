@@ -2182,3 +2182,15 @@ def delivery_note(request, id):
             return redirect('users:orders')
         else:
             pass
+
+
+def download_proof(request, id):
+    document = Order.objects.filter(id=id).first()
+    if document:
+        filename = document.proof_of_payment.name.split('/')[-1]
+        response = HttpResponse(document.proof_of_payment, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document Not Found')
+        return redirect('users:orders')
+    return response
