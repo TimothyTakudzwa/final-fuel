@@ -2131,7 +2131,7 @@ def place_order(request):
             trailer_reg = request.POST['trailer_reg']
             driver = request.POST['driver']
             driver_id = request.POST['driver_id']
-            Order.objects.create(price=price, amount_paid=amount_paid, duty=duty, vat=vat, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, noic_depot=noic_depot, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+            Order.objects.create(price=price, amount_paid=amount_paid, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, noic_depot=noic_depot, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
             messages.success(request,'placed order successfully')
             return redirect('users:orders')
 
