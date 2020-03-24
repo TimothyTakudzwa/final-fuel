@@ -107,6 +107,34 @@ def verification(request, token, user_id):
                   {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
 
 
+@login_required
+def initial_password_change(request):
+    if request.method == 'POST':
+        password1 = request.POST['new_password1']
+        password2 = request.POST['new_password2']
+        if password1 != password2:
+            messages.warning(request, "Passwords Don't Match")
+            return redirect('supplier:initial-password-change')
+        elif len(password1) < 8:
+            messages.warning(request, "Password is too short")
+            return redirect('supplier:initial-password-change')
+        elif password1.isnumeric():
+            messages.warning(request, "Password can not be entirely numeric!")
+            return redirect('supplier:initial-password-change')
+        elif not password1.isalnum():
+            messages.warning(request, "Password should be alphanumeric")
+            return redirect('supplier:initial-password-change')
+        else:
+            user = request.user
+            user.set_password(password1)
+            user.save()
+            update_session_auth_hash(request, user)
+
+            messages.success(request, 'Password Successfully Changed')
+            return redirect('fuel-request')
+    return render(request, 'supplier/initial_pass_change.html')
+
+
 @login_required()
 def change_password(request):
     context = {
@@ -130,6 +158,7 @@ def change_password(request):
                 return redirect('change-password')
             elif new1.isnumeric():
                 messages.warning(request, "Password can not be entirely numeric!")
+                return redirect('change-password')
             elif not new1.isalnum():
                 messages.warning(request, "Password should be alphanumeric")
                 return redirect('change-password')
@@ -1056,15 +1085,12 @@ def view_delivery_schedule(request, id):
 
 
 def view_confirmation_doc(request, id):
-    delivery = DeliverySchedule.objects.filter(id=id).first()
-    if delivery:
-        filename = delivery.confirmation_document.name.split('/')[-1]
-        response = HttpResponse(delivery.confirmation_document, content_type='text/plain')
-        response['Content-Disposition'] = 'attachment; filename=%s' % filename
-    else:
-        messages.warning(request, 'Document Not Found')
-        redirect('supplier:delivery_schedules')
-    return response
+    payment = AccountHistory.objects.filter(delivery_schedule__id=id).first()
+    payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
+    context = {
+        'payment': payment
+    }
+    return render(request, 'supplier/delivery_note.html', context=context)
 
 
 def view_delivery_note(request, id):

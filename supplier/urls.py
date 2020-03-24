@@ -20,6 +20,7 @@ urlpatterns = [
     path('activate_whatsapp/', views.activate_whatsapp, name='activate_whatsapp'),
     path('company/', views.company, name='company'),
     path('change_password/', views.change_password, name='change_password'),
+    path('initial-password-change/', views.initial_password_change, name='initial-password-change'),
     path('view_invoice/<int:id>', views.view_invoice, name='view_invoice'),
     path('release-note/<int:id>', views.upload_release_note, name='release-note'),
     path('view-release-note/<int:id>', views.view_release_note, name='view-release-note'),
