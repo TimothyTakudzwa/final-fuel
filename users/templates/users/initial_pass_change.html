@@ -202,7 +202,7 @@
                     </div>
                 </div>
                 <div class="panel-body">        
-                  <form action="{% url 'supplier:initial-password-change' %}" method="POST">
+                  <form action="{% url 'users:initial-password-change' %}" method="POST">
                   {% csrf_token %}
                 <div id="div_id_new_password1" class="form-group">
                 <label for="new_password1" class="col-form-label  requiredField">New password<span class="asteriskField">*</span> </label>
