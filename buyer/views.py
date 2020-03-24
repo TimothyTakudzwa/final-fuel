@@ -395,9 +395,9 @@ Landing page
 def dashboard(request):
     if request.user.company.is_govnt_org:
         updates = SuballocationFuelUpdate.objects.filter(~Q(subsidiary__praz_reg_num=None)).filter(
-            ~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
+            ~Q(diesel_quantity=0.00), ~Q(petrol_quantity=0.00))
     else:
-        updates = SuballocationFuelUpdate.objects.filter(~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
+        updates = SuballocationFuelUpdate.objects.filter(~Q(diesel_quantity=0.00), ~Q(petrol_quantity=0.00))
     for update in updates:
         subsidiary = Subsidiaries.objects.filter(id=update.subsidiary.id).first()
         if UserReview.objects.filter(depot=subsidiary).exists():
