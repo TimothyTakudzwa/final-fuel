@@ -24,6 +24,7 @@ from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, 
 from .constants import coordinates_towns
 from .forms import ZeraProfileUpdateForm, ZeraImageUpdateForm
 from fuelUpdates.models import SordCompanyAuditTrail
+from fuelfinder.helper_functions import random_password
 from users.models import SordActionsAuditTrail
 from accounts.models import AccountHistory
 from users.views import message_is_sent
@@ -126,10 +127,11 @@ def add_supplier_admin(request, id):
         while User.objects.filter(username=username.lower()).exists():
             username = initial_username + str(i)
             i += 1
-        password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+        password = random_password()
         user = User.objects.create(company=company, first_name=first_name, last_name=last_name, email=email, phone_number=phone_number.replace(' ', ''),
-        user_type='S_ADMIN', is_active=True, username=username.lower(), password=password)
-        message_is_sent(request, user)
+        user_type='S_ADMIN', is_active=True, username=username.lower(), password_reset=True)
+        user.set_password(password)
+        message_is_sent(request, user, password)
         messages.success(request, 'User successfully created')
         return redirect ('zeraPortal:dashboard')
 

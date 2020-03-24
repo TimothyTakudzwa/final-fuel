@@ -49,15 +49,27 @@ def login_user(request):
         if current_user.user_type == "BUYER":
             return redirect("buyer-dashboard")
         elif current_user.user_type == 'SS_SUPPLIER':
-            return redirect("serviceStation:home")
+            if current_user.password_reset:
+                return redirect("serviceStation:initial-password-change")
+            else:
+                return redirect("serviceStation:home")
         elif current_user.user_type == 'SUPPLIER':
-            return redirect("fuel-request")
+            if current_user.password_reset:
+                return redirect("supplier:initial-password-change")
+            else:
+                return redirect("fuel-request")
         elif current_user.user_type == 'S_ADMIN':
-            return redirect("users:allocate")
+            if current_user.password_reset:
+                return redirect("users:initial-password-change")
+            else:
+                return redirect("users:allocate")
         elif current_user.user_type == 'ZERA':
             return redirect("zeraPortal:dashboard")
         elif current_user.user_type == 'NOIC_STAFF':
-            return redirect("noicDepot:orders")
+            if current_user.password_reset:
+                return redirect("noicDepot:initial-password-change")
+            else:
+                return redirect("noicDepot:orders")
         elif current_user.user_type == 'NOIC_ADMIN':
             return redirect("noic:dashboard")
     else:
@@ -76,26 +88,33 @@ def login_user(request):
                     # user has entered details correctly
                     if auth_status:
                         current_user = User.objects.get(username=username)
-                        if not current_user.last_login:
-                            first_login = True
                         # starting session
                         login(request, current_user)
                         # redirecting to the necessary pages
                         if current_user.user_type == "BUYER":
                             return redirect("buyer-dashboard")
                         elif current_user.user_type == 'SS_SUPPLIER':
-                            return redirect("serviceStation:home")
+                            if current_user.password_reset:
+                                return redirect("serviceStation:initial-password-change")
+                            else:
+                                return redirect("serviceStation:home")
                         elif current_user.user_type == 'SUPPLIER':
-                            if first_login:
+                            if current_user.password_reset:
                                 return redirect("supplier:initial-password-change")
                             else:
                                 return redirect("fuel-request")
                         elif current_user.user_type == 'S_ADMIN':
-                            return redirect("users:allocate")
+                            if current_user.password_reset:
+                                return redirect("users:initial-password-change")
+                            else:
+                                return redirect("users:allocate")
                         elif current_user.user_type == 'ZERA':
                             return redirect("zeraPortal:dashboard")
                         elif current_user.user_type == 'NOIC_STAFF':
-                            return redirect("noicDepot:orders")
+                            if current_user.password_reset:
+                                return redirect("noicDepot:initial-password-change")
+                            else:
+                                return redirect("noicDepot:orders")
                         elif current_user.user_type == 'NOIC_ADMIN':
                             return redirect("noic:dashboard")
                     # wrong password
