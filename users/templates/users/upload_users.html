@@ -94,39 +94,47 @@
                                                 <!--account details-->
                                                 <div class="row">
                                                     <!--supplier-->
-                                                    <div class="col-md-6">
-                                                        <h2>Supplier</h2>
-                                                        <!--name-->
-                                                        <h5>{{ account.supplier_company.name }}</h5>
-                                                        <text class="text-muted">Address</text>
-                                                        <h5>{{ account.supplier_company.address }}</h5>
-                                                        <!--bank-->
-                                                        <text class="text-muted">Bank</text>
-                                                        <h5>{{ account.supplier_company.destination_bank }}</h5>
-                                                        <text class="text-muted">A/c</text>
-                                                        <!--account-->
-                                                        <h5>{{ account.supplier_company.account_number }}</h5>
-                                                        <text class="text-muted">BPN</text>
-                                                        <!--vat number-->
-                                                        <h5>{{ account.supplier_company.bp_num }}</h5>
-                                                    </div>
-                                                    <!--buyer-->
-                                                    <div class="col-md-6 text-right">
-                                                        <h2>Buyer</h2>
-                                                        <!--name-->
-                                                        <h5>{{ account.buyer_company.name }}</h5>
-                                                        <text class="text-muted">Address</text>
-                                                        <h5>{{ account.buyer_company.address }}</h5>
-                                                        <!--bank-->
-                                                        <text class="text-muted">Bank</text>
-                                                        <h5>{{ account.buyer_company.destination_bank }}</h5>
-                                                        <text class="text-muted">A/c</text>
-                                                        <!--account-->
-                                                        <h5>{{ account.buyer_company.account_number }}</h5>
-                                                        <text class="text-muted">BPN</text>
-                                                        <!--vat number-->
-                                                        <h5>{{ account.buyer_company.bp_num }}</h5>
-                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="col-md-6">
+                                                            <div style="color: white;background-color: mintcream;padding: 5px;">
+                                                                <h2>Supplier - <small>{{ account.supplier_company.name }}</small></h2>
+                                                            </div>    
+                                                            <!--name-->
+                                                            <!-- <h5 style="font-weight: bolder; color: cadetblue;">{{ account.supplier_company.name }}</h5> -->
+                                                            <h5>Address</h5>
+                                                            <text class="text-muted">{{ account.supplier_company.address }}</text>
+                                                            <!--bank-->
+                                                            <h5>Bank</h5>
+                                                            <text class="text-muted">{{ account.supplier_company.destination_bank }}</text>
+                                                            <text class="text-muted">A/c</text>
+                                                            <!--account-->
+                                                            <h5>Account Number</h5>
+                                                            <text class="text-muted">{{ account.supplier_company.account_number }}</text>
+                                                            <!--vat number-->
+                                                            <h5>BPN</h5>
+                                                            <text class="text-muted">{{ account.supplier_company.bp_num }}</text>
+
+                                                        </div>
+                                                        <!--buyer-->
+                                                        <div class="col-md-6">
+                                                            <div style="color: white;background-color: mintcream;padding: 5px;">
+
+                                                                <h2>Buyer - <small>{{ account.buyer_company.name }}</small</h2>
+                                                            </div>    
+                                                            <!--name-->
+                                                            <h5>Address</h5>
+                                                            <text class="text-muted">{{ account.buyer_company.address }}</text>
+                                                            <!--bank-->
+                                                            <h5>Bank</h5>
+                                                            <text class="text-muted">{{ account.buyer_company.destination_bank }}</text>
+                                                            <!--account-->
+                                                            <h5>Account Number</h5>
+                                                            <text class="text-muted">{{ account.buyer_company.account_number }}</text>
+                                                            <!--vat number-->
+                                                            <h5>BPN</h5>
+                                                            <text class="text-muted">{{ account.buyer_company.bp_num }}</text>
+                                                        </div>
+                                                    </div>    
                                                 </div>
                                                 <hr>
 

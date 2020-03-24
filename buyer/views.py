@@ -508,9 +508,12 @@ def offers(request, id):
     offers = Offer.objects.filter(request=selected_request).filter(declined=False).all()
     for offer in offers:
         depot = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
+        account = Account.objects.filter(buyer_company=request.user.company, supplier_company=offer.supplier.company).first()
         if depot:
             offer.depot_name = depot.name
             offer.depot_address = depot.location
+        if account:
+            offer.account = account    
 
     return render(request, 'buyer/offer.html', {'offers': offers})
 
