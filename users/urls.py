@@ -61,6 +61,7 @@ urlpatterns = [
     path('initial-password-change/', views.initial_password_change, name='initial-password-change'),
     path('orders/', views.orders, name='orders'),
     path('view_release_note/<int:id>', views.view_release_note, name='view_release_note'),
-    path('delivery_note/<int:id>', views.delivery_note, name='delivery_note')
+    path('delivery_note/<int:id>', views.delivery_note, name='delivery_note'),
+    path('download_proof/<int:id>', views.download_proof, name='download_proof')
 
 ]

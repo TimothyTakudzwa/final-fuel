@@ -33,7 +33,9 @@ urlpatterns = [
     path('edit_account_details/<int:id>', views.edit_account_details, name="edit_account_details"),
     path('payment_release_notes/<int:id>', views.payment_release_notes, name='payment_release_notes'),
     path('delivery_note/<int:id>', views.delivery_note, name='delivery_note'),
-    path('download_release_note/<int:id>', views.download_release_note, name='download_release_note')
+    path('download_release_note/<int:id>', views.download_release_note, name='download_release_note'),
+    path('company_profile/', views.company_profile, name='company_profile'),
+
     
 
 ]
