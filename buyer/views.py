@@ -751,7 +751,7 @@ def delivery_schedules(request):
                 else:
                     depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
                     schedule.delivery_address = depot.location
-    context = {'form': DeliveryScheduleForm(),
+    context = {
                'schedules': schedules
                }
     if request.method == 'POST':

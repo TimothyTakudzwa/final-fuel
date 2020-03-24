@@ -98,7 +98,8 @@
                           </button>
                           </div>
                           <div class="modal-body">
-                            <div style="padding: 50px;font-stretch: ultra-condensed;font-variant:;font-size: 58px;padding-top: 1px;">
+                            <div style="padding: 50px;font-stretch: ultra-condensed;font-variant:;font-size: 58px;padding-top: 1px;padding-bottom: 20px;margin-bottom: 20px;
+                            background-color: mintcream;padding-left: 25px;margin-left: 25px;font-variant: petite-caps;">
                                 <h3>Upload Document To Confirm 
                                 <strong style="color: #009688;">
                                 Delivery From Sam Sepiol Inc 
@@ -109,16 +110,20 @@
                                   <form method="POST" action="" enctype="multipart/form-data">
                                       {% csrf_token %}
                                       <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
-                                    <div form-row>
+                                    <div class="row">
                                         <div class="form-group" style="padding-left: 50px;">
-                                        {{form.confirmation_document|as_crispy_field}}
+                                            <div class="form-group col-md-12">
+                                                <label>Delivery Date</label>
+                                                <input type="date" name="delivery_date" class="form-control"  required/>
+                                            </div>
                                         </div>
                                     </div>      
-                                    <div class="modal-footer">  
-                                    <input class="btn btn-info" type="submit" value="Confirm Delivery">
-                                    </div>
+                                    
                                   </form>
                               </div>
+                              <div class="modal-footer">  
+                                <button class="btn btn-info" type="submit" >Confirm Delivery</button>
+                                </div>
                           </div>
                       </div>
                   </div>

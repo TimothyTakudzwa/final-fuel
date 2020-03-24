@@ -137,7 +137,7 @@
                                <div class="col-sm-6" id="currency">
 
                                    <label><b style='color:#009688'>Currency</b></label>
-                                   <select class="form-control" name="currency">
+                                   <select class="form-control" name="currency" id="currency">
 
                                        <option>RTGS</option>
                                        <option>USD</option>
@@ -216,6 +216,10 @@
                                 $("#fuel_paid").keyup(function(){
                                     update();
                                 
+                                });
+                                $('#currency').on('change', 'select', function() {
+                                    console.log("Achinja");
+                                    update();
                                 });
                             </script>
                          
