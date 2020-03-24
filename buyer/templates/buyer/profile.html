@@ -85,57 +85,73 @@
            
               <div class="review-block">
                   <div class="row">
-                     
-                      <div class="col-sm-4">
-                          <div class="review-block-rate">
-                              <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Company Name</h4>
-                              </label>
-                             
-                          </div>
-                          <div class="review-block-title">{{user.company.name}} </div>
-                          <div class="review-block-description"> </div>
-                      </div>
-                      <div class="col-sm-4">
-                          <div class="review-block-rate">
-                              <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Company Address</h4>
-                              </label>
-                             
-                          </div>
-                          <div class="review-block-title">{{user.company.address}}</div>
-                          <div class="review-block-description"> </div>
-                      </div>
-                      <div class="col-sm-4">
+                    <div class="col-sm-12">
                         <div class="review-block-rate">
-                            <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Company Industry</h4>
+                            <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>Company Profile</h4>
                             </label>
                            
                         </div>
-                        <div class="review-block-title">{{user.company.industry}}</div>
-                        <div class="review-block-description"> </div>
+                        
                     </div>
-                    <div class="col-sm-12">
-                      <div class="review-block-rate">
-                          <label type="button" class="btn btn-block btn-success btn-xs" aria-label="Left Align"><h4>BP Number</h4>
-                          </label>
-                         
-                      </div>
-                      {% if user.company.bp_num != None %}
-                      <div class="review-block-title">{{user.company.bp_num}}</div>
-                      <div class="review-block-description"> </div>
-                      {% else %}
-                      <div class="review-block-title">N/A</div>
-                      <div class="review-block-description"> </div>
-                      {% endif %}
-                  </div>
+                     
+                    {% load crispy_forms_tags %}
+                    <form action="{% url 'buyer:company_profile'%}" method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="form-group row">
+                            
+                                <div class="col-sm-4">
+                            <label for="name" class="-form-label">Company Name</label>
+                            
+                                <input name="name" type="text" class="form-control"  id="name"  value="{{compan.name}}">
+                            </div>
+                            
+                            
+                            <div class="col-sm-4">                              
+                                <label for="address" class="col-form-label">Address</label>
+                                
+                                    <input name="address" type="text" class="form-control"  id="address"  value="{{ compan.address}}">
+                                </div>
+                                </div>
+        
+        
+                                <div class="form-group row">
+                                
+                                    <div class="col-sm-4">
+                                        <label for="destination_bank" class=" col-form-label">Destination Bank</label>
+                                    
+                                        <input name="destination_bank" type="text" class="form-control" id="diesel"  value="{{compan.destination_bank}}">
+                                    </div>
+                                    
+                                    
+                                    
+                                    <div class="col-sm-4">                     
+                                        <label for="account_number" class="col-form-label">Account Number</label>
+                                        
+                                        <input name="account_number" type="text" class="form-control" id="petrol"  value="{{compan.account_number}}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                      
+                                  
+                                <div class="col-md-4 text-center">     
+                                    <button type="submit" class="btn btn-primary ">Save Changes</button>
+                                </div>
+                               
+                                
+                                    </div>
+    
+                    </form>
+        
                       
                   </div>
-                  <hr>
                  
-                  <hr>
                  
               </div>
           </div>
       </div> 
+      
   </section> <!-- /.content -->
   
   
