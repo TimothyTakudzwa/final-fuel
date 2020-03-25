@@ -101,9 +101,9 @@
 
 
                             <td>{{sord.payment_type}}</td>
-                            <td>{{sord.initial_quantity||floatformat:2}}</td>
-                            <td>{{sord.quantity_allocated||floatformat:2}}</td>
-                            <td>{{sord.end_quantity||floatformat:2}}</td>
+                            <td>{{sord.initial_quantity|floatformat:2}}</td>
+                            <td>{{sord.quantity_allocated|floatformat:2}}</td>
+                            <td>{{sord.end_quantity|floatformat:2}}</td>
                             {% if sord.allocated_to == None %}
                             <td><B style="margin-left: 25px;">--</B></td>
                             {% else %}

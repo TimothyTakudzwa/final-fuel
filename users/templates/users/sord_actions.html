@@ -92,7 +92,7 @@
                             {% endif %}    
 
                             <td>{{sord.payment_type}}</td>
-                            <td>{{sord.allocated_quantity||floatformat:2}}</td>
+                            <td>{{sord.allocated_quantity|floatformat:2}}</td>
                             <td>{{sord.price}}</td>
                             <td>{{sord.allocated_by}}</td>
                             <td>{{sord.allocated_to}}</td>
