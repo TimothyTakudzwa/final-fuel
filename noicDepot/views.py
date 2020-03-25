@@ -96,7 +96,7 @@ def payment_approval(request, id):
     order.payment_approved = True
     order.save()
     messages.success(request, 'payment approved successfully')
-    return redirect('noicDepot:orders')
+    return redirect(f'noicDepot/orders/?order_id={order.id}')
 
 def view_release_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()

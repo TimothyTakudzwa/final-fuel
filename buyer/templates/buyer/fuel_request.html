@@ -29,9 +29,16 @@
     </section>
     <!-- Main content -->
     <div class="content">
+        <div class="">
+            <button class="btn btn-default" onclick="toggle_tables()" style="border-radius: 3px;" id="toggle_button">Toggle Tables</button>
+          </div>
         <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
-            data-index="0">
+            data-index="0" id="incomplete_requests">
             <div class="panel-heading ui-sortable-handle">
+
+                <div class="btn-group" role="group" aria-label="Button group">
+                    <h4>Inomplete Requests</h4>
+                </div>
                 
                 <div class="dropdown">
                     <ul class="dropdown-menu dropdown-menu-right">
@@ -123,6 +130,134 @@
 
             </div>
         </div>
+
+        <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
+            data-index="0" id="complete_requests">
+            <div class="panel-heading ui-sortable-handle">
+                <div class="btn-group" role="group" aria-label="Button group">
+                    <h4>Complete Requests</h4>
+                </div>
+                
+                <div class="dropdown">
+                    <ul class="dropdown-menu dropdown-menu-right">
+
+
+                    </ul>
+                    <div class="dropdown-toggle" data-toggle="dropdown"><span
+                            class="panel-control-icon glyphicon glyphicon-cog"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+
+
+                <div class="table-responsive">
+                    <table id="fuel_updates_complete" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr style="background-color: gray;color: white;">
+                                <th>Requested To</th>
+                                <th>Delivery Method</th>
+                                <th>Currency</th>
+                                <th>Fuel Type</th>
+                                <th>Quantity</th>
+                                <th>Requested On</th>                                        
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for fuel_request in complete_requests %}
+                            <tr>
+                                <td>
+                                    <b>{{fuel_request.depot}} - {{fuel_request.request_company}}</b>
+                                </td>
+                              
+                                <td>
+                                    {{fuel_request.delivery_method}}
+                                </td>
+                                <td>
+                                    {{fuel_request.payment_method}}
+                                </td>
+                                
+                                {% if fuel_request.fuel_type == 'Diesel' %}
+                                    <td class="" style="color: #009688;">
+                                        {{fuel_request.fuel_type}}
+                                    </td>
+                                {% elif fuel_request.fuel_type == 'Petrol' %}
+                                
+                                    <td class="" style="color: #ffb61e;">
+                                        {{fuel_request.fuel_type}}
+                                    </td>
+                                {% else %}
+                                    <td class="">
+                                        {{fuel_request.fuel_type}}
+                                    </td>
+                                {% endif %}    
+
+
+                                <td class="">
+                                    {{fuel_request.amount|intcomma}} Litres
+                                </td>
+                                <td class="">
+                                     {{fuel_request.date}} -- {{fuel_request.time}}
+                                </td>
+                                <td>
+                                    {% if fuel_request.has_offers == True%}
+                                   
+                                        <a type="button" class="btn btn-labeled btn-success m-b-5"  href="{% url 'fuel-offers' fuel_request.id %}">
+                                            <span class="btn-label"><i
+                                                    class="glyphicon glyphicon-info-sign"></i></span>View Offers
+                                            </a>
+                                      
+                                    </a>
+        
+                                    {% else %}
+                                    <button type="button" disabled class="btn btn-labeled btn-danger m-b-5">
+                                        <span class="btn-label"><i
+                                                class="glyphicon glyphicon-remove"></i></span>No offers Yet
+                                    </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+        
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+        </div>
+
+
+        <script>
+            function check_visible(){
+              if ($('#incomplete_requests').is(':visible')){
+                $("#toggle_button").prop("value", "Pama");
+                $("#toggle_button").html("View Complete Requests")
+          
+              }else{
+          
+                $("#toggle_button").prop("value", "Pama");
+                $("#toggle_button").html("View Incomplete Requests")
+              }
+            }
+          </script>
+          
+          
+          <script>
+            $("#incomplete_requests").show();
+            $("#complete_requests").hide();
+            check_visible()
+            
+            function toggle_tables(){
+              $("#incomplete_requests").toggle();
+              $("#complete_requests").toggle();
+              check_visible()
+          
+            }
+          
+          </script>       
 
     </div>
 
