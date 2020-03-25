@@ -77,7 +77,7 @@
                         <tr>
 
                             <td><b style='color:#009688'>{{allocate.payment_type}} </b></td>
-                            <td>{{allocate.petrol_quantity}} Litres {% if allocate.petrol_quantity < 1000 %} <i
+                            <td>{{allocate.petrol_quantity|floatformat:2}} Litres {% if allocate.petrol_quantity < 1000 %} <i
                                     class="material-icons text-danger">warning</i>{% endif %}</td>
 
                             <td> {% if allocate.payment_type == 'USD & RTGS' %} <b style='color:#009688'>RTGS</b>
@@ -87,7 +87,7 @@
                                 {{allocate.petrol_price|stringformat:".2f"}}{% endif %}</td>
 
 
-                            <td>{{allocate.diesel_quantity}} Litres {% if allocate.diesel_quantity < 1000 %} <i
+                            <td>{{allocate.diesel_quantity|floatformat:2}} Litres {% if allocate.diesel_quantity < 1000 %} <i
                                     class="material-icons text-danger">warning</i>{% endif %}</td>
                             <td> {% if allocate.payment_type == 'USD & RTGS' %} <b style='color:#009688'>RTGS</b>
                                 {{allocate.diesel_price|stringformat:".2f"}} | <b style='color:#009688'>USD</b>

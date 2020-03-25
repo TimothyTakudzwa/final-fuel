@@ -126,7 +126,7 @@
                       <td>{{tran.time}}</td>
                       <td>{{tran.buyer}}</td>
                       <td>{{tran.offer.request.delivery_address}}</td>
-                      <td>{{tran.offer.request.amount}} l</td>
+                      <td>{{tran.offer.request.amount|floatformat:2}} l</td>
                       <td>$ {{tran.revenue|stringformat:".2f"}}</td>
                      <td>
                          {% if tran.is_complete %}
