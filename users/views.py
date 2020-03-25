@@ -1495,7 +1495,7 @@ def initial_password_change(request):
 
             messages.success(request, 'Password Successfully Changed')
             return redirect('users:allocate')
-    return render(request, 'supplier/initial_pass_change.html')
+    return render(request, 'users/initial_pass_change.html')
 
 
 @login_required()

@@ -84,7 +84,7 @@
                 </span>
                 <span class="logo-lg">
                     <!--<b>Admin</b>H-admin-->
-                    <h1>ZFMS</h1>
+                    <h4>ZFMS</h4>
                     
                 </span>
             </a>
@@ -132,48 +132,7 @@
                 </div>
              
                 <!-- sidebar menu -->
-                <ul class="sidebar-menu">
-                    <li class="nav-item {% if request.path == '/available_stock/' %} active {% endif %} ">
-                        <a href="{%url 'available_stock'%}"><i class="fa fa-bank"></i><span>Current Stocks</span>
-                        </a>
-                    </li>                    
-                    <li class="nav-item {% if request.path == '/fuel-request/' %} active {% endif %}  ">
-                          <a href="{%url 'fuel-request'%}"><i class="fa fa-binoculars"></i><span>Requests</span>
-                          </a>
-                      </li>
-                      <li class="nav-item {% if request.path == '/my_offers/' %} active {% endif %} ">
-                          <a href="{%url 'my_offers'%}"><i class="fa fa-book"></i><span>Offers</span>
-                          </a>
-                      </li>                      
-                      <li class="nav-item {% if request.path == '/transaction/' %} active {% endif %} ">
-                          <a href="{%url 'transaction'%}"><i class="fa fa-exchange"></i><span>Transactions</span>
-                          </a>
-                      </li>
-                      <li class="nav-item {% if request.path == '/supplier/delivery_schedules/' %} active {% endif %}">
-                        <a href="{% url 'supplier:delivery_schedules' %}"><i class="fa fa-truck" aria-hidden="true"></i><span>Delivery Schedules</span>
-                        </a>
-                    </li>
-                    <li class="nav-item {% if request.path == '/clients/' %} active {% endif %}  ">
-                        <a href="{%url 'supplier:clients'%}"><i class="fa fa-address-card" aria-hidden="true"></i><span>Clients</span>
-                        </a>
-                    </li>
-                      <li class="nav-item {% if request.path == '/allocated_quantity/' %} active {% endif %} ">
-                          <a href="{% url 'allocated_quantity' %}"><i class="fa fa-th-list"></i><span>Fuel Allocations</span>
-                          </a>
-                      </li>
-                      <li class="nav-item {% if request.path == '/account/' %} active {% endif %} ">
-                          <a href="{%url 'account'%}"><i class="fa fa-user-circle-o"></i><span>User Profile</span>
-                          </a>
-                      </li>
-
-                      <li class="nav-item">
-                          <a href="{% url 'logout' %}?next=/login"><i class="fa fa-sign-out"></i><span>Logout</span>
-                          </a>
-                      </li>
-                      
-
-
-                </ul>
+                
             </div> <!-- /.sidebar -->
         </aside>
         <!-- =============================================== -->
@@ -203,7 +162,75 @@
         
         {% endif %}
         
-              {% block body %}{% endblock %}
+        <section class="content-header">
+            <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Search...">
+                    <span class="input-group-btn">
+                        <button type="submit" name="search" id="search-btn" class="btn"><i
+                                class="fa fa-search"></i></button>
+                    </span>
+                </div>
+            </form>
+            <div class="header-icon">
+              <i class="fa fa-gear"></i>
+            </div>
+            <div class="header-title">
+              <h1>Settings</h1>
+              <small>Change Password</small>
+              <ol class="breadcrumb hidden-xs">
+                  <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
+                  <li class="active">Settings</li>
+              </ol>
+            </div>
+          </section>
+          <!-- Main content -->
+          <div class="content">
+            <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
+                data-index="0">
+                <div class="panel-heading ui-sortable-handle">
+                    
+                    <div class="dropdown">
+                        <ul class="dropdown-menu dropdown-menu-right">
+          
+          
+                        </ul>
+                        <div class="dropdown-toggle" data-toggle="dropdown"><span
+                                class="panel-control-icon glyphicon glyphicon-cog"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">        
+                  <form action="{% url 'noicDepot:initial-password-change' %}" method="POST">
+                  {% csrf_token %}
+                <div id="div_id_new_password1" class="form-group">
+                <label for="new_password1" class="col-form-label  requiredField">New password<span class="asteriskField">*</span> </label>
+                    <div class="">
+                    <input type="password" name="new_password1" class="textinput textInput form-control" required="" id="new_password1">
+                    <small id="hint_id_new_password1" class="form-text text-muted">
+                        <ul>
+                        <li>Your password can't be too similar to your other personal information.</li>
+                        <li>Your password must contain at least 8 characters.</li>
+                        <li>Your password can't be a commonly used password.</li>
+                        <li>Your password can't be entirely numeric.</li>
+                        </ul>
+                        </small>
+                    </div>
+                    </div>
+                        
+                        
+                <div id="div_id_new_password2" class="form-group">
+                <label for="id_new_password2" class="col-form-label  requiredField">New password confirmation<span class="asteriskField">*</span> </label>
+                <div class="">
+                    <input type="password" name="new_password2" class="textinput textInput form-control" required="" id="id_new_password2">
+                </div>
+                </div>
+
+                <p style="text-align: center;"><button type="submit" class="btn btn-primary pull-center">Save Password</button></p>
+                  </form>
+              </div>
+              </div>
+          </div>
         </div> <!-- /.content-wrapper -->
             <footer class="main-footer">
                 <div class="pull-right hidden-xs"> <b>Version</b> 1.0</div>
@@ -254,63 +281,6 @@
         } ).draw();
     } );
     </script>
-
-<script>
-    $(document).ready(function() {
-        var t = $('#offers_pending').DataTable( {
-            "columnDefs": [ {
-                "searchable": false,
-                "orderable": false,
-                "targets": 0
-            } ],
-            "order": [[ 1, 'asc' ]]
-        } );
-     
-        t.on( 'order.dt search.dt', function () {
-            t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                cell.innerHTML = i+1;
-            } );
-        } ).draw();
-    } );
-    </script>   
-<script>
-    $(document).ready(function() {
-        var t = $('#fuel_request_complete').DataTable( {
-            "columnDefs": [ {
-                "searchable": false,
-                "orderable": false,
-                "targets": 0
-            } ],
-            "order": [[ 1, 'asc' ]]
-        } );
-     
-        t.on( 'order.dt search.dt', function () {
-            t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                cell.innerHTML = i+1;
-            } );
-        } ).draw();
-    } );
-    </script>      
-
-<script>
-    $(document).ready(function() {
-        var t = $('#transaction_incomplete_table').DataTable( {
-            "columnDefs": [ {
-                "searchable": false,
-                "orderable": false,
-                "targets": 0
-            } ],
-            "order": [[ 1, 'asc' ]]
-        } );
-     
-        t.on( 'order.dt search.dt', function () {
-            t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                cell.innerHTML = i+1;
-            } );
-        } ).draw();
-    } );
-</script> 
-
 
 <script>
     $(document).ready(function() {
@@ -527,49 +497,7 @@
             }, 1300);
             console.log("Tapinda")
         }    
-    </script>    
-    <script>
-        $(document).ready(function () {
-          var logged_user = {{request.user.id}};
-          var socket = io.connect('https://dreamhub.co.zw/new_offer');
-        console.log(socket)
-
-        socket.on('offer_rejected', function (msg) {
-            if (logged_user == msg.user_id) {
-                MyFunction(msg);
-                console.log("Testing New Notification");
-            }
-         
-        });
-
-        socket.on('offer_accepted', function (msg) {
-            if (logged_user == msg.user_id) {
-                MyFunction(msg);
-                console.log("Testing New Notification");
-            }
-         
-        });
-
-        socket.on('new_request', function (msg) {
-            MyFunction(msg);
-            console.log("Testing New Notification");
- 
-        });
-
-        socket.on('DELIVERY', function (msg) {
-            MyFunction(msg);
-            console.log("Testing New Notification");
- 
-        });
-
-        socket.on('schedule_reminder', function (msg) {
-            MyFunction(msg);
-            console.log("Testing New Notification");
- 
-        });
-
-             });
-      </script>
+    </script>
 
 
 </body>

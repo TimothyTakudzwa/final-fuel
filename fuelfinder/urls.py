@@ -16,6 +16,8 @@ urlpatterns = [
 
     path('login/', buyer_views.login_user, name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='supplier/logout.html'), name='logout'),
+    path('verification/<token>/<user_id>', supplier_views.verification, name='verification'),
+
 
     path('buyer/', include('buyer.urls')),
     path('zeraPortal/', include(('zeraPortal.urls', 'zeraPortal'), namespace='zeraPortal')),
@@ -38,7 +40,6 @@ urlpatterns = [
     path('accepted_offer/<id>', supplier_views.accepted_offer, name='accepted_offer'),
     path('stock_update/<int:id>', supplier_views.stock_update, name='stock_update'),
     path('rejected_offer/<id>', supplier_views.rejected_offer, name='rejected_offer'),
-    path('verification/<token>/<user_id>', supplier_views.verification, name='verification'),
     path('complete-transaction/<int:id>', supplier_views.complete_transaction, name='complete-transaction'),
     path('available_stock/', supplier_views.available_stock, name='available_stock'),
     path('transaction/', supplier_views.transaction, name='transaction'),

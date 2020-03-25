@@ -287,6 +287,7 @@ for loading user profile, editing profile and changing password
 
 @login_required()
 def profile(request):
+    compan = Company.objects.filter(id=request.user.company.id).first()
     if request.method == 'POST':
         old = request.POST.get('old_password')
         new1 = request.POST.get('new_password1')
@@ -311,6 +312,7 @@ def profile(request):
     context = {
         'form': PasswordChangeForm(user=request.user),
         'user_logged': request.user,
+        'compan': compan,
     }
     return render(request, 'buyer/profile.html', context)
 
@@ -395,9 +397,9 @@ Landing page
 def dashboard(request):
     if request.user.company.is_govnt_org:
         updates = SuballocationFuelUpdate.objects.filter(~Q(subsidiary__praz_reg_num=None)).filter(
-            ~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
+            ~Q(diesel_quantity=0.00), ~Q(petrol_quantity=0.00))
     else:
-        updates = SuballocationFuelUpdate.objects.filter(~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
+        updates = SuballocationFuelUpdate.objects.filter(~Q(diesel_quantity=0.00), ~Q(petrol_quantity=0.00))
     for update in updates:
         subsidiary = Subsidiaries.objects.filter(id=update.subsidiary.id).first()
         if UserReview.objects.filter(depot=subsidiary).exists():
@@ -1017,7 +1019,6 @@ def account_application(request):
     companies = Company.objects.filter(company_type='SUPPLIER').all()
     for company in companies:
         company.admin = User.objects.filter(company=company, user_type='S_ADMIN').first()
-        print(company)
         status = Account.objects.filter(buyer_company=request.user.company, supplier_company=company).exists()
         if status:
             account = Account.objects.filter(buyer_company=request.user.company, supplier_company=company).first()
@@ -1074,13 +1075,10 @@ def company_profile(request):
         
         compan.name = request.POST['name']
         compan.address = request.POST['address']
-        compan.industry = request.POST['industry']
-        compan.iban_number = request.POST['iban_number']
-        compan.licence_number = request.POST['licence_number']
         compan.destination_bank = request.POST['destination_bank']
         compan.account_number = request.POST['account_number']
         compan.save()
         messages.success(request, 'Company Profile updated successfully')
-        return redirect('buyer:company_profile')
+        return redirect('buyer-profile')
 
-    return render(request, 'buyer/company_profile.html', {'compan': compan})
+    
