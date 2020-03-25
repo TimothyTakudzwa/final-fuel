@@ -71,6 +71,7 @@ def login_user(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         # authenticating
+        User.objects.filter(username=username.lower())
         check = User.objects.filter(username=username)
         if check.exists():
             status = authenticate(username=username, password=password)
@@ -405,13 +406,53 @@ def password_reset(request):
         check = User.objects.filter(email=email)
         if check.exists():
             client = User.objects.get(email=email)
+
+            if request.POST.get('app'):
+                if client.user_type == 'BUYER' or client.user_type == 'INDIVIDUAL':
+                    # generate temporary password
+                    password = secrets.token_hex(3)
+                    client.set_password(password)
+                    # force password reset
+                    client.password_reset = True
+                    client.save()
+                    # update session in case user is logged on somewhere
+                    update_session_auth_hash(request, client)
+                    # set details for sending email
+                    sender = f'Fuel Finder Accounts<{settings.EMAIL_HOST_USER}>'
+                    title = 'Password Reset'
+                    message = f"Your account password was reset.Please use this password when signing in : \n" \
+                              f"{password}\n" \
+                              f"Remember to change the password when you sign in."
+                    # send email
+                    try:
+                        msg = EmailMultiAlternatives(title, message, sender, [email])
+                        msg.send()
+                        return HttpResponse(200)
+                    # if error occurs
+                    except BadHeaderError:
+                        return HttpResponse(400)
+                else:
+                    # send warning
+                    # set details for sending email
+                    sender = f'Fuel Finder Accounts<{settings.EMAIL_HOST_USER}>'
+                    title = 'Password Reset'
+                    message = f"An attempt to reset your password was made via the General App.Please "
+                    # send email
+                    try:
+                        msg = EmailMultiAlternatives(title, message, sender, [email])
+                        msg.send()
+                        return HttpResponse(200)
+                    # if error occurs
+                    except BadHeaderError:
+                        return HttpResponse(400)
+
             # generate temporary password
             password = secrets.token_hex(3)
             client.set_password(password)
             # force password reset
             client.password_reset = True
             client.save()
-            # update session incase user is logged on somewhere
+            # update session in case user is logged on somewhere
             update_session_auth_hash(request, client)
             # set details for sending email
             sender = f'Fuel Finder Accounts<{settings.EMAIL_HOST_USER}>'
@@ -424,9 +465,10 @@ def password_reset(request):
                 msg = EmailMultiAlternatives(title, message, sender, [email])
                 msg.send()
                 return HttpResponse(200)
-            # if error occures
+            # if error occurs
             except BadHeaderError:
                 return HttpResponse(400)
+
         # user doesn't exist
         else:
             return HttpResponse(status=404)

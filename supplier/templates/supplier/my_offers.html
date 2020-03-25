@@ -19,17 +19,22 @@
 
 <!-- Main content -->
 <div class="content">
+  <a href="{% url 'activate_whatsapp' %}" style="background-color: #25d366; margin-bottom: 20px;" class="btn btn-success btn-labeled" type="button" class="btn btn-labeled btn-success m-b-5">
+    <span class="btn-label"><i class="fa fa-whatsapp"></i></span>
+    {% if request.user.activated_for_whatsapp %}
+        Deactivate Whatsapp
+    {% else %}
+        Activate Whatsapp
+    {% endif %}
+</a>
+  <div class="">
+    <button class="btn btn-default" onclick="toggle_tables()" style="border-radius: 3px;" id="toggle_button">Toggle Tables</button>
+  </div>
     <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
-        data-index="0">
+        data-index="0" id="offers_panel">
         <div class="panel-heading ui-sortable-handle">
             <div class="btn-group"> 
-                <a class="btn btn-success" href="{% url 'activate_whatsapp' %}" style="background-color: #25d366;"><i class="fa fa-whatsapp" style="margin-right: 11px;"></i>
-                    {% if request.user.activated_for_whatsapp %}
-                        Deactivate Whatsapp
-                    {% else %}
-                        Activate Whatsapp
-                    {% endif %}
-                </a>  
+              <h4>Offers - Pending</h4>
             </div>
             
             <div class="dropdown">
@@ -131,7 +136,7 @@ aria-hidden="true">
 <div class="modal-content">
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-    <h2 class="modal-title">Edit Offer</h2>
+    <span class="modal-title">Edit Offer</span>
 </div>
 <div class="modal-body">
  <form method="POST" action="{% url 'supplier:edit_offer' offer.id %}">
@@ -147,7 +152,7 @@ aria-hidden="true">
          <input type="text" name="quantity" class="form-control" value="{{offer.quantity}}" />
      </div>
     </div>
-     <div class=" row col-sm-12">
+     <div class=" row">
      <div class="col-sm-6">
          <lable>Fuel Price</lable>
          <input type="text" name="price" class="form-control" value="{{offer.price}}" />
@@ -158,7 +163,10 @@ aria-hidden="true">
   </div>
      </div>
 </div>
-    <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-info btn-sm">Update Offer</button></p>
+<div class="modal-footer">  
+  <button type="submit" class="btn btn-primary ">Generate Report</button>
+  <button class="btn btn-default" data-dismiss="modal" >Close</button>
+</div>
 
 </form>
 </div>
@@ -173,7 +181,7 @@ aria-hidden="true">
 <div class="modal-content">
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-    <h2 class="modal-title">Edit Offer</h2>
+    <span class="modal-title">Edit Offer</span>
 </div>
 <div class="modal-body">
  <form method="POST" action="{% url 'supplier:edit_offer' offer.id %}">
@@ -213,7 +221,7 @@ aria-hidden="true">
             </div>
             </div>
         <p style="text-align: center;"><label>Available Equipments</label></p>
-         <div class="col-sm-12">
+         <div class="row">
             <div class="togglebutton form-group col-sm-4">
               <label>
                   <input type="checkbox" name="pump_available" >
@@ -240,7 +248,10 @@ aria-hidden="true">
         </div>
         </div>
 </div>
-    <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-info btn-sm">Update Offer</button></p>
+<div class="modal-footer">  
+  <button type="submit" class="btn btn-primary ">Make Offer</button>
+  <button class="btn btn-default" data-dismiss="modal" >Close</button>
+</div>
 
 </form>
 </div>
@@ -253,6 +264,272 @@ aria-hidden="true">
 
 </div>
 </div>
+    </div>
+
+    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
+        data-index="0" id="offers_completed_panel">
+        <div class="panel-heading ui-sortable-handle">
+            <div class="btn-group"> 
+              <h4>Offers - Accepted </h4>
+              
+            </div>
+            
+            <div class="dropdown">
+                <ul class="dropdown-menu dropdown-menu-right">
+
+
+                </ul>
+                <div class="dropdown-toggle" data-toggle="dropdown"><span
+                        class="panel-control-icon glyphicon glyphicon-cog"></span>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">              
+      
+      <div class="table-responsive">
+        <table id="offers_pending" class="table table-striped table-bordered" style="width:100%">
+            <thead style="background-color: lightslategray; color:white;">
+                <tr>
+                  <th style="color: white;"></th>
+                    <th style="color: white;">Date</th>
+                    <th style="color: white;">Buyer</th>
+                    <th style="color: white;">Fuel</th>
+                    <th style="color: white;">Offered</th>
+                    <th style="color: white;">Price</th>
+                    <th style="color: white;">Delivery Method</th>
+                    <th style="color: white;">Transport Fee</th>
+                    <th style="color: white;">Currency</th>
+                    <th style="color: white;">Equipment</th>
+                    <!-- <th style="color: white;">Action</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for offer in offers_pending %}
+                <tr>
+                    <td></td>
+                    <td>{{ offer.date }}</td>
+                    <td>{{ offer.request.name.first_name|lower|capfirst }} {{ offer.request.name.last_name|lower|capfirst }}</td>
+                    
+                    {% if offer.request.fuel_type == 'Diesel' %}
+                      <td style="color: #009688;" >{{ offer.request.fuel_type|lower|capfirst }}</td>
+                    {% elif offer.request.fuel_type == 'Petrol' %}
+                      <td style="color: #ffb61e;" >{{ offer.request.fuel_type|lower|capfirst }}</td>
+                    {% else %}  
+                      <td>{{ offer.request.fuel_type|lower|capfirst }}</td>
+                    {% endif %}  
+
+
+
+                    <td>{{ offer.quantity|intcomma }}</td>
+                    <td>{{ offer.price|intcomma }}</td>
+                    <td>{{ offer.delivery_method|lower|capfirst}}</td>
+                    {% if offer.transport_fee != None %}
+                    <td>{{ offer.transport_fee|intcomma }}</td>
+                    {% else %}  
+                    <td>N/A</td>
+                    {% endif %}                              
+                    <td>{{offer.request.payment_method}}</td>
+                    <td>{% if offer.pump_available %}Pump &nbsp; {%endif%} {% if offer.dipping_stick_available %}Stick &nbsp; {%endif%} {% if offer.meter_available %}Meter&nbsp;{% endif %}{% if offer.no_equipments %}No Equipment{%endif%}</td>
+                    {%if offer.declined %}
+                    <td>Declined</td>
+                    {% else %}
+                    {% if offer.delivery_method == 'DELIVERY' %}
+                    <!-- <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_{{offer.id}}">Edit Offer</button></td> -->
+                    {% else %}
+                    <!-- <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_collection_{{offer.id}}">Edit Offer</button></td> -->
+                    {% endif %}
+                    {%endif%}
+                </tr>
+                <script>                  
+                    $('#pump_available').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                    $('#swipe').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                    $('#ecocash').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                    $('#cash').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                    $('#usd').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                  
+                    $('#dipping_stick_available').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                  
+                    $('#meter_available').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                  </script>
+
+<!-- edit offer with delivery modal -->
+<div class="modal fade modal-success in" id="edit_{{offer.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-notice">
+<div class="modal-content">
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <span class="modal-title">Edit Offer</span>
+</div>
+<div class="modal-body">
+ <form method="POST" action="{% url 'supplier:edit_offer' offer.id %}">
+     {% csrf_token %}
+     <div class=" row col-sm-12">
+     <div class="col-sm-6">
+         <lable>Fuel Type</lable>
+         <input type="text" name="fuel_type" class="form-control" value="{{offer.request.fuel_type}}" disabled/>
+     </div>
+
+     <div class="col-sm-6">
+         <lable>Fuel Quantity</lable>
+         <input type="text" name="quantity" class="form-control" value="{{offer.quantity}}" />
+     </div>
+    </div>
+     <div class=" row">
+     <div class="col-sm-6">
+         <lable>Fuel Price</lable>
+         <input type="text" name="price" class="form-control" value="{{offer.price}}" />
+     </div>
+     <div class="col-sm-6">
+      <lable>Transport Fee</lable>
+      <input type="text" name="transport" class="form-control" value="{{offer.transport_fee}}" />
+  </div>
+     </div>
+</div>
+<div class="modal-footer">  
+  <button type="submit" class="btn btn-primary ">Generate Report</button>
+  <button class="btn btn-default" data-dismiss="modal" >Close</button>
+</div>
+
+</form>
 </div>
 </div>
+</div>
+<!-- end edit modal -->
+
+<!-- edit offer with self collection modal -->
+<div class="modal fade modal-success in" id="edit_collection_{{offer.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-notice">
+<div class="modal-content">
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <span class="modal-title">Edit Offer</span>
+</div>
+<div class="modal-body">
+ <form method="POST" action="{% url 'supplier:edit_offer' offer.id %}">
+     {% csrf_token %}
+     <div class=" row col-sm-12">
+     <div class="col-sm-4">
+         <lable>Fuel Type</lable>
+         <input type="text" name="fuel_type" class="form-control" value="{{offer.request.fuel_type}}" disabled/>
+     </div>
+
+     <div class="col-sm-4">
+         <lable>Fuel Quantity</lable>
+         <input type="text" name="quantity" class="form-control" value="{{offer.quantity}}" />
+     </div>
+     <div class="col-sm-4">
+         <lable>Fuel Price</lable>
+         <input type="text" name="price" class="form-control" value="{{offer.price}}" />
+     </div>
+     </div>
+
+     <div class="form-group" name='choices' id='choices{{forloop.counter}}'>
+        <p style="text-align: center;"><label>Collection Address</label></p>
+         <div class=" row col-sm-12">                          
+            <div class="togglebutton col-sm-4">
+              <label for="">Street Number</label>
+              <input type="text" class="form-control" name="street_number" aria-describedby="helpId" placeholder="" required/>
+              
+            </div>
+            <div class="togglebutton col-sm-4">
+              <label for="">Street Name</label>
+              <input type="text" class="form-control" name="street_name" aria-describedby="helpId" placeholder="" required/>
+              
+            </div>
+            <div class="togglebutton col-sm-4">
+              <label for="">Location/Town</label>
+              <input type="text" class="form-control" name="location" aria-describedby="helpId" placeholder="" required/>
+            </div>
+            </div>
+        <p style="text-align: center;"><label>Available Equipments</label></p>
+         <div class="row">
+            <div class="togglebutton form-group col-sm-4">
+              <label>
+                  <input type="checkbox" name="pump_available" >
+                  <span class="toggle"></span>
+                  Pump
+              </label>
+          </div>
+
+            <div class="togglebutton form-group col-sm-4">
+              <label>
+                  <input type="checkbox" name="dipping_stick_available" >
+                  <span class="toggle"></span>
+                  Dipping Stick
+              </label>
+          </div>
+
+            <div class="togglebutton form-group col-sm-4">
+              <label>
+                  <input type="checkbox" name="meter_available" >
+                  <span class="toggle"></span>
+                  Meter
+              </label>
+          </div>
+        </div>
+        </div>
+</div>
+<div class="modal-footer">  
+  <button type="submit" class="btn btn-primary ">Make Offer</button>
+  <button class="btn btn-default" data-dismiss="modal" >Close</button>
+</div>
+
+</form>
+</div>
+</div>
+</div>
+<!-- end edit modal -->
+                {%endfor%}
+            </tbody>
+            </table>
+
+</div>
+</div>
+    </div>
+</div>
+
+<script>
+  function check_visible(){
+    if ($('#offers_completed_panel').is(':visible')){
+      $("#toggle_button").prop("value", "Pama");
+      $("#toggle_button").html("View Accepted Offers")
+
+    }else{
+
+      $("#toggle_button").prop("value", "Pama");
+      $("#toggle_button").html("View Pending Offers")
+    }
+  }
+</script>
+
+
+<script>
+  $("#offers_panel").show();
+  $("#offers_completed_panel").hide();
+  check_visible()
+  
+  function toggle_tables(){
+    $("#offers_panel").toggle();
+    $("#offers_completed_panel").toggle();
+    check_visible()
+
+  }
+
+</script>
     {%endblock%}

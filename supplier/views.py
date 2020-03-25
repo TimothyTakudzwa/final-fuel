@@ -420,7 +420,8 @@ def fuel_request(request):
                 buyer_request.price = fuel.diesel_price
         else:
             buyer_request.price = 0.00
-    return render(request, 'supplier/fuel_request.html', {'requests': requests})
+        complete_requests = FuelRequest.objects.filter(is_complete=True).all()
+    return render(request, 'supplier/fuel_request.html', {'requests': requests, 'complete_requests': complete_requests})
 
 
 def new_fuel_request(request, id):
@@ -495,9 +496,11 @@ def my_offers(request):
             offer_temp.no_payment = True
         if offer_temp.dipping_stick_available == offer_temp.meter_available == offer_temp.pump_available == False:
             offer_temp.no_equipments = True
-        if not offer_temp.collection_address.strip():
-            offer_temp.collection_address = f'N/A'
-    return render(request, 'supplier/my_offers.html', {'offers': offers})
+        # if not offer_temp.collection_address.strip():
+        #     offer_temp.collection_address = f'N/A'
+    offers_pending = Offer.objects.filter(supplier=request.user, is_accepted=True).all()
+
+    return render(request, 'supplier/my_offers.html', {'offers': offers, 'offers_pending': offers_pending})
 
 
 def offer(request, id):
@@ -525,7 +528,7 @@ def offer(request, id):
                     available_fuel = fuel.diesel_quantity + fuel_reserve.diesel_quantity
                 else:
                     available_fuel = fuel.diesel_quantity
-            offer_quantity = int(request.POST.get('quantity'))
+            offer_quantity = float(request.POST.get('quantity'))
             quantity = fuel_request.amount
 
             if offer_quantity <= available_fuel:
@@ -691,14 +694,20 @@ def transaction(request):
     today = datetime.now().strftime("%m/%d/%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
     transactions = []
+    transactions_pending = []
     for tran in Transaction.objects.filter(supplier=request.user).all():
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
         if delivery_sched:
             tran.delivery_sched = delivery_sched
-        tran.review = UserReview.objects.filter(transaction=tran).first()   
-        transactions.append(tran)
+        tran.review = UserReview.objects.filter(transaction=tran).first()
+        if tran.is_complete == True:   
+            transactions.append(tran)
+        if tran.is_complete == False:
+            transactions_pending.append(tran)
+
     context = {
         'transactions': transactions,
+        'transactions_pending': transactions_pending,
         'transporters': transporters,
         'today': today
     }
