@@ -1,6 +1,7 @@
 {% extends "users/base.html" %}
 {% load crispy_forms_tags %}
 {% load humanize %}
+{% load static %}
 {% load staticfiles %}
 {% block body %}
 
@@ -71,10 +72,10 @@
                         <tr>
 
 
-                            <td style="color: #009688;">{{company_total_diesel_capacity|floatformat:2}}</td>
-                            <td style="color: #ffb61e;">{{company_total_petrol_capacity|floatformat:2}}</td>
-                            <td>{{company_capacity.unallocated_diesel|floatformat:2}}</td>
-                            <td>{{company_capacity.diesel_price|floatformat:2}}</td>
+                            <td style="color: #009688;">{{company_total_diesel_capacity }}</td>
+                            <td style="color: #ffb61e;">{{company_total_petrol_capacity}}</td>
+                            <td>{{company_capacity.unallocated_diesel}}</td>
+                            <td>{{company_capacity.diesel_price}}</td>
                             <td>{{company_capacity.usd_diesel_price}}</td>
                             <td>{{company_capacity.unallocated_petrol}}</td>
                             <td>{{company_capacity.petrol_price}}</td>
