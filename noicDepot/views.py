@@ -68,7 +68,12 @@ def dashboard(request):
 def orders(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders = Order.objects.filter(noic_depot=depot).all()
-    # order_id = None
+    print(orders)
+    for order in orders:
+        if order is not None:
+            alloc = SordNationalAuditTrail.objects.filter(order=order).first()
+            if alloc is not None:
+                order.allocation = alloc
     return render(request, 'noicDepot/orders.html', {'orders': orders})
 
 def stock(request):

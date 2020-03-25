@@ -48,74 +48,40 @@
 
 
         <div class="table-responsive">
-            <table id="fuel_allocations" class="table table-striped table-bordered" style="width:100%">
-                <thead>
+            <table id="offer" class="table table-striped table-bordered" style="width:100%">
+                <thead style="background-color: lightslategray; color:white;">
                 <tr>
-                    <th>
-                        <h6>Supplier Company</h6>
-                    </th>
-                    <th>
-                            <h6>Depot Name</h6>
-                        </th>
-                    <th>
-                        <h6>Collection Address</h6>
-                    </th>
-                    <th>
-                        <h6>Fuel Requested </h6>
-                    </th>
-                    <th>
-                        <h6>Fuel Offer </h6>
-                    </th>
-              
-                    <th>
-                        <h6>Price per Litre </h6>
-                    </th>
-                    <th>
-                        <h6>Transport Fee </h6>
-                    </th>
-                    <th>
-                        <h6>Requested On </h6>
-                    </th>
-                    <th>
-                        <h6>Action</h6>
-                    </th>
-                    <th>
-                        <h6>Action</h6>
-                    </th>
+                    <th style="color: white;">Supplier Company</th>
+                    <th style="color: white;">Depot Name</th>
+                    <th style="color: white;">Collection Address</th>
+                    <th style="color: white;">Fuel Requested</th>
+                    <th style="color: white;">Fuel Offer</th>              
+                    <th style="color: white;">Price per Litre</th>
+                    <th style="color: white;">Transport Fee</th>
+                    <th style="color: white;">Requested On</th>
+                    <th style="color: white;">Action</th>
+                    <th style="color: white;">Action</th>
                 </tr>
                 </thead>
-                <tboddy>
+                <tbody>
                     {% for offer in offers %}
-                    <tr>
-                        
-                        <td>
-                            {{offer.supplier.company}}
-                        </td>
-                        <td>
-                                {{offer.depot_name}}
-                            </td>
-                        <td>
-                            {{offer.collection_address}}
-                        </td>
-                        <td>
-                            {{offer.request.amount}} Litres
-                        </td>
-                        <td class="">
-                            {{offer.quantity}} Litres
-                        </td>
-                        <td class="">
-                            RTGS {{offer.price}}
-                        </td>
+                    <tr>                        
+                        <td>{{offer.supplier.company}}</td>
+                        <td>{{offer.depot_name}}</td>
+                        <td>{{offer.collection_address}}</td>
+                        <td>{{offer.request.amount}} Litres</td>
+                        <td>{{offer.quantity}} Litres</td>
+                        {% if offer.request.payment_method == 'RTGS'%}
+                        <td>RTGS {{offer.price}}</td>
+                        {% else %}
+                        <td>USD {{offer.price}}</td>
+                        {% endif %}
                         {% if offer.transport_fee != None %}
-                        <td class="">
-                            {{offer.transport_fee}}
-                        </td>
+                        <td>{{offer.transport_fee}}</td>
                         {% else %}
                         <td>N/A</td>
                         {% endif %}
-                        <td class="">
-                             {{offer.date}} -- {{offer.time}}
-                        </td>
+                        <td>{{offer.date}} -- {{offer.time}}</td>
                         <td class="text-primary">    
                             <a class="btn btn-primary btn-sm" href="#"  data-toggle="modal" data-target="#complete_{{offer.id}}" >
                                 <i class="material-icons"></i>Accept Offer 
