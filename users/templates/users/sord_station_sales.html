@@ -104,9 +104,9 @@
                             {% endif %}
 
                             <td>{{sord.payment_type}}</td>
-                            <td>{{sord.initial_quantity|intcomma}}</td>
-                            <td>{{sord.quantity_sold|intcomma}}</td>
-                            <td>{{sord.end_quantity|intcomma}}</td>
+                            <td>{{sord.initial_quantity|floatformat:2}}</td>
+                            <td>{{sord.quantity_sold|floatformat:2}}</td>
+                            <td>{{sord.end_quantity|floatformat:2}}</td>
                             <td>{{sord.received_by}}</td>
                            
 
