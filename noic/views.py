@@ -316,7 +316,7 @@ def staff(request):
         sup = User.objects.filter(email=email).first()
         if sup is not None:
             messages.warning(request, f"{sup.email} already used in the system, please use a different email")
-            return redirect('users:suppliers_list')
+            return redirect('noic:staff')
 
         password = random_password()
         phone_number = request.POST.get('phone_number')
