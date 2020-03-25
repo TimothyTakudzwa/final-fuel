@@ -116,7 +116,7 @@
                     <td>
                         <div class="btn-group">
                             <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'noicDepot:download_proof' order.id %}" > <i class="fa fa-download" style="font-size:15px"></i> P.O.P</a>
-                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" data-target="#approve{{order.id}}" >Approve</a>
+                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" data-target="#allocate{{order.id}}" >Approve</a>
                         </div>
                     </td>
                     {% endif %}
@@ -145,10 +145,11 @@
 
 <script>
 
-$('#myForm').on('submit', function(e){
-  $('#myModal').modal('show');
-  e.preventDefault();
-});
+    $(document).ready(function(){
+
+        $("#myModal").modal('show');
+
+    });
 
 </script>
 
@@ -231,7 +232,7 @@ $('#myForm').on('submit', function(e){
                         </div>
                         <div>
                             {% load crispy_forms_tags %}
-                            <form action="{% url 'noicDepot:allocate_fuel' order.id %}" method="POST" onsubmit="openModal()" id="myForm">
+                            <form action="{% url 'noicDepot:allocate_fuel' order.id %}" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" value="{{order.fuel_type}}" name="fuel_type" />
                                 <input type="hidden" value="{{order.quantity}}" name="quantity" />
