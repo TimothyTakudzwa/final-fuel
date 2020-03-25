@@ -98,19 +98,32 @@
                           </button>
                           </div>
                           <div class="modal-body">
+                            <div style="padding: 50px;font-stretch: ultra-condensed;font-variant:;font-size: 58px;padding-top: 1px;padding-bottom: 20px;margin-bottom: 20px;
+                            background-color: mintcream;padding-left: 25px;margin-left: 25px;font-variant: petite-caps;">
+                                <h3>Upload Document To Confirm 
+                                <strong style="color: #009688;">
+                                Delivery From Sam Sepiol Inc 
+                                </strong>.
+                                </h3>
+                            </div>
                                   
                                   <form method="POST" action="" enctype="multipart/form-data">
                                       {% csrf_token %}
                                       <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
-                                      <div class="form-group col-md-6">
-                                        <label>Delivery Date</label>
-                                        <input type="date" name="delivery_date" class="form-control"  required/>
-                                    </div>
-                                    <div class="modal-footer">  
-                                    <input class="btn btn-info" type="submit" value="Confirm Delivery">
-                                    </div>
+                                    <div class="row">
+                                        <div class="form-group" style="padding-left: 50px;">
+                                            <div class="form-group col-md-12">
+                                                <label>Delivery Date</label>
+                                                <input type="date" name="delivery_date" class="form-control"  required/>
+                                            </div>
+                                        </div>
+                                    </div>      
+                                    
                                   </form>
                               </div>
+                              <div class="modal-footer">  
+                                <button class="btn btn-info" type="submit" >Confirm Delivery</button>
+                                </div>
                           </div>
                       </div>
                   </div>
@@ -118,14 +131,14 @@
 
                   <!--Additional Information Modal-->
                   <div class="modal fade modal-success in" id="additonal_information{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                        aria-hidden="true" style="overflow-y: initial !important;">
-                        <div class="modal-dialog modal-notice">
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-notice" style="overflow-y: initial !important;">
                             <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                 <span class="modal-title">Additional Information</span>
                             </div>
-                                <div class="modal-body" style="padding: 30px;height: 400px;overflow-y: auto;">
+                                <div class="modal-body" style="padding: 30px;height: 600px;overflow-y: auto;">
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Delivery date/Time: </p>
                                         <p class="col-md-6">{{delivery.date}} | {{ delivery.delivery_time }}</p>

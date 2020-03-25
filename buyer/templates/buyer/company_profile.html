@@ -1,4 +1,4 @@
-{% extends "users/base.html" %}
+{% extends "finder/buyer_base.html" %}
 {% load static %}
 {% block title %}
 {{title}}
@@ -60,7 +60,7 @@
               </div>
             
             {% load crispy_forms_tags %}
-            <form action="{% url 'users:company_profile'%}" method="POST">
+            <form action="{% url 'buyer:company_profile'%}" method="POST">
                 {% csrf_token %}
                 <div class="form-group row">
                     
@@ -90,31 +90,13 @@
                            
                             
                            
-                            <div class="col-sm-6">                     
-                                <label for="num_of_subs" class="col-form-label">Number of Subsidiaries</label>
-                                
-                                    <input name="num_of_subs" type="text" class="form-control" id="num_of_subs"  value="{{num_of_subsidiaries}}">
-                                </div>
+                            <div class="col-sm-6">
+                                <label for="iban_number" class=" col-form-label">Iban Number</label>
+                            
+                                <input name="iban_number" type="text" class="form-control" id="diesel"  value="{{compan.iban_number}}">
+                            </div>
                                 </div>
 
-                               
-
-                                <div class="form-group row">
-                              
-                                    <div class="col-sm-6">
-                                        <label for="iban_number" class=" col-form-label">Iban Number</label>
-                                    
-                                        <input name="iban_number" type="text" class="form-control" id="diesel"  value="{{compan.iban_number}}">
-                                    </div>
-                                    
-                                    
-                                    
-                                    <div class="col-sm-6">                     
-                                        <label for="licence_number" class="col-form-label">Licence Number</label>
-                                        
-                                        <input name="licence_number" type="text" class="form-control" id="petrol"  value="{{compan.license_number}}">
-                                    </div>
-                                </div>
 
                                 <div class="form-group row">
                               
@@ -133,23 +115,7 @@
                                     </div>
                                 </div>
 
-                                <!-- <div class="form-group row">
                               
-                                        <div class="col-sm-6">
-                                            <label for="diesel" class=" col-form-label">Diesel Capacity</label>
-                                        
-                                            <input name="diesel" type="text" class="form-control" id="diesel"  value="{{fuel_capacity.diesel_quantity}}">
-                                        </div>
-                                       
-                                        
-                                       
-                                        <div class="col-sm-6">                     
-                                            <label for="petrol" class="col-form-label">Petrol Quantity</label>
-                                            
-                                            <input name="petrol" type="text" class="form-control" id="petrol"  value="{{fuel_capacity.petrol_quantity}}">
-                                        </div>
-                                    </div> -->
-                                        
 
                             
                         <div class="col-md-12 text-center">     

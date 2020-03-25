@@ -198,11 +198,10 @@
                                             
                                        
                                      </div>
-                                        <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                                            <button type="button" class="btn btn-secondary col-sm-6"
-                                                data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
-                                        </div>
+                                     <div class="modal-footer">  
+                                        <button type="submit" class="btn btn-primary ">Save Changes</button>
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div> 
                                              </form>
                                          </form>
                                  </div>
@@ -385,14 +384,14 @@
         });
     </script>
  <div class="modal fade modal-success in" id="new_sub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document" style="margin: 0;">
+    <div class="modal-dialog" role="document" style="margin: 0; overflow-y: initial !important;">
        <div class="modal-content">
            <div class="modal-header" style="width: 100%;">
                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                <span class="modal-title" id="exampleModalLabel" style="color:white;">Add Subsidiary </span>
                
            </div>
-           <div class="modal-body">
+           <div class="modal-body" style="height: 540px;overflow-y: auto;">
 
                {% load crispy_forms_tags %}
                <form action="{% url 'users:stations' %}" method="POST" enctype="multipart/form-data">
@@ -574,11 +573,11 @@
                     <input type="file" accept=".pdf, .doc,.docx" name="payment" class="form-control-file" id="exampleFormControlFile1">
                 </div>
             </div>                                                       
-                       <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                           <button type="button" class="btn btn-secondary col-sm-6"
-                               data-dismiss="modal">Close</button>
-                           <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
-                       </div>
+            <div class="modal-footer">  
+                <button type="submit" class="btn btn-primary ">Submit</button>
+                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+            </div> 
+
                </form>
               
 

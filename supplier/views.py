@@ -127,6 +127,7 @@ def initial_password_change(request):
         else:
             user = request.user
             user.set_password(password1)
+            user.password_reset = False
             user.save()
             update_session_auth_hash(request, user)
 

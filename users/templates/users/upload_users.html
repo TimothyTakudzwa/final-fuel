@@ -35,8 +35,9 @@
         <div class="mt-3 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
             <div class="panel-heading ui-sortable-handle">
                 <div class="btn-group">
-                    <button class="btn btn-info btn-md" data-toggle="modal" data-target="#new_user">
-                        Upload Accounts
+                    
+                    <button class="btn btn-success btn-labeled" data-toggle="modal" data-target="#new_user" type="button" class="btn btn-labeled btn-success m-b-5">
+                        <span class="btn-label"><i class="fa fa-upload"></i></span>Upload Accounts
                     </button>
                 </div>
                 <div class="dropdown">
@@ -94,39 +95,47 @@
                                                 <!--account details-->
                                                 <div class="row">
                                                     <!--supplier-->
-                                                    <div class="col-md-6">
-                                                        <h2>Supplier</h2>
-                                                        <!--name-->
-                                                        <h5>{{ account.supplier_company.name }}</h5>
-                                                        <text class="text-muted">Address</text>
-                                                        <h5>{{ account.supplier_company.address }}</h5>
-                                                        <!--bank-->
-                                                        <text class="text-muted">Bank</text>
-                                                        <h5>{{ account.supplier_company.destination_bank }}</h5>
-                                                        <text class="text-muted">A/c</text>
-                                                        <!--account-->
-                                                        <h5>{{ account.supplier_company.account_number }}</h5>
-                                                        <text class="text-muted">BPN</text>
-                                                        <!--vat number-->
-                                                        <h5>{{ account.supplier_company.bp_num }}</h5>
-                                                    </div>
-                                                    <!--buyer-->
-                                                    <div class="col-md-6 text-right">
-                                                        <h2>Buyer</h2>
-                                                        <!--name-->
-                                                        <h5>{{ account.buyer_company.name }}</h5>
-                                                        <text class="text-muted">Address</text>
-                                                        <h5>{{ account.buyer_company.address }}</h5>
-                                                        <!--bank-->
-                                                        <text class="text-muted">Bank</text>
-                                                        <h5>{{ account.buyer_company.destination_bank }}</h5>
-                                                        <text class="text-muted">A/c</text>
-                                                        <!--account-->
-                                                        <h5>{{ account.buyer_company.account_number }}</h5>
-                                                        <text class="text-muted">BPN</text>
-                                                        <!--vat number-->
-                                                        <h5>{{ account.buyer_company.bp_num }}</h5>
-                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="col-md-6">
+                                                            <div style="color: white;background-color: mintcream;padding: 5px;">
+                                                                <h2>Supplier - <small>{{ account.supplier_company.name }}</small></h2>
+                                                            </div>    
+                                                            <!--name-->
+                                                            <!-- <h5 style="font-weight: bolder; color: cadetblue;">{{ account.supplier_company.name }}</h5> -->
+                                                            <h5>Address</h5>
+                                                            <text class="text-muted">{{ account.supplier_company.address }}</text>
+                                                            <!--bank-->
+                                                            <h5>Bank</h5>
+                                                            <text class="text-muted">{{ account.supplier_company.destination_bank }}</text>
+                                                            <text class="text-muted">A/c</text>
+                                                            <!--account-->
+                                                            <h5>Account Number</h5>
+                                                            <text class="text-muted">{{ account.supplier_company.account_number }}</text>
+                                                            <!--vat number-->
+                                                            <h5>BPN</h5>
+                                                            <text class="text-muted">{{ account.supplier_company.bp_num }}</text>
+
+                                                        </div>
+                                                        <!--buyer-->
+                                                        <div class="col-md-6">
+                                                            <div style="color: white;background-color: mintcream;padding: 5px;">
+
+                                                                <h2>Buyer - <small>{{ account.buyer_company.name }}</small</h2>
+                                                            </div>    
+                                                            <!--name-->
+                                                            <h5>Address</h5>
+                                                            <text class="text-muted">{{ account.buyer_company.address }}</text>
+                                                            <!--bank-->
+                                                            <h5>Bank</h5>
+                                                            <text class="text-muted">{{ account.buyer_company.destination_bank }}</text>
+                                                            <!--account-->
+                                                            <h5>Account Number</h5>
+                                                            <text class="text-muted">{{ account.buyer_company.account_number }}</text>
+                                                            <!--vat number-->
+                                                            <h5>BPN</h5>
+                                                            <text class="text-muted">{{ account.buyer_company.bp_num }}</text>
+                                                        </div>
+                                                    </div>    
                                                 </div>
                                                 <hr>
 
@@ -168,9 +177,10 @@
 
                                                         <input type="hidden" value="{{ account.id }}" name="account_id">
 
-                                                        <button class="btn btn-info btn-md">
-                                                            Generate Report
-                                                        </button>
+                                                        <div class="modal-footer">  
+                                                            <button type="submit" class="btn btn-primary ">Generate Report</button>
+                                                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                        </div>
 
                                                     </form>
 
@@ -212,21 +222,31 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+                    
 
                     <div class="modal-body">
-                        <form method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <div class="row">
-                                <div class="col-md-12">
-                                    {{ form|crispy }}
+                        <div style="padding: 50px;font-stretch: ultra-condensed;font-variant:;font-size: 58px;padding-top: 1px;padding-bottom: 20px;margin-bottom: 20px;
+                            background-color: mintcream;padding-left: 25px;margin-left: 25px;">
+                                <h3>Upload Application Form
+                                
+                                </h3>
+                        </div>
+                        <div style="padding-left: 25px; padding-top: 20px; margin-left: 25px;">
+
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        {{ form|crispy }}
+                                    </div>
+                                    
                                 </div>
-                                <div class="text-center" style="padding-left: 20px;">
-                                    <button class="btn btn-info btn-md" type="submit">
-                                        Upload Accounts
-                                    </button>
+                                <div class="modal-footer">  
+                                    <button type="submit" class="btn btn-primary ">Submit</button>
+                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>    
                     </div>
 
                 </div>

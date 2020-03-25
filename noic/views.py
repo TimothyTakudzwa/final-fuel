@@ -24,6 +24,7 @@ from fuelUpdates.models import SordCompanyAuditTrail
 from users.models import SordActionsAuditTrail
 from accounts.models import AccountHistory
 from users.views import message_is_sent
+from fuelfinder.helper_functions import random_password
 from national.models import Order, NationalFuelUpdate, SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
 
 from .lib import *
@@ -317,7 +318,7 @@ def staff(request):
             messages.warning(request, f"{sup.email} already used in the system, please use a different email")
             return redirect('users:suppliers_list')
 
-        password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+        password = random_password()
         phone_number = request.POST.get('phone_number')
         subsidiary_id = request.POST.get('depot')
         
@@ -328,12 +329,13 @@ def staff(request):
             username = initial_username + str(i)
             i += 1
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
-                                   first_name=first_name, last_name=last_name, user_type='NOIC_STAFF', email=email, password=password,
-                                   phone_number=phone_number)
+                                   first_name=first_name, last_name=last_name, user_type='NOIC_STAFF', email=email,
+                                   phone_number=phone_number, password_reset=True)
+        user.set_password(password)
         depot = NoicDepot.objects.filter0(id=subsidiary_id).first()
         depot.is_active = True
         depot.save()
-        if message_is_send(request, user):
+        if message_is_send(request, user, password):
             if user.is_active:
                 user.stage = 'menu'
                 user.save()
@@ -345,11 +347,10 @@ def staff(request):
     return render(request, 'noic/staff.html', {'depots': depots, 'form1': form1, 'staffs': staffs})
 
 
-
-def message_is_send(request, user):
+def message_is_send(request, user, password):
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
-    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: 12345 \n\nPlease login on Fuel Management System Website and access your assigned Depot & don't forget to change your password on user profile. \n. "
+    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: {password} \n\nPlease login on Fuel Management System Website and access your assigned Depot & don't forget to change your password on user profile. \n. "
     try:
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
         msg.send()

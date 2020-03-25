@@ -53,7 +53,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                <span style="color: white; font-size: 18px;">Add User</span>
+                                <span style="color: white;">Add Userr</span>
                             </div>
                             <div class="modal-body">
 
@@ -83,11 +83,16 @@
                                         <div class="form-group col-md-6 mb-0">
                                         </div>
                                     </div>
-                                            <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                            <!-- <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
                                                 <button type="button" class="btn btn-secondary col-sm-6"
                                                     data-dismiss="modal">Close</button>
                                                 <button type="submit" class="btn btn-primary col-sm-6">Add User Profile</button>
-                                            </div>
+                                            </div> -->
+
+                                            <div class="modal-footer">  
+                                                <button type="submit" class="btn btn-primary">Add User Profile</button>
+                                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                            </div>     
                                     
 
                                 </form>
@@ -138,11 +143,10 @@
                                         </div>
                                     </div> 
                                     {% csrf_token %}
-                                        <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                                            <button type="button" class="btn btn-secondary col-sm-6"
-                                                data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary col-sm-6">Add User Profile</button>
-                                        </div>
+                                    <div class="modal-footer">  
+                                        <button type="submit" class="btn btn-primary">Add User Profile</button>
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div>   
                                 </form>
                             </div>
 
@@ -285,9 +289,14 @@
                                                     </div>
                                                     </div>
 
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">Close</button> <button type="submit" class="btn btn-primary ">Submit</button>
-                                                    </div>
+                                                    <!-- <div class="modal-footer">
+                                                        <button type="button" class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">Close</button> 
+                                                    </div> -->
+
+                                                    <div class="modal-footer">  
+                                                        <button type="submit" class="btn btn-primary ">Save Changes</button>
+                                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                    </div> 
 
 
                                                 </form>
@@ -333,11 +342,11 @@
                                                     </div>
                                                     </div>
                                                         
-                                                        <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                                                            <button type="button" class="btn btn-secondary col-sm-6"
-                                                                data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-primary col-sm-6">Add User Profile</button>
-                                                        </div>
+                                                    <div class="modal-footer">  
+                                                        <button type="submit" class="btn btn-primary ">Save Changes</button>
+                                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                    </div> 
+
 
                                                 </form>
                                             </div>

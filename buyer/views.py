@@ -49,15 +49,27 @@ def login_user(request):
         if current_user.user_type == "BUYER":
             return redirect("buyer-dashboard")
         elif current_user.user_type == 'SS_SUPPLIER':
-            return redirect("serviceStation:home")
+            if current_user.password_reset:
+                return redirect("serviceStation:initial-password-change")
+            else:
+                return redirect("serviceStation:home")
         elif current_user.user_type == 'SUPPLIER':
-            return redirect("fuel-request")
+            if current_user.password_reset:
+                return redirect("supplier:initial-password-change")
+            else:
+                return redirect("fuel-request")
         elif current_user.user_type == 'S_ADMIN':
-            return redirect("users:allocate")
+            if current_user.password_reset:
+                return redirect("users:initial-password-change")
+            else:
+                return redirect("users:allocate")
         elif current_user.user_type == 'ZERA':
             return redirect("zeraPortal:dashboard")
         elif current_user.user_type == 'NOIC_STAFF':
-            return redirect("noicDepot:orders")
+            if current_user.password_reset:
+                return redirect("noicDepot:initial-password-change")
+            else:
+                return redirect("noicDepot:orders")
         elif current_user.user_type == 'NOIC_ADMIN':
             return redirect("noic:dashboard")
     else:
@@ -76,26 +88,33 @@ def login_user(request):
                     # user has entered details correctly
                     if auth_status:
                         current_user = User.objects.get(username=username)
-                        if not current_user.last_login:
-                            first_login = True
                         # starting session
                         login(request, current_user)
                         # redirecting to the necessary pages
                         if current_user.user_type == "BUYER":
                             return redirect("buyer-dashboard")
                         elif current_user.user_type == 'SS_SUPPLIER':
-                            return redirect("serviceStation:home")
+                            if current_user.password_reset:
+                                return redirect("serviceStation:initial-password-change")
+                            else:
+                                return redirect("serviceStation:home")
                         elif current_user.user_type == 'SUPPLIER':
-                            if first_login:
+                            if current_user.password_reset:
                                 return redirect("supplier:initial-password-change")
                             else:
                                 return redirect("fuel-request")
                         elif current_user.user_type == 'S_ADMIN':
-                            return redirect("users:allocate")
+                            if current_user.password_reset:
+                                return redirect("users:initial-password-change")
+                            else:
+                                return redirect("users:allocate")
                         elif current_user.user_type == 'ZERA':
                             return redirect("zeraPortal:dashboard")
                         elif current_user.user_type == 'NOIC_STAFF':
-                            return redirect("noicDepot:orders")
+                            if current_user.password_reset:
+                                return redirect("noicDepot:initial-password-change")
+                            else:
+                                return redirect("noicDepot:orders")
                         elif current_user.user_type == 'NOIC_ADMIN':
                             return redirect("noic:dashboard")
                     # wrong password
@@ -268,6 +287,7 @@ for loading user profile, editing profile and changing password
 
 @login_required()
 def profile(request):
+    compan = Company.objects.filter(id=request.user.company.id).first()
     if request.method == 'POST':
         old = request.POST.get('old_password')
         new1 = request.POST.get('new_password1')
@@ -292,6 +312,7 @@ def profile(request):
     context = {
         'form': PasswordChangeForm(user=request.user),
         'user_logged': request.user,
+        'compan': compan,
     }
     return render(request, 'buyer/profile.html', context)
 
@@ -376,9 +397,9 @@ Landing page
 def dashboard(request):
     if request.user.company.is_govnt_org:
         updates = SuballocationFuelUpdate.objects.filter(~Q(subsidiary__praz_reg_num=None)).filter(
-            ~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
+            ~Q(diesel_quantity=0.00), ~Q(petrol_quantity=0.00))
     else:
-        updates = SuballocationFuelUpdate.objects.filter(~Q(diesel_quantity=0.00)).filter(~Q(petrol_quantity=0.00))
+        updates = SuballocationFuelUpdate.objects.filter(~Q(diesel_quantity=0.00), ~Q(petrol_quantity=0.00))
     for update in updates:
         subsidiary = Subsidiaries.objects.filter(id=update.subsidiary.id).first()
         if UserReview.objects.filter(depot=subsidiary).exists():
@@ -513,9 +534,12 @@ def offers(request, id):
     offers = Offer.objects.filter(request=selected_request).filter(declined=False).all()
     for offer in offers:
         depot = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
+        account = Account.objects.filter(buyer_company=request.user.company, supplier_company=offer.supplier.company).first()
         if depot:
             offer.depot_name = depot.name
             offer.depot_address = depot.location
+        if account:
+            offer.account = account    
 
     return render(request, 'buyer/offer.html', {'offers': offers})
 
@@ -748,7 +772,7 @@ def delivery_schedules(request):
                 else:
                     depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
                     schedule.delivery_address = depot.location
-    context = {'form': DeliveryScheduleForm(),
+    context = {
                'schedules': schedules
                }
     if request.method == 'POST':
@@ -995,7 +1019,6 @@ def account_application(request):
     companies = Company.objects.filter(company_type='SUPPLIER').all()
     for company in companies:
         company.admin = User.objects.filter(company=company, user_type='S_ADMIN').first()
-        print(company)
         status = Account.objects.filter(buyer_company=request.user.company, supplier_company=company).exists()
         if status:
             account = Account.objects.filter(buyer_company=request.user.company, supplier_company=company).first()
@@ -1042,3 +1065,20 @@ def upload_application(request, id):
                                cr6=cr6, tax_clearance=tax_clearance, cert_of_inco=cert_of_inco)
         messages.success(request, 'Application successfully send')
     return redirect('accounts-status')
+
+
+
+def company_profile(request):
+    compan = Company.objects.filter(id=request.user.company.id).first()
+
+    if request.method == 'POST':
+        
+        compan.name = request.POST['name']
+        compan.address = request.POST['address']
+        compan.destination_bank = request.POST['destination_bank']
+        compan.account_number = request.POST['account_number']
+        compan.save()
+        messages.success(request, 'Company Profile updated successfully')
+        return redirect('buyer-profile')
+
+    

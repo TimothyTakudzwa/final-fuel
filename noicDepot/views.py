@@ -31,6 +31,35 @@ user = get_user_model()
 
 
 # Create your views here.
+@login_required
+def initial_password_change(request):
+    if request.method == 'POST':
+        password1 = request.POST['new_password1']
+        password2 = request.POST['new_password2']
+        if password1 != password2:
+            messages.warning(request, "Passwords Don't Match")
+            return redirect('noicDepot:initial-password-change')
+        elif len(password1) < 8:
+            messages.warning(request, "Password is too short")
+            return redirect('noicDepot:initial-password-change')
+        elif password1.isnumeric():
+            messages.warning(request, "Password can not be entirely numeric!")
+            return redirect('noicDepot:initial-password-change')
+        elif not password1.isalnum():
+            messages.warning(request, "Password should be alphanumeric")
+            return redirect('noicDepot:initial-password-change')
+        else:
+            user = request.user
+            user.set_password(password1)
+            user.password_reset = False
+            user.save()
+            update_session_auth_hash(request, user)
+
+            messages.success(request, 'Password Successfully Changed')
+            return redirect('noicDepot:orders')
+    return render(request, 'noicDepot/initial_pass_change.html')
+
+
 def dashboard(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders = SordNationalAuditTrail.objects.filter(assigned_depot=depot).all()
