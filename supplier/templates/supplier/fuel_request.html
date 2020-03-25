@@ -28,19 +28,24 @@
 </section>
 <!-- Main content -->
 <div class="content">
+    <a href="{% url 'activate_whatsapp' %}" style="background-color: #25d366; margin-bottom: 20px;" class="btn btn-success btn-labeled" type="button" class="btn btn-labeled btn-success m-b-5">
+        <span class="btn-label"><i class="fa fa-whatsapp"></i></span>
+        {% if request.user.activated_for_whatsapp %}
+            Deactivate Whatsapp
+        {% else %}
+            Activate Whatsapp
+        {% endif %}
+    </a>
+    <div class="">
+        <button class="btn btn-default" onclick="toggle_tables()" style="border-radius: 3px;" id="toggle_button">Toggle Tables</button>
+      </div>
     <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
-        data-index="0">
+        data-index="0" id="requests_incomplete">
         <div class="panel-heading ui-sortable-handle">
             <div class="btn-group"> 
-
-                <a href="{% url 'activate_whatsapp' %}" style="background-color: #25d366;" class="btn btn-success btn-labeled" type="button" class="btn btn-labeled btn-success m-b-5">
-                    <span class="btn-label"><i class="fa fa-whatsapp"></i></span>
-                    {% if request.user.activated_for_whatsapp %}
-                        Deactivate Whatsapp
-                    {% else %}
-                        Activate Whatsapp
-                    {% endif %}
-                </a>
+                
+               <h4> Requests - Incomplete</h4>
+                
             </div>
             
             <div class="dropdown">
@@ -382,6 +387,382 @@ aria-hidden="true">
 
 </div>
 </div>
+    </div>
+
+    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
+        data-index="0" id="requests_complete">
+        <div class="panel-heading ui-sortable-handle">
+            <div class="btn-group"> 
+                <h4>Requests - Complete</h4>
+                
+            </div>
+            
+            <div class="dropdown">
+                <ul class="dropdown-menu dropdown-menu-right">
+
+
+                </ul>
+                <div class="dropdown-toggle" data-toggle="dropdown"><span
+                        class="panel-control-icon glyphicon glyphicon-cog"></span>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">              
+      
+      <div class="table-responsive">
+        <table id="fuel_request_complete" class="table table-striped table-bordered" style="width:100%">
+            <thead style="background-color: lightslategray; color:white;">
+                <tr>
+                    <th style="color: white;"></th>
+                    <th style="color: white;">Date</th>
+                    <th style="color: white;">Buyer</th>
+                    <th style="color: white;">Quantity</th>
+                    <th style="color: white;">Fuel</th>
+                    <th style="color: white;">Currency</th>
+                    <th style="color: white;">Delivery</th>
+                    <th style="color: white;">Address</th>
+                    <th style="color: white;">Equipment</th>
+                    <!-- <th style="color: white;">Action</th> -->
+                </tr>
+            </thead>
+            <tbody>
+            {% if complete_requests %}    
+                {% for req in complete_requests %}
+                <tr>
+                    <td></td>
+                    <td>{{ req.date }}</td>
+                    <td>{{ req.name.company.name|lower|title }}</td>
+                    <td>{{ req.amount|intcomma }}</td>
+                    
+                    {% if req.fuel_type == 'Diesel' %}
+                        <td style="color: #009688;">{{ req.fuel_type|lower|capfirst }}</td>
+                    {% elif req.fuel_type == 'Petrol' %}
+                        <td style="color: #ffb61e;">{{ req.fuel_type|lower|capfirst }}</td>
+                    {% else %}    
+                        <td>{{ req.fuel_type|lower|capfirst }}</td>
+                    {% endif %}    
+
+
+
+
+                    <td>{{ req.payment_method}}</td>                    
+                    <td>{{ req.delivery_method|lower|capfirst }}</td>
+                    {% if req.delivery_address != None %}
+                    <td>{{ req.delivery_address|lower|title}}</td>  
+                    {% else %}
+                    <td>N/A</td> 
+                    {% endif %}                                 
+                    <td>{% if req.dipping_stick_required %}Stick &nbsp;{% endif %}{% if req.pump_required %}Pump &nbsp;{% endif %}{% if req.meter_required %}Meter&nbsp;{% endif %}{% if req.no_equipments %}No Equipment Required{% endif %}</td>
+                    {% if req.my_offer != 'No Offer' %}
+                    {% if req.delivery_method == 'DELIVERY' %}
+                    
+                      {% endif %}
+                    {% else %}
+                    {% if req.delivery_method == 'DELIVERY' %}
+                    {% else %}
+                    {% endif %}
+                    {% endif %}
+                </tr>
+                <script>
+                    $('#pump_available').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                    $('#swipe').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                    $('#ecocash').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                    $('#cash').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                    $('#usd').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                  
+                    $('#dipping_stick_available').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                  
+                    $('#meter_available').on('change', function () {
+                      $(this).val(this.checked ? "True" : "False");
+                    });
+                  </script>
+
+                <!-- make offer modal -->
+                        <!-- <div class="modal fade modal-success in" id="add_offer_{{req.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                        aria-hidden="true">
+                    <div class="modal-dialog modal-notice">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <span class="modal-title">Make Offer</span>
+                        </div>
+                    <div class="modal-body">
+                    <form method="POST" action="{% url 'supplier:supplier' req.id %}">
+                        {% csrf_token %}
+                        <div class=" row">
+                        <div class="col-sm-6">
+                            <label>Fuel Type</label>
+                            <input type="text" name="fuel_type" class="form-control" value="{{req.fuel_type}}" disabled/>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label>Fuel Quantity</label>
+                            <input type="number" step="0.01" name="quantity" class="form-control" value="{{req.amount}}" required/>
+                        </div>
+                        </div>
+                        <div class=" row">
+                        <div class="col-sm-6">
+                            <label>Fuel Price</label>
+                            <input type="number" step="0.01" name="price" class="form-control" value="{{req.price|stringformat:".2f"}}" required/>
+                        </div>
+                        <div class="col-sm-6">
+                        <label>Transport Fee</label>
+                        <input type="number" step="0.01" name="transport" class="form-control" value="0.00" />
+                    </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">  
+                        <button type="submit" class="btn btn-primary ">Make Offer</button>
+                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                    </div> 
+                    </form>
+                    </div>
+                    </div>
+                    </div> -->
+                    <!-- end make offer modal -->
+
+
+                    <!-- make offer modal with self collection-->
+                    <div class="modal fade modal-success in" id="add_offer_collection_{{req.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-notice">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <span class="modal-title">Make Offer</span>
+                        </div>
+                    <div class="modal-body">
+                    <form method="POST" action="{% url 'supplier:supplier' req.id %}">
+                        {% csrf_token %}
+                        <div class=" row col-sm-12">
+                        <div class="col-sm-4">
+                            <label>Fuel Type</label>
+                            <input type="text" name="fuel_type" class="form-control" value="{{req.fuel_type}}" disabled/>
+                        </div>
+                    
+                        <div class="col-sm-4">
+                            <label>Fuel Quantity</label>
+                            <input type="number" step="0.01" name="quantity" class="form-control" value="{{req.amount}}" required/>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Fuel Price</label>
+                            <input type="number" step="0.01" name="price" class="form-control" value="{{req.price|stringformat:".2f"}}" required/>
+                        </div>
+                        </div>  
+                        <div class="form-group" name='choices'>                
+                            <p style="text-align: center;"><label>Collection Address</label></p>
+                            <div class=" row col-sm-12">                            
+                                <div class="togglebutton col-sm-4">
+                                    <label for="">Street Number</label>
+                                    <input type="text" class="form-control" name="street_number" aria-describedby="helpId" placeholder="" required>
+                                    
+                                </div>
+                                <div class="togglebutton col-sm-4">
+                                    <label for="">Street Name</label>
+                                    <input type="text" class="form-control" name="street_name" aria-describedby="helpId" placeholder="" required>
+                                    
+                                </div>
+                                <div class="togglebutton col-sm-4">
+                                    <label for="">Location/Town</label>
+                                    <input type="text" class="form-control" name="location" aria-describedby="helpId" placeholder="" required>
+                                
+                                </div>
+                                </div>
+                            <p style="text-align: center;"><label>Available Equipments</label></p>
+                            <div class="row" style="padding-left: 15px;">
+                                <div class="col-sm-4">
+                                    <input class="form-control-md" type="checkbox" value="False" name="pump_available">
+                                    <label for="pump_available">Pump </label>
+                                    
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control-md" type="checkbox" value="False" name="dipping_stick_available">
+                                    <label for="dipping_stick_available">Dipping Stick </label>
+                                </div>
+                    
+                                <div class="col-sm-4">
+                                    <input class="form-control-md" type="checkbox" value="False" name="meter_available">
+                                    <label for="meter_available">Meter</label>
+                                </div>
+                            </div>
+                            </div>
+                    </div>
+                    <div class="modal-footer">  
+                        <button type="submit" class="btn btn-primary ">Make Offer</button>
+                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                    </div> 
+                    </form>
+                    </div>
+                    </div>
+                    </div>
+                    <!-- end make offer modal -->
+
+
+                    <!-- edit modal -->
+                    <div class="modal fade modal-success in" id="edit_offer_{{req.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-notice">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h2 class="modal-title">Edit Offer</h2>
+                    </div>
+                    <div class="modal-body">
+                    <form method="POST" action="#">
+                        {% csrf_token %}
+                        <div class=" row col-sm-12">
+                        <div class="col-sm-6">
+                            <lable>Fuel Type</lable>
+                            <input type="text" name="fuel_type" class="form-control" value="{{req.fuel_type}}" disabled/>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <lable>Fuel Quantity</lable>
+                            <input type="number" step="0.01" name="quantity" class="form-control" value="{{req.offer_quantity}}" required/>
+                        </div>
+                        </div>
+                        <div class=" row col-sm-12">
+                        <div class="col-sm-6">
+                            <lable>Fuel Price</lable>
+                            <input type="number" step="0.01" name="price" class="form-control" value="{{req.offer_price|stringformat:".2f"}}" required/>
+                        </div>
+                        <div class="col-sm-6">
+                        <lable>Transport Fee</lable>
+                        <input type="number" step="0.01" name="transport" class="form-control" value="{{req.transport_fee|stringformat:".2f"}}" required/>
+                    </div>
+                        </div>
+                    </div>
+                        <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-info btn-sm">Update Offer</button></p>
+                    </form>
+                    </div>
+                    </div>
+                    </div>
+                    <!-- end edit modal -->
+
+
+                    <!-- edit offer with self collection modal -->
+                    <div class="modal fade modal-success in" id="edit_offer_collection_{{req.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-notice">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h2 class="modal-title">Edit Offer</h2>
+                    </div>
+                    <div class="modal-body">
+                    <form method="POST" action="#">
+                        {% csrf_token %}
+                        <div class=" row col-sm-12">
+                        <div class="col-sm-4">
+                            <lable>Fuel Type</lable>
+                            <input type="text" name="fuel_type" class="form-control" value="{{req.fuel_type}}" disabled/>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <lable>Fuel Quantity</lable>
+                            <input type="number" step="0.01" name="quantity" class="form-control" value="{{req.offer_quantity}}" required/>
+                        </div>
+                        <div class="col-sm-4">
+                            <lable>Fuel Price</lable>
+                            <input type="number" step="0.01" name="price" class="form-control" value="{{req.offer_price|stringformat:".2f"}}" required/>
+                        </div>
+                        </div>
+
+                        <div class="form-group" name='choices'>
+                            <p style="text-align: center;"><label>Collection Address</label></p>
+                            <div class=" row col-sm-12">                          
+                                <div class="togglebutton col-sm-4">
+                                <label for="">Street Number</label>
+                                <input type="text" class="form-control" name="street_number" aria-describedby="helpId" placeholder="" required/>
+                                
+                                </div>
+                                <div class="togglebutton col-sm-4">
+                                <label for="">Street Name</label>
+                                <input type="text" class="form-control" name="street_name" aria-describedby="helpId" placeholder="" required/>
+                                
+                                </div>
+                                <div class="togglebutton col-sm-4">
+                                <label for="">Location/Town</label>
+                                <input type="text" class="form-control" name="location" aria-describedby="helpId" placeholder="" required/>
+                                </div>
+                                </div>
+                            <p style="text-align: center;"><label>Available Equipments</label></p>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <input class="form-control-md" type="checkbox" value="False" name="pump_available">
+                                    <label for="pump_available">Pump </label>
+                                    
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control-md" type="checkbox" value="False" name="dipping_stick_available">
+                                    <label for="dipping_stick_available">Dipping Stick </label>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <input class="form-control-md" type="checkbox" value="False" name="meter_available">
+                                    <label for="meter_available">Meter</label>
+                                </div>
+                            </div>
+                            </div>
+                </div>
+                    <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-info btn-sm">Update Offer</button></p>
+                </form>
+                </div>
+                </div>
+                </div>
+                <!-- end edit modal -->
+                {%endfor%}
+            {% else %}    
+            No Data To Show
+            {% endif %}
+            </tbody>
+            </table>
+
 </div>
+</div>
+    </div>
+
+    <script>
+        function check_visible(){
+          if ($('#requests_complete').is(':visible')){
+            $("#toggle_button").prop("value", "Pama");
+            $("#toggle_button").html("View Complete Requests")
+      
+          }else{
+      
+            $("#toggle_button").prop("value", "Pama");
+            $("#toggle_button").html("View Incomplete Requests")
+          }
+        }
+      </script>
+      
+      
+      <script>
+        $("#requests_complete").show();
+        $("#requests_incomplete").hide();
+        check_visible()
+        
+        function toggle_tables(){
+          $("#requests_complete").toggle();
+          $("#requests_incomplete").toggle();
+          check_visible()
+      
+        }
+      
+      </script>    
+
+    
 </div>
     {%endblock%}
