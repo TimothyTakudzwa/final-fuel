@@ -160,7 +160,7 @@ def token_is_send(request, auth_user):
     try:
         msg = EmailMultiAlternatives(subject, message, sender, [f'{auth_user.email}'])
         msg.send()
-        messages.success(request, f"{auth_user.first_name}  {auth_user.last_name} Registered Successfully")
+        #messages.success(request, f"{auth_user.first_name}  {auth_user.last_name} Registered Successfully")
         return True
     except Exception:
         messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
