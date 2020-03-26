@@ -58,7 +58,7 @@ class SuballocationFuelUpdate(models.Model):
     swipe = models.BooleanField(default=False)
     usd = models.BooleanField(default=False)
     fca = models.BooleanField(default=False)
-    last_updated = models.DateField(blank=True, null=True)
+    last_updated = models.DateField(auto_now_add=True, blank=True, null=True)
     petrol_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     diesel_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     petrol_usd_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
