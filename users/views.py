@@ -881,7 +881,6 @@ def suppliers_list(request):
             i += 1
         sup = User.objects.filter(email=email).first()
         if sup is not None:
-            print("ndapinda nepano")
             messages.warning(request, f"{sup.email} already used in the system, please use a different email")
             return redirect('users:suppliers_list')
         else:
@@ -1397,7 +1396,6 @@ def depot_staff(request):
         email = request.POST.get('email')
         sup = User.objects.filter(email=email).first()
         if sup is not None:
-            print("nechepano--------------")
             messages.warning(request, f"{sup.email} already used in the system, please use a different email")
             return redirect('users:suppliers_list')
 
