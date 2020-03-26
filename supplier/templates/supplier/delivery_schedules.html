@@ -82,12 +82,17 @@
                         {%endif%}
                       </td>
                       <td>
-                        <button type="button" class="btn btn-purple btn-sm" data-toggle="modal"
-                            data-target="#edit_delivery_{{delivery.id}}">Edit Schedule</button>
+                        
+                        <button class="btn btn-success btn-labeled" data-toggle="modal" data-target="#edit_delivery_{{delivery.id}}" type="button" class="btn btn-labeled btn-success m-b-5">
+                            <span class="btn-label"><i class="fa fa-edit"></i></span>Edit Schedule
+                        </button>    
                       </td>
-                      <td><button class="btn btn-primary" data-toggle="modal" data-target="#additonal_information{{delivery.id}}">
-                        More Info
-                        </button></td>
+                      <td>
+                          
+                        <button class="btn btn-success btn-labeled" data-toggle="modal" data-target="#additonal_information{{delivery.id}}" type="button" class="btn btn-labeled btn-success m-b-5">
+                            <span class="btn-label"><i class="fa fa-info"></i></span>More Info
+                        </button> 
+                    </td>
                     </tr>
                     <div class="modal fade modal-success in" id="edit_delivery_{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                           aria-hidden="true">
@@ -144,6 +149,8 @@
                           <div class="modal-footer">
                             <div class="row pull-right" style="margin-right: 15px;">                
                                 <button class="btn btn-primary" type="submit">Save Changes</button>
+                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+
                             </div>
                         </div>
                           </form>
@@ -159,7 +166,7 @@
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                 <span class="modal-title">Additional Information</span>
                             </div>
-                                <div class="modal-body" style="padding: 30px;height: 400px;overflow-y: auto;">
+                                <div class="modal-body" style="padding: 30px;height: 600px;overflow-y: auto;">
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Delivery Date/Time: </p>
                                         <p class="col-md-6">{{ delivery.date }} | {{ delivery.delivery_time }}</p>
@@ -238,7 +245,10 @@
                                         {%else %}
                                         <p class="col-md-6">Status: Pending </p>    
                                         {% endif %} 
-                                    </div>           
+                                    </div>     
+                                    <div class="modal-footer">  
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div>    
 
                                 </div>
                                 </div>

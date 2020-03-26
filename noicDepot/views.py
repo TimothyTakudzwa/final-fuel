@@ -68,6 +68,12 @@ def dashboard(request):
 def orders(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders = Order.objects.filter(noic_depot=depot).all()
+    print(orders)
+    for order in orders:
+        if order is not None:
+            alloc = SordNationalAuditTrail.objects.filter(order=order).first()
+            if alloc is not None:
+                order.allocation = alloc
     return render(request, 'noicDepot/orders.html', {'orders': orders})
 
 def stock(request):
@@ -90,7 +96,7 @@ def payment_approval(request, id):
     order.payment_approved = True
     order.save()
     messages.success(request, 'payment approved successfully')
-    return redirect('noicDepot:orders')
+    return redirect(f'noicDepot/orders/?order_id={order.id}')
 
 def view_release_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()

@@ -346,9 +346,12 @@ def fuel_request(request):
             fuel_request_item.has_offers = True
         else:
             fuel_request_item.has_offers = False
+    complete_requests = FuelRequest.objects.filter(name=user_logged, is_complete=True).all()
+
 
     context = {
-        'fuel_requests': fuel_requests
+        'fuel_requests': fuel_requests,
+        'complete_requests' : complete_requests
     }
 
     return render(request, 'buyer/fuel_request.html', context=context)
@@ -651,6 +654,8 @@ def transactions(request):
             return redirect('buyer-transactions')
 
     buyer = request.user
+    complete_trans = []
+    in_complete_trans = []
     all_transactions = Transaction.objects.filter(buyer=buyer).all()
     for transaction in all_transactions:
         subsidiary = Subsidiaries.objects.filter(id=transaction.supplier.subsidiary_id).first()
@@ -666,9 +671,15 @@ def transactions(request):
             # transaction.address = subsidiary.location
         from supplier.models import UserReview
         transaction.review = UserReview.objects.filter(transaction=transaction).first()
+        if transaction.is_complete == True:
+            complete_trans.append(transaction)
+        else:    
+            in_complete_trans.append(transaction)
+
 
     context = {
-        'transactions': all_transactions,
+        'transactions': complete_trans,
+        'incomplete_transactions': in_complete_trans,
         'subsidiary': Subsidiaries.objects.filter(),
         'all_transactions': AccountHistory.objects.filter()
     }

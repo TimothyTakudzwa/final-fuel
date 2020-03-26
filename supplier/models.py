@@ -58,7 +58,7 @@ class SuballocationFuelUpdate(models.Model):
     swipe = models.BooleanField(default=False)
     usd = models.BooleanField(default=False)
     fca = models.BooleanField(default=False)
-    last_updated = models.DateField(blank=True, null=True)
+    last_updated = models.DateField(auto_now_add=True, blank=True, null=True)
     petrol_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     diesel_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     petrol_usd_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
@@ -223,7 +223,7 @@ class SordSubsidiaryAuditTrail(models.Model):
     initial_quantity =  models.FloatField(default=0.00)
     quantity_sold =  models.FloatField(default=0.00)
     end_quantity =  models.FloatField(default=0.00)
-    received_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    received_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.DO_NOTHING)
     subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.DO_NOTHING, related_name='subsidiary_sord')
     last_updated = models.DateTimeField(auto_now_add=True)
 

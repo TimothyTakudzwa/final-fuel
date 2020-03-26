@@ -87,8 +87,9 @@
                             <td>
                                
                                     <!--call modal-->
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{payment.id}}">
-                                        Account Details
+                                    
+                                    <button class="btn btn-success btn-labeled" data-toggle="modal" data-target="#view{{payment.id}}" type="button" class="btn btn-labeled btn-success m-b-5">
+                                        <span class="btn-label"><i class="fa fa-eye"></i></span>Account Details
                                     </button>
                                     <!--view details-->
                                     <div class="modal fade modal-success in" id="view{{payment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -123,6 +124,9 @@
                                                             <h4>Verified &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.account.is_verified }}</h4>
                                                         </div>
                                                     </div>
+                                                    <div class="modal-footer">  
+                                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -133,8 +137,9 @@
                             <td>
                                 
                                     <!--call modal-->
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#trans{{payment.id}}">
-                                        Transaction Details
+                                    
+                                    <button class="btn btn-success btn-labeled" data-toggle="modal" data-target="#trans{{payment.id}}" type="button" class="btn btn-labeled btn-success m-b-5">
+                                        <span class="btn-label"><i class="fa fa-eye"></i></span>Transaction Details
                                     </button>
                                     <!--view details-->
                                     <div class="modal fade modal-success in" id="trans{{payment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -221,6 +226,9 @@
                                                         </div>
                                                        
                                                     </div>
+                                                    <div class="modal-footer">  
+                                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -294,12 +302,19 @@
 
                                         <form method="POST" action="{% url 'supplier:edit-release-note' payment.id %}" enctype="multipart/form-data">
                                             {% csrf_token %}
-                                            <div class="form-group col-md-6">
-                                                <label>Release Date</label>
-                                                <input type="date" name="release_date" class="form-control"  required/>
+                                            <div class="form-group row">
+                                                <div class="col-md-6">
+                                                    <label>Release Date</label>
+                                                    <input type="date" name="release_date" class="form-control"  required/>
+                                                </div>    
                                             </div>
                                             <br>
-                                            <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+                                            <!-- <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p> -->
+
+                                            <div class="modal-footer">  
+                                                <button type="submit" class="btn btn-primary ">Save Changes</button>
+                                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                            </div>
 
                                         </form>
                                     </div>

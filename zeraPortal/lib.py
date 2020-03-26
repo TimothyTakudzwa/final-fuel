@@ -81,7 +81,7 @@ def get_aggregate_monthly_sales(year):
         months_trans = Transaction.objects.filter(date__year=year, date__month=counter)
         if months_trans:
             for tran in months_trans :
-                months_revenue += (tran.offer.request.amount * tran.offer.price)
+                months_revenue += (float(tran.offer.request.amount) * float(tran.offer.price))
         else:
             months_revenue = 0
 

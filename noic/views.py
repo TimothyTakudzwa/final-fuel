@@ -316,7 +316,7 @@ def staff(request):
         sup = User.objects.filter(email=email).first()
         if sup is not None:
             messages.warning(request, f"{sup.email} already used in the system, please use a different email")
-            return redirect('users:suppliers_list')
+            return redirect('noic:staff')
 
         password = random_password()
         phone_number = request.POST.get('phone_number')
@@ -332,7 +332,7 @@ def staff(request):
                                    first_name=first_name, last_name=last_name, user_type='NOIC_STAFF', email=email,
                                    phone_number=phone_number, password_reset=True)
         user.set_password(password)
-        depot = NoicDepot.objects.filter0(id=subsidiary_id).first()
+        depot = NoicDepot.objects.filter(id=subsidiary_id).first()
         depot.is_active = True
         depot.save()
         if message_is_send(request, user, password):
