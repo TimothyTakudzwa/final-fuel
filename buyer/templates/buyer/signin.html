@@ -191,12 +191,18 @@
                                                                                 </fieldset>
 
                                                                                 <div class="form-group sign_up_btn_group">
-                                                                                    <button class="btn btn-primary" type="submit">Login</button>
-                                                                                    <a class="btn btn-warning" href="{% url 'buyer-register'%}">Register</a>
+                                                                                    <div class="row mb-2">
+                                                                                        <div class="col-md-6 mt-3">
+                                                                                            <button class="btn btn-primary w-100" type="submit">Login</button>
+                                                                                        </div>
+                                                                                        <div class="col-md-6 mt-3">
+                                                                                            <button class="btn btn-warning w-100" href="{% url 'buyer-register'%}">Register</button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <p class="oppi_sign_note sign_up_para text-center mt-3">
+                                                                                        <span><a class="mt-1" href="{% url 'password_reset'%}">Forgot your password?</a></span>
+                                                                                    </p>
                                                                                 </div>
-                                                                                <p class="oppi_sign_note sign_up_para text-right">
-                                                                                    <span class="float-left"><a href="{% url 'password_reset'%}">Forgot your password?</a></span>
-                                                                                </p>
                                                                             </form>
                                                                         </div>
                                                                     </div>
