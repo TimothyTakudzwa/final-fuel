@@ -60,13 +60,13 @@
             <tr>
 
                 <td>{{noic_usd_petrol|intcomma}} Litres {% if noic_usd_petrol < 10000 %} 
-                    <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"> Petrol quantity too low</i>{% endif %}</td>
+                    <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
                 <td>{{noic_usd_diesel|intcomma}} Litres {% if noic_usd_diesel < 1000 %} <i
-                        class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"> Diesel quantity too low</i>{% endif %}</td>
+                        class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
                 <td>{{noic_rtgs_petrol|intcomma}} Litres {% if noic_rtgs_petrol < 1000 %} <i
-                    class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"> Petrol quantity too low</i>{% endif %}</td>
+                    class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
                 <td>{{noic_rtgs_diesel|intcomma}} Litres {% if noic_rtgs_diesel < 1000 %} <i
-                    class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"> Diesel quantity too low</i>{% endif %}</td>
+                    class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
 
                 
             </tr>
@@ -123,16 +123,16 @@
             <tr>
                 <td>{{fuel.depot.name}}</td>
                 <td>{{fuel.usd_diesel|intcomma}} {% if fuel.usd_diesel < 1000 %} 
-                    <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"> Diesel quantity too low</i>{% endif %}</td>
+                    <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"> </i>{% endif %}</td>
                 <td>{{fuel.usd_diesel_price}}</td>
                 <td>{{fuel.rtgs_diesel|intcomma}} {% if fuel.rtgs_diesel < 1000 %} 
-                    <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"> Diesel quantity too low</i>{% endif %}</td>
+                    <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"> </i>{% endif %}</td>
                 <td>{{fuel.rtgs_diesel_price}}</td>
                 <td>{{fuel.usd_petrol|intcomma}} {% if fuel.usd_petrol < 1000 %} 
-                    <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson">Petrol quantity too low</i>{% endif %}</td>
+                    <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
                 <td>{{fuel.usd_petrol_price}}</td>
                 <td>{{fuel.rtgs_petrol|intcomma}} {% if fuel.rtgs_petrol < 1000 %} 
-                    <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson">Petrol quantity too low</i>{% endif %}</td>
+                    <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
                 <td>{{fuel.rtgs_petrol_price}}</td>
                 <td>
                     <div class="btn-group">
