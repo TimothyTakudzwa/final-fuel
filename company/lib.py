@@ -79,7 +79,7 @@ def get_monthly_sales(company, year):
         months_trans = Transaction.objects.filter(date__year=year, date__month=counter, supplier__company=company)
         if months_trans:
             for tran in months_trans :
-                months_revenue += (tran.offer.request.amount * tran.offer.price)
+                months_revenue += (float(tran.offer.request.amount) * float(tran.offer.price))
         else:
             months_revenue = 0
 
@@ -141,7 +141,7 @@ def get_total_revenue(user):
     
     if trans:
         for transaction in trans:
-            revenue += (transaction.offer.request.amount * transaction.offer.price)
+            revenue += (float(transaction.offer.request.amount) * float(transaction.offer.price))
     else:
         revenue = 0        
     return revenue

@@ -1015,7 +1015,7 @@ def statistics(request):
         purchases = []
         number_of_trans = 0
         for tran in new_buyer_transactions:
-            total_value += (tran.offer.request.amount * tran.offer.price)
+            total_value += (float(tran.offer.request.amount) * float(tran.offer.price))
             purchases.append(tran)
             number_of_trans += 1
         buyer.total_revenue = total_value
