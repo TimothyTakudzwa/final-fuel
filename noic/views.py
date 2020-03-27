@@ -136,12 +136,12 @@ def depots(request):
 
         messages.success(request, 'Depot Created Successfully')
         return render(request, 'noic/depots.html',
-                  {'depots': depots, 'add_user' : True, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
+                  {'depots': depots, 'add_user' : 'show', 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
                    'Mutare': Mutare, 'Gweru': Gweru, 'form': DepotContactForm()})
        
 
     return render(request, 'noic/depots.html',
-                  {'depots': depots, 'add_user' : False, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
+                  {'depots': depots, 'add_user' : 'hide', 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
                    'Mutare': Mutare, 'Gweru': Gweru, 'form': DepotContactForm()})
 
 
