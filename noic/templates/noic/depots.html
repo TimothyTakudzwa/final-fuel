@@ -4,7 +4,12 @@
 {% if add_user == 'show' %}
 
 <script>
-    console.log("This is it")
+   
+    $(document).ready(function () {
+        console.log("This is it")
+        $('#new_depot_user').modal('show');
+    });
+
 </script>
 {%else%}
 <script>
@@ -606,7 +611,7 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6 mb-0">
-                                {{ form1.depot|as_crispy_field }}
+                               
                             </div>
                             
                             <div class="form-group col-md-6 mb-0">
