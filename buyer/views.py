@@ -160,6 +160,7 @@ def token_is_send(request, auth_user):
     try:
         msg = EmailMultiAlternatives(subject, message, sender, [f'{auth_user.email}'])
         msg.send()
+
         messages.success(request, f"{auth_user.first_name}  {auth_user.last_name} Registered successfully")
         return True
     except Exception:
@@ -174,6 +175,7 @@ def token_is_send(request, auth_user):
 Stage one registration view
 
 """
+
 
 
 def register(request):
@@ -398,11 +400,21 @@ Landing page
 
 @login_required
 def dashboard(request):
+    updates = []
     if request.user.company.is_govnt_org:
-        updates = SuballocationFuelUpdate.objects.filter(~Q(subsidiary__praz_reg_num=None)).filter(
-            ~Q(diesel_quantity=0.00), ~Q(petrol_quantity=0.00))
+        fuel_updates = SuballocationFuelUpdate.objects.filter(~Q(subsidiary__praz_reg_num=None)).all()
+        for fuel_update in fuel_updates:
+            if fuel_update.diesel_quantity == 0.00 and fuel_update.petrol_quantity == 0.00:
+                pass
+            else:
+                updates.append(fuel_update)
     else:
-        updates = SuballocationFuelUpdate.objects.filter(~Q(diesel_quantity=0.00), ~Q(petrol_quantity=0.00))
+        fuel_updates = SuballocationFuelUpdate.objects.all()
+        for fuel_update in fuel_updates:
+            if fuel_update.diesel_quantity == 0.00 and fuel_update.petrol_quantity == 0.00:
+                pass
+            else:
+                updates.append(fuel_update)
     for update in updates:
         subsidiary = Subsidiaries.objects.filter(id=update.subsidiary.id).first()
         if UserReview.objects.filter(depot=subsidiary).exists():

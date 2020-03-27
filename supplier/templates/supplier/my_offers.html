@@ -28,7 +28,7 @@
     {% endif %}
 </a>
   <div class="">
-    <button class="btn btn-default" onclick="toggle_tables()" style="border-radius: 3px;" id="toggle_button">Toggle Tables</button>
+    <button class="btn btn-default" onclick="toggle_tables()" style="border-radius: 3px;background-color: #009688;color: white;" id="toggle_button">Toggle Tables</button>
   </div>
     <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
         data-index="0" id="offers_panel">
@@ -508,12 +508,12 @@ aria-hidden="true">
   function check_visible(){
     if ($('#offers_completed_panel').is(':visible')){
       $("#toggle_button").prop("value", "Pama");
-      $("#toggle_button").html("View Accepted Offers")
+      $("#toggle_button").html("Click To View Accepted Offers")
 
     }else{
 
       $("#toggle_button").prop("value", "Pama");
-      $("#toggle_button").html("View Pending Offers")
+      $("#toggle_button").html("Click To View Pending Offers")
     }
   }
 </script>

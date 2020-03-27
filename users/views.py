@@ -872,10 +872,6 @@ def suppliers_list(request):
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
-        sup = User.objects.filter(email=email).first()
-        if sup is not None:
-            messages.warning(request, f"{sup.email} already used in the system, please use a different email")
-            return redirect('users:suppliers_list')
         password = random_password()
         phone_number = request.POST.get('phone_number')
         subsidiary_id = request.POST.get('service_station')
@@ -885,53 +881,24 @@ def suppliers_list(request):
         while User.objects.filter(username=username.lower()).exists():
             username = initial_username + str(i)
             i += 1
-        user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
-                                   first_name=first_name, last_name=last_name, user_type='SS_SUPPLIER',
-                                   company=request.user.company, email=email,
-                                   phone_number=phone_number, password_reset=True)
-        user.set_password(password)
-        if message_is_send(request, user, password):
-            if user.is_active:
-                user.stage = 'menu'
-                user.save()
-            else:
-                messages.warning(request, f"Oops , something went wrong, please try again")
 
-        form = DepotContactForm(request.POST)
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        email = request.POST.get('email')
         sup = User.objects.filter(email=email).first()
         if sup is not None:
             messages.warning(request, f"{sup.email} already used in the system, please use a different email")
             return redirect('users:suppliers_list')
 
-        password = random_password()
-        phone_number = request.POST.get('phone_number')
-        subsidiary_id = request.POST.get('depot')
-        full_name = first_name + " " + last_name
-        i = 0
-        username = initial_username = first_name[0] + last_name
-        while User.objects.filter(username=username.lower()).exists():
-            username = initial_username + str(i)
-            i += 1
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
-                                   first_name=first_name, last_name=last_name, user_type='SUPPLIER',
-                                   company=request.user.company, email=email,
-                                   phone_number=phone_number, password_reset=True)
+                                first_name=first_name, last_name=last_name, user_type='SS_SUPPLIER',
+                                company=request.user.company, email=email,
+                                phone_number=phone_number, password_reset=True)
         user.set_password(password)
         if message_is_send(request, user, password):
             if user.is_active:
-                # messages.success(request, "You have been registered succesfully")
                 user.stage = 'menu'
                 user.save()
-
-                # return render(request, 'buyer/email_send.html')
             else:
-                messages.warning(request, f"Oops , something went wrong, please try again")
-                # return render(request, 'buyer/email_send.html')
-        # messages.success(request, f"{username.lower()} Registered as Depot Rep Successfully")
-        return redirect('users:suppliers_list')
+                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+
     return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1, 'form':form})
 
 
@@ -1017,7 +984,7 @@ def statistics(request):
         purchases = []
         number_of_trans = 0
         for tran in new_buyer_transactions:
-            total_value += (tran.offer.request.amount * tran.offer.price)
+            total_value += (float(tran.offer.request.amount) * float(tran.offer.price))
             purchases.append(tran)
             number_of_trans += 1
         buyer.total_revenue = total_value

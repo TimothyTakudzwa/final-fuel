@@ -88,6 +88,11 @@ def depots(request):
              'Ascot', 'Ridgemont', 'Windsor Park', 'Ivene', 'Haben Park', 'Bata', 'ThornHill Air Field' 'Green Dale',
              'Bristle', 'Southdowns']
     if request.method == 'POST':
+        # check if email exists
+        if User.objects.filter(uemail=request.POST.get('email')).exists():
+            messages.warning(request, 'Invalid Email')
+            return redirect('noic:depots')
+
         name = request.POST['name']
         city = request.POST['city']
         location = request.POST['location']
@@ -107,13 +112,35 @@ def depots(request):
         
         fuel_update = DepotFuelUpdate.objects.create(depot=depot)
         fuel_update.save()
-        messages.success(request, 'Depot created successfully')
+
+        # creating user for depot
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        username = first_name[0] + last_name
+
+        i = 0
+        while User.objects.filter(username=username).exists():
+            username = first_name[0] + last_name + str(i)
+            i += 1
+
+        depot_staff = User.objects.create(username=user,
+                                          email=request.POST.get('email'),
+                                          first_name=first_name,
+                                          last_name=last_name,
+                                          company_position='manager',
+                                          user_type='NOIC_STAFF',
+                                          password_reset=True,
+                                          subsidiary_id=depot.id
+                                          )
+        depot_staff.set_password(random_password())
+
+        messages.success(request, 'Depot Created Successfully')
         return redirect('noic:depots')
        
 
     return render(request, 'noic/depots.html',
                   {'depots': depots, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
-                   'Mutare': Mutare, 'Gweru': Gweru})
+                   'Mutare': Mutare, 'Gweru': Gweru, 'form': DepotContactForm()})
 
 
 def edit_depot(request, id):

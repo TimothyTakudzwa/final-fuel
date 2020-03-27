@@ -29,7 +29,7 @@
     <!-- Main content -->
     <div class="content">
         <div class="">
-            <button class="btn btn-default" onclick="toggle_tables()" style="border-radius: 3px;" id="toggle_button">Toggle Tables</button>
+            <button class="btn btn-default" onclick="toggle_tables()" style="border-radius: 3px;background-color: #009688;color: white;" id="toggle_button">Toggle Tables</button>
           </div>
         <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0" id="complete_trans">
             <div class="panel-heading ui-sortable-handle">
@@ -912,12 +912,12 @@
             function check_visible(){
               if ($('#complete_trans').is(':visible')){
                 $("#toggle_button").prop("value", "Pama");
-                $("#toggle_button").html("View Complete Transactions")
+                $("#toggle_button").html("Click To View Complete Transactions")
           
               }else{
           
                 $("#toggle_button").prop("value", "Pama");
-                $("#toggle_button").html("View Incomplete Transaction")
+                $("#toggle_button").html(" Click To View Incomplete Transaction")
               }
             }
           </script>
