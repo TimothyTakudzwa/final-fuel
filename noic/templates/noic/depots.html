@@ -11,6 +11,8 @@
     console.log("This is it 333")
 </script>
 {%endif%}
+
+
     <section class="content-header">
         <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
             <div class="input-group">
@@ -572,7 +574,56 @@
             </div>
         </div>
     </section>
+    <div class="modal fade modal-success in" id="new_depot_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title" id="exampleModalLabel">Add User </span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
 
+                    {% load crispy_forms_tags %}
+                    <form action="{% url 'noic:staff' %}" method="POST">
+                        <div class="row">
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form1.first_name|as_crispy_field }}
+                            </div>
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form1.last_name|as_crispy_field }}
+                            </div>
+                         </div>
+                         <div class="row">
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form1.phone_number|as_crispy_field }}
+                            </div>
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form1.email|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form1.depot|as_crispy_field }}
+                            </div>
+                            
+                            <div class="form-group col-md-6 mb-0">
+                            </div>
+                        </div> 
+                        {% csrf_token %}
+                            <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                <button type="button" class="btn btn-secondary col-sm-6"
+                                    data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary col-sm-6">Add User Profile</button>
+                            </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
 
 {% endblock %}
