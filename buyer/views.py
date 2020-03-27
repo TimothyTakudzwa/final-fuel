@@ -1,5 +1,6 @@
 import secrets
 from datetime import date
+from operator import attrgetter
 
 import requests
 from django.contrib import messages
@@ -407,14 +408,14 @@ def dashboard(request):
             if fuel_update.diesel_quantity == 0.00 and fuel_update.petrol_quantity == 0.00:
                 pass
             else:
-                updates.append(fuel_update)
+                updates.append(fuel_update)                
     else:
         fuel_updates = SuballocationFuelUpdate.objects.all()
         for fuel_update in fuel_updates:
             if fuel_update.diesel_quantity == 0.00 and fuel_update.petrol_quantity == 0.00:
                 pass
             else:
-                updates.append(fuel_update)
+                updates.append(fuel_update)    
     for update in updates:
         subsidiary = Subsidiaries.objects.filter(id=update.subsidiary.id).first()
         if UserReview.objects.filter(depot=subsidiary).exists():
@@ -434,6 +435,7 @@ def dashboard(request):
             update.company = company.name
             update.depot = subsidiary.name
             update.address = subsidiary.address
+    updates.sort(key=attrgetter('date', 'time'), reverse=True)
     if request.method == 'POST':
         form = FuelRequestForm(request.POST)
         if 'MakeDeal' in request.POST:

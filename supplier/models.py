@@ -47,6 +47,8 @@ class Subsidiaries(models.Model):
 
 
 class SuballocationFuelUpdate(models.Model):
+    date = models.DateField(auto_now_add=True, null=True)
+    time = models.TimeField(auto_now_add=True, null=True)
     subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE, related_name='suballocation_fuel_update')
     payment_type = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS'), ('USD & RTGS', 'USD & RTGS')))
     queue_length = models.CharField(max_length=255,choices=(('short', 'Short'), ('medium', 'Medium Long'), ('long', 'Long')))
@@ -72,6 +74,8 @@ class SuballocationFuelUpdate(models.Model):
 
 class SubsidiaryFuelUpdate(models.Model):
     from company.models import CompanyFuelUpdate
+    date = models.DateField(auto_now_add=True, null=True)
+    time = models.TimeField(auto_now_add=True, null=True)
     subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE)
     petrol_quantity =  models.FloatField(default=0.00)
     diesel_quantity =  models.FloatField(default=0.00)
@@ -90,6 +94,7 @@ class SubsidiaryFuelUpdate(models.Model):
 
 
 class FuelAllocation(models.Model):
+    time = models.TimeField(auto_now_add=True, null=True)
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, null=True)
     date = models.DateField(auto_now_add=True)
     fuel_payment_type = models.CharField(max_length = 100, default = "", blank=True, null=True)
@@ -214,6 +219,7 @@ class DeliverySchedule(models.Model):
 
 class SordSubsidiaryAuditTrail(models.Model):
     from company.models import Company
+    time = models.TimeField(auto_now_add=True, null=True)
     date = models.DateTimeField(auto_now_add=True)
     sord_no =  models.CharField(max_length=100)
     action_no = models.PositiveIntegerField()
