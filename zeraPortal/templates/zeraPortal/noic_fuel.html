@@ -70,17 +70,25 @@
                         class="fa fa-exclamation-triangle text-danger"></i>{% endif %}</td>
                 <td>{{fuel.usd_diesel_price}}</td>
                 <td>{{fuel.rtgs_diesel|intcomma}} {% if fuel.rtgs_diesel < 1000 %} <i
-                    class="fa fa-exclamation-triangle text-danger">Diesel quantity too low</i>{% endif %}</td>
+                    class="fa fa-exclamation-triangle text-danger"></i>{% endif %}</td>
                 <td>{{fuel.rtgs_diesel_price}}</td>
                 <td>{{fuel.usd_petrol|intcomma}} {% if fuel.usd_petrol < 1000 %} <i
-                    class="fa fa-exclamation-triangle text-danger">Petrol quantity too low</i>{% endif %}</td>
+                    class="fa fa-exclamation-triangle text-danger"></i>{% endif %}</td>
                 <td>{{fuel.usd_petrol_price}}</td>
                 <td>{{fuel.rtgs_petrol|intcomma}} {% if fuel.rtgs_petrol < 1000 %} <i
-                    class="fa fa-exclamation-triangle text-danger">Petrol quantity too low</i>{% endif %}</td>
+                    class="fa fa-exclamation-triangle text-danger"></i>{% endif %}</td>
                 <td>{{fuel.rtgs_petrol_price}}</td>
                 <td>
                     <div class="btn-group">
-                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{% url 'zeraPortal:noic_allocations' fuel.depot.id %}"><i style="font-size:16px;color:rgb(0, 225, 255)"></i><i class="fa-eye"></i> | View Allocations</a>
+                        <!-- <a class="btn btn-success btn-sm btn-labeled" data-toggle="modal" href="{% url 'zeraPortal:noic_allocations' fuel.depot.id %}">
+                            <span class="btn-label">
+                                <i class="fa-eye"></i>
+                            </span>    
+                        </a> -->
+
+                        <a href="{% url 'zeraPortal:noic_allocations' fuel.depot.id %}" type="button" class="btn btn-labeled btn-success btn-sm">
+                            <span class="btn-label"><i class="fa fa-eye"></i></span>View Allocations
+                        </a> 
                     </div>
                 </td>
             </tr>
