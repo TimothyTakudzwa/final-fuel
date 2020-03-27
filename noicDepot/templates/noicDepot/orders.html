@@ -117,7 +117,7 @@
                     <td>
                         <div class="btn-group">
                             <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'noicDepot:download_proof' order.id %}" > <i class="fa fa-download" style="font-size:15px"></i> P.O.P</a>
-                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" href="{% url 'noicDepot:payment_approval' order.id %}"  >Approve</a>
+                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:payment_approval' order.id %}"  >Approve</a>
                         </div>
                     </td>
                     {% endif %}
@@ -140,16 +140,23 @@
                    <td><b style="margin-left: 25px;"> <i>Pending</i></b></td>
                    {% endif %}
                 </tr>
+
+
  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
 
 <script src="js/bootstrap.min.js"></script>
 
 <script>
 $('#myForm').on('submit', function(e){
-    $('#myModal').modal('show');
+    $(window).load(function(){
+        $('#myModal').modal('show');
+         });
     e.preventDefault();
   });
+
 </script>
+
+
 {% if order.allocation != None %}
 <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
     <div class="modal-dialog" role="document">
@@ -192,14 +199,14 @@ $('#myForm').on('submit', function(e){
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div>
 
         {% load crispy_forms_tags %}
-        <form onsubmit="openModal()" id="myForm" action="{% url 'noicDepot:allocate_fuel' order.id %}" method="POST">
+        <form action="{% url 'noicDepot:allocate_fuel' order.id %}" onsubmit="openModal()" id="myForm" method="POST">
             {% csrf_token %}
             <input type="hidden" value="{{order.fuel_type}}" name="fuel_type" />
             <input type="hidden" value="{{order.quantity}}" name="quantity" />
             <input type="hidden" value="{{order.currency}}" name="currency" />
+            <input type="hidden" value="{{order.price}}" name="price" />
             <div class="form-group row col-sm-12" style="margin-top: 5%;">
                 <div class="col-sm-6">
                     <label><b style='color:#009688'>Fuel Type</b></label>
@@ -219,13 +226,16 @@ $('#myForm').on('submit', function(e){
                     <input type="text" name="currency1" class="form-control"
                         value="{{order.currency}}" disabled />
                 </div>
+
+                <div class="col-sm-6">
+                    <label><b style='color:#009688'>Price</b></label>
+                    <input type="text" name="price" class="form-control"
+                        value="{{order.price}}" disabled />
+                </div>
                 
                 
             </div>
-            
-
-
-    </div>
+        
     <div class="form-group row"
         style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
         <button type="button" class="btn btn-secondary col-sm-6"
@@ -243,10 +253,6 @@ $('#myForm').on('submit', function(e){
 </div>
 </div>
 </div>
-
-<script>
-    $('#allocate{{order_id}}').toggle()
-</script>
 
 </div>
     {%endblock%}

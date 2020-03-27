@@ -221,17 +221,9 @@
                                                 <input type="text" name="quantity" class="form-control"
                                                 placeholder="In Litres" id="quantity" disabled/>
                                             </div>
-                                            <div class="col-sm-6">
-
-                                                <label><b style='color:#009688'>Depot</b></label>
-
-                                                    <select class="form-control" name="depots">
-                                                        {% for depot in depots %}
-                                                        <option >{{depot.name}}</option>
-                                                        {% endfor %}
-                                                    </select>
-
-                                            </div>
+                                            <div class="col-md-6">
+                                                {{ form1.depot|as_crispy_field }}
+                                             </div>
 
                                             
                                             

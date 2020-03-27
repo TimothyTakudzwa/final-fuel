@@ -24,7 +24,7 @@ def recommend(fuel_request):
             payment_type=fuel_request.payment_method).filter(~Q(diesel_price=0.00)).order_by('-diesel_price').all()
 
     if supplies.count() == 0:
-        return status, "Nothing Found"
+        return status, "Nothing found"
     else:
         scoreboard = {}
         for supplier in supplies:

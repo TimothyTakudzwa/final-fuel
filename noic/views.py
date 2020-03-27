@@ -107,7 +107,7 @@ def depots(request):
         
         fuel_update = DepotFuelUpdate.objects.create(depot=depot)
         fuel_update.save()
-        messages.success(request, 'Depot Created Successfully')
+        messages.success(request, 'Depot created successfully')
         return redirect('noic:depots')
        
 
@@ -341,7 +341,7 @@ def staff(request):
                 user.save()
 
             else:
-                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+                messages.warning(request, f"Oops , something went wrong, please try again")
         return redirect('noic:staff')
 
     return render(request, 'noic/staff.html', {'depots': depots, 'form1': form1, 'staffs': staffs})
@@ -354,11 +354,11 @@ def message_is_send(request, user, password):
     try:
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
         msg.send()
-        messages.success(request, f"{user.first_name}  {user.last_name} Registered Successfully")
+        messages.success(request, f"{user.first_name}  {user.last_name} Registered successfully")
         return True
     except Exception as e:
         messages.warning(request,
-                         f"Oops , Something Wen't Wrong sending email, Please make sure you have Internet access")
+                         f"Oops , something wen't wrong sending email, please make sure you have internet access")
         return False
     return render(request, 'buyer/send_email.html')
 

@@ -37,7 +37,7 @@ def initial_password_change(request):
         password1 = request.POST['new_password1']
         password2 = request.POST['new_password2']
         if password1 != password2:
-            messages.warning(request, "Passwords Don't Match")
+            messages.warning(request, "Passwords don't match")
             return redirect('noicDepot:initial-password-change')
         elif len(password1) < 8:
             messages.warning(request, "Password is too short")
@@ -55,7 +55,7 @@ def initial_password_change(request):
             user.save()
             update_session_auth_hash(request, user)
 
-            messages.success(request, 'Password Successfully Changed')
+            messages.success(request, 'Password successfully changed')
             return redirect('noicDepot:orders')
     return render(request, 'noicDepot/initial_pass_change.html')
 
@@ -88,7 +88,7 @@ def upload_release_note(request, id):
         allocation.release_date = request.POST['release_date']
         allocation.release_note = True
         allocation.save()
-        messages.success(request, "Release Note Successfully created")
+        messages.success(request, "Release note successfully created")
         return redirect('noicDepot:dashboard')
 
 def payment_approval(request, id):
@@ -96,7 +96,7 @@ def payment_approval(request, id):
     order.payment_approved = True
     order.save()
     messages.success(request, 'payment approved successfully')
-    return redirect(f'noicDepot/orders/?order_id={order.id}')
+    return redirect('noicDepot:orders')
 
 def view_release_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
@@ -211,7 +211,7 @@ def download_proof(request, id):
         response = HttpResponse(order.proof_of_payment, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found')
         return redirect('noicDepot:orders')
     return response
 
@@ -223,7 +223,7 @@ def download_d_note(request, id):
         response = HttpResponse(allocation.d_note, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found')
         return redirect('noicDepot:dashboard')
     return response
 

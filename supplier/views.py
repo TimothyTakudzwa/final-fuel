@@ -113,7 +113,7 @@ def initial_password_change(request):
         password1 = request.POST['new_password1']
         password2 = request.POST['new_password2']
         if password1 != password2:
-            messages.warning(request, "Passwords Don't Match")
+            messages.warning(request, "Passwords don't match")
             return redirect('supplier:initial-password-change')
         elif len(password1) < 8:
             messages.warning(request, "Password is too short")
@@ -131,7 +131,7 @@ def initial_password_change(request):
             user.save()
             update_session_auth_hash(request, user)
 
-            messages.success(request, 'Password Successfully Changed')
+            messages.success(request, 'Password successfully changed')
             return redirect('fuel-request')
     return render(request, 'supplier/initial_pass_change.html')
 
@@ -149,7 +149,7 @@ def change_password(request):
 
         if authenticate(request, username=request.user.username, password=old):
             if new1 != new2:
-                messages.warning(request, "Passwords Don't Match")
+                messages.warning(request, "Passwords don't match")
                 return redirect('change-password')
             elif new1 == old:
                 messages.warning(request, "New password can not be similar to the old one")
@@ -169,10 +169,10 @@ def change_password(request):
                 user.save()
                 update_session_auth_hash(request, user)
 
-                messages.success(request, 'Password Successfully Changed')
+                messages.success(request, 'Password successfully changed')
                 return redirect('account')
         else:
-            messages.warning(request, 'Wrong Old Password, Please Try Again')
+            messages.warning(request, 'Wrong old password, please try again')
             return redirect('change-password')
     return render(request, 'supplier/change_password.html', context=context)
 
@@ -240,13 +240,13 @@ def activate_whatsapp(request):
     if user.activated_for_whatsapp == False:
         user.activated_for_whatsapp = True
         user.save()
-        messages.success(request, 'Your WhatsApp has been activated successfully')
+        messages.success(request, 'Your whatsApp has been activated successfully')
         return redirect('fuel-request')
 
     else:
         user.activated_for_whatsapp = False
         user.save()
-        messages.warning(request, 'Your WhatsApp has been deactivated successfully')
+        messages.warning(request, 'Your whatsApp has been deactivated successfully')
         return redirect('fuel-request')
 
 
@@ -267,11 +267,11 @@ def verify_client(request, id):
     if not client.is_verified:
         client.is_verified = True
         client.save()
-        messages.success(request, f'{client.buyer_company.name} Successfully Verified')
+        messages.success(request, f'{client.buyer_company.name} successfully verified')
         return redirect('supplier:clients')
     client.is_verified = False
     client.save()
-    messages.success(request, f'{client.buyer_company.name}"s Verification Overturned')
+    messages.success(request, f'{client.buyer_company.name}"s verification overturned')
     return redirect('supplier:clients')
 
 
@@ -283,7 +283,7 @@ def view_client_id_document(request, id):
         response = HttpResponse(client.id_document, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found')
         redirect('supplier:clients')
     return response
 
@@ -296,7 +296,7 @@ def view_application_id_document(request, id):
         response = HttpResponse(client.application_document, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found')
         redirect('supplier:clients')
     return response
 
@@ -311,14 +311,14 @@ def edit_delivery_schedule(request):
         delivery_schedule.vehicle_reg = request.POST['vehicle_reg']
         if request.POST['delivery_date']:
             if delivery_schedule.date_edit_count >= 3:
-                messages.warning(request, "Sorry You Have Exceeded The Number Of Permitted Delivery Date Extensions,\
-                                     You Can Not Proceed")
+                messages.warning(request, "Sorry you have exceeded the number of permitted delivery date extensions,\
+                                     you can not proceed")
                 return redirect('supplier:delivery_schedules')
             delivery_schedule.date = request.POST['delivery_date']
             delivery_schedule.date_edit_count += 1
         delivery_schedule.transport_company = request.POST['transport_company']
         delivery_schedule.save()
-        messages.success(request, f"Schedule Successfully Updated")
+        messages.success(request, f"Schedule successfully updated")
         return redirect('supplier:delivery_schedules')
 
 
@@ -688,7 +688,7 @@ def transaction(request):
             depot=Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
             comment=request.POST.get('comment')
         )
-        messages.success(request, 'Transaction Successfully Reviewed')
+        messages.success(request, 'Transaction successfully reviewed')
         return redirect('transaction')
 
     today = datetime.now().strftime("%m/%d/%y")
@@ -769,7 +769,7 @@ def complete_transaction(request, id):
                 transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Petrol', payment_type,
                                         transaction)
 
-                messages.success(request, "Proof of Payment Approved!, Please create a delivery schedule for the buyer or upload a release note.")
+                messages.success(request, "Proof of payment approved!, please create a delivery schedule for the buyer or upload a release note.")
                 return redirect('transaction')
             else:
                 messages.warning(request, "There is not enough petrol in stock to complete the transaction.")
@@ -814,7 +814,7 @@ def complete_transaction(request, id):
                 transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Diesel', payment_type,
                                         transaction)
 
-                messages.success(request, "Proof of Payment Approved!, Please create a delivery schedule for the buyer.")
+                messages.success(request, "Proof of payment approved!, please create a delivery schedule for the buyer.")
                 return redirect('transaction')
             else:
                 messages.warning(request, "There is not enough diesel in stock to complete the transaction")
@@ -858,7 +858,7 @@ def download_proof(request, id):
         response = HttpResponse(document.proof_of_payment, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found')
         return redirect('transaction')
     return response
 
@@ -1045,8 +1045,8 @@ def create_delivery_schedule(request):
         payment_history.balance -= transaction.paid_reserve
         payment_history.delivery_schedule = schedule
         payment_history.save()
-        messages.success(request, "Schedule Successfully Created")
-        message = f"{schedule.transaction.supplier.company} has created a delivery schedule for you, Click To View Schedule"
+        messages.success(request, "Schedule successfully created")
+        message = f"{schedule.transaction.supplier.company} has created a delivery schedule for you, click to view schedule"
         Notification.objects.create(user=schedule.transaction.buyer, action='schedule', message=message,
                                     reference_id=schedule.id)
 
@@ -1062,7 +1062,7 @@ def delivery_schedules(request):
         schedule.supplier_document = supplier_document
         schedule.save()
         messages.success(request, "File Successfully Uploaded")
-        msg = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
+        msg = f"Delivery confirmed for {schedule.transaction.buyer.company}, click to view confirmation document"
         #Notification.objects.create(user=request.user, action='DELIVERY', message=msg, reference_id=schedule.id)
         return redirect('supplier:delivery_schedules')
 
@@ -1110,7 +1110,7 @@ def view_delivery_note(request, id):
         response = HttpResponse(delivery.delivery_note, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found')
         redirect('transactions')
     return response
 
@@ -1128,7 +1128,7 @@ def upload_release_note(request, id):
         payment_history.release_note = request.POST['release_date']
         payment_history.release_activated = True
         payment_history.save()
-        messages.success(request, "Release Note Successfully created")
+        messages.success(request, "Release note successfully created")
         return redirect(f'/supplier/payment-and-release-notes/{transaction.id}')
 
 
@@ -1153,7 +1153,7 @@ def view_supplier_doc(request, id):
         response = HttpResponse(delivery.supplier_document, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found')
         redirect('supplier:delivery_schedules')
     return response
 
@@ -1162,7 +1162,7 @@ def del_supplier_doc(request, id):
     delivery = DeliverySchedule.objects.filter(id=id).first()
     delivery.supplier_document = None
     delivery.save()
-    messages.success(request, 'Document Removed Successfully')
+    messages.success(request, 'Document removed successfully')
     return redirect('supplier:delivery_schedules')
 
 def supplier_release_note(request, id):
@@ -1179,7 +1179,7 @@ def supplier_release_note(request, id):
         payment_history.release_note = request.FILES.get('release_note')
         payment_history.release_activated = True
         payment_history.save()
-        messages.success(request, "Release Note Successfully Uploaded")
+        messages.success(request, "Release note successfully uploaded")
         return redirect(f'/supplier/payment-and-release-notes/{id}')
 
 

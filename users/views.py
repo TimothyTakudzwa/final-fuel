@@ -81,7 +81,9 @@ def allocate(request):
         diesel_usd_price = fuel_object.usd_diesel_price
         petrol_rtgs_price = fuel_object.rtgs_petrol_price
         petrol_usd_price = fuel_object.usd_petrol_price
-    depots = NoicDepot.objects.all()
+    form1 = DepotContactForm()
+    depots = NoicDepot.objects.filter(is_active=True).all()
+    form1.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots]
     company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
     subs_total_diesel_capacity = 0
     subs_total_petrol_capacity = 0
@@ -115,7 +117,7 @@ def allocate(request):
     else:
         allocations = allocations
     return render(request, 'users/allocate.html',
-                  {'depots': depots, 'diesel_rtgs_price': diesel_rtgs_price, 'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price, 'petrol_usd_price': petrol_usd_price, 'allocates': allocates, 'allocations': allocations, 'company_capacity': company_capacity,
+                  {'depots': depots, 'form1': form1, 'diesel_rtgs_price': diesel_rtgs_price, 'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price, 'petrol_usd_price': petrol_usd_price, 'allocates': allocates, 'allocations': allocations, 'company_capacity': company_capacity,
                    'company_total_diesel_capacity': company_total_diesel_capacity,
                    'company_total_petrol_capacity': company_total_petrol_capacity})
 
@@ -198,7 +200,7 @@ def allocated_fuel(request, sid):
             depot.diesel_quantity = depot.diesel_quantity + int(request.POST['quantity'])
             company_quantity.unallocated_diesel = company_quantity.unallocated_diesel - int(request.POST['quantity'])
             company_quantity.save()
-            messages.success(request, 'Fuel Allocation SUccesful')
+            messages.success(request, 'Fuel allocation succesful')
         fuel_updated.save()
         depot.save()
 
@@ -556,7 +558,7 @@ def allocation_update(request, id):
                                                                               received_by=receiver)
                         depot_audit.save()
 
-            messages.success(request, 'Fuel Allocation SUccesful')
+            messages.success(request, 'Fuel allocation succesful')
             service_station = Subsidiaries.objects.filter(id=fuel_update.subsidiary.id).first()
             reference = 'fuel allocation'
             reference_id = fuel_update.id
@@ -747,7 +749,7 @@ def allocation_update_main(request, id):
                                                                               received_by=receiver)
                         depot_audit.save()
 
-            messages.success(request, 'Fuel Allocation SUccesful')
+            messages.success(request, 'Fuel allocation succesful')
             service_station = Subsidiaries.objects.filter(id=fuel_update.subsidiary.id).first()
             reference = 'fuel allocation'
             reference_id = fuel_update.id
@@ -831,13 +833,13 @@ def stations(request):
             fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=subsidiary,
                                                               limit=2000)
             fuel_update.save()
-            messages.success(request, 'Subsidiary Created Successfully')
+            messages.success(request, 'Subsidiary created successfully')
             return redirect('users:stations')
         else:
             fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=subsidiary,
                                                               limit=2000)
             fuel_update.save()
-            messages.success(request, 'Subsidiary Created Successfully')
+            messages.success(request, 'Subsidiary created successfully')
             return redirect('users:stations')
 
     return render(request, 'users/service_stations.html',
@@ -893,7 +895,7 @@ def suppliers_list(request):
                 user.stage = 'menu'
                 user.save()
             else:
-                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+                messages.warning(request, f"Oops , something went wrong, please try again")
 
         form = DepotContactForm(request.POST)
         first_name = request.POST.get('first_name')
@@ -926,7 +928,7 @@ def suppliers_list(request):
 
                 # return render(request, 'buyer/email_send.html')
             else:
-                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+                messages.warning(request, f"Oops , something went wrong, please try again")
                 # return render(request, 'buyer/email_send.html')
         # messages.success(request, f"{username.lower()} Registered as Depot Rep Successfully")
         return redirect('users:suppliers_list')
@@ -1066,7 +1068,7 @@ def supplier_user_edit(request, cid):
         supplier.supplier_role = request.POST['user_type']
         # supplier.supplier_role = request.POST['supplier_role']
         supplier.save()
-        messages.success(request, 'Your Changes Have Been Saved')
+        messages.success(request, 'Your changes have been saved')
     return render(request, 'users/suppliers_list.html')
 
 
@@ -1171,7 +1173,7 @@ def myaccount(request):
         staff.phone_number = request.POST['phone_number']
         staff.company_position = request.POST['company_position']
         staff.save()
-        messages.success(request, 'Your Changes Have Been Saved')
+        messages.success(request, 'Your changes have been saved')
 
     return render(request, 'users/profile.html')
 
@@ -1306,11 +1308,11 @@ def message_is_send(request, user, password):
     try:
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
         msg.send()
-        messages.success(request, f"{user.first_name}  {user.last_name} Registered Successfully")
+        messages.success(request, f"{user.first_name}  {user.last_name} Registered successfully")
         return True
     except Exception as e:
         messages.warning(request,
-                         f"Oops , Something Wen't Wrong sending email, Please make sure you have Internet access")
+                         f"Oops , something went wrong sending email, Please make sure you have internet access")
         return False
     return render(request, 'buyer/send_email.html')
 
@@ -1404,7 +1406,7 @@ def delete_user(request, id):
         form = ActionForm(request.POST)
         if form.is_valid():
             supplier.delete()
-            messages.success(request, 'User Has Been Deleted')
+            messages.success(request, 'User has been deleted')
         return redirect('administrator:blog_all_posts')
     form = ActionForm()
 
@@ -1456,7 +1458,7 @@ def depot_staff(request):
 
                 # return render(request, 'buyer/email_send.html')
             else:
-                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+                messages.warning(request, f"Oops , something went wrong, please try again")
                 # return render(request, 'buyer/email_send.html')
         # messages.success(request, f"{username.lower()} Registered as Depot Rep Successfully")
         return redirect('users:suppliers_list')
@@ -1475,7 +1477,7 @@ def initial_password_change(request):
         password1 = request.POST['new_password1']
         password2 = request.POST['new_password2']
         if password1 != password2:
-            messages.warning(request, "Passwords Don't Match")
+            messages.warning(request, "Passwords don't match")
             return redirect('users:initial-password-change')
         elif len(password1) < 8:
             messages.warning(request, "Password is too short")
@@ -1493,7 +1495,7 @@ def initial_password_change(request):
             user.save()
             update_session_auth_hash(request, user)
 
-            messages.success(request, 'Password Successfully Changed')
+            messages.success(request, 'Password successfully changed')
             return redirect('users:allocate')
     return render(request, 'users/initial_pass_change.html')
 
@@ -1648,7 +1650,7 @@ def company_profile(request):
         compan.destination_bank = request.POST['destination_bank']
         compan.account_number = request.POST['account_number']
         compan.save()
-        messages.success(request, 'Company Profile updated successfully')
+        messages.success(request, 'Company profile updated successfully')
         return redirect('users:company_profile')
 
     return render(request, 'users/company_profile.html', {'compan': compan, 'num_of_subsidiaries': num_of_subsidiaries})
@@ -1767,7 +1769,7 @@ def download_application(request, id):
         response = HttpResponse(application.application_document, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found')
         return redirect('users:client-application')
     return response
 
@@ -1779,7 +1781,7 @@ def download_tax_clearance(request, id):
         response = HttpResponse(application.tax_clearance, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found')
         return redirect('users:client-application')
     return response
 
@@ -1791,7 +1793,7 @@ def download_cr14(request, id):
         response = HttpResponse(application.cr14, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found')
         return redirect('users:client-application')
     return response
 
@@ -1803,7 +1805,7 @@ def download_cr6(request, id):
         response = HttpResponse(application.cr6, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found')
         return redirect('users:client-application')
     return response
 
@@ -1815,7 +1817,7 @@ def download_proof_of_residence(request, id):
         response = HttpResponse(application.proof_of_residence, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found')
         return redirect('users:client-application')
     return response
 
@@ -1827,7 +1829,7 @@ def download_cert_of_inc(request, id):
         response = HttpResponse(application.cert_of_inc, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found')
         return redirect('users:client-application')
     return response
 
@@ -1839,7 +1841,7 @@ def download_document(request, id):
         response = HttpResponse(document.id_document, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found')
         return redirect('users:client-application')
     return response
 
@@ -1860,7 +1862,7 @@ def application_approval(request, id):
             account.is_verified = True
             account.account_number = new_account
             account.save()
-            messages.success(request, 'Account Successfully Approved!!!')
+            messages.success(request, 'Account successfully approved!!!')
             return redirect('users:client-application')
 
 
@@ -2137,14 +2139,15 @@ def place_order(request):
             else:
                 price = petrol_rtgs_price
             proof_of_payment = request.FILES.get('proof_of_payment')
-            noic_depot = NoicDepot.objects.filter(name=request.POST['depots']).first()
+            depot_id = request.POST.get('depot')
+            noic_depot = NoicDepot.objects.filter(id=depot_id).first()
             amount_paid = request.POST['fuel_paid']
             transporter = request.POST['transporter']
             truck_reg = request.POST['truck_reg']
             trailer_reg = request.POST['trailer_reg']
             driver = request.POST['driver']
             driver_id = request.POST['driver_id']
-            Order.objects.create(price=price, amount_paid=amount_paid, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, noic_depot=noic_depot, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+            Order.objects.create(price=price, noic_depot=noic_depot, amount_paid=amount_paid, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
             messages.success(request,'placed order successfully')
             return redirect('users:orders')
         else:
@@ -2153,14 +2156,15 @@ def place_order(request):
             else:
                 price = diesel_rtgs_price
             proof_of_payment = request.FILES.get('proof_of_payment')
-            noic_depot = NoicDepot.objects.filter(name=request.POST['depots']).first()
+            depot_id = request.POST.get('depot')
+            noic_depot = NoicDepot.objects.filter(id=depot_id).first()
             amount_paid = request.POST['fuel_paid']
             transporter = request.POST['transporter']
             truck_reg = request.POST['truck_reg']
             trailer_reg = request.POST['trailer_reg']
             driver = request.POST['driver']
             driver_id = request.POST['driver_id']
-            Order.objects.create(price=price, amount_paid=amount_paid, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, noic_depot=noic_depot, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+            Order.objects.create(price=price, noic_depot=noic_depot, amount_paid=amount_paid, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
             messages.success(request,'placed order successfully')
             return redirect('users:orders')
 
@@ -2181,7 +2185,9 @@ def orders(request):
     diesel_usd_price = fuel_object.usd_diesel_price
     petrol_rtgs_price = fuel_object.rtgs_petrol_price
     petrol_usd_price = fuel_object.usd_petrol_price
+    form1 = DepotContactForm()
     depots = NoicDepot.objects.filter(is_active=True).all()
+    form1.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots]
     orders = Order.objects.filter(company=request.user.company).all()
     for order in orders:
         sord = SordNationalAuditTrail.objects.filter(order=order).first()
@@ -2190,7 +2196,7 @@ def orders(request):
         else:
             order.allocation = None
 
-    return render(request, 'users/orders.html', {'depots': depots, 'diesel_rtgs_price': diesel_rtgs_price, 'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price, 'petrol_usd_price': petrol_usd_price,'orders': orders})
+    return render(request, 'users/orders.html', {'depots': depots, 'form1': form1, 'diesel_rtgs_price': diesel_rtgs_price, 'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price, 'petrol_usd_price': petrol_usd_price,'orders': orders})
 
 
 def view_release_note(request, id):
@@ -2224,6 +2230,6 @@ def download_proof(request, id):
         response = HttpResponse(document.proof_of_payment, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found')
         return redirect('users:orders')
     return response

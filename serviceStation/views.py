@@ -28,7 +28,7 @@ def initial_password_change(request):
         password1 = request.POST['new_password1']
         password2 = request.POST['new_password2']
         if password1 != password2:
-            messages.warning(request, "Passwords Don't Match")
+            messages.warning(request, "Passwords don't match")
             return redirect('serviceStation:initial-password-change')
         elif len(password1) < 8:
             messages.warning(request, "Password is too short")
@@ -46,7 +46,7 @@ def initial_password_change(request):
             user.save()
             update_session_auth_hash(request, user)
 
-            messages.success(request, 'Password Successfully Changed')
+            messages.success(request, 'Password successfully changed')
             return redirect('serviceStation:home')
     return render(request, 'serviceStation/initial_pass_change.html')
 
@@ -58,7 +58,7 @@ def fuel_updates(request):
     if request.method == 'POST':
         #fuel_update = FuelUpdate.objects.filter(sub_type=request.POST['sub_type']).first()
         if int(updates.petrol_quantity) < int(request.POST['petrol_quantity']):
-            messages.warning(request, 'You cannot update Petrol to an amount more than the available quantity')
+            messages.warning(request, 'You cannot update petrol to an amount more than the available quantity')
             return redirect('serviceStation:home')
         fuel_reduction = updates.petrol_quantity - float(request.POST['petrol_quantity'])
         updates.petrol_quantity = request.POST['petrol_quantity'] 
@@ -71,12 +71,12 @@ def fuel_updates(request):
         if int(updates.petrol_quantity) < 1000:
             updates.status = 'Expecting Fuel'
             updates.save()
-            messages.warning(request, 'Please request for more fuel from you Company')
+            messages.warning(request, 'Please request for more fuel from your company')
             return redirect('serviceStation:home')
 
         updates.save()
         sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Petrol')
-        messages.success(request, 'Updated Petrol QuantitY Successfully')
+        messages.success(request, 'Updated petrol quantitY successfully')
         service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         reference = 'fuel quantity updates'
         reference_id = updates.id
@@ -91,7 +91,7 @@ def update_diesel(request, id):
     if request.method == 'POST':
         diesel_update = SubsidiaryFuelUpdate.objects.filter(id=id).first()
         if int(diesel_update.diesel_quantity) < int(request.POST['diesel_quantity']):
-            messages.warning(request, 'You cannot update Diesel to an amount more than the available quantity')
+            messages.warning(request, 'You cannot update diesel to an amount more than the available quantity')
             return redirect('serviceStation:home')
         fuel_reduction = diesel_update.diesel_quantity - float(request.POST['diesel_quantity'])
         diesel_update.diesel_quantity = request.POST['diesel_quantity']
@@ -101,12 +101,12 @@ def update_diesel(request, id):
         if int(diesel_update.diesel_quantity) < 1000:
             diesel_update.status = 'Expecting Fuel'
             diesel_update.save()
-            messages.warning(request, 'Please request for more fuel from you Company')
+            messages.warning(request, 'Please request for more fuel from your company')
             return redirect('serviceStation:home')
 
         diesel_update.save()
         sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Diesel')
-        messages.success(request, 'Updated Diesel QuantitY Successfully')
+        messages.success(request, 'Updated diesel quantitY successfully')
         service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         reference = 'fuel quantity updates'
         reference_id = diesel_update.id
@@ -115,7 +115,7 @@ def update_diesel(request, id):
         return redirect('serviceStation:home')
 
     else:
-        messages.success(request, 'Fuel Object Does Not Exist')
+        messages.success(request, 'Fuel object does not exist')
         return redirect('serviceStation:home')
 
 def sord_update(request, user, quantity, action, fuel_type):
@@ -176,7 +176,7 @@ def myaccount(request):
         staff.phone_number = request.POST['phone_number']
         staff.company_position = request.POST['company_position']
         staff.save()
-        messages.success(request, 'Your Changes Have Been Saved')
+        messages.success(request, 'Your changes have been saved')
        
     return render(request, 'serviceStation/profile.html', {'sub':sub})
 
@@ -187,13 +187,13 @@ def activate_whatsapp(request):
     if usr.activated_for_whatsapp == False:
         usr.activated_for_whatsapp = True
         usr.save()
-        messages.success(request, 'Your WhatsApp has been activated successfully')
+        messages.success(request, 'Your whatsApp has been activated successfully')
         return redirect('serviceStation:home')
 
     else:
         usr.activated_for_whatsapp = False
         usr.save()
-        messages.warning(request, 'Your WhatsApp has been deactivated successfully')
+        messages.warning(request, 'Your whatsApp has been deactivated successfully')
         return redirect('serviceStation:home')
 
 def allocated_quantity(request):
@@ -220,7 +220,7 @@ def subsidiary_profile(request):
             subsidiary.destination_bank = request.POST['destination_bank']
             subsidiary.account_number = request.POST['account_number']
             subsidiary.save()
-            messages.success(request, 'Service Station Profile updated successfully')
+            messages.success(request, 'Service station profile updated successfully')
             return redirect('serviceStation:subsidiary_profile')
 
         else:
@@ -254,7 +254,7 @@ def edit_password(request):
 
         if authenticate(request, username=request.user.username, password=old):
             if new1 != new2:
-                messages.warning(request, "Passwords Don't Match")
+                messages.warning(request, "Passwords don't match")
                 return redirect('serviceStation:edit_password')
             elif new1 == old:
                 messages.warning(request, "New password can not be similar to the old one")
@@ -274,10 +274,10 @@ def edit_password(request):
                 user.save()
                 update_session_auth_hash(request, user)
 
-                messages.success(request, 'Password Successfully Changed')
+                messages.success(request, 'Password successfully changed')
                 return redirect('serviceStation:myaccount')
         else:
-            messages.warning(request, 'Wrong Old Password, Please Try Again')
+            messages.warning(request, 'Wrong old password, please try again')
             return redirect('serviceStation:edit_password')
     return render(request, 'serviceStation/change_password.html', context=context)
   
