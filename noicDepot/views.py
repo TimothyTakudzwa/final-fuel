@@ -74,7 +74,7 @@ def orders(request):
             alloc = SordNationalAuditTrail.objects.filter(order=order).first()
             if alloc is not None:
                 order.allocation = alloc
-    return render(request, 'noicDepot/orders.html', {'orders': orders})
+    return render(request, 'noicDepot/orders.html', {'orders': orders, 'allocate' : 'hide', 'release' : 'hide'})
 
 def stock(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
@@ -94,6 +94,13 @@ def upload_release_note(request, id):
 def payment_approval(request, id):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     noic_capacity = DepotFuelUpdate.objects.filter(depot=depot).first()
+    
+    orders = Order.objects.filter(noic_depot=depot).all()
+    for order in orders:
+        if order is not None:
+            alloc = SordNationalAuditTrail.objects.filter(order=order).first()
+            if alloc is not None:
+                order.allocation = alloc
     order = Order.objects.filter(id=id).first()
     if order.fuel_type.lower() == "petrol":
         if order.currency.lower() == 'usd':
@@ -120,7 +127,7 @@ def payment_approval(request, id):
     order.payment_approved = True
     order.save()
     messages.success(request, 'payment approved successfully')
-    return redirect('noicDepot:orders')
+    return render(request, 'noicDepot/orders.html', {'orders': orders, 'allocate' : 'show'})
 
 def view_release_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
@@ -133,6 +140,13 @@ def view_release_note(request, id):
 
 
 def allocate_fuel(request, id):
+    depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+    orders = Order.objects.filter(noic_depot=depot).all()
+    for order in orders:
+        if order is not None:
+            alloc = SordNationalAuditTrail.objects.filter(order=order).first()
+            if alloc is not None:
+                order.allocation = alloc
     order = Order.objects.filter(id=id).first()
    
     if request.method == 'POST':
@@ -157,7 +171,7 @@ def allocate_fuel(request, id):
                     order.save()
                     noic_capacity.save()
                     messages.success(request, f'fuel allocated successfully, with {balance} remaining')
-                    return redirect('noicDepot:orders')
+                    return render(request, 'noicDepot/orders.html', {'orders': orders, 'release' : 'show'})
                 else:
                     noic_capacity.usd_petrol -= float(request.POST['quantity'])
                     noic_capacity.save()
@@ -172,7 +186,7 @@ def allocate_fuel(request, id):
                     order.allocated_fuel = True
                     order.save()
                     messages.success(request, 'fuel allocated successfully')
-                    return redirect('noicDepot:orders')
+                    return render(request, 'noicDepot/orders.html', {'orders': orders, 'release' : 'show'})
             
             else:
                 depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
@@ -194,7 +208,7 @@ def allocate_fuel(request, id):
                     order.save()
                     noic_capacity.save()
                     messages.success(request, f'fuel allocated successfully, with {balance} remaining')
-                    return redirect('noicDepot:orders')
+                    return render(request, 'noicDepot/orders.html', {'orders': orders, 'release' : 'show'})
                 else:
                     noic_capacity.rtgs_petrol -= float(request.POST['quantity'])
                     noic_capacity.save()
@@ -209,7 +223,7 @@ def allocate_fuel(request, id):
                     order.allocated_fuel = True
                     order.save()
                     messages.success(request, 'fuel allocated successfully')
-                    return redirect('noicDepot:orders')
+                    return render(request, 'noicDepot/orders.html', {'orders': orders, 'release' : 'show'})
             
 
         else:
@@ -233,7 +247,7 @@ def allocate_fuel(request, id):
                     order.save()
                     noic_capacity.save()
                     messages.success(request, f'fuel allocated successfully, with {balance} remaining')
-                    return redirect('noicDepot:orders')
+                    return render(request, 'noicDepot/orders.html', {'orders': orders, 'release' : 'show'})
                 else:
                     noic_capacity.usd_diesel -= float(request.POST['quantity'])
                     noic_capacity.save()
@@ -248,7 +262,7 @@ def allocate_fuel(request, id):
                     order.allocated_fuel = True
                     order.save()
                     messages.success(request, 'fuel allocated successfully')
-                    return redirect('noicDepot:orders')
+                    return render(request, 'noicDepot/orders.html', {'orders': orders, 'release' : 'show'})
             
             
             else:
@@ -271,7 +285,7 @@ def allocate_fuel(request, id):
                     noic_capacity.save()
                     order.save()
                     messages.success(request, f'fuel allocated successfully, with {balance} remaining')
-                    return redirect('noicDepot:orders')
+                    return render(request, 'noicDepot/orders.html', {'orders': orders, 'release' : 'show'})
                 else:
                     noic_capacity.rtgs_diesel -= float(request.POST['quantity'])
                     noic_capacity.save()
@@ -286,7 +300,7 @@ def allocate_fuel(request, id):
                     order.allocated_fuel = True
                     order.save()
                     messages.success(request, 'fuel allocated successfully')
-                    return redirect('noicDepot:orders')
+                    return render(request, 'noicDepot/orders.html', {'orders': orders, 'release' : 'show'})
 
 def download_proof(request, id):
     order = Order.objects.filter(id=id).first()
