@@ -1,5 +1,6 @@
 import secrets
 from datetime import date
+from operator import attrgetter
 
 import requests
 from django.contrib import messages
@@ -160,10 +161,11 @@ def token_is_send(request, auth_user):
     try:
         msg = EmailMultiAlternatives(subject, message, sender, [f'{auth_user.email}'])
         msg.send()
-        messages.success(request, f"{auth_user.first_name}  {auth_user.last_name} Registered Successfully")
+
+        messages.success(request, f"{auth_user.first_name}  {auth_user.last_name} Registered successfully")
         return True
     except Exception:
-        messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+        messages.warning(request, f"Oops , something wentt wrong, please try again")
         return False
         messages.success(request, ('Your profile was successfully updated!'))
     return render(request, 'buyer/send_email.html')
@@ -174,6 +176,7 @@ def token_is_send(request, auth_user):
 Stage one registration view
 
 """
+
 
 
 def register(request):
@@ -251,7 +254,7 @@ def change_password(request):
 
         if authenticate(request, username=request.user.username, password=old):
             if new1 != new2:
-                messages.warning(request, "Passwords Don't Match")
+                messages.warning(request, "Passwords don't match")
                 return redirect('bchange-password')
             elif new1 == old:
                 messages.warning(request, "New password can not be similar to the old one")
@@ -270,10 +273,10 @@ def change_password(request):
                 current_user.save()
                 update_session_auth_hash(request, current_user)
 
-                messages.success(request, 'Password Successfully Changed')
+                messages.success(request, 'Password successfully changed')
                 return redirect('buyer-profile')
         else:
-            messages.warning(request, 'Wrong Old Password, Please Try Again')
+            messages.warning(request, 'Wrong old password, please try again')
             return redirect('bchange-password')
     return render(request, 'buyer/change_password.html', context=context)
 
@@ -295,7 +298,7 @@ def profile(request):
 
         if authenticate(request, username=request.user.username, password=old):
             if new1 != new2:
-                messages.warning(request, "Passwords Don't Match")
+                messages.warning(request, "Passwords don't match")
                 return redirect('buyer-profile')
             else:
                 current_user = request.user
@@ -303,10 +306,10 @@ def profile(request):
                 current_user.save()
                 update_session_auth_hash(request, current_user)
 
-                messages.success(request, 'Password Successfully Changed')
+                messages.success(request, 'Password successfully changed')
                 return redirect('buyer-profile')
         else:
-            messages.warning(request, 'Wrong Old Password, Please Try Again')
+            messages.warning(request, 'Wrong old password, please try again')
             return redirect('buyer-profile')
 
     context = {
@@ -379,7 +382,7 @@ def fuel_finder(request):
             fuel_request_item.delivery_method = delivery_method
             fuel_request_item.wait = True
             fuel_request_item.save()
-            messages.success(request, f'kindly note your request has been made ')
+            messages.success(request, f'Kindly note your request has been made ')
 
             message = f'{request.user.company.name.title()} made a request of {fuel_request_item.amount}L' \
                       f' {fuel_request_item.fuel_type.lower()}'
@@ -398,11 +401,21 @@ Landing page
 
 @login_required
 def dashboard(request):
+    updates = []
     if request.user.company.is_govnt_org:
-        updates = SuballocationFuelUpdate.objects.filter(~Q(subsidiary__praz_reg_num=None)).filter(
-            ~Q(diesel_quantity=0.00), ~Q(petrol_quantity=0.00))
+        fuel_updates = SuballocationFuelUpdate.objects.filter(~Q(subsidiary__praz_reg_num=None)).all()
+        for fuel_update in fuel_updates:
+            if fuel_update.diesel_quantity == 0.00 and fuel_update.petrol_quantity == 0.00:
+                pass
+            else:
+                updates.append(fuel_update)                
     else:
-        updates = SuballocationFuelUpdate.objects.filter(~Q(diesel_quantity=0.00), ~Q(petrol_quantity=0.00))
+        fuel_updates = SuballocationFuelUpdate.objects.all()
+        for fuel_update in fuel_updates:
+            if fuel_update.diesel_quantity == 0.00 and fuel_update.petrol_quantity == 0.00:
+                pass
+            else:
+                updates.append(fuel_update)    
     for update in updates:
         subsidiary = Subsidiaries.objects.filter(id=update.subsidiary.id).first()
         if UserReview.objects.filter(depot=subsidiary).exists():
@@ -422,6 +435,7 @@ def dashboard(request):
             update.company = company.name
             update.depot = subsidiary.name
             update.address = subsidiary.address
+    updates.sort(key=attrgetter('date', 'time'), reverse=True)
     if request.method == 'POST':
         form = FuelRequestForm(request.POST)
         if 'MakeDeal' in request.POST:
@@ -448,7 +462,7 @@ def dashboard(request):
                 fuel_request_object.last_deal = int(request.POST.get('company_id'))
                 fuel_request_object.save()
                 current_user = User.objects.filter(subsidiary_id=fuel_request_object.last_deal).first()
-            messages.success(request, f'kindly note your request has been made ')
+            messages.success(request, f'Kindly note your request has been made ')
             message = f'{request.user.first_name} {request.user.last_name} made a request of ' \
                       f'{fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()}'
             Notification.objects.create(message=message, user=request.user, reference_id=fuel_request_object.id,
@@ -477,7 +491,7 @@ def dashboard(request):
                 fuel_request_object.meter_required = True if request.POST.get('meter_required') == "True" else False
                 fuel_request_object.wait = True
                 fuel_request_object.save()
-            messages.success(request, f'Fuel Request has been submitted successfully and now waiting for an offer')
+            messages.success(request, f'Fuel request has been submitted successfully and now waiting for an offer')
             message = f'{request.user.first_name} {request.user.last_name} made a request of ' \
                       f'{fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()}'
             Notification.objects.create(message=message, user=request.user, reference_id=fuel_request_object.id,
@@ -515,7 +529,7 @@ def dashboard(request):
                 else:
                     offer = Offer.objects.filter(id=offer_id).first()
                     sub = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
-                    messages.info(request, "Match Found")
+                    messages.info(request, "Match found")
                     return render(request, 'buyer/dashboard.html',
                                   {'form': form, 'updates': updates, 'offer': offer, 'sub': sub})
     else:
@@ -543,7 +557,7 @@ def offers(request, id):
             offer.depot_address = depot.location
         if account:
             offer.account = account    
-
+    offers.order_by('-date', '-time')
     return render(request, 'buyer/offer.html', {'offers': offers})
 
 
@@ -650,7 +664,7 @@ def transactions(request):
                 depot=Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
                 comment=request.POST.get('comment')
             )
-            messages.success(request, 'Transaction Successfully Reviewed')
+            messages.success(request, 'Transaction successfully reviewed')
             return redirect('buyer-transactions')
 
     buyer = request.user
@@ -676,12 +690,13 @@ def transactions(request):
         else:    
             in_complete_trans.append(transaction)
 
-
+    in_complete_trans.sort(key=attrgetter('date', 'time'), reverse=True)
+    complete_trans.sort(key=attrgetter('date', 'time'), reverse=True)
     context = {
         'transactions': complete_trans,
         'incomplete_transactions': in_complete_trans,
         'subsidiary': Subsidiaries.objects.filter(),
-        'all_transactions': AccountHistory.objects.filter()
+        'all_transactions': AccountHistory.objects.filter().order_by('-date', '-time')
     }
 
     return render(request, 'buyer/transactions.html', context=context)
@@ -692,7 +707,7 @@ def transactions_review_delete(request, transaction_id):
     from supplier.models import UserReview
     rev = UserReview.objects.filter(id=transaction_id).first()
     rev.delete()
-    messages.success(request, 'Review Successfully Deleted')
+    messages.success(request, 'Review successfully deleted')
     return redirect("buyer-transactions")
 
 
@@ -704,7 +719,7 @@ def transaction_review_edit(request, id):
         review.rating = int(request.POST.get('rating'))
         review.comment = request.POST.get('comment')
         review.save()
-        messages.success(request, 'Review Successfully Edited')
+        messages.success(request, 'Review successfully edited')
     return redirect("buyer-transactions")
 
 
@@ -794,7 +809,7 @@ def delivery_schedules(request):
         schedule.confirmation_date = confirmation_date
         schedule.save()
         messages.success(request, 'Delivery successfully confirmed!!!')
-        message = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
+        message = f"Delivery confirmed for {schedule.transaction.buyer.company}, Click to view confirmation document"
         Notification.objects.create(user=request.user, action='DELIVERY', message=message, reference_id=schedule.id)
         return redirect('delivery-schedule')
 
@@ -872,13 +887,13 @@ def make_direct_request(request):
             fuel_request_object.dipping_stick_required = True if request.POST.get('dipping_stick_required') == "on" else False
             fuel_request_object.meter_required = True if request.POST.get('meter_required') == "on" else False
             fuel_request_object.save()
-            messages.success(request, f"Successfully Made An Order to {supplier.company.name}")
+            messages.success(request, f"Successfully made an order to {supplier.company.name}")
             message = f'{request.user.company.name.title()} made a request of ' \
                       f'{fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()}'
             Notification.objects.create(user=supplier, message=message, reference_id=fuel_request_object.id,
                                         action="new_request")
         else:
-            messages.warning(request, f"Supplier Not Found")
+            messages.warning(request, f"Supplier not found")
 
     return redirect('buyer:accounts')
 
@@ -895,7 +910,7 @@ def edit_account_details(request, id):
     if request.method == "POST":
         account.account_number = request.POST.get('account_number')
         account.save()
-        messages.success(request, f"Successfully Made Changes To Account Details")
+        messages.success(request, f"Successfully made changes to account details")
     return redirect('buyer:accounts')
 
 
@@ -939,7 +954,7 @@ def make_private_request(request):
         message = f'{request.user.company.name.title()} made a private request of' \
                   f' {fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()} '
         # Notification.objects.create(user=supplier,message=message, reference_id=fuel_request.id, action="new_request")
-        messages.success(request, f"Successfully Made A Private Order To Our Suppliers")
+        messages.success(request, f"Successfully made a private order to uor suppliers")
 
     return redirect('buyer:accounts')
 
@@ -994,7 +1009,7 @@ def download_release_note(request, id):
         response = HttpResponse(document.release_note, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found')
         return redirect(f'/buyer:payment_release_notes/{document.transaction.id}')
     return response
 
@@ -1054,7 +1069,7 @@ def download_application(request, id):
         response = HttpResponse(company.application_form, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.info(request, f'Document Not Found, Please wait for {company.name} to upload application form')
+        messages.info(request, f'Document not found, please wait for {company.name} to upload application form')
         return redirect('accounts-status')
     return response
 
@@ -1089,7 +1104,7 @@ def company_profile(request):
         compan.destination_bank = request.POST['destination_bank']
         compan.account_number = request.POST['account_number']
         compan.save()
-        messages.success(request, 'Company Profile updated successfully')
+        messages.success(request, 'Company profile updated successfully')
         return redirect('buyer-profile')
 
     

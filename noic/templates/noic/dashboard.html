@@ -137,11 +137,19 @@
                 <td>
                     <div class="btn-group">
                         
-                        <button class="btn btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal"
-                            data-target="#add_fuel{{fuel.id}}"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp; | Add Fuel</button>&nbsp;&nbsp;
-                        <button class="btn btn-danger btn-sm" style="font-size: 12px;" data-toggle="modal"
-                            data-target="#edit_{{fuel.id}}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp; | Edit Prices</button>
                         
+                        
+                            <button type="button" class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#add_fuel{{fuel.id}}" style="margin-right: 10px;">
+                                <span class="btn-label"><i class="glyphicon glyphicon-plus"></i></span>Add Fuel
+                            </button>    
+                            
+
+                            <button type="button" class="btn btn-labeled btn-danger btn-sm" data-toggle="modal"
+                            data-target="#edit_{{fuel.id}}">
+                                <span class="btn-label"><i class="glyphicon glyphicon-pencil"></i></span>Edit Prices
+                            </button>  
+                            
+                         
                         
                     </div>
                 </td>

@@ -47,6 +47,8 @@ class Subsidiaries(models.Model):
 
 
 class SuballocationFuelUpdate(models.Model):
+    date = models.DateField(auto_now_add=True, null=True)
+    time = models.TimeField(auto_now_add=True, null=True)
     subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE, related_name='suballocation_fuel_update')
     payment_type = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS'), ('USD & RTGS', 'USD & RTGS')))
     queue_length = models.CharField(max_length=255,choices=(('short', 'Short'), ('medium', 'Medium Long'), ('long', 'Long')))
@@ -66,12 +68,17 @@ class SuballocationFuelUpdate(models.Model):
     status = models.CharField(max_length=1000)
     limit = models.FloatField(default=2000)
 
+    class Meta:
+        ordering = ['-date', '-time']
+
     def __str__(self):
         return f'{self.id}, SubAllocation '
 
 
 class SubsidiaryFuelUpdate(models.Model):
     from company.models import CompanyFuelUpdate
+    date = models.DateField(auto_now_add=True, null=True)
+    time = models.TimeField(auto_now_add=True, null=True)
     subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE)
     petrol_quantity =  models.FloatField(default=0.00)
     diesel_quantity =  models.FloatField(default=0.00)
@@ -85,11 +92,15 @@ class SubsidiaryFuelUpdate(models.Model):
     queue_length = models.CharField(max_length=150, default='Short')
     limit = models.FloatField()
 
+    class Meta:
+        ordering = ['-date', '-time']
+
     def __str__(self):
         return f'{self.id} -- SubsidiaryFuelUpdate '
 
 
 class FuelAllocation(models.Model):
+    time = models.TimeField(auto_now_add=True, null=True)
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, null=True)
     date = models.DateField(auto_now_add=True)
     fuel_payment_type = models.CharField(max_length = 100, default = "", blank=True, null=True)
@@ -106,7 +117,7 @@ class FuelAllocation(models.Model):
     action = models.CharField(max_length=255, default='')
 
     class Meta:
-        ordering = ['-date']
+        ordering = ['-date', '-time']
 
 
 
@@ -212,9 +223,12 @@ class DeliverySchedule(models.Model):
     #     with open(self.confirmation_document.path) as fp:
     #         return fp.read().replace('\n', '<br>')
 
+    class Meta:
+        ordering = ['-date']
+
 class SordSubsidiaryAuditTrail(models.Model):
     from company.models import Company
-    date = models.DateTimeField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True, null=True)
     sord_no =  models.CharField(max_length=100)
     action_no = models.PositiveIntegerField()
     action = models.CharField(max_length=150)

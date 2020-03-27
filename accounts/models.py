@@ -25,7 +25,7 @@ class Account(models.Model):
     proof_of_residence = models.FileField(upload_to='id_documents', blank=True)
 
     class Meta:
-        ordering = ['date', 'time']
+        ordering = ['-date', '-time']
 
     def __str__(self):
         return f'{str(self.buyer_company.name)}'
@@ -48,7 +48,7 @@ class AccountHistory(models.Model):
     release_activated = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['date', 'time']
+        ordering = ['-date', '-time']
 
     def __str__(self):
         return f'${str(self.balance)}'

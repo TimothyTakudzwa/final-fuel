@@ -37,7 +37,7 @@
         {% endif %}
     </a>
     <div class="">
-        <button class="btn btn-default" onclick="toggle_tables()" style="border-radius: 3px;" id="toggle_button">Toggle Tables</button>
+        <button class="btn btn-default" onclick="toggle_tables()" style="border-radius: 3px;background-color: #009688;color: white;" id="toggle_button">Toggle Tables</button>
       </div>
     <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
         data-index="0" id="requests_incomplete">
@@ -738,12 +738,12 @@ aria-hidden="true">
         function check_visible(){
           if ($('#requests_complete').is(':visible')){
             $("#toggle_button").prop("value", "Pama");
-            $("#toggle_button").html("View Complete Requests")
+            $("#toggle_button").html("Click To View Complete Requests")
       
           }else{
       
             $("#toggle_button").prop("value", "Pama");
-            $("#toggle_button").html("View Incomplete Requests")
+            $("#toggle_button").html("Click To View Incomplete Requests")
           }
         }
       </script>
