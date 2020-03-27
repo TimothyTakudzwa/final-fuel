@@ -64,6 +64,7 @@ def allocations(request):
     
 def depots(request):
     depots = NoicDepot.objects.all()
+    form1 = DepotContactForm()
     zimbabwean_towns = ["Select City ---", "Harare", "Bulawayo", "Gweru", "Mutare", "Chirundu", "Bindura", "Beitbridge",
                         "Hwange", "Juliusdale", "Kadoma", "Kariba", "Karoi", "Kwekwe", "Marondera", "Masvingo",
                         "Chinhoyi", "Mutoko", "Nyanga", "Victoria Falls"]
@@ -135,7 +136,7 @@ def depots(request):
         # depot_staff.set_password(random_password())
 
         messages.success(request, 'Depot Created Successfully')
-        form1 = DepotContactForm()
+        
         depots = NoicDepot.objects.all()
         
         return render(request, 'noic/depots.html',
