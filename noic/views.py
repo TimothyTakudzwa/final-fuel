@@ -123,7 +123,7 @@ def depots(request):
             username = first_name[0] + last_name + str(i)
             i += 1
 
-        depot_staff = User.objects.create(username=username,
+        depot_staff = User.objects.create(username=username.lower(),
                                           email=request.POST.get('email'),
                                           first_name=first_name,
                                           last_name=last_name,

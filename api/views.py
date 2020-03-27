@@ -129,7 +129,7 @@ def register(request):
             # noinspection PyBroadException
             try:
                 # creating account
-                client = user.objects.create_user(username=username, email=email, password=password)
+                client = user.objects.create_user(username=username.lower(), email=email, password=password)
                 client.phone_number = phone
                 client.user_type = 'INDIVIDUAL'
                 client.first_name = first_name
