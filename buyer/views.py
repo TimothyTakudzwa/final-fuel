@@ -557,7 +557,7 @@ def offers(request, id):
             offer.depot_address = depot.location
         if account:
             offer.account = account    
-
+    offers.order_by('-date', '-time')
     return render(request, 'buyer/offer.html', {'offers': offers})
 
 
@@ -690,12 +690,13 @@ def transactions(request):
         else:    
             in_complete_trans.append(transaction)
 
-
+    in_complete_trans.sort(key=attrgetter('date', 'time'), reverse=True)
+    complete_trans.sort(key=attrgetter('date', 'time'), reverse=True)
     context = {
         'transactions': complete_trans,
         'incomplete_transactions': in_complete_trans,
         'subsidiary': Subsidiaries.objects.filter(),
-        'all_transactions': AccountHistory.objects.filter()
+        'all_transactions': AccountHistory.objects.filter().order_by('-date', '-time')
     }
 
     return render(request, 'buyer/transactions.html', context=context)

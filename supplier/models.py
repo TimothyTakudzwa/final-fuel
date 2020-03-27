@@ -68,6 +68,9 @@ class SuballocationFuelUpdate(models.Model):
     status = models.CharField(max_length=1000)
     limit = models.FloatField(default=2000)
 
+    class Meta:
+        ordering = ['-date', '-time']
+
     def __str__(self):
         return f'{self.id}, SubAllocation '
 
@@ -88,6 +91,9 @@ class SubsidiaryFuelUpdate(models.Model):
     status = models.CharField(max_length=1000)
     queue_length = models.CharField(max_length=150, default='Short')
     limit = models.FloatField()
+
+    class Meta:
+        ordering = ['-date', '-time']
 
     def __str__(self):
         return f'{self.id} -- SubsidiaryFuelUpdate '
@@ -111,7 +117,7 @@ class FuelAllocation(models.Model):
     action = models.CharField(max_length=255, default='')
 
     class Meta:
-        ordering = ['-date']
+        ordering = ['-date', '-time']
 
 
 
@@ -217,10 +223,12 @@ class DeliverySchedule(models.Model):
     #     with open(self.confirmation_document.path) as fp:
     #         return fp.read().replace('\n', '<br>')
 
+    class Meta:
+        ordering = ['-date']
+
 class SordSubsidiaryAuditTrail(models.Model):
     from company.models import Company
     time = models.TimeField(auto_now_add=True, null=True)
-    date = models.DateTimeField(auto_now_add=True)
     sord_no =  models.CharField(max_length=100)
     action_no = models.PositiveIntegerField()
     action = models.CharField(max_length=150)
