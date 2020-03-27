@@ -89,7 +89,7 @@ def depots(request):
              'Bristle', 'Southdowns']
     if request.method == 'POST':
         # check if email exists
-        if User.objects.filter(uemail=request.POST.get('email')).exists():
+        if User.objects.filter(email=request.POST.get('email')).exists():
             messages.warning(request, 'Invalid Email')
             return redirect('noic:depots')
 
