@@ -180,18 +180,42 @@
                                 <td>
                                     {{data.payment_type}}
                                 </td>
+                                {% if data.petrol_quantity == 0.00 %}
+                                <td style="color: #ffb61e;">
+                                    <p style="text-align: center;">-</p>
+                                </td>
+                                {% else %}
                                 <td style="color: #ffb61e;">
                                     {{data.petrol_price}}
                                 </td>
+                                {% endif %}
+                                {% if data.diesel_quantity == 0.00 %}
+                                <td style="color: #009688;">
+                                    <p style="text-align: center;">-</p>
+                                </td>
+                                {% else %}
                                 <td style="color: #009688;">
                                     {{data.diesel_price}}
                                 </td>
+                                {% endif %}
+                                {% if data.petrol_quantity == 0.00 %}
                                 <td style="color: #ffb61e;">
-                                    {{data.petrol_quantity|intcomma}}
+                                    <p style="text-align: center;">-</p>
                                 </td>
+                                {% else %}
+                                <td style="color: #ffb61e;">
+                                    {{data.petrol_quantity|floatformat:2}}
+                                </td>
+                                {% endif %}
+                                {% if data.diesel_quantity == 0.00 %}
                                 <td style="color: #009688;">
-                                    {{data.diesel_quantity|intcomma}}
+                                    <p style="text-align: center;">-</p>
                                 </td>
+                                {% else %}
+                                <td style="color: #009688;">
+                                    {{data.diesel_quantity|floatformat:2}}
+                                </td>
+                                {% endif %}
                                 <td>
                                     {% if not data.last_updated %}
                                     <p style="color: lightslategray;">Yet To Be Updated</p>
