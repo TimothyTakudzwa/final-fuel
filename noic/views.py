@@ -145,7 +145,7 @@ def depots(request):
 
     return render(request, 'noic/depots.html',
                   {'depots': depots, 'add_user' : 'hide', 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
-                   'Mutare': Mutare, 'Gweru': Gweru, 'form': DepotContactForm()})
+                   'Mutare': Mutare, 'Gweru': Gweru, 'form1': form1, 'form': DepotContactForm()})
 
 
 def edit_depot(request, id):
