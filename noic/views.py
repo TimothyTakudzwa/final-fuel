@@ -114,32 +114,34 @@ def depots(request):
         fuel_update.save()
 
         # creating user for depot
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        username = first_name[0] + last_name
+        # first_name = request.POST.get('first_name')
+        # last_name = request.POST.get('last_name')
+        # username = first_name[0] + last_name
 
-        i = 0
-        while User.objects.filter(username=username).exists():
-            username = first_name[0] + last_name + str(i)
-            i += 1
+        # i = 0
+        # while User.objects.filter(username=username).exists():
+        #     username = first_name[0] + last_name + str(i)
+        #     i += 1
 
-        depot_staff = User.objects.create(username=username.lower(),
-                                          email=request.POST.get('email'),
-                                          first_name=first_name,
-                                          last_name=last_name,
-                                          company_position='manager',
-                                          user_type='NOIC_STAFF',
-                                          password_reset=True,
-                                          subsidiary_id=depot.id
-                                          )
-        depot_staff.set_password(random_password())
+        # depot_staff = User.objects.create(username=username.lower(),
+        #                                   email=request.POST.get('email'),
+        #                                   first_name=first_name,
+        #                                   last_name=last_name,
+        #                                   company_position='manager',
+        #                                   user_type='NOIC_STAFF',
+        #                                   password_reset=True,
+        #                                   subsidiary_id=depot.id
+        #                                   )
+        # depot_staff.set_password(random_password())
 
         messages.success(request, 'Depot Created Successfully')
-        return redirect('noic:depots')
+        return render(request, 'noic/depots.html',
+                  {'depots': depots, 'add_user' : True, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
+                   'Mutare': Mutare, 'Gweru': Gweru, 'form': DepotContactForm()})
        
 
     return render(request, 'noic/depots.html',
-                  {'depots': depots, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
+                  {'depots': depots, 'add_user' : False, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
                    'Mutare': Mutare, 'Gweru': Gweru, 'form': DepotContactForm()})
 
 
