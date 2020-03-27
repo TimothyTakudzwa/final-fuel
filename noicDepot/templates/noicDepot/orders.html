@@ -3,6 +3,8 @@
 {% load humanize %}
 
 {% block body %}
+
+
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
@@ -44,7 +46,8 @@
                 </div>
             </div>
         </div>
-        <div class="panel-body">              
+        <div class="panel-body">      
+        
       
       <div class="table-responsive">
         <table id="allocations" class="table table-striped table-bordered" style="width:100%">
@@ -146,15 +149,39 @@
 
 <script src="js/bootstrap.min.js"></script>
 
+
+{% if allocate == 'show' %}
+
 <script>
-$('#myForm').on('submit', function(e){
-    $(window).load(function(){
-        $('#myModal').modal('show');
-         });
-    e.preventDefault();
-  });
+   
+    $(document).ready(function () {
+        $('#allocate{{order.id}}').modal('show');
+    });
 
 </script>
+{%else%}
+<script>
+    console.log("This is it 333")
+</script>
+{%endif%}
+
+
+{% if release == 'show' %}
+
+<script>
+   
+    $(document).ready(function () {
+        $('#myModal').modal('show');
+    });
+
+</script>
+{%else%}
+<script>
+    console.log("This is it 333")
+</script>
+{%endif%}
+
+
 
 
 {% if order.allocation != None %}
@@ -201,7 +228,7 @@ $('#myForm').on('submit', function(e){
     </div>
 
         {% load crispy_forms_tags %}
-        <form action="{% url 'noicDepot:allocate_fuel' order.id %}" onsubmit="openModal()" id="myForm" method="POST">
+        <form action="{% url 'noicDepot:allocate_fuel' order.id %}" method="POST">
             {% csrf_token %}
             <input type="hidden" value="{{order.fuel_type}}" name="fuel_type" />
             <input type="hidden" value="{{order.quantity}}" name="quantity" />
