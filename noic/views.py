@@ -137,7 +137,7 @@ def depots(request):
         messages.success(request, 'Depot Created Successfully')
         form1 = DepotContactForm()
         depots = NoicDepot.objects.all()
-        form1.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots]
+        
         return render(request, 'noic/depots.html',
                   {'depots': depots, 'form1': form1, 'add_user' : 'show', 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
                    'Mutare': Mutare, 'Gweru': Gweru, 'form': DepotContactForm()})
