@@ -588,9 +588,9 @@ def accept_offer(request, id):
     account = Account.objects.filter(buyer_company=request.user.company,supplier_company=offer.supplier.company,is_verified=True).first()
     if account is not None:
         if offer.transport_fee is not None:
-            expected = int(offer.quantity * offer.price) + int(offer.transport_fee)
+            expected = int((Decimal(offer.quantity) * offer.price) + Decimal(offer.transport_fee))
         else:
-            expected = int(offer.quantity * offer.price)
+            expected = int(Decimal(offer.quantity) * offer.price)
         Transaction.objects.create(offer=offer, buyer=request.user, supplier=offer.supplier, is_complete=False,expected = expected)
         FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
         offer.is_accepted = True
