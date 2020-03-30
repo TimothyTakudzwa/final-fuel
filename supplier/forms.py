@@ -211,4 +211,4 @@ def editoffer(request):
 class DeliveryScheduleForm(forms.ModelForm):
     class Meta:
         model = DeliverySchedule
-        fields = ['confirmation_document']
+        # fields = ['confirmation_document']
