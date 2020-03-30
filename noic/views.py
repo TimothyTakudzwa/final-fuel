@@ -63,6 +63,7 @@ def allocations(request):
     
     
 def depots(request):
+    global depot
     depots = NoicDepot.objects.all()
     form1 = DepotContactForm()
     zimbabwean_towns = ["Select City ---", "Harare", "Bulawayo", "Gweru", "Mutare", "Chirundu", "Bindura", "Beitbridge",
@@ -88,6 +89,8 @@ def depots(request):
              'Daylesford', 'Mkoba', 'Riverside', 'Southview', 'Nehosho', 'Clydesdale Park', 'Lundi Park', 'Montrose',
              'Ascot', 'Ridgemont', 'Windsor Park', 'Ivene', 'Haben Park', 'Bata', 'ThornHill Air Field' 'Green Dale',
              'Bristle', 'Southdowns']
+
+
     if request.method == 'POST':
         # check if email exists
         if User.objects.filter(email=request.POST.get('email')).exists():
@@ -110,6 +113,8 @@ def depots(request):
                                                 name=name,
                                                  opening_time=opening_time, closing_time=closing_time)
         depot.save()
+
+        depot_id = depot.id
         
         fuel_update = DepotFuelUpdate.objects.create(depot=depot)
         fuel_update.save()
@@ -123,7 +128,7 @@ def depots(request):
         # while User.objects.filter(username=username).exists():
         #     username = first_name[0] + last_name + str(i)
         #     i += 1
-
+        
         # depot_staff = User.objects.create(username=username.lower(),
         #                                   email=request.POST.get('email'),
         #                                   first_name=first_name,
@@ -141,7 +146,7 @@ def depots(request):
         
         return render(request, 'noic/depots.html',
                   {'depots': depots, 'form1': form1, 'add_user' : 'show', 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
-                   'Mutare': Mutare, 'Gweru': Gweru, 'form': DepotContactForm()})
+                   'Mutare': Mutare, 'Gweru': Gweru, 'form': DepotContactForm(), 'depot': depot_id})
        
 
     return render(request, 'noic/depots.html',
