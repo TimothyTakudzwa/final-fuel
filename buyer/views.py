@@ -12,6 +12,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from weasyprint import HTML
+from decimal import *
 
 from accounts.models import Account
 from buyer.models import User
