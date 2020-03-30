@@ -21,7 +21,7 @@ from buyer.recommend import recommend
 from buyer.utils import render_to_pdf
 from company.models import Company
 from notification.models import Notification
-#from supplier.forms import DeliveryScheduleForm
+from supplier.forms import DeliveryScheduleForm
 from supplier.lib import total_requests, transactions_total_cost, total_offers
 from supplier.models import Offer, Subsidiaries, DeliverySchedule, Transaction, TokenAuthentication, \
     UserReview, SuballocationFuelUpdate
