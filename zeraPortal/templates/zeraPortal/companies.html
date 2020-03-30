@@ -220,7 +220,22 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
             </div>
             </div>
             <!--End unblock message modal-->
+            
 
+            {% if administrater == 'show' %}
+
+            <script>
+            
+                $(document).ready(function () {
+                    $('#add_user{{company.id}}').modal('show');
+                });
+
+            </script>
+            {%else%}
+            <script>
+                console.log("This is it 333")
+            </script>
+            {%endif%}
             <!--Add supplier admin Modal-->
             <div class="modal fade modal-success in" id="add_user{{company.id}}" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -229,7 +244,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                             
                             <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                            <span class="modal-title">{{company.name}} Administrator </span>
+                            <span class="modal-title">Company Administrator </span>
                         </div>
                             <div class="modal-body">
                                 <form action="{% url 'zeraPortal:add-supplier-admin' company.id %}" method="POST">

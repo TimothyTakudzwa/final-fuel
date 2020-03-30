@@ -59,11 +59,11 @@ def dashboard(request):
             new_company.save()
             CompanyFuelUpdate.objects.create(company=new_company)
             messages.success(request, 'Company successfully registered')
-            return redirect('zeraPortal:dashboard')
+            return render(request, 'zeraPortal/companies.html', {'companies': companies, 'administrater' : 'show', 'zimbabwean_towns':zimbabwean_towns})
         else:
             messages.warning(request, 'License number already exists!!!')
             return redirect('zeraPortal:dashboard')
-    return render(request, 'zeraPortal/companies.html', {'companies': companies, 'zimbabwean_towns':zimbabwean_towns})
+    return render(request, 'zeraPortal/companies.html', {'companies': companies, 'administrater' : 'hide', 'zimbabwean_towns':zimbabwean_towns})
 
 
 def noic_fuel(request):
