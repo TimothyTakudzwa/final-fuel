@@ -803,7 +803,7 @@ def delivery_schedules(request):
                'schedules': schedules
                }
     if request.method == 'POST':
-        confirmation_document = request.FILES.get('delivery_date')
+        confirmation_date = request.FILES.get('delivery_date')
         delivery_id = request.POST.get('delivery_id')
 
         schedule = DeliverySchedule.objects.get(id=delivery_id)
