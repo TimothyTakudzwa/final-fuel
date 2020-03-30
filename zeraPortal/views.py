@@ -447,7 +447,7 @@ def report_generator(request):
             end_date = datetime.strptime(end_date, '%Y-%m-%d')
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
-            stock = CompanyFuelUpdate.objects.filter(company=request.user.company).all()
+            stock = CompanyFuelUpdate.objects.all()
 
             requests = None
             allocations = None
@@ -494,7 +494,7 @@ def report_generator(request):
             verified_companies=None
             unverified_companies=None
         if request.POST.get('report_type') == 'Companies - Verified':
-            v_companies = Company.objects.filter(is_verified=True)
+            v_companies = Company.objects.filter(is_verified=True, company_type='SUPPLIER')
             verified_companies = []
 
             for company in v_companies:
@@ -509,7 +509,7 @@ def report_generator(request):
             revs = None
             unverified_companies=None
         if request.POST.get('report_type') == 'Companies - Unverified':
-            uv_companies = Company.objects.filter(is_verified=False)
+            uv_companies = Company.objects.filter(is_verified=False, company_type='SUPPLIER')
             unverified_companies = []
 
             for company in uv_companies:

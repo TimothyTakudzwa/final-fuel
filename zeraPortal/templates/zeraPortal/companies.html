@@ -44,13 +44,12 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
             <form action=""
                 method="POST">
                 {% csrf_token %}
-                <div class="col-sm-12">
+                <div class="row-sm-12">
                     <label>Company Name</label>
                     <input type="text" name="company_name" class="form-control" required/>
                 </div>
-
-
-                <div class="col-sm-12" name="city">
+                <div class="row">
+                <div class="col-sm-6" name="city">
                     <label>City</label>
                     <select class="form-control" name="city">
                         {% for city in zimbabwean_towns %}
@@ -59,27 +58,33 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                     </select>
                 </div>
             
-                <div class="col-sm-12">
+                <div class="col-sm-6">
                     <label>Company Address</label>
                     <input type="text" name="address" class="form-control" required/>
                 </div>
-                <div class="col-sm-12">
+                </div>
+                <div class="row">
+                <div class="col-sm-6">
                     <label>License Number</label>
                     <input type="text" name="license_number" class="form-control" required/>
                 </div>
-                <div class="col-sm-12">
+                <div class="col-sm-6">
                   <label>VAT Number</label>
                   <input type="text" name="vat_number" class="form-control" value="" />
               </div>
-              <div class="col-sm-12">
+                </div>
+                <div class="row">
+              <div class="col-sm-6">
                 <label>Contact Person Name</label>
                 <input type="text" name="contact_person" class="form-control" value="" />
             </div>
-              <div class="col-sm-12">
+              <div class="col-sm-6">
                 <label>Phone Number</label>
                 <input type="text" name="phone_number" class="form-control" value="" />
             </div>
-        <div class="form-group row mt-5" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                </div>
+                <div class=""><label></label></div>
+        <div class="form-group row mt-5" style="margin-left: 1%; margin-right: 1%; margin-top: 5%; margin-bottom: 5%;">
             <button type="button" class="btn btn-secondary col-sm-6"
                 data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary col-sm-6">Register</button>
@@ -301,13 +306,12 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-body">
                             <form action="{% url 'zeraPortal:edit-company-details' company.id %}" method="POST">
                                 {% csrf_token %}
-                                <div class="col-sm-12">
+                                    <div class="row-sm-12">
                                     <label>Company Name</label>
                                     <input type="text" name="company_name" value="{{company.name}}" class="form-control" required/>
                                 </div>
-
-
-                                <div class="col-sm-12" name="city">
+                                <div class="row">
+                                <div class="col-sm-6" name="city">
                                     <label>City</label>
                                     <select class="form-control" name="city">
                                         {% for city in zimbabwean_towns %}
@@ -316,26 +320,32 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     </select>
                                 </div>
                             
-                                <div class="col-sm-12">
+                                <div class="col-sm-6">
                                     <label>Company Address</label>
                                     <input type="text" name="address" value="{{company.address}}" class="form-control" required/>
                                 </div>
-                                <div class="col-sm-12">
+                                </div>
+                                <div class="row">
+                                <div class="col-sm-6">
                                     <label>License Number</label>
                                     <input type="text" name="license_number" value="{{company.license_number}}" class="form-control" required/>
                                 </div>
-                                <div class="col-sm-12">
+                                <div class="col-sm-6">
                                 <label>VAT Number</label>
                                 <input type="text" name="vat_number" value="{{company.vat_number}}" class="form-control" value="" />
                             </div>
-                            <div class="col-sm-12">
+                                </div>
+                            <div class="row">
+                            <div class="col-sm-6">
                                 <label>Contact Person Name</label>
                                 <input type="text" name="contact_person" value="{{company.contact_person}}" class="form-control" value="" />
                             </div>
-                            <div class="col-sm-12">
+                            <div class="col-sm-6">
                                 <label>Phone Number</label>
                                 <input type="text" name="phone_number" value="{{company.phone_number}}" class="form-control" value="" />
                             </div>
+                            </div>
+                            <div class=""><label></label></div>
                         <div class="form-group row mt-5" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
                             <button type="button" class="btn btn-secondary col-sm-6"
                                 data-dismiss="modal">Close</button>
