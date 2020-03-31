@@ -129,7 +129,7 @@ def get_aggregate_total_revenue():
     
     if trans:
         for transaction in trans:
-            revenue += (transaction.offer.request.amount * transaction.offer.price)
+            revenue += (float(transaction.offer.request.amount) * float(transaction.offer.price))
     else:
         revenue = 0        
     return revenue
