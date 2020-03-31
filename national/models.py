@@ -27,6 +27,7 @@ class NoicDepot(models.Model):
 
 class Order(models.Model):
     date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True, null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     quantity =  models.FloatField(default=0.00)
     fuel_type = models.CharField(max_length=150, blank=True, null=True)
@@ -48,6 +49,7 @@ class Order(models.Model):
 
 class NationalFuelUpdate(models.Model):
     date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True, null=True)
     allocated_petrol =  models.FloatField(default=0.00)
     allocated_diesel =  models.FloatField(default=0.00)
     unallocated_petrol =  models.FloatField(default=0.00)
@@ -60,6 +62,7 @@ class NationalFuelUpdate(models.Model):
 class SordNationalAuditTrail(models.Model):
     order = models.ForeignKey(Order, on_delete=models.DO_NOTHING, related_name='company_order', blank=True, null=True)
     date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True, null=True)
     sord_no =  models.CharField(max_length=100, blank=True, null=True)
     action_no = models.PositiveIntegerField(blank=True, null=True)
     action = models.CharField(max_length=150, blank=True, null=True)
