@@ -834,17 +834,23 @@ def stations(request):
                                                               limit=2000)
             fuel_update.save()
             messages.success(request, 'Subsidiary created successfully')
-            return redirect('users:stations')
+            return render(request, 'users/service_stations.html',
+                  {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
+                   'Mutare': Mutare, 'Gweru': Gweru, 'subsidiary': subsidiary, 'add_user' : 'show'})
+
         else:
             fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=subsidiary,
                                                               limit=2000)
             fuel_update.save()
             messages.success(request, 'Subsidiary created successfully')
-            return redirect('users:stations')
+            return render(request, 'users/service_stations.html',
+                  {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
+                   'Mutare': Mutare, 'Gweru': Gweru, 'subsidiary': subsidiary, 'add_user' : 'show'})
+
 
     return render(request, 'users/service_stations.html',
                   {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
-                   'Mutare': Mutare, 'Gweru': Gweru})
+                   'Mutare': Mutare, 'Gweru': Gweru, 'add_user' : 'hide', 'allocate' : 'hide'})
 
 
 @login_required()
@@ -888,16 +894,34 @@ def suppliers_list(request):
             return redirect('users:suppliers_list')
 
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
-                                first_name=first_name, last_name=last_name, user_type='SS_SUPPLIER',
+                                first_name=first_name, last_name=last_name,
                                 company=request.user.company, email=email,
                                 phone_number=phone_number, password_reset=True)
-        user.set_password(password)
-        if message_is_send(request, user, password):
-            if user.is_active:
-                user.stage = 'menu'
-                user.save()
-            else:
-                messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+        subsidiary = Subsidiaries.objects.filter(id=subsidiary_id).first()
+        if subsidiary.is_depot == True:
+            user.user_type = 'SS_SUPPLIER' 
+            user.save()
+            fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
+            user.set_password(password)
+            if message_is_send(request, user, password):
+                if user.is_active:
+                    user.stage = 'menu'
+                    user.save()
+                else:
+                    messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+            return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1, 'allocate' : 'show', 'fuel_update': fuel_update, 'form':form})
+        else:
+            user.user_type = 'SUPPLIER'
+            user.save() 
+            user.set_password(password)
+            if message_is_send(request, user, password):
+                if user.is_active:
+                    user.stage = 'menu'
+                    user.save()
+                else:
+                    messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+            return redirect(f'/users/allocated_fuel/{subsidiary.id}')
+        
 
     return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1, 'form':form})
 
