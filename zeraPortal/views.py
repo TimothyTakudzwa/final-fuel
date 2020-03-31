@@ -59,11 +59,11 @@ def dashboard(request):
             new_company.save()
             CompanyFuelUpdate.objects.create(company=new_company)
             messages.success(request, 'Company successfully registered')
-            return redirect('zeraPortal:dashboard')
+            return render(request, 'zeraPortal/companies.html', {'companies': companies, 'new_company': new_company, 'administrater' : 'show', 'zimbabwean_towns':zimbabwean_towns})
         else:
             messages.warning(request, 'License number already exists!!!')
             return redirect('zeraPortal:dashboard')
-    return render(request, 'zeraPortal/companies.html', {'companies': companies, 'zimbabwean_towns':zimbabwean_towns})
+    return render(request, 'zeraPortal/companies.html', {'companies': companies, 'administrater' : 'hide', 'zimbabwean_towns':zimbabwean_towns})
 
 
 def noic_fuel(request):
@@ -109,6 +109,7 @@ def edit_company(request, id):
 
 def add_supplier_admin(request, id):
     company = Company.objects.filter(id=id).first()
+    print('hhhhhhhhhhh is co', company.name)
     first_name = request.POST['first_name']
     last_name = request.POST['last_name']
     email = request.POST['email']
@@ -131,6 +132,7 @@ def add_supplier_admin(request, id):
         user = User.objects.create(company=company, first_name=first_name, last_name=last_name, email=email, phone_number=phone_number.replace(' ', ''),
         user_type='S_ADMIN', is_active=True, username=username.lower(), password_reset=True)
         user.set_password(password)
+        user.save()
         message_is_sent(request, user, password)
         messages.success(request, 'User successfully created')
         return redirect ('zeraPortal:dashboard')

@@ -1,6 +1,73 @@
 {% extends "zeraPortal/zera_base.html" %}
 {% block body %}
 
+
+{% if administrater == 'show' %}
+<!--Add supplier admin Modal-->
+<div class="modal fade modal-success in" id="add_user" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <span class="modal-title">Company Administrator </span>
+            </div>
+                <div class="modal-body">
+                    <form action="{% url 'zeraPortal:add-supplier-admin' new_company.id %}" method="POST">
+                        {% csrf_token %}
+                        <div class="row col-sm-12">
+                            <div class="col-sm-6">
+                            <label>First Name: </label>
+                            <input type="text" name="first_name" class="form-control" required/>
+                        </div>
+                    
+                        <div class="col-sm-6">
+                            <label>Last Name: </label>
+                            <input type="text" name="last_name" class="form-control" required/>
+                        </div>
+                        </div>
+                        <div class="row col-sm-12">
+                            <div class="col-sm-6">
+                            <label>Email Address: </label>
+                            <input type="email" name="email" class="form-control" required/>
+                        </div>
+                    
+                        <div class="col-sm-6">
+                            <label>Phone Number: </label>
+                            <input type="text" placeholder="263772353696" name="phone_number" class="form-control" required/>
+                        </div>
+                        </div>
+                        <div class="row col-sm-12">
+                        <input type="hidden" name="company" value="{{new_company.id}}" class="form-control"/>
+                        </div>
+                       
+                    
+                <div class="form-group row" style="margin-left: 2%; margin-right: 8%; margin-top: 8%; margin-bottom: 8%;">
+                    <button type="button" class="btn btn-secondary col-sm-6"
+                        data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary col-sm-6">Save</button>
+                </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!--End Add user modal-->
+
+<script>
+
+    $(document).ready(function () {
+        $('#add_user').modal('show');
+    });
+
+</script>
+{%else%}
+<script>
+    console.log("This is it 333")
+</script>
+{%endif%}
+
 <section class="content-header">
   <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
          <div class="input-group">
@@ -225,7 +292,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
             </div>
             </div>
             <!--End unblock message modal-->
-
+            
             <!--Add supplier admin Modal-->
             <div class="modal fade modal-success in" id="add_user{{company.id}}" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -330,8 +397,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <input type="text" name="phone_number" value="{{company.phone_number}}" class="form-control" value="" />
                             </div>
                             </div>
-                            <div class=""><label></label></div>
-                        <div class="form-group row mt-5" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                            <div class=""><label></label></div                        <div class="form-group row mt-5" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
                             <button type="button" class="btn btn-secondary col-sm-6"
                                 data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary col-sm-6">Save</button>

@@ -331,6 +331,7 @@ Fuel Requests
 def fuel_request(request):
     sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     requests = []
+    complete_requests = []
     if sub.praz_reg_num != None:
         all_requests = FuelRequest.objects.filter(is_deleted=False, is_complete=False).all()
         for fuel_request in all_requests:
