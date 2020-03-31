@@ -588,8 +588,7 @@ def statistics(request):
 
     for sub in branches:
         tran_amount = 0
-        sub_trans = Transaction.objects.filter(supplier__subsidiary_id=sub.id,
-                                               is_complete=True)
+        sub_trans = Transaction.objects.filter(is_complete=True)
         for sub_tran in sub_trans:
             tran_amount += (float(sub_tran.offer.request.amount) * float(sub_tran.offer.price))
         sub.tran_count = sub_trans.count()
