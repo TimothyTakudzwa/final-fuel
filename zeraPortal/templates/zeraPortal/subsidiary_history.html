@@ -21,7 +21,7 @@
       <h1> {{subsidiary.name|title}}'s</h1>
       <small>Transaction History</small>
       <ol class="breadcrumb hidden-xs">
-          <li><a href="{% url 'users:allocate' %}"><i class="pe-7s-home"></i> Home</a></li>
+          <li><a href="{% url 'zeraPortal:dashboard' %}"><i class="pe-7s-home"></i> Home</a></li>
           <li class="active"> Subsidiary Transaction History</li>
       </ol>
 
@@ -56,7 +56,7 @@
             </div>
             <div class="modal-body" style="background:#eeee">
 
-                <form method="POST" action="/users/subsidiary_transaction_history/{{subsidiary.id}}">
+                <form method="POST" action="/zeraPortal/subsidiary_transaction_history/{{subsidiary.id}}">
                     {% csrf_token %}
                     <div class="form-group">
                         <select name="report_type" class="browser-default custom-select" id="report_options">
