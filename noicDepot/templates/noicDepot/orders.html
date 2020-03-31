@@ -5,6 +5,122 @@
 {% block body %}
 
 
+{% if allocate == 'show' %}
+
+<div class="modal fade modal-success in" id="allocate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <span class="modal-title" id="exampleModalLongTitle">Allocate Fuel- <i
+                    style="color:azure"><small>Please Note the fuel you are entering is for the 
+                        payment you approved</small></i></span>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    
+            {% load crispy_forms_tags %}
+            <form action="{% url 'noicDepot:allocate_fuel' order.id %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" value="{{order.fuel_type}}" name="fuel_type" />
+                <input type="hidden" value="{{order.quantity}}" name="quantity" />
+                <input type="hidden" value="{{order.currency}}" name="currency" />
+                <input type="hidden" value="{{order.price}}" name="price" />
+                <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Fuel Type</b></label>
+                        <input type="text" name="fuel_type1" class="form-control"
+                            value="{{order.fuel_type}}" disabled />
+                    </div>
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Quantity</b></label>
+                        <input type="text" name="quantity1" class="form-control"
+                            value="{{order.quantity}}" disabled />
+                    </div>
+                </div>
+    
+                <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Currency</b></label>
+                        <input type="text" name="currency1" class="form-control"
+                            value="{{order.currency}}" disabled />
+                    </div>
+    
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Price</b></label>
+                        <input type="text" name="price" class="form-control"
+                            value="{{order.price}}" disabled />
+                    </div>
+                    
+                    
+                </div>
+            
+        <div class="form-group row"
+            style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+            <button type="button" class="btn btn-secondary col-sm-6"
+                data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+        </div>
+        </form>
+    </div>
+    </div>
+    </div>
+
+<script>
+   
+    $(document).ready(function () {
+        $('#allocate}').modal('show');
+    });
+
+</script>
+{%else%}
+<script>
+    console.log("This is it 333")
+</script>
+{%endif%}
+
+{% if release == 'show' %}
+
+<div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #009688; color: white">
+                <span class="modal-title" id="exampleModalLabel">Upload Release Note</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form method="POST" action="{% url 'noicDepot:upload_release_note' sord_object.id %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group col-md-6">
+                        <label>Release Date</label>
+                        <input type="date" name="release_date" class="form-control"  required/>
+                    </div>
+                    <br>
+                    <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+
+                </form>
+            </div>
+        </div>
+    </div>
+  </div>
+
+<script>
+   
+    $(document).ready(function () {
+        $('#myModal').modal('show');
+    });
+
+</script>
+{%else%}
+<script>
+    console.log("This is it 333")
+</script>
+{%endif%}
+
+
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
@@ -148,70 +264,6 @@
  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
 
 <script src="js/bootstrap.min.js"></script>
-
-
-{% if allocate == 'show' %}
-
-<script>
-   
-    $(document).ready(function () {
-        $('#allocate{{order.id}}').modal('show');
-    });
-
-</script>
-{%else%}
-<script>
-    console.log("This is it 333")
-</script>
-{%endif%}
-
-
-{% if release == 'show' %}
-
-<script>
-   
-    $(document).ready(function () {
-        $('#myModal').modal('show');
-    });
-
-</script>
-{%else%}
-<script>
-    console.log("This is it 333")
-</script>
-{%endif%}
-
-
-
-
-{% if order.allocation != None %}
-<div class="modal fade" tabindex="-1" role="dialog" id="myModal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #009688; color: white">
-                <span class="modal-title" id="exampleModalLabel">Upload Release Note</span>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <form method="POST" action="{% url 'noicDepot:upload_release_note' order.allocation.id %}" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group col-md-6">
-                        <label>Release Date</label>
-                        <input type="date" name="release_date" class="form-control"  required/>
-                    </div>
-                    <br>
-                    <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
-
-                </form>
-            </div>
-        </div>
-    </div>
-  </div>
-  {% endif %}
-
 
 
   
