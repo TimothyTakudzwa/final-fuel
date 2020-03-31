@@ -642,7 +642,7 @@ def statistics(request):
     return render(request, 'zeraPortal/statistics.html', { 'trans': trans, 'clients': clients,
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
                                                      'last_week_rev': last_week_rev,'city_sales_volume':city_sales_volume,
-                                                     'final_desperate_cities':final_desperate_cities})
+                                                     'final_desperate_cities':final_desperate_cities, 'sorted_subs':sorted_subs})
     
 
 def clients_history(request, cid):
