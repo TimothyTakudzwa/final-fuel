@@ -796,6 +796,8 @@ def stations(request):
              'Daylesford', 'Mkoba', 'Riverside', 'Southview', 'Nehosho', 'Clydesdale Park', 'Lundi Park', 'Montrose',
              'Ascot', 'Ridgemont', 'Windsor Park', 'Ivene', 'Haben Park', 'Bata', 'ThornHill Air Field' 'Green Dale',
              'Bristle', 'Southdowns']
+    form1 = SupplierContactForm()
+    form = DepotContactForm()
     if request.method == 'POST':
         name = request.POST['name']
         city = request.POST['city']
@@ -836,7 +838,7 @@ def stations(request):
             messages.success(request, 'Subsidiary created successfully')
             return render(request, 'users/service_stations.html',
                   {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
-                   'Mutare': Mutare, 'Gweru': Gweru, 'subsidiary': subsidiary, 'add_user' : 'show'})
+                   'Mutare': Mutare, 'Gweru': Gweru, 'subsidiary': subsidiary, 'form': form, 'form1': form1, 'add_user' : 'show'})
 
         else:
             fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=subsidiary,
@@ -845,7 +847,7 @@ def stations(request):
             messages.success(request, 'Subsidiary created successfully')
             return render(request, 'users/service_stations.html',
                   {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
-                   'Mutare': Mutare, 'Gweru': Gweru, 'subsidiary': subsidiary, 'add_user' : 'show'})
+                   'Mutare': Mutare, 'Gweru': Gweru, 'subsidiary': subsidiary, 'form': form, 'form1': form1, 'add_user' : 'show'})
 
 
     return render(request, 'users/service_stations.html',
@@ -898,7 +900,7 @@ def suppliers_list(request):
                                 company=request.user.company, email=email,
                                 phone_number=phone_number, password_reset=True)
         subsidiary = Subsidiaries.objects.filter(id=subsidiary_id).first()
-        if subsidiary.is_depot == True:
+        if subsidiary.is_depot == False:
             user.user_type = 'SS_SUPPLIER' 
             user.save()
             fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
