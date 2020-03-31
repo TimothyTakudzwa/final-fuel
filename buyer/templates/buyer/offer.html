@@ -51,6 +51,8 @@
             <table id="offer" class="table table-striped table-bordered" style="width:100%">
                 <thead style="background-color: lightslategray; color:white;">
                 <tr>
+                    <th style="color: white;">Date</th>
+                    <th style="color: white;">Time</th>
                     <th style="color: white;">Supplier Company</th>
                     <th style="color: white;">Depot Name</th>
                     <th style="color: white;">Collection Address</th>
@@ -65,7 +67,9 @@
                 </thead>
                 <tbody>
                     {% for offer in offers %}
-                    <tr>                        
+                    <tr>
+                        <td>{{offer.date}}</td>
+                        <td>{{offer.time}}</td>                      
                         <td>{{offer.supplier.company}}</td>
                         <td>{{offer.depot_name}}</td>
                         <td>{{offer.collection_address}}</td>

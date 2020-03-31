@@ -45,9 +45,15 @@
      <div class="panel-body">
 
         <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped" id="fuel_updates">
+            <table class="table table-bordered table-hover table-striped" id="offer">
                 <thead style="background-color: lightslategray; color: white;">
                     <tr>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Time
+                        </th>
                         
                         <th>
                             <h6>Supplier Company</h6>
@@ -83,7 +89,12 @@
 
                     {% for offer in offers %}
                     <tr>
-                        
+                        <td>
+                            {{offer.date}}
+                        </td>
+                        <td>
+                            {{offer.time}}
+                        </td>
                         <td>
                             {{offer.supplier.company}}
                         </td>

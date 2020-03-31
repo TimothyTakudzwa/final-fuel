@@ -54,6 +54,8 @@
                     <table id="fuel_updates" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                         <tr style="background-color: gray;color: white;">
+                            <th>Date</th>
+                            <th>Time</th>
                             <th>Depot</th>
                             <th>PickUp Address</th>
                             <th>Fuel</th>
@@ -72,6 +74,8 @@
 
                         {% for transaction in transactions %}
                             <tr>
+                                <td>{{transaction.date}}</td>
+                                <td>{{transaction.time}}</td>
                                 <td class="name truncate">{{transaction.depot}}</td>
                                 {% if transaction.offer.collection_address != None %}
                                     <td class="name truncate">{{transaction.offer.collection_address}}</td>
