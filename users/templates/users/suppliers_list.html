@@ -3,6 +3,92 @@
 {% load crispy_forms_tags %}
 {% block body %}
 
+{% if allocate == 'show' %}
+
+ <!--Add Petrol fuel-->
+ <div class="modal fade modal-success in" id="add_fuel" tabindex="-1"
+ role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+ <div class=" modal-dialog-centered" role="document" style="margin: 0;">
+     <div class="modal-content">
+         <div class="modal-header">
+             <span class="modal-title" id="exampleModalLongTitle">Allocate Fuel <i
+                     style="color:azure; margin-left: 2.4px;"><small>Please Note the fuel you are
+                         entering is to be
+                         sold in Zimbabwean Dollars</small></i></span>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+             </button>
+         </div>
+         <div>
+             {% load crispy_forms_tags %}
+             <form action="{% url 'users:allocation_update_main' fuel_update.id %}" method="POST">
+                 {% csrf_token %}
+                 <input type="hidden" value="RTGS" name="fuel_payment_type" />
+                 <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                     <div class="col-sm-6">
+
+                         <label><b style='color:#009688'>Fuel Type</b></label>
+
+
+                         <label><b style='color:#009688'>Fuel Type</b></label>
+                         <select class="form-control" name="fuel_type">
+                             <option>Petrol</option>
+                             <option>Diesel</option>
+                         </select>
+                     </div>
+                     <div class="col-sm-6">
+                         <label><b style='color:#009688'>Quantity</b></label>
+                         <input type="text" name="quantity" class="form-control"
+                             placeholder="In Litres" required />
+                     </div>
+                 </div>
+                 <div class=" form-group row col-sm-12">
+                     <div class="col-sm-6">
+                         <label><b style='color:#009688'>Price</b></label>
+                         <input type="text" name="price" class="form-control" placeholder="Price"
+                             required />
+                     </div>
+                     <input type="hidden" name="cash" value="0" />
+                     <input type="hidden" name="swipe" value="0">
+                     <input type="hidden" name="ecocash" value="0">
+                     <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
+                         <label><b style='color:#009688'>Payment Method</b></label>
+                         <div class="col-sm-12 row">
+                             <input type="checkbox" class=" col-sm-6" name="cash" value="1">
+                             Cash<br>
+                             <input type="checkbox" class="col-sm-6" value="1"
+                                 name="swipe">Swipe<br>
+                             <input type="checkbox" class="col-sm-6" value="1"
+                                 name="ecocash">Ecocash<br>
+                         </div>
+                     </div>
+                 </div>
+
+         </div>
+         <div class="form-group row"
+             style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+             <button type="button" class="btn btn-secondary col-sm-6"
+                 data-dismiss="modal">Close</button>
+             <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
+         </div>
+         </form>
+     </div>
+ </div>
+</div>
+<script>
+   
+    $(document).ready(function () {
+        $('#add_fuel').modal('show');
+    });
+
+</script>
+{%else%}
+<script>
+    console.log("This is it 333")
+</script>
+{%endif%}
+
+
 
     <section class="content-header">
         <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
