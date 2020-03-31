@@ -46,6 +46,9 @@ class Order(models.Model):
     driver_id = models.CharField(max_length=150, blank=True, null=True)
     noic_depot = models.ForeignKey(NoicDepot, on_delete=models.DO_NOTHING, related_name='company_allocation', blank=True, null=True)
 
+    class Meta:
+        ordering = ['-date', '-time']
+
 
 class NationalFuelUpdate(models.Model):
     date = models.DateField(auto_now_add=True)
@@ -57,6 +60,9 @@ class NationalFuelUpdate(models.Model):
     diesel_price = models.DecimalField(max_digits=10, default=0.00, decimal_places=2)
     petrol_price = models.DecimalField(max_digits=10, default=0.00, decimal_places=2)
     currency = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS')))
+
+    class Meta:
+        ordering = ['-date', '-time']
 
 
 class SordNationalAuditTrail(models.Model):
@@ -83,6 +89,10 @@ class SordNationalAuditTrail(models.Model):
 
     def __str__(self):
         return f'{self.id} -- SordNationalAuditTrail'
+
+    class Meta:
+        ordering = ['-date', '-time']
+        
         
 class DepotFuelUpdate(models.Model):
     depot = models.ForeignKey(NoicDepot, on_delete=models.CASCADE, blank=True, null=True)
