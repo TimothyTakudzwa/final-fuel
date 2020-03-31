@@ -47,6 +47,7 @@
                     <thead style="color:white; background:lightslategray">
                         <th style="color:white;"></th>
                         <th style="color:white;">Date</th>
+                        <th style="color:white;">Time</th>
                         <th style="color:white;">Action</th>
                         <th style="color:white;">Diesel</th>
                         <th style="color:white;">Price</th>
@@ -58,6 +59,7 @@
                         <tr>
                             <td></td>
                             <td>{{allocation.date}}</td>
+                            <td>{{allocation.time}}</td>
                             <td>{{allocation.action}}</td>
                             {% if allocation.diesel_quantity != 0 %}
                             <td>{{allocation.diesel_quantity}}</td>
