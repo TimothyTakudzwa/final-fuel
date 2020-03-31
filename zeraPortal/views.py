@@ -59,11 +59,11 @@ def dashboard(request):
             new_company.save()
             CompanyFuelUpdate.objects.create(company=new_company)
             messages.success(request, 'Company successfully registered')
-            return redirect('zeraPortal:dashboard')
+            return render(request, 'zeraPortal/companies.html', {'companies': companies, 'new_company': new_company, 'administrater' : 'show', 'zimbabwean_towns':zimbabwean_towns})
         else:
             messages.warning(request, 'License number already exists!!!')
             return redirect('zeraPortal:dashboard')
-    return render(request, 'zeraPortal/companies.html', {'companies': companies, 'zimbabwean_towns':zimbabwean_towns})
+    return render(request, 'zeraPortal/companies.html', {'companies': companies, 'administrater' : 'hide', 'zimbabwean_towns':zimbabwean_towns})
 
 
 def noic_fuel(request):
@@ -109,6 +109,7 @@ def edit_company(request, id):
 
 def add_supplier_admin(request, id):
     company = Company.objects.filter(id=id).first()
+    print('hhhhhhhhhhh is co', company.name)
     first_name = request.POST['first_name']
     last_name = request.POST['last_name']
     email = request.POST['email']
@@ -448,7 +449,7 @@ def report_generator(request):
             end_date = datetime.strptime(end_date, '%Y-%m-%d')
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
-            stock = CompanyFuelUpdate.objects.filter(company=request.user.company).all()
+            stock = CompanyFuelUpdate.objects.all()
 
             requests = None
             allocations = None
@@ -495,7 +496,7 @@ def report_generator(request):
             verified_companies=None
             unverified_companies=None
         if request.POST.get('report_type') == 'Companies - Verified':
-            v_companies = Company.objects.filter(is_verified=True)
+            v_companies = Company.objects.filter(is_verified=True, company_type='SUPPLIER')
             verified_companies = []
 
             for company in v_companies:
@@ -510,7 +511,7 @@ def report_generator(request):
             revs = None
             unverified_companies=None
         if request.POST.get('report_type') == 'Companies - Unverified':
-            uv_companies = Company.objects.filter(is_verified=False)
+            uv_companies = Company.objects.filter(is_verified=False, company_type='SUPPLIER')
             unverified_companies = []
 
             for company in uv_companies:
