@@ -54,6 +54,7 @@
                         <thead>
                         <tr>
                             <th>Date</th>
+                            <th>Time</th>
                             <th>User</th>
                             <th>Company</th>
                             <th>Service Station & Depots</th>
@@ -66,6 +67,7 @@
                         {% for trail in trails %}
                             <tr>
                                 <td>{{trail.date}}</td>
+                                <td>{{trail.time}}</td>
                                 <td>{{trail.user}}</td>
                                 <td>{{trail.company.name|title}}</td>
                                 <td>{{trail.service_station.name}}</td>
