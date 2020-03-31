@@ -131,6 +131,7 @@ def add_supplier_admin(request, id):
         user = User.objects.create(company=company, first_name=first_name, last_name=last_name, email=email, phone_number=phone_number.replace(' ', ''),
         user_type='S_ADMIN', is_active=True, username=username.lower(), password_reset=True)
         user.set_password(password)
+        user.save()
         message_is_sent(request, user, password)
         messages.success(request, 'User successfully created')
         return redirect ('zeraPortal:dashboard')
