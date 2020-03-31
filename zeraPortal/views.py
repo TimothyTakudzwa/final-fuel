@@ -59,7 +59,7 @@ def dashboard(request):
             new_company.save()
             CompanyFuelUpdate.objects.create(company=new_company)
             messages.success(request, 'Company successfully registered')
-            return render(request, 'zeraPortal/companies.html', {'companies': companies, 'administrater' : 'show', 'zimbabwean_towns':zimbabwean_towns})
+            return render(request, 'zeraPortal/companies.html', {'companies': companies, 'new_company': new_company, 'administrater' : 'show', 'zimbabwean_towns':zimbabwean_towns})
         else:
             messages.warning(request, 'License number already exists!!!')
             return redirect('zeraPortal:dashboard')
@@ -109,6 +109,7 @@ def edit_company(request, id):
 
 def add_supplier_admin(request, id):
     company = Company.objects.filter(id=id).first()
+    print('hhhhhhhhhhh is co', company.name)
     first_name = request.POST['first_name']
     last_name = request.POST['last_name']
     email = request.POST['email']
