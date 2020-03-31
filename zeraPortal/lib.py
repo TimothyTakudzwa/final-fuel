@@ -61,7 +61,7 @@ def get_weekly_sales(this_week):
         day_trans = Transaction.objects.filter(date=day, is_complete=True)
         if day_trans:
             for tran in day_trans:
-                weeks_revenue += (tran.offer.request.amount * tran.offer.price)
+                weeks_revenue += (float(tran.offer.request.amount) * float(tran.offer.price))
         else:
             weeks_revenue = 0
         weekly_data[day.strftime("%a")] = int(weeks_revenue)
@@ -129,7 +129,7 @@ def get_aggregate_total_revenue():
     
     if trans:
         for transaction in trans:
-            revenue += (transaction.offer.request.amount * transaction.offer.price)
+            revenue += (float(transaction.offer.request.amount) * float(transaction.offer.price))
     else:
         revenue = 0        
     return revenue
