@@ -54,6 +54,7 @@
             <thead style="background-color: lightslategray; color:white;">
                 <tr>
                     <th style="color: white;">Date</th>
+                    <th style="color: white;">Time</th>
                     <th style="color: white;">Company</th>
                     <th style="color: white;">User</th>
                     <th style="color: white;">Contact</th>
@@ -66,6 +67,7 @@
                 {% for client in clients %}
                 <tr>
                     <td>{{ client.date }}</td>
+                    <td>{{ client.time }}</td>
                     <td>{{ client.buyer_company }}</td>
                     <td>{{ client.applied_by.first_name }} {{client.applied_by.lastname}}</td>
                     <td>{{client.applied_by.phone_number}}</td>                    

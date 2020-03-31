@@ -52,6 +52,9 @@
                                 Date
                             </th>
                             <th>
+                                Time
+                            </th>
+                            <th>
                                 Subsidiary
                             </th>
                             <th>
@@ -90,6 +93,7 @@
                         {% for sord in sord_sales%}
                         <tr>
                             <td>{{sord.date}}</td>
+                            <td>{{sord.time}}</td>
                             <td>{{sord.subsidiary.name}}</td>
                             <td>{{sord.sord_no}}</td>
                             <td>{{sord.action_no}}</td>
