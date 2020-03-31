@@ -226,7 +226,32 @@
 
     <script>
         $(document).ready(function () {
-            $('#delivery').DataTable();
+            $('#delivery_schedule').DataTable(
+                {
+                "order": [[ 1, 'desc' ], [ 2, 'desc' ]]
+                }
+            );
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#delivery').DataTable(
+                {
+                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
+                "columnDefs": [
+                {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 1 ],
+                "visible": false
+            }
+                    ]
+                }
+            );
         });
     </script>
     <script>
@@ -236,7 +261,22 @@
     </script>
     <script>
         $(document).ready(function () {
-            $('#offer').DataTable();
+            $('#offer').DataTable(
+                {
+                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
+                "columnDefs": [
+                {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 1 ],
+                "visible": false
+            }
+                    ]
+                }
+            );
         });
     </script>
 
@@ -248,12 +288,47 @@
 
    <script>
         $(document).ready(function () {
-            $('#fuel_updates').DataTable();
+            $('#fuel_updates').DataTable({
+                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
+                "columnDefs": [
+                {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 1 ],
+                "visible": false
+            }
+                    ]
+                });
         });
     </script>
     <script>
         $(document).ready(function () {
-            $('#fuel_updates_complete').DataTable();
+            $('#payment_history').DataTable({
+                "order": [[ 0, 'desc' ]]
+                });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#fuel_requests').DataTable(
+                {
+                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
+                "columnDefs": [
+                {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 1 ],
+                "visible": false
+            }
+                    ]
+                }
+            );
         });
     </script>
     <script>

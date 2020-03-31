@@ -170,6 +170,7 @@
             <thead style="background-color: lightslategray; color:white;">
                 <tr>
                     <th style="color: white;">Date</th>
+                    <th style="color: white;">Time</th>
                     <th style="color: white;">Company</th>
                     <th style="color: white;">Address</th>
                     <th style="color: white;">Fuel</th>
@@ -184,6 +185,7 @@
                 {% for order in orders %}
                 <tr>
                     <td>{{ order.date }}</td>
+                    <td>{{ order.time }}</td>
                     <td>{{ order.company.name|lower|title }}</td>
                     <td>{{ order.company.address|lower|title }}</td>
                     <td>{{ order.fuel_type|lower|capfirst }}</td>

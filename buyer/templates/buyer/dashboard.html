@@ -125,6 +125,8 @@
                     <table id="fuel_updates" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                         <tr style="background-color: gray;color: white;">
+                            <th>Date</th>
+                            <th>Time</th>
                             <th>Company Name</th>
                             <th>Depot</th>
                             <th>Supplier Rating</th>
@@ -141,6 +143,12 @@
 
                         {% for data in updates %}
                             <tr>
+                                <td>
+                                    {{data.date}}
+                                </td>
+                                <td>
+                                    {{data.time}}
+                                </td>
                                 <td>
                                     {{data.company}}
                                 </td>

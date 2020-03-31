@@ -234,7 +234,17 @@
    
    <script>
         $(document).ready(function () {
-            $('#allocations').DataTable();
+            $('#allocations').DataTable(
+                {
+                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
+                "columnDefs": [
+            {
+                "targets": [ 1 ],
+                "visible": false
+            }
+                    ]
+                }
+            );
         });
     </script>
     <!-- jquery-ui -->

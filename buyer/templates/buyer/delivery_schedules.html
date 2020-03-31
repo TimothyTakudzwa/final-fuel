@@ -43,6 +43,8 @@
             <table id="delivery" class="table table-striped table-bordered" style="width:100%">
                 <thead style="background-color: lightslategray; color:white;">
                     <tr>
+                        <th style="color: white;">Date</th>
+                        <th style="color: white;">Time</th>
                         <th style="color: white;">Supplier</th>
                         <!-- <th style="color: white;">Delivery Date</th>
                         <th style="color: white;">Delivery Time</th> -->
@@ -58,6 +60,8 @@
                 <tbody>
                     {% for delivery in schedules %}
                     <tr>
+                        <td>{{ delivery.date }}</td>
+                        <td>{{ delivery.time }}</td>
                         <td>{{ delivery.subsidiary }}</td>
                         <!--<td>{{ delivery.date }}</td>
                         <td>{{ delivery.delivery_time }}</td>-->
