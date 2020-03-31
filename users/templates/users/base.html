@@ -520,9 +520,17 @@
     $(document).ready(function() {
       $('#sord_allocations').DataTable({"order": [[ 0, "desc" ]]}); 
     } );
+
     $(document).ready(function() {
-      $('#sord_station_sales').DataTable({"order": [[ 0, "desc" ]]}); 
+      $('#sord_station_sales').DataTable({
+                "columnDefs": [ {
+                    "targets": [ 1 ],
+                    "visible": false
+                } ],
+                "order": [[ 0, 'asc' ], [ 1, 'asc' ]]
+            }); 
     } );
+
     $(document).ready(function() {
       $('#station_staff').DataTable({"order": [[ 0, "desc" ]]}); 
     } );
@@ -530,7 +538,13 @@
       $('#depot_staff').DataTable({"order": [[ 0, "desc" ]]}); 
     } );
     $(document).ready(function() {
-      $('#audit_trail').DataTable({"order": [[ 0, "desc" ]]}); 
+      $('#audit_trail').DataTable({
+                "columnDefs": [ {
+                    "targets": [ 1 ],
+                    "visible": false
+                } ],
+                "order": [[ 0, 'asc' ], [ 1, 'asc' ]]
+            }); 
     } );
     $(document).ready(function() {
       $('#staff_applications').DataTable({"order": [[ 0, "desc" ]]}); 
@@ -546,7 +560,33 @@
       $('#audit_table').DataTable({"order": [[ 0, "desc" ]]}); 
     } );
     $(document).ready(function() {
-      $('#client_application').DataTable({"order": [[ 0, "desc" ]]}); 
+      $('#client_application').DataTable({
+                "columnDefs": [ {
+                    "targets": [ 1 ],
+                    "visible": false
+                } ],
+                "order": [[ 0, 'asc' ], [ 1, 'asc' ]]
+            }); 
+    } );
+
+    $(document).ready(function() {
+      $('#orders').DataTable({
+                "columnDefs": [ {
+                    "targets": [ 1 ],
+                    "visible": false
+                } ],
+                "order": [[ 0, 'asc' ], [ 1, 'asc' ]]
+            }); 
+    } );
+
+    $(document).ready(function() {
+      $('#sord_actions').DataTable({
+                "columnDefs": [ {
+                    "targets": [ 1 ],
+                    "visible": false
+                } ],
+                "order": [[ 0, 'asc' ], [ 1, 'asc' ]]
+            }); 
     } );
     
     $(document).ready(function() {

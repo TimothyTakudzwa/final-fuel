@@ -58,6 +58,7 @@
                         <tr>
                             <th style="color: white;"></th>
                             <th style="color: white;"> Date </th>
+                            <th style="color: white;"> Time </th>
                             <th style="color: white;">Company</th>
                             <th style="color: white;">Delivery Address</th>
                             <th style="color: white;">Fuel </th>
@@ -79,6 +80,7 @@
                             <tr>
                                 <td></td>
                                 <td>{{ transaction.date }}</td>
+                                <td>{{ transaction.time }}</td>
                                 <td>{{ transaction.buyer.company.name }}</td>
                                 {% if transaction.offer.request.delivery_address != None %}
                                     <td>{{transaction.offer.request.delivery_address}}</td>
@@ -577,6 +579,7 @@
                         <tr>
                             <th style="color: white;"></th>
                             <th style="color: white;"> Date </th>
+                            <th style="color: white;"> Time </th>
                             <th style="color: white;">Company</th>
                             <th style="color: white;">Delivery Address</th>
                             <th style="color: white;">Fuel </th>
@@ -598,6 +601,7 @@
                             <tr>
                                 <td></td>
                                 <td>{{ transaction.date }}</td>
+                                <td>{{ transaction.time }}</td>
                                 <td>{{ transaction.buyer.company.name }}</td>
                                 {% if transaction.offer.request.delivery_address != None %}
                                     <td>{{transaction.offer.request.delivery_address}}</td>

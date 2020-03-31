@@ -133,19 +133,19 @@ def allocated_fuel(request, sid):
             if int(request.POST['quantity']) > company_quantity.unallocated_petrol:
                 messages.warning(request,
                                  f'You can not allocate fuel above your company petrol capacity of {company_quantity.unallocated_petrol}')
-                return redirect('users:allocate')
+                return redirect(f'/users/allocated_fuel/{sid}')
             if request.POST['fuel_payment_type'] == "RTGS":
                 if float(request.POST['price']) > company_quantity.petrol_price:
                     messages.warning(request,
                                      f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}')
-                    return redirect('users:allocate')
+                    return redirect(f'/users/allocated_fuel/{sid}')
                 else:
                     pass
             elif request.POST['fuel_payment_type'] == "USD":
                 if float(request.POST['price']) > company_quantity.usd_petrol_price:
                     messages.warning(request,
                                      f'You can not set price above NOIC petrol price of {company_quantity.usd_petrol_price}')
-                    return redirect('users:allocate')
+                    return redirect(f'/users/allocated_fuel/{sid}')
                 else:
                     pass
             fuel_updated = SuballocationFuelUpdate.objects.create(subsidiary=sub,
@@ -165,23 +165,24 @@ def allocated_fuel(request, sid):
             company_quantity.unallocated_petrol = company_quantity.unallocated_petrol - int(request.POST['quantity'])
             company_quantity.save()
             messages.success(request, 'Fuel Allocation SUccesful')
+            return redirect(f'/users/allocated_fuel/{sid}')
         else:
             if int(request.POST['quantity']) > company_quantity.unallocated_diesel:
                 messages.warning(request,
                                  f'You can not allocate fuel above your company diesel capacity of {company_quantity.unallocated_diesel}')
-                return redirect('users:allocate')
+                return redirect(f'/users/allocated_fuel/{sid}')
             if request.POST['fuel_payment_type'] == "RTGS":
                 if float(request.POST['price']) > company_quantity.diesel_price:
                     messages.warning(request,
                                      f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}')
-                    return redirect('users:allocate')
+                    return redirect(f'/users/allocated_fuel/{sid}')
                 else:
                     pass
             elif request.POST['fuel_payment_type'] == "USD":
                 if float(request.POST['price']) > company_quantity.usd_diesel_price:
                     messages.warning(request,
                                      f'You can not set price above NOIC diesel price of {company_quantity.usd_diesel_price}')
-                    return redirect('users:allocate')
+                    return redirect(f'/users/allocated_fuel/{sid}')
                 else:
                     pass
             fuel_updated = SuballocationFuelUpdate.objects.create(subsidiary=sub,
@@ -389,7 +390,7 @@ def allocation_update(request, id):
                 if int(request.POST['quantity']) > company_quantity.unallocated_diesel:
                     messages.warning(request,
                                      f'You can not allocate fuel above your company diesel quantity of {company_quantity.unallocated_diesel}')
-                    return redirect('users:allocate')
+                    return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                 fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['quantity'])
                 depot.diesel_quantity = depot.diesel_quantity + int(request.POST['quantity'])
 
@@ -585,12 +586,12 @@ def allocation_update_main(request, id):
                 if int(request.POST['quantity']) > company_quantity.unallocated_petrol:
                     messages.warning(request,
                                      f'You can not allocate fuel above your company petrol quantity of {company_quantity.unallocated_petrol}')
-                    return redirect('users:allocate')
+                    return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                 fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['quantity'])
                 if float(request.POST['price']) > company_quantity.petrol_price:
                     messages.warning(request,
                                      f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}')
-                    return redirect('users:allocate')
+                    return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                 else:
                     fuel_update.petrol_price = float(request.POST['price'])
                 company_quantity.unallocated_petrol = company_quantity.unallocated_petrol - int(
@@ -600,12 +601,12 @@ def allocation_update_main(request, id):
                 if int(request.POST['quantity']) > company_quantity.unallocated_diesel:
                     messages.warning(request,
                                      f'You can not allocate fuel above your company diesel quantity of {company_quantity.unallocated_diesel}')
-                    return redirect('users:allocate')
+                    return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                 fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['quantity'])
                 if float(request.POST['price']) > company_quantity.diesel_price:
                     messages.warning(request,
                                      f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}')
-                    return redirect('users:allocate')
+                    return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                 else:
                     fuel_update.diesel_price = request.POST['price']
                 company_quantity.unallocated_diesel = company_quantity.unallocated_diesel - int(
@@ -756,7 +757,7 @@ def allocation_update_main(request, id):
             action = f"You have allocated {request.POST['fuel_type']} quantity of {int(request.POST['quantity'])}L @ {fuel_update.petrol_price} "
             Audit_Trail.objects.create(company=request.user.company, service_station=service_station, user=request.user,
                                        action=action, reference=reference, reference_id=reference_id)
-            return redirect('users:allocate')
+            return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
 
         else:
             messages.success(request, 'Subsidiary does not exists')
@@ -796,6 +797,8 @@ def stations(request):
              'Daylesford', 'Mkoba', 'Riverside', 'Southview', 'Nehosho', 'Clydesdale Park', 'Lundi Park', 'Montrose',
              'Ascot', 'Ridgemont', 'Windsor Park', 'Ivene', 'Haben Park', 'Bata', 'ThornHill Air Field' 'Green Dale',
              'Bristle', 'Southdowns']
+    form1 = SupplierContactForm()
+    form = DepotContactForm()
     if request.method == 'POST':
         name = request.POST['name']
         city = request.POST['city']
@@ -836,7 +839,7 @@ def stations(request):
             messages.success(request, 'Subsidiary created successfully')
             return render(request, 'users/service_stations.html',
                   {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
-                   'Mutare': Mutare, 'Gweru': Gweru, 'subsidiary': subsidiary, 'add_user' : 'show'})
+                   'Mutare': Mutare, 'Gweru': Gweru, 'subsidiary': subsidiary, 'form': form, 'form1': form1, 'add_user' : 'show'})
 
         else:
             fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=subsidiary,
@@ -845,7 +848,7 @@ def stations(request):
             messages.success(request, 'Subsidiary created successfully')
             return render(request, 'users/service_stations.html',
                   {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
-                   'Mutare': Mutare, 'Gweru': Gweru, 'subsidiary': subsidiary, 'add_user' : 'show'})
+                   'Mutare': Mutare, 'Gweru': Gweru, 'subsidiary': subsidiary, 'form': form, 'form1': form1, 'add_user' : 'show'})
 
 
     return render(request, 'users/service_stations.html',
@@ -898,7 +901,7 @@ def suppliers_list(request):
                                 company=request.user.company, email=email,
                                 phone_number=phone_number, password_reset=True)
         subsidiary = Subsidiaries.objects.filter(id=subsidiary_id).first()
-        if subsidiary.is_depot == True:
+        if subsidiary.is_depot == False:
             user.user_type = 'SS_SUPPLIER' 
             user.save()
             fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()

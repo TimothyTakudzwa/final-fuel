@@ -49,6 +49,7 @@
                             <tr>
                               <th style="color: white;"></th>
                                 <th style="color: white;">Date</th>
+                                <th style="color: white;">Time</th>
                                 <th style="color: white;">Buyer</th>
                                 <th style="color: white;">Fuel</th>
                                 <th style="color: white;">Requested</th>
@@ -66,6 +67,7 @@
                             <tr>
                               <td></td>
                               <td>{{ offer.date }}</td>
+                              <td>{{ offer.time }}</td>
                               <td>{{ offer.request.name.first_name|lower|capfirst }} {{ offer.request.name.last_name|lower|capfirst }}</td>
                               <td>{{ offer.request.fuel_type|lower|capfirst }}</td>
                               <td>{{ offer.request.amount|intcomma }}</td>
