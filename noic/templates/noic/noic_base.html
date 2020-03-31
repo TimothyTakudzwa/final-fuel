@@ -235,7 +235,17 @@
 
     <script>
         $(document).ready(function () {
-            $('#fuel_request').DataTable();
+            $('#orders').DataTable(
+                {
+                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
+                "columnDefs": [
+            {
+                "targets": [ 1 ],
+                "visible": false
+            }
+                    ]
+                }
+            );
         });
     </script>
 
@@ -257,7 +267,17 @@
    
    <script>
         $(document).ready(function () {
-            $('#allocations').DataTable();
+            $('#allocations').DataTable(
+                {
+                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
+                "columnDefs": [
+            {
+                "targets": [ 1 ],
+                "visible": false
+            }
+                    ]
+                }
+            );
         });
     </script>
     <!-- jquery-ui -->

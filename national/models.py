@@ -27,6 +27,7 @@ class NoicDepot(models.Model):
 
 class Order(models.Model):
     date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True, null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     quantity =  models.FloatField(default=0.00)
     fuel_type = models.CharField(max_length=150, blank=True, null=True)
@@ -45,9 +46,13 @@ class Order(models.Model):
     driver_id = models.CharField(max_length=150, blank=True, null=True)
     noic_depot = models.ForeignKey(NoicDepot, on_delete=models.DO_NOTHING, related_name='company_allocation', blank=True, null=True)
 
+    class Meta:
+        ordering = ['-date', '-time']
+
 
 class NationalFuelUpdate(models.Model):
     date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True, null=True)
     allocated_petrol =  models.FloatField(default=0.00)
     allocated_diesel =  models.FloatField(default=0.00)
     unallocated_petrol =  models.FloatField(default=0.00)
@@ -56,10 +61,14 @@ class NationalFuelUpdate(models.Model):
     petrol_price = models.DecimalField(max_digits=10, default=0.00, decimal_places=2)
     currency = models.CharField(max_length=255, null=True, choices=(('USD', 'USD'), ('RTGS', 'RTGS')))
 
+    class Meta:
+        ordering = ['-date', '-time']
+
 
 class SordNationalAuditTrail(models.Model):
     order = models.ForeignKey(Order, on_delete=models.DO_NOTHING, related_name='company_order', blank=True, null=True)
     date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True, null=True)
     sord_no =  models.CharField(max_length=100, blank=True, null=True)
     action_no = models.PositiveIntegerField(blank=True, null=True)
     action = models.CharField(max_length=150, blank=True, null=True)
@@ -80,6 +89,10 @@ class SordNationalAuditTrail(models.Model):
 
     def __str__(self):
         return f'{self.id} -- SordNationalAuditTrail'
+
+    class Meta:
+        ordering = ['-date', '-time']
+        
         
 class DepotFuelUpdate(models.Model):
     depot = models.ForeignKey(NoicDepot, on_delete=models.CASCADE, blank=True, null=True)
