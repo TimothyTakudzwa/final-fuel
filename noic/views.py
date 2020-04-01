@@ -505,11 +505,11 @@ def report_generator(request):
         start_date = request.POST.get('start_date') 
         end_date = request.POST.get('end_date')
         if start_date:
-            start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
             start_date = start_date.date()
         report_type = request.POST.get('report_type')
         if end_date:
-            end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
             stock = type('test', (object,), {})()
