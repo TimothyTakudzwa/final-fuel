@@ -330,7 +330,7 @@
                                                         <div class="form-group col-md-6">
                                                             <label for="exampleInputEmail1">Starting Date</label>
                                                             <input name="start_date" type="date" class="form-control"
-                                                                id="exampleInputEmail1" aria-describedby="emailHelp"
+                                                                id="starting_date" aria-describedby="emailHelp"
                                                                 placeholder="Enter email" required>
                                                             <small id="emailHelp" class="form-text text-muted">Please Pick A Starting
                                                                 Date.</small>
@@ -338,14 +338,17 @@
                 
                                                         <div class="form-group col-md-6">
                                                             <label for="exampleInputEmail1">Ending Date</label>
-                                                            <input name="end_date" type="date" class="form-control" id="exampleInputEmail1"
+                                                            <input name="end_date" type="date" class="form-control" id="ending_date"
                                                                 aria-describedby="emailHelp" placeholder="Enter email" required>
                                                             <small id="emailHelp" class="form-text text-muted"
                                                                 style="color: lightslategray;">Please Pick A Ending Date.</small>
                                                         </div>
                                                     </div>    
                 
-                                                    <input class="btn btn-info" type="submit" value="Submit">
+                                                    <div class="modal-footer">  
+                                                        <button type="submit" class="btn btn-primary ">Generate Report</button>
+                                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                    </div> 
                                                 </form>
                 
                                             </div>
@@ -1810,12 +1813,26 @@ table5.columns().eq(0).each(function (colIdx) {
 
 
         
-    $('#report_options').change(function () {
+$('#report_options').change(function () {
         var selected = $('#report_options option:selected').text();
         if (selected == "Stock" || selected == "Companies - Verified" || selected == "Companies - Unverified" ){
             $('.report_dates').hide();
+            $('#starting_date').removeAttr('required');
+            $('#ending_date').removeAttr('required');
         }else{
             $('.report_dates').show();
+            if ($('#starting_date').attr('required')){
+                console.log('iripo');
+            }else{
+                console.log('wabvisa');
+                $('#starting_date').attr('required', 'true')
+            }
+            if ($('#ending_date').attr('required')){
+                console.log('iripo');
+            }else{
+                console.log('wabvisa');
+                $('#ending_date').attr('required', 'true')
+            }
         }
     });
 

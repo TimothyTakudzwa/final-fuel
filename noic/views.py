@@ -1,6 +1,7 @@
 import secrets
 from validate_email import validate_email
-from datetime import datetime, timedelta, date
+# from datetime import datetime, timedelta, date
+import datetime
 
 from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404, redirect
@@ -512,7 +513,7 @@ def report_generator(request):
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
             stock = type('test', (object,), {})()
-            stock.date = datetime.datetime.today()
+            stock.date = datetime.today()
             stock.usd, stock.zwl = get_current_usd_stock(), get_current_zwl_stock()
 
             allocations_per_supplier = None
