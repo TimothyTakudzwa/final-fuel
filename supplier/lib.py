@@ -28,7 +28,7 @@ def client_revenue(supplier_id,buyer_company):
     supplier = User.objects.filter(id=supplier_id).first()
     cash_trans = 0
     for trans in Transaction.objects.filter(supplier=supplier, buyer__company=buyer_company, is_complete=True):
-        cash_trans += (decimal.Decimal(trans.offer.request.amount) * trans.offer.price)
+        cash_trans += (trans.offer.request.amount * trans.offer.price)
     return cash_trans
 
 def total_requests(buyer_company):
@@ -42,7 +42,7 @@ def transactions_total_cost(buyer):
     trans = Transaction.objects.filter(buyer=buyer, is_complete=True).all()
     if trans:
         for tran in trans:
-            revenue += (tran.offer.request.amount * tran.offer.price)
+            revenue += (decimal.Decimal(tran.offer.request.amount) * tran.offer.price)
     return revenue 
 
 def total_offers(buyer):
