@@ -58,6 +58,7 @@
                         <tr>
                             <th style="color: white;"></th>
                             <th style="color: white;"> Date </th>
+                            <th style="color: white;"> Time </th>
                             <th style="color: white;">Company</th>
                             <th style="color: white;">Delivery Address</th>
                             <th style="color: white;">Fuel </th>
@@ -79,6 +80,7 @@
                             <tr>
                                 <td></td>
                                 <td>{{ transaction.date }}</td>
+                                <td>{{ transaction.time }}</td>
                                 <td>{{ transaction.buyer.company.name }}</td>
                                 {% if transaction.offer.request.delivery_address != None %}
                                     <td>{{transaction.offer.request.delivery_address}}</td>
@@ -498,7 +500,10 @@
                                                 <div class="modal-footer">
                                                     <div >
 
-                                                        <button type="submit" class="btn btn-primary col-sm-12" style="margin-left: 15px;">Approve</button>
+                                                        <button type="submit" class="btn btn-primary" style="margin-left: 15px;">Approve</button>
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">
+                                                            Close
+                                                        </button>
                                                     </div>
                                                 </div>
 
@@ -574,6 +579,7 @@
                         <tr>
                             <th style="color: white;"></th>
                             <th style="color: white;"> Date </th>
+                            <th style="color: white;"> Time </th>
                             <th style="color: white;">Company</th>
                             <th style="color: white;">Delivery Address</th>
                             <th style="color: white;">Fuel </th>
@@ -595,6 +601,7 @@
                             <tr>
                                 <td></td>
                                 <td>{{ transaction.date }}</td>
+                                <td>{{ transaction.time }}</td>
                                 <td>{{ transaction.buyer.company.name }}</td>
                                 {% if transaction.offer.request.delivery_address != None %}
                                     <td>{{transaction.offer.request.delivery_address}}</td>
@@ -1065,12 +1072,12 @@
         function check_visible(){
           if ($('#transactions_complete').is(':visible')){
             $("#toggle_button").prop("value", "Pama");
-            $("#toggle_button").html("Click To View Complete Transactions")
+            $("#toggle_button").html("Click To View Incomplete Transactions")
       
           }else{
       
             $("#toggle_button").prop("value", "Pama");
-            $("#toggle_button").html("Click To View Incomplete Transaction")
+            $("#toggle_button").html("Click To View Complete Transaction")
           }
         }
       </script>

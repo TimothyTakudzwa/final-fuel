@@ -51,6 +51,7 @@
                             <tr>
                                 <th style="color: white;"></th>
                                 <th style="color: white;"> Date </th>
+                                <th style="color: white;"> Time </th>
                                 <th style="color: white;">Buyer Name</th>
                                 <th style="color: white;">Company</th>
                                 <th style="color: white;">Fuel Type</th>
@@ -66,6 +67,7 @@
                             <tr>
                                 <td></td>
                                 <td>{{ transaction.date }}</td>
+                                <td>{{ transaction.time }}</td>
                                 <td>{{ transaction.buyer.first_name|lower|capfirst }} {{ transaction.buyer.last_name|lower|capfirst }}</td>
                                 <td>{{ transaction.buyer.company.name }}</td>
                                 <td>{{ transaction.offer.request.fuel_type|lower|capfirst }}</td>

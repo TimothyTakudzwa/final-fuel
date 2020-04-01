@@ -16,11 +16,11 @@
   </div>
   <div class="header-title">
 
-      <h1> {{buyer.name|title}}'s</h1>
+      <h1> {{buyer.company.name|title}}'s</h1>
       <small>Transaction History</small>
       <ol class="breadcrumb hidden-xs">
-          <li><a href="{% url 'users:allocate' %}"><i class="pe-7s-home"></i> Home</a></li>
-          <li class="active"> {{buyer.name|title}} Transaction History</li>
+          <li><a href="{% url 'zeraPortal:dashboard' %}"><i class="pe-7s-home"></i> Home</a></li>
+          <li class="active"> {{buyer.company.name|title}} Transaction History</li>
       </ol>
 
   </div>
@@ -28,20 +28,27 @@
   </section>
 
 
-<div class="jumbotron jumbotron-fluid">
-    <div class="container">
-
-        <p class="lead" style="padding-left: 15px;padding-top: 30px;">
-            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#state_modal"
-                role="button" style="color: white;">Filtered State - {{ state }}</button>
-            
-            <!--    
-            <button class="btn btn-info btn-lg" data-toggle="modal" data-target="#trans_info_modal"
-                role="button" style="color: white;">View Quick Info</button> -->
-
-        </p>
+<div class="jumbotron jumbotron-fluid" style="padding-bottom: 0px;">
+    <div class="container" style="padding-left: 0;margin-left: 30px;width: 100%;">
+        <div class="panel panel-bd">
+            <div class="panel-heading">
+                <div class="view-header">
+                    <div class="header-icon">
+                        <i class="pe-7s-filter" style="font-size: 42px;"></i>
+                    </div>
+                    <div class="header-title">
+                        <h3>Filter</h3>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <p class="lead">
+                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#state_modal" role="button" style="color: white;">Filtered State - {{ state }}</button>
+                </p>
+            </div>
         
-        
+        </div>
     </div>
 </div>
 
@@ -52,20 +59,27 @@
                 <span class="modal-title" style="color:whitesmoke"> Filter By State</span>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body" style="background:#eeee">
+            <div class="modal-body">
 
                 <form method="POST" action="/zeraPortal/clients_history/{{buyer.id}}">
                     {% csrf_token %}
-                    <div class="form-group">
-                        <select name="report_type" class="browser-default custom-select" id="report_options">
+                    <div class="form-group" style="padding-left: 30px;padding-top: 15px;font-size: 16px;color: grey;">
+                        <label>Please Select Filter Option</label>
+                    </div>
+                    <div class="form-group" style="padding-left: 30px;padding-right: 30px;padding-bottom: 30px; padding-top: 15px;">
+                        <select class="form-control" name="report_type" class="browser-default custom-select" id="report_options">
                             <option selected>Completed</option>
                             <option value="Incomplete">Incomplete</option>
                             <option value="All">All</option>
                         </select>
                     </div>
                        
+                    <div class="modal-footer">  
+                        <button type="submit" class="btn btn-primary ">Submit</button>
+                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                    </div> 
 
-                    <input class="btn btn-info" type="submit" value="Submit">
+                    
                 </form>
 
             </div>
@@ -73,6 +87,13 @@
     </div>
 </div>
 
+<script>
+    $('body').click(function (event) {
+        if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#report_modal')) {
+            $("#state_modal").modal('hide');
+        }      
+    });
+</script> 
 <section class="content">
 <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
     <div class="panel-heading ui-sortable-handle">

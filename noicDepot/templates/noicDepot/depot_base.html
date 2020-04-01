@@ -80,7 +80,7 @@
                 </span>
                 <span class="logo-lg">
                     <!--<b>Admin</b>H-admin-->
-                    <h1>ZFMS</h1>
+                    <h1 style="text-align: left;">ZFMS</h1>
                 </span>
             </a>
             <!-- Header Navbar -->
@@ -92,6 +92,12 @@
                 </a>
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
+                        <li class="dropdown notifications-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="pe-7s-bell"></i>
+                                <span class="label label-warning">0</span>
+                            </a>
+                        </li>    
                         <li class="dropdown dropdown-user admin-user">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <!-- <div class="user-image">
@@ -234,7 +240,17 @@
    
    <script>
         $(document).ready(function () {
-            $('#allocations').DataTable();
+            $('#allocations').DataTable(
+                {
+                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
+                "columnDefs": [
+            {
+                "targets": [ 1 ],
+                "visible": false
+            }
+                    ]
+                }
+            );
         });
     </script>
     <!-- jquery-ui -->

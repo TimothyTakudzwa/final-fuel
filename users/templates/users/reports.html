@@ -106,7 +106,7 @@
                     <span class="logo-mini"> </span>
                     <span class="logo-lg">
 
-                        <h1>ZFMS</h1>
+                        <h1 style="text-align: left;">ZFMS</h1>
 
                     </span>
                 </a>
@@ -295,10 +295,66 @@
                                                 <section class="content" style="min-height: 1000px;">
                         
                             
-                        <button type="button" class="btn btn-labeled btn-success btn-lg"  data-toggle="modal" data-target="#report_modal"
-                        role="button" style="color: white; margin-left: 10px; margin-bottom: 30px;">
-                            <span class="btn-label"><i class="fa fa-cogs" aria-hidden="true"></i></span>Generate Report
-                        </button> 
+                                                    <div class="col-md-12" style="margin-bottom: 15px;">
+                                                        <div class="col-md-6" style="height: 166px;">    
+                                                            <button type="button" class="btn btn-labeled btn-success btn-lg" data-toggle="modal" data-target="#report_modal" role="button" style="margin-top: 57px;">
+                                                                <span class="btn-label"><i class="fa fa-cogs" aria-hidden="true"></i></span>Generate Report
+                                                            </button>
+                                                        </div>
+                                                        
+                                                        {% if trans or revs or stock or allocations or requests %}
+                                                        <div class="col-md-6" style="background-color: #009688;">
+                                                            <div class="container" style="margin-bottom: 30px">
+                                                                <blockquote class="quote-box">
+                                                                {% if trans or revs or requests or allocations %}
+                                                                <h1 style="color: white;font-size: 15px;">Showing results from <b style="color: gold;">{{start}}</b> to <b style="color: gold;">{{end}} </b> </h1>
+                                                                {% elif stock %}
+                                                                <h1 style="color:white;font-size: 15px;">Showing Current Stock Levels  - <b style="color: gold;">{{ request.user.company.name|title}}'s Subsidiaries</b> </h1>
+                                                                {% elif verified_companies %}
+                                                                <h1 style="color: white;font-size: 15px;">Showing Current Verified Companies </h1>
+                                                                {% elif unverified_companies %}
+                                                                <h1 style="color: white;font-size: 15px;">Showing Current Unverified Companies </h1>
+                            
+                                                                {% endif %}
+                                                                <hr>
+                                                                
+                                                                </blockquote>
+                                                            </div>
+                                                        </div>    
+                                                        {% else %}
+                                                        <!--
+                                                        <div style="/* padding: 25px; */background-color:rgb(14, 80, 100);border: #fafbfb 2px solid;border-radius: 10px;padding-left: 15px;padding-top: 30px;padding-bottom: 30px;margin-left: 15px;margin-top: -89px;">
+                                                        </div>
+                                                        -->
+                                                        <div class="col-md-6" style="background-color: #009688;">
+                                                            <div class="container col-md-12" style="margin-bottom: 30px">
+                                                                <blockquote class="quote-box">
+                                                                
+                                                                <h1 style="color: white;font-size: 15px; font-weight: 400;">No Data, Generate New Report </h1>
+                            
+                                                                <hr>
+                                                                <!-- <div class="blog-post-actions">
+                                                                    <p class="blog-post-bottom pull-left" style="padding:20px;">
+                                                                    {% if trans %}
+                                                                    Transactions
+                                                                    {% elif revs %}
+                                                                    Revenue
+                                                                    {% elif stock%}
+                                                                    Stock
+                                                                    {% elif allocations %}
+                                                                    Fuel Allocations
+                                                                    {% elif requests %}
+                                                                    Requests
+                                                                    {% endif %}
+                                                                    Report
+                                                                    </p>
+                                                                    
+                                                                </div> -->
+                                                                </blockquote>
+                                                            </div>
+                                                        </div>    
+                                                        {%endif%}
+                                                    </div> 
                               
                                     
                                     
@@ -326,7 +382,7 @@
                                                         <div class="form-group col-md-6">
                                                             <label for="exampleInputEmail1">Starting Date</label>
                                                             <input name="start_date" type="date" class="form-control"
-                                                                id="exampleInputEmail1" aria-describedby="emailHelp"
+                                                                id="starting_date" aria-describedby="emailHelp"
                                                                 placeholder="Enter email" required>
                                                             <small id="emailHelp" class="form-text text-muted">Please Pick A Starting
                                                                 Date.</small>
@@ -334,7 +390,7 @@
                 
                                                         <div class="form-group col-md-6">
                                                             <label for="exampleInputEmail1">Ending Date</label>
-                                                            <input name="end_date" type="date" class="form-control" id="exampleInputEmail1"
+                                                            <input name="end_date" type="date" class="form-control" id="ending_date"
                                                                 aria-describedby="emailHelp" placeholder="Enter email" required>
                                                             <small id="emailHelp" class="form-text text-muted"
                                                                 style="color: lightslategray;">Please Pick A Ending Date.</small>
@@ -342,7 +398,7 @@
                                                     </div>    
                 
                                                     <div class="modal-footer">  
-                                                        <button type="submit" class="btn btn-primary ">Save Changes</button>
+                                                        <button type="submit" class="btn btn-primary ">Generate Report</button>
                                                         <button class="btn btn-default" data-dismiss="modal" >Close</button>
                                                     </div> 
                                                 </form>
@@ -380,68 +436,7 @@
                             <!-- <div class="jumbotron jumbotron-fluid" style="background: linear-gradient(to right, #fdbb2d, #b21f1f, #1a2a6c);color: white;margin-bottom: 100px;"> -->
 
                         
-                        {% if trans or revs or stock or allocations or requests %}
-
-                        <div class="container" style="margin-bottom: 30px">
-                            <blockquote class="quote-box">
-                              {% if not stock %}
-                              <h1 style="color: #374767;font-size: 22px;">Showing results from <b>{{start}}</b> to <b>{{end}} </b> </h1>
-                              {% else %}
-                              <h1 style="color: #374767;font-size: 22px;">Showing Current Stock Levels  - {{ request.user.company.name|title}}'s Subsidiaries </h1>
-
-                              {% endif %}
-                              <hr>
-                              <div class="blog-post-actions">
-                                <p class="blog-post-bottom pull-left" style="padding:20px;">
-                                  {% if trans %}
-                                  Transactions
-                                  {% elif revs %}
-                                  Revenue
-                                  {% elif stock%}
-                                  Stock
-                                  {% elif allocations %}
-                                  Fuel Allocations
-                                  {% elif requests %}
-                                  Requests
-                                  {% endif %}
-                                  Report
-                                </p>
-                                
-                              </div>
-                            </blockquote>
-                        </div>
-                        {% else %}
-                        <!--
-                        <div style="/* padding: 25px; */background-color:rgb(14, 80, 100);border: #fafbfb 2px solid;border-radius: 10px;padding-left: 15px;padding-top: 30px;padding-bottom: 30px;margin-left: 15px;margin-top: -89px;">
-                        </div>
-                        -->
-
-                        <div class="container col-md-12" style="margin-bottom: 30px">
-                            <blockquote class="quote-box">
-                              
-                              <h1 style="color: lightslategray;font-size: 22px; font-weight: 400;">No Data, Generate New Report Above </h1>
-
-                              <hr>
-                              <!-- <div class="blog-post-actions">
-                                <p class="blog-post-bottom pull-left" style="padding:20px;">
-                                  {% if trans %}
-                                  Transactions
-                                  {% elif revs %}
-                                  Revenue
-                                  {% elif stock%}
-                                  Stock
-                                  {% elif allocations %}
-                                  Fuel Allocations
-                                  {% elif requests %}
-                                  Requests
-                                  {% endif %}
-                                  Report
-                                </p>
-                                
-                              </div> -->
-                            </blockquote>
-                        </div>
-                        {%endif%}  
+                        
                     
                         {%if trans%}
                         <div class="col-md-12">
@@ -1503,12 +1498,26 @@ table5.columns().eq(0).each(function (colIdx) {
 
 
         
-    $('#report_options').change(function () {
+$('#report_options').change(function () {
         var selected = $('#report_options option:selected').text();
-        if (selected == "Stock"){
+        if (selected == "Stock" || selected == "Companies - Verified" || selected == "Companies - Unverified" ){
             $('.report_dates').hide();
+            $('#starting_date').removeAttr('required');
+            $('#ending_date').removeAttr('required');
         }else{
             $('.report_dates').show();
+            if ($('#starting_date').attr('required')){
+                console.log('iripo');
+            }else{
+                console.log('wabvisa');
+                $('#starting_date').attr('required', 'true')
+            }
+            if ($('#ending_date').attr('required')){
+                console.log('iripo');
+            }else{
+                console.log('wabvisa');
+                $('#ending_date').attr('required', 'true')
+            }
         }
     });
 

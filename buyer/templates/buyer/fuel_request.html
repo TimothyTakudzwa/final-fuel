@@ -54,9 +54,11 @@
 
 
                 <div class="table-responsive">
-                    <table id="fuel_updates" class="table table-striped table-bordered" style="width:100%">
+                    <table id="fuel_requests" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr style="background-color: gray;color: white;">
+                                <th>Date</th>
+                                <th>Time</th>
                                 <th>Requested To</th>
                                 <th>Delivery Method</th>
                                 <th>Currency</th>
@@ -70,6 +72,12 @@
 
                             {% for fuel_request in fuel_requests %}
                             <tr>
+                                <td>
+                                    {{fuel_request.date}}
+                                </td>
+                                <td>
+                                    {{fuel_request.time}}
+                                </td>
                                 <td>
                                     <b>{{fuel_request.depot}} - {{fuel_request.request_company}}</b>
                                 </td>

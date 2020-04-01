@@ -54,6 +54,8 @@
                     <table id="fuel_updates" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                         <tr style="background-color: gray;color: white;">
+                            <th>Date</th>
+                            <th>Time</th>
                             <th>Depot</th>
                             <th>PickUp Address</th>
                             <th>Fuel</th>
@@ -72,6 +74,8 @@
 
                         {% for transaction in transactions %}
                             <tr>
+                                <td>{{transaction.date}}</td>
+                                <td>{{transaction.time}}</td>
                                 <td class="name truncate">{{transaction.depot}}</td>
                                 {% if transaction.offer.collection_address != None %}
                                     <td class="name truncate">{{transaction.offer.collection_address}}</td>
@@ -395,44 +399,44 @@
                                                     {% csrf_token %}
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
-                                                            <lable><b> Delivery Date:</b></lable>
+                                                            <label><b> Delivery Date:</b></label>
                                                             &nbsp;{{transaction.delivery_object.date }}
                                                         </div>
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Delivery Time:</b></lable>
+                                                            <label><b>Delivery Time:</b></label>
                                                             &nbsp;{{transaction.delivery_object.delivery_time }}
                                                         </div>
                                                     </div>
                                                     <div class="row">
 
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Driver Name:</b></lable>
+                                                            <label><b>Driver Name:</b></label>
                                                             &nbsp;{{transaction.delivery_object.driver_name }}
                                                         </div>
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Phone Number:</b></lable>
+                                                            <label><b>Phone Number:</b></label>
                                                             &nbsp;{{transaction.delivery_object.phone_number }}
                                                         </div>
                                                     </div>
                                                     <div class="row">
 
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Id Number:</b></lable>
+                                                            <label><b>Id Number:</b></label>
                                                             &nbsp;{{transaction.delivery_object.id_number }}
                                                         </div>
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Vehicle Reg:</b></lable>
+                                                            <label><b>Vehicle Reg:</b></label>
                                                             &nbsp;{{transaction.delivery_object.vehicle_reg }}
                                                         </div>
                                                     </div>
                                                     <div class="row">
 
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Amount Paid:</b></lable>
+                                                            <label><b>Amount Paid:</b></label>
                                                             &nbsp;{{transaction.paid }}
                                                         </div>
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Fuel Quantity:</b></lable>
+                                                            <label><b>Fuel Quantity:</b></label>
                                                             &nbsp;{{transaction.paid| div:transaction.offer.price |intcomma}}
                                                         </div>
                                                     </div>
@@ -817,44 +821,44 @@
                                                     {% csrf_token %}
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
-                                                            <lable><b> Delivery Date:</b></lable>
+                                                            <label><b> Delivery Date:</b></label>
                                                             &nbsp;{{transaction.delivery_object.date }}
                                                         </div>
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Delivery Time:</b></lable>
+                                                            <label><b>Delivery Time:</b></label>
                                                             &nbsp;{{transaction.delivery_object.delivery_time }}
                                                         </div>
                                                     </div>
                                                     <div class="row">
 
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Driver Name:</b></lable>
+                                                            <label><b>Driver Name:</b></label>
                                                             &nbsp;{{transaction.delivery_object.driver_name }}
                                                         </div>
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Phone Number:</b></lable>
+                                                            <label><b>Phone Number:</b></label>
                                                             &nbsp;{{transaction.delivery_object.phone_number }}
                                                         </div>
                                                     </div>
                                                     <div class="row">
 
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Id Number:</b></lable>
+                                                            <label><b>Id Number:</b></label>
                                                             &nbsp;{{transaction.delivery_object.id_number }}
                                                         </div>
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Vehicle Reg:</b></lable>
+                                                            <label><b>Vehicle Reg:</b></label>
                                                             &nbsp;{{transaction.delivery_object.vehicle_reg }}
                                                         </div>
                                                     </div>
                                                     <div class="row">
 
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Amount Paid:</b></lable>
+                                                            <label><b>Amount Paid:</b></label>
                                                             &nbsp;{{transaction.paid }}
                                                         </div>
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Fuel Quantity:</b></lable>
+                                                            <label><b>Fuel Quantity:</b></label>
                                                             &nbsp;{{transaction.paid| div:transaction.offer.price |intcomma}}
                                                         </div>
                                                     </div>
@@ -912,12 +916,12 @@
             function check_visible(){
               if ($('#complete_trans').is(':visible')){
                 $("#toggle_button").prop("value", "Pama");
-                $("#toggle_button").html("Click To View Complete Transactions")
+                $("#toggle_button").html("Click To View Incomplete Transactions")
           
               }else{
           
                 $("#toggle_button").prop("value", "Pama");
-                $("#toggle_button").html(" Click To View Incomplete Transaction")
+                $("#toggle_button").html(" Click To View Complete Transactions")
               }
             }
           </script>

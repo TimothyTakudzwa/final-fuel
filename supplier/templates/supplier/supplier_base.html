@@ -84,7 +84,7 @@
                 </span>
                 <span class="logo-lg">
                     <!--<b>Admin</b>H-admin-->
-                    <h1>ZFMS</h1>
+                    <h1 style="text-align: left;">ZFMS</h1>
                     
                 </span>
             </a>
@@ -97,6 +97,26 @@
                 </a>
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
+                        <!-- Notifications -->
+                        <li class="dropdown notifications-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="pe-7s-bell"></i>
+                                <span class="label label-warning">0</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="header"><i class="fa fa-bell"></i>0 Notifications</li>
+                                <li>
+                                    <ul class="menu">
+                                        <li>
+                                        <a href="#" class="border-gray"><i class="fa fa-inbox"></i> Inbox  <span class=" label-success label label-default pull-right">0</span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                               <li class="footer">
+                               <a href="#"> See all Notifications <i class=" fa fa-arrow-right"></i></a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="dropdown dropdown-user admin-user">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <!-- <div class="user-image">
@@ -221,11 +241,10 @@
         $(document).ready(function() {
             var t = $('#fuel_request').DataTable( {
                 "columnDefs": [ {
-                    "searchable": false,
-                    "orderable": false,
-                    "targets": 0
+                    "targets": [ 2 ],
+                    "visible": false
                 } ],
-                "order": [[ 1, 'asc' ]]
+                "order": [[ 1, 'asc' ], [ 2, 'asc' ]]
             } );
          
             t.on( 'order.dt search.dt', function () {
@@ -239,13 +258,12 @@
 <script>
     $(document).ready(function() {
         var t = $('#offers').DataTable( {
-            "columnDefs": [ {
-                "searchable": false,
-                "orderable": false,
-                "targets": 0
-            } ],
-            "order": [[ 1, 'asc' ]]
-        } );
+                "columnDefs": [ {
+                    "targets": [ 2 ],
+                    "visible": false
+                } ],
+                "order": [[ 1, 'asc' ], [ 2, 'asc' ]]
+            } );
      
         t.on( 'order.dt search.dt', function () {
             t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
@@ -258,13 +276,12 @@
 <script>
     $(document).ready(function() {
         var t = $('#offers_pending').DataTable( {
-            "columnDefs": [ {
-                "searchable": false,
-                "orderable": false,
-                "targets": 0
-            } ],
-            "order": [[ 1, 'asc' ]]
-        } );
+                "columnDefs": [ {
+                    "targets": [ 2 ],
+                    "visible": false
+                } ],
+                "order": [[ 1, 'asc' ], [ 2, 'asc' ]]
+            } );
      
         t.on( 'order.dt search.dt', function () {
             t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
@@ -276,13 +293,12 @@
 <script>
     $(document).ready(function() {
         var t = $('#fuel_request_complete').DataTable( {
-            "columnDefs": [ {
-                "searchable": false,
-                "orderable": false,
-                "targets": 0
-            } ],
-            "order": [[ 1, 'asc' ]]
-        } );
+                "columnDefs": [ {
+                    "targets": [ 2 ],
+                    "visible": false
+                } ],
+                "order": [[ 1, 'asc' ], [ 2, 'asc' ]]
+            } );
      
         t.on( 'order.dt search.dt', function () {
             t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
@@ -295,13 +311,12 @@
 <script>
     $(document).ready(function() {
         var t = $('#transaction_incomplete_table').DataTable( {
-            "columnDefs": [ {
-                "searchable": false,
-                "orderable": false,
-                "targets": 0
-            } ],
-            "order": [[ 1, 'asc' ]]
-        } );
+                "columnDefs": [ {
+                    "targets": [ 2 ],
+                    "visible": false
+                } ],
+                "order": [[ 1, 'asc' ], [ 2, 'asc' ]]
+            } );
      
         t.on( 'order.dt search.dt', function () {
             t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
@@ -315,13 +330,12 @@
 <script>
     $(document).ready(function() {
         var t = $('#transactions').DataTable( {
-            "columnDefs": [ {
-                "searchable": false,
-                "orderable": false,
-                "targets": 0
-            } ],
-            "order": [[ 1, 'asc' ]]
-        } );
+                "columnDefs": [ {
+                    "targets": [ 2 ],
+                    "visible": false
+                } ],
+                "order": [[ 1, 'asc' ], [ 2, 'asc' ]]
+            } );
      
         t.on( 'order.dt search.dt', function () {
             t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {

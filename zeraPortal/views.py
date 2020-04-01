@@ -588,10 +588,9 @@ def statistics(request):
 
     for sub in branches:
         tran_amount = 0
-        sub_trans = Transaction.objects.filter(supplier__subsidiary_id=sub.id,
-                                               is_complete=True)
+        sub_trans = Transaction.objects.filter(is_complete=True)
         for sub_tran in sub_trans:
-            tran_amount += (sub_tran.offer.request.amount * sub_tran.offer.price)
+            tran_amount += (float(sub_tran.offer.request.amount) * float(sub_tran.offer.price))
         sub.tran_count = sub_trans.count()
         sub.tran_value = tran_amount
         subs.append(sub)
@@ -643,7 +642,7 @@ def statistics(request):
     return render(request, 'zeraPortal/statistics.html', { 'trans': trans, 'clients': clients,
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
                                                      'last_week_rev': last_week_rev,'city_sales_volume':city_sales_volume,
-                                                     'final_desperate_cities':final_desperate_cities})
+                                                     'final_desperate_cities':final_desperate_cities, 'sorted_subs':sorted_subs})
     
 
 def clients_history(request, cid):
@@ -657,7 +656,7 @@ def clients_history(request, cid):
             trns = Transaction.objects.filter(buyer=buyer, is_complete=True)
             trans = []
             for tran in trns:
-                tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.revenue = (float(tran.offer.request.amount) * float(tran.offer.price))
                 tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Complete'
@@ -666,7 +665,7 @@ def clients_history(request, cid):
             trns = Transaction.objects.filter(buyer=buyer, is_complete=False)
             trans = []
             for tran in trns:
-                tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.revenue = (float(tran.offer.request.amount) * float(tran.offer.price))
                 tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Incomplete'
@@ -675,7 +674,7 @@ def clients_history(request, cid):
             trns = Transaction.objects.filter(buyer=buyer)
             trans = []
             for tran in trns:
-                tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.revenue = (float(tran.offer.request.amount) * float(tran.offer.price))
                 trans.append(tran)
             state = 'All'
         return render(request, 'zeraPortal/clients_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
@@ -683,7 +682,7 @@ def clients_history(request, cid):
     trns = Transaction.objects.filter(buyer=buyer)
     trans = []
     for tran in trns:
-        tran.revenue = tran.offer.request.amount * tran.offer.price
+        tran.revenue = (float(tran.offer.request.amount) * float(tran.offer.price))
         trans.append(tran)
 
     return render(request, 'zeraPortal/clients_history.html', {'trans': trans, 'buyer': buyer, 'state': state})    
@@ -701,7 +700,7 @@ def subsidiary_transaction_history(request, sid):
             trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id, is_complete=True)
             trans = []
             for tran in trns:
-                tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.revenue = (float(tran.offer.request.amount) * float(tran.offer.price))
                 trans.append(tran)
             state = 'Complete'
 
@@ -709,7 +708,7 @@ def subsidiary_transaction_history(request, sid):
             trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id, is_complete=False)
             trans = []
             for tran in trns:
-                tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.revenue = (float(tran.offer.request.amount) * float(tran.offer.price))
                 trans.append(tran)
             state = 'Incomplete'
 
@@ -717,17 +716,17 @@ def subsidiary_transaction_history(request, sid):
             trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
             trans = []
             for tran in trns:
-                tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.revenue = (float(tran.offer.request.amount) * float(tran.offer.price))
                 trans.append(tran)
             state = 'All'
         return render(request, 'zeraPortal/subsidiary_history.html', {'trans': trans, 'subsidiary': subsidiary, 'state': state})
     
     trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
     for tran in trns:
-        tran.revenue = tran.offer.request.amount * tran.offer.price
+        tran.revenue = (float(tran.offer.request.amount) * float(tran.offer.price))
         trans.append(tran)
 
-    return render(request, 'zeraPortal/subsidiary_history.html', {'trans': trans, 'subsidiary': subsidiary})
+    return render(request, 'zeraPortal/subsidiary_history.html', {'trans': trans, 'subsidiary': subsidiary, 'state': state})
 
 def profile(request):
     user = request.user
@@ -735,13 +734,13 @@ def profile(request):
 
 
 def suspicious_behavior(request):
-    schedules = DeliverySchedule.objects.filter(date__lt=datetime.today() + timedelta(days=1), confirmation_document='',
+    schedules = DeliverySchedule.objects.filter(date__lt=datetime.today() + timedelta(days=1),
                                                     supplier_document='')
     late_schedules = []
     suspicious_schedules = []
     
     for ds in DeliverySchedule.objects.all():
-        if ds.supplier_document and ds.confirmation_document:
+        if ds.supplier_document and ds.confirmation_date:
             account = AccountHistory.objects.filter(transaction=ds.transaction)
             if not account:
                 suspicious_schedules.append(ds)

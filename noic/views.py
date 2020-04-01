@@ -1,6 +1,7 @@
 import secrets
 from validate_email import validate_email
-from datetime import datetime, timedelta, date
+# from datetime import datetime, timedelta, date
+import datetime
 
 from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404, redirect
@@ -504,15 +505,15 @@ def report_generator(request):
         start_date = request.POST.get('start_date') 
         end_date = request.POST.get('end_date')
         if start_date:
-            start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
             start_date = start_date.date()
         report_type = request.POST.get('report_type')
         if end_date:
-            end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
             stock = type('test', (object,), {})()
-            stock.date = datetime.datetime.today()
+            stock.date = datetime.today()
             stock.usd, stock.zwl = get_current_usd_stock(), get_current_zwl_stock()
 
             allocations_per_supplier = None
@@ -583,7 +584,7 @@ def report_generator(request):
 
 # @login_required()
 def statistics(request):
-    yesterday = date.today() - timedelta(days=1)
+    yesterday = datetime.today() - timedelta(days=1)
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
     weekly_rev = get_weekly_sales(True)
     last_week_rev = get_weekly_sales(False)
