@@ -30,9 +30,9 @@
   </section>
 
 
-<div class="jumbotron jumbotron-fluid">
+<div class="jumbotron jumbotron-fluid" style="padding-bottom: 0px;">
     <div class="jumbotron jumbotron-fluid">
-        <div class="container" style="padding-left: 0;margin-left: 30px;">
+        <div class="container" style="padding-left: 0;margin-left: 30px; width: 100%;">
             <div class="panel panel-bd">
                 <div class="panel-heading">
                     <div class="view-header">
@@ -99,108 +99,130 @@
     });
 </script> 
 
-{% if trans %}
-<div class="col-md-12">
-        <div class="container-fluid">
+<section class="content">
+    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+        <div class="panel-heading ui-sortable-handle">
+            <div class="btn-group"> 
+                <h4>Subsidiaries - {{ request.user.company.name|title}}</h4> 
+            </div>
+        <div class="dropdown">
+            <ul class="dropdown-menu dropdown-menu-right">
+               
+              
+            </ul>
+            <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+            </div>
+            </div>
+            </div>    
 
-            <table id="example" class="table table-striped table-bordered" style="width:100%">
-                <thead style="color:white; background:lightslategray">
-                    <th style="color:white;">
-                    Date
-                    </th>
-                    <th style="color:white;">
-                    Time
-                    </th>
-                    <th style="color:white;">
-                    Buyer
-                    </th>
-                    <th style="color:white;">
-                    Quantity (Litres)
-                    </th>
-                    <th style="color: white;">
-                    Revenue
-                    </th>
-                    <th>
-                    Status
-                    </th>
-                </thead>    
-                       
-                         
-                   <tbody>
-                       {% for tran in trans %}
-                       <tr>
-                            <td>{{tran.date}}</td>
-                            <td>{{tran.time}}</td>
-                            <td>{{tran.buyer}}</td>
-                            <td>{{tran.offer.request.amount}}</td>
-                            <td>$ {{tran.revenue|stringformat:".2f"}}</td>
-                           <td>
-                               {% if tran.is_complete %}
-                               <i class="fa fa-check-circle-o" style="color: #009688;"></i>
-                               {% else %}
-                               <i class="fa fa-times-circle-o" style="color: crimson;"></i>
-                               {% endif %}
-                            </td>
-                            <td>
-                                <button class="btn-sm btn-success" data-toggle="modal" data-target="#acc_history_{{tran.id}}"
-                                role="button">View Sord Numbers</button>
-                            </td>
-                            <div class="modal fade modal-success in" id="acc_history_{{tran.id}}" tabindex="-1" role="dialog"
-                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
+        <div class="panel-body">
+
+            {% if trans %}
+            <div class="col-md-12">
+                    <div class="container-fluid">
+
+                        <table id="id_example" class="table table-striped table-bordered" style="width:100%">
+                            <thead style="color:white; background:lightslategray">
+                                <th style="color:white;">
+                                Date
+                                </th>
+                                <th style="color:white;">
+                                Time
+                                </th>
+                                <th style="color:white;">
+                                Buyer
+                                </th>
+                                <th style="color:white;">
+                                Quantity (Litres)
+                                </th>
+                                <th style="color: white;">
+                                Revenue
+                                </th>
+                                <th>
+                                Status
+                                </th>
+                                <th></th>
+                            </thead>    
                                 
-                                <div class="modal-header" style="margin-bottom: 0;">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                <span class="modal-title" style="margin-bottom: 0;">Sord Numbers {{tran.id}}</span>
-                            </div>
-                                <div class="modal-body" style="padding-top: 0;">
-                                    <div class="row fixed-top" style="margin-top: 0; color: white;background-color: lightslategray; padding-top: 15px; padding-bottom: 10px;margin-bottom: 5px;
-                                    font-weight: bolder; font-size: 16px;">
-                                        <div class="col-md-6">
-                                            Date
+                                    
+                            <tbody>
+                                {% for tran in trans %}
+                                <tr>
+                                        <td>{{tran.date}}</td>
+                                        <td>{{tran.time}}</td>
+                                        <td>{{tran.buyer}}</td>
+                                        <td>{{tran.offer.request.amount}}</td>
+                                        <td>$ {{tran.revenue|stringformat:".2f"}}</td>
+                                    <td>
+                                        {% if tran.is_complete %}
+                                        <i class="fa fa-check-circle-o" style="color: #009688;"></i>
+                                        {% else %}
+                                        <i class="fa fa-times-circle-o" style="color: crimson;"></i>
+                                        {% endif %}
+                                        </td>
+                                        <td>
+                                            <button class="btn-sm btn-success" data-toggle="modal" data-target="#acc_history_{{tran.id}}"
+                                            role="button">View Sord Numbers</button>
+                                        </td>
+                                        <div class="modal fade modal-success in" id="acc_history_{{tran.id}}" tabindex="-1" role="dialog"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            
+                                            <div class="modal-header" style="margin-bottom: 0;">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                            <span class="modal-title" style="margin-bottom: 0;">Sord Numbers {{tran.id}}</span>
                                         </div>
-                                        <div class="col-md-6">
-                                            Sord Number
+                                            <div class="modal-body" style="padding-top: 0;">
+                                                <div class="row fixed-top" style="margin-top: 0; color: white;background-color: lightslategray; padding-top: 15px; padding-bottom: 10px;margin-bottom: 5px;
+                                                font-weight: bolder; font-size: 16px;">
+                                                    <div class="col-md-6">
+                                                        Date
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        Sord Number
+                                                    </div>
+                                                </div>
+                                                {% if tran.account_history %}
+                                                    {% for payment in tran.account_history%}
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                {{ payment.date }}
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                {{ payment.sord_number }}
+                                                            </div>
+
+                                                        </div>
+                                                    {% endfor %}    
+                                                {% else %}
+                                                No Data Available For This Transaction
+                                                {% endif %}
+                                                
                                         </div>
                                     </div>
-                                    {% if tran.account_history %}
-                                        {% for payment in tran.account_history%}
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    {{ payment.date }}
-                                                </div>
-                                                <div class="col-md-6">
-                                                    {{ payment.sord_number }}
-                                                </div>
-
-                                            </div>
-                                        {% endfor %}    
-                                    {% else %}
-                                    No Data Available For This Transaction
-                                    {% endif %}
-                                    
-                            </div>
-                        </div>
-                    </div>
-                            </div>
+                                </div>
+                                        </div>
+                                        
+                                    </tr>
                             
-                        </tr>
-                   
-                    {% endfor %}   
-                   
+                                {% endfor %}   
+                            
 
-                </tbody>
-                </table>
+                            </tbody>
+                            </table>
 
-        </div>
-    </div>
-    
-</div>
-{% else %}
-<p class="text-center" style="margin-top: 50px;color: #333;">
-    No Transactions Match The Filter <strong>{{state}}</strong>
-</p> 
-{% endif %}
+                    </div>
+                </div>
+        
+            {% else %}
+            <p class="text-center" style="margin-top: 50px;color: #333;">
+                No Transactions Match The Filter <strong>{{state}}</strong>
+            </p> 
+            {% endif %}
+        </div> 
+    </div>       
+
+</section>
 
 {% endblock %}
