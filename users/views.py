@@ -962,23 +962,23 @@ def statistics(request):
     weekly_rev = get_weekly_sales(request.user.company, True)
     last_week_rev = get_weekly_sales(request.user.company, False)
     last_year_rev = get_monthly_sales(request.user.company, (datetime.now().year - 1))
-    offers = Offer.objects.filter(supplier__company=request.user.company).count()
-    bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
-    normal_requests = FuelRequest.objects.filter(delivery_method="DELIVERY").count()  # Change these 2 items
-    staff = ''
-    new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
-    try:
-        rating = SupplierRating.objects.filter(supplier=request.user.company).first().rating
-    except:
-        rating = 0
+    # offers = Offer.objects.filter(supplier__company=request.user.company).count()
+    # bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
+    # normal_requests = FuelRequest.objects.filter(delivery_method="DELIVERY").count()  # Change these 2 items
+    # staff = ''
+    # new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
+    # try:
+    #     rating = SupplierRating.objects.filter(supplier=request.user.company).first().rating
+    # except:
+    #     rating = 0
 
-    admin_staff = User.objects.filter(company=company).filter(user_type='SUPPLIER').count()
-    # all_staff = User.objects.filter(company=company).count()
-    other_staff = User.objects.filter(company=company).filter(user_type='SS_SUPPLIER').count()
+    # admin_staff = User.objects.filter(company=company).filter(user_type='SUPPLIER').count()
+    # # all_staff = User.objects.filter(company=company).count()
+    # other_staff = User.objects.filter(company=company).filter(user_type='SS_SUPPLIER').count()
     clients = []
-    stock = get_aggregate_stock(request.user.company)
-    diesel = stock['diesel']
-    petrol = stock['petrol']
+    # stock = get_aggregate_stock(request.user.company)
+    # diesel = stock['diesel']
+    # petrol = stock['petrol']
 
     trans = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).annotate(
         number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
@@ -1040,14 +1040,8 @@ def statistics(request):
     #     trans = 0    
     trans_complete = get_transactions_complete_percentage(request.user)
     average_rating = get_average_rating(request.user.company)
-    return render(request, 'users/statistics.html', {'offers': offers,
-                                                     'bulk_requests': bulk_requests, 'trans': trans, 'clients': clients,
-                                                     'normal_requests': normal_requests,
-                                                     'diesel': diesel, 'petrol': petrol, 'revenue': revenue,
-                                                     'new_orders': new_orders, 'rating': rating,
-                                                     'admin_staff': admin_staff,
-                                                     'other_staff': other_staff, 'trans_complete': trans_complete,
-                                                     'sorted_subs': sorted_subs, 'average_rating': average_rating,
+    return render(request, 'users/statistics.html', {'trans': trans, 'clients': clients,
+                                                     'sorted_subs': sorted_subs,
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
                                                      'last_week_rev': last_week_rev})
 
