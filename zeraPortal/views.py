@@ -726,7 +726,7 @@ def subsidiary_transaction_history(request, sid):
         tran.revenue = (float(tran.offer.request.amount) * float(tran.offer.price))
         trans.append(tran)
 
-    return render(request, 'zeraPortal/subsidiary_history.html', {'trans': trans, 'subsidiary': subsidiary})
+    return render(request, 'zeraPortal/subsidiary_history.html', {'trans': trans, 'subsidiary': subsidiary, 'state': state})
 
 def profile(request):
     user = request.user
