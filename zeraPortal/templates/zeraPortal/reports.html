@@ -288,12 +288,69 @@
                         </section>
 
                                                 <section class="content" style="min-height: 600px;">
-                        
+                        <div class="col-md-12" style="margin-bottom: 15px;">
+                            <div class="col-md-6" style="height: 166px;">    
+                                <button type="button" class="btn btn-labeled btn-success btn-lg" data-toggle="modal" data-target="#report_modal" role="button" style="margin-top: 57px;">
+                                    <span class="btn-label"><i class="fa fa-cogs" aria-hidden="true"></i></span>Generate Report
+                                </button>
+                            </div>
                             
-                        <button type="button" class="btn btn-labeled btn-success btn-lg"  data-toggle="modal" data-target="#report_modal"
-                        role="button" style="color: white; margin-left: 10px; margin-bottom: 30px;padding-left: 12px;">
-                            <span class="btn-label"><i class="fa fa-cogs" aria-hidden="true"></i></span>Generate Report
-                        </button>        
+                            {% if trans or revs or stock or allocations or requests or verified_companies or  unverified_companies%}
+                            <div class="col-md-6" style="background-color: #009688;">
+                                <div class="container" style="margin-bottom: 30px">
+                                    <blockquote class="quote-box">
+                                    {% if trans or revs or allocations or requests %}
+                                    <h1 style="color: white;font-size: 15px;">Showing results from <b style="color: gold;">{{start}}</b> to <b style="color: gold;">{{end}} </b> </h1>
+                                    {% elif stock %}
+                                    <h1 style="color:white;font-size: 15px;">Showing Current Stock Levels  - {{ request.user.company.name|title}}'s Subsidiaries </h1>
+                                    {% elif verified_companies %}
+                                    <h1 style="color: white;font-size: 15px;">Showing Current Verified Companies </h1>
+                                    {% elif unverified_companies %}
+                                    <h1 style="color: white;font-size: 15px;">Showing Current Unverified Companies </h1>
+
+                                    {% endif %}
+                                    <hr>
+                                    
+                                    </blockquote>
+                                </div>
+                            </div>    
+                            {% else %}
+                            <!--
+                            <div style="/* padding: 25px; */background-color:rgb(14, 80, 100);border: #fafbfb 2px solid;border-radius: 10px;padding-left: 15px;padding-top: 30px;padding-bottom: 30px;margin-left: 15px;margin-top: -89px;">
+                            </div>
+                            -->
+                            <div class="col-md-6" style="background-color: #009688;">
+                                <div class="container col-md-12" style="margin-bottom: 30px">
+                                    <blockquote class="quote-box">
+                                    
+                                    <h1 style="color: white;font-size: 15px; font-weight: 400;">No Data, Generate New Report </h1>
+
+                                    <hr>
+                                    <!-- <div class="blog-post-actions">
+                                        <p class="blog-post-bottom pull-left" style="padding:20px;">
+                                        {% if trans %}
+                                        Transactions
+                                        {% elif revs %}
+                                        Revenue
+                                        {% elif stock%}
+                                        Stock
+                                        {% elif allocations %}
+                                        Fuel Allocations
+                                        {% elif requests %}
+                                        Requests
+                                        {% endif %}
+                                        Report
+                                        </p>
+                                        
+                                    </div> -->
+                                    </blockquote>
+                                </div>
+                            </div>    
+                            {%endif%}
+                        </div>      
+
+
+
                         <script>
                             $('body').click(function (event) {
                                 if(!$(event.target).closest('#report_modal').length && !$(event.target).is('#report_modal')) {
@@ -382,76 +439,7 @@
                             <!-- <div class="jumbotron jumbotron-fluid" style="background: linear-gradient(to right, #fdbb2d, #b21f1f, #1a2a6c);color: white;margin-bottom: 100px;"> -->
 
                         
-                        {% if trans or revs or stock or allocations or requests or verified_companies or  unverified_companies%}
-
-                        <div class="container" style="margin-bottom: 30px">
-                            <blockquote class="quote-box">
-                              {% if trans or revs or allocations or requests %}
-                              <h1 style="color: #374767;font-size: 22px;">Showing results from <b>{{start}}</b> to <b>{{end}} </b> </h1>
-                              {% elif stock %}
-                              <h1 style="color: #374767;font-size: 22px;">Showing Current Stock Levels  - {{ request.user.company.name|title}}'s Subsidiaries </h1>
-                              {% elif verified_companies %}
-                              <h1 style="color: #374767;font-size: 22px;">Showing Current Verified Companies </h1>
-                              {% elif unverified_companies %}
-                              <h1 style="color: #374767;font-size: 22px;">Showing Current Unverified Companies </h1>
-
-                              {% endif %}
-                              <hr>
-                              <div class="blog-post-actions">
-                                <p class="blog-post-bottom pull-left" style="padding:20px;">
-                                  {% if trans %}
-                                  Transactions
-                                  {% elif revs %}
-                                  Revenue
-                                  {% elif stock%}
-                                  Stock
-                                  {% elif allocations %}
-                                  Fuel Allocations
-                                  {% elif requests %}
-                                  Requests
-                                  {% elif verified_companies %}
-                                  Verified Companies
-                                  {% elif unverified_companies %}
-                                  Unverified Companies
-                                  {% endif %}
-                                  Report
-                                </p>
-                                
-                              </div>
-                            </blockquote>
-                        </div>
-                        {% else %}
-                        <!--
-                        <div style="/* padding: 25px; */background-color:rgb(14, 80, 100);border: #fafbfb 2px solid;border-radius: 10px;padding-left: 15px;padding-top: 30px;padding-bottom: 30px;margin-left: 15px;margin-top: -89px;">
-                        </div>
-                        -->
-
-                        <div class="container col-md-12" style="margin-bottom: 30px">
-                            <blockquote class="quote-box">
-                              
-                              <h1 style="color: lightslategray;font-size: 22px; font-weight: 400;">No Data, Generate New Report Above </h1>
-
-                              <hr>
-                              <!-- <div class="blog-post-actions">
-                                <p class="blog-post-bottom pull-left" style="padding:20px;">
-                                  {% if trans %}
-                                  Transactions
-                                  {% elif revs %}
-                                  Revenue
-                                  {% elif stock%}
-                                  Stock
-                                  {% elif allocations %}
-                                  Fuel Allocations
-                                  {% elif requests %}
-                                  Requests
-                                  {% endif %}
-                                  Report
-                                </p>
-                                
-                              </div> -->
-                            </blockquote>
-                        </div>
-                        {%endif%}  
+                        
 
                         {% if verified_companies %}
                         <div class="col-md-12">
