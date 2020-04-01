@@ -351,8 +351,9 @@ def report_generator(request):
         if request.POST.get('report_type') == 'Stock':
             depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
             stock = DepotFuelUpdate.objects.filter(depot=depot).first()
+            stock.depot = depot
 
-            print('______________________{stock}_________________')
+            print(f'______________________{stock}_________________')
             print('______________________Im in stock_________________')
 
 

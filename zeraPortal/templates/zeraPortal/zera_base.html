@@ -91,6 +91,26 @@
                 </a>
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
+
+                        <li class="dropdown notifications-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="pe-7s-bell"></i>
+                                <span class="label label-warning">0</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="header"><i class="fa fa-bell"></i>0 Notifications</li>
+                                <li>
+                                    <ul class="menu">
+                                        <li>
+                                        <a href="#" class="border-gray"><i class="fa fa-inbox"></i> Inbox  <span class=" label-success label label-default pull-right">0</span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                               <li class="footer">
+                               <a href="#"> See all Notifications <i class=" fa fa-arrow-right"></i></a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="dropdown dropdown-user admin-user">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <!-- <div class="user-image">
@@ -233,6 +253,11 @@
     <script>
         $(document).ready(function () {
             $('#companies').DataTable();
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#id_example').DataTable();
         });
     </script>
     <script>

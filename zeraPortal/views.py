@@ -726,7 +726,7 @@ def subsidiary_transaction_history(request, sid):
         tran.revenue = (float(tran.offer.request.amount) * float(tran.offer.price))
         trans.append(tran)
 
-    return render(request, 'zeraPortal/subsidiary_history.html', {'trans': trans, 'subsidiary': subsidiary})
+    return render(request, 'zeraPortal/subsidiary_history.html', {'trans': trans, 'subsidiary': subsidiary, 'state': state})
 
 def profile(request):
     user = request.user
@@ -734,13 +734,13 @@ def profile(request):
 
 
 def suspicious_behavior(request):
-    schedules = DeliverySchedule.objects.filter(date__lt=datetime.today() + timedelta(days=1), confirmation_document='',
+    schedules = DeliverySchedule.objects.filter(date__lt=datetime.today() + timedelta(days=1),
                                                     supplier_document='')
     late_schedules = []
     suspicious_schedules = []
     
     for ds in DeliverySchedule.objects.all():
-        if ds.supplier_document and ds.confirmation_document:
+        if ds.supplier_document and ds.confirmation_date:
             account = AccountHistory.objects.filter(transaction=ds.transaction)
             if not account:
                 suspicious_schedules.append(ds)
