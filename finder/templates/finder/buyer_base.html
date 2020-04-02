@@ -163,6 +163,10 @@
                         <a href="{%url 'buyer-transactions'%}"><i class="fa fa-handshake-o"></i><span>Transactions</span>
                         </a>
                     </li>
+                    <li class="nav-item {% if request.path == '/buyer/activity/' %} active {% endif %}">
+                        <a href="{% url 'buyer:activity' %}"><i  class="fa fa-area-chart"></i><span>Activity</span>
+                        </a>
+                    </li>
                     <li class="nav-item {% if request.path == '/buyer/delivery-schedule/' %} active {% endif %}  ">
                         <a href="{%url 'delivery-schedule'%}"><i class="fa fa-truck"></i><span>Delivery Schedule</span>
                         </a>

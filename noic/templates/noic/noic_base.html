@@ -165,6 +165,11 @@
                         </a>
                     </li>
 
+                    <li class="nav-item {% if request.path == '/noic/activity/' %} active {% endif %}">
+                        <a href="{% url 'noic:activity' %}"><i  class="fa fa-area-chart"></i><span>Activity</span>
+                        </a>
+                    </li>
+
                     <li class="nav-item {% if request.path == '/noic/depots/' %} active {% endif %}">
                         <a href="{% url 'noic:depots' %}"><i  class="fa fa-book"></i><span>Depots</span>
                         </a>

@@ -241,8 +241,9 @@
                             {% if payment.release_activated %}
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-primary btn-sm" style="color: white;" href="{% url 'supplier:view-release-note' payment.id %}">View</a>
-                                    <a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#edit_{{payment.id}}">Edit</a>  
+                                    <a class="btn btn-primary btn-sm" style="color: white;" href="{% url 'supplier:view-release-note' payment.id %}"><i class="fa fa-eye" style="font-size:16px"></i></a>
+                                    <a class="btn btn-warning btn-sm" style="color: white;" href="{% url 'supplier:download-release-note' payment.id %}"><i class="fa fa-download" style="font-size:16px"></i></a>
+                                    <a class="btn btn-primary btn-sm" style="color: white;" data-toggle="modal" data-target="#edit_{{payment.id}}">Edit</a>  
                                 </div>
                             </td>
                             {% else %}
