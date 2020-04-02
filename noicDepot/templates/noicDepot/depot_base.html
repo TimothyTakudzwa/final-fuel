@@ -236,13 +236,19 @@
 
     <script>
         $(document).ready(function () {
-            $('#fuel_request').DataTable();
+            $('#fuel_request').DataTable(
+                {
+                "ordering": false
+            }
+            );
         });
     </script>
 
 <script>
     $(document).ready(function () {
-        $('#depots').DataTable();
+        $('#depots').DataTable({
+                "ordering": false
+            });
     });
 </script>
    
@@ -250,7 +256,7 @@
         $(document).ready(function () {
             $('#allocations').DataTable(
                 {
-                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
+                "order": false,
                 "columnDefs": [
             {
                 "targets": [ 1 ],
