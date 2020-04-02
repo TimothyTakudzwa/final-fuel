@@ -40,6 +40,8 @@ def orders(request):
     form1 = DepotContactForm()
     depots = NoicDepot.objects.all()
     form1.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots]
+    for order in orders:
+        order.allocation = SordNationalAuditTrail.objects.filter(order=order).first()
 
     return render(request, 'noic/orders.html', {'orders': orders, 'form1': form1})
 

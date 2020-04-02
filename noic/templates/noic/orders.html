@@ -128,7 +128,7 @@
                     {% if order.allocated_fuel %}
                     <td>
                         <div class="btn-group">
-                            <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"  href="{% url 'noic:allocations' %}" >View Allocations</a>
+                            <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"  data-target="#allocation_{{order.id}}" >View Allocations</a>
                             </div>
                     </td>
                     {% else %}
@@ -196,6 +196,53 @@
                     </div>
                 </div>
             </div>
+
+            <!--Allocation Modal-->
+    <div class="modal fade modal-success in" id="allocation_{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #009688; color: white">
+                    <span class="modal-title" id="exampleModalLabel">{{ order.allocation.company }} Allocation</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <!--name-->
+                        <div class="col-md-12">
+                            <h4>Date &nbsp;&nbsp; : &nbsp;&nbsp; {{ order.allocation.date }}</h4>
+                        </div>
+                        <!--email-->
+                        <div class="col-md-12">
+                            <h4>SORD &nbsp;&nbsp; : &nbsp;&nbsp; {{ order.allocation.sord_no}}</h4>
+                        </div>
+                        <!--phone-->
+                        <div class="col-md-12">
+                            <h4>Fuel &nbsp;&nbsp; : &nbsp;&nbsp; {{ order.allocation.fuel_type }}</h4>
+                        </div>
+                        <div class="col-md-12">
+                            <h4>Company &nbsp;&nbsp; : &nbsp;&nbsp; {{ order.allocation.company }}</h4>
+                        </div>
+                        <div class="col-md-12">
+                            <h4>Quantity &nbsp;&nbsp; : &nbsp;&nbsp; {{ order.allocation.quantity }}</h4>
+                        </div>
+                        <div class="col-md-12">
+                            <h4>Price &nbsp;&nbsp; : &nbsp;&nbsp; {{ order.allocation.price }} {{ order.allocation.currency }}</h4>
+                        </div>
+                        <div class="col-md-12">
+                            <h4>Depot &nbsp;&nbsp; : &nbsp;&nbsp; {{ order.allocation.assigned_depot.name }}</h4>
+                        </div>
+                        
+                    </div>
+                    <div class="modal-footer">  
+                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End allocation modal-->
                 {%endfor%}
             </tbody>
             </table>
@@ -205,3 +252,4 @@
 </div>
 </div>
     {%endblock%}
+    
