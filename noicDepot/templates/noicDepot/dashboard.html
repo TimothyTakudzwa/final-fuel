@@ -99,8 +99,9 @@
                             <td>
                                 <div class="btn-group">
                                     <a class="btn btn-primary btn-sm" style="color: white;" href="{% url 'noic:view_release_note' sord.id %}">View</a>
-                                    <a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#edit_{{sord.id}}" class="glyphicon glyphicon-pencil">
-                                        Edit Note</a>
+                                    <a class="btn btn-warning btn-sm" style="color: white;" href="{% url 'noic:download_release_note' sord.id %}">Download</a>
+                                    <a class="btn btn-primary btn-sm" style="color: white;" data-toggle="modal" data-target="#edit_{{sord.id}}" class="glyphicon glyphicon-pencil">
+                                        Edit</a>
                                 </div>
                                 
                             </td> 

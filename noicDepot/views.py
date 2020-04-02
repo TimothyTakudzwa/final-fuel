@@ -153,6 +153,16 @@ def view_release_note(request, id):
     return render(request, 'noicDepot/release_note.html', context=context)
 
 
+def download_release_note(request, id):
+    allocation = SordNationalAuditTrail.objects.filter(id=id).first()
+    allocation.admin = User.objects.filter(company=allocation.company).filter(user_type='S_ADMIN').first()
+    allocation.rep = request.user
+    context = {
+        'allocation': allocation
+    }
+    return render(request, 'noicDepot/r_note.html', context=context)
+
+
 def allocate_fuel(request, id):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders = Order.objects.filter(noic_depot=depot).all()

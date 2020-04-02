@@ -35,6 +35,7 @@ urlpatterns = [
     path('delivery_note/<int:id>', views.delivery_note, name='delivery_note'),
     path('download_release_note/<int:id>', views.download_release_note, name='download_release_note'),
     path('company_profile/', views.company_profile, name='company_profile'),
+    path('activity/', views.activity, name='activity')
 
     
 
