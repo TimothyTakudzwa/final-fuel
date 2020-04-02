@@ -136,6 +136,10 @@
                         <a href="{% url 'noicDepot:dashboard' %}"><i class="fa fa-book"></i><span>Allocations</span>
                         </a>
                     </li>
+                    <li class="nav-item {% if request.path == '/noicDepot/activity/' %} active {% endif %}">
+                        <a href="{% url 'noicDepot:activity' %}"><i  class="fa fa-area-chart"></i><span>Activity</span>
+                        </a>
+                    </li>
                     <li class="nav-item {% if request.path == '/noicDepot/statistics/' %} active {% endif %}">
                         <a href="{% url 'noicDepot:statistics' %}"><i class="fa fa-line-chart"></i><span>Statistics</span>
                         </a>
