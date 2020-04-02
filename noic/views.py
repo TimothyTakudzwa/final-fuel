@@ -34,6 +34,7 @@ from zeraPortal.lib import *
 user = get_user_model()
 
 # Create your views here.
+@login_required()
 def orders(request):
     orders = Order.objects.all()
     form1 = DepotContactForm()
@@ -43,10 +44,13 @@ def orders(request):
     return render(request, 'noic/orders.html', {'orders': orders, 'form1': form1})
 
 
+@login_required()
 def activity(request):
     activities = Activity.objects.filter(user=request.user).all()
     return render(request, 'noic/activity.html', {'activities': activities})
 
+
+@login_required()
 def dashboard(request):
     capacities = NationalFuelUpdate.objects.all()
     depots = DepotFuelUpdate.objects.all()
@@ -63,11 +67,13 @@ def dashboard(request):
     return render(request, 'noic/dashboard.html', {'capacities': capacities, 'depots': depots, 'noic_usd_diesel':noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel, 'noic_usd_petrol': noic_usd_petrol, 'noic_rtgs_petrol': noic_rtgs_petrol})
 
 
+@login_required()
 def allocations(request):
     allocations = SordNationalAuditTrail.objects.all()
     return render(request, 'noic/allocations.html', {'allocations': allocations})
-    
-    
+
+
+@login_required()
 def depots(request):
     global depot
     depots = NoicDepot.objects.all()
@@ -142,6 +148,7 @@ def depots(request):
                    'Mutare': Mutare, 'Gweru': Gweru, 'form1': form1, 'form': DepotContactForm()})
 
 
+@login_required()
 def edit_depot(request, id):
     if request.method == 'POST':
         if NoicDepot.objects.filter(id=id).exists():
@@ -162,6 +169,7 @@ def edit_depot(request, id):
             return redirect('noic:depots')
 
 
+@login_required()
 def delete_depot(request, id):
     if request.method == 'POST':
         if NoicDepot.objects.filter(id=id).exists():
@@ -178,6 +186,8 @@ def delete_depot(request, id):
             messages.success(request, 'Depot does not exists')
             return redirect('noic:depots')
 
+
+@login_required()
 def fuel_update(request, id):
     fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -228,6 +238,8 @@ def fuel_update(request, id):
                 messages.success(request, 'updated diesel quantity successfully')
                 return redirect('noic:dashboard')
 
+
+@login_required()
 def edit_prices(request, id):
     fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -245,6 +257,7 @@ def edit_prices(request, id):
         return redirect('noic:dashboard')
 
 
+@login_required()
 def payment_approval(request, id):
     order = Order.objects.filter(id=id).first()
     order.payment_approved = True
@@ -253,6 +266,7 @@ def payment_approval(request, id):
     return redirect('noic:orders')
             
 
+@login_required()
 def allocate_fuel(request, id):
     order = Order.objects.filter(id=id).first()
    
@@ -347,6 +361,7 @@ def allocate_fuel(request, id):
                     return redirect('noic:orders')
 
 
+@login_required()
 def statistics(request):
     yesterday = date.today() - timedelta(days=1)
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
@@ -358,6 +373,7 @@ def statistics(request):
     return render(request, 'noic/statistics.html', {'monthly_rev':monthly_rev,'weekly_rev':weekly_rev,'last_week_rev': last_week_rev, 'city_sales_volume': city_sales_volume })
 
 
+@login_required()
 def staff(request):
     staffs = User.objects.filter(user_type='NOIC_STAFF').all()
     for staff in staffs:
@@ -411,6 +427,7 @@ def staff(request):
     return render(request, 'noic/staff.html', {'depots': depots, 'form1': form1, 'staffs': staffs})
 
 
+@login_required()
 def message_is_send(request, user, password):
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
@@ -426,6 +443,8 @@ def message_is_send(request, user, password):
         return False
     return render(request, 'buyer/send_email.html')
 
+
+@login_required()
 def report_generator(request):
 
     '''View to dynamically render form tables based on different criteria'''
@@ -514,11 +533,13 @@ def report_generator(request):
     return render(request, 'noic/reports.html')
 
 
+@login_required()
 def profile(request):
     user = request.user
     return render(request, 'noic/profile.html', {'user':user})
 
 
+@login_required()
 def report_generator(request):
     '''View to dynamically render form tables based on different criteria'''
     orders = pending_orders = complete_orders = stock = allocations_per_supplier = None
@@ -608,7 +629,8 @@ def report_generator(request):
                   {'orders': orders, 'pending_orders': pending_orders, 'complete_orders': complete_orders,
                        'start': start, 'end': end, 'stock': stock})
 
-# @login_required()
+
+@login_required()
 def statistics(request):
     yesterday = datetime.today() - timedelta(days=1)
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
