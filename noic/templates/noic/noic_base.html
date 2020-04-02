@@ -260,17 +260,7 @@
 
     <script>
         $(document).ready(function () {
-            $('#orders').DataTable(
-                {
-                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
-                "columnDefs": [
-            {
-                "targets": [ 1 ],
-                "visible": false
-            }
-                    ]
-                }
-            );
+            $('#orders').DataTable();
         });
     </script>
 
@@ -292,17 +282,7 @@
    
    <script>
         $(document).ready(function () {
-            $('#allocations').DataTable(
-                {
-                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
-                "columnDefs": [
-            {
-                "targets": [ 1 ],
-                "visible": false
-            }
-                    ]
-                }
-            );
+            $('#allocations').DataTable();
         });
     </script>
     <!-- jquery-ui -->
