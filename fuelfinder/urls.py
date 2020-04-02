@@ -70,6 +70,8 @@ urlpatterns = [
          auth_views.PasswordResetCompleteView.as_view(template_name='supplier/password/password_reset_complete.html'),
          name='password_reset_complete'),
 
+    path('session_security/', include('session_security.urls'))
+
 ]
 
 if settings.DEBUG:
