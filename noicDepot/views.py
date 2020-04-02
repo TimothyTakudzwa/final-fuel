@@ -67,7 +67,8 @@ def dashboard(request):
 
 def activity(request):
     activities = Activity.objects.filter(user=request.user).all()
-    return render(request, 'noicDepot/activity.html', {'activities': activities})
+    depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+    return render(request, 'noicDepot/activity.html', {'activities': activities, 'depot': depot})
 
 def orders(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
@@ -95,8 +96,7 @@ def upload_release_note(request, id):
 
         action = "Uploading Release Note"
         description = f"You have uploaded release note to {allocation.company.name}"
-        Activity.objects.create(company=allocation.company, user=request.user,
-                                    action=action, description=description, reference_id=allocation.id)
+        Activity.objects.create(company=allocation.company, user=request.user, action=action, description=description, reference_id=allocation.id)
         messages.success(request, "Release note successfully created")
         return redirect('noicDepot:dashboard')
 

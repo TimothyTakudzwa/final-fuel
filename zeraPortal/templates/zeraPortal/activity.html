@@ -1,4 +1,4 @@
-{% extends "noicDepot/depot_base.html" %}
+{% extends "zeraPortal/zera_base.html" %}
 {% load static %}
 {% load humanize %}
 
@@ -20,7 +20,7 @@
         <i class="fa fa-binoculars"></i>
     </div> -->
     <div class="header-title" style="margin-left: 0px;">
-        <h1>{{depot.name}} Daily Activity  </h1>
+        <h1>ZERA Daily Activity  </h1>
         <small>Fuel Management System</small>
         <ol class="breadcrumb hidden-xs">
             <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
@@ -68,7 +68,7 @@
                     <td>{{activity.action}}</td>
                     <td>{{activity.description}}</td> 
                     <td>{{activity.reference_id}}</td> 
-                   
+                    
                 </tr>
      =
                 {%endfor%}
