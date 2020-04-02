@@ -98,8 +98,11 @@
                             <td>
                                 <div class="btn-group">
                                     {% if allocate.payment_type == 'USD'%}
-                                    <button class="btn btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal"
-                                        data-target="#add_usd_fuel{{allocate.id}}"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp; | Add USD Fuel</button>&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-labeled btn-primary m-b-5" data-toggle="modal"
+                                    data-target="#add_usd_fuel{{allocate.id}}">
+                                        <span class="btn-label"><i class="glyphicon glyphicon-plus"></i></span>Add USD Fuel
+                                    </button>
+
                                     <button class="btn btn-danger btn-sm" style="font-size: 12px;" data-toggle="modal"
                                         data-target="#edit_{{allocate.id}}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp; | Edit</button>
                                     {%else%}
@@ -170,9 +173,11 @@
                                     </div>
                                     <div class="modal-footer">
                                         <div>
-                                            <button class="btn" style="background-color: lightgray; color: #333;"
-                                                data-dismiss="modal">No</button> <button type="submit"
+                                            <button type="submit"
                                                 class="btn btn-primary ">Submit</button>
+                                            <button class="btn" style="background-color: lightgray; color: #333;"
+                                                data-dismiss="modal">No</button> 
+                                                
                                         </div>
                                         </form>
                                         </form>
@@ -262,12 +267,10 @@
 
 
                                     </div>
-                                    <div class="form-group row"
-                                        style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                                        <button type="button" class="btn btn-secondary col-sm-6"
-                                            data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
-                                    </div>
+                                    <div class="modal-footer">  
+                                        <button type="submit" class="btn btn-primary ">Submit</button>
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div> 
                                     </form>
                                 </div>
                             </div>
@@ -374,12 +377,10 @@
                                             </select>
                                         </div>
                                      </div>
-                                <div class="form-group row"
-                                    style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                                    <button type="button" class="btn btn-secondary col-sm-6"
-                                        data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
-                                </div>
+                                     <div class="modal-footer">  
+                                        <button type="submit" class="btn btn-primary ">Submit</button>
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div> 
                                 </form>
                             </div>
                         </div>
