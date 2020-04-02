@@ -350,7 +350,8 @@ def allocate_fuel(request, id):
                     noic_capacity.rtgs_diesel -= float(request.POST['quantity'])
                     noic_capacity.save()
                     sord_object = SordNationalAuditTrail.objects.create(price=noic_capacity.rtgs_diesel_price, order=order, assigned_depot=depot, company=order.company, fuel_type=request.POST['fuel_type'], currency=request.POST['currency'], quantity=float(request.POST['quantity']))
-                    sord_object.sord_no = sord_object.id
+                    fuel_type = request.POST['fuel_type']
+                    sord_object.sord_no = sord_generator(fuel_type[0], sord_object.id)
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no, action_no=0, action='Receiving Fuel',fuel_type=sord_object.fuel_type, payment_type=sord_object.currency, initial_quantity=float(request.POST['quantity']), end_quantity=float(request.POST['quantity']))
                     company_update = CompanyFuelUpdate.objects.filter(company=order.company).first()
