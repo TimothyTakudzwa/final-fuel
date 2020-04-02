@@ -60,10 +60,16 @@
                             <input type="password" title="Please enter your password" placeholder="******" required="" value="" name="password" id="password" class="form-control">
                             <span class="help-block small">Your strong password</span>
                         </div>
-                        <div>
-                            <button class="btn btn-primary" type="submit">Login</button>
-                            <a class="btn btn-warning" href="{% url 'buyer-register'%}">Register</a>
-                            <span class="help-block small"><a class="mt-1" href="{% url 'password_reset'%}">Forgot your password?</a></span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a class="btn btn-warning" href="{% url 'buyer-register'%}" style="width: 100%">Register</a>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-primary" type="submit" style="width: 100%">Login</button>
+                            </div>
+                            <div class="col-md-12 text-center">
+                                <span class="help-block small"><a class="mt-1" href="{% url 'password_reset'%}">Forgot your password?</a></span>
+                            </div>
                         </div>
                     </form>
                 </div>
