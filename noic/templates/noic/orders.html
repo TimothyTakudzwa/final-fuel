@@ -209,29 +209,55 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <!--name-->
-                        <div class="col-md-12">
-                            <h4>Date &nbsp;&nbsp; : &nbsp;&nbsp; {{ order.allocation.date }}</h4>
+                        <div class="row">
+                        <div class="col-md-6">
+                            <h4>Date &nbsp;&nbsp;&nbsp;&nbsp; :</h4>
                         </div>
-                        <!--email-->
-                        <div class="col-md-12">
-                            <h4>SORD &nbsp;&nbsp; : &nbsp;&nbsp; {{ order.allocation.sord_no}}</h4>
+                        <div class="col-md-6">{{ order.allocation.date }}</div>
                         </div>
-                        <!--phone-->
-                        <div class="col-md-12">
-                            <h4>Fuel &nbsp;&nbsp; : &nbsp;&nbsp; {{ order.allocation.fuel_type }}</h4>
+                        <div class="row">
+                        <div class="col-md-6">
+                            <h4>SORD &nbsp;&nbsp;&nbsp;&nbsp; :</h4>
                         </div>
-                        <div class="col-md-12">
-                            <h4>Company &nbsp;&nbsp; : &nbsp;&nbsp; {{ order.allocation.company }}</h4>
+                        <div class="col-md-6">{{ order.allocation.sord_no}}</div>
                         </div>
-                        <div class="col-md-12">
-                            <h4>Quantity &nbsp;&nbsp; : &nbsp;&nbsp; {{ order.allocation.quantity }}</h4>
+                        <div class="row">
+                        <div class="col-md-6">
+                            <h4>Fuel &nbsp;&nbsp;&nbsp;&nbsp; :</h4>
                         </div>
-                        <div class="col-md-12">
-                            <h4>Price &nbsp;&nbsp; : &nbsp;&nbsp; {{ order.allocation.price }} {{ order.allocation.currency }}</h4>
+                        <div class="col-md-6"> {{ order.allocation.fuel_type }}</div>
                         </div>
-                        <div class="col-md-12">
-                            <h4>Depot &nbsp;&nbsp; : &nbsp;&nbsp; {{ order.allocation.assigned_depot.name }}</h4>
+                        <div class="row">
+                        <div class="col-md-6">
+                            <h4>Company &nbsp;&nbsp;&nbsp;&nbsp; : </h4>
+                        </div>
+                        <div class="col-md-6">
+                            {{ order.allocation.company }}
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-md-6">
+                            <h4>Quantity &nbsp;&nbsp;&nbsp;&nbsp; :  </h4>
+                        </div>
+                        <div class="col-md-6">
+                            {{ order.allocation.quantity }}
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-md-6">
+                            <h4>Price &nbsp;&nbsp;&nbsp;&nbsp; : </h4>
+                        </div>
+                        <div class="col-md-6">
+                            {{ order.allocation.price }} {{ order.allocation.currency }}
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-md-6">
+                            <h4>Depot &nbsp;&nbsp;&nbsp;&nbsp; : </h4>
+                        </div>
+                        <div class="col-md-6">
+                            {{ order.allocation.assigned_depot.name }}
+                        </div>
                         </div>
                         
                     </div>
