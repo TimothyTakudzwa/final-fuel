@@ -1,0 +1,47 @@
+<script>
+    $(document).ready(function () {
+        $('#orders').DataTable(
+            {
+            "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
+            "columnDefs": [
+        {
+            "targets": [ 1 ],
+            "visible": false
+        }
+                ]
+            }
+        );
+    });
+</script>
+
+<script>
+$(document).ready(function () {
+    $('#depots').DataTable();
+});
+</script>
+<script>
+$(document).ready(function () {
+    $('#staff').DataTable();
+});
+</script>
+<script>
+$(document).ready(function () {
+    $('#depots').DataTable();
+});
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#allocations').DataTable(
+            {
+            "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
+            "columnDefs": [
+        {
+            "targets": [ 1 ],
+            "visible": false
+        }
+                ]
+            }
+        );
+    });
+</script>
