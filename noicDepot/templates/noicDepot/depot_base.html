@@ -138,6 +138,10 @@
                         <a href="{% url 'noicDepot:orders' %}"><i class="fa fa-book"></i><span>Dashboard</span>
                         </a>
                     </li>
+                    <li class="nav-item {% if request.path == '/noicDepot/accepted_orders/' %} active {% endif %}">
+                        <a href="{% url 'noicDepot:accepted_orders' %}"><i class="fa fa-book"></i><span>Orders Trail</span>
+                        </a>
+                    </li>
                     <li class="nav-item {% if request.path == '/noicDepot/dashboard/' %} active {% endif %}">
                         <a href="{% url 'noicDepot:dashboard' %}"><i class="fa fa-book"></i><span>Allocations</span>
                         </a>
