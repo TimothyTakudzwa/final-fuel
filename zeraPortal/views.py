@@ -72,7 +72,7 @@ def dashboard(request):
 
 def activity(request):
     activities = Activity.objects.filter(user=request.user).all()
-    return render(request, 'noicDepot/activity.html', {'activities': activities})
+    return render(request, 'zeraPortal/activity.html', {'activities': activities})
 
 def noic_fuel(request):
     # capacities = NationalFuelUpdate.objects.all()

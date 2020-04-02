@@ -52,7 +52,7 @@
             <thead style="background-color: lightslategray; color:white;">
                 <tr>
                     <th style="color: white;">Date</th>
-                    <th style="color: white;">Company</th>
+                    <th style="color: white;">Organisation</th>
                     <th style="color: white;">User</th>
                     <th style="color: white;">Action</th>
                     <th style="color: white;">Description</th>
@@ -63,7 +63,7 @@
                 {% for activity in activities %}
                 <tr>
                     <td>{{ activity.date }}</td>
-                    <td>NOIC</td>
+                    <td>ZERA</td>
                     <td>{{activity.user.first_name}} {{activity.user.last_name}}</td>
                     <td>{{activity.action}}</td>
                     <td>{{activity.description}}</td> 
