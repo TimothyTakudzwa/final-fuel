@@ -195,22 +195,22 @@
                                             <div class="col-sm-6" id="diesel_rtgs_price">
                                                 <label><b style='color:#009688'>Price</b></label>
                                                 <input type="text" name="diesel_rtgs_price" class="form-control"
-                                                    value="{{diesel_rtgs_price}}" required />
+                                                    value="{{diesel_rtgs_price}}" id="diesel_rtgs_price_input" required />
                                             </div>
                                             <div class="col-sm-6" id="diesel_usd_price">
                                                 <label><b style='color:#009688'>Price</b></label>
                                                 <input type="text" name="diesel_usd_price" class="form-control"
-                                                    value="{{diesel_usd_price}}" required />
+                                                    value="{{diesel_usd_price}}" id="diesel_usd_price_input" required />
                                             </div>
                                             <div class="col-sm-6" id="petrol_rtgs_price">
                                                 <label><b style='color:#009688'>Price</b></label>
                                                 <input type="text" name="petrol_rtgs_price" class="form-control"
-                                                    value="{{petrol_rtgs_price}}" required />
+                                                    value="{{petrol_rtgs_price}}" id="petrol_rtgs_price_input" required />
                                             </div>
                                             <div class="col-sm-6" id="petrol_usd_price">
                                                 <label><b style='color:#009688'>Price</b></label>
                                                 <input type="text" name="petrol_usd_price" class="form-control"
-                                                    value="{{petrol_usd_price}}" required />
+                                                    value="{{petrol_usd_price}}" id="petrol_usd_price_input" required />
                                             </div>
 
                                         </div>
@@ -231,31 +231,53 @@
                                         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
                                         <script>
                                             $( "#fuel_paid" ).keyup(function() {
-                                             console.log( "Handler for .keyup() called." );
-                                             });
-                                                                         
-             
-                                             function update() {
-                                                 if ($('#fuel_type option:selected').text() == "Diesel"){
-                                                     if ($('#currency option:selected').text() == "USD") {
-                                                         $('input[name="quantity"]').val($('input[name="fuel_paid"]').val()/$('input[name="diesel_usd_price"]').val());
-                                                     }else if ($('#currency option:selected').text() == "RTGS") {
-                                                         $('input[name="quantity"]').val($('input[name="fuel_paid"]').val()/$('input[name="diesel_rtgs_price"]').val());
-                                                     }
-                                                 }else{
-                                                     if ($('#currency option:selected').text() == "USD") {
-                                                         $('input[name="quantity"]').val($('input[name="fuel_paid"]').val()/$('input[name="petrol_usd_price"]').val());
-                                                     }else if ($('#currency option:selected').text() == "RTGS"){
-                                                         $('input[name="quantity"]').val($('input[name="fuel_paid"]').val()/$('input[name="petrol_rtgs_price"]').val());
-                                                     }
-             
-                                                 }    
-                                             }
-             
-                                             $("#fuel_paid").keyup(function(){
-                                                 update();
-                                             
-                                             });
+                                                console.log( "Handler for .keyup() called." );
+                                                });
+                                                                            
+
+                                                function update() {
+                                                    if ($('#fuel_type option:selected').text() == "Diesel"){
+                                                        if ($('#currency option:selected').text() == "USD") {
+                                                            $('input[name="quantity"]').val(parseFloat($('input[name="fuel_paid"]').val()/$('input[name="diesel_usd_price"]').val()).toFixed(2)) ;
+                                                        }else if ($('#currency option:selected').text() == "RTGS") {
+                                                            $('input[name="quantity"]').val(parseFloat($('input[name="fuel_paid"]').val()/$('input[name="diesel_rtgs_price"]').val()).toFixed(2));
+                                                        }
+                                                    }else{
+                                                        if ($('#currency option:selected').text() == "USD") {
+                                                            $('input[name="quantity"]').val(parseFloat($('input[name="fuel_paid"]').val()/$('input[name="petrol_usd_price"]').val()).toFixed(2));
+                                                        }else if ($('#currency option:selected').text() == "RTGS"){
+                                                            $('input[name="quantity"]').val(parseFloat($('input[name="fuel_paid"]').val()/$('input[name="petrol_rtgs_price"]').val()).toFixed(2));
+                                                        }
+
+                                                    }    
+                                                }
+
+                                                $("#fuel_paid").keyup(function(){
+                                                    update();
+                                                
+                                                });
+                                                $("#diesel_rtgs_price_input").keyup(function(){
+                                                    update();
+                                                
+                                                });$("#diesel_usd_price_input").keyup(function(){
+                                                    update();
+                                                
+                                                });$("#petrol_rtgs_price_input").keyup(function(){
+                                                    update();
+                                                
+                                                });$("#petrol_usd_price_input").keyup(function(){
+                                                    update();
+                                                
+                                                });
+                                                $('#currency').on('change', 'select', function() {
+                                                    // console.log("Achinja");
+                                                    update();
+                                                });
+                                                $('#fuel_type').on('change', 'select', function() {
+                                                    // console.log("Achinja");
+                                                    update();
+                                                });
+                                 
                                          </script>
                                         
 
@@ -313,12 +335,10 @@
                                            
                                         </div>
                                 </div>
-                                <div class="form-group row"
-                                    style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                                    <button type="button" class="btn btn-secondary col-sm-6"
-                                        data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
-                                </div>
+                                <div class="modal-footer">  
+                                    <button type="submit" class="btn btn-primary ">Submit</button>
+                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                </div> 
                                 </form>
                             </div>
                         </div>
@@ -457,6 +477,16 @@
 
 </div>
 </div>
+<script>
+    $('body').click(function (event) {
+        if(!$(event.target).closest('#place_order{{company_capacity.id}}').length && !$(event.target).is('#place_order')) {
+            $("#place_order{{company_capacity.id}}").modal('hide');
+        }
+        // if(!$(event.target).closest('#new_depot_user').length && !$(event.target).is('#new_depot_user')) {
+        //     $("#new_depot_user").modal('hide');
+        // }      
+    });
+</script>
 {% endif %}
 
 

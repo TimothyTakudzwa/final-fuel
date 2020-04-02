@@ -2,6 +2,7 @@ from datetime import datetime, date, timedelta
 
 from buyer.models import *
 from supplier.models import *
+import decimal
 
 def get_customer_contributions(supplier_id, buyer_company):
     supplier = User.objects.filter(id=supplier_id).first()
@@ -41,7 +42,7 @@ def transactions_total_cost(buyer):
     trans = Transaction.objects.filter(buyer=buyer, is_complete=True).all()
     if trans:
         for tran in trans:
-            revenue += (tran.offer.request.amount * tran.offer.price)
+            revenue += (decimal.Decimal(tran.offer.request.amount) * tran.offer.price)
     return revenue 
 
 def total_offers(buyer):

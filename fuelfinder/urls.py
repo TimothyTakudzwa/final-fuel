@@ -12,9 +12,9 @@ import buyer.views as buyer_views
 urlpatterns = [
 
     path('admin/', admin.site.urls),
-    path('', finder_views.landing_page, name='home'),
+    # path('', finder_views.landing_page, name='home'),
 
-    path('login/', buyer_views.login_user, name='login'),
+    path('', buyer_views.login_user, name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='supplier/logout.html'), name='logout'),
     path('verification/<token>/<user_id>', supplier_views.verification, name='verification'),
 

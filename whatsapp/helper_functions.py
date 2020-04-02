@@ -184,7 +184,7 @@ def individual_handler(request, user,message):
 
 def requesting_for_fuel(user, message):
     if user.position == 1:
-        cities = ["Harare","Bulawayo","Beitbridge","Bindura","Chinhoyi","Chirundu","Gweru","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Mutare","Mutoko","Nyanga","Victoria Falls"]
+        cities = ['Beitbridge', 'Bindura', 'Bulawayo', 'Chinhoyi', 'Chirundu', 'Gweru', 'Harare', 'Hwange', 'Juliusdale', 'Kadoma', 'Kariba', 'Karoi', 'Kwekwe', 'Marondera', 'Masvingo', 'Mutare', 'Mutoko', 'Nyanga', 'Victoria Falls']
         response_message = "Which City are you in?\n\n"
         i = 1
         for city in cities:
@@ -194,7 +194,7 @@ def requesting_for_fuel(user, message):
         user.save()
     elif user.position == 11:
         if message =="1":
-            Harare = ['Avenues', 'Budiriro','Dzivaresekwa',  'Kuwadzana', 'Warren Park','Glen Norah', 'Glen View',  'Avondale',  'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park','Borrowdale',  'Chisipiti',  'Glen Lorne', 'Greendale', 'Greystone Park', 'Helensvale', 'Highlands',   'Mandara', 'Manresa','Msasa','Newlands',  'The Grange',  'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft', 'Hatcliffe', 'Mabelreign', 'Marlborough',  'Meyrick Park', 'Mount Pleasant',  'Pomona',   'Tynwald',  'Vainona', 'Arcadia','Braeside', 'CBD',  'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale', 'Sunningdale', 'Epworth','Highfield' 'Kambuzuma',  'Southerton', 'Warren Park', 'Southerton',  'Mabvuku', 'Tafara',  'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park',  'Marimba Park', 'Mufakose']
+            Harare = ['Arcadia', 'Ardbennie', 'Ashdown Park', 'Avenues', 'Avondale', 'Avonlea', 'Belgravia', 'Belvedere', 'Bluff Hill', 'Borrowdale', 'Borrowdale', 'Braeside', 'Budiriro', 'CBD', 'Chisipiti', 'Cranbourne', 'Dzivaresekwa', 'Eastlea', 'Emerald Hill', 'Epworth', 'Glen Lorne', 'Glen Norah', 'Glen View', 'Graniteside', 'Greencroft', 'Greendale', 'Greystone Park', 'Gun Hill', 'Hatcliffe', 'Helensvale', 'HighfieldKambuzuma', 'Highlands', 'Hillside', 'Houghton Park', 'Kuwadzana', 'Mabelreign', 'Mabvuku', 'Mandara', 'Manresa', 'Marimba Park', 'Marlborough', 'Mbare', 'Meyrick Park', 'Milton Park', 'Mount Pleasant', 'Msasa', 'Mufakose', 'Newlands', 'Pomona', 'Prospect', 'Queensdale', 'Southerton', 'Southerton', 'Sunningdale', 'Tafara', 'The Grange', 'Tynwald', 'Vainona', 'Warren Park', 'Warren Park']
             user.fuel_updates_ids = "Harare"
             response_message = 'Which location do you want to look for fuel in?\n\n'
             i = 1
@@ -204,7 +204,7 @@ def requesting_for_fuel(user, message):
             user.position = 12
             user.save()
         elif message == "2":
-            Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane', 'North End', 'Northvale', 'North Lynne', 'Northlea', 'North Trenance', 'Ntaba Moyo', 'Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont', 'Bradfield','Burnside', 'Cement', 'Cowdray Park', 'Donnington West', 'Donnington', 'Douglasdale', 'Emakhandeni', 'Eloana', 'Emganwini', 'Enqameni', 'Enqotsheni']
+            Bulawayo = ['Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Bellevue', 'Belmont', 'Belmont Industrial area', 'Bradfield', 'Burnside', 'Cement', 'Cowdray Park', 'Donnington', 'Donnington West', 'Douglasdale', 'Eloana', 'Emakhandeni', 'Emganwini', 'Enqameni', 'Enqotsheni', 'New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane', 'North End', 'North Lynne', 'North Trenance', 'Northlea', 'Northvale', 'Ntaba Moyo']
             user.fuel_updates_ids = "Bulawayo"
             response_message = 'Which location do you want to look for fuel in?\n\n'
             i = 1
@@ -214,7 +214,9 @@ def requesting_for_fuel(user, message):
             user.position = 13
             user.save()
         else:
-            cities = ["Harare","Bulawayo","Beitbridge","Bindura","Chinhoyi","Chirundu","Gweru","Hwange","Juliusdale","Kadoma","Kariba","Karoi","Kwekwe","Marondera", "Masvingo","Mutare","Mutoko","Nyanga","Victoria Falls"]
+            cities = ['Beitbridge', 'Bindura', 'Bulawayo', 'Chinhoyi', 'Chirundu', 'Gweru', 'Harare', 'Hwange',
+                      'Juliusdale', 'Kadoma', 'Kariba', 'Karoi', 'Kwekwe', 'Marondera', 'Masvingo', 'Mutare', 'Mutoko',
+                      'Nyanga', 'Victoria Falls']
             my_city = cities[int(message) - 1]
             stations = Subsidiaries.objects.filter(city=my_city,is_depot=False).all()
             response_message = 'Please visit one of the service stations below to buy fuel\n\n'
@@ -228,7 +230,15 @@ def requesting_for_fuel(user, message):
                 else:
                     pass
     elif user.position == 12:
-        Harare = ['Avenues', 'Budiriro','Dzivaresekwa',  'Kuwadzana', 'Warren Park','Glen Norah', 'Glen View',  'Avondale',  'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park','Borrowdale',  'Chisipiti',  'Glen Lorne', 'Greendale', 'Greystone Park', 'Helensvale', 'Highlands',   'Mandara', 'Manresa','Msasa','Newlands',  'The Grange',  'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft', 'Hatcliffe', 'Mabelreign', 'Marlborough',  'Meyrick Park', 'Mount Pleasant',  'Pomona',   'Tynwald',  'Vainona', 'Arcadia','Braeside', 'CBD',  'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale', 'Sunningdale', 'Epworth','Highfield' 'Kambuzuma',  'Southerton', 'Warren Park', 'Southerton',  'Mabvuku', 'Tafara',  'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park',  'Marimba Park', 'Mufakose']
+        Harare = ['Arcadia', 'Ardbennie', 'Ashdown Park', 'Avenues', 'Avondale', 'Avonlea', 'Belgravia', 'Belvedere',
+                  'Bluff Hill', 'Borrowdale', 'Borrowdale', 'Braeside', 'Budiriro', 'CBD', 'Chisipiti', 'Cranbourne',
+                  'Dzivaresekwa', 'Eastlea', 'Emerald Hill', 'Epworth', 'Glen Lorne', 'Glen Norah', 'Glen View',
+                  'Graniteside', 'Greencroft', 'Greendale', 'Greystone Park', 'Gun Hill', 'Hatcliffe', 'Helensvale',
+                  'HighfieldKambuzuma', 'Highlands', 'Hillside', 'Houghton Park', 'Kuwadzana', 'Mabelreign', 'Mabvuku',
+                  'Mandara', 'Manresa', 'Marimba Park', 'Marlborough', 'Mbare', 'Meyrick Park', 'Milton Park',
+                  'Mount Pleasant', 'Msasa', 'Mufakose', 'Newlands', 'Pomona', 'Prospect', 'Queensdale', 'Southerton',
+                  'Southerton', 'Sunningdale', 'Tafara', 'The Grange', 'Tynwald', 'Vainona', 'Warren Park',
+                  'Warren Park']
         location = Harare[int(message) - 1]
         stations = Subsidiaries.objects.filter(city=user.fuel_updates_ids,location=location,is_depot=False).all()
         response_message = 'Please visit one of the service stations below to buy fuel\n\n'
@@ -242,7 +252,11 @@ def requesting_for_fuel(user, message):
             else:
                 pass
     elif user.position == 13:
-        Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane', 'North End', 'Northvale', 'North Lynne', 'Northlea', 'North Trenance', 'Ntaba Moyo', 'Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont', 'Bradfield','Burnside', 'Cement', 'Cowdray Park', 'Donnington West', 'Donnington', 'Douglasdale', 'Emakhandeni', 'Eloana', 'Emganwini', 'Enqameni', 'Enqotsheni']
+        Bulawayo = ['Ascot', 'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Bellevue', 'Belmont',
+                    'Belmont Industrial area', 'Bradfield', 'Burnside', 'Cement', 'Cowdray Park', 'Donnington',
+                    'Donnington West', 'Douglasdale', 'Eloana', 'Emakhandeni', 'Emganwini', 'Enqameni', 'Enqotsheni',
+                    'New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane',
+                    'North End', 'North Lynne', 'North Trenance', 'Northlea', 'Northvale', 'Ntaba Moyo']
         location = Bulawayo[int(message) - 1]
         stations = Subsidiaries.objects.filter(city=user.fuel_updates_ids,location=location,is_depot=False).all()
         response_message = 'Please visit one of the service stations below to buy fuel\n\n'

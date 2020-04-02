@@ -187,7 +187,9 @@ def create_company(request, id):
     user = User.objects.filter(id=id).first()
     user_type = user.user_type
     form.initial['company_name'] = user.company.name
-    zimbabwean_towns = ["Select City ---", "Harare", "Bulawayo", "Gweru", "Mutare", "Chirundu", "Bindura", "Beitbridge","Hwange", "Juliusdale", "Kadoma", "Kariba", "Karoi", "Kwekwe", "Marondera", "Masvingo", "Chinhoyi", "Mutoko", "Nyanga", "Victoria Falls"]
+    zimbabwean_towns = ['Select City ---', 'Beitbridge', 'Bindura', 'Bulawayo', 'Chinhoyi', 'Chirundu', 'Gweru',
+                        'Harare', 'Hwange', 'Juliusdale', 'Kadoma', 'Kariba', 'Karoi', 'Kwekwe', 'Marondera',
+                        'Masvingo', 'Mutare', 'Mutoko', 'Nyanga', 'Victoria Falls']
 
     if request.method == 'POST':
         form = CreateCompany(request.POST)

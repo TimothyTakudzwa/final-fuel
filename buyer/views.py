@@ -1108,4 +1108,3 @@ def company_profile(request):
         messages.success(request, 'Company profile updated successfully')
         return redirect('buyer-profile')
 
-    

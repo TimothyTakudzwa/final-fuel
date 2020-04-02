@@ -101,6 +101,7 @@ INDUSTRY_CHOICES = (("Accounting", "Accounting"),
                     ("Sports", "Sports"),
                     ("Telecommunications", "Telecommunications"),
                     ("Transportation", "Transportation"))
+
 TYPE_CHOICES = (
     ('INDIVIDUAL', 'Individual'),
     ('S_ADMIN', 'Supplier Admin'),
@@ -121,6 +122,8 @@ SUPPLIER_CHOICES = (
 )
 
 STORAGE_TANKS = (('ABOVE GROUND', 'ABOVE GROUND'), ('BELOW GROUND', 'BELOW GROUND'))
+
+
 job_titles = [
     "accountant",
     "actor",
@@ -1088,6 +1091,8 @@ job_titles = [
     "yardmaster",
     "zoologist"
 ]
+
+
 industries = [
     "Accounting",
     "Airlines/Aviation",
