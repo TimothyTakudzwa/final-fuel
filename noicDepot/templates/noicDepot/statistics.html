@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load humanize %}
 {% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html lang="en">
@@ -550,7 +551,7 @@
                     <ul>
                         <li class="active facebook-color" style="background-color: #337ab7;"><h5>{{order_completions}}</h5> Order Completion</li>
                         <li class="following-color"><h5>{{allocations}}</h5> Total Allocations Received</li>
-                        <li class="active facebook-color" style="background-color: #E5343D;"><h5>${{revenue}}</h5> Total Sales Revenue </li>
+                        <li class="active facebook-color" style="background-color: #E5343D;"><h5>${{revenue||intcomma}}</h5> Total Sales Revenue </li>
                     </ul>
                 </div>
                 <footer class="twt-footer">
@@ -579,19 +580,19 @@
                     <div class="clearfix"></div>
                 </div>
                 <a href="#" class="list-group-item">
-                    <p class="pull-right">{{stock.usd_petrol|floatformat:2 }}(l)</p>
+                    <p class="pull-right">{{stock.usd_petrol|floatformat:2|intcomma }}(l)</p>
                     <p class="list-group-item-text">USD Petrol</p>
                 </a>
                 <a href="#" class="list-group-item">
-                    <p class="pull-right">{{stock.rtgs_petrol|floatformat:2 }}(l)</p>
+                    <p class="pull-right">{{stock.rtgs_petrol|floatformat:2|intcomma }}(l)</p>
                     <p class="list-group-item-text">RTGS Petrol</p>
                 </a>
                 <a href="#" class="list-group-item">
-                    <p class="pull-right">{{stock.usd_diesel|floatformat:2 }}(l)</p>
+                    <p class="pull-right">{{stock.usd_diesel|floatformat:2|intcomma }}(l)</p>
                     <p class="list-group-item-text">USD Diesel</p>
                 </a>
                 <a href="#" class="list-group-item" style="padding-bottom: 40px">
-                    <p class="pull-right">{{stock.rtgs_diesel|floatformat:2 }}(l)</p>
+                    <p class="pull-right">{{stock.rtgs_diesel|floatformat:2|intcomma }}(l)</p>
                     <p class="list-group-item-text">RTGS Diesel</p>
                 </a>
             </div>
