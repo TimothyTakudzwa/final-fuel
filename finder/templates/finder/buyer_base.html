@@ -252,7 +252,7 @@
         $(document).ready(function () {
             $('#delivery_schedule').DataTable(
                 {
-                "order": [[ 1, 'desc' ], [ 2, 'desc' ]]
+                "order": false
                 }
             );
         });
@@ -262,7 +262,7 @@
         $(document).ready(function () {
             $('#delivery').DataTable(
                 {
-                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
+                "order": false,
                 "columnDefs": [
                 {
                 "targets": [ 0 ],
@@ -280,14 +280,16 @@
     </script>
     <script>
         $(document).ready(function () {
-            $('#accounts_table').DataTable();
+            $('#accounts_table').DataTable({
+                "order" : false
+            });
         });
     </script>
     <script>
         $(document).ready(function () {
             $('#offer').DataTable(
                 {
-                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
+                "order": false,
                 "columnDefs": [
                 {
                 "targets": [ 0 ],
@@ -306,14 +308,16 @@
 
 <script>
     $(document).ready(function () {
-        $('#suppliers').DataTable();
+        $('#suppliers').DataTable({
+                "order" : false
+            });
     });
 </script>
 
    <script>
         $(document).ready(function () {
             $('#fuel_updates').DataTable({
-                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
+                "order": false,
                 "columnDefs": [
                 {
                 "targets": [ 0 ],
@@ -331,7 +335,7 @@
     <script>
         $(document).ready(function () {
             $('#payment_history').DataTable({
-                "order": [[ 0, 'desc' ]]
+                "order": false
                 });
         });
     </script>
@@ -339,7 +343,7 @@
         $(document).ready(function () {
             $('#fuel_requests').DataTable(
                 {
-                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
+                "order": false,
                 "columnDefs": [
                 {
                 "targets": [ 0 ],
@@ -357,7 +361,9 @@
     </script>
     <script>
         $(document).ready(function () {
-            $('#incomplete_trans').DataTable();
+            $('#incomplete_trans').DataTable({
+                "order" : false
+            });
         });
     </script>
     <!-- jquery-ui -->
