@@ -517,8 +517,7 @@ def report_generator(request):
 
 
 def statistics(request):
-    # depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
-    depot = NoicDepot.objects.filter(id=2).first()
+    depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     weekly_rev = get_weekly_sales(True,depot)
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year, depot)
     last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1), depot)
