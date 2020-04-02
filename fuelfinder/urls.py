@@ -12,8 +12,9 @@ import buyer.views as buyer_views
 urlpatterns = [
 
     path('admin/', admin.site.urls),
-    path('', finder_views.landing_page, name='home'),
+    # path('', finder_views.landing_page, name='home'),
 
+    path('', buyer_views.login_user, name='login'),
     path('login/', buyer_views.login_user, name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='supplier/logout.html'), name='logout'),
     path('verification/<token>/<user_id>', supplier_views.verification, name='verification'),
@@ -68,6 +69,8 @@ urlpatterns = [
     path('password-reset-complete/',
          auth_views.PasswordResetCompleteView.as_view(template_name='supplier/password/password_reset_complete.html'),
          name='password_reset_complete'),
+
+    path('session_security/', include('session_security.urls'))
 
 ]
 

@@ -17,7 +17,8 @@ urlpatterns = [
     path('depots/', views.depots, name='depots'),
     path('edit_depot/<int:id>', views.edit_depot, name='edit_depot'),
     path('delete_depot/<int:id>', views.delete_depot, name='delete_depot'),
-    path('staff/', views.staff, name='staff')
+    path('staff/', views.staff, name='staff'),
+    path('activity/', views.activity, name='activity')
 
 
 ]

@@ -3,6 +3,7 @@ from buyer.models import *
 from supplier.models import *
 from django.db import models
 from buyer.models import User
+from national.models import NoicDepot
 
 
 class AuditTrail(models.Model):
@@ -42,3 +43,16 @@ class Audit_Trail(models.Model):
     def __str__(self):
         return f'{self.user.username} - {self.company.name}'
 
+
+class Activity(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, blank=True, null=True)
+    subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.DO_NOTHING, blank=True, null=True)
+    depot = models.ForeignKey(NoicDepot, on_delete=models.DO_NOTHING, blank=True, null=True)
+    action = models.CharField(max_length=700, blank=True, null=True)
+    description = models.CharField(max_length=700, blank=True, null=True)
+    reference_id = models.PositiveIntegerField(default=0)
+
+    

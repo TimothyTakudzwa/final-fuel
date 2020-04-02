@@ -16,7 +16,7 @@ from buyer.utils import render_to_pdf
 from company.models import CompanyFuelUpdate
 from fuelUpdates.models import SordCompanyAuditTrail
 from notification.models import Notification
-from users.models import Audit_Trail, SordActionsAuditTrail
+from users.models import Audit_Trail, SordActionsAuditTrail, Activity
 from whatsapp.helper_functions import send_message
 from .forms import PasswordChange, CreateCompany, OfferForm
 from .lib import *
@@ -187,7 +187,9 @@ def create_company(request, id):
     user = User.objects.filter(id=id).first()
     user_type = user.user_type
     form.initial['company_name'] = user.company.name
-    zimbabwean_towns = ["Select City ---", "Harare", "Bulawayo", "Gweru", "Mutare", "Chirundu", "Bindura", "Beitbridge","Hwange", "Juliusdale", "Kadoma", "Kariba", "Karoi", "Kwekwe", "Marondera", "Masvingo", "Chinhoyi", "Mutoko", "Nyanga", "Victoria Falls"]
+    zimbabwean_towns = ['Select City ---', 'Beitbridge', 'Bindura', 'Bulawayo', 'Chinhoyi', 'Chirundu', 'Gweru',
+                        'Harare', 'Hwange', 'Juliusdale', 'Kadoma', 'Kariba', 'Karoi', 'Kwekwe', 'Marondera',
+                        'Masvingo', 'Mutare', 'Mutoko', 'Nyanga', 'Victoria Falls']
 
     if request.method == 'POST':
         form = CreateCompany(request.POST)
@@ -318,6 +320,10 @@ def edit_delivery_schedule(request):
             delivery_schedule.date_edit_count += 1
         delivery_schedule.transport_company = request.POST['transport_company']
         delivery_schedule.save()
+
+        action = "Updating Delivery Schedule"
+        description = f"You have updated delivery schedule for buyer {delivery_schedule.transaction.buyer.company.name}"
+        Activity.objects.create(company=delivery_schedule.transaction.buyer.company, user=request.user, action=action, description=description, reference_id=delivery_schedule.id)
         messages.success(request, f"Schedule successfully updated")
         return redirect('supplier:delivery_schedules')
 
@@ -463,6 +469,10 @@ def stock_update(request, id):
 
                 stock_sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Petrol',
                                   fuel_update.payment_type)
+                petrol_stock = fuel_update.petrol_quantity
+                action = "Updating Fuel Stocks"
+                description = f"You have updated petrol stock to {petrol_stock}L"
+                Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=fuel_update.id)
 
             else:
                 if float(request.POST['quantity']) > available_diesel:
@@ -476,11 +486,17 @@ def stock_update(request, id):
                 stock_sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Diesel',
                                   fuel_update.payment_type)
 
+                petrol_stock = fuel_update.diesel_quantity
+                action = "Updating Fuel Stocks"
+                description = f"You have updated diesel stock to {petrol_stock}L"
+                Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=fuel_update.id)
+
             fuel_update.cash = request.POST['cash']
             fuel_update.swipe = request.POST['swipe']
             if fuel_update.payment_type != 'USD':
                 fuel_update.ecocash = request.POST['ecocash']
             fuel_update.save()
+            
             messages.success(request, 'Fuel successfully updated')
     return redirect('available_stock')
 
@@ -573,6 +589,10 @@ def offer(request, id):
                     Audit_Trail.objects.create(company=request.user.company, service_station=service_station,
                                                user=request.user, action=action, reference=reference,
                                                reference_id=reference_id)
+                    
+                    action = "Making Offer"
+                    description = f"You have made an offer of {offer_quantity}L @ {request.POST.get('price')} to a request made by {fuel_request.name.company.name}"
+                    Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=reference_id)
                     return redirect('fuel-request')
                 else:
                     messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
@@ -635,6 +655,10 @@ def edit_offer(request, id):
                 message = f'You have an updated offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.company.name.title()} for your request of {offer.request.amount}L'
                 Notification.objects.create(message=message, user=offer.request.name, reference_id=offer.id,
                                             action="new_offer")
+
+                # action = "Updating Offer"
+                # description = f"You have updated an offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.company.name.title()} for your request of {offer.request.amount}L"
+                # Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=offer.id)
                 return redirect('my_offers')
             else:
                 messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
@@ -769,6 +793,10 @@ def complete_transaction(request, id):
                 user = transaction.offer.request.name
                 transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Petrol', payment_type,
                                         transaction)
+                
+                action = "Approving Payment"
+                description = f"You have approved payment for fuel from {transaction.buyer.company.name}"
+                Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=transaction.id)
 
                 messages.success(request, "Proof of payment approved!, please create a delivery schedule for the buyer or upload a release note.")
                 return redirect('transaction')
@@ -814,6 +842,10 @@ def complete_transaction(request, id):
                 user = transaction.offer.request.name
                 transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Diesel', payment_type,
                                         transaction)
+
+                action = "Approving Payment"
+                description = f"You have approved payment for fuel from {transaction.buyer.company.name}"
+                Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=transaction.id)
 
                 messages.success(request, "Proof of payment approved!, please create a delivery schedule for the buyer.")
                 return redirect('transaction')
@@ -1046,6 +1078,10 @@ def create_delivery_schedule(request):
         payment_history.balance -= transaction.paid_reserve
         payment_history.delivery_schedule = schedule
         payment_history.save()
+
+        action = "Creating Delivery Schedule"
+        description = f"You have created delivery schedule for {transaction.buyer.company.name}"
+        Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=transaction.id)
         messages.success(request, "Schedule successfully created")
         message = f"{schedule.transaction.supplier.company} has created a delivery schedule for you, click to view schedule"
         Notification.objects.create(user=schedule.transaction.buyer, action='schedule', message=message,
@@ -1129,6 +1165,10 @@ def upload_release_note(request, id):
         payment_history.release_note = request.POST['release_date']
         payment_history.release_activated = True
         payment_history.save()
+
+        action = "Creating Release Note"
+        description = f"You have created release note for {transaction.buyer.company.name}"
+        Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=transaction.id)
         messages.success(request, "Release note successfully created")
         return redirect(f'/supplier/payment-and-release-notes/{transaction.id}')
 
@@ -1139,6 +1179,9 @@ def edit_release_note(request, id):
         release.release_date = request.POST['release_date']
         release.release_activated = True
         release.save()
+        action = "Updating Release Note"
+        description = f"You have updated release note for {release.transaction.buyer.company.name}"
+        Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=release.transaction.id)
         return redirect(f'/supplier/payment-and-release-notes/{release.transaction.id}')
 
 def payment_release_notes(request, id):
@@ -1180,6 +1223,10 @@ def supplier_release_note(request, id):
         payment_history.release_note = request.FILES.get('release_note')
         payment_history.release_activated = True
         payment_history.save()
+
+        action = "Creating Release Note"
+        description = f"You have created release note for {transaction.buyer.company.name}"
+        Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=transaction.id)
         messages.success(request, "Release note successfully uploaded")
         return redirect(f'/supplier/payment-and-release-notes/{id}')
 
@@ -1213,3 +1260,17 @@ def view_release_note(request, id):
         'payment': payment
     }
     return render(request, 'supplier/release_note.html', context=context)
+
+def download_release_note(request, id):
+    payment = AccountHistory.objects.filter(id=id).first()
+    payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
+    context = {
+        'payment': payment
+    }
+    return render(request, 'supplier/r_note.html', context=context)
+
+
+def activity(request):
+    activities = Activity.objects.filter(user=request.user).all()
+    depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+    return render(request, 'supplier/activity.html', {'activities': activities, 'depot': depot})

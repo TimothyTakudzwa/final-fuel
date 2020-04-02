@@ -163,6 +163,7 @@
    <script src="{% static 'finder/assets/js/material-dashboard.js' %}" type="text/javascript"></script>
    <!-- Material Dashboard DEMO methods, don't include it in your project! -->
    <script src="{% static 'finder/assets/demo/demo.js' %}"></script>
+   {% include 'session_security/all.html' %}
    <script>
      $(document).ready(function() {
       $('#example').DataTable({"order": [[ 0, "desc" ]]});

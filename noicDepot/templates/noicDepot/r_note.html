@@ -28,11 +28,11 @@
                     </div>
                     <div class="col company-details">
                         <h2 class="name">
-                            {{payment.transaction.buyer.first_name}} {{payment.transaction.buyer.last_name}}                          
+                            {{allocation.admin.first_name}} {{allocation.admin.last_name}}                          
                         </h2>
-                        <div>{{payment.transaction.buyer.company.name}}</div>
-                        <div>{{payment.transaction.buyer.phone_number}}</div>
-                        <div>{{payment.transaction.buyer.email}}</div>
+                        <div>{{allocation.company.name}}</div>
+                        <div>{{allocation.admin.phone_number}}</div>
+                        <div>{{allocation.admin.email}}</div>
                     </div>
                 </div>
             </header>
@@ -40,14 +40,13 @@
                 <div class="row contacts">
                     <div class="col invoice-to">
                         <div class="text-gray-light"><h3>Release Note From:</h3></div>
-                        <h4 class="to">{{payment.transaction.supplier.company}}</h4>
-                        <h5 class="to">{{payment.transaction.depot}}</h5>
-                        <div class="address">{{payment.offer.transaction.collection_address}}</div>
-                        <div class="email"><a href="mailto:{{transaction.buyer.email}}">{{payment.transaction.buyer.email}}</a></div>
+                        <h4 class="to">{{allocation.assigned_depot.name}}</h4>
+                        <div class="address">{{allocation.assigned_depot.address}} {{allocation.assigned_depot.city}}</div>
+                        <div class="email"><a href="mailto:{{allocation.rep.email}}">{{allocation.rep.email}}</a></div>
                     </div>
                     <div class="col invoice-details">
-                        <h1 class="invoice-id">REF {{payment.id}}</h1>
-                        <div class="date">Generated : {{payment.transaction.offer.date}} -- {{payment.transaction.offer.time}}</div>
+                        <h1 class="invoice-id">REF {{allocation.id}}</h1>
+                        <div class="date">Generated : {{allocation.date}}</div>
                     </div>
                 </div>
                 <table border="0" cellspacing="0" cellpadding="0">
@@ -57,6 +56,9 @@
                             <th class="text-left">COLLECTION ADDRESS</th>
                             <th class="text-left">PRODUCT</th>
                             <th class="text-left">QUANTITY</th>
+                            <th class="text-left">VAT</th>
+                            <th class="text-left">DUTY</th>
+                            <th class="text-left">TOTAL PRICE</th>
                             <th class="text-left">TRANSPORTER</th>
                             <th class="text-left">DRIVER</th>
                             <th class="text-left">DRIVER ID</th>
@@ -65,14 +67,17 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="">{{payment.release_date}}</td>
-                            <td class="">{{payment.transaction.offer.collection_address}}</td>            
-                            <td class="">{{payment.transaction.offer.request.fuel_type}}|S-ORD {{payment.sord_number}} </td>
-                            <td class="">{{payment.quantity|intcomma}} Litres</td>
-                            <td class="">{{payment.transaction.offer.request.transporter}}</td>
-                            <td class="">{{payment.transaction.offer.request.driver}}</td>
-                            <td class="">{{payment.transaction.offer.request.driver_id}}</td>
-                            <td class="">{{payment.transaction.offer.request.truck_reg}}</td>
+                            <td class="">{{allocation.release_date}}</td>
+                            <td class="">{{allocation.assigned_depot.address}} {{allocation.assigned_depot.city}}</td>            
+                            <td class="">{{allocation.fuel_type}}|S-ORD {{allocation.sord_no}} </td>
+                            <td class="">{{allocation.quantity|intcomma}} Litres</td>
+                            <td class="">{{allocation.order.vat}}</td>
+                            <td class="">{{allocation.order.duty}}</td>
+                            <td class="">{{allocation.order.price}}</td>
+                            <td class="">{{allocation.order.transporter}}</td>
+                            <td class="">{{allocation.order.driver}}</td>
+                            <td class="">{{allocation.order.driver_id}}</td>
+                            <td class="">{{allocation.order.truck_reg}}</td>
                         </tr>
                         
                     </tbody>
@@ -95,7 +100,7 @@
 </div>
 
 </body>
-<!-- <script>
+<script>
         var currentdate = new Date();
         var datetime =currentdate.getDate() + "-"
                 + (currentdate.getMonth()+1)  + "-" 
@@ -106,4 +111,4 @@
         doc.addHTML(document.body,function() {
             doc.save(name);
         });
-        </script> -->
+        </script>

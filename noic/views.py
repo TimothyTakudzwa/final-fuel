@@ -22,7 +22,7 @@ from users.forms import DepotContactForm
 from company.models import Company, CompanyFuelUpdate
 from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, Transaction, Offer, DeliverySchedule
 from fuelUpdates.models import SordCompanyAuditTrail
-from users.models import SordActionsAuditTrail
+from users.models import SordActionsAuditTrail, Activity
 from accounts.models import AccountHistory
 from users.views import message_is_sent
 from fuelfinder.helper_functions import random_password
@@ -41,6 +41,11 @@ def orders(request):
     form1.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots]
 
     return render(request, 'noic/orders.html', {'orders': orders, 'form1': form1})
+
+
+def activity(request):
+    activities = Activity.objects.filter(user=request.user).all()
+    return render(request, 'noic/activity.html', {'activities': activities})
 
 def dashboard(request):
     capacities = NationalFuelUpdate.objects.all()
@@ -119,27 +124,10 @@ def depots(request):
         fuel_update = DepotFuelUpdate.objects.create(depot=depot)
         fuel_update.save()
 
-        # creating user for depot
-        # first_name = request.POST.get('first_name')
-        # last_name = request.POST.get('last_name')
-        # username = first_name[0] + last_name
-
-        # i = 0
-        # while User.objects.filter(username=username).exists():
-        #     username = first_name[0] + last_name + str(i)
-        #     i += 1
-        
-        # depot_staff = User.objects.create(username=username.lower(),
-        #                                   email=request.POST.get('email'),
-        #                                   first_name=first_name,
-        #                                   last_name=last_name,
-        #                                   company_position='manager',
-        #                                   user_type='NOIC_STAFF',
-        #                                   password_reset=True,
-        #                                   subsidiary_id=depot.id
-        #                                   )
-        # depot_staff.set_password(random_password())
-
+        action = "Depot Creation"
+        description = f"You have created another NOIC Depot {depot.name}"
+        Activity.objects.create(depot=depot, user=request.user,
+                                    action=action, description=description, reference_id=depot.id)
         messages.success(request, 'Depot Created Successfully')
         
         depots = NoicDepot.objects.all()
@@ -163,6 +151,10 @@ def edit_depot(request, id):
             depot_update.opening_time = request.POST['opening_time']
             depot_update.closing_time = request.POST['closing_time']
             depot_update.save()
+            action = "Updating Depot"
+            description = f"You have updated NOIC Depot {depot_update.name}"
+            Activity.objects.create(depot=depot_update, user=request.user,
+                                        action=action, description=description, reference_id=depot_update.id)
             messages.success(request, 'Depot updated successfully')
             return redirect('noic:depots')
         else:
@@ -175,6 +167,10 @@ def delete_depot(request, id):
         if NoicDepot.objects.filter(id=id).exists():
             depot_update = NoicDepot.objects.filter(id=id).first()
             depot_update.delete()
+            action = "Deleting Depot"
+            description = f"You have deleted NOIC Depot {depot_update.name}"
+            Activity.objects.create(depot=depot_update, user=request.user,
+                                        action=action, description=description, reference_id=depot_update.id)
             messages.success(request, 'Depot deleted successfully')
             return redirect('noic:depots')
 
@@ -190,12 +186,22 @@ def fuel_update(request, id):
                 fuel_update.usd_petrol += float(request.POST['quantity'])
                 fuel_update.usd_petrol_price = request.POST['price']
                 fuel_update.save()
+
+                action = "Fuel Allocation"
+                description = f"You have allocated fuel to {fuel_update.depot.name}"
+                Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                                    action=action, description=description, reference_id=fuel_update.id)
                 messages.success(request, 'updated petrol quantity successfully')
                 return redirect('noic:dashboard')
             else:
                 fuel_update.rtgs_petrol += float(request.POST['quantity'])
                 fuel_update.rtgs_petrol_price = request.POST['price']
                 fuel_update.save()
+
+                action = "Fuel Allocation"
+                description = f"You have allocated fuel to {fuel_update.depot.name}"
+                Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                                    action=action, description=description, reference_id=fuel_update.id)
                 messages.success(request, 'updated petrol quantity successfully')
                 return redirect('noic:dashboard')
             
@@ -204,12 +210,21 @@ def fuel_update(request, id):
                 fuel_update.usd_diesel += float(request.POST['quantity'])
                 fuel_update.usd_diesel_price = request.POST['price']
                 fuel_update.save()
+
+                action = "Fuel Allocation"
+                description = f"You have allocated fuel to {fuel_update.depot.name}"
+                Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                                    action=action, description=description, reference_id=fuel_update.id)
                 messages.success(request, 'updated diesel quantity successfully')
                 return redirect('noic:dashboard')
             else:
                 fuel_update.rtgs_diesel += float(request.POST['quantity'])
                 fuel_update.rtgs_diesel_price = request.POST['price']
                 fuel_update.save()
+                action = "Fuel Allocation"
+                description = f"You have allocated fuel to {fuel_update.depot.name}"
+                Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                                    action=action, description=description, reference_id=fuel_update.id)
                 messages.success(request, 'updated diesel quantity successfully')
                 return redirect('noic:dashboard')
 
@@ -221,6 +236,11 @@ def edit_prices(request, id):
         fuel_update.rtgs_petrol_price = request.POST['rtgs_petrol_price']
         fuel_update.rtgs_diesel_price = request.POST['rtgs_diesel_price']
         fuel_update.save()
+
+        action = "Updating Prices"
+        description = f"You have updated fuel prices for {depot_update.depot.name}"
+        Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                                    action=action, description=description, reference_id=fuel_update.depot.id)
         messages.success(request, 'updated prices successfully')
         return redirect('noic:dashboard')
 
@@ -256,6 +276,7 @@ def allocate_fuel(request, id):
                     company_update.save()
                     order.allocated_fuel = True
                     order.save()
+
                     messages.success(request, 'fuel allocated successfully')
                     return redirect('noic:orders')
             
@@ -373,6 +394,11 @@ def staff(request):
         depot = NoicDepot.objects.filter(id=subsidiary_id).first()
         depot.is_active = True
         depot.save()
+
+        action = "Creating Staff"
+        description = f"You have created user {user.first_name} for {depot.name}"
+        Activity.objects.create(depot=depot, user=request.user,
+                                    action=action, description=description, reference_id=user.id)
         if message_is_send(request, user, password):
             if user.is_active:
                 user.stage = 'menu'

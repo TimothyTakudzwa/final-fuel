@@ -25,7 +25,7 @@ from .constants import coordinates_towns
 from .forms import ZeraProfileUpdateForm, ZeraImageUpdateForm
 from fuelUpdates.models import SordCompanyAuditTrail
 from fuelfinder.helper_functions import random_password
-from users.models import SordActionsAuditTrail
+from users.models import SordActionsAuditTrail, Activity
 from accounts.models import AccountHistory
 from users.views import message_is_sent
 from national.models import DepotFuelUpdate, NoicDepot, SordNationalAuditTrail
@@ -58,6 +58,10 @@ def dashboard(request):
                                 contact_person=contact_person, account_number=account_number, company_type='SUPPLIER', phone_number=phone_number, is_active=True)
             new_company.save()
             CompanyFuelUpdate.objects.create(company=new_company)
+
+            action = "Company Registration"
+            description = f"You have registered another supplier company {new_company.name}"
+            Activity.objects.create(company=new_company, user=request.user, action=action, description=description, reference_id=new_company.id)
             messages.success(request, 'Company successfully registered')
             return render(request, 'zeraPortal/companies.html', {'companies': companies, 'new_company': new_company, 'administrater' : 'show', 'zimbabwean_towns':zimbabwean_towns})
         else:
@@ -65,6 +69,10 @@ def dashboard(request):
             return redirect('zeraPortal:dashboard')
     return render(request, 'zeraPortal/companies.html', {'companies': companies, 'administrater' : 'hide', 'zimbabwean_towns':zimbabwean_towns})
 
+
+def activity(request):
+    activities = Activity.objects.filter(user=request.user).all()
+    return render(request, 'zeraPortal/activity.html', {'activities': activities})
 
 def noic_fuel(request):
     # capacities = NationalFuelUpdate.objects.all()
@@ -101,6 +109,10 @@ def edit_company(request, id):
         company.phone_number = request.POST.get('phone_number')
         company.license_number = license_number
         company.save()
+
+        action = "Updating Company"
+        description = f"You have updated supplier company {company.name}"
+        Activity.objects.create(company=company, user=request.user, action=action, description=description, reference_id=company.id)
         messages.success(request, 'Company details updated successfully')
         return redirect('zeraPortal:dashboard')
     else:
@@ -134,6 +146,10 @@ def add_supplier_admin(request, id):
         user.set_password(password)
         user.save()
         message_is_sent(request, user, password)
+
+        action = "Creating Supplier Admin"
+        description = f"You have created supplier admin for {user.first_name} for {company.name}"
+        Activity.objects.create(company=company, user=request.user, action=action, description=description, reference_id=user.id)
         messages.success(request, 'User successfully created')
         return redirect ('zeraPortal:dashboard')
 
@@ -143,6 +159,10 @@ def block_company(request, id):
     if request.method == 'POST':
         company.is_active = False
         company.save()
+
+        action = "Blocking Company"
+        description = f"You have blocked supplier company {company.name}"
+        Activity.objects.create(company=company, user=request.user, action=action, description=description, reference_id=company.id)
         messages.success(request, f'{company.name} Successfully Blocked')
         return redirect('zeraPortal:dashboard')
 
@@ -152,6 +172,10 @@ def unblock_company(request, id):
     if request.method == 'POST':
         company.is_active = True
         company.save()
+
+        action = "Unblocking Company"
+        description = f"You have unblocked supplier company {company.name}"
+        Activity.objects.create(company=company, user=request.user, action=action, description=description, reference_id=company.id)
         messages.success(request, f'{company.name} Successfully Unblocked')
         return redirect('zeraPortal:dashboard')
 
@@ -335,6 +359,10 @@ def change_licence(request, id):
         if not check_license:
             subsidiary.license_num = license_num
             subsidiary.save()
+
+            action = "Updating Licence"
+            description = f"You have updated licence for subsidiary {subsidiary.name}"
+            Activity.objects.create(subsidiary=subsidiary, user=request.user, action=action, description=description, reference_id=subsidiary.id)
             messages.success(request, f'{subsidiary.name} License updated successfully')
             return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
         else:
@@ -347,6 +375,10 @@ def block_licence(request, id):
     if request.method == 'POST':
         subsidiary.is_active = False
         subsidiary.save()
+
+        action = "Cancelling Licence"
+        description = f"You have cancelled licence for subsidiary {subsidiary.name}"
+        Activity.objects.create(subsidiary=subsidiary, user=request.user, action=action, description=description, reference_id=subsidiary.id)
         messages.info(request, f'{subsidiary.name} License Blocked')
         return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
 
@@ -411,6 +443,10 @@ def unblock_licence(request, id):
     if request.method == 'POST':
         subsidiary.is_active = True
         subsidiary.save()
+
+        action = "Unblocking Licence"
+        description = f"You have unblocked licence for subsidiary {subsidiary.name}"
+        Activity.objects.create(subsidiary=subsidiary, user=request.user, action=action, description=description, reference_id=subsidiary.id)
         messages.success(request, f'{subsidiary.name} License unblocked successfully')
         return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
 
@@ -424,6 +460,10 @@ def add_licence(request, id):
             subsidiary.license_num = license_num
             subsidiary.is_active = True
             subsidiary.save()
+
+            action = "Approving Subsidiary"
+            description = f"You have approved subsidiary {subsidiary.name}"
+            Activity.objects.create(subsidiary=subsidiary, user=request.user, action=action, description=description, reference_id=subsidiary.id)
             messages.success(request, f'{subsidiary.name} Approved Successfully')
             return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
         else:

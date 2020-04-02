@@ -16,6 +16,7 @@ from decimal import *
 
 from accounts.models import Account
 from buyer.models import User
+from users.models import Activity
 from accounts.models import AccountHistory
 from buyer.recommend import recommend
 from buyer.utils import render_to_pdf
@@ -383,6 +384,7 @@ def fuel_finder(request):
             fuel_request_item.delivery_method = delivery_method
             fuel_request_item.wait = True
             fuel_request_item.save()
+            
             messages.success(request, f'Kindly note your request has been made ')
 
             message = f'{request.user.company.name.title()} made a request of {fuel_request_item.amount}L' \
@@ -463,6 +465,10 @@ def dashboard(request):
                 fuel_request_object.last_deal = int(request.POST.get('company_id'))
                 fuel_request_object.save()
                 current_user = User.objects.filter(subsidiary_id=fuel_request_object.last_deal).first()
+
+            action = "Fuel Request"
+            description = f"You have made fuel request of {fuel_request_object.amount} {fuel_request_object.fuel_type}"
+            Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=fuel_request_object.id)
             messages.success(request, f'Kindly note your request has been made ')
             message = f'{request.user.first_name} {request.user.last_name} made a request of ' \
                       f'{fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()}'
@@ -492,6 +498,10 @@ def dashboard(request):
                 fuel_request_object.meter_required = True if request.POST.get('meter_required') == "True" else False
                 fuel_request_object.wait = True
                 fuel_request_object.save()
+            
+            action = "Fuel Request"
+            description = f"You have made fuel request of {fuel_request_object.amount} {fuel_request_object.fuel_type}"
+            Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=fuel_request_object.id)
             messages.success(request, f'Fuel request has been submitted successfully and now waiting for an offer')
             message = f'{request.user.first_name} {request.user.last_name} made a request of ' \
                       f'{fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()}'
@@ -531,6 +541,10 @@ def dashboard(request):
                     offer = Offer.objects.filter(id=offer_id).first()
                     sub = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
                     messages.info(request, "Match found")
+
+                    action = "Fuel Request"
+                    description = f"You have made fuel request of {fuel_request_object.amount} {fuel_request_object.fuel_type}"
+                    Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=fuel_request_object.id)
                     return render(request, 'buyer/dashboard.html',
                                   {'form': form, 'updates': updates, 'offer': offer, 'sub': sub})
     else:
@@ -599,7 +613,10 @@ def accept_offer(request, id):
 
         message = f'{offer.request.name.first_name} {offer.request.name.last_name} accepted your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
         Notification.objects.create(message=message, user=offer.supplier, reference_id=offer.id, action="offer_accepted")
-
+        
+        action = "Accepting Offer"
+        description = f"You have accepted offer of {offer.quantity}L {offer.request.fuel_type}"
+        Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=offer.id)
         messages.warning(request, "Your request has been saved successfully")
         return redirect("buyer-transactions")
     else:
@@ -616,6 +633,10 @@ def reject_offer(request, id):
     my_request.wait = True
     my_request.is_complete = False
     my_request.save()
+
+    action = "Rejecting Offer"
+    description = f"You have rejected offer of {offer.quantity}L {offer.request.fuel_type}"
+    Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=offer.id)
 
     message = f'{offer.request.name.first_name} {offer.request.name.last_name} rejected your offer of {offer.quantity}L {offer.request.fuel_type.lower()} at ${offer.price}'
     Notification.objects.create(message=message, user=offer.supplier, reference_id=offer.id, action="offer_rejected")
@@ -985,6 +1006,10 @@ def proof_of_payment(request, id):
                 transaction.proof_of_payment_approved = False
                 transaction.pending_proof_of_payment = True
                 transaction.save()
+
+                action = "Uploading Proof of Payment"
+                description = f"You have uploaded proof of payment for transaction of {transaction.offer.quantity}L {transaction.offer.request.fuel_type}"
+                Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=transaction.id)
                 messages.success(request, 'Proof of payment successfully uploaded')
                 return redirect('buyer-transactions')
         else:
@@ -998,6 +1023,9 @@ def delivery_note(request, id):
             payment.delivery_note = request.FILES.get('d_note')
             payment.save()
             
+            action = "Uploading Delivery Note"
+            description = f"You have uploaded d-note for transaction of {payment.transaction.offer.quantity}L {payment.transaction.offer.request.fuel_type}"
+            Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=payment.transaction.id)
             messages.success(request, 'Delivery note successfully uploaded')
             return redirect(f'/buyer/payment_release_notes/{payment.transaction.id}')
         else:
@@ -1108,4 +1136,7 @@ def company_profile(request):
         messages.success(request, 'Company profile updated successfully')
         return redirect('buyer-profile')
 
-    
+
+def activity(request):
+    activities = Activity.objects.filter(user=request.user).all()
+    return render(request, 'buyer/activity.html', {'activities': activities})

@@ -5,6 +5,7 @@ from io import BytesIO
 
 import pandas as pd
 from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.db.models import Count
@@ -774,9 +775,11 @@ function for creating subsidiaries (Depots & Stations) & their fuel update objec
 @login_required()
 def stations(request):
     stations = Subsidiaries.objects.filter(company=request.user.company).all()
-    zimbabwean_towns = ["Select City ---", "Harare", "Bulawayo", "Gweru", "Mutare", "Chirundu", "Bindura", "Beitbridge",
-                        "Hwange", "Juliusdale", "Kadoma", "Kariba", "Karoi", "Kwekwe", "Marondera", "Masvingo",
-                        "Chinhoyi", "Mutoko", "Nyanga", "Victoria Falls"]
+    zimbabwean_towns = ['Select City ---', 'Beitbridge', 'Bindura', 'Bulawayo', 'Chinhoyi', 'Chirundu', 'Gweru',
+                        'Harare',
+                        'Hwange', 'Juliusdale', 'Kadoma', 'Kariba', 'Karoi', 'Kwekwe', 'Marondera', 'Masvingo',
+                        'Mutare',
+                        'Mutoko', 'Nyanga', 'Victoria Falls']
     Harare = ['Avenues', 'Budiriro', 'Dzivaresekwa', 'Kuwadzana', 'Warren Park', 'Glen Norah', 'Glen View', 'Avondale',
               'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park', 'Borrowdale', 'Chisipiti', 'Glen Lorne',
               'Greendale', 'Greystone Park', 'Helensvale', 'Highlands', 'Mandara', 'Manresa', 'Msasa', 'Newlands',

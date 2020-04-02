@@ -69,8 +69,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'mathfilters',
     'debug_toolbar',
-    'comments.apps.CommentsConfig'
-
+    'comments.apps.CommentsConfig',
+    'session_security',
 ]
 
 
@@ -80,9 +80,12 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+
+    'session_security.middleware.SessionSecurityMiddleware',
+
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'fuelfinder.urls'
@@ -182,3 +185,8 @@ MEDIA_URL = '/media/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_URL = 'login'
+
+# update these in seconds seconds
+SESSION_SECURITY_WARN_AFTER = 30
+SESSION_SECURITY_EXPIRE_AFTER = 60
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

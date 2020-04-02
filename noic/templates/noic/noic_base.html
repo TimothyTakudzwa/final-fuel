@@ -80,7 +80,7 @@
                 </span>
                 <span class="logo-lg">
                     <!--<b>Admin</b>H-admin-->
-                    <h1>ZFMS</h1>
+                    <h1 style="text-align: left;">ZFMS</h1>
                 </span>
             </a>
             <!-- Header Navbar -->
@@ -154,14 +154,19 @@
                     </li>
                    
                     <li class="nav-item {% if request.path == '/noic/orders/' %} active {% endif %}">
-                        <a href="{% url 'noic:orders' %}"><i class="fa fa-book"></i><span>Orders Audit Trail</span>
+                        <a href="{% url 'noic:orders' %}"><i class="fa fa-book"></i><span>Allocations</span>
                         </a>
                     </li>
 
                     
                    
                     <li class="nav-item {% if request.path == '/noic/allocations/' %} active {% endif %}">
-                        <a href="{% url 'noic:allocations' %}"><i class="fa fa-binoculars"></i><span>Allocations Audit Trail</span>
+                        <a href="{% url 'noic:allocations' %}"><i class="fa fa-binoculars"></i><span>Audit Trail</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item {% if request.path == '/noic/activity/' %} active {% endif %}">
+                        <a href="{% url 'noic:activity' %}"><i  class="fa fa-area-chart"></i><span>Activity</span>
                         </a>
                     </li>
 
@@ -256,15 +261,15 @@
     <script>
         $(document).ready(function () {
             $('#orders').DataTable(
-                {
-                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
-                "columnDefs": [
-            {
-                "targets": [ 1 ],
-                "visible": false
-            }
-                    ]
-                }
+            //     {
+            //     // "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
+            //     "columnDefs": [
+            // {
+            //     "targets": [ 1 ],
+            //     "visible": false
+            // }
+            //         ]
+            //     }
             );
         });
     </script>
@@ -371,6 +376,7 @@
     <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/sweetalert/sweetalert.min.js"></script>
     <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/js/classie.js"></script>
     <script src="https://timothytakudzwa.github.io/static/new/assets/dist/js/custom.js" type="text/javascript"></script>
+    {% include 'session_security/all.html' %}
 
     <!-- End Theme label Script
         =====================================================================-->

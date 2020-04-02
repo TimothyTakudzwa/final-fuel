@@ -41,5 +41,6 @@ urlpatterns = [
     path('view_release_note/<int:id>', views.view_release_note, name='view_release_note'),
     path('noic_allocations/<int:id>', views.noic_allocations, name='noic_allocations'),
     path('noic_release_note/<int:id>', views.noic_release_note, name='noic_release_note'),
-    path('noic_delivery_note/<int:id>', views.noic_delivery_note, name='noic_delivery_note')
+    path('noic_delivery_note/<int:id>', views.noic_delivery_note, name='noic_delivery_note'),
+    path('activity/', views.activity, name='activity')
 ]

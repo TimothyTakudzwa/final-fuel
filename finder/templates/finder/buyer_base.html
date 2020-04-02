@@ -79,7 +79,7 @@
                 </span>
                 <span class="logo-lg">
                     <!--<b>Admin</b>H-admin-->
-                    <h1>ZFMS</h1>
+                    <h1 style="text-align: left;">ZFMS</h1>
                 </span>
             </a>
             <!-- Header Navbar -->
@@ -161,6 +161,10 @@
                     </li>
                     <li class="nav-item {% if request.path == '/buyer/transactions' %} active {% endif %}  ">
                         <a href="{%url 'buyer-transactions'%}"><i class="fa fa-handshake-o"></i><span>Transactions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {% if request.path == '/buyer/activity/' %} active {% endif %}">
+                        <a href="{% url 'buyer:activity' %}"><i  class="fa fa-area-chart"></i><span>Activity</span>
                         </a>
                     </li>
                     <li class="nav-item {% if request.path == '/buyer/delivery-schedule/' %} active {% endif %}  ">
@@ -421,6 +425,7 @@
         =====================================================================-->
     <!-- Dashboard js -->
     <script src="https://timothytakudzwa.github.io/static/new/assets/dist/js/custom.js" type="text/javascript"></script>
+    {% include 'session_security/all.html' %}
 
     <!-- End Theme label Script
         =====================================================================-->

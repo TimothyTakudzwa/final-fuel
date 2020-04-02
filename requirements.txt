@@ -47,3 +47,4 @@ WeasyPrint==50
 webencodings==0.5.1
 wrapt==1.11.2
 xhtml2pdf==0.2.3
+django-session-security==2.6.5
