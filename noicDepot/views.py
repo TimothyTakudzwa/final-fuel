@@ -71,9 +71,15 @@ def activity(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     return render(request, 'noicDepot/activity.html', {'activities': activities, 'depot': depot})
 
+
+def accepted_orders(request):
+    depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+    orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=True).all()
+    return render(request, 'noicDepot/accepted_orders.html', {'orders': orders})
+
 def orders(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
-    orders = Order.objects.filter(noic_depot=depot).all()
+    orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=False).all()
     # print(orders)
     for order in orders:
         if order is not None:
