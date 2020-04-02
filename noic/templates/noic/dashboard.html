@@ -161,9 +161,9 @@
             <div class=" modal-dialog" role="document" >
                 <div class="modal-content">
                     <div class="modal-header">
-                        <span class="modal-title" id="exampleModalLongTitle">Add USD Fuel- <i
+                        <span class="modal-title" id="exampleModalLongTitle">Add Fuel- <i
                                 style="color:azure"><small>Please Note the fuel you are entering is to be
-                                    sold in United States Dollars</small></i></span>
+                                    sold either in United States Dollars or RTGS</small></i></span>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -205,7 +205,7 @@
                                 <div class="col-sm-6">
                                     <label><b style='color:#009688'>Price</b></label>
                                     <input type="text" name="price" class="form-control"
-                                     required />
+                                     value ="{{fuel.usd_petrol_price}}" required />
                                 </div>
                                 
                             </div>
