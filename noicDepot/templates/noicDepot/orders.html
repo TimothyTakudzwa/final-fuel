@@ -189,7 +189,7 @@
                     <td>{{ order.company.name|lower|title }}</td>
                     <td>{{ order.company.address|lower|title }}</td>
                     <td>{{ order.fuel_type|lower|capfirst }}</td>
-                    <td>{{ order.quantity|intcomma }}</td>
+                    <td>{{ order.quantity|floatformat:2 }}</td>
                     <td>{{ order.currency}}</td> 
                     <td>
 
