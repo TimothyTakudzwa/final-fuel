@@ -996,7 +996,7 @@ def statistics(request):
         sub_trans = Transaction.objects.filter(supplier__company=request.user.company, supplier__subsidiary_id=sub.id,
                                                is_complete=True)
         for sub_tran in sub_trans:
-            tran_amount += (sub_tran.offer.request.amount * sub_tran.offer.price)
+            tran_amount += (float(sub_tran.offer.request.amount)* float(sub_tran.offer.price))
         sub.tran_count = sub_trans.count()
         sub.tran_value = tran_amount
         subs.append(sub)
