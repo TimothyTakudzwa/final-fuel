@@ -469,11 +469,11 @@
                                 if(!$(event.target).closest('#add_fuel{{allocate.id}}').length && !$(event.target).is('#add_fuel{{allocate.id}}')) {
                                     $("#add_fuel{{allocate.id}}").modal('hide');
                                 }
-                                if(!$(event.target).closest('#add_usd_fuel').length && !$(event.target).is('#add_usd_fuel')) {
-                                    $("#add_usd_fuel").modal('hide');
+                                if(!$(event.target).closest('#add_usd_fuel{{allocate.id}}').length && !$(event.target).is('#add_usd_fuel{{allocate.id}}')) {
+                                    $("#add_usd_fuel{{allocate.id}}").modal('hide');
                                 }
-                                if(!$(event.target).closest('#add_rtgs_fuel').length && !$(event.target).is('#add_rtgs_fuel')) {
-                                    $("#add_rtgs_fuel").modal('hide');
+                                if(!$(event.target).closest('#add_rtgs_fuel{{allocate.id}}').length && !$(event.target).is('#add_rtgs_fuel{{allocate.id}}')) {
+                                    $("#add_rtgs_fuel{{allocate.id}}").modal('hide');
                                 }       
                             });
                         </script>
@@ -605,12 +605,15 @@
                                 if(!$(event.target).closest('#add_fuel{{allocate.id}}').length && !$(event.target).is('#add_fuel{{allocate.id}}')) {
                                     $("#add_fuel{{allocate.id}}").modal('hide');
                                 }
-                                if(!$(event.target).closest('#add_usd_fuel').length && !$(event.target).is('#add_usd_fuel')) {
-                                    $("#add_usd_fuel").modal('hide');
+                                if(!$(event.target).closest('#add_usd_fuel{{allocate.id}}').length && !$(event.target).is('#add_usd_fuel{{allocate.id}}')) {
+                                    $("#add_usd_fuel{{allocate.id}}").modal('hide');
                                 }
-                                if(!$(event.target).closest('#add_rtgs_fuel').length && !$(event.target).is('#add_rtgs_fuel')) {
-                                    $("#add_rtgs_fuel").modal('hide');
-                                }       
+                                if(!$(event.target).closest('#add_rtgs_fuel{{allocate.id}}').length && !$(event.target).is('#add_rtgs_fuel{{allocate.id}}')) {
+                                    $("#add_rtgs_fuel{{allocate.id}}").modal('hide');
+                                }
+                                if(!$(event.target).closest('#edit_{{allocate.id}}').length && !$(event.target).is('#edit_{{allocate.id}}')) {
+                                    $("#edit_{{allocate.id}}").modal('hide');
+                                }        
                             });
                         </script>
 
