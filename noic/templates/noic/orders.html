@@ -80,7 +80,7 @@
                     {% endif %}    
 
 
-                    <td>{{ order.quantity|intcomma }}</td>
+                    <td>{{ order.quantity|floatformat:2 }}</td>
                     <td>{{ order.currency}}</td> 
                     <td>
 
