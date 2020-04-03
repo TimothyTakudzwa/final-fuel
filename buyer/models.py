@@ -82,6 +82,7 @@ class FuelRequest(models.Model):
     truck_reg = models.CharField(max_length=150, blank=True, null=True)
     driver = models.CharField(max_length=150, blank=True, null=True)
     driver_id = models.CharField(max_length=150, blank=True, null=True)
+    is_test_data = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['date', 'time', 'name']
