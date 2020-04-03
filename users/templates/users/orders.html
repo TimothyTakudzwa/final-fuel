@@ -556,7 +556,12 @@
                         }
                         if(!$(event.target).closest('#new_depot_user').length && !$(event.target).is('#new_depot_user')) {
                             $("#new_depot_user").modal('hide');
+                        } 
+                        if(!$(event.target).closest('#upload_{{order.allocation.id}}').length && !$(event.target).is('#upload_{{order.allocation.id}}')) {
+                            $("#upload_{{order.allocation.id}}").modal('hide');
                         }      
+
+                        
                     });
                 </script>
                    
