@@ -1,6 +1,6 @@
 from django.db import models
 from buyer.models import User
-from company.mdels import Company
+from company.models import Company
 
 
 class Notification(models.Model):
