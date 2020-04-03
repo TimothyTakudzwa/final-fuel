@@ -1,15 +1,21 @@
 from django.db import models
 from buyer.models import User
+from company.models import Company
 
 
 class Notification(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notification_name', blank = True, null= True)
-    message = models.CharField(max_length=5000)
-    action = models.CharField(max_length=30, choices=(('REQUEST' , 'REQUEST'), ('OFFER' , 'OFFER'), ('DELVERY','DELVERY')))
-    reference_id = models.PositiveIntegerField(default=0)
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notification_name', blank = True, null= True)
+    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, blank=True, null=True)
+    message = models.CharField(max_length=5000)
+    action = models.CharField(max_length=30, choices=(('REQUEST' , 'REQUEST'), ('OFFER' , 'OFFER'), ('DELVERY','DELVERY'),('ORDER', 'ORDER')))
+    reference_id = models.PositiveIntegerField(default=0)
+    is_read = models.BooleanField(default=False) 
+    depot_id = models.PositiveIntegerField(default=0) 
+    is_noic_depot = models.BooleanField(default=False) 
 
+    
     def __str__(self):
         return f'{str(self.user)} - {str(self.date)}'
 

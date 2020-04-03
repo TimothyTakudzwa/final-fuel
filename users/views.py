@@ -23,6 +23,7 @@ from .forms import AllocationForm, SupplierContactForm, UsersUploadForm, ReportF
 from .models import AuditTrail, SordActionsAuditTrail
 from buyer.models import *
 from supplier.models import *
+from notification.models import Notification
 from national.models import Order, SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
 from users.models import *
 from accounts.models import Account, AccountHistory
@@ -2138,7 +2139,12 @@ def place_order(request):
             trailer_reg = request.POST['trailer_reg']
             driver = request.POST['driver']
             driver_id = request.POST['driver_id']
-            Order.objects.create(price=price, noic_depot=noic_depot, amount_paid=amount_paid, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+            order = Order.objects.create(price=price, noic_depot=noic_depot, amount_paid=amount_paid, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+            order.save()
+
+            message = f'{request.user.company.name.title()} placed an order of {quantity}L' \
+                      f' {fuel_type.lower}'
+            Notification.objects.create(message=message, reference_id=order.id, depot_id=noic_depot.id, action="ORDER")
             messages.success(request,'placed order successfully')
             return redirect('users:orders')
         else:
@@ -2156,6 +2162,10 @@ def place_order(request):
             driver = request.POST['driver']
             driver_id = request.POST['driver_id']
             Order.objects.create(price=price, noic_depot=noic_depot, amount_paid=amount_paid, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+
+            message = f'{request.user.company.name.title()} placed an order of {quantity}L' \
+                      f' {fuel_type.lower}'
+            Notification.objects.create(message=message, reference_id=order.id, depot_id=noic_depot.id, company=request.user.company, action="ORDER")
             messages.success(request,'placed order successfully')
             return redirect('users:orders')
 

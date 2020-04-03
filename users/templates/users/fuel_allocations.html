@@ -155,13 +155,13 @@
 
                                             <div class="form-group">
                                                 <lable>Petrol Price</lable>
-                                                <input type="text" name="petrol_price" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" name="petrol_price" class="form-control"
                                                     value="{{allocate.petrol_price}}" />
                                             </div>
 
                                             <div class="form-group">
                                                 <lable>Diesel Price</lable>
-                                                <input type="text" name="diesel_price" value="{{allocate.diesel_price}}"
+                                                <input type="number" min="0.1" step="0.01" name="diesel_price" value="{{allocate.diesel_price}}"
                                                     class="form-control" />
                                             </div>
 
@@ -230,14 +230,14 @@
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <label><b style='color:#009688'>Quantity</b></label>
-                                                    <input type="text" name="quantity" class="form-control"
+                                                    <input type="number" min="0.1" step="0.01" name="quantity" class="form-control"
                                                         placeholder="In Litres" required />
                                                 </div>
                                             </div>
                                             <div class=" form-group row col-sm-12">
                                                 <div class="col-sm-6">
                                                     <label><b style='color:#009688'>Price</b></label>
-                                                    <input type="text" name="price" class="form-control"
+                                                    <input type="number" min="0.1" step="0.01" name="price" class="form-control"
                                                         placeholder="In United States Dollars" required />
                                                 </div>
                                                 <input type="hidden" name="cash" value="0" />
@@ -318,14 +318,14 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <label><b style='color:#009688'>Quantity</b></label>
-                                                <input type="text" name="quantity" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" name="quantity" class="form-control"
                                                     placeholder="In Litres" required />
                                             </div>
                                         </div>
                                         <div class=" form-group row col-sm-12">
                                             <div class="col-sm-6">
                                                 <label><b style='color:#009688'>RTGS Price</b></label>
-                                                <input type="text" name="price" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" name="price" class="form-control"
                                                     placeholder="In RTGS Dollars" required />
                                             </div>
                                             <input type="hidden" name="cash" value="0" />
@@ -346,7 +346,7 @@
                                         <div class=" form-group row col-sm-12">
                                             <div class="col-sm-6">
                                                 <label><b style='color:#009688'>USD Price</b></label>
-                                                <input type="text" name="usd_price" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" name="usd_price" class="form-control"
                                                     placeholder="In United States Dollars" required />
                                             </div>
                                             <input type="hidden" name="cash" value="0" />
@@ -428,14 +428,14 @@
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <label><b style='color:#009688'>Quantity</b></label>
-                                                    <input type="text" name="quantity" class="form-control"
+                                                    <input type="number" min="0.1" step="0.01" name="quantity" class="form-control"
                                                         placeholder="In Litres" required />
                                                 </div>
                                             </div>
                                             <div class=" form-group row col-sm-12">
                                                 <div class="col-sm-6">
                                                     <label><b style='color:#009688'>Price</b></label>
-                                                    <input type="text" name="price" class="form-control"
+                                                    <input type="number" min="0.1" step="0.01" name="price" class="form-control"
                                                         placeholder="In Zimbabwean Dollars" required />
                                                 </div>
                                                 <input type="hidden" name="cash" value="0" />
@@ -548,12 +548,12 @@
                                             </div>
                                             <div class="form-group">
                                                 <lable>Quantity</lable>
-                                                <input type="text" name="quantity" class="form-control" value=" " />
+                                                <input type="number" min="0.1" step="0.01" name="quantity" class="form-control" value=" " />
                                             </div>
 
                                             <div class="form-group">
                                                 <lable>Price</lable>
-                                                <input type="text" name="price" class="form-control" value=" " />
+                                                <input type="number" min="0.1" step="0.01" name="price" class="form-control" value=" " />
                                             </div>
                                             <div class="form-group" name="payment" id="payment{{forloop.counter}}">
                                                 <label><b style='color:#009688'>Payment Method</b></label>
@@ -660,14 +660,14 @@
                         </div>
                         <div class="col-sm-6">
                             <label><b style='color:#009688'>Quantity</b></label>
-                            <input type="text" name="quantity" class="form-control"
+                            <input type="number" min="0.1" step="0.01" name="quantity" class="form-control"
                                 placeholder="In Litres" required />
                         </div>
                     </div>
                     <div class=" form-group row col-sm-12">
                         <div class="col-sm-6">
                             <label><b style='color:#009688'>Price</b></label>
-                            <input type="text" name="price" class="form-control"
+                            <input type="number" min="0.1" step="0.01" name="price" class="form-control"
                                 placeholder="In United States Dollars" required />
                         </div>
                         <input type="hidden" name="cash" value="0" />
@@ -744,14 +744,14 @@
                         </div>
                         <div class="col-sm-6">
                             <label><b style='color:#009688'>Quantity</b></label>
-                            <input type="text" name="quantity" class="form-control"
+                            <input type="number" min="0.1" step="0.01" name="quantity" class="form-control"
                                 placeholder="In Litres" required />
                         </div>
                     </div>
                     <div class=" form-group row col-sm-12">
                         <div class="col-sm-6">
                             <label><b style='color:#009688'>RTGS Price</b></label>
-                            <input type="text" name="price" class="form-control"
+                            <input type="number" min="0.1" step="0.01" name="price" class="form-control"
                                 placeholder="In RTGS Dollars" required />
                         </div>
                         <input type="hidden" name="cash" value="0" />
@@ -772,7 +772,7 @@
                     <div class=" form-group row col-sm-12">
                         <div class="col-sm-6">
                             <label><b style='color:#009688'>USD Price</b></label>
-                            <input type="text" name="usd_price" class="form-control"
+                            <input type="number" min="0.1" step="0.01" name="usd_price" class="form-control"
                                 placeholder="In United States Dollars" required />
                         </div>
                         <input type="hidden" name="cash" value="0" />
@@ -830,14 +830,14 @@
                             </div>
                             <div class="col-sm-6">
                                 <label><b style='color:#009688'>Quantity</b></label>
-                                <input type="text" name="quantity" class="form-control"
+                                <input type="number" min="0.1" step="0.01" name="quantity" class="form-control"
                                     placeholder="In Litres" required />
                             </div>
                         </div>
                         <div class=" form-group row col-sm-12">
                             <div class="col-sm-6">
                                 <label><b style='color:#009688'>Price</b></label>
-                                <input type="text" name="price" class="form-control"
+                                <input type="number" min="0.1" step="0.01" name="price" class="form-control"
                                     placeholder="In Zimbabwean Dollars" required />
                             </div>
                             <input type="hidden" name="cash" value="0" />

@@ -40,6 +40,8 @@ def orders(request):
     form1 = DepotContactForm()
     depots = NoicDepot.objects.all()
     form1.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots]
+    for order in orders:
+        order.allocation = SordNationalAuditTrail.objects.filter(order=order).first()
 
     return render(request, 'noic/orders.html', {'orders': orders, 'form1': form1})
 
@@ -194,7 +196,7 @@ def fuel_update(request, id):
         if request.POST['fuel_type'].lower() == 'petrol':
             if request.POST['currency'] == 'USD':
                 fuel_update.usd_petrol += float(request.POST['quantity'])
-                fuel_update.usd_petrol_price = request.POST['price']
+                fuel_update.usd_petrol_price = request.POST['petrol_usd_price']
                 fuel_update.save()
 
                 action = "Fuel Allocation"
@@ -205,7 +207,7 @@ def fuel_update(request, id):
                 return redirect('noic:dashboard')
             else:
                 fuel_update.rtgs_petrol += float(request.POST['quantity'])
-                fuel_update.rtgs_petrol_price = request.POST['price']
+                fuel_update.rtgs_petrol_price = request.POST['petrol_rtgs_price']
                 fuel_update.save()
 
                 action = "Fuel Allocation"
@@ -218,7 +220,7 @@ def fuel_update(request, id):
         else:
             if request.POST['currency'] == 'USD':
                 fuel_update.usd_diesel += float(request.POST['quantity'])
-                fuel_update.usd_diesel_price = request.POST['price']
+                fuel_update.usd_diesel_price = request.POST['diesel_usd_price']
                 fuel_update.save()
 
                 action = "Fuel Allocation"
@@ -229,7 +231,7 @@ def fuel_update(request, id):
                 return redirect('noic:dashboard')
             else:
                 fuel_update.rtgs_diesel += float(request.POST['quantity'])
-                fuel_update.rtgs_diesel_price = request.POST['price']
+                fuel_update.rtgs_diesel_price = request.POST['diesel_rtgs_price']
                 fuel_update.save()
                 action = "Fuel Allocation"
                 description = f"You have allocated fuel to {fuel_update.depot.name}"

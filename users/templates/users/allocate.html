@@ -605,14 +605,14 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <label><b style='color:#009688'>Quantity</b></label>
-                                                <input type="text" name="quantity" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" name="quantity" class="form-control"
                                                     placeholder="In Litres" required />
                                             </div>
                                         </div>
                                         <div class=" form-group row col-sm-12">
                                             <div class="col-sm-6">
                                                 <label><b style='color:#009688'>Price</b></label>
-                                                <input type="text" name="price" class="form-control" placeholder="Price"
+                                                <input type="number" min="0.1" step="0.01" name="price" class="form-control" placeholder="Price"
                                                     required />
                                             </div>
                                             <input type="hidden" name="cash" value="0" />
@@ -678,14 +678,14 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <label><b style='color:#009688'>Quantity</b></label>
-                                                <input type="text" name="quantity" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" name="quantity" class="form-control"
                                                     placeholder="In Litres" required />
                                             </div>
                                         </div>
                                         <div class=" form-group row col-sm-12">
                                             <div class="col-sm-6">
                                                 <label><b style='color:#009688'>Price</b></label>
-                                                <input type="text" name="price" class="form-control" placeholder="Price"
+                                                <input type="number" min="0.1" step="0.01" name="price" class="form-control" placeholder="Price"
                                                     required />
                                             </div>
                                             <input type="hidden" name="cash" value="0" />
@@ -754,7 +754,7 @@
                                         <div class=" form-group row col-sm-12" style="margin-top: 10px;">
                                             <div class="col-sm-6">
                                                 <label><b style='color:#009688'>Petrol Price</b></label>
-                                                <input type="text" name="petrol_price" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" name="petrol_price" class="form-control"
                                                     placeholder="In RTGS Dollars" value="{{allocate.petrol_price}}"
                                                     required />
                                             </div>
@@ -776,7 +776,7 @@
                                         <div class=" form-group row col-sm-12">
                                             <div class="col-sm-6">
                                                 <label><b style='color:#009688'>Diesel Price</b></label>
-                                                <input type="text" name="diesel_price" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" name="diesel_price" class="form-control"
                                                     placeholder="In United States Dollars"
                                                     value="{{allocate.diesel_price}}" required />
                                             </div>
@@ -826,13 +826,13 @@
 
                                         <div class="form-group">
                                             <lable>Petrol Price</lable>
-                                            <input type="text" name="petrol_price" class="form-control"
+                                            <input type="number" min="0.1" step="0.01" name="petrol_price" class="form-control"
                                                 value="{{allocate.petrol_price}}" />
                                         </div>
 
                                         <div class="form-group">
                                             <lable>Diesel Price</lable>
-                                            <input type="text" name="diesel_price" value="{{allocate.diesel_price}}"
+                                            <input type="number" min="0.1" step="0.01" name="diesel_price" value="{{allocate.diesel_price}}"
                                                 class="form-control" />
                                         </div>
 
@@ -884,7 +884,7 @@
                                         {% csrf_token %}
                                         <div class="form-group">
                                             <lable>Petrol Capacitdy</lable>
-                                            <input type="text" name="petrol_quantity" class="form-control" value=" "
+                                            <input type="number" min="0.1" step="0.01" name="petrol_quantity" class="form-control" value=" "
                                                 required />
                                         </div>
 
@@ -1026,13 +1026,13 @@
                                         <div class="row">
                                             <div class="form-group col-md-6">
                                                 <lable>Diesel User Input</lable>
-                                                <input type="text" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" class="form-control"
                                                     value="{{alloc.diesel_quantity}}" />
                                             </div>
 
                                             <div class="form-group col-md-6">
                                                 <lable>Actual Diesel Quantity</lable>
-                                                <input type="text" name="diesel_quantity" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" name="diesel_quantity" class="form-control"
                                                     value="" />
                                             </div>
                                         </div>
@@ -1050,13 +1050,13 @@
                                         <div class="row">
                                             <div class="form-group col-md-6">
                                                 <lable>Petrol User Input</lable>
-                                                <input type="text" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" class="form-control"
                                                     value="{{alloc.petrol_quantity}}" />
                                             </div>
 
                                             <div class="form-group col-md-6">
                                                 <lable>Actual Petrol Quantity</lable>
-                                                <input type="text" name="petrol_quantity" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" name="petrol_quantity" class="form-control"
                                                     value="" />
                                             </div>
                                         </div>

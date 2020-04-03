@@ -9,7 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>ZFMS</title>
+    <title>ZFMS</title> fa-
 
     <!-- Favicon and touch icons -->
     <link rel="shortcut icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png"
@@ -92,10 +92,13 @@
                 </a>
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
-                        <li class="dropdown notifications-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="pe-7s-bell"></i>
-                                <span class="label label-warning">0</span>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="material-icons">notifications</i>
+                              <span class="notification">{{num_of_new_orders}}</span>
+                              <p class="d-lg-none d-md-block">
+                                New Notifications
+                              </p>
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="header"><i class="fa fa-bell"></i>Notifications</li>
@@ -111,12 +114,15 @@
                                 </li>
                             </ul>
                         </li>    
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                              {% for order in orders_notifications %}
+                              <a class="dropdown-item" href="{% url 'noicDepot:accepted_orders' %}">{{order.company.name}} placed new order</a>
+                              {% endfor %}
+                            </div>
+                          </li>   
                         <li class="dropdown dropdown-user admin-user">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <!-- <div class="user-image">
-                                    <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar4.png"
-                                        class="img-circle" height="40" width="40" alt="User Image">
-                                </div> -->
+                                
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a href="{%url 'buyer-profile'%}"><i class="fa fa-users"></i> User Profile</a></li>
