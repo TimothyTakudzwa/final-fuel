@@ -210,15 +210,13 @@
                                     } 
 
                                     if ($('#quantity').val() === "NaN" || $('#quantity').val() === "Infinity" ){
-                                        console.log("Pakaipa73");
                                         if ($("#submit_order").is(":disabled") === false) {
                                             $('#submit_order').prop('disabled', true)
-                                            // console.log("Now Disabling")
                                         }    
                                     } else{
                                         if ($("#submit_order").is(":disabled") === true) {
                                             $('#submit_order').prop('disabled', false)
-                                            // console.log("Now Disabling")
+
                                         }
 
                                     }
@@ -462,8 +460,10 @@
                             {% if order.allocation.release_note %}
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-primary btn-sm" style="color: white;" href="{% url 'users:view_release_note' order.allocation.id %}">Download Release Note</a>
                                    
+                                    <a  href="href='{% url 'users:view_release_note' order.allocation.id %}" class="btn btn-primary btn-sm btn-labeled m-b-5" type="button">
+                                        <span class="btn-label"><i class="fa fa-download"></i></span> Download Release Note
+                                    </a>
                                 </div>
                                 
                             </td> 
@@ -488,8 +488,10 @@
                             {% else %}
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#upload_{{order.allocation.id}}" >Upload D-Note</a>
                                    
+                                    <a  data-toggle="modal" data-target="#upload_{{order.allocation.id}}" class="btn btn-warning btn-sm btn-labeled m-b-5" type="button">
+                                        <span class="btn-label"><i class="fa fa-download"></i></span> Upload D-Note
+                                    </a>
                                 </div>
 
                              </td>
