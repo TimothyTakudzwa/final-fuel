@@ -19,6 +19,7 @@ from operator import attrgetter
 
 from buyer.models import User, FuelRequest
 from users.forms import DepotContactForm
+from notification.models import Notification
 from company.models import Company, CompanyFuelUpdate
 from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, Transaction, Offer, DeliverySchedule
 from fuelUpdates.models import SordCompanyAuditTrail
@@ -73,11 +74,21 @@ def activity(request):
 
 def accepted_orders(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
-    orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=True).all()
+    orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(action="ORDER").filter(is_read=False).all()
+    for order in orders_notifications:
+        if order is not None:
+            order.is_read = True
+            order.save()
+        else:
+            pass
+     
+    orders = Order.objects.filter(noic_depot=depot).all()
     return render(request, 'noicDepot/accepted_orders.html', {'orders': orders})
 
 def orders(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+    orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(action="ORDER").filter(is_read=False).all()
+    num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(action="ORDER").filter(is_read=False).count()
     orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=False).all()
     # print(orders)
     for order in orders:
@@ -85,7 +96,7 @@ def orders(request):
             alloc = SordNationalAuditTrail.objects.filter(order=order).first()
             if alloc is not None:
                 order.allocation = alloc
-    return render(request, 'noicDepot/orders.html', {'orders': orders, 'allocate' : 'hide', 'release' : 'hide'})
+    return render(request, 'noicDepot/orders.html', {'orders': orders, 'orders_notifications': orders_notifications, 'num_of_new_orders': num_of_new_orders,'allocate' : 'hide', 'release' : 'hide'})
 
 def stock(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
