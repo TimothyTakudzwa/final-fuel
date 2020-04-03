@@ -622,13 +622,13 @@ def statistics(request):
         number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
     buyers = [client.buyer for client in trans]
 
-    branches = Subsidiaries.objects.filter(is_depot=True)
+    branches = Subsidiaries.objects.filter(is_depot=False)
 
     subs = []
 
     for sub in branches:
         tran_amount = 0
-        sub_trans = Transaction.objects.filter(is_complete=True)
+        sub_trans = Transaction.objects.filter(supplier__subsidiary_id=sub.id, is_complete=True)
         for sub_tran in sub_trans:
             tran_amount += (float(sub_tran.offer.request.amount) * float(sub_tran.offer.price))
         sub.tran_count = sub_trans.count()
@@ -639,17 +639,15 @@ def statistics(request):
     sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True)
 
     new_buyers = []
+
     for buyer in buyers:
         total_transactions = buyers.count(buyer)
-        buyers.remove(buyer)
-        new_buyer_transactions = Transaction.objects.filter(is_complete=True).all()
+        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, is_complete=True).all()
         total_value = 0
         purchases = []
-        number_of_trans = 0
         for tran in new_buyer_transactions:
             total_value += (float(tran.offer.request.amount) * float(tran.offer.price))
             purchases.append(tran)
-            number_of_trans += 1
         buyer.total_revenue = total_value
         buyer.purchases = purchases
         buyer.number_of_trans = total_transactions
