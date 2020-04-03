@@ -59,7 +59,7 @@ def get_weekly_sales(company, this_week):
         day_trans = Transaction.objects.filter(date=day, supplier__company=company, is_complete=True)
         if day_trans:
             for tran in day_trans:
-                weeks_revenue += (tran.offer.request.amount * tran.offer.price)
+                weeks_revenue += (float(tran.offer.request.amount) * float(tran.offer.price))
         else:
             weeks_revenue = 0
         weekly_data[day.strftime("%a")] = int(weeks_revenue)

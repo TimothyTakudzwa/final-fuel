@@ -144,7 +144,7 @@
                         </a>
                     </li>
                     <li class="nav-item {% if request.path == '/noicDepot/accepted_orders/' %} active {% endif %}">
-                        <a href="{% url 'noicDepot:accepted_orders' %}"><i class="fa fa-book"></i><span>Orders Trail</span>
+                        <a href="{% url 'noicDepot:accepted_orders' %}"><i class="fa fa-book"></i><span>Orders</span>
                         </a>
                     </li>
                     <li class="nav-item {% if request.path == '/noicDepot/dashboard/' %} active {% endif %}">
@@ -241,13 +241,19 @@
 
     <script>
         $(document).ready(function () {
-            $('#fuel_request').DataTable();
+            $('#fuel_request').DataTable(
+                {
+                "ordering": false
+            }
+            );
         });
     </script>
 
 <script>
     $(document).ready(function () {
-        $('#depots').DataTable();
+        $('#depots').DataTable({
+                "ordering": false
+            });
     });
 </script>
    
@@ -255,7 +261,7 @@
         $(document).ready(function () {
             $('#allocations').DataTable(
                 {
-                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
+                "order": false,
                 "columnDefs": [
             {
                 "targets": [ 1 ],

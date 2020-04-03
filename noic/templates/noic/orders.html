@@ -128,7 +128,7 @@
                     {% if order.allocated_fuel %}
                     <td>
                         <div class="btn-group">
-                            <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"  href="{% url 'noic:allocations' %}" >View Allocations</a>
+                            <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"  data-target="#allocation_{{order.id}}" >View Allocations</a>
                             </div>
                     </td>
                     {% else %}
@@ -196,6 +196,79 @@
                     </div>
                 </div>
             </div>
+
+            <!--Allocation Modal-->
+    <div class="modal fade modal-success in" id="allocation_{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #009688; color: white">
+                    <span class="modal-title" id="exampleModalLabel">{{ order.allocation.company }} Allocation</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="row">
+                        <div class="col-md-6">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;Date</h4>
+                        </div>
+                        <div class="col-md-6">{{ order.allocation.date }}</div>
+                        </div>
+                        <div class="row">
+                        <div class="col-md-6">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;SORD</h4>
+                        </div>
+                        <div class="col-md-6">{{ order.allocation.sord_no}}</div>
+                        </div>
+                        <div class="row">
+                        <div class="col-md-6">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;Fuel</h4>
+                        </div>
+                        <div class="col-md-6"> {{ order.allocation.fuel_type }}</div>
+                        </div>
+                        <div class="row">
+                        <div class="col-md-6">
+                            <h4> &nbsp;&nbsp;&nbsp;&nbsp;Company</h4>
+                        </div>
+                        <div class="col-md-6">
+                            {{ order.allocation.company }}
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-md-6">
+                            <h4> &nbsp;&nbsp;&nbsp;&nbsp;Quantity</h4>
+                        </div>
+                        <div class="col-md-6">
+                            {{ order.allocation.quantity }}
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-md-6">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;Price </h4>
+                        </div>
+                        <div class="col-md-6">
+                            {{ order.allocation.price }} {{ order.allocation.currency }}
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-md-6">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;Depot</h4>
+                        </div>
+                        <div class="col-md-6">
+                            {{ order.allocation.assigned_depot.name }}
+                        </div>
+                        </div>
+                        
+                    </div>
+                    <div class="modal-footer">  
+                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End allocation modal-->
                 {%endfor%}
             </tbody>
             </table>
@@ -205,3 +278,4 @@
 </div>
 </div>
     {%endblock%}
+    

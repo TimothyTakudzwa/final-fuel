@@ -18,6 +18,7 @@ from itertools import chain
 from operator import attrgetter
 
 from buyer.models import User, FuelRequest
+from noicDepot.util import sord_generator
 from users.forms import DepotContactForm
 from notification.models import Notification
 from company.models import Company, CompanyFuelUpdate
@@ -27,6 +28,8 @@ from users.models import SordActionsAuditTrail, Activity
 from accounts.models import AccountHistory
 from users.views import message_is_sent
 from national.models import Order, NationalFuelUpdate, SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
+
+from .lib import *
 
 user = get_user_model()
 
@@ -199,7 +202,7 @@ def allocate_fuel(request, id):
                     # messages.warning(request, f'you cannot allocate fuel more than your capacity of {noic_capacity.usd_petrol}L')
                     balance = float(request.POST['quantity']) - noic_capacity.usd_petrol
                     sord_object = SordNationalAuditTrail.objects.create(price=noic_capacity.usd_petrol_price, order=order, assigned_depot=depot, company=order.company, fuel_type=request.POST['fuel_type'], currency=request.POST['currency'], quantity=(float(request.POST['quantity'])-float(balance)))
-                    sord_object.sord_no = sord_object.id
+                    sord_object.sord_no = sord_generator('p', sord_object.id)
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no, action_no=0, action='Receiving Fuel',fuel_type=sord_object.fuel_type, payment_type=sord_object.currency, initial_quantity=float(request.POST['quantity']), end_quantity=float(request.POST['quantity']))
                     company_update = CompanyFuelUpdate.objects.filter(company=order.company).first()
@@ -244,7 +247,7 @@ def allocate_fuel(request, id):
                     # messages.warning(request, f'you cannot allocate fuel more than your capacity of {noic_capacity.rtgs_petrol}L')
                     balance = float(request.POST['quantity']) - noic_capacity.rtgs_petrol
                     sord_object = SordNationalAuditTrail.objects.create(price=noic_capacity.rtgs_petrol_price, order=order, assigned_depot=depot, company=order.company, fuel_type=request.POST['fuel_type'], currency=request.POST['currency'], quantity=(float(request.POST['quantity'])-float(balance)))
-                    sord_object.sord_no = sord_object.id
+                    sord_object.sord_no = sord_generator('p', sord_object.id)
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no, action_no=0, action='Receiving Fuel',fuel_type=sord_object.fuel_type, payment_type=sord_object.currency, initial_quantity=float(request.POST['quantity']), end_quantity=float(request.POST['quantity']))
                     company_update = CompanyFuelUpdate.objects.filter(company=order.company).first()
@@ -266,7 +269,7 @@ def allocate_fuel(request, id):
                     noic_capacity.rtgs_petrol -= float(request.POST['quantity'])
                     noic_capacity.save()
                     sord_object = SordNationalAuditTrail.objects.create(price=noic_capacity.rtgs_petrol_price, order=order, assigned_depot=depot, company=order.company, fuel_type=request.POST['fuel_type'], currency=request.POST['currency'], quantity=float(request.POST['quantity']))
-                    sord_object.sord_no = sord_object.id
+                    sord_object.sord_no = sord_generator('p', sord_object.id)
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no, action_no=0, action='Receiving Fuel',fuel_type=sord_object.fuel_type, payment_type=sord_object.currency, initial_quantity=float(request.POST['quantity']), end_quantity=float(request.POST['quantity']))
                     company_update = CompanyFuelUpdate.objects.filter(company=order.company).first()
@@ -291,7 +294,7 @@ def allocate_fuel(request, id):
                     # messages.warning(request, f'you cannot allocate fuel more than your capacity of {noic_capacity.usd_diesel}L')
                     balance = float(request.POST['quantity']) - noic_capacity.usd_diesel
                     sord_object = SordNationalAuditTrail.objects.create(price=noic_capacity.usd_diesel_price, order=order, assigned_depot=depot, company=order.company, fuel_type=request.POST['fuel_type'], currency=request.POST['currency'], quantity=float(request.POST['quantity'])-float(balance))
-                    sord_object.sord_no = sord_object.id
+                    sord_object.sord_no = sord_generator('d', sord_object.id)
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no, action_no=0, action='Receiving Fuel',fuel_type=sord_object.fuel_type, payment_type=sord_object.currency, initial_quantity=float(request.POST['quantity']), end_quantity=float(request.POST['quantity']))
                     company_update = CompanyFuelUpdate.objects.filter(company=order.company).first()
@@ -313,7 +316,7 @@ def allocate_fuel(request, id):
                     noic_capacity.usd_diesel -= float(request.POST['quantity'])
                     noic_capacity.save()
                     sord_object = SordNationalAuditTrail.objects.create(price=noic_capacity.usd_diesel_price, order=order, assigned_depot=depot, company=order.company, fuel_type=request.POST['fuel_type'], currency=request.POST['currency'], quantity=float(request.POST['quantity']))
-                    sord_object.sord_no = sord_object.id
+                    sord_object.sord_no = sord_generator('d', sord_object.id)
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no, action_no=0, action='Receiving Fuel',fuel_type=sord_object.fuel_type, payment_type=sord_object.currency, initial_quantity=float(request.POST['quantity']), end_quantity=float(request.POST['quantity']))
                     company_update = CompanyFuelUpdate.objects.filter(company=order.company).first()
@@ -337,7 +340,8 @@ def allocate_fuel(request, id):
                     # messages.warning(request, f'you cannot allocate fuel more than your capacity of {noic_capacity.rtgs_diesel}L')
                     balance = float(request.POST['quantity']) - noic_capacity.rtgs_diesel
                     sord_object = SordNationalAuditTrail.objects.create(price=noic_capacity.rtgs_diesel_price, order=order, assigned_depot=depot, company=order.company, fuel_type=request.POST['fuel_type'], currency=request.POST['currency'], quantity=float(request.POST['quantity'])-float(balance))
-                    sord_object.sord_no = sord_object.id
+                    fuel_type = request.POST['fuel_type']
+                    sord_object.sord_no = sord_generator(fuel_type[0], sord_object.id)
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no, action_no=0, action='Receiving Fuel',fuel_type=sord_object.fuel_type, payment_type=sord_object.currency, initial_quantity=float(request.POST['quantity']), end_quantity=float(request.POST['quantity']))
                     company_update = CompanyFuelUpdate.objects.filter(company=order.company).first()
@@ -359,7 +363,8 @@ def allocate_fuel(request, id):
                     noic_capacity.rtgs_diesel -= float(request.POST['quantity'])
                     noic_capacity.save()
                     sord_object = SordNationalAuditTrail.objects.create(price=noic_capacity.rtgs_diesel_price, order=order, assigned_depot=depot, company=order.company, fuel_type=request.POST['fuel_type'], currency=request.POST['currency'], quantity=float(request.POST['quantity']))
-                    sord_object.sord_no = sord_object.id
+                    fuel_type = request.POST['fuel_type']
+                    sord_object.sord_no = sord_generator(fuel_type[0], sord_object.id)
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no, action_no=0, action='Receiving Fuel',fuel_type=sord_object.fuel_type, payment_type=sord_object.currency, initial_quantity=float(request.POST['quantity']), end_quantity=float(request.POST['quantity']))
                     company_update = CompanyFuelUpdate.objects.filter(company=order.company).first()
@@ -523,95 +528,18 @@ def report_generator(request):
 
 
 def statistics(request):
-    # yesterday = date.today() - timedelta(days=1)
-    # monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
-    # weekly_rev = get_weekly_sales(True)
-    # last_week_rev = get_weekly_sales(False)
-    # city_sales_volume = get_volume_sales_by_location()
-    # final_desperate_cities = []
-    # desperate_cities = desperate()
-    
-    # while len(desperate_cities) > 5:
-    #     desperate_cities.popitem()
-    
-    # for city, deficit in desperate_cities.items():
-    #     final_desperate_cities.append((city,deficit))
-        
-    # # number_of_companies = Company.objects.all().count()
-    # # number_of_depots = Subsidiaries.objects.filter(is_depot=True).count()
-    # # number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()
-    # last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1))
-    # # offers = Offer.objects.all().count()
-    # # bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
-    # # normal_requests = FuelRequest.objects.filter(delivery_method="DELIVERY").count()  # Change these 2 items
-    # staff = ''
-    # # new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
-    # # clients = []
-    # # stock = get_aggregate_stock()
-    # # diesel = stock['diesel']
-    # # petrol = stock['petrol']
+    depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+    weekly_rev = get_weekly_sales(True,depot)
+    monthly_rev = get_aggregate_monthly_sales(datetime.now().year, depot)
+    last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1), depot)
+    last_week_rev = get_weekly_sales(False,depot)
+    order_completions = str(round((Order.objects.filter(payment_approved=True, noic_depot=depot).count()/Order.objects.filter(noic_depot=depot).count() * 100))) + " %"
+    allocations = SordNationalAuditTrail.objects.filter(assigned_depot=depot).count()
+    stock = DepotFuelUpdate.objects.filter(depot=depot).first()
+    revenue = 0
+    for order in Order.objects.filter(payment_approved=True):
+        revenue += order.amount_paid
 
-    # trans = Transaction.objects.filter(is_complete=True).annotate(
-    #     number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
-    # buyers = [client.buyer for client in trans]
-
-    # branches = Subsidiaries.objects.filter(is_depot=True)
-
-    # subs = []
-
-    # for sub in branches:
-    #     tran_amount = 0
-    #     sub_trans = Transaction.objects.filter(supplier__subsidiary_id=sub.id,
-    #                                            is_complete=True)
-    #     for sub_tran in sub_trans:
-    #         tran_amount += (sub_tran.offer.request.amount * sub_tran.offer.price)
-    #     sub.tran_count = sub_trans.count()
-    #     sub.tran_value = tran_amount
-    #     subs.append(sub)
-
-    # # sort subsidiaries by transaction value
-    # sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True)
-
-    # new_buyers = []
-    # for buyer in buyers:
-    #     total_transactions = buyers.count(buyer)
-    #     buyers.remove(buyer)
-    #     new_buyer_transactions = Transaction.objects.filter(is_complete=True).all()
-    #     total_value = 0
-    #     purchases = []
-    #     number_of_trans = 0
-    #     for tran in new_buyer_transactions:
-    #         total_value += (tran.offer.request.amount * tran.offer.price)
-    #         purchases.append(tran)
-    #         number_of_trans += 1
-    #     buyer.total_revenue = total_value
-    #     buyer.purchases = purchases
-    #     buyer.number_of_trans = total_transactions
-    #     if buyer not in new_buyers:
-    #         new_buyers.append(buyer)
-
-    # clients = sorted(new_buyers, key=lambda x: x.total_revenue, reverse=True)
-
-    # for company in companies:
-    #     company.total_value = value[counter]
-    #     company.num_transactions = num_trans[counter]
-    #     counter += 1
-
-    # clients = [company for company in  companies]
-
-    # revenue = round(float(sum(value)))
-    # revenue = get_aggregate_total_revenue()
-    # revenue = '${:,.2f}'.format(revenue)
-    # revenue = str(revenue) + '.00'
-
-    # try:
-    #     trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
-    # except:
-    #     trans = 0    
-    # trans_complete = get_aggregate_transactions_complete_percentage()
-    # inactive_depots = Subsidiaries.objects.filter(is_active=False, is_depot=True).count()
-    # inactive_stations = Subsidiaries.objects.filter(is_active=False, is_depot=False).count()
-    # approval_percentage = get_approved_company_complete_percentage()
-
-    return render(request, 'noicDepot/statistics.html', {})
+    return render(request, 'noicDepot/statistics.html', {'weekly_rev': weekly_rev, 'last_week_rev':last_week_rev, 'monthly_rev':monthly_rev,
+                    'depot':depot, 'order_completions':order_completions, 'allocations':allocations, 'stock':stock,'revenue': revenue })
     

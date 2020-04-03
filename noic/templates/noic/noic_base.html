@@ -155,7 +155,7 @@
                     
                    
                     <li class="nav-item {% if request.path == '/noic/orders/' %} active {% endif %}">
-                        <a href="{% url 'noic:orders' %}"><i class="fa fa-book"></i><span>Allocations</span>
+                        <a href="{% url 'noic:orders' %}"><i class="fa fa-book"></i><span>Orders</span>
                         </a>
                     </li>
 
@@ -261,49 +261,32 @@
 
     <script>
         $(document).ready(function () {
-            $('#orders').DataTable(
-                {
-                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
-                "columnDefs": [
-            {
-                "targets": [ 1 ],
-                "visible": false
-            }
-                    ]
-                }
-            );
+            $('#orders').DataTable({
+                "ordering": false
+            });
         });
     </script>
 
 <script>
     $(document).ready(function () {
-        $('#depots').DataTable();
+        $('#depots').DataTable({
+            "ordering": false
+        });
     });
 </script>
 <script>
     $(document).ready(function () {
-        $('#staff').DataTable();
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $('#depots').DataTable();
+        $('#staff').DataTable({
+            "ordering": false
+        });
     });
 </script>
    
    <script>
         $(document).ready(function () {
-            $('#allocations').DataTable(
-                {
-                "order": [[ 0, 'desc' ], [ 1, 'desc' ]],
-                "columnDefs": [
-            {
-                "targets": [ 1 ],
-                "visible": false
-            }
-                    ]
-                }
-            );
+            $('#allocations').DataTable({
+                "ordering": false
+            });
         });
     </script>
     <!-- jquery-ui -->
