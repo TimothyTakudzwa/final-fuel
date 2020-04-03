@@ -90,6 +90,11 @@
                         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
                         <script>
                             $(document).ready(function () {
+                            if ($('#id_depot option').length === 2){
+                                $('#submit_order').prop('disabled', true)
+                            }   
+
+
                             $('#fuel_type').show();
                             $('#currency').show();
                             $('#diesel_rtgs_price').hide();
@@ -336,7 +341,7 @@
                                         </div>
                                 </div>
                                 <div class="modal-footer">  
-                                    <button type="submit" class="btn btn-primary ">Submit</button>
+                                    <button type="submit" class="btn btn-primary" id="submit_order">Submit</button>
                                     <button class="btn btn-default" data-dismiss="modal" >Close</button>
                                 </div> 
                                 </form>
