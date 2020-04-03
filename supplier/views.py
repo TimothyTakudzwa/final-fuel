@@ -1112,6 +1112,7 @@ def delivery_schedules(request):
     return render(request, 'supplier/delivery_schedules.html', {'schedules': schedules})
 
 
+@login_required()
 def view_delivery_schedule(request, id):
     if request.method == 'POST':
         supplier_document = request.FILES.get('supplier_document')
@@ -1131,6 +1132,7 @@ def view_delivery_schedule(request, id):
     return render(request, 'supplier/view_delivery_schedule.html', {'schedule': schedule})
 
 
+@login_required()
 def view_confirmation_doc(request, id):
     payment = AccountHistory.objects.filter(delivery_schedule__id=id).first()
     payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
@@ -1140,6 +1142,7 @@ def view_confirmation_doc(request, id):
     return render(request, 'supplier/delivery_note.html', context=context)
 
 
+@login_required()
 def view_delivery_note(request, id):
     delivery = AccountHistory.objects.filter(id=id).first()
     if delivery:
@@ -1151,6 +1154,8 @@ def view_delivery_note(request, id):
         redirect('transactions')
     return response
 
+
+@login_required()
 def upload_release_note(request, id):
     payment_history = AccountHistory.objects.filter(id=id).first()
     transaction = Transaction.objects.filter(id=payment_history.transaction.id).first()
@@ -1173,6 +1178,7 @@ def upload_release_note(request, id):
         return redirect(f'/supplier/payment-and-release-notes/{transaction.id}')
 
 
+@login_required()
 def edit_release_note(request, id):
     release = AccountHistory.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -1184,12 +1190,15 @@ def edit_release_note(request, id):
         Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=release.transaction.id)
         return redirect(f'/supplier/payment-and-release-notes/{release.transaction.id}')
 
+
+@login_required()
 def payment_release_notes(request, id):
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
     return render(request, 'supplier/payment_and_rnote.html', {'payment_history': payment_history})
 
 
+@login_required()
 def view_supplier_doc(request, id):
     delivery = DeliverySchedule.objects.filter(id=id).first()
     if delivery:
@@ -1202,6 +1211,7 @@ def view_supplier_doc(request, id):
     return response
 
 
+@login_required()
 def del_supplier_doc(request, id):
     delivery = DeliverySchedule.objects.filter(id=id).first()
     delivery.supplier_document = None
@@ -1209,6 +1219,8 @@ def del_supplier_doc(request, id):
     messages.success(request, 'Document removed successfully')
     return redirect('supplier:delivery_schedules')
 
+
+@login_required()
 def supplier_release_note(request, id):
     transaction = Transaction.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -1237,13 +1249,14 @@ payment history
 
 """
 
-
+@login_required()
 def payment_history(request, id):
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
     return render(request, 'supplier/payment_history.html', {'payment_history': payment_history})
 
 
+@login_required()
 def mark_completion(request, id):
     transaction = Transaction.objects.filter(id=id).first()
     transaction.is_complete = True
@@ -1253,6 +1266,7 @@ def mark_completion(request, id):
     return redirect('transaction')
 
 
+@login_required()
 def view_release_note(request, id):
     payment = AccountHistory.objects.filter(id=id).first()
     payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
@@ -1261,6 +1275,8 @@ def view_release_note(request, id):
     }
     return render(request, 'supplier/release_note.html', context=context)
 
+
+@login_required()
 def download_release_note(request, id):
     payment = AccountHistory.objects.filter(id=id).first()
     payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
@@ -1270,6 +1286,7 @@ def download_release_note(request, id):
     return render(request, 'supplier/r_note.html', context=context)
 
 
+@login_required()
 def activity(request):
     activities = Activity.objects.filter(user=request.user).all()
     depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()

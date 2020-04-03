@@ -786,6 +786,7 @@ def view_invoice(request, id):
     return render(request, 'buyer/invoice2.html', context)
 
 
+@login_required()
 def view_release_note(request, id):
     payment = AccountHistory.objects.filter(id=id).first()
     payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
@@ -838,6 +839,7 @@ def delivery_schedules(request):
     return render(request, 'buyer/delivery_schedules.html', context=context)
 
 
+@login_required()
 def delivery_schedule(request, id):
     schedule = DeliverySchedule.objects.filter(id=id).first()
     schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
@@ -859,6 +861,7 @@ Buyer Accounts
 """
 
 
+@login_required()
 def accounts(request):
     form = FuelRequestForm(request.POST)
     accounts_available = Account.objects.filter(buyer_company=request.user.company).all()
@@ -879,6 +882,7 @@ Direct Request
 """
 
 
+@login_required()
 def make_direct_request(request):
     """
     Function To Make Direct Requests With A Particular Supplier
@@ -926,7 +930,7 @@ Edit Account Details
 
 """
 
-
+@login_required()
 def edit_account_details(request, id):
     account = Account.objects.filter(id=id).first()
     if request.method == "POST":
@@ -943,6 +947,7 @@ Make private request
 """
 
 
+@login_required()
 def make_private_request(request):
     """
     This Function Will Retrieve Form Data and Create A Request With Only The Suppliers
@@ -1016,6 +1021,7 @@ def proof_of_payment(request, id):
             pass
 
 
+@login_required()
 def delivery_note(request, id):
     if request.method == 'POST':
         payment = AccountHistory.objects.filter(id=id).first()
@@ -1031,6 +1037,8 @@ def delivery_note(request, id):
         else:
             pass
 
+
+@login_required()
 def download_release_note(request, id):
     document = AccountHistory.objects.filter(id=id).first()
     if document:
@@ -1049,6 +1057,8 @@ payment history
 
 """
 
+
+@login_required()
 def payment_history(request, id):
     form1 = DeliveryScheduleForm()           
     transaction = Transaction.objects.filter(id=id).first()
@@ -1056,6 +1066,7 @@ def payment_history(request, id):
     return render(request, 'buyer/payment_history.html', {'payment_history': payment_history, 'form1':form1})
 
 
+@login_required()
 def payment_release_notes(request, id):
     form1 = DeliveryScheduleForm()           
     transaction = Transaction.objects.filter(id=id).first()
@@ -1122,7 +1133,7 @@ def upload_application(request, id):
     return redirect('accounts-status')
 
 
-
+@login_required()
 def company_profile(request):
     compan = Company.objects.filter(id=request.user.company.id).first()
 
@@ -1137,6 +1148,8 @@ def company_profile(request):
         return redirect('buyer-profile')
 
 
+@login_required()
 def activity(request):
     activities = Activity.objects.filter(user=request.user).all()
     return render(request, 'buyer/activity.html', {'activities': activities})
+
