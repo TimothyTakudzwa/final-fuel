@@ -154,9 +154,150 @@
                     </div>
                 </td>
             </tr>
-        
+
+
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                $('#fuel_type').show();
+                $('#currency').show();
+                $('#diesel_rtgs_price').hide();
+                $('#diesel_usd_price').hide();
+                $('#petrol_rtgs_price').show();
+                $('#petrol_usd_price').hide();
+               
+                
+                
+                $('#fuel_type, #currency').change(function () {
+                if ($('#fuel_type option:selected').text() == "Diesel") {
+                    if ($('#currency option:selected').text() == "USD") {
+                        $('#currency').show();
+                        $('#diesel_rtgs_price').hide();
+                        $('#diesel_usd_price').show();
+                        $('#petrol_rtgs_price').hide();
+                        $('#petrol_usd_price').hide();
+                    
+                     }
+
+                    else {
+                        $('#currency').show();
+                        $('#diesel_rtgs_price').show();
+                        $('#diesel_usd_price').hide();
+                        $('#petrol_rtgs_price').hide();
+                        $('#petrol_usd_price').hide();
+                    }
+
+                }
+
+                else {
+                    if ($('#currency option:selected').text() == "USD") {
+                        $('#currency').show();
+                        $('#diesel_rtgs_price').hide();
+                        $('#diesel_usd_price').hide();
+                        $('#petrol_rtgs_price').hide();
+                        $('#petrol_usd_price').show();
+                    
+                     }
+
+                    else {
+                        $('#currency').show();
+                        $('#diesel_rtgs_price').hide();
+                        $('#diesel_usd_price').hide();
+                        $('#petrol_rtgs_price').show();
+                        $('#petrol_usd_price').hide();
+                    }
+
+                }
+             
+                 });
+                    });
+                </script>
+
 
             <div class="modal fade modal-success in" id="add_fuel{{fuel.id}}" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class=" modal-dialog" role="document" style="margin: 0;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title" id="exampleModalLongTitle">Add Fuel- <i
+                            style="color:azure"><small>Please Note the fuel you are entering is to be
+                                sold either in United States Dollars or RTGS</small></i></span>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div>
+                        {% load crispy_forms_tags %}
+                        <form action="{% url 'noic:fuel_update' fuel.id %}" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="hidden"  id="quantity" name="quantity" />
+                            <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                                <div class="col-sm-6" id="fuel_type">
+
+                                    <label><b style='color:#009688'>Fuel Type</b></label>
+                                    <select class="form-control" name="fuel_type">
+
+                                        <option>Petrol</option>
+                                        <option>Diesel</option>
+
+
+                                    </select>
+                                </div>
+                                <div class="col-sm-6" id=quantity>
+                                    <label><b style='color:#009688'>Quantity</b></label>
+                                    <input type="text" name="quantity" class="form-control"
+                                     id="quantity" disabled/>
+                                </div>
+                               
+                            </div>
+                            <div class=" form-group row col-sm-12">
+                                <div class="col-sm-6" id="currency">
+
+                                    <label><b style='color:#009688'>Currency</b></label>
+                                    <select class="form-control" name="currency">
+
+                                        <option>RTGS</option>
+                                        <option>USD</option>
+
+
+                                    </select>
+                                </div>
+                                <div class="col-sm-6" id="diesel_rtgs_price">
+                                    <label><b style='color:#009688'>Price</b></label>
+                                    <input type="text" name="diesel_rtgs_price" class="form-control"
+                                        value="{{diesel_rtgs_price}}" id="diesel_rtgs_price_input" required />
+                                </div>
+                                <div class="col-sm-6" id="diesel_usd_price">
+                                    <label><b style='color:#009688'>Price</b></label>
+                                    <input type="text" name="diesel_usd_price" class="form-control"
+                                        value="{{diesel_usd_price}}" id="diesel_usd_price_input" required />
+                                </div>
+                                <div class="col-sm-6" id="petrol_rtgs_price">
+                                    <label><b style='color:#009688'>Price</b></label>
+                                    <input type="text" name="petrol_rtgs_price" class="form-control"
+                                        value="{{petrol_rtgs_price}}" id="petrol_rtgs_price_input" required />
+                                </div>
+                                <div class="col-sm-6" id="petrol_usd_price">
+                                    <label><b style='color:#009688'>Price</b></label>
+                                    <input type="text" name="petrol_usd_price" class="form-control"
+                                        value="{{petrol_usd_price}}" id="petrol_usd_price_input" required />
+                                </div>
+
+                            </div>
+
+                        
+                    </div>
+                    <div class="modal-footer">  
+                        <button type="submit" class="btn btn-primary ">Submit</button>
+                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                    </div> 
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+
+            <!-- <div class="modal fade modal-success in" id="add_fuel{{fuel.id}}" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class=" modal-dialog" role="document" >
                 <div class="modal-content">
@@ -221,7 +362,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="modal fade modal-success in" id="edit_{{fuel.id}}" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
