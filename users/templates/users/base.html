@@ -167,11 +167,11 @@
                     <!-- sidebar menu -->
                     <ul class="sidebar-menu">
                         <li class="{% if request.path == '/users/allocate/' %} active {% endif %}">
-                            <a href="{% url 'users:allocate' %}"><i class="fa fa-clipboard"></i><span>Dashboard</span>
+                            <a href="{% url 'users:allocate' %}"><i class="fa fa-dashboard"></i><span>Dashboard</span>
                             </a>
                         </li>
                         <li class="{% if request.path == '/users/orders/' %} active {% endif %}">
-                            <a href="{% url 'users:orders' %}"><i class="fa fa-clipboard"></i><span>NOIC Orders</span>
+                            <a href="{% url 'users:orders' %}"><i class="fa fa-shopping-cart"></i><span>NOIC Orders</span>
                             </a>
                         </li>
                         <li class="{% if request.path == '/users/sord_allocations/' %} active {% endif %}">
@@ -179,16 +179,16 @@
                             </a>
                         </li>
                         <li class="{% if request.path == '/users/sord_station_sales/' %} active {% endif %}">
-                            <a href="{% url 'users:sord_station_sales' %}"><i class="fa fa-clipboard"></i><span>Sord Subsidiary Sales</span>
+                            <a href="{% url 'users:sord_station_sales' %}"><i class="fa fa-exchange"></i><span>Sord Subsidiary Sales</span>
                             </a>
                         </li>
                         <li class="{% if request.path == '/users/suppliers/' %} active {% endif %}">
-                            <a href="{% url 'users:suppliers_list' %}"><i class="fa fa-sitemap"></i><span>Staff Management</span>
+                            <a href="{% url 'users:suppliers_list' %}"><i class="fa fa-users"></i><span>Staff Management</span>
                             </a>
                         </li>
 
                         <li class="{% if request.path == '/users/audit_trail/' %} active {% endif %}">
-                            <a href="{% url 'users:audit_trail' %}"><i class="fa fa-money"></i><span>Activity</span>
+                            <a href="{% url 'users:audit_trail' %}"><i class="fa fa-area-chart"></i><span>Activity</span>
                             </a>
                         </li>
 
@@ -205,7 +205,7 @@
                             </a>
                         </li>
                         <li class="{% if request.path == '/users/client-application/' %} active {% endif %}">
-                          <a href="{% url 'users:client-application' %}"><i class="fa fa-clipboard"></i><span>Client Applications</span>
+                          <a href="{% url 'users:client-application' %}"><i class="fa fa-inbox"></i><span>Client Applications</span>
                           </a>
                       </li>
                         <li class="{% if request.path == '/users/waiting_for_approval/' %} active {% endif %}">
@@ -213,7 +213,7 @@
                             </a>
                         </li>
                         <li class="{% if request.path == '/users/upload_users/' %} active {% endif %}">
-                            <a href="{% url 'users:upload_users' %}"><i class="fa fa-upload"></i><span>Accounts</span>
+                            <a href="{% url 'users:upload_users' %}"><i class="fa fa-money"></i><span>Accounts</span>
                             </a>
                         </li>
                         <li class="nav-item">

@@ -180,7 +180,7 @@
                                             </div>
                                             <div class="col-sm-6" id="fuel_paid">
                                                 <label><b style='color:#009688'>Sub Total <i style="color: black;">(payment)</i></b></label>
-                                                <input type="text" id="fuel_paid" name="fuel_paid" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" id="fuel_paid" name="fuel_paid" class="form-control"
                                                     placeholder="$0.00" required />
                                             </div>
                                            
@@ -199,22 +199,22 @@
                                             </div>
                                             <div class="col-sm-6" id="diesel_rtgs_price">
                                                 <label><b style='color:#009688'>Price</b></label>
-                                                <input type="text" name="diesel_rtgs_price" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" name="diesel_rtgs_price" class="form-control"
                                                     value="{{diesel_rtgs_price}}" id="diesel_rtgs_price_input" required />
                                             </div>
                                             <div class="col-sm-6" id="diesel_usd_price">
                                                 <label><b style='color:#009688'>Price</b></label>
-                                                <input type="text" name="diesel_usd_price" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" name="diesel_usd_price" class="form-control"
                                                     value="{{diesel_usd_price}}" id="diesel_usd_price_input" required />
                                             </div>
                                             <div class="col-sm-6" id="petrol_rtgs_price">
                                                 <label><b style='color:#009688'>Price</b></label>
-                                                <input type="text" name="petrol_rtgs_price" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" name="petrol_rtgs_price" class="form-control"
                                                     value="{{petrol_rtgs_price}}" id="petrol_rtgs_price_input" required />
                                             </div>
                                             <div class="col-sm-6" id="petrol_usd_price">
                                                 <label><b style='color:#009688'>Price</b></label>
-                                                <input type="text" name="petrol_usd_price" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" name="petrol_usd_price" class="form-control"
                                                     value="{{petrol_usd_price}}" id="petrol_usd_price_input" required />
                                             </div>
 
@@ -382,13 +382,13 @@
 
                                             <div class="form-group">
                                                 <lable>Petrol Capacity</lable>
-                                                <input type="text" name="petrol_quantity" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" name="petrol_quantity" class="form-control"
                                                     value="{{company_capacity.petrol_quantity}}" />
                                             </div>
 
                                             <div class="form-group">
                                                 <lable>Petrol Price</lable>
-                                                <input type="text" name="petrol_price" class="form-control"
+                                                <input type="number" min="0.1" step="0.01" name="petrol_price" class="form-control"
                                                     value="{{company_capacity.petrol_price}}" />
                                             </div>
 
@@ -442,13 +442,13 @@
 
                                 <div class="form-group">
                                     <lable>Diesel Capacity</lable>
-                                    <input type="text" name="diesel_quantity" class="form-control"
+                                    <input type="number" min="0.1" step="0.01" name="diesel_quantity" class="form-control"
                                         value="{{company_capacity.diesel_quantity}}" />
                                 </div>
 
                                 <div class="form-group">
                                     <lable>Diesel Price</lable>
-                                    <input type="text" name="diesel_price" class="form-control"
+                                    <input type="number" min="0.1" step="0.01" name="diesel_price" class="form-control"
                                         value="{{company_capacity.diesel_price}}" />
                                 </div>
 
