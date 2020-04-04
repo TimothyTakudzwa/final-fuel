@@ -477,7 +477,7 @@
                                                     
                                                     <td>{{order.date}}</td>
                                                     <td>{{order.company.name|title}}</td>
-                                                    <td>{{order.quantity}}</td>
+                                                    <td>{{order.quantity|floatformat:2|intcomma}}</td>
                                                     <td>{{order.fuel_type}}</td>
                                                     <td>{{order.currency}}</td>
         
@@ -582,7 +582,7 @@
                                                     
                                                     <td>{{order.date}}</td>
                                                     <td>{{order.company.name|title}}</td>
-                                                    <td>{{order.quantity}}</td>
+                                                    <td>{{order.quantity|floatformat:2|intcomma}}</td>
                                                     <td>{{order.fuel_type}}</td>
                                                     <td>{{order.currency}}</td>
                                                     <td>{{order.amount_paid}}</td>
@@ -689,7 +689,7 @@
                                                     </td>
                                                     <td>{{order.company}}</td>
                                                     <td>{{order.fuel_type}}</td>
-                                                    <td>{{order.quantity}}</td>
+                                                    <td>{{order.quantity|floatformat:2|intcomma}}</td>
                                                     <td>{{order.currency}}</td>
                                                     
                                                     <td>
