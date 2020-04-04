@@ -30,6 +30,7 @@ from users.views import message_is_sent
 from national.models import Order, NationalFuelUpdate, SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
 
 from .lib import *
+from .models import Collections
 
 user = get_user_model()
 
@@ -564,3 +565,10 @@ def statistics(request):
     return render(request, 'noicDepot/statistics.html', {'weekly_rev': weekly_rev, 'last_week_rev':last_week_rev, 'monthly_rev':monthly_rev,
                     'depot':depot, 'order_completions':order_completions, 'allocations':allocations, 'stock':stock,'revenue': revenue })
 
+
+@login_required()
+def collections(request):
+    context = {
+        'collections': Collections.objects.filter()
+    }
+    return render(request, 'noicDepot/collections.html', context=context)
