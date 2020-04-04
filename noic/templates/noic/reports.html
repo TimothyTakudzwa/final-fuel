@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load humanize %}
 {% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html lang="en">
@@ -598,7 +599,7 @@
                                                     
                                                     <td>{{order.date}}</td>
                                                     <td>{{order.company.name|title}}</td>
-                                                    <td>{{order.quantity}}</td>
+                                                    <td>{{order.quantity|floatformat|intcomma}}</td>
                                                     <td>{{order.fuel_type}}</td>
                                                     <td>{{order.currency}}</td>
                                                     <td>{{order.amount_paid}}</td>
