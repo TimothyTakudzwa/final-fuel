@@ -90,7 +90,7 @@
                         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
                         <script>
                             $(document).ready(function () {
-                            if ($('#id_depot option').length === 2){
+                            if ($('#id_depot option').length === 0){
                                 $('#submit_order').prop('disabled', true)
                             }   
 
@@ -254,7 +254,17 @@
                                                             $('input[name="quantity"]').val(parseFloat($('input[name="fuel_paid"]').val()/$('input[name="petrol_rtgs_price"]').val()).toFixed(2));
                                                         }
 
-                                                    }    
+                                                    }
+                                                    if ($('#quantity').val() === "NaN" || $('#quantity').val() === "Infinity" ){
+                                                        if ($("#submit_order").is(":disabled") === false) {
+                                                            $('#submit_order').prop('disabled', true) 
+                                                        }    
+                                                    } else{
+                                                        if ($("#submit_order").is(":disabled") === true) {
+                                                            $('#submit_order').prop('disabled', false)    
+                                                        }
+
+                                                    } 
                                                 }
 
                                                 $("#fuel_paid").keyup(function(){
