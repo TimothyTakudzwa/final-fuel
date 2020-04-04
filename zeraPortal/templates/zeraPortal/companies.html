@@ -227,7 +227,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_user{{company.id}}">Assign Admin</button></td>
                         {% endif %}
                         {% if company.is_active == True %}
-                        <td>
+                        <td style="width: 130px;">
                             <div class="btn-group" role="group">
                             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#block_{{company.id}}">Block</button>
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit_{{company.id}}">Edit</button>
