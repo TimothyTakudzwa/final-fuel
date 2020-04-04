@@ -286,9 +286,8 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <form action="{% url 'zeraPortal:unblock_company' company.id %}" method="POST">
                                 {% csrf_token %}
                                 <p>Are You Sure You Want To Unblock {{ company.name }}?</p>
-                               
-                            
-                        <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                                                
+                        <div class="modal-footer" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
                             <button type="button" class="btn btn-secondary col-sm-6"
                                 data-dismiss="modal">No</button>
                             <button type="submit" class="btn btn-primary col-sm-6">Yes</button>
@@ -371,7 +370,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <label>Company Name</label>
                                     <input type="text" name="company_name" value="{{company.name}}" class="form-control" required/>
                                 </div>
-                                <div class="row">
+                                <div class="row" style="margin-top: 5px;">
                                 <div class="col-sm-6" name="city">
                                     <label>City</label>
                                     <select class="form-control" name="city">
@@ -386,7 +385,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <input type="text" name="address" value="{{company.address}}" class="form-control" required/>
                                 </div>
                                 </div>
-                                <div class="row">
+                                <div class="row" style="margin-top: 5px;">
                                 <div class="col-sm-6">
                                     <label>License Number</label>
                                     <input type="text" name="license_number" value="{{company.license_number}}" class="form-control" required/>
@@ -396,7 +395,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <input type="text" name="vat_number" value="{{company.vat_number}}" class="form-control" value="" />
                             </div>
                                 </div>
-                            <div class="row">
+                            <div class="row" style="margin-top: 5px;">
                             <div class="col-sm-6">
                                 <label>Contact Person Name</label>
                                 <input type="text" name="contact_person" value="{{company.contact_person}}" class="form-control" value="" />
@@ -406,7 +405,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <input type="text" name="phone_number" value="{{company.phone_number}}" class="form-control" value="" />
                             </div>
                             </div>
-                        <div class="modal-footer" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                        <div class="modal-footer" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 1%;">
                             <button type="submit" class="btn btn-primary">Save</button>
 
                             <button type="button" class="btn btn-secondary"
