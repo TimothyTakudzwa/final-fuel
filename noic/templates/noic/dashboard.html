@@ -59,13 +59,13 @@
                 
             <tr>
 
-                <td>{{noic_usd_petrol|intcomma}} Litres {% if noic_usd_petrol < 10000 %} 
+                <td>{{noic_usd_petrol|floatformat|intcomma}} Litres {% if noic_usd_petrol < 10000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
-                <td>{{noic_usd_diesel|intcomma}} Litres {% if noic_usd_diesel < 1000 %} <i
+                <td>{{noic_usd_diesel|floatformat|intcomma}} Litres {% if noic_usd_diesel < 1000 %} <i
                         class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
-                <td>{{noic_rtgs_petrol|intcomma}} Litres {% if noic_rtgs_petrol < 1000 %} <i
+                <td>{{noic_rtgs_petrol|floatformat|intcomma}} Litres {% if noic_rtgs_petrol < 1000 %} <i
                     class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
-                <td>{{noic_rtgs_diesel|intcomma}} Litres {% if noic_rtgs_diesel < 1000 %} <i
+                <td>{{noic_rtgs_diesel|floatformat|intcomma}} Litres {% if noic_rtgs_diesel < 1000 %} <i
                     class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
 
                 
@@ -122,16 +122,16 @@
                 {% for fuel in depots %}
             <tr>
                 <td>{{fuel.depot.name}}</td>
-                <td>{{fuel.usd_diesel|intcomma}} {% if fuel.usd_diesel < 1000 %} 
+                <td>{{fuel.usd_diesel|floatformat|intcomma}} {% if fuel.usd_diesel < 1000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"> </i>{% endif %}</td>
                 <td>{{fuel.usd_diesel_price}}</td>
-                <td>{{fuel.rtgs_diesel|intcomma}} {% if fuel.rtgs_diesel < 1000 %} 
+                <td>{{fuel.rtgs_diesel|floatformat|intcomma}} {% if fuel.rtgs_diesel < 1000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"> </i>{% endif %}</td>
                 <td>{{fuel.rtgs_diesel_price}}</td>
-                <td>{{fuel.usd_petrol|intcomma}} {% if fuel.usd_petrol < 1000 %} 
+                <td>{{fuel.usd_petrol|floatformat|intcomma}} {% if fuel.usd_petrol < 1000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
                 <td>{{fuel.usd_petrol_price}}</td>
-                <td>{{fuel.rtgs_petrol|intcomma}} {% if fuel.rtgs_petrol < 1000 %} 
+                <td>{{fuel.rtgs_petrol|floatformat|intcomma}} {% if fuel.rtgs_petrol < 1000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
                 <td>{{fuel.rtgs_petrol_price}}</td>
                 <td>
@@ -216,7 +216,7 @@
 
             <div class="modal fade modal-success in" id="add_fuel{{fuel.id}}" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class=" modal-dialog" role="document" style="margin: 0;">
+            <div class=" modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <span class="modal-title" id="exampleModalLongTitle">Add Fuel- <i
@@ -246,7 +246,7 @@
                                 <div class="col-sm-6" id=quantity>
                                     <label><b style='color:#009688'>Quantity</b></label>
                                     <input type="text" name="quantity" class="form-control"
-                                     id="quantity" disabled/>
+                                     id="quantity"/>
                                 </div>
                                
                             </div>

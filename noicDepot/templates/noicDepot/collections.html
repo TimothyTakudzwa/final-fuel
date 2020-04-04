@@ -1,0 +1,202 @@
+{% extends "noicDepot/depot_base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Fuel Finder - NOIC {% endblock %}
+{% load humanize %}
+{% block body %}
+    <section class="content-header">
+        <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search...">
+                <span class="input-group-btn">
+                  <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+              </span>
+            </div>
+        </form>
+        <!-- <div class="header-icon">
+            <i class="fa fa-industry"></i>
+        </div> -->
+        <div class="header-title" style="margin-left: 0px;">
+
+            <h1>Collections</h1>
+            <small>Fuel Management System </small>
+            <ol class="breadcrumb hidden-xs">
+                <li><a href="{% url 'users:allocate' %}"><i class="pe-7s-home"></i> Home</a></li>
+                <li class="active">Allocations</li>
+            </ol>
+
+        </div>
+
+    </section>
+    <section class="content">
+        <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+            <div class="panel-heading ui-sortable-handle">
+                <div class="btn-group">
+                    <h4>Collections</h4>
+                </div>
+                <div class="dropdown">
+                    <ul class="dropdown-menu dropdown-menu-right">
+
+
+                    </ul>
+                    <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+
+
+                <div class="table-responsive">
+                    <table id="allocations" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Order Date</th>
+                            <th>Depot</th>
+                            <th>Company</th>
+                            <th>Fuel Type</th>
+                            <th>Quantity</th>
+                            <th>Collection</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for collection in collections %}
+                            <tr>
+                                <td>{{collection.date}} {{collection.time}}</td>
+                                <td>{{collection.order.noic_depot.name}}</td>
+                                <td>{{collection.order.company.name}}</td>
+                                <td>{{collection.order.fuel_type}}</td>
+                                <td>{{collection.order.quantity}}l</td>
+                                <td>
+                                    {% if collection.has_collected %}
+                                        <!--view collection-->
+                                        <div class="text-center">
+                                            <button class="btn btn-md btn-primary" data-toggle="modal"  data-target="#view_collection{{collection.id}}">
+                                                View Collection
+                                            </button>
+                                        </div>
+                                    {% else %}
+                                        <!--add collection-->
+                                        <div class="text-center">
+                                            <button class="btn btn-md btn-primary" data-toggle="modal"  data-target="#add_collection{{collection.id}}">
+                                                Add Collection
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+
+                            <!--view collection-->
+                            <div class="modal fade modal-success in" id="view_collection{{collection.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 style="color: white">View collection for {{ collection.order.company }}</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h5>Date Collected &nbsp; : &nbsp; <text class="text-muted">{{ collection.date_collected }}</text></h5>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5>Time Collected &nbsp; : &nbsp; <text class="text-muted">{{ collection.time_collected }}</text></h5>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5>Transporter &nbsp; : &nbsp; <text class="text-muted">{{ collection.transporter }}</text></h5>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5>Collection Truck &nbsp; : &nbsp; <text class="text-muted">{{ collection.truck_reg }}</text></h5>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5>Trailer &nbsp; : &nbsp; <text class="text-muted">{{ collection.trailer_reg }}</text></h5>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5>Driver &nbsp; : &nbsp; <text class="text-muted">{{ collection.driver }}</text></h5>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5>Driver Id &nbsp; : &nbsp; <text class="text-muted">{{ collection.driver_id }}</text></h5>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5>Company &nbsp; : &nbsp; <text class="text-muted">{{ collection.order.company.name }}</text></h5>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5>Depot &nbsp; : &nbsp; <text class="text-muted">{{ collection.order.noic_depot.name }}</text></h5>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5>Quantity &nbsp; : &nbsp; <text class="text-muted">{{ collection.order.quantity }}l</text></h5>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5>Fuel Type &nbsp; : &nbsp; <text class="text-muted">{{ collection.order.fuel_type }}</text></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!--add collection-->
+                            <div class="modal fade modal-success in" id="add_collection{{collection.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 style="color: white">Add collection for {{ collection.order.company }}</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" value="{{collection.id}}" name="collection_id"/>
+                                                <div class="row">
+                                                    <!--transporter-->
+                                                    <div class="col-md-6">
+                                                        <fieldset class="form-group">
+                                                            {{ form.transporter|as_crispy_field }}
+                                                        </fieldset>
+                                                    </div>
+                                                    <!--truck reg-->
+                                                    <div class="col-md-6">
+                                                        <fieldset class="form-group">
+                                                            {{ form.truck_reg|as_crispy_field }}
+                                                        </fieldset>
+                                                    </div>
+                                                    <!--trailer reg-->
+                                                    <div class="col-md-6">
+                                                        <fieldset class="form-group">
+                                                            {{ form.trailer_reg|as_crispy_field }}
+                                                        </fieldset>
+                                                    </div>
+                                                    <!--driver-->
+                                                    <div class="col-md-6">
+                                                        <fieldset class="form-group">
+                                                            {{ form.driver|as_crispy_field }}
+                                                        </fieldset>
+                                                    </div>
+                                                    <!--driver id-->
+                                                    <div class="col-md-12">
+                                                        <fieldset class="form-group">
+                                                            {{ form.driver_id|as_crispy_field }}
+                                                        </fieldset>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <button type="submit" class="btn btn-primary w-100 btn-md">Submit</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

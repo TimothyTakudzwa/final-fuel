@@ -95,10 +95,10 @@
                         <li class="dropdown notifications-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="pe-7s-bell"></i>
-                                <span class="label label-warning">0</span>
+                                <span class="label label-warning" id="notification_count">0</span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li class="header"><i class="fa fa-bell"></i>0 Notifications</li>
+                                <li class="header"><i class="fa fa-bell"></i>Notifications</li>
                                 <li>
                                     <ul class="menu">
                                         <li>
@@ -455,6 +455,9 @@
     </script> 
     
     <script>
+        function incrementNotificationCount(){
+            $('#notification_count').text(parseInt($('#notification_count').text()) + 1);
+        }
         $(document).ready(function () {
           var logged_user = {{request.user.id}};
           var socket = io.connect('https://dreamhub.co.zw/new_offer');
@@ -464,12 +467,14 @@
             if (logged_user == msg.user_id) {
                 MyFunction(msg);
                 console.log("Testing New Notification");
+                incrementNotificationCount();
             }
         });
 
         socket.on('schedule', function (msg) {
             MyFunction(msg);
             console.log("Testing New Notification");
+            incrementNotificationCount();
  
         });
 
