@@ -104,7 +104,7 @@
                            
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                               {% for order in orders_notifications %}
-                              <a class="dropdown-item" href="{% url 'noicDepot:accepted_orders' %}">{{order.company.name}} placed new order</a>
+                              <a class="dropdown-item" href="{% url 'noicDepot:accepted_orders' %}">new fuel order {{order.company.name}}</a>
                               {% endfor %}
                             </div>
                           </li>   
