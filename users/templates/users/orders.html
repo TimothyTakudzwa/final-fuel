@@ -38,7 +38,13 @@
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
             <script>
+                
+
                 $(document).ready(function () {
+                if ($('#id_depot option').length === 0){
+                $('#submit_order').prop('disabled', true)
+                } 
+
                 $('#fuel_type').show();
                 $('#currency').show();
                 $('#diesel_rtgs_price').hide();
@@ -201,7 +207,19 @@
                                             $('input[name="quantity"]').val(parseFloat($('input[name="fuel_paid"]').val()/$('input[name="petrol_rtgs_price"]').val()).toFixed(2));
                                         }
 
-                                    }    
+                                    } 
+
+                                    if ($('#quantity').val() === "NaN" || $('#quantity').val() === "Infinity" ){
+                                        if ($("#submit_order").is(":disabled") === false) {
+                                            $('#submit_order').prop('disabled', true)
+                                        }    
+                                    } else{
+                                        if ($("#submit_order").is(":disabled") === true) {
+                                            $('#submit_order').prop('disabled', false)
+
+                                        }
+
+                                    }
                                 }
 
                                 $("#fuel_paid").keyup(function(){
@@ -288,7 +306,7 @@
                         </div>
                    </div>
                    <div class="modal-footer">  
-                    <button type="submit" class="btn btn-primary ">Submit</button>
+                    <button type="submit" class="btn btn-primary" id="submit_order">Submit</button>
                     <button class="btn btn-default" data-dismiss="modal" >Close</button>
                 </div> 
                    </form>
@@ -343,7 +361,7 @@
                     <td>{{ order.time }}</td>
                     <td>{{ order.noic_depot.name }}</td>
 
-                    {% if order.fuel_type == 'Diesel' %}
+                    {% if order.fuel_type == 'Petrol'  %}
                         <td style="color: #009688;">{{ order.fuel_type|lower|capfirst }}</td>
                     {% elif order.fuel_type == 'Diesel' %}
                         <td style="color: #ffb61e;">{{ order.fuel_type|lower|capfirst }}</td>
@@ -351,7 +369,7 @@
                         <td>{{ order.fuel_type|lower|capfirst }}</td>
                     {% endif %}    
 
-                    <td>{{ order.quantity|floatformat:2 }}</td>
+                    <td>{{ order.quantity }}</td>
                     <td>{{ order.currency}}</td> 
                     <td>
 
@@ -442,8 +460,10 @@
                             {% if order.allocation.release_note %}
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-primary btn-sm" style="color: white;" href="{% url 'users:view_release_note' order.allocation.id %}">Download Release Note</a>
                                    
+                                    <a  href="{% url 'users:view_release_note' order.allocation.id %}" class="btn btn-primary btn-sm btn-labeled m-b-5" type="button">
+                                        <span class="btn-label"><i class="fa fa-download"></i></span> Download Release Note
+                                    </a>
                                 </div>
                                 
                             </td> 
@@ -468,8 +488,10 @@
                             {% else %}
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#upload_{{order.allocation.id}}" >Upload D-Note</a>
                                    
+                                    <a  data-toggle="modal" data-target="#upload_{{order.allocation.id}}" class="btn btn-warning btn-sm btn-labeled m-b-5" type="button">
+                                        <span class="btn-label"><i class="fa fa-download"></i></span> Upload D-Note
+                                    </a>
                                 </div>
 
                              </td>
@@ -534,7 +556,12 @@
                         }
                         if(!$(event.target).closest('#new_depot_user').length && !$(event.target).is('#new_depot_user')) {
                             $("#new_depot_user").modal('hide');
+                        } 
+                        if(!$(event.target).closest('#upload_{{order.allocation.id}}').length && !$(event.target).is('#upload_{{order.allocation.id}}')) {
+                            $("#upload_{{order.allocation.id}}").modal('hide');
                         }      
+
+                        
                     });
                 </script>
                    

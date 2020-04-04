@@ -30,6 +30,7 @@ from users.views import message_is_sent
 from national.models import Order, NationalFuelUpdate, SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
 
 from .lib import *
+from .models import Collections
 
 user = get_user_model()
 
@@ -64,17 +65,21 @@ def initial_password_change(request):
     return render(request, 'noicDepot/initial_pass_change.html')
 
 
+@login_required()
 def dashboard(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders = SordNationalAuditTrail.objects.filter(assigned_depot=depot).all()
     return render(request, 'noicDepot/dashboard.html', {'orders': orders})
 
+
+@login_required()
 def activity(request):
     activities = Activity.objects.filter(user=request.user).all()
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     return render(request, 'noicDepot/activity.html', {'activities': activities, 'depot': depot})
 
 
+@login_required()
 def accepted_orders(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(action="ORDER").filter(is_read=False).all()
@@ -88,6 +93,8 @@ def accepted_orders(request):
     orders = Order.objects.filter(noic_depot=depot).all()
     return render(request, 'noicDepot/accepted_orders.html', {'orders': orders})
 
+
+@login_required()
 def orders(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(action="ORDER").filter(is_read=False).all()
@@ -101,12 +108,15 @@ def orders(request):
                 order.allocation = alloc
     return render(request, 'noicDepot/orders.html', {'orders': orders, 'orders_notifications': orders_notifications, 'num_of_new_orders': num_of_new_orders,'allocate' : 'hide', 'release' : 'hide'})
 
+
+@login_required()
 def stock(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     depot_stock = DepotFuelUpdate.objects.filter(depot=depot).all()
     return render(request, 'noicDepot/stock.html', {'depot_stock': depot_stock, 'depot': depot})
 
 
+@login_required()
 def upload_release_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -120,6 +130,8 @@ def upload_release_note(request, id):
         messages.success(request, "Release note successfully created")
         return redirect('noicDepot:dashboard')
 
+
+@login_required()
 def payment_approval(request, id):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     noic_capacity = DepotFuelUpdate.objects.filter(depot=depot).first()
@@ -163,6 +175,8 @@ def payment_approval(request, id):
     messages.success(request, 'payment approved successfully')
     return render(request, 'noicDepot/orders.html', {'orders': orders, 'order': order, 'allocate' : 'show'})
 
+
+@login_required()
 def view_release_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     allocation.admin = User.objects.filter(company=allocation.company).filter(user_type='S_ADMIN').first()
@@ -173,6 +187,7 @@ def view_release_note(request, id):
     return render(request, 'noicDepot/release_note.html', context=context)
 
 
+@login_required()
 def download_release_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     allocation.admin = User.objects.filter(company=allocation.company).filter(user_type='S_ADMIN').first()
@@ -183,6 +198,7 @@ def download_release_note(request, id):
     return render(request, 'noicDepot/r_note.html', context=context)
 
 
+@login_required()
 def allocate_fuel(request, id):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders = Order.objects.filter(noic_depot=depot).all()
@@ -380,6 +396,8 @@ def allocate_fuel(request, id):
                     messages.success(request, 'fuel allocated successfully')
                     return render(request, 'noicDepot/orders.html', {'orders': orders, 'sord_object': sord_object, 'release' : 'show'})
 
+
+@login_required()
 def download_proof(request, id):
     order = Order.objects.filter(id=id).first()
     if order:
@@ -392,6 +410,7 @@ def download_proof(request, id):
     return response
 
 
+@login_required()
 def download_d_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     if allocation:
@@ -404,11 +423,13 @@ def download_d_note(request, id):
     return response
 
 
+@login_required()
 def profile(request):
     user = request.user
     return render(request, 'noicDepot/profile.html', {'user': user})
 
 
+@login_required()
 def report_generator(request):
     '''View to dynamically render form tables based on different criteria'''
     allocations = requests = trans = stock = None
@@ -527,6 +548,7 @@ def report_generator(request):
                    'start': start_date, 'end': end_date, 'show': show, 'stock': stock})
 
 
+@login_required()
 def statistics(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     weekly_rev = get_weekly_sales(True,depot)
@@ -542,4 +564,11 @@ def statistics(request):
 
     return render(request, 'noicDepot/statistics.html', {'weekly_rev': weekly_rev, 'last_week_rev':last_week_rev, 'monthly_rev':monthly_rev,
                     'depot':depot, 'order_completions':order_completions, 'allocations':allocations, 'stock':stock,'revenue': revenue })
-    
+
+
+@login_required()
+def collections(request):
+    context = {
+        'collections': Collections.objects.filter()
+    }
+    return render(request, 'noicDepot/collections.html', context=context)

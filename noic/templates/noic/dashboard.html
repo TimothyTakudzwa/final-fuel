@@ -216,7 +216,7 @@
 
             <div class="modal fade modal-success in" id="add_fuel{{fuel.id}}" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class=" modal-dialog" role="document" style="margin: 0;">
+            <div class=" modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <span class="modal-title" id="exampleModalLongTitle">Add Fuel- <i
@@ -264,22 +264,22 @@
                                 </div>
                                 <div class="col-sm-6" id="diesel_rtgs_price">
                                     <label><b style='color:#009688'>Price</b></label>
-                                    <input type="text" name="diesel_rtgs_price" class="form-control"
+                                    <input type="number" min="0.1" step="0.01" name="diesel_rtgs_price" class="form-control"
                                         value="{{diesel_rtgs_price}}" id="diesel_rtgs_price_input" required />
                                 </div>
                                 <div class="col-sm-6" id="diesel_usd_price">
                                     <label><b style='color:#009688'>Price</b></label>
-                                    <input type="text" name="diesel_usd_price" class="form-control"
+                                    <input type="number" min="0.1" step="0.01" name="diesel_usd_price" class="form-control"
                                         value="{{diesel_usd_price}}" id="diesel_usd_price_input" required />
                                 </div>
                                 <div class="col-sm-6" id="petrol_rtgs_price">
                                     <label><b style='color:#009688'>Price</b></label>
-                                    <input type="text" name="petrol_rtgs_price" class="form-control"
+                                    <input type="number" min="0.1" step="0.01" name="petrol_rtgs_price" class="form-control"
                                         value="{{petrol_rtgs_price}}" id="petrol_rtgs_price_input" required />
                                 </div>
                                 <div class="col-sm-6" id="petrol_usd_price">
                                     <label><b style='color:#009688'>Price</b></label>
-                                    <input type="text" name="petrol_usd_price" class="form-control"
+                                    <input type="number" min="0.1" step="0.01" name="petrol_usd_price" class="form-control"
                                         value="{{petrol_usd_price}}" id="petrol_usd_price_input" required />
                                 </div>
 
@@ -384,12 +384,12 @@
                             <div class="col-sm-6">
 
                                 <lable><b style='color:#009688'>USD Petrol Price</b></lable>
-                                <input type="text" name="usd_petrol_price" class="form-control"
+                                <input type="number" min="0.1" step="0.01" name="usd_petrol_price" class="form-control"
                                     value="{{fuel.usd_petrol_price}}" />
                             </div>
                             <div class="col-sm-6">
                                 <label><b style='color:#009688'>USD Diesel Price</b></label>
-                                <input type="text" name="usd_diesel_price" class="form-control"
+                                <input type="number" min="0.1" step="0.01" name="usd_diesel_price" class="form-control"
                                     placeholder="$" value="{{fuel.usd_diesel_price}}" />
                             </div>
                             
@@ -399,12 +399,12 @@
                             <div class="col-sm-6">
 
                                 <lable><b style='color:#009688'>RTGS Petrol Price</b></lable>
-                                <input type="text" name="rtgs_petrol_price" class="form-control"
+                                <input type="number" min="0.1" step="0.01" name="rtgs_petrol_price" class="form-control"
                                     value="{{fuel.rtgs_petrol_price}}" />
                             </div>
                             <div class="col-sm-6">
                                 <label><b style='color:#009688'>RTGS Diesel Price</b></label>
-                                <input type="text" name="rtgs_diesel_price" class="form-control"
+                                <input type="number" min="0.1" step="0.01" name="rtgs_diesel_price" class="form-control"
                                     placeholder="$" value="{{fuel.rtgs_diesel_price}}" />
                             </div>
                             

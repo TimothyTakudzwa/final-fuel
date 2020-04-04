@@ -119,11 +119,15 @@ def allocate(request):
     else:
         allocations = allocations
     return render(request, 'users/allocate.html',
-                  {'depots': depots, 'form1': form1, 'diesel_rtgs_price': diesel_rtgs_price, 'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price, 'petrol_usd_price': petrol_usd_price, 'allocates': allocates, 'allocations': allocations, 'company_capacity': company_capacity,
+                  {'depots': depots, 'form1': form1, 'diesel_rtgs_price': diesel_rtgs_price,
+                   'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price,
+                   'petrol_usd_price': petrol_usd_price, 'allocates': allocates, 'allocations': allocations,
+                   'company_capacity': company_capacity,
                    'company_total_diesel_capacity': company_total_diesel_capacity,
                    'company_total_petrol_capacity': company_total_petrol_capacity})
 
 
+@login_required()
 def allocated_fuel(request, sid):
     sub = Subsidiaries.objects.filter(id=sid).first()
     allocates = SuballocationFuelUpdate.objects.filter(subsidiary=sub).all()
@@ -231,9 +235,9 @@ def allocated_fuel(request, sid):
                     action_audit = SordActionsAuditTrail.objects.create(sord_num=sord_allocation.sord_no,
                                                                         action_num=sord_allocation.action_no,
                                                                         allocated_quantity=amount_cf,
-                                                                        action_type = "Allocation",
-                                                                        supplied_from = request.user.company.name,
-                                                                        price = fuel_updated.petrol_price,
+                                                                        action_type="Allocation",
+                                                                        supplied_from=request.user.company.name,
+                                                                        price=fuel_updated.petrol_price,
                                                                         allocated_by=request.user.username,
                                                                         allocated_to=sub.name, fuel_type="Petrol",
                                                                         payment_type=fuel_updated.payment_type)
@@ -257,9 +261,9 @@ def allocated_fuel(request, sid):
                                                                         action_num=sord_allocation.action_no,
                                                                         allocated_quantity=sord_allocation.end_quantity,
                                                                         allocated_by=request.user.username,
-                                                                        action_type = "Allocation",
-                                                                        price = fuel_updated.petrol_price,
-                                                                        supplied_from = request.user.company.name,
+                                                                        action_type="Allocation",
+                                                                        price=fuel_updated.petrol_price,
+                                                                        supplied_from=request.user.company.name,
                                                                         allocated_to=sub.name, fuel_type="Petrol",
                                                                         payment_type=fuel_updated.payment_type)
                     receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -296,9 +300,9 @@ def allocated_fuel(request, sid):
                                                                         action_num=sord_allocation.action_no,
                                                                         allocated_quantity=amount_cf,
                                                                         allocated_by=request.user.username,
-                                                                        action_type = "Allocation",
-                                                                        price = fuel_updated.diesel_price,
-                                                                        supplied_from = request.user.company.name,
+                                                                        action_type="Allocation",
+                                                                        price=fuel_updated.diesel_price,
+                                                                        supplied_from=request.user.company.name,
                                                                         allocated_to=sub.name, fuel_type="Diesel",
                                                                         payment_type=fuel_updated.payment_type)
                     receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -321,9 +325,9 @@ def allocated_fuel(request, sid):
                                                                         action_num=sord_allocation.action_no,
                                                                         allocated_quantity=sord_allocation.end_quantity,
                                                                         allocated_by=request.user.username,
-                                                                        action_type = "Allocation",
-                                                                        price = fuel_updated.diesel_price,
-                                                                        supplied_from = request.user.company.name,
+                                                                        action_type="Allocation",
+                                                                        price=fuel_updated.diesel_price,
+                                                                        supplied_from=request.user.company.name,
                                                                         allocated_to=sub.name, fuel_type="Diesel",
                                                                         payment_type=fuel_updated.payment_type)
                     receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -449,9 +453,9 @@ def allocation_update(request, id):
                                                                             action_num=sord_allocation.action_no,
                                                                             allocated_quantity=amount_cf,
                                                                             allocated_by=request.user.username,
-                                                                            action_type = "Allocation",
-                                                                            price = fuel_update.petrol_price,
-                                                                            supplied_from = request.user.company.name,
+                                                                            action_type="Allocation",
+                                                                            price=fuel_update.petrol_price,
+                                                                            supplied_from=request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Petrol",
                                                                             payment_type=fuel_update.payment_type)
                         receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -476,9 +480,9 @@ def allocation_update(request, id):
                                                                             action_num=sord_allocation.action_no,
                                                                             allocated_quantity=sord_allocation.end_quantity,
                                                                             allocated_by=request.user.username,
-                                                                            action_type = "Allocation",
-                                                                            price = fuel_update.petrol_price,
-                                                                            supplied_from = request.user.company.name,
+                                                                            action_type="Allocation",
+                                                                            price=fuel_update.petrol_price,
+                                                                            supplied_from=request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Petrol",
                                                                             payment_type=fuel_update.payment_type)
                         receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -517,9 +521,9 @@ def allocation_update(request, id):
                                                                             action_num=sord_allocation.action_no,
                                                                             allocated_quantity=amount_cf,
                                                                             allocated_by=request.user.username,
-                                                                            action_type = "Allocation",
-                                                                            price = fuel_update.diesel_price,
-                                                                            supplied_from = request.user.company.name,
+                                                                            action_type="Allocation",
+                                                                            price=fuel_update.diesel_price,
+                                                                            supplied_from=request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Diesel",
                                                                             payment_type=fuel_update.payment_type)
                         receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -544,9 +548,9 @@ def allocation_update(request, id):
                                                                             action_num=sord_allocation.action_no,
                                                                             allocated_quantity=sord_allocation.end_quantity,
                                                                             allocated_by=request.user.username,
-                                                                            action_type = "Allocation",
-                                                                            price = fuel_update.diesel_price,
-                                                                            supplied_from = request.user.company.name,
+                                                                            action_type="Allocation",
+                                                                            price=fuel_update.diesel_price,
+                                                                            supplied_from=request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Diesel",
                                                                             payment_type=fuel_update.payment_type)
                         receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -645,9 +649,9 @@ def allocation_update_main(request, id):
                                                                             action_num=sord_allocation.action_no,
                                                                             allocated_quantity=amount_cf,
                                                                             allocated_by=request.user.username,
-                                                                            action_type = "Allocation",
-                                                                            price = fuel_update.petrol_price,
-                                                                            supplied_from = request.user.company.name,
+                                                                            action_type="Allocation",
+                                                                            price=fuel_update.petrol_price,
+                                                                            supplied_from=request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Petrol",
                                                                             payment_type="RTGS")
                         receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -671,9 +675,9 @@ def allocation_update_main(request, id):
                                                                             action_num=sord_allocation.action_no,
                                                                             allocated_quantity=sord_allocation.end_quantity,
                                                                             allocated_by=request.user.username,
-                                                                            action_type = "Allocation",
-                                                                            price = fuel_update.petrol_price,
-                                                                            supplied_from = request.user.company.name,
+                                                                            action_type="Allocation",
+                                                                            price=fuel_update.petrol_price,
+                                                                            supplied_from=request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Petrol",
                                                                             payment_type="RTGS")
                         receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -710,9 +714,9 @@ def allocation_update_main(request, id):
                                                                             action_num=sord_allocation.action_no,
                                                                             allocated_quantity=amount_cf,
                                                                             allocated_by=request.user.username,
-                                                                            action_type = "Allocation",
-                                                                            price = fuel_update.diesel_price,
-                                                                            supplied_from = request.user.company.name,
+                                                                            action_type="Allocation",
+                                                                            price=fuel_update.diesel_price,
+                                                                            supplied_from=request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Diesel",
                                                                             payment_type="RTGS")
                         receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -736,9 +740,9 @@ def allocation_update_main(request, id):
                                                                             action_num=sord_allocation.action_no,
                                                                             allocated_quantity=sord_allocation.end_quantity,
                                                                             allocated_by=request.user.username,
-                                                                            action_type = "Allocation",
-                                                                            price = fuel_update.diesel_price,
-                                                                            supplied_from = request.user.company.name,
+                                                                            action_type="Allocation",
+                                                                            price=fuel_update.diesel_price,
+                                                                            supplied_from=request.user.company.name,
                                                                             allocated_to=sub.name, fuel_type="Diesel",
                                                                             payment_type="RTGS")
                         receiver = User.objects.filter(subsidiary_id=sub.id).first()
@@ -829,8 +833,10 @@ def stations(request):
             application_form = None
             fire_brigade = None
             ema = None
-       
-        subsidiary = Subsidiaries.objects.create(is_active=is_active, application_form=application_form, fire_brigade=fire_brigade, ema=ema, license_num=license_num, praz_reg_num=praz_reg_num,
+
+        subsidiary = Subsidiaries.objects.create(is_active=is_active, application_form=application_form,
+                                                 fire_brigade=fire_brigade, ema=ema, license_num=license_num,
+                                                 praz_reg_num=praz_reg_num,
                                                  vat=vat, account_number=account_number,
                                                  destination_bank=destination_bank, city=city, location=location,
                                                  company=request.user.company, name=name, is_depot=is_depot,
@@ -842,8 +848,10 @@ def stations(request):
             fuel_update.save()
             messages.success(request, 'Subsidiary created successfully')
             return render(request, 'users/service_stations.html',
-                  {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
-                   'Mutare': Mutare, 'Gweru': Gweru, 'subsidiary': subsidiary, 'form': form, 'form1': form1, 'add_user' : 'show'})
+                          {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo,
+                           'zimbabwean_towns': zimbabwean_towns,
+                           'Mutare': Mutare, 'Gweru': Gweru, 'subsidiary': subsidiary, 'form': form, 'form1': form1,
+                           'add_user': 'show'})
 
         else:
             fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=subsidiary,
@@ -851,13 +859,14 @@ def stations(request):
             fuel_update.save()
             messages.success(request, 'Subsidiary created successfully')
             return render(request, 'users/service_stations.html',
-                  {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
-                   'Mutare': Mutare, 'Gweru': Gweru, 'subsidiary': subsidiary, 'form': form, 'form1': form1, 'add_user' : 'show'})
-
+                          {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo,
+                           'zimbabwean_towns': zimbabwean_towns,
+                           'Mutare': Mutare, 'Gweru': Gweru, 'subsidiary': subsidiary, 'form': form, 'form1': form1,
+                           'add_user': 'show'})
 
     return render(request, 'users/service_stations.html',
                   {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
-                   'Mutare': Mutare, 'Gweru': Gweru, 'add_user' : 'hide', 'allocate' : 'hide'})
+                   'Mutare': Mutare, 'Gweru': Gweru, 'add_user': 'hide', 'allocate': 'hide'})
 
 
 @login_required()
@@ -875,8 +884,10 @@ def suppliers_list(request):
     form1 = SupplierContactForm()
     form = DepotContactForm()
 
-    subsidiaries = Subsidiaries.objects.filter(is_depot=False).filter(is_active=True).filter(company=request.user.company).all()
-    depots = Subsidiaries.objects.filter(is_depot=True).filter(is_active=True).filter(company=request.user.company).all()
+    subsidiaries = Subsidiaries.objects.filter(is_depot=False).filter(is_active=True).filter(
+        company=request.user.company).all()
+    depots = Subsidiaries.objects.filter(is_depot=True).filter(is_active=True).filter(
+        company=request.user.company).all()
     form1.fields['service_station'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in subsidiaries]
     form.fields['depot'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in depots]
 
@@ -901,12 +912,12 @@ def suppliers_list(request):
             return redirect('users:suppliers_list')
 
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
-                                first_name=first_name, last_name=last_name,
-                                company=request.user.company, email=email,
-                                phone_number=phone_number, password_reset=True)
+                                   first_name=first_name, last_name=last_name,
+                                   company=request.user.company, email=email,
+                                   phone_number=phone_number, password_reset=True)
         subsidiary = Subsidiaries.objects.filter(id=subsidiary_id).first()
         if subsidiary.is_depot == False:
-            user.user_type = 'SS_SUPPLIER' 
+            user.user_type = 'SS_SUPPLIER'
             user.save()
             fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
             user.set_password(password)
@@ -916,10 +927,12 @@ def suppliers_list(request):
                     user.save()
                 else:
                     messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
-            return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1, 'allocate' : 'show', 'fuel_update': fuel_update, 'form':form})
+            return render(request, 'users/suppliers_list.html',
+                          {'suppliers': suppliers, 'form1': form1, 'allocate': 'show', 'fuel_update': fuel_update,
+                           'form': form})
         else:
             user.user_type = 'SUPPLIER'
-            user.save() 
+            user.save()
             user.set_password(password)
             if message_is_send(request, user, password):
                 if user.is_active:
@@ -928,11 +941,11 @@ def suppliers_list(request):
                 else:
                     messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
             return redirect(f'/users/allocated_fuel/{subsidiary.id}')
-        
 
-    return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1, 'form':form})
+    return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1, 'form': form})
 
 
+@login_required()
 def get_pdf(request):
     trans = Transaction.objects.all()
     today = datetime.datetime.today()
@@ -944,6 +957,7 @@ def get_pdf(request):
     return Render.render('users/pdf.html', params)
 
 
+@login_required()
 def account_activate(request):
     return render(request, 'users/account_activate.html')
 
@@ -997,7 +1011,7 @@ def statistics(request):
         sub_trans = Transaction.objects.filter(supplier__company=request.user.company, supplier__subsidiary_id=sub.id,
                                                is_complete=True)
         for sub_tran in sub_trans:
-            tran_amount += (float(sub_tran.offer.request.amount)* float(sub_tran.offer.price))
+            tran_amount += (float(sub_tran.offer.request.amount) * float(sub_tran.offer.price))
         sub.tran_count = sub_trans.count()
         sub.tran_value = tran_amount
         subs.append(sub)
@@ -1090,7 +1104,6 @@ def client_history(request, cid):
                 trans.append(tran)
             state = 'Incomplete'
 
-
         if request.POST.get('report_type') == 'All':
             trns = Transaction.objects.filter(buyer=buyer)
             trans = []
@@ -1147,7 +1160,7 @@ def subsidiary_transaction_history(request, sid):
                 trans.append(tran)
             state = 'All'
         return render(request, 'users/subs_history.html', {'trans': trans, 'subsidiary': subsidiary, 'state': state})
-    
+
     trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
     for tran in trns:
         tran.revenue = tran.offer.request.amount * tran.offer.price
@@ -1260,6 +1273,7 @@ def audit_trail(request):
     return render(request, 'users/audit_trail.html', {'trails': trails})
 
 
+@login_required()
 def waiting_for_approval(request):
     stations = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
     depots = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company).all()
@@ -1268,6 +1282,7 @@ def waiting_for_approval(request):
                   {'applicants': applicants, 'stations': stations, 'depots': depots})
 
 
+@login_required()
 def approve_applicant(request, id):
     if request.method == 'POST':
         if user.objects.filter(id=id).exists():
@@ -1286,6 +1301,7 @@ def approve_applicant(request, id):
             return redirect('users:waiting_for_approval')
 
 
+@login_required()
 def decline_applicant(request, id):
     applicant = user.objects.filter(id=id).first()
     applicant.delete()
@@ -1293,6 +1309,7 @@ def decline_applicant(request, id):
     return redirect('users:waiting_for_approval')
 
 
+@login_required()
 def message_is_send(request, user, password):
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
@@ -1309,6 +1326,7 @@ def message_is_send(request, user, password):
     return render(request, 'buyer/send_email.html')
 
 
+@login_required()
 def message_is_sent(request, user, password):
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
@@ -1334,6 +1352,7 @@ def suppliers_delete(request, sid):
     else:
         messages.success(request, 'user does not exists')
         return redirect('users:suppliers_list')
+
 
 # DO NOT DELETE DEPOT STAFF MANAGEMENT VIEWS!!!!!!!!!!!
 @login_required()
@@ -1627,13 +1646,13 @@ def edit_depot_rep(request, id):
             return redirect('users:suppliers_list')
 
 
+@login_required()
 def company_profile(request):
     compan = Company.objects.filter(id=request.user.company.id).first()
     num_of_subsidiaries = Subsidiaries.objects.filter(company=request.user.company).count()
     # fuel_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
 
     if request.method == 'POST':
-        
         compan.name = request.POST['name']
         compan.address = request.POST['address']
         compan.industry = request.POST['industry']
@@ -1648,6 +1667,7 @@ def company_profile(request):
     return render(request, 'users/company_profile.html', {'compan': compan, 'num_of_subsidiaries': num_of_subsidiaries})
 
 
+@login_required()
 def company_petrol(request, id):
     if request.method == 'POST':
         if CompanyFuelUpdate.objects.filter(id=id).exists():
@@ -1663,6 +1683,7 @@ def company_petrol(request, id):
             return redirect('users:allocate')
 
 
+@login_required()
 def company_diesel(request, id):
     if request.method == 'POST':
         if CompanyFuelUpdate.objects.filter(id=id).exists():
@@ -1678,6 +1699,7 @@ def company_diesel(request, id):
             return redirect('users:allocate')
 
 
+@login_required()
 def edit_allocation(request, id):
     if request.method == 'POST':
         if FuelAllocation.objects.filter(id=id).exists():
@@ -1722,6 +1744,7 @@ def edit_allocation(request, id):
             return redirect('users:allocate')
 
 
+@login_required()
 def sordactions(request, id):
     sord_actions = SordActionsAuditTrail.objects.filter(sord_num=id).all()
 
@@ -1732,11 +1755,13 @@ def sordactions(request, id):
     return render(request, 'users/sord_actions.html', {'sord_number': sord_number, 'sord_actions': sord_actions})
 
 
+@login_required()
 def sord_station_sales(request):
     sord_sales = SordSubsidiaryAuditTrail.objects.filter(subsidiary__company=request.user.company).all()
     return render(request, 'users/sord_station_sales.html', {'sord_sales': sord_sales})
 
 
+@login_required()
 def delivery_schedule(request, id):
     return render(request, 'users/delivery_schedule.html')
 
@@ -1754,6 +1779,7 @@ def client_application(request):
     return render(request, 'users/clients_applications.html', context=context)
 
 
+@login_required()
 def download_application(request, id):
     application = Account.objects.filter(id=id).first()
     if application:
@@ -1766,6 +1792,7 @@ def download_application(request, id):
     return response
 
 
+@login_required()
 def download_tax_clearance(request, id):
     application = Account.objects.filter(id=id).first()
     if application:
@@ -1778,6 +1805,7 @@ def download_tax_clearance(request, id):
     return response
 
 
+@login_required()
 def download_cr14(request, id):
     application = Account.objects.filter(id=id).first()
     if application:
@@ -1790,6 +1818,7 @@ def download_cr14(request, id):
     return response
 
 
+@login_required()
 def download_cr6(request, id):
     application = Account.objects.filter(id=id).first()
     if application:
@@ -1802,6 +1831,7 @@ def download_cr6(request, id):
     return response
 
 
+@login_required()
 def download_proof_of_residence(request, id):
     application = Account.objects.filter(id=id).first()
     if application:
@@ -1814,6 +1844,7 @@ def download_proof_of_residence(request, id):
     return response
 
 
+@login_required()
 def download_cert_of_inc(request, id):
     application = Account.objects.filter(id=id).first()
     if application:
@@ -1826,6 +1857,7 @@ def download_cert_of_inc(request, id):
     return response
 
 
+@login_required()
 def download_document(request, id):
     document = Account.objects.filter(id=id).first()
     if document:
@@ -2107,6 +2139,7 @@ def upload_users(request):
     return render(request, 'users/upload_users.html', context=context)
 
 
+@login_required()
 def place_order(request):
     fuel_object = DepotFuelUpdate.objects.first()
     diesel_rtgs_price = 0
@@ -2139,13 +2172,16 @@ def place_order(request):
             trailer_reg = request.POST['trailer_reg']
             driver = request.POST['driver']
             driver_id = request.POST['driver_id']
-            order = Order.objects.create(price=price, noic_depot=noic_depot, amount_paid=amount_paid, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+            order = Order.objects.create(price=price, noic_depot=noic_depot, amount_paid=amount_paid,
+                                         transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg,
+                                         driver=driver, driver_id=driver_id, company=company, quantity=quantity,
+                                         currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
             order.save()
 
             message = f'{request.user.company.name.title()} placed an order of {quantity}L' \
                       f' {fuel_type.lower}'
             Notification.objects.create(message=message, reference_id=order.id, depot_id=noic_depot.id, action="ORDER")
-            messages.success(request,'placed order successfully')
+            messages.success(request, 'placed order successfully')
             return redirect('users:orders')
         else:
             if currency == 'USD':
@@ -2161,16 +2197,20 @@ def place_order(request):
             trailer_reg = request.POST['trailer_reg']
             driver = request.POST['driver']
             driver_id = request.POST['driver_id']
-            Order.objects.create(price=price, noic_depot=noic_depot, amount_paid=amount_paid, transporter=transporter, truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id, company=company,quantity=quantity,currency=currency, fuel_type=fuel_type, proof_of_payment=proof_of_payment)
+            Order.objects.create(price=price, noic_depot=noic_depot, amount_paid=amount_paid, transporter=transporter,
+                                 truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id,
+                                 company=company, quantity=quantity, currency=currency, fuel_type=fuel_type,
+                                 proof_of_payment=proof_of_payment)
 
             message = f'{request.user.company.name.title()} placed an order of {quantity}L' \
                       f' {fuel_type.lower}'
-            Notification.objects.create(message=message, reference_id=order.id, depot_id=noic_depot.id, company=request.user.company, action="ORDER")
-            messages.success(request,'placed order successfully')
+            Notification.objects.create(message=message, reference_id=order.id, depot_id=noic_depot.id,
+                                        company=request.user.company, action="ORDER")
+            messages.success(request, 'placed order successfully')
             return redirect('users:orders')
 
 
-
+@login_required()
 def orders(request):
     fuel_object = DepotFuelUpdate.objects.first()
     diesel_rtgs_price = 0
@@ -2197,9 +2237,13 @@ def orders(request):
         else:
             order.allocation = None
 
-    return render(request, 'users/orders.html', {'depots': depots, 'form1': form1, 'diesel_rtgs_price': diesel_rtgs_price, 'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price, 'petrol_usd_price': petrol_usd_price,'orders': orders})
+    return render(request, 'users/orders.html',
+                  {'depots': depots, 'form1': form1, 'diesel_rtgs_price': diesel_rtgs_price,
+                   'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price,
+                   'petrol_usd_price': petrol_usd_price, 'orders': orders})
 
 
+@login_required()
 def view_release_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     allocation.admin = request.user
@@ -2210,20 +2254,21 @@ def view_release_note(request, id):
     return render(request, 'users/release_note.html', context=context)
 
 
-
+@login_required()
 def delivery_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     if request.method == 'POST':
         if allocation is not None:
             allocation.d_note = request.FILES.get('d_note')
             allocation.save()
-            
+
             messages.success(request, 'Delivery note successfully uploaded')
             return redirect('users:orders')
         else:
             pass
 
 
+@login_required()
 def download_proof(request, id):
     document = Order.objects.filter(id=id).first()
     if document:
