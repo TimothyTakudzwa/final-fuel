@@ -8,6 +8,15 @@ class Collections(models.Model):
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
 
+    date_collected = models.DateField(null=True, blank=True)
+    time_collected = models.TimeField(null=True, blank=True)
+
+    transporter = models.CharField(max_length=150, blank=True, null=True)
+    truck_reg = models.CharField(max_length=150, blank=True, null=True)
+    trailer_reg = models.CharField(max_length=150, blank=True, null=True)
+    driver = models.CharField(max_length=150, blank=True, null=True)
+    driver_id = models.CharField(max_length=150, blank=True, null=True)
+
     class Meta:
         verbose_name_plural = 'Collections'
         ordering = ['date', 'time']

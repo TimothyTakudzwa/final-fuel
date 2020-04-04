@@ -28,10 +28,14 @@ from users.models import SordActionsAuditTrail, Activity
 from accounts.models import AccountHistory
 from users.views import message_is_sent
 from national.models import Order, NationalFuelUpdate, SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
+from .forms import CollectionsForm
 
 from .lib import *
 from .models import Collections
 
+from datetime import date, datetime
+
+today = date.today()
 user = get_user_model()
 
 
@@ -569,6 +573,22 @@ def statistics(request):
 @login_required()
 def collections(request):
     context = {
-        'collections': Collections.objects.filter()
+        'collections': Collections.objects.filter(),
+        'form': CollectionsForm()
     }
+    if request.method == 'POST':
+        collection = Collections.objects.filter(id=request.POST.get('collection_id')).first()
+        collection.transporter = request.POST.get('transporter')
+        collection.truck_reg = request.POST.get('truck_reg')
+        collection.trailer_reg = request.POST.get('trailer_reg')
+        collection.driver = request.POST.get('driver')
+        collection.driver_id = request.POST.get('driver_id')
+        collection.date_collected = date.today()
+        collection.time_collected = datetime.today().time()
+        collection.has_collected = True
+        collection.save()
+
+        messages.success(request, 'Collection saved successfully')
+        return redirect('noicDepot:collections')
+
     return render(request, 'noicDepot/collections.html', context=context)
