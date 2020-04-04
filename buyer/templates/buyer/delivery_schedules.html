@@ -218,12 +218,33 @@
                                         {% endif %} 
                                     </div>         
 
+                                    <div class="modal-footer">  
+                                        <button class="btn btn-info" type="submit" >Confirm Delivery</button>
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+
+                                    </div>  
+
                                 </div>
                                 </div>
                                 </div>>
                                 
                             </div>
                         </div>
+                        <script>
+                            $('body').click(function (event) {
+                                if(!$(event.target).closest('#additonal_information{{delivery.id}}').length && !$(event.target).is('#additonal_information{{delivery.id}}')) {
+                                    $("#additonal_information{{delivery.id}}").modal('hide');
+                                }
+                                if(!$(event.target).closest('#upload_{{delivery.id}}').length && !$(event.target).is('#upload_{{delivery.id}}')) {
+                                    $("#upload_{{delivery.id}}").modal('hide');
+                                } 
+                                // if(!$(event.target).closest('#upload_{{order.allocation.id}}').length && !$(event.target).is('#upload_{{order.allocation.id}}')) {
+                                //     $("#upload_{{order.allocation.id}}").modal('hide');
+                                // }      
+        
+                                
+                            });
+                        </script>
                     {%endfor%}
                 </tbody>
                 </table>
