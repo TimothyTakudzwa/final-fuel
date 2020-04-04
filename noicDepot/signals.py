@@ -10,11 +10,6 @@ def orders_log(sender, instance, created, **kwargs):
         order = Order.objects.get(id=instance.id)
         Collections.objects.create(
             order=order,
+            has_collected=False
         )
-    else:
-        order = Order.objects.get(id=instance.id)
-        collection = Collections.objects.filter(order=order).first()
-        # if collection has happened, driver details will be available
-        if order.driver is not None:
-            collection.has_collected = True
-            collection.save()
+
