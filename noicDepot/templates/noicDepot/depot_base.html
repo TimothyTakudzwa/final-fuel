@@ -142,15 +142,15 @@
                 <!-- sidebar menu -->
                 <ul class="sidebar-menu">
                     <li class="nav-item {% if request.path == '/noicDepot/orders/' %} active {% endif %}">
-                        <a href="{% url 'noicDepot:orders' %}"><i class="fa fa-book"></i><span>Dashboard</span>
+                        <a href="{% url 'noicDepot:orders' %}"><i class="fa fa-dashboard"></i><span>Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item {% if request.path == '/noicDepot/accepted_orders/' %} active {% endif %}">
-                        <a href="{% url 'noicDepot:accepted_orders' %}"><i class="fa fa-book"></i><span>Orders</span>
+                        <a href="{% url 'noicDepot:accepted_orders' %}"><i class="fa fa-shopping-cart"></i><span>Orders</span>
                         </a>
                     </li>
                     <li class="nav-item {% if request.path == '/noicDepot/dashboard/' %} active {% endif %}">
-                        <a href="{% url 'noicDepot:dashboard' %}"><i class="fa fa-book"></i><span>Allocations</span>
+                        <a href="{% url 'noicDepot:dashboard' %}"><i class="fa fa-tasks"></i><span>Allocations</span>
                         </a>
                     </li>
                     <li class="nav-item {% if request.path == '/noicDepot/collections/' %} active {% endif %}">
@@ -173,7 +173,7 @@
 
                     <ul class="sidebar-menu">
                         <li class="nav-item {% if request.path == '/noicDepot/stock/' %} active {% endif %}">
-                            <a href="{% url 'noicDepot:stock' %}"><i class="fa fa-binoculars"></i><span>Fuel Stocks</span>
+                            <a href="{% url 'noicDepot:stock' %}"><i class="fa fa-bank"></i><span>Fuel Stocks</span>
                             </a>
                         </li>
 
