@@ -1,4 +1,5 @@
 {% extends "zeraPortal/zera_base.html" %}
+{% load humanize %}
  {% block title %}Fuel Finder - ZERA {% endblock %} 
  {% block body %}
 <section class="content-header">
@@ -81,8 +82,8 @@
                             <td>{{capacity.company.name}}</td>
                             <td>{{capacity.usd_diesel_price}}</td>
                             <td>{{capacity.diesel_price}}</td>
-                            <td style="color: #009688;">{{capacity.diesel_capacity}}</td>
-                            <td style="color: #ffb61e;">{{capacity.petrol_capacity}}</td>
+                            <td style="color: #009688;">{{capacity.diesel_capacity|floatformat|intcomma}}</td>
+                            <td style="color: #ffb61e;">{{capacity.petrol_capacity|floatformat|intcomma}}</td>
                             <td>{{capacity.usd_petrol_price}}</td>
                             <td>{{capacity.petrol_price}}</td>
                             <td>
