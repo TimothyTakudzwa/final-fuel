@@ -165,6 +165,10 @@
                         <a href="{% url 'noicDepot:dashboard' %}"><i class="fa fa-book"></i><span>Allocations</span>
                         </a>
                     </li>
+                    <li class="nav-item {% if request.path == '/noicDepot/collections/' %} active {% endif %}">
+                        <a href="{% url 'noicDepot:collections' %} "><i class="fa fa-award"></i><span>Collections</span>
+                        </a>
+                    </li>
                     <li class="nav-item {% if request.path == '/noicDepot/activity/' %} active {% endif %}">
                         <a href="{% url 'noicDepot:activity' %}"><i  class="fa fa-area-chart"></i><span>Activity</span>
                         </a>
@@ -184,7 +188,7 @@
                             <a href="{% url 'noicDepot:stock' %}"><i class="fa fa-binoculars"></i><span>Fuel Stocks</span>
                             </a>
                         </li>
-                   
+
                     <li class="nav-item {% if request.path == '/noicDepot/profile/' %} active {% endif %}">
                         <a href="{% url 'noicDepot:profile' %} "><i class="fa fa-user"></i><span>User Profile</span>
                         </a>
