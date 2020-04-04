@@ -65,8 +65,19 @@ def dashboard(request):
         noic_rtgs_diesel += depot.rtgs_diesel
         noic_usd_petrol += depot.usd_petrol
         noic_rtgs_petrol += depot.rtgs_petrol
+    
+    fuel_object = DepotFuelUpdate.objects.first()
+    diesel_rtgs_price = 0
+    diesel_usd_price = 0
+    petrol_rtgs_price = 0
+    petrol_usd_price = 0
+    if fuel_object is not None:
+        diesel_rtgs_price = fuel_object.rtgs_diesel_price
+        diesel_usd_price = fuel_object.usd_diesel_price
+        petrol_rtgs_price = fuel_object.rtgs_petrol_price
+        petrol_usd_price = fuel_object.usd_petrol_price
 
-    return render(request, 'noic/dashboard.html', {'capacities': capacities, 'depots': depots, 'noic_usd_diesel':noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel, 'noic_usd_petrol': noic_usd_petrol, 'noic_rtgs_petrol': noic_rtgs_petrol})
+    return render(request, 'noic/dashboard.html', {'capacities': capacities, 'depots': depots, 'diesel_rtgs_price': diesel_rtgs_price, 'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price, 'petrol_usd_price': petrol_usd_price, 'noic_usd_diesel':noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel, 'noic_usd_petrol': noic_usd_petrol, 'noic_rtgs_petrol': noic_rtgs_petrol})
 
 
 @login_required()
