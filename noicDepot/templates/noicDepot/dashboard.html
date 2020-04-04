@@ -93,7 +93,7 @@
                             <td>{{sord.company}}</td>
                             <td>{{sord.fuel_type}}</td>
                             <td>{{sord.currency}}</td>
-                            <td>-----</td>
+                            <td>{{sord.quantity|intcomma}}</td>
                             <td>{{sord.price}}</td>
                             {% if sord.release_note %}
                             <td>
