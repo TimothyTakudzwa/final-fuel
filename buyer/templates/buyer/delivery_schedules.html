@@ -20,9 +20,11 @@
 
 <section class="content">
     <div class="content">
-        <div class="">
-            <button class="btn btn-default" onclick="toggle_tables()" style="border-radius: 3px;background-color: #009688;color: white;" id="toggle_button">Toggle Tables</button>
-          </div>
+        <div class="btn-group">
+            <button class="btn btn-default" onclick="show_future_schedule()" style="border-radius: 3px;background-color: #009688;color: white;" id="future_toggle_button">Future</button>
+            <button class="btn btn-default" onclick="show_today_schedule()" style="border-radius: 3px;background-color: #009688;color: white;" id="present_toggle_button">Present</button>
+            <button class="btn btn-default" onclick="show_past_schedule()" style="border-radius: 3px;background-color: #009688;color: white;" id="past_toggle_button">Past</button>
+        </div>
         <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
             data-index="0" id="past_schedules">
             <div class="panel-heading ui-sortable-handle">
@@ -719,51 +721,57 @@
 
       <script>
         function check_visible(){
-          if ($('#today_schedules').is(':visible') || $('#future_schedules').is(':visible')){
-            $("#toggle_button").prop("value", "Pama");
-            $("#toggle_button").html("Click To View Past Schedules")
-      
+          if ($('#today_schedules').is(':visible')){
+            $("#today_toggle_button").prop("disabled", true);
+            $("#future_toggle_button").prop("disabled", false);
+            $("#past_toggle_button").prop("disabled", false);
           }
-          else if ($('#past_schedules').is(':visible') || $('#today_schedules').is(':visible')){
-            $("#toggle_button").prop("value", "Pama");
-            $("#toggle_button").html("Click To View Future Schedules")
-      
+          else if ($('#past_schedules').is(':visible')){
+            $("#past_toggle_button").prop("disabled", true);
+            $("#future_toggle_button").prop("disabled", false);
+            $("#today_toggle_button").prop("disabled", false);
           }
           
-          else if ($('#past_schedules').is(':visible') || $('#future_schedules').is(':visible')){
-      
-            $("#toggle_button").prop("value", "Pama");
-            $("#toggle_button").html("Click To View Today Schedules")
+          else if ($('#future_schedules').is(':visible')) {
+            $("#future_toggle_button").prop("disabled", true);
+            $("#today_toggle_button").prop("disabled", false);
+            $("#past_toggle_button").prop("disabled", false);
           }
         }
       </script>
       
       
       <script>
-        $("#today_schedules").show();
-        $("#past_schedules").hide();
-        $("#future_schedules").hide();
-        check_visible()
+        // $("#today_schedules").show();
+        // $("#past_schedules").hide();
+        // $("#future_schedules").hide();
+        // check_visible()
         
-        function toggle_tables(){
-            if ($("#toggle_button").html() === "Click To View Today Schedules"){
-                $("#today_schedules").show();
-                $("#past_schedules").hide();
-                $("#future_schedules").hide();
-            }else if ($("#toggle_button").html() === "Click To View Future Schedules"){
-                $("#future_schedules").show();
-                $("#past_schedules").hide();
-                $("#today_schedules").hide()
-            }else if ($("#toggle_button").html() === "Click To View Past Schedules"){
-                $("#past_schedules").show();
-                $("#future_schedules").hide();
-                $("#today_schedules").hide()
-            }
-            check_visible()
+        // function toggle_tables(){
         //   $("#today_schedules").toggle();
         //   $("#past_schedules").toggle();
         //   $("#future_schedules").toggle();
+        //   check_visible()
       
+        // }
+
+        function show_past_schedule(){
+            $("#past_schedules").show();
+            $("#today_schedules").hide();
+            $("#future_schedules").hide();
+
+        }
+        function show_future_schedule(){
+            $("#future_schedules").show();
+            $("#past_schedules").hide();
+            $("#today_schedules").hide();
+
+        }
+        function show_today_schedule(){
+            $("#today_schedules").show();
+            $("#past_schedules").hide();
+            $("#future_schedules").hide();
+
         }
       
       </script>       
