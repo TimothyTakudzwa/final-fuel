@@ -46,8 +46,7 @@
         <div class="panel-body">              
       
       <div class="table-responsive">
-        {% for fuel in depot_stock %}
-        <table id="depots" class="table table-striped table-bordered" style="width:100%">
+        <table id="allocations" class="table table-striped table-bordered" style="width:100%">
 
             <thead style="background-color: lightslategray; color:white;">
                 <tr>
@@ -57,32 +56,33 @@
                     <th style="color: white;">Action</th>
                 </tr>
             </thead>
+           
             <tbody>
+             {% for fuel in depot_stock %}
             <tr>
                 <td height="35"> USD Diesel Quantity</td>
-                <td height="35"> {{fuel.usd_diesel|intcomma}}L {% if fuel.usd_diesel < 1000 %} 
-                    <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
+                <td height="35"> {{fuel.usd_diesel|intcomma}}L {% if fuel.usd_diesel < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
                     {% if noic_usd_diesel != 0 %}
                     <td height="35"> {{noic_usd_diesel}}</td>
                     {% else %}
                     <td height="35"> No Pending USD Diesel Orders</td>
                     {% endif %}
                     {% if fuel.usd_diesel < noic_usd_diesel %}
-                    <td height="35"> 
+                    <td height="35" width="10%"> 
                         <div class="btn-group">
-                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 1 %}">Notify HQ</a>
+                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 1 %}">Notify HQ for more diesel</a>
                         </div>
                     </td>
                     {% endif %}
-                </tr>
+             </tr>
               <tr>
                 <td height="35">USD Diesel Price</td>
                 
                 <td height="35">
                     ${{fuel.usd_diesel_price}}
                 </td>
-                <td height="35"> -</td>
-                  <td height="35"> -</td>
+                <td height="35"> N/A</td>
+                  <td height="35" width="10%"> N/A</td>
               </tr>
         <tr>
             <td height="35">RTGS Diesel Quantity</td>
@@ -95,9 +95,9 @@
             <td height="35"> No Pending RTGS Diesel Orders</td>
             {% endif %}
             {% if fuel.rtgs_diesel < noic_rtgs_diesel %}
-            <td height="35"> 
+            <td height="35" width="10%"> 
                 <div class="btn-group">
-                    <a class="btn btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 2 %}">Notify HQ</a>
+                    <a class="btn btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 2 %}">Notify HQ for more diesel</a>
                 </div>
             </td>
             {% endif %}
@@ -106,8 +106,8 @@
           <tr>
               <td height="35">RTGS Diesel Price</td>
               <td height="35">${{fuel.rtgs_diesel_price}}</td>
-              <td height="35"> -</td>
-              <td height="35"> -</td>
+              <td height="35"> N/A</td>
+                  <td height="35" width="10%"> N/A</td>
             </tr>
            
               <tr>
@@ -119,9 +119,9 @@
                     <td height="35"> No Pending USD Petrol Orders</td>
                     {% endif %}
                     {% if fuel.usd_petrol < noic_usd_petrol %}
-                    <td height="35"> 
+                    <td height="35" width="10%"> 
                         <div class="btn-group">
-                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 3 %}">Notify HQ</a>
+                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 3 %}">Notify HQ for more petrol</a>
                         </div>
                     </td>
                     {% endif %}
@@ -129,8 +129,8 @@
                 <tr>
                   <td height="35">USD Petrol Price</td>
                   <td>${{fuel.usd_petrol_price}}</td>
-                  <td height="35"> -</td>
-                  <td height="35"> -</td>
+                  <td height="35"> N/A</td>
+                  <td height="35" width="10%"> N/A</td>
                 </tr>
                 <tr>
                   <td height="35">RTGS Petrol Quantity</td>
@@ -141,9 +141,9 @@
                 <td height="35"> No Pending RTGS Petrol Orders</td>
                 {% endif %}
                 {% if fuel.rtgs_petrol < noic_rtgs_petrol %}
-                <td height="35"> 
+                <td height="35" width="10%"> 
                     <div class="btn-group">
-                        <a class="btn btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 4 %}">Notify HQ</a>
+                        <a class="btn btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 4 %}">Notify HQ for more petrol</a>
                     </div>
                 </td>
                 {% endif %}
@@ -151,13 +151,15 @@
                 <tr>
                     <td height="35">RTGS Petrol Price</td>
                     <td height="35">${{fuel.rtgs_petrol_price}}</td>
-                    <td height="35"> -</td>
-                    <td height="35"> -</td>
+                    <td height="35"> N/A</td>
+                    <td height="35" width="10%"> N/A</td>
                   </tr>
+                  {% endfor %}
                 </tbody>
-            </table>
-            {% endfor %}
+               
 
+            </table>
+           
 
            
 </div>
