@@ -719,18 +719,18 @@
 
       <script>
         function check_visible(){
-          if ($('#today_schedules').is(':visible')){
+          if ($('#today_schedules').is(':visible') || $('#future_schedules').is(':visible')){
             $("#toggle_button").prop("value", "Pama");
             $("#toggle_button").html("Click To View Past Schedules")
       
           }
-          else if ($('#past_schedules').is(':visible')){
+          else if ($('#past_schedules').is(':visible') || $('#today_schedules').is(':visible')){
             $("#toggle_button").prop("value", "Pama");
             $("#toggle_button").html("Click To View Future Schedules")
       
           }
           
-          else{
+          else if ($('#past_schedules').is(':visible') || $('#future_schedules').is(':visible')){
       
             $("#toggle_button").prop("value", "Pama");
             $("#toggle_button").html("Click To View Today Schedules")
@@ -746,10 +746,23 @@
         check_visible()
         
         function toggle_tables(){
-          $("#today_schedules").toggle();
-          $("#past_schedules").toggle();
-          $("#future_schedules").toggle();
-          check_visible()
+            if ($("#toggle_button").html() === "Click To View Today Schedules"){
+                $("#today_schedules").show();
+                $("#past_schedules").hide();
+                $("#future_schedules").hide();
+            }else if ($("#toggle_button").html() === "Click To View Future Schedules"){
+                $("#future_schedules").show();
+                $("#past_schedules").hide();
+                $("#today_schedules").hide()
+            }else if ($("#toggle_button").html() === "Click To View Past Schedules"){
+                $("#past_schedules").show();
+                $("#future_schedules").hide();
+                $("#today_schedules").hide()
+            }
+            check_visible()
+        //   $("#today_schedules").toggle();
+        //   $("#past_schedules").toggle();
+        //   $("#future_schedules").toggle();
       
         }
       
