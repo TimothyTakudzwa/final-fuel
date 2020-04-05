@@ -1,6 +1,7 @@
 from django.db import models
 from buyer.models import User
 from company.models import Company
+from national.models import NoicDepot
 
 
 class Notification(models.Model):
@@ -9,9 +10,10 @@ class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notification_name', blank = True, null= True)
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, blank=True, null=True)
     message = models.CharField(max_length=5000)
-    action = models.CharField(max_length=30, choices=(('REQUEST' , 'REQUEST'), ('OFFER' , 'OFFER'), ('DELVERY','DELVERY'),('ORDER', 'ORDER')))
+    action = models.CharField(max_length=30, choices=(('REQUEST' , 'REQUEST'), ('OFFER' , 'OFFER'), ('DELVERY','DELVERY'),('ORDER', 'ORDER'), ('MORE_FUEL', 'MORE_FUEL')))
     reference_id = models.PositiveIntegerField(default=0)
     is_read = models.BooleanField(default=False) 
+    responsible_depot = models.ForeignKey(NoicDepot, on_delete=models.DO_NOTHING, blank=True, null=True)
     depot_id = models.PositiveIntegerField(default=0) 
     is_noic_depot = models.BooleanField(default=False) 
 

@@ -117,7 +117,28 @@ def orders(request):
 def stock(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     depot_stock = DepotFuelUpdate.objects.filter(depot=depot).all()
-    return render(request, 'noicDepot/stock.html', {'depot_stock': depot_stock, 'depot': depot})
+
+    orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=False).all()
+    noic_usd_diesel = 0
+    noic_rtgs_diesel = 0
+    noic_usd_petrol = 0
+    noic_rtgs_petrol = 0
+
+    for order in orders:
+        if order.fuel_type.lower() == 'petrol':
+            if order.currency == 'USD':
+                noic_usd_petrol += order.quantity
+            else:
+                noic_rtgs_petrol += order.quantity
+
+        else:
+            if order.currency == 'USD':
+                noic_usd_diesel += order.quantity
+            else:
+                noic_rtgs_diesel += order.quantity
+
+    
+    return render(request, 'noicDepot/stock.html', {'depot_stock': depot_stock, 'depot': depot, 'noic_usd_diesel':noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel, 'noic_usd_petrol': noic_usd_petrol, 'noic_rtgs_petrol': noic_rtgs_petrol})
 
 
 @login_required()
@@ -592,3 +613,20 @@ def collections(request):
         return redirect('noicDepot:collections')
 
     return render(request, 'noicDepot/collections.html', context=context)
+
+
+def hg_notifier(request, id):
+    depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+    if id == 1:
+        message = 'Requesting for more USD diesel fuel'
+        Notification.objects.create(message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
+    elif id == 2:
+        message = 'Requesting for more RTGS diesel fuel'
+        Notification.objects.create(message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
+    elif id ==3:
+        message = 'Requesting for more USD petrol fuel'
+        Notification.objects.create(message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
+    else:
+        message = 'Requesting for more RTGS petrol fuel'
+        Notification.objects.create(message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
+    return redirect('noicDepot:stock')
