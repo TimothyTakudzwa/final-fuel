@@ -62,10 +62,9 @@
                             <th>Expected & Paid</th>
                             <th>Statement</th>
                             <th>Status</th>
-                            <!-- <th>Contact Person</th> -->
-                            <th>Banking Details</th>
+                            <th>Bank Details</th>
                             <th>Payments</th>
-                            <th>Upload Payment Proof</th>
+                            <th>P.OP</th>
                             <th>Rating</th>
                             
                         </tr>
@@ -306,7 +305,7 @@
                             {% endif %}
                             {% if transaction.expected == transaction.paid %}
                                 {% if transaction.is_complete == True %}
-                                    <td><i class="fa fa-check-square-o" style="font-size:25px;color:rgb(0, 225, 255)">Done</i></td>
+                                    <td><i class="fa fa-check-square-o" style="font-size:25px;color:rgb(0, 225, 255)">Complete</i></td>
                                 {% elif transaction.delivery_object.confirmation_document %}
                                     <td>Received</td>
                                 {% else %}
@@ -519,11 +518,9 @@
                             <th>Expected & Paid</th>
                             <th>Statement</th>
                             <th>Status</th>
-                            <!-- <th>Contact Person</th> -->
-                            <th>Banking Details</th>
+                            <th>Bank Details</th>
                             <th>Payments</th>
-                            <th>Upload Payment Proof</th>
-                            <!-- <th>Rating</th> -->
+                            <th>P.O.P</th>
                             
                         </tr>
                         </thead>
@@ -761,7 +758,7 @@
                             {% endif %}
                             {% if transaction.expected == transaction.paid %}
                                 {% if transaction.is_complete == True %}
-                                    <td><i class="fa fa-check-square-o" style="font-size:25px;color:rgb(0, 225, 255)">Done</i></td>
+                                    <td><i class="fa fa-check-square-o" style="font-size:25px;color:rgb(0, 225, 255)">Complete</i></td>
                                 {% elif transaction.delivery_object.confirmation_document %}
                                     <td>Received</td>
                                 {% else %}
