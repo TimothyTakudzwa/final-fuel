@@ -873,8 +873,8 @@ def delivery_schedules(request):
                     schedule.delivery_address = depot.location                                  
 
     context = {
-               'today_schedules': today_schedules
-               'future_schedules': future_schedules
+               'today_schedules': today_schedules,
+               'future_schedules': future_schedules,
                'past_schedules': past_schedules
 
                }
