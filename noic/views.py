@@ -27,6 +27,7 @@ from accounts.models import AccountHistory
 from users.views import message_is_sent
 from fuelfinder.helper_functions import random_password
 from national.models import Order, NationalFuelUpdate, SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
+from notification.models import Notification
 
 from .lib import *
 from zeraPortal.lib import *
@@ -42,6 +43,14 @@ def orders(request):
     form1.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots]
     for order in orders:
         order.allocation = SordNationalAuditTrail.objects.filter(order=order).first()
+    
+    requests_notifications = Notification.objects.filter(depot_id=depot.id).filter(action="ORDER").filter(is_read=False).all()
+    for req in requests_notifications:
+        if req is not None:
+            req.is_read = True
+            req.save()
+        else:
+            pass
 
     return render(request, 'noic/orders.html', {'orders': orders, 'form1': form1})
 
@@ -54,6 +63,8 @@ def activity(request):
 
 @login_required()
 def dashboard(request):
+    requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
+    num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
     capacities = NationalFuelUpdate.objects.all()
     depots = DepotFuelUpdate.objects.all()
     noic_usd_diesel = 0
@@ -77,7 +88,7 @@ def dashboard(request):
         petrol_rtgs_price = fuel_object.rtgs_petrol_price
         petrol_usd_price = fuel_object.usd_petrol_price
 
-    return render(request, 'noic/dashboard.html', {'capacities': capacities, 'depots': depots, 'diesel_rtgs_price': diesel_rtgs_price, 'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price, 'petrol_usd_price': petrol_usd_price, 'noic_usd_diesel':noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel, 'noic_usd_petrol': noic_usd_petrol, 'noic_rtgs_petrol': noic_rtgs_petrol})
+    return render(request, 'noic/dashboard.html', {'capacities': capacities, 'depots': depots, 'requests_notifications': requests_notifications, 'num_of_requests': num_of_requests, 'diesel_rtgs_price': diesel_rtgs_price, 'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price, 'petrol_usd_price': petrol_usd_price, 'noic_usd_diesel':noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel, 'noic_usd_petrol': noic_usd_petrol, 'noic_rtgs_petrol': noic_rtgs_petrol})
 
 
 @login_required()

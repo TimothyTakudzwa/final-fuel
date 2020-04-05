@@ -2180,7 +2180,8 @@ def place_order(request):
 
             message = f'{request.user.company.name.title()} placed an order of {quantity}L' \
                       f' {fuel_type.lower}'
-            Notification.objects.create(message=message, reference_id=order.id, depot_id=noic_depot.id, action="ORDER")
+            my_company = request.user.company
+            Notification.objects.create(message=message, company=my_company, reference_id=order.id, depot_id=noic_depot.id, action="ORDER")
             messages.success(request, 'placed order successfully')
             return redirect('users:orders')
         else:
@@ -2204,8 +2205,8 @@ def place_order(request):
 
             message = f'{request.user.company.name.title()} placed an order of {quantity}L' \
                       f' {fuel_type.lower}'
-            Notification.objects.create(message=message, reference_id=order.id, depot_id=noic_depot.id,
-                                        company=request.user.company, action="ORDER")
+            my_company = request.user.company
+            Notification.objects.create(message=message, reference_id=order.id, company=my_company, depot_id=noic_depot.id, action="ORDER")
             messages.success(request, 'placed order successfully')
             return redirect('users:orders')
 
