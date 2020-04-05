@@ -115,11 +115,11 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
             <form action=""
                 method="POST">
                 {% csrf_token %}
-                <div class="row-sm-12">
+                <div class="form-group row-sm-12">
                     <label>Company Name</label>
                     <input type="text" name="company_name" class="form-control" required/>
                 </div>
-                <div class="row">
+                <div class="form-group row">
                 <div class="col-sm-6" name="city">
                     <label>City</label>
                     <select class="form-control" name="city">
@@ -134,7 +134,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <input type="text" name="address" class="form-control" required/>
                 </div>
                 </div>
-                <div class="row">
+                <div class="form-group row">
                 <div class="col-sm-6">
                     <label>License Number</label>
                     <input type="text" name="license_number" class="form-control" required/>
@@ -144,7 +144,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <input type="text" name="vat_number" class="form-control" value="" />
               </div>
                 </div>
-                <div class="row">
+                <div class="form-group row">
               <div class="col-sm-6">
                 <label>Contact Person Name</label>
                 <input type="text" name="contact_person" class="form-control" value="" />
