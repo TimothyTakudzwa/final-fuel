@@ -1,5 +1,5 @@
 import secrets
-from datetime import date, datetime
+from datetime import date, datetime, time, timedelta
 from operator import attrgetter
 
 import requests
@@ -798,7 +798,10 @@ def view_release_note(request, id):
 
 @login_required
 def delivery_schedules(request):
-    today_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user, date=datetime.today())
+    today_min = datetime.combine(date.today(), time.min)
+    today_max = datetime.combine(date.today(), time.max)
+    # today = datetime.today() -timedelta(days=100) 
+    today_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user, date__range=(today_min, today_max))
     future_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user, date__gt=datetime.today())
     past_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user, date__lt=datetime.today())
 
