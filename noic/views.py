@@ -1,41 +1,30 @@
-import secrets
-from validate_email import validate_email
 # from datetime import datetime, timedelta, date
-import datetime
 
-from django.shortcuts import render
-from django.shortcuts import render, get_object_or_404, redirect
-from django.core.mail import BadHeaderError, EmailMultiAlternatives
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
 from django.contrib import messages
-from django.db.models import Count
-from django.http import HttpResponse
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from itertools import chain
-from operator import attrgetter
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.mail import EmailMultiAlternatives
+from django.db.models import Count
+from django.shortcuts import render, redirect
 
-from buyer.models import User, FuelRequest
-from users.forms import DepotContactForm
-from company.models import Company, CompanyFuelUpdate
-from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, Transaction, Offer, DeliverySchedule
+from company.models import Company
 from fuelUpdates.models import SordCompanyAuditTrail
-from users.models import SordActionsAuditTrail, Activity
-from accounts.models import AccountHistory
-from users.views import message_is_sent
 from fuelfinder.helper_functions import random_password
-from national.models import Order, NationalFuelUpdate, SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
+from national.models import DepotFuelUpdate, NoicDepot
 from notification.models import Notification
-
-from .lib import *
+from supplier.models import FuelAllocation
+from users.forms import DepotContactForm
+from users.models import Activity
 from zeraPortal.lib import *
+from .lib import *
+from .decorators import user_role
 
 user = get_user_model()
 
-# Create your views here.
+
 @login_required()
+@user_role
 def orders(request):
     orders = Order.objects.all()
     form1 = DepotContactForm()
@@ -56,12 +45,14 @@ def orders(request):
 
 
 @login_required()
+@user_role
 def activity(request):
     activities = Activity.objects.filter(user=request.user).all()
     return render(request, 'noic/activity.html', {'activities': activities})
 
 
 @login_required()
+@user_role
 def dashboard(request):
     requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
     num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
@@ -92,12 +83,14 @@ def dashboard(request):
 
 
 @login_required()
+@user_role
 def allocations(request):
     allocations = SordNationalAuditTrail.objects.all()
     return render(request, 'noic/allocations.html', {'allocations': allocations})
 
 
 @login_required()
+@user_role
 def depots(request):
     global depot
     depots = NoicDepot.objects.all()
@@ -173,6 +166,7 @@ def depots(request):
 
 
 @login_required()
+@user_role
 def edit_depot(request, id):
     if request.method == 'POST':
         if NoicDepot.objects.filter(id=id).exists():
@@ -194,6 +188,7 @@ def edit_depot(request, id):
 
 
 @login_required()
+@user_role
 def delete_depot(request, id):
     if request.method == 'POST':
         if NoicDepot.objects.filter(id=id).exists():
@@ -212,6 +207,7 @@ def delete_depot(request, id):
 
 
 @login_required()
+@user_role
 def fuel_update(request, id):
     fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -264,6 +260,7 @@ def fuel_update(request, id):
 
 
 @login_required()
+@user_role
 def edit_prices(request, id):
     fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -282,6 +279,7 @@ def edit_prices(request, id):
 
 
 @login_required()
+@user_role
 def payment_approval(request, id):
     order = Order.objects.filter(id=id).first()
     order.payment_approved = True
@@ -291,6 +289,7 @@ def payment_approval(request, id):
             
 
 @login_required()
+@user_role
 def allocate_fuel(request, id):
     order = Order.objects.filter(id=id).first()
    
@@ -386,6 +385,7 @@ def allocate_fuel(request, id):
 
 
 @login_required()
+@user_role
 def statistics(request):
     yesterday = date.today() - timedelta(days=1)
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
@@ -398,6 +398,7 @@ def statistics(request):
 
 
 @login_required()
+@user_role
 def staff(request):
     staffs = User.objects.filter(user_type='NOIC_STAFF').all()
     for staff in staffs:
@@ -452,6 +453,7 @@ def staff(request):
 
 
 @login_required()
+@user_role
 def message_is_send(request, user, password):
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
@@ -469,6 +471,7 @@ def message_is_send(request, user, password):
 
 
 @login_required()
+@user_role
 def report_generator(request):
 
     '''View to dynamically render form tables based on different criteria'''
@@ -558,12 +561,14 @@ def report_generator(request):
 
 
 @login_required()
+@user_role
 def profile(request):
     user = request.user
     return render(request, 'noic/profile.html', {'user':user})
 
 
 @login_required()
+@user_role
 def report_generator(request):
     '''View to dynamically render form tables based on different criteria'''
     orders = pending_orders = complete_orders = stock = allocations_per_supplier = None
@@ -655,6 +660,7 @@ def report_generator(request):
 
 
 @login_required()
+@user_role
 def statistics(request):
     yesterday = datetime.today() - timedelta(days=1)
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year)

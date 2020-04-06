@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'mathfilters',
     'debug_toolbar',
     'comments.apps.CommentsConfig',
+    'error_pages.apps.ErrorPagesConfig',
     'session_security',
 ]
 
@@ -190,3 +191,5 @@ LOGIN_URL = 'login'
 SESSION_SECURITY_WARN_AFTER = 1740
 SESSION_SECURITY_EXPIRE_AFTER = 1800
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+CSRF_FAILURE_VIEW = 'error_pages.views.csrf_failure'
