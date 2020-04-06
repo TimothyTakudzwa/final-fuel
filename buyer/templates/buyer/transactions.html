@@ -61,7 +61,7 @@
                             <th>Depot</th>
                             <th>PickUp Address</th>
                             <th>Fuel</th>
-                            <th>Expected & Paid</th>
+                            <!-- <th>Expected & Paid</th> -->
                             <th>Statement</th>
                             <th>Status</th>
                             <th>Bank Details</th>
@@ -85,48 +85,6 @@
                                 {% endif %}
                                 <td class="name truncate">{{transaction.offer.request.fuel_type}} {{transaction.offer.quantity}}L @ {{transaction.offer.price}}</td>
 
-                                <td>
-
-                                    <!--call modal-->
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#expected{{transaction.id}}">
-                                        <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
-                                    </button>
-                                    <!--view details-->
-                                    <div class="modal fade modal-success in" id="expected{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header" style="background-color: #009688; color: white">
-                                                    <span class="modal-title" id="exampleModalLabel">Expected & Paid</span>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="row">
-                                                        <!--expected-->
-                                                        <div class="col-md-3">
-                                                            <h4 style="font-weight: lighter;font-size: 14px;">Expected &nbsp;&nbsp; : &nbsp;&nbsp; ${{transaction.expected|stringformat:".2f"}}</h4>
-                                                        </div>
-                                                        {% if transaction.offer.delivery_method == 'DELIVERY' %}
-                                                         <!--transport-->
-                                                         <div class="col-md-3">
-                                                            <h4 style="font-weight: lighter;font-size: 14px;">Transport Fee &nbsp;&nbsp; : &nbsp;&nbsp;  ${{transaction.offer.transport_fee|stringformat:".2f"}}</h4>
-                                                        </div>
-                                
-                                        
-                                                        {% endif %}
-                                                       
-                                                        <!--paid-->
-                                                        <div class="col-md-3">
-                                                            <h4 style="font-weight: lighter;font-size: 14px;">Paid &nbsp;&nbsp; : &nbsp;&nbsp; ${{transaction.paid|stringformat:".2f"}}</h4>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </td>
 
 
                 <!--account statement with supplier-->
