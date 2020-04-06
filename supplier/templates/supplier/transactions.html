@@ -211,7 +211,7 @@
                                 <td>
                                     {% if transaction.is_complete and not transaction.review %}
                                         <a class="btn btn-danger btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
-                                            Rate {{transaction.supplier.company.name}}
+                                            Rate {{transaction.buyer.company.name}}
                                         </a>
                                     {% elif not transaction.is_complete %}
                                         Incomplete
@@ -248,7 +248,7 @@
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <span class="modal-title" style= "color:whitesmoke" >Review {{transaction.supplier}}</span>
+                                                <span class="modal-title" style= "color:whitesmoke" >Review {{transaction.buyer.company.name}}</span>
                                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                             </div>
                                             <div class="modal-body" style= "background:white">
@@ -732,7 +732,7 @@
                                 <td>
                                     {% if transaction.is_complete and not transaction.review %}
                                         <a class="btn btn-danger btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
-                                            Rate {{transaction.supplier.company.name}}
+                                            Rate {{transaction.buyer.company.name}}
                                         </a>
                                     {% elif not transaction.is_complete %}
                                         Incomplete
@@ -769,7 +769,7 @@
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <span class="modal-title" style= "color:whitesmoke" >Review {{transaction.supplier}}</span>
+                                                <span class="modal-title" style= "color:whitesmoke" >Review {{transaction.buyer.company.name}}</span>
                                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                             </div>
                                             <div class="modal-body" style= "background:white">

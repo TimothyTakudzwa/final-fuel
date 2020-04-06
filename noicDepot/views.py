@@ -629,4 +629,5 @@ def hg_notifier(request, id):
     else:
         message = 'Requesting for more RTGS petrol fuel'
         Notification.objects.create(message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
+    messages.success(request, "Request for more fuel made successfully")
     return redirect('noicDepot:stock')
