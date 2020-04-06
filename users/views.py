@@ -1784,11 +1784,9 @@ def edit_allocation(request, id):
 
 
 @login_required()
-@user_role
-def sordactions(request, id):
-    sord_actions = SordActionsAuditTrail.objects.filter(sord_num=5).all()
-    print(id)
-    print(sord_actions)
+# @user_role
+def sordactions(request, sid):
+    sord_actions = SordActionsAuditTrail.objects.filter(sord_num=sid).all()
 
     if sord_actions:
         sord_number = sord_actions[0].sord_num
