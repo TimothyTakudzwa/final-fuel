@@ -1,4 +1,5 @@
 {% extends "users/base.html" %}
+{% load humanize %}
 {% block body %}
 
 
@@ -126,8 +127,8 @@
                       <td>{{tran.time}}</td>
                       <td>{{tran.buyer}}</td>
                       <td>{{tran.offer.request.delivery_address}}</td>
-                      <td>{{tran.offer.request.amount|floatformat:2}} l</td>
-                      <td>$ {{tran.revenue|stringformat:".2f"}}</td>
+                      <td>{{tran.offer.request.amount|floatformat:2|intcomma}} l</td>
+                      <td>$ {{tran.revenue|stringformat:".2f"|intcomma}}</td>
                      <td>
                          {% if tran.is_complete %}
                          <i class="fa fa-check-circle-o" style="color: #2ecc71;"></i>

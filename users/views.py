@@ -27,6 +27,7 @@ from notification.models import Notification
 from users.models import *
 from .decorators import user_role
 from .forms import SupplierContactForm, UsersUploadForm, ReportForm, ProfileEditForm, ActionForm, DepotContactForm
+from decimal import *
 
 user = get_user_model()
 
@@ -93,18 +94,18 @@ def allocate(request):
     company_total_diesel_capacity = subs_total_diesel_capacity + company_capacity.unallocated_diesel
     company_total_petrol_capacity = subs_total_petrol_capacity + company_capacity.unallocated_petrol
 
-    company_total_diesel_capacity = '{:,}'.format(company_total_diesel_capacity)
-    company_total_petrol_capacity = '{:,}'.format(company_total_petrol_capacity)
+    # company_total_diesel_capacity = '{:,}'.format(company_total_diesel_capacity)
+    # company_total_petrol_capacity = '{:,}'.format(company_total_petrol_capacity)
 
     subs = Subsidiaries.objects.filter(company=request.user.company, is_active=True).all()
     for sub in subs:
         allocates.append(SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first())
     allocations = FuelAllocation.objects.filter(company=request.user.company).all()
-    if company_capacity is not None:
-        company_capacity.unallocated_diesel = '{:,}'.format(company_capacity.unallocated_diesel)
-        company_capacity.unallocated_petrol = '{:,}'.format(company_capacity.unallocated_petrol)
-    else:
-        company_capacity = company_capacity
+    # if company_capacity is not None:
+    #     company_capacity.unallocated_diesel = '{:,}'.format(company_capacity.unallocated_diesel)
+    #     company_capacity.unallocated_petrol = '{:,}'.format(company_capacity.unallocated_petrol)
+    # else:
+    #     company_capacity = company_capacity
     if allocations is not None:
         for alloc in allocations:
             subsidiary = Subsidiaries.objects.filter(id=alloc.allocated_subsidiary_id).first()
@@ -346,8 +347,7 @@ def allocated_fuel(request, sid):
             subsidiary = Subsidiaries.objects.filter(id=allocate.subsidiary.id).first()
             if subsidiary is not None:
                 allocate.subsidiary_name = subsidiary.name
-                allocate.diesel_quantity = '{:,}'.format(allocate.diesel_quantity)
-                allocate.petrol_quantity = '{:,}'.format(allocate.petrol_quantity)
+                
             else:
                 allocates = allocates
         else:
@@ -1107,7 +1107,7 @@ def client_history(request, cid):
             trns = Transaction.objects.filter(buyer=buyer, is_complete=False)
             trans = []
             for tran in trns:
-                tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.revenue = Decimal(tran.offer.request.amount) * tran.offer.price
                 tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Incomplete'
@@ -1116,7 +1116,7 @@ def client_history(request, cid):
             trns = Transaction.objects.filter(buyer=buyer)
             trans = []
             for tran in trns:
-                tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.revenue = Decimal(tran.offer.request.amount) * tran.offer.price
                 tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'All'

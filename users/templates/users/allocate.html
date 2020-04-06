@@ -56,12 +56,12 @@
                 <table id="company_table" class="table table-striped table-bordered" style="width:100%">
                     <thead>
                         <tr>
-                            <th style="color: #009688;">Diesel Capacity</th>
-                            <th style="color: #ffb61e;">Petrol Capacity</th>
-                            <th>Unallocated Diesel</th>
+                            <th style="color: #ffb61e;">Diesel Capacity</th>
+                            <th style="color: #009688;">Petrol Capacity</th>
+                            <th style="color: #ffb61e;">Unallocated Diesel</th>
                             <th>RTGS Price</th>
                             <th>USD Price</th>
-                            <th>Unallocated Petrol</th>
+                            <th style="color: #009688;">Unallocated Petrol</th>
                             <th>RTGS Price</th>
                             <th>USD Price</th>
                             <th>Action</th>
@@ -71,13 +71,13 @@
                     <tbody>
                         <tr>
 
-
-                            <td style="color: #009688;">{{company_total_diesel_capacity }}</td>
-                            <td style="color: #ffb61e;">{{company_total_petrol_capacity}}</td>
-                            <td>{{company_capacity.unallocated_diesel}}</td>
+                            
+                            <td>{{company_total_diesel_capacity|floatformat:2|intcomma }}</td>
+                            <td>{{company_total_petrol_capacity|floatformat:2|intcomma}}</td>
+                            <td>{{company_capacity.unallocated_diesel|floatformat:2|intcomma}}</td>
                             <td>{{company_capacity.diesel_price}}</td>
                             <td>{{company_capacity.usd_diesel_price}}</td>
-                            <td>{{company_capacity.unallocated_petrol}}</td>
+                            <td>{{company_capacity.unallocated_petrol|floatformat:2|intcomma}}</td>
                             <td>{{company_capacity.petrol_price}}</td>
                             <td>{{company_capacity.usd_petrol_price}}</td>
                             <td>
@@ -529,11 +529,12 @@
             <table id="fuel_allocations" class="table table-striped table-bordered" style="width:100%">
                 <thead>
                     <tr>
+                        
                         <th>Name</th>
                         <th>Type</th>
-                        <th>Diesel</th>
+                        <th style="color: #ffb61e;">Diesel</th>
                         <!-- <th>Price</th> -->
-                        <th>Petrol</th>
+                        <th style="color: #009688;">Petrol</th>
                         <!-- <th>Price</th> -->
 
                         <th>Action</th>
@@ -550,11 +551,11 @@
                         {% else %}
                         <td>Service Station</td>
                         {% endif %}
-                        <td>{{allocate.diesel_quantity|floatformat:2}} {% if allocate.diesel_quantity < 1000 %} <i
+                        <td>{{allocate.diesel_quantity|floatformat:2|intcomma}} {% if allocate.diesel_quantity < 1000 %} <i
                                 class="fa fa-exclamation-triangle"
                                 style="margin-left: 2.5px;color: #ff5722;"></i>{% endif %}</td>
                         
-                        <td>{{allocate.petrol_quantity|floatformat:2}} {% if allocate.petrol_quantity < 1000 %} <i
+                        <td>{{allocate.petrol_quantity|floatformat:2|intcomma}} {% if allocate.petrol_quantity < 1000 %} <i
                                 class="fa fa-exclamation-triangle"
                                 style="margin-left: 2.5px;color: #ff5722;"></i>{% endif %}</td>
                         
@@ -573,7 +574,7 @@
 
                                 <a class="btn btn-info btn-sm" data-toggle="modal"
                                     data-target="#add_petrol_fuel{{allocate.id}}">Add Petrol</a>
-                                <a class="btn btn-danger btn-sm" data-toggle="modal"
+                                <a class="btn btn-warning btn-sm" data-toggle="modal"
                                     data-target="#add_diesel_fuel{{allocate.id}}">Add Diesel</a>
                                 <a class="btn btn-default btn-sm"
                                     style="background-color: steelblue; color: white;border: 1px solid transparent;"
@@ -972,9 +973,9 @@
                         <th>Subsidiary Name</th>
                         <th>Sub Type</th>
                         <th>Action</th>
-                        <th>Diesel</th>
+                        <th style="color: #ffb61e;">Diesel</th>
                         <th>Price</th>
-                        <th>Petrol</th>
+                        <th style="color: #009688;">Petrol</th>
                         <th>Price</th>
                         <th>Payment</th>
                         <th>Action</th>
@@ -989,14 +990,14 @@
                         <td>{{alloc.sub_type}}</td>
                         <td>{{alloc.action}}</td>
                         {% if alloc.diesel_quantity != 0 %}
-                        <td>{{alloc.diesel_quantity|floatformat:2}}</td>
+                        <td>{{alloc.diesel_quantity|floatformat:2|intcomma}}</td>
                         <td>{{alloc.diesel_price}}</td>
                         {% else %}
                         <td>-</td>
                         <td>-</td>
                         {% endif %}
                         {% if alloc.petrol_quantity != 0 %}
-                        <td>{{alloc.petrol_quantity|floatformat:2}}</td>
+                        <td>{{alloc.petrol_quantity|floatformat:2|intcomma}}</td>
                         <td>{{alloc.petrol_price}}</td>
                         {% else %}
                         <td>-</td>

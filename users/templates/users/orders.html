@@ -370,7 +370,7 @@
                         <td>{{ order.fuel_type|lower|capfirst }}</td>
                     {% endif %}    
 
-                    <td>{{ order.quantity }}</td>
+                    <td>{{ order.quantity|floatformat:2|intcomma }}</td>
                     <td>{{ order.currency}}</td> 
                     <td>
 

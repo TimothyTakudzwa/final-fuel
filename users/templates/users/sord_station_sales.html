@@ -99,7 +99,7 @@
                             <td>{{sord.action_no}}</td>
                             <td>{{sord.action}}</td>
 
-                            {% if sord.fuel_type == 'Diesel' %}
+                            {% if sord.fuel_type == 'Petrol' %}
                             <td style="color: #009688;">{{sord.fuel_type}}</td>
                             {% elif sord.fuel_type == 'Diesel' %}
                                 <td style="color: #ffb61e;">{{sord.fuel_type}}</td>
@@ -108,9 +108,9 @@
                             {% endif %}
 
                             <td>{{sord.payment_type}}</td>
-                            <td>{{sord.initial_quantity|floatformat:2}}</td>
-                            <td>{{sord.quantity_sold|floatformat:2}}</td>
-                            <td>{{sord.end_quantity|floatformat:2}}</td>
+                            <td>{{sord.initial_quantity|floatformat:2|intcomma}}</td>
+                            <td>{{sord.quantity_sold|floatformat:2|intcomma}}</td>
+                            <td>{{sord.end_quantity|floatformat:2|intcomma}}</td>
                             <td>{{sord.received_by}}</td>
                            
 
