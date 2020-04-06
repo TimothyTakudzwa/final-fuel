@@ -1,46 +1,30 @@
-import secrets
-from validate_email import validate_email
-from datetime import datetime, timedelta
+from datetime import date, datetime
 
-from django.shortcuts import render
-from django.shortcuts import render, get_object_or_404, redirect
-from django.core.mail import BadHeaderError, EmailMultiAlternatives
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
-from datetime import datetime, date
 from django.contrib import messages
-from django.db.models import Count
-from django.http import HttpResponse
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from itertools import chain
-from operator import attrgetter
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
 
-from buyer.models import User, FuelRequest
-from noicDepot.util import sord_generator
-from users.forms import DepotContactForm
-from notification.models import Notification
-from company.models import Company, CompanyFuelUpdate
-from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, Transaction, Offer, DeliverySchedule
 from fuelUpdates.models import SordCompanyAuditTrail
-from users.models import SordActionsAuditTrail, Activity
-from accounts.models import AccountHistory
-from users.views import message_is_sent
-from national.models import Order, NationalFuelUpdate, SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
+from national.models import SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
+from noicDepot.util import sord_generator
+from notification.models import Notification
+from supplier.models import FuelAllocation
+from users.models import Activity
 from .forms import CollectionsForm
-
 from .lib import *
 from .models import Collections
-
-from datetime import date, datetime
+from .decorators import user_role
 
 today = date.today()
 user = get_user_model()
 
 
-# Create your views here.
 @login_required
+@user_role
 def initial_password_change(request):
     if request.method == 'POST':
         password1 = request.POST['new_password1']
@@ -70,6 +54,7 @@ def initial_password_change(request):
 
 
 @login_required()
+@user_role
 def dashboard(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders = SordNationalAuditTrail.objects.filter(assigned_depot=depot).all()
@@ -77,6 +62,7 @@ def dashboard(request):
 
 
 @login_required()
+@user_role
 def activity(request):
     activities = Activity.objects.filter(user=request.user).all()
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
@@ -84,6 +70,7 @@ def activity(request):
 
 
 @login_required()
+@user_role
 def accepted_orders(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(action="ORDER").filter(is_read=False).all()
@@ -99,6 +86,7 @@ def accepted_orders(request):
 
 
 @login_required()
+@user_role
 def orders(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(action="ORDER").filter(is_read=False).all()
@@ -114,6 +102,7 @@ def orders(request):
 
 
 @login_required()
+@user_role
 def stock(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     depot_stock = DepotFuelUpdate.objects.filter(depot=depot).all()
@@ -142,6 +131,7 @@ def stock(request):
 
 
 @login_required()
+@user_role
 def upload_release_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -157,6 +147,7 @@ def upload_release_note(request, id):
 
 
 @login_required()
+@user_role
 def payment_approval(request, id):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     noic_capacity = DepotFuelUpdate.objects.filter(depot=depot).first()
@@ -202,6 +193,7 @@ def payment_approval(request, id):
 
 
 @login_required()
+@user_role
 def view_release_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     allocation.admin = User.objects.filter(company=allocation.company).filter(user_type='S_ADMIN').first()
@@ -213,6 +205,7 @@ def view_release_note(request, id):
 
 
 @login_required()
+@user_role
 def download_release_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     allocation.admin = User.objects.filter(company=allocation.company).filter(user_type='S_ADMIN').first()
@@ -224,6 +217,7 @@ def download_release_note(request, id):
 
 
 @login_required()
+@user_role
 def allocate_fuel(request, id):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders = Order.objects.filter(noic_depot=depot).all()
@@ -423,6 +417,7 @@ def allocate_fuel(request, id):
 
 
 @login_required()
+@user_role
 def download_proof(request, id):
     order = Order.objects.filter(id=id).first()
     if order:
@@ -436,6 +431,7 @@ def download_proof(request, id):
 
 
 @login_required()
+@user_role
 def download_d_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     if allocation:
@@ -449,12 +445,14 @@ def download_d_note(request, id):
 
 
 @login_required()
+@user_role
 def profile(request):
     user = request.user
     return render(request, 'noicDepot/profile.html', {'user': user})
 
 
 @login_required()
+@user_role
 def report_generator(request):
     '''View to dynamically render form tables based on different criteria'''
     allocations = requests = trans = stock = None
@@ -574,6 +572,7 @@ def report_generator(request):
 
 
 @login_required()
+@user_role
 def statistics(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     weekly_rev = get_weekly_sales(True,depot)
@@ -592,6 +591,7 @@ def statistics(request):
 
 
 @login_required()
+@user_role
 def collections(request):
     context = {
         'collections': Collections.objects.filter(),
@@ -615,6 +615,8 @@ def collections(request):
     return render(request, 'noicDepot/collections.html', context=context)
 
 
+@login_required()
+@user_role
 def hg_notifier(request, id):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     if id == 1:
