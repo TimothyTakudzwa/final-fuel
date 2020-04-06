@@ -28,8 +28,9 @@ from supplier.models import Offer, Subsidiaries, DeliverySchedule, Transaction, 
     UserReview, SuballocationFuelUpdate
 from .constants import sample_data
 from .forms import BuyerRegisterForm, PasswordChange, FuelRequestForm, PasswordChangeForm, LoginForm
+from .models import FuelRequest, DeliveryBranch
 from .models import FuelRequest
-from .decorators import user_role
+from .decorators import user_role, user_permission
 
 user = get_user_model()
 
@@ -571,8 +572,8 @@ Offers
 
 
 @login_required
-@user_role
 def offers(request, id):
+    user_permission(request)
     selected_request = FuelRequest.objects.filter(id=id).first()
     offers = Offer.objects.filter(request=selected_request).filter(declined=False).all()
     for offer in offers:
@@ -596,15 +597,15 @@ Offer Handlers
 
 
 @login_required
-@user_role
 def new_offer(request, id):
+    user_permission(request)
     offers_available = Offer.objects.filter(id=id).all()
     return render(request, 'buyer/new_offer.html', {'offers': offers_available})
 
 
 @login_required
-@user_role
 def new_fuel_offer(request, id):
+    user_permission(request)
     offers_present = Offer.objects.filter(id=id).all()
     for offer in offers_present:
         depot = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
@@ -612,8 +613,8 @@ def new_fuel_offer(request, id):
 
 
 @login_required
-@user_role
 def accept_offer(request, id):
+    user_permission(request)
     offer = Offer.objects.filter(id=id).first()
     account = Account.objects.filter(buyer_company=request.user.company, supplier_company=offer.supplier.company,
                                      is_verified=True).first()
@@ -645,8 +646,8 @@ def accept_offer(request, id):
 
 
 @login_required
-@user_role
 def reject_offer(request, id):
+    user_permission(request)
     offer = Offer.objects.filter(id=id).first()
     offer.declined = True
     offer.save()
@@ -748,8 +749,8 @@ def transactions(request):
 
 
 @login_required
-@user_role
 def transactions_review_delete(request, transaction_id):
+    user_permission(request)
     from supplier.models import UserReview
     rev = UserReview.objects.filter(id=transaction_id).first()
     rev.delete()
@@ -758,8 +759,8 @@ def transactions_review_delete(request, transaction_id):
 
 
 @login_required
-@user_role
 def transaction_review_edit(request, id):
+    user_permission(request)
     from supplier.models import UserReview
     review = UserReview.objects.filter(id=id).first()
     if request.method == "POST":
@@ -778,8 +779,8 @@ Invoice Handlers
 
 
 @login_required
-@user_role
 def invoice(request, id):
+    user_permission(request)
     buyer = request.user
     transactions_availabe = Transaction.objects.filter(buyer=buyer, id=id).first()
 
@@ -792,8 +793,8 @@ def invoice(request, id):
 
 
 @login_required
-@user_role
 def view_invoice(request, id):
+    user_permission(request)
     buyer = request.user
     transaction = Transaction.objects.filter(buyer=buyer, id=id).all()
     for transaction in transaction:
@@ -814,8 +815,8 @@ def view_invoice(request, id):
 
 
 @login_required()
-@user_role
 def view_release_note(request, id):
+    user_permission(request)
     payment = AccountHistory.objects.filter(id=id).first()
     payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
     context = {
@@ -925,8 +926,8 @@ def delivery_schedules(request):
 
 
 @login_required()
-@user_role
 def delivery_schedule(request, id):
+    user_permission(request)
     schedule = DeliverySchedule.objects.filter(id=id).first()
     schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
     if schedule.transaction.offer.delivery_method.lower() == 'delivery':
@@ -1022,8 +1023,8 @@ Edit Account Details
 
 
 @login_required()
-@user_role
 def edit_account_details(request, id):
+    user_permission(request)
     account = Account.objects.filter(id=id).first()
     if request.method == "POST":
         account.account_number = request.POST.get('account_number')
@@ -1089,8 +1090,8 @@ Proof of payment
 
 
 @login_required
-@user_role
 def proof_of_payment(request, id):
+    user_permission(request)
     if request.method == 'POST':
         transaction = Transaction.objects.filter(id=id).first()
         if transaction is not None:
@@ -1119,8 +1120,8 @@ def proof_of_payment(request, id):
 
 
 @login_required()
-@user_role
 def delivery_note(request, id):
+    user_permission(request)
     if request.method == 'POST':
         payment = AccountHistory.objects.filter(id=id).first()
         if payment is not None:
@@ -1138,8 +1139,8 @@ def delivery_note(request, id):
 
 
 @login_required()
-@user_role
 def download_release_note(request, id):
+    user_permission(request)
     document = AccountHistory.objects.filter(id=id).first()
     if document:
         filename = document.release_note.name.split('/')[-1]
@@ -1159,8 +1160,8 @@ payment history
 
 
 @login_required()
-@user_role
 def payment_history(request, id):
+    user_permission(request)
     form1 = DeliveryScheduleForm()
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
@@ -1168,8 +1169,9 @@ def payment_history(request, id):
 
 
 @login_required()
-@user_role
 def payment_release_notes(request, id):
+    user_permission(request)
+    user_permission(request)
     form1 = DeliveryScheduleForm()
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
@@ -1184,8 +1186,8 @@ Account Application
 
 
 @login_required
-@user_role
 def account_application(request):
+    user_permission(request)
     companies = Company.objects.filter(company_type='SUPPLIER').all()
     for company in companies:
         company.admin = User.objects.filter(company=company, user_type='S_ADMIN').first()
@@ -1206,8 +1208,8 @@ def account_application(request):
 
 
 @login_required
-@user_role
 def download_application(request, id):
+    user_permission(request)
     company = Company.objects.filter(id=id).first()
     if company.application_form:
         filename = company.application_form.name.split('/')[-1]
@@ -1220,8 +1222,8 @@ def download_application(request, id):
 
 
 @login_required
-@user_role
 def upload_application(request, id):
+    user_permission(request)
     if request.method == 'POST':
         supplier = Company.objects.filter(id=id).first()
         buyer = request.user.company
@@ -1260,3 +1262,45 @@ def company_profile(request):
 def activity(request):
     activities = Activity.objects.filter(user=request.user).all()
     return render(request, 'buyer/activity.html', {'activities': activities})
+
+
+'''Handling Delivery Branches'''
+
+
+@login_required
+def delivery_branches(request):
+    branches = DeliveryBranch.objects.filter(company=request.user.company).all()
+    return render(request, 'buyer/delivery_branches.html', {'branches' : branches})
+
+
+@login_required()
+def create_branch(request):
+    if request.method == 'POST':
+        name = request.POST['branch_name']
+        street_name = request.POST['street_name']
+        street_number = request.POST['street_number']
+        city = request.POST['city']
+        description = request.POST['description']
+        check_name = DeliveryBranch.objects.filter(name=name, company=request.user.company).exists()
+        if check_name:
+            messages.warning(request, 'You already have a branch with a similar name!')
+            return redirect('buyer:delivery-branches')
+        else:
+            DeliveryBranch.objects.create(name=name, street_name=street_name, street_number=street_number, city=city,
+            company=request.user.company, description=description)
+            messages.success(request, 'Branch successfully created')
+            return redirect('buyer:delivery-branches')
+
+        
+@login_required()
+def edit_branch(request, id):
+    user_permission(request)
+    if request.method == 'POST':
+        branch = DeliveryBranch.objects.filter(id=id).first()
+        branch.street_name = request.POST['street_name']
+        branch.street_number = request.POST['street_number']
+        branch.city = request.POST['city']
+        branch.description = request.POST['description']
+        branch.save()
+        messages.success(request, 'Branch details updated successfully!')
+        return redirect('buyer:delivery-branches')
