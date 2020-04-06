@@ -1,43 +1,37 @@
-import secrets
-from validate_email import validate_email
-from datetime import datetime, timedelta
+from datetime import date
 
-from django.shortcuts import render
-from django.shortcuts import render, get_object_or_404, redirect
-from django.core.mail import BadHeaderError, EmailMultiAlternatives
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
-from datetime import datetime, date
 from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.db.models import Count, Q
 from django.http import HttpResponse
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
-from django.contrib.auth import get_user_model
-from itertools import chain
-from operator import attrgetter
+from django.shortcuts import render, redirect
+from validate_email import validate_email
 
-from buyer.models import User, FuelRequest
+from accounts.models import AccountHistory
 from comments.models import Comment
-from company.models import Company, CompanyFuelUpdate
-from supplier.models import Subsidiaries, SubsidiaryFuelUpdate, FuelAllocation, Transaction, Offer, DeliverySchedule
-from .constants import coordinates_towns
-from .forms import ZeraProfileUpdateForm, ZeraImageUpdateForm
+from company.models import Company
 from fuelUpdates.models import SordCompanyAuditTrail
 from fuelfinder.helper_functions import random_password
-from users.models import SordActionsAuditTrail, Activity
-from accounts.models import AccountHistory
-from users.views import message_is_sent
 from national.models import DepotFuelUpdate, NoicDepot, SordNationalAuditTrail
+from supplier.models import SubsidiaryFuelUpdate, FuelAllocation, DeliverySchedule
+from users.models import SordActionsAuditTrail, Activity
+from users.views import message_is_sent
+from .constants import coordinates_towns
+from .decorators import user_role
 
 user = get_user_model()
 
 from .lib import *
 
 
-
+@login_required()
+@user_role
 def dashboard(request):
-    zimbabwean_towns = ["Select City ---", "Harare", "Bulawayo", "Gweru", "Mutare", "Chirundu", "Bindura", "Beitbridge","Hwange", "Juliusdale", "Kadoma", "Kariba", "Karoi", "Kwekwe", "Marondera", "Masvingo", "Chinhoyi", "Mutoko", "Nyanga", "Victoria Falls"]
+    zimbabwean_towns = ["Select City ---", "Harare", "Bulawayo", "Gweru", "Mutare", "Chirundu", "Bindura", "Beitbridge",
+                        "Hwange", "Juliusdale", "Kadoma", "Kariba", "Karoi", "Kwekwe", "Marondera", "Masvingo",
+                        "Chinhoyi", "Mutoko", "Nyanga", "Victoria Falls"]
     companies = Company.objects.filter(company_type='SUPPLIER').all()
     for company in companies:
         company.num_of_depots = Subsidiaries.objects.filter(company=company, is_depot='True').count()
@@ -54,26 +48,37 @@ def dashboard(request):
             contact_person = request.POST.get('contact_person')
             account_number = request.POST.get('account_number')
             phone_number = request.POST.get('phone_number')
-            new_company = Company.objects.create(name=name, city=city, address=address, license_number=license_number, vat_number=vat_number,
-                                contact_person=contact_person, account_number=account_number, company_type='SUPPLIER', phone_number=phone_number, is_active=True)
+            new_company = Company.objects.create(name=name, city=city, address=address, license_number=license_number,
+                                                 vat_number=vat_number,
+                                                 contact_person=contact_person, account_number=account_number,
+                                                 company_type='SUPPLIER', phone_number=phone_number, is_active=True)
             new_company.save()
             CompanyFuelUpdate.objects.create(company=new_company)
 
             action = "Company Registration"
             description = f"You have registered another supplier company {new_company.name}"
-            Activity.objects.create(company=new_company, user=request.user, action=action, description=description, reference_id=new_company.id)
+            Activity.objects.create(company=new_company, user=request.user, action=action, description=description,
+                                    reference_id=new_company.id)
             messages.success(request, 'Company successfully registered')
-            return render(request, 'zeraPortal/companies.html', {'companies': companies, 'new_company': new_company, 'administrater' : 'show', 'zimbabwean_towns':zimbabwean_towns})
+            return render(request, 'zeraPortal/companies.html',
+                          {'companies': companies, 'new_company': new_company, 'administrater': 'show',
+                           'zimbabwean_towns': zimbabwean_towns})
         else:
             messages.warning(request, 'License number already exists!!!')
             return redirect('zeraPortal:dashboard')
-    return render(request, 'zeraPortal/companies.html', {'companies': companies, 'administrater' : 'hide', 'zimbabwean_towns':zimbabwean_towns})
+    return render(request, 'zeraPortal/companies.html',
+                  {'companies': companies, 'administrater': 'hide', 'zimbabwean_towns': zimbabwean_towns})
 
 
+@login_required()
+@user_role
 def activity(request):
     activities = Activity.objects.filter(user=request.user).all()
     return render(request, 'zeraPortal/activity.html', {'activities': activities})
 
+
+@login_required()
+@user_role
 def noic_fuel(request):
     # capacities = NationalFuelUpdate.objects.all()
     depots = DepotFuelUpdate.objects.all()
@@ -87,14 +92,21 @@ def noic_fuel(request):
         noic_usd_petrol += depot.usd_petrol
         noic_rtgs_petrol += depot.rtgs_petrol
 
-    return render(request, 'zeraPortal/noic_fuel.html', {'depots': depots, 'noic_usd_diesel':noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel, 'noic_usd_petrol': noic_usd_petrol, 'noic_rtgs_petrol': noic_rtgs_petrol})
+    return render(request, 'zeraPortal/noic_fuel.html',
+                  {'depots': depots, 'noic_usd_diesel': noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel,
+                   'noic_usd_petrol': noic_usd_petrol, 'noic_rtgs_petrol': noic_rtgs_petrol})
 
+
+@login_required()
+@user_role
 def noic_allocations(request, id):
     depot = NoicDepot.objects.filter(id=id).first()
     allocations = SordNationalAuditTrail.objects.filter(assigned_depot=depot).all()
     return render(request, 'zeraPortal/noic_allocations.html', {'allocations': allocations, 'depot': depot})
 
 
+@login_required()
+@user_role
 def edit_company(request, id):
     company = Company.objects.filter(id=id).first()
     license_number = request.POST.get('license_number')
@@ -112,13 +124,17 @@ def edit_company(request, id):
 
         action = "Updating Company"
         description = f"You have updated supplier company {company.name}"
-        Activity.objects.create(company=company, user=request.user, action=action, description=description, reference_id=company.id)
+        Activity.objects.create(company=company, user=request.user, action=action, description=description,
+                                reference_id=company.id)
         messages.success(request, 'Company details updated successfully')
         return redirect('zeraPortal:dashboard')
     else:
         messages.warning(request, 'License number already exists!!!')
         return redirect('zeraPortal:dashboard')
 
+
+@login_required()
+@user_role
 def add_supplier_admin(request, id):
     company = Company.objects.filter(id=id).first()
     print('hhhhhhhhhhh is co', company.name)
@@ -141,19 +157,23 @@ def add_supplier_admin(request, id):
             username = initial_username + str(i)
             i += 1
         password = random_password()
-        user = User.objects.create(company=company, first_name=first_name, last_name=last_name, email=email, phone_number=phone_number.replace(' ', ''),
-        user_type='S_ADMIN', is_active=True, username=username.lower(), password_reset=True)
+        user = User.objects.create(company=company, first_name=first_name, last_name=last_name, email=email,
+                                   phone_number=phone_number.replace(' ', ''),
+                                   user_type='S_ADMIN', is_active=True, username=username.lower(), password_reset=True)
         user.set_password(password)
         user.save()
         message_is_sent(request, user, password)
 
         action = "Creating Supplier Admin"
         description = f"You have created supplier admin for {user.first_name} for {company.name}"
-        Activity.objects.create(company=company, user=request.user, action=action, description=description, reference_id=user.id)
+        Activity.objects.create(company=company, user=request.user, action=action, description=description,
+                                reference_id=user.id)
         messages.success(request, 'User successfully created')
-        return redirect ('zeraPortal:dashboard')
+        return redirect('zeraPortal:dashboard')
 
 
+@login_required()
+@user_role
 def block_company(request, id):
     company = Company.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -162,11 +182,14 @@ def block_company(request, id):
 
         action = "Blocking Company"
         description = f"You have blocked supplier company {company.name}"
-        Activity.objects.create(company=company, user=request.user, action=action, description=description, reference_id=company.id)
+        Activity.objects.create(company=company, user=request.user, action=action, description=description,
+                                reference_id=company.id)
         messages.success(request, f'{company.name} Successfully Blocked')
         return redirect('zeraPortal:dashboard')
 
 
+@login_required()
+@user_role
 def unblock_company(request, id):
     company = Company.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -175,11 +198,14 @@ def unblock_company(request, id):
 
         action = "Unblocking Company"
         description = f"You have unblocked supplier company {company.name}"
-        Activity.objects.create(company=company, user=request.user, action=action, description=description, reference_id=company.id)
+        Activity.objects.create(company=company, user=request.user, action=action, description=description,
+                                reference_id=company.id)
         messages.success(request, f'{company.name} Successfully Unblocked')
         return redirect('zeraPortal:dashboard')
 
 
+@login_required()
+@user_role
 def company_fuel(request):
     capacities = CompanyFuelUpdate.objects.all()
     for fuel in capacities:
@@ -199,11 +225,15 @@ def company_fuel(request):
     return render(request, 'zeraPortal/company_fuel.html', {'capacities': capacities})
 
 
+@login_required()
+@user_role
 def allocations(request, id):
     sord_allocations = SordCompanyAuditTrail.objects.filter(company__id=id).all()
     return render(request, 'zeraPortal/fuel_allocations.html', {'sord_allocations': sord_allocations})
 
 
+@login_required()
+@user_role
 def sordactions(request, id):
     sord_actions = SordActionsAuditTrail.objects.filter(sord_num=id).all()
 
@@ -214,7 +244,9 @@ def sordactions(request, id):
     return render(request, 'zeraPortal/sord_actions.html', {'sord_number': sord_number, 'sord_actions': sord_actions})
 
 
-def download_release_note(request,id):
+@login_required()
+@user_role
+def download_release_note(request, id):
     document = AccountHistory.objects.filter(id=id).first()
     if document:
         filename = document.release_note.name.split('/')[-1]
@@ -226,6 +258,8 @@ def download_release_note(request,id):
     return response
 
 
+@login_required()
+@user_role
 def transactions(request, id):
     today = datetime.now().strftime("%m/%d/%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
@@ -247,12 +281,16 @@ def transactions(request, id):
     return render(request, 'zeraPortal/transactions.html', context=context)
 
 
+@login_required()
+@user_role
 def payment_and_schedules(request, id):
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
     return render(request, 'zeraPortal/payment_and_schedules.html', {'payment_history': payment_history})
 
 
+@login_required()
+@user_role
 def view_confirmation_doc(request, id):
     delivery = DeliverySchedule.objects.filter(id=id).first()
     if delivery:
@@ -265,6 +303,8 @@ def view_confirmation_doc(request, id):
     return response
 
 
+@login_required()
+@user_role
 def view_supplier_doc(request, id):
     delivery = DeliverySchedule.objects.filter(id=id).first()
     if delivery:
@@ -277,14 +317,19 @@ def view_supplier_doc(request, id):
     return response
 
 
+@login_required()
+@user_role
 def company_subsidiaries(request, id):
     subsidiaries = Subsidiaries.objects.filter(company__id=id).all()
     company = Company.objects.get(id=id)
     for subsidiary in subsidiaries:
         subsidiary.fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
-       
-    return render(request, 'zeraPortal/company_subsidiaries.html', {'subsidiaries':subsidiaries, 'company':company})
 
+    return render(request, 'zeraPortal/company_subsidiaries.html', {'subsidiaries': subsidiaries, 'company': company})
+
+
+@login_required()
+@user_role
 def download_application(request, id):
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if subsidiary:
@@ -297,6 +342,8 @@ def download_application(request, id):
     return response
 
 
+@login_required()
+@user_role
 def download_council(request, id):
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if subsidiary:
@@ -309,6 +356,8 @@ def download_council(request, id):
     return response
 
 
+@login_required()
+@user_role
 def download_pop(request, id):
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if subsidiary:
@@ -319,8 +368,10 @@ def download_pop(request, id):
         messages.warning(request, 'Document Not Found')
         return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
     return response
-    
 
+
+@login_required()
+@user_role
 def download_fire_brigade_doc(request, id):
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if subsidiary:
@@ -332,6 +383,9 @@ def download_fire_brigade_doc(request, id):
         return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
     return response
 
+
+@login_required()
+@user_role
 def download_ema(request, id):
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if subsidiary:
@@ -343,14 +397,19 @@ def download_ema(request, id):
         return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
     return response
 
+
+@login_required()
+@user_role
 def subsidiaries(request):
     subsidiaries = Subsidiaries.objects.all()
     for subsidiary in subsidiaries:
         subsidiary.fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
-       
-    return render(request, 'zeraPortal/subsidiaries.html', {'subsidiaries':subsidiaries})
+
+    return render(request, 'zeraPortal/subsidiaries.html', {'subsidiaries': subsidiaries})
 
 
+@login_required()
+@user_role
 def change_licence(request, id):
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -362,7 +421,8 @@ def change_licence(request, id):
 
             action = "Updating Licence"
             description = f"You have updated licence for subsidiary {subsidiary.name}"
-            Activity.objects.create(subsidiary=subsidiary, user=request.user, action=action, description=description, reference_id=subsidiary.id)
+            Activity.objects.create(subsidiary=subsidiary, user=request.user, action=action, description=description,
+                                    reference_id=subsidiary.id)
             messages.success(request, f'{subsidiary.name} License updated successfully')
             return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
         else:
@@ -370,6 +430,8 @@ def change_licence(request, id):
             return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
 
 
+@login_required()
+@user_role
 def block_licence(request, id):
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -378,11 +440,14 @@ def block_licence(request, id):
 
         action = "Cancelling Licence"
         description = f"You have cancelled licence for subsidiary {subsidiary.name}"
-        Activity.objects.create(subsidiary=subsidiary, user=request.user, action=action, description=description, reference_id=subsidiary.id)
+        Activity.objects.create(subsidiary=subsidiary, user=request.user, action=action, description=description,
+                                reference_id=subsidiary.id)
         messages.info(request, f'{subsidiary.name} License Blocked')
         return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
 
 
+@login_required()
+@user_role
 def download_proof(request, id):
     document = AccountHistory.objects.filter(id=id).first()
     if document:
@@ -395,6 +460,8 @@ def download_proof(request, id):
     return response
 
 
+@login_required()
+@user_role
 def view_delivery_note(request, id):
     delivery = AccountHistory.objects.filter(id=id).first()
     if delivery:
@@ -407,7 +474,8 @@ def view_delivery_note(request, id):
     return response
 
 
-
+@login_required()
+@user_role
 def view_release_note(request, id):
     payment = AccountHistory.objects.filter(id=id).first()
     payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
@@ -417,6 +485,8 @@ def view_release_note(request, id):
     return render(request, 'zeraPortal/release_note.html', context=context)
 
 
+@login_required()
+@user_role
 def noic_release_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     allocation.admin = User.objects.filter(company=allocation.company).filter(user_type='S_ADMIN').first()
@@ -427,6 +497,8 @@ def noic_release_note(request, id):
     return render(request, 'zeraPortal/noic_release_note.html', context=context)
 
 
+@login_required()
+@user_role
 def noic_delivery_note(request, id):
     delivery = SordNationalAuditTrail.objects.filter(id=id).first()
     if delivery:
@@ -438,6 +510,9 @@ def noic_delivery_note(request, id):
         redirect(f'/zeraPortal/noic_allocations/{delivery.assigned_depot.id}')
     return response
 
+
+@login_required()
+@user_role
 def unblock_licence(request, id):
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -446,15 +521,18 @@ def unblock_licence(request, id):
 
         action = "Unblocking Licence"
         description = f"You have unblocked licence for subsidiary {subsidiary.name}"
-        Activity.objects.create(subsidiary=subsidiary, user=request.user, action=action, description=description, reference_id=subsidiary.id)
+        Activity.objects.create(subsidiary=subsidiary, user=request.user, action=action, description=description,
+                                reference_id=subsidiary.id)
         messages.success(request, f'{subsidiary.name} License unblocked successfully')
         return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
 
 
+@login_required()
+@user_role
 def add_licence(request, id):
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if request.method == 'POST':
-        license_num =  request.POST['license_num']
+        license_num = request.POST['license_num']
         check_license = Subsidiaries.objects.filter(license_num=license_num).exists()
         if not check_license:
             subsidiary.license_num = license_num
@@ -463,7 +541,8 @@ def add_licence(request, id):
 
             action = "Approving Subsidiary"
             description = f"You have approved subsidiary {subsidiary.name}"
-            Activity.objects.create(subsidiary=subsidiary, user=request.user, action=action, description=description, reference_id=subsidiary.id)
+            Activity.objects.create(subsidiary=subsidiary, user=request.user, action=action, description=description,
+                                    reference_id=subsidiary.id)
             messages.success(request, f'{subsidiary.name} Approved Successfully')
             return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
         else:
@@ -471,6 +550,8 @@ def add_licence(request, id):
             return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
 
 
+@login_required()
+@user_role
 def report_generator(request):
     '''View to dynamically render form tables based on different criteria'''
     allocations = requests = trans = stock = None
@@ -495,23 +576,23 @@ def report_generator(request):
             allocations = None
             trans = None
             revs = None
-            verified_companies=None
-            unverified_companies=None
+            verified_companies = None
+            unverified_companies = None
         if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':
             trans = Transaction.objects.filter(date__range=[start_date, end_date],
                                                supplier__company=request.user.company)
             requests = None
             allocations = None
             revs = None
-            verified_companies=None
-            unverified_companies=None
+            verified_companies = None
+            unverified_companies = None
 
             if request.POST.get('report_type') == 'Revenue':
                 trans = Transaction.objects.filter(date__range=[start_date, end_date],
                                                    supplier__company=request.user.company, is_complete=True)
                 revs = {}
                 total_revenue = 0
-                trans_no =0
+                trans_no = 0
 
                 if trans:
                     for tran in trans:
@@ -533,8 +614,8 @@ def report_generator(request):
             allocations = None
             stock = None
             revs = None
-            verified_companies=None
-            unverified_companies=None
+            verified_companies = None
+            unverified_companies = None
         if request.POST.get('report_type') == 'Companies - Verified':
             v_companies = Company.objects.filter(is_verified=True, company_type='SUPPLIER')
             verified_companies = []
@@ -543,13 +624,12 @@ def report_generator(request):
                 company.admin = User.objects.filter(company=company).first()
                 verified_companies.append(company)
 
-
             print(f'__________________{verified_companies}__________________________________')
             trans = None
             allocations = None
             stock = None
             revs = None
-            unverified_companies=None
+            unverified_companies = None
         if request.POST.get('report_type') == 'Companies - Unverified':
             uv_companies = Company.objects.filter(is_verified=False, company_type='SUPPLIER')
             unverified_companies = []
@@ -558,13 +638,12 @@ def report_generator(request):
                 company.admin = User.objects.filter(company=company).first()
                 unverified_companies.append(company)
 
-
             print(f'__________________{unverified_companies}__________________________________')
             trans = None
             allocations = None
             stock = None
             revs = None
-            verified_companies=None
+            verified_companies = None
         if request.POST.get('report_type') == 'Allocations':
             print("__________________________I am in allocations____________________________")
             allocations = FuelAllocation.objects.all()
@@ -572,15 +651,17 @@ def report_generator(request):
             requests = None
             revs = None
             stock = None
-            verified_companies=None
-            unverified_companies=None
+            verified_companies = None
+            unverified_companies = None
         start = start_date
         end = end_date
 
         # revs = 0
         return render(request, 'zeraPortal/reports.html',
-                      {'trans': trans, 'requests': requests, 'allocations': allocations,'verified_companies':verified_companies,
-                       'unverified_companies':unverified_companies,'start': start, 'end': end, 'revs': revs, 'stock': stock})
+                      {'trans': trans, 'requests': requests, 'allocations': allocations,
+                       'verified_companies': verified_companies,
+                       'unverified_companies': unverified_companies, 'start': start, 'end': end, 'revs': revs,
+                       'stock': stock})
 
     show = False
     print(trans)
@@ -589,6 +670,8 @@ def report_generator(request):
                    'start': start_date, 'end': end_date, 'show': show, 'stock': stock})
 
 
+@login_required()
+@user_role
 def statistics(request):
     yesterday = date.today() - timedelta(days=1)
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
@@ -597,13 +680,13 @@ def statistics(request):
     city_sales_volume = get_volume_sales_by_location()
     final_desperate_cities = []
     desperate_cities = desperate()
-    
+
     while len(desperate_cities) > 5:
         desperate_cities.popitem()
-    
+
     for city, deficit in desperate_cities.items():
-        final_desperate_cities.append((city,deficit))
-        
+        final_desperate_cities.append((city, deficit))
+
     # number_of_companies = Company.objects.all().count()
     # number_of_depots = Subsidiaries.objects.filter(is_depot=True).count()
     # number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()
@@ -677,12 +760,16 @@ def statistics(request):
     # inactive_stations = Subsidiaries.objects.filter(is_active=False, is_depot=False).count()
     # approval_percentage = get_approved_company_complete_percentage()
 
-    return render(request, 'zeraPortal/statistics.html', { 'trans': trans, 'clients': clients,
-                                                     'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
-                                                     'last_week_rev': last_week_rev,'city_sales_volume':city_sales_volume,
-                                                     'final_desperate_cities':final_desperate_cities, 'sorted_subs':sorted_subs})
-    
+    return render(request, 'zeraPortal/statistics.html', {'trans': trans, 'clients': clients,
+                                                          'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
+                                                          'last_week_rev': last_week_rev,
+                                                          'city_sales_volume': city_sales_volume,
+                                                          'final_desperate_cities': final_desperate_cities,
+                                                          'sorted_subs': sorted_subs})
 
+
+@login_required()
+@user_role
 def clients_history(request, cid):
     buyer = User.objects.filter(id=cid).first()
     trans = []
@@ -723,10 +810,11 @@ def clients_history(request, cid):
         tran.revenue = (float(tran.offer.request.amount) * float(tran.offer.price))
         trans.append(tran)
 
-    return render(request, 'zeraPortal/clients_history.html', {'trans': trans, 'buyer': buyer, 'state': state})    
+    return render(request, 'zeraPortal/clients_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
 
 
-@login_required
+@login_required()
+@user_role
 def subsidiary_transaction_history(request, sid):
     subsidiary = Subsidiaries.objects.filter(id=sid).first()
     trans = []
@@ -757,44 +845,51 @@ def subsidiary_transaction_history(request, sid):
                 tran.revenue = (float(tran.offer.request.amount) * float(tran.offer.price))
                 trans.append(tran)
             state = 'All'
-        return render(request, 'zeraPortal/subsidiary_history.html', {'trans': trans, 'subsidiary': subsidiary, 'state': state})
-    
+        return render(request, 'zeraPortal/subsidiary_history.html',
+                      {'trans': trans, 'subsidiary': subsidiary, 'state': state})
+
     trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
     for tran in trns:
         tran.revenue = (float(tran.offer.request.amount) * float(tran.offer.price))
         trans.append(tran)
 
-    return render(request, 'zeraPortal/subsidiary_history.html', {'trans': trans, 'subsidiary': subsidiary, 'state': state})
+    return render(request, 'zeraPortal/subsidiary_history.html',
+                  {'trans': trans, 'subsidiary': subsidiary, 'state': state})
 
+
+@login_required()
+@user_role
 def profile(request):
     user = request.user
-    return render(request, 'zeraPortal/profile.html', {'user':user})
+    return render(request, 'zeraPortal/profile.html', {'user': user})
 
 
+@login_required()
+@user_role
 def suspicious_behavior(request):
     schedules = DeliverySchedule.objects.filter(date__lt=datetime.today() + timedelta(days=1),
-                                                    supplier_document='')
+                                                supplier_document='')
     late_schedules = []
     suspicious_schedules = []
-    
+
     for ds in DeliverySchedule.objects.all():
         if ds.supplier_document and ds.confirmation_date:
             account = AccountHistory.objects.filter(transaction=ds.transaction)
             if not account:
                 suspicious_schedules.append(ds)
-                
-    
+
     for schedule in schedules:
         d1 = datetime.strptime(str(schedule.date), "%Y-%m-%d")
         d2 = datetime.strptime(str(datetime.today().date()), "%Y-%m-%d")
         schedule.days_late = abs((d2 - d1).days)
         late_schedules.append(schedule)
-        
-        
-        
-    return render(request, 'zeraPortal/suspicious_behavior.html', {'late_schedules':late_schedules, 'suspicious_schedules':suspicious_schedules})
+
+    return render(request, 'zeraPortal/suspicious_behavior.html',
+                  {'late_schedules': late_schedules, 'suspicious_schedules': suspicious_schedules})
 
 
+@login_required()
+@user_role
 def desperate_regions(request):
     context = {
         'regions': desperate(),
@@ -803,6 +898,8 @@ def desperate_regions(request):
     return render(request, 'zeraPortal/desperate_regions.html', context=context)
 
 
+@login_required()
+@user_role
 def comments(request):
     subsidiaries = []
 
@@ -812,11 +909,12 @@ def comments(request):
         if sub.comments:
             subsidiaries.append(sub)
 
-    return render(request, 'zeraPortal/comments.html', {'subsidiaries':subsidiaries})
+    return render(request, 'zeraPortal/comments.html', {'subsidiaries': subsidiaries})
 
 
+@login_required()
+@user_role
 def sub_comments(request, id):
     sub = Subsidiaries.objects.filter(id=id).first()
     comments = Comment.objects.filter(station=sub)
-    return render(request, 'zeraPortal/sub_comments.html', {'comments':comments, 'sub': sub})
-
+    return render(request, 'zeraPortal/sub_comments.html', {'comments': comments, 'sub': sub})

@@ -1,0 +1,29 @@
+{% extends 'error_pages/base.html' %}
+{% load staticfiles %}
+
+{% block body %}
+
+    <div class="middle-box">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="error-text">
+                    <h1>4<span class="arrow bounce">0</span><span class="m-l-90">0</span></h1>
+                    <h3><span>Bad</span><br class="hidden-xs">Request</h3>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="error-desc">
+                    <p>Invalid server request.Please try again or go back to home page.</p>
+                     <div class="text-center">
+                         <button class="btn btn-lg btn-info" onclick='location.href="{% url 'home' %}"'>
+                             Go To Home
+                         </button>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

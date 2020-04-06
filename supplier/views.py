@@ -1,3 +1,4 @@
+from decimal import *
 from operator import attrgetter
 
 from django.contrib import messages
@@ -6,7 +7,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
-from supplier.models import UserReview
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -18,9 +18,9 @@ from fuelUpdates.models import SordCompanyAuditTrail
 from notification.models import Notification
 from users.models import Audit_Trail, SordActionsAuditTrail, Activity
 from whatsapp.helper_functions import send_message
+from .decorators import user_role
 from .forms import PasswordChange, CreateCompany, OfferForm
 from .lib import *
-from decimal import *
 
 User = get_user_model()
 
@@ -76,7 +76,8 @@ def verification(request, token, user_id):
                                 # user.is_waiting = False
                                 # user.stage = 'menu'
                                 # user.save()
-                                return render(request, 'supplier/final_reg.html', {'selected_company': selected_company})
+                                return render(request, 'supplier/final_reg.html',
+                                              {'selected_company': selected_company})
                     else:
                         if user.user_type == 'SUPPLIER':
                             user.delete()
@@ -108,6 +109,7 @@ def verification(request, token, user_id):
 
 
 @login_required
+@user_role
 def initial_password_change(request):
     if request.method == 'POST':
         password1 = request.POST['new_password1']
@@ -137,6 +139,7 @@ def initial_password_change(request):
 
 
 @login_required()
+@user_role
 def change_password(request):
     context = {
         'title': 'Fuel Finder | Change Password',
@@ -201,7 +204,8 @@ def create_company(request, id):
                 is_govnt_org = request.POST.get('is_govnt_org')
                 logo = request.FILES.get('logo')
                 company_name = user.company.name
-                Company.objects.filter(name=company_name).update(name=company_name, city=city, address=address, logo=logo,
+                Company.objects.filter(name=company_name).update(name=company_name, city=city, address=address,
+                                                                 logo=logo,
                                                                  is_govnt_org=is_govnt_org)
                 return redirect('login')
 
@@ -218,7 +222,8 @@ def create_company(request, id):
                 CompanyFuelUpdate.objects.create(company=new_company)
                 return render(request, 'supplier/final_reg.html')
 
-    return render(request, 'supplier/create_company.html', {'form': form, 'user_type': user_type, 'zimbabwean_towns': zimbabwean_towns})
+    return render(request, 'supplier/create_company.html',
+                  {'form': form, 'user_type': user_type, 'zimbabwean_towns': zimbabwean_towns})
 
 
 '''
@@ -227,6 +232,7 @@ Supplier Profile
 
 
 @login_required()
+@user_role
 def account(request):
     subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     return render(request, 'supplier/user_profile.html', {'subsidiary': subsidiary})
@@ -237,6 +243,8 @@ supplier activate whatsapp
 '''
 
 
+@login_required()
+@user_role
 def activate_whatsapp(request):
     user = User.objects.filter(id=request.user.id).first()
     if user.activated_for_whatsapp == False:
@@ -258,12 +266,14 @@ handling client applications
 
 
 @login_required
+@user_role
 def clients(request):
     clients = Account.objects.filter(supplier_company=request.user.company)
     return render(request, 'supplier/clients.html', {'clients': clients})
 
 
 @login_required
+@user_role
 def verify_client(request, id):
     client = get_object_or_404(Account, id=id)
     if not client.is_verified:
@@ -278,6 +288,7 @@ def verify_client(request, id):
 
 
 @login_required
+@user_role
 def view_client_id_document(request, id):
     client = Account.objects.filter(id=id).first()
     if client:
@@ -291,6 +302,7 @@ def view_client_id_document(request, id):
 
 
 @login_required
+@user_role
 def view_application_id_document(request, id):
     client = Account.objects.filter(id=id).first()
     if client:
@@ -304,6 +316,7 @@ def view_application_id_document(request, id):
 
 
 @login_required
+@user_role
 def edit_delivery_schedule(request):
     if request.method == "POST":
         delivery_schedule = DeliverySchedule.objects.filter(id=int(request.POST['delivery_id'])).first()
@@ -323,7 +336,8 @@ def edit_delivery_schedule(request):
 
         action = "Updating Delivery Schedule"
         description = f"You have updated delivery schedule for buyer {delivery_schedule.transaction.buyer.company.name}"
-        Activity.objects.create(company=delivery_schedule.transaction.buyer.company, user=request.user, action=action, description=description, reference_id=delivery_schedule.id)
+        Activity.objects.create(company=delivery_schedule.transaction.buyer.company, user=request.user, action=action,
+                                description=description, reference_id=delivery_schedule.id)
         messages.success(request, f"Schedule successfully updated")
         return redirect('supplier:delivery_schedules')
 
@@ -334,6 +348,7 @@ Fuel Requests
 
 
 @login_required()
+@user_role
 def fuel_request(request):
     sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     requests = []
@@ -442,6 +457,7 @@ Fuel Stock operations
 
 
 @login_required
+@user_role
 def available_stock(request):
     updates = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).all()
 
@@ -449,6 +465,7 @@ def available_stock(request):
 
 
 @login_required()
+@user_role
 def stock_update(request, id):
     updates = SuballocationFuelUpdate.objects.filter(id=id).first()
     available_petrol = updates.petrol_quantity
@@ -472,7 +489,8 @@ def stock_update(request, id):
                 petrol_stock = fuel_update.petrol_quantity
                 action = "Updating Fuel Stocks"
                 description = f"You have updated petrol stock to {petrol_stock}L"
-                Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=fuel_update.id)
+                Activity.objects.create(company=request.user.company, user=request.user, action=action,
+                                        description=description, reference_id=fuel_update.id)
 
             else:
                 if float(request.POST['quantity']) > available_diesel:
@@ -489,14 +507,15 @@ def stock_update(request, id):
                 petrol_stock = fuel_update.diesel_quantity
                 action = "Updating Fuel Stocks"
                 description = f"You have updated diesel stock to {petrol_stock}L"
-                Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=fuel_update.id)
+                Activity.objects.create(company=request.user.company, user=request.user, action=action,
+                                        description=description, reference_id=fuel_update.id)
 
             fuel_update.cash = request.POST['cash']
             fuel_update.swipe = request.POST['swipe']
             if fuel_update.payment_type != 'USD':
                 fuel_update.ecocash = request.POST['ecocash']
             fuel_update.save()
-            
+
             messages.success(request, 'Fuel successfully updated')
     return redirect('available_stock')
 
@@ -506,6 +525,8 @@ Offers Operations
 '''
 
 
+@login_required()
+@user_role
 def my_offers(request):
     offers = Offer.objects.filter(supplier=request.user, is_accepted=False).all()
     for offer_temp in offers:
@@ -520,6 +541,8 @@ def my_offers(request):
     return render(request, 'supplier/my_offers.html', {'offers': offers, 'offers_pending': offers_pending})
 
 
+@login_required()
+@user_role
 def offer(request, id):
     form = OfferForm(request.POST)
     if request.method == "POST":
@@ -589,10 +612,11 @@ def offer(request, id):
                     Audit_Trail.objects.create(company=request.user.company, service_station=service_station,
                                                user=request.user, action=action, reference=reference,
                                                reference_id=reference_id)
-                    
+
                     action = "Making Offer"
                     description = f"You have made an offer of {offer_quantity}L @ {request.POST.get('price')} to a request made by {fuel_request.name.company.name}"
-                    Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=reference_id)
+                    Activity.objects.create(company=request.user.company, user=request.user, action=action,
+                                            description=description, reference_id=reference_id)
                     return redirect('fuel-request')
                 else:
                     messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
@@ -607,6 +631,7 @@ def offer(request, id):
 
 
 @login_required
+@user_role
 def edit_offer(request, id):
     offer = Offer.objects.get(id=id)
     fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id,
@@ -669,11 +694,15 @@ def edit_offer(request, id):
     return render(request, 'supplier/fuel_request.html', {'offer': offer})
 
 
+@login_required()
+@user_role
 def accepted_offer(request, id):
     transactions = Transaction.objects.filter(id=id).all()
     return render(request, 'supplier/new_transaction.html', {'transactions': transactions})
 
 
+@login_required()
+@user_role
 def rejected_offer(request, id):
     offers = Offer.objects.filter(id=id).all()
     return render(request, 'supplier/my_offer.html', {'offers': offers})
@@ -683,12 +712,15 @@ def rejected_offer(request, id):
 allocated quantities
 '''
 
-
+@login_required()
+@user_role
 def allocated_quantity(request):
     allocations = FuelAllocation.objects.filter(allocated_subsidiary_id=request.user.subsidiary_id).all()
     return render(request, 'supplier/allocated_quantity.html', {'allocations': allocations})
 
 
+@login_required()
+@user_role
 def company(request):
     subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     num_of_suppliers = User.objects.filter(subsidiary_id=request.user.subsidiary_id).count()
@@ -701,13 +733,14 @@ Transactions Operations
 
 
 @login_required
+@user_role
 def transaction(request):
     if request.method == "POST":
         tran = Transaction.objects.get(id=request.POST.get('transaction_id'))
         UserReview.objects.create(
             rater=request.user,
             rating=int(request.POST.get('rating')),
-            company_type = 'SUPPLIER',
+            company_type='SUPPLIER',
             company=tran.supplier.company,
             transaction=tran,
             depot=Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
@@ -725,7 +758,7 @@ def transaction(request):
         if delivery_sched:
             tran.delivery_sched = delivery_sched
         tran.review = UserReview.objects.filter(transaction=tran).first()
-        if tran.is_complete == True:   
+        if tran.is_complete == True:
             transactions.append(tran)
         if tran.is_complete == False:
             transactions_pending.append(tran)
@@ -740,6 +773,7 @@ def transaction(request):
 
 
 @login_required
+@user_role
 def complete_transaction(request, id):
     transaction = Transaction.objects.filter(id=id).first()
     subsidiary_fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).first()
@@ -768,12 +802,13 @@ def complete_transaction(request, id):
             else:
                 available_fuel = fuel.petrol_quantity
             if transaction_quantity <= available_fuel:
-                
+
                 transaction.proof_of_payment_approved = True
                 transaction.paid += Decimal(request.POST['received'])
                 transaction.paid_reserve = float(request.POST['received'])
                 if transaction.offer.delivery_method == "DELIVERY":
-                    transaction.fuel_money_reserve = float(request.POST['received']) - float(request.POST['transport_charge'])
+                    transaction.fuel_money_reserve = float(request.POST['received']) - float(
+                        request.POST['transport_charge'])
                 else:
                     transaction.fuel_money_reserve = float(request.POST['received'])
                 transaction.save()
@@ -793,12 +828,14 @@ def complete_transaction(request, id):
                 user = transaction.offer.request.name
                 transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Petrol', payment_type,
                                         transaction)
-                
+
                 action = "Approving Payment"
                 description = f"You have approved payment for fuel from {transaction.buyer.company.name}"
-                Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=transaction.id)
+                Activity.objects.create(company=request.user.company, user=request.user, action=action,
+                                        description=description, reference_id=transaction.id)
 
-                messages.success(request, "Proof of payment approved!, please create a delivery schedule for the buyer or upload a release note.")
+                messages.success(request,
+                                 "Proof of payment approved!, please create a delivery schedule for the buyer or upload a release note.")
                 return redirect('transaction')
             else:
                 messages.warning(request, "There is not enough petrol in stock to complete the transaction.")
@@ -817,12 +854,13 @@ def complete_transaction(request, id):
             else:
                 available_fuel = fuel.diesel_quantity
             if transaction_quantity <= available_fuel:
-                
+
                 transaction.proof_of_payment_approved = True
                 transaction.paid += Decimal(request.POST['received'])
                 transaction.paid_reserve = float(request.POST['received'])
                 if transaction.offer.delivery_method == "DELIVERY":
-                    transaction.fuel_money_reserve = float(request.POST['received']) - float(request.POST['transport_charge'])
+                    transaction.fuel_money_reserve = float(request.POST['received']) - float(
+                        request.POST['transport_charge'])
                 else:
                     transaction.fuel_money_reserve = float(request.POST['received'])
                 transaction.save()
@@ -845,9 +883,11 @@ def complete_transaction(request, id):
 
                 action = "Approving Payment"
                 description = f"You have approved payment for fuel from {transaction.buyer.company.name}"
-                Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=transaction.id)
+                Activity.objects.create(company=request.user.company, user=request.user, action=action,
+                                        description=description, reference_id=transaction.id)
 
-                messages.success(request, "Proof of payment approved!, please create a delivery schedule for the buyer.")
+                messages.success(request,
+                                 "Proof of payment approved!, please create a delivery schedule for the buyer.")
                 return redirect('transaction')
             else:
                 messages.warning(request, "There is not enough diesel in stock to complete the transaction")
@@ -866,6 +906,8 @@ def invoice(request, id):
     return HttpResponse(pdf, content_type='application/pdf')
 
 
+@login_required()
+@user_role
 def view_invoice(request, id):
     transaction = Transaction.objects.filter(supplier=request.user, id=id).all()
     for transaction in transaction:
@@ -897,6 +939,7 @@ def download_proof(request, id):
 
 
 @login_required
+@user_role
 def client_transaction_history(request, id):
     client = Account.objects.filter(id=id).first()
 
@@ -919,6 +962,8 @@ def client_transaction_history(request, id):
                                                              'todays_requests': todays_requests})
 
 
+@login_required()
+@user_role
 def stock_sord_update(request, user, quantity, action, fuel_type, payment_type):
     initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id=request.user.subsidiary_id,
                                                            fuel_type=fuel_type, payment_type=payment_type).all()
@@ -942,18 +987,18 @@ def stock_sord_update(request, user, quantity, action, fuel_type, payment_type):
                 sord_obj = SordCompanyAuditTrail.objects.filter(sord_no=entry.sord_no).first()
                 sord_obj2 = SordActionsAuditTrail.objects.filter(sord_num=entry.sord_no).first()
                 SordActionsAuditTrail.objects.create(sord_num=sord_obj.sord_no,
-                                                                        action_num=sord_obj.action_no + 1,
-                                                                        allocated_quantity=entry.end_quantity,
-                                                                        action_type = "Stock Update",
-                                                                        supplied_from = subsidiary.name,
-                                                                        price = sord_obj2.price,
-                                                                        allocated_by=request.user.username,
-                                                                        allocated_to=user.company.name,
-                                                                        fuel_type=entry.fuel_type,
-                                                                        payment_type=payment_type)
+                                                     action_num=sord_obj.action_no + 1,
+                                                     allocated_quantity=entry.end_quantity,
+                                                     action_type="Stock Update",
+                                                     supplied_from=subsidiary.name,
+                                                     price=sord_obj2.price,
+                                                     allocated_by=request.user.username,
+                                                     allocated_to=user.company.name,
+                                                     fuel_type=entry.fuel_type,
+                                                     payment_type=payment_type)
                 sord_obj.action_no += 1
                 sord_obj.save()
-                
+
                 balance_brought_forward = balance_brought_forward - entry.end_quantity
             else:
                 SordSubsidiaryAuditTrail.objects.create(sord_no=entry.sord_no, action_no=entry.action_no + 1,
@@ -965,20 +1010,22 @@ def stock_sord_update(request, user, quantity, action, fuel_type, payment_type):
                 sord_obj = SordCompanyAuditTrail.objects.filter(sord_no=entry.sord_no).first()
                 sord_obj2 = SordActionsAuditTrail.objects.filter(sord_num=entry.sord_no).first()
                 SordActionsAuditTrail.objects.create(sord_num=sord_obj.sord_no,
-                                                                        action_num=sord_obj.action_no + 1,
-                                                                        allocated_quantity=balance_brought_forward,
-                                                                        action_type = "Stock Update",
-                                                                        supplied_from = subsidiary.name,
-                                                                        price = sord_obj2.price,
-                                                                        allocated_by=request.user.username,
-                                                                        allocated_to=user.company.name,
-                                                                        fuel_type=entry.fuel_type,
-                                                                        payment_type=payment_type)
+                                                     action_num=sord_obj.action_no + 1,
+                                                     allocated_quantity=balance_brought_forward,
+                                                     action_type="Stock Update",
+                                                     supplied_from=subsidiary.name,
+                                                     price=sord_obj2.price,
+                                                     allocated_by=request.user.username,
+                                                     allocated_to=user.company.name,
+                                                     fuel_type=entry.fuel_type,
+                                                     payment_type=payment_type)
                 sord_obj.action_no += 1
                 sord_obj.save()
                 balance_brought_forward = 0
 
 
+@login_required()
+@user_role
 def transaction_sord_update(request, user, quantity, action, fuel_type, payment_type, transaction):
     initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id=request.user.subsidiary_id,
                                                            fuel_type=fuel_type, payment_type=payment_type).all()
@@ -1004,15 +1051,15 @@ def transaction_sord_update(request, user, quantity, action, fuel_type, payment_
                 sord_obj = SordCompanyAuditTrail.objects.filter(sord_no=entry.sord_no).first()
                 sord_obj2 = SordActionsAuditTrail.objects.filter(sord_num=entry.sord_no).first()
                 SordActionsAuditTrail.objects.create(sord_num=sord_obj.sord_no,
-                                                                        action_num=sord_obj.action_no + 1,
-                                                                        allocated_quantity=entry.end_quantity,
-                                                                        action_type = "Sale",
-                                                                        supplied_from = subsidiary.name,
-                                                                        price = sord_obj2.price,
-                                                                        allocated_by=request.user.username,
-                                                                        allocated_to=user.company.name,
-                                                                        fuel_type=entry.fuel_type,
-                                                                        payment_type=payment_type)
+                                                     action_num=sord_obj.action_no + 1,
+                                                     allocated_quantity=entry.end_quantity,
+                                                     action_type="Sale",
+                                                     supplied_from=subsidiary.name,
+                                                     price=sord_obj2.price,
+                                                     allocated_by=request.user.username,
+                                                     allocated_to=user.company.name,
+                                                     fuel_type=entry.fuel_type,
+                                                     payment_type=payment_type)
                 sord_obj.action_no += 1
                 sord_obj.save()
 
@@ -1029,15 +1076,15 @@ def transaction_sord_update(request, user, quantity, action, fuel_type, payment_
                 sord_obj = SordCompanyAuditTrail.objects.filter(sord_no=entry.sord_no).first()
                 sord_obj2 = SordActionsAuditTrail.objects.filter(sord_num=entry.sord_no).first()
                 SordActionsAuditTrail.objects.create(sord_num=sord_obj.sord_no,
-                                                                        action_num=sord_obj.action_no + 1,
-                                                                        allocated_quantity=balance_brought_forward,
-                                                                        action_type = "Sale",
-                                                                        supplied_from = subsidiary.name,
-                                                                        price = sord_obj2.price,
-                                                                        allocated_by=request.user.username,
-                                                                        allocated_to=user.company.name,
-                                                                        fuel_type=entry.fuel_type,
-                                                                        payment_type=payment_type)
+                                                     action_num=sord_obj.action_no + 1,
+                                                     allocated_quantity=balance_brought_forward,
+                                                     action_type="Sale",
+                                                     supplied_from=subsidiary.name,
+                                                     price=sord_obj2.price,
+                                                     allocated_by=request.user.username,
+                                                     allocated_to=user.company.name,
+                                                     fuel_type=entry.fuel_type,
+                                                     payment_type=payment_type)
                 sord_obj.action_no += 1
                 sord_obj.save()
 
@@ -1054,6 +1101,7 @@ Delivery Schedule Operations
 
 
 @login_required
+@user_role
 def create_delivery_schedule(request):
     if request.method == 'POST':
         schedule = DeliverySchedule.objects.create(
@@ -1081,7 +1129,8 @@ def create_delivery_schedule(request):
 
         action = "Creating Delivery Schedule"
         description = f"You have created delivery schedule for {transaction.buyer.company.name}"
-        Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=transaction.id)
+        Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description,
+                                reference_id=transaction.id)
         messages.success(request, "Schedule successfully created")
         message = f"{schedule.transaction.supplier.company} has created a delivery schedule for you, click to view schedule"
         Notification.objects.create(user=schedule.transaction.buyer, action='schedule', message=message,
@@ -1091,6 +1140,7 @@ def create_delivery_schedule(request):
 
 
 @login_required
+@user_role
 def delivery_schedules(request):
     if request.method == 'POST':
         supplier_document = request.FILES.get('supplier_document')
@@ -1100,7 +1150,7 @@ def delivery_schedules(request):
         schedule.save()
         messages.success(request, "File Successfully Uploaded")
         msg = f"Delivery confirmed for {schedule.transaction.buyer.company}, click to view confirmation document"
-        #Notification.objects.create(user=request.user, action='DELIVERY', message=msg, reference_id=schedule.id)
+        # Notification.objects.create(user=request.user, action='DELIVERY', message=msg, reference_id=schedule.id)
         return redirect('supplier:delivery_schedules')
 
     schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user).all()
@@ -1113,6 +1163,7 @@ def delivery_schedules(request):
 
 
 @login_required()
+@user_role
 def view_delivery_schedule(request, id):
     if request.method == 'POST':
         supplier_document = request.FILES.get('supplier_document')
@@ -1133,6 +1184,7 @@ def view_delivery_schedule(request, id):
 
 
 @login_required()
+@user_role
 def view_confirmation_doc(request, id):
     payment = AccountHistory.objects.filter(delivery_schedule__id=id).first()
     payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
@@ -1143,6 +1195,7 @@ def view_confirmation_doc(request, id):
 
 
 @login_required()
+@user_role
 def view_delivery_note(request, id):
     delivery = AccountHistory.objects.filter(id=id).first()
     if delivery:
@@ -1156,6 +1209,7 @@ def view_delivery_note(request, id):
 
 
 @login_required()
+@user_role
 def upload_release_note(request, id):
     payment_history = AccountHistory.objects.filter(id=id).first()
     transaction = Transaction.objects.filter(id=payment_history.transaction.id).first()
@@ -1173,12 +1227,14 @@ def upload_release_note(request, id):
 
         action = "Creating Release Note"
         description = f"You have created release note for {transaction.buyer.company.name}"
-        Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=transaction.id)
+        Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description,
+                                reference_id=transaction.id)
         messages.success(request, "Release note successfully created")
         return redirect(f'/supplier/payment-and-release-notes/{transaction.id}')
 
 
 @login_required()
+@user_role
 def edit_release_note(request, id):
     release = AccountHistory.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -1187,11 +1243,13 @@ def edit_release_note(request, id):
         release.save()
         action = "Updating Release Note"
         description = f"You have updated release note for {release.transaction.buyer.company.name}"
-        Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=release.transaction.id)
+        Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description,
+                                reference_id=release.transaction.id)
         return redirect(f'/supplier/payment-and-release-notes/{release.transaction.id}')
 
 
 @login_required()
+@user_role
 def payment_release_notes(request, id):
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
@@ -1199,6 +1257,7 @@ def payment_release_notes(request, id):
 
 
 @login_required()
+@user_role
 def view_supplier_doc(request, id):
     delivery = DeliverySchedule.objects.filter(id=id).first()
     if delivery:
@@ -1212,6 +1271,7 @@ def view_supplier_doc(request, id):
 
 
 @login_required()
+@user_role
 def del_supplier_doc(request, id):
     delivery = DeliverySchedule.objects.filter(id=id).first()
     delivery.supplier_document = None
@@ -1221,6 +1281,7 @@ def del_supplier_doc(request, id):
 
 
 @login_required()
+@user_role
 def supplier_release_note(request, id):
     transaction = Transaction.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -1238,7 +1299,8 @@ def supplier_release_note(request, id):
 
         action = "Creating Release Note"
         description = f"You have created release note for {transaction.buyer.company.name}"
-        Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=transaction.id)
+        Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description,
+                                reference_id=transaction.id)
         messages.success(request, "Release note successfully uploaded")
         return redirect(f'/supplier/payment-and-release-notes/{id}')
 
@@ -1249,7 +1311,9 @@ payment history
 
 """
 
+
 @login_required()
+@user_role
 def payment_history(request, id):
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
@@ -1257,16 +1321,18 @@ def payment_history(request, id):
 
 
 @login_required()
+@user_role
 def mark_completion(request, id):
     transaction = Transaction.objects.filter(id=id).first()
     transaction.is_complete = True
     transaction.save()
-    
+
     messages.success(request, 'Transaction is now complete')
     return redirect('transaction')
 
 
 @login_required()
+@user_role
 def view_release_note(request, id):
     payment = AccountHistory.objects.filter(id=id).first()
     payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
@@ -1277,6 +1343,7 @@ def view_release_note(request, id):
 
 
 @login_required()
+@user_role
 def download_release_note(request, id):
     payment = AccountHistory.objects.filter(id=id).first()
     payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
@@ -1287,6 +1354,7 @@ def download_release_note(request, id):
 
 
 @login_required()
+@user_role
 def activity(request):
     activities = Activity.objects.filter(user=request.user).all()
     depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
