@@ -28,6 +28,7 @@ from supplier.models import Offer, Subsidiaries, DeliverySchedule, Transaction, 
     UserReview, SuballocationFuelUpdate
 from .constants import sample_data
 from .forms import BuyerRegisterForm, PasswordChange, FuelRequestForm, PasswordChangeForm, LoginForm
+from .models import FuelRequest, DeliveryBranch
 from .models import FuelRequest
 from .decorators import user_role
 
@@ -1260,3 +1261,44 @@ def company_profile(request):
 def activity(request):
     activities = Activity.objects.filter(user=request.user).all()
     return render(request, 'buyer/activity.html', {'activities': activities})
+
+
+'''Handling Delivery Branches'''
+
+
+@login_required
+def delivery_branches(request):
+    branches = DeliveryBranch.objects.filter(company=request.user.company).all()
+    return render(request, 'buyer/delivery_branches.html', {'branches' : branches})
+
+
+@login_required()
+def create_branch(request):
+    if request.method == 'POST':
+        name = request.POST['branch_name']
+        street_name = request.POST['street_name']
+        street_number = request.POST['street_number']
+        city = request.POST['city']
+        description = request.POST['description']
+        check_name = DeliveryBranch.objects.filter(name=name, company=request.user.company).exists()
+        if check_name:
+            messages.warning(request, 'You already have a branch with a similar name!')
+            return redirect('buyer:delivery-branches')
+        else:
+            DeliveryBranch.objects.create(name=name, street_name=street_name, street_number=street_number, city=city,
+            company=request.user.company, description=description)
+            messages.success(request, 'Branch successfully created')
+            return redirect('buyer:delivery-branches')
+
+        
+@login_required()
+def edit_branch(request, id):
+    if request.method == 'POST':
+        branch = DeliveryBranch.objects.filter(id=id).first()
+        branch.street_name = request.POST['street_name']
+        branch.street_number = request.POST['street_number']
+        branch.city = request.POST['city']
+        branch.description = request.POST['description']
+        branch.save()
+        messages.success(request, 'Branch details updated successfully!')
+        return redirect('buyer:delivery-branches')

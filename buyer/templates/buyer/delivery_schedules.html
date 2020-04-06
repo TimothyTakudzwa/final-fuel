@@ -53,16 +53,18 @@
             <div class="table-responsive">
                 <table id="fuel_requests" class="table table-striped table-bordered" style="width:100%">
                     <thead style="background-color: lightslategray;">
-                        <th style="color: white;">Date</th>
+                        <tr style="background-color: gray;color: white;">
+                            <th style="color: white;">Date</th>
                         <th style="color: white;">Time</th>
                         <th style="color: white;">Supplier</th>
                         <th style="color: white;">Address</th>
                         <th style="color: white;">Product</th>
                         <th style="color: white;">Quantity</th>
-                        <th style="color: white;">Equipment</th>
-                        <!-- <th style="color: white;">Transporter</th>  -->
+                        <!-- <th style="color: white;">Equipment</th> -->
+                        <th style="color: white;">Transporter</th> 
                         <th style="color: white;">Add. Information</th>                       
                         <th style="color: white;">Status</th>
+                        </tr>    
                     </thead>
                     <tbody>
 
@@ -71,8 +73,7 @@
                             <td>{{ delivery.date }}</td>
                             <td>{{ delivery.time }}</td>
                             <td>{{ delivery.subsidiary }}</td>
-                            <!-- <td>{{ delivery.date }}</td>
-                            <td>{{ delivery.delivery_time }}</td> -->
+                          
                             <td>{{ delivery.delivery_address }}</td>
                             
                             {% if delivery.transaction.offer.request.fuel_type == 'Diesel' %}
@@ -90,7 +91,6 @@
                                 {% if delivery.transaction.offer.dipping_stick_available %} Stick &nbsp; {% endif %}
                                 {% if not delivery.transaction.offer.pump_available and not delivery.transaction.offer.meter_available and not delivery.transaction.offer.dipping_stick_available %} No Equipment {% endif %}
                             </td>
-                            <!-- <td>{{delivery.transport_company}}</td> -->
                             <td><button class="btn btn-purple btn-sm" data-toggle="modal" data-target="#additonal_information{{delivery.id}}">View Information</button></td>                      
                             {% if not delivery.confirmation_date %}
                             <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#upload_{{delivery.id}}">Confirm Delivery</button></td>

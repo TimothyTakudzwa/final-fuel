@@ -86,3 +86,15 @@ class FuelRequest(models.Model):
 
     class Meta:
         ordering = ['date', 'time', 'name']
+
+
+class DeliveryBranch(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, null=True, blank=True)
+    name = models.CharField(max_length=500, null=True, blank=True)
+    street_number = models.CharField(max_length=100, null=True, blank=True)
+    street_name = models.CharField(max_length=500, null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    description = models.CharField(max_length=500, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.name}'
