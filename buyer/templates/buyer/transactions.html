@@ -66,7 +66,7 @@
                             <th>Status</th>
                             <th>Bank Details</th>
                             <th>Payments</th>
-                            <th>P.OP</th>
+                            <th>P.O.P</th>
                             <th>Rating</th>
                             
                         </tr>
@@ -307,7 +307,7 @@
                             {% endif %}
                             {% if transaction.expected == transaction.paid %}
                                 {% if transaction.is_complete == True %}
-                                    <td><i class="fa fa-check-square-o" style="font-size:25px;color:rgb(0, 225, 255)">Complete</i></td>
+                                    <td><small style="font-size:15px;color:rgb(0, 225, 255)">approved</small></td>
                                 {% elif transaction.delivery_object.confirmation_document %}
                                     <td>Received</td>
                                 {% else %}
@@ -591,7 +591,7 @@
 
                 <!--statement modal-->
                 <div class="modal fade modal-success in" id="activity{{ transaction.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document" style="margin: 0;">
+                    <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <span class="modal-title" id="exampleModalLabel">Activity with {{ transaction.supplier.company.name }} </span>
@@ -761,7 +761,7 @@
                             {% endif %}
                             {% if transaction.expected == transaction.paid %}
                                 {% if transaction.is_complete == True %}
-                                    <td><i class="fa fa-check-square-o" style="font-size:25px;color:rgb(0, 225, 255)">Complete</i></td>
+                                    <td><small style="font-size:15px;color:rgb(0, 225, 255)">approved</small></td>
                                 {% elif transaction.delivery_object.confirmation_document %}
                                     <td>Received</td>
                                 {% else %}
