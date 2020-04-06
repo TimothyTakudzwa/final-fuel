@@ -7,7 +7,7 @@ def user_role(function):
         if request.user.user_type == 'NOIC_ADMIN':
             return function(request, *args, *kwargs)
         else:
-            return redirect('login')
+            raise PermissionDenied
 
     wrap.__doc__ = function.__doc__
     wrap.__name__ = function.__name__
