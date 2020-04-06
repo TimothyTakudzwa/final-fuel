@@ -754,9 +754,11 @@ aria-hidden="true">
       
       
       <script>
-        $("#requests_complete").show();
-        $("#requests_incomplete").hide();
-        check_visible()
+        $(document).ready(function(){  
+            $("#requests_complete").show();
+            $("#requests_incomplete").hide();
+            check_visible()
+        });
         
         function toggle_tables(){
           $("#requests_complete").toggle();
