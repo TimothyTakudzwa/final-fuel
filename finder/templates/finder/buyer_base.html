@@ -171,6 +171,10 @@
                         <a href="{%url 'delivery-schedule'%}"><i class="fa fa-truck"></i><span>Delivery Schedule</span>
                         </a>
                     </li>
+                    <li class="nav-item {% if request.path == '/buyer/delivery-branches/' %} active {% endif %}  ">
+                        <a href="{%url 'buyer:delivery-branches'%}"><i class="fa fa-location-arrow"></i><span>Delivery Branches</span>
+                        </a>
+                    </li>
                     <li class="nav-item {% if request.path == '/buyer/accounts-status' %} active {% endif %}  ">
                         <a href="{%url 'accounts-status'%}"><i class="fa fa-handshake-o"></i><span>Account Applications</span>
                         </a>
@@ -309,6 +313,13 @@
 <script>
     $(document).ready(function () {
         $('#suppliers').DataTable({
+                "order" : false
+            });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#delivery_branches').DataTable({
                 "order" : false
             });
     });
