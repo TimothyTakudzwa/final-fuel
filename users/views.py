@@ -9,29 +9,23 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.db.models import Count
-from django.http import HttpResponse
 from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import get_template
 from django.template.loader import render_to_string
-from weasyprint import HTML, default_url_fetcher, CSS
+from weasyprint import HTML
 from xhtml2pdf import pisa
 
-from buyer.models import *
-from buyer.forms import *
-from .forms import AllocationForm, SupplierContactForm, UsersUploadForm, ReportForm, DepotContactForm
-from .models import AuditTrail, SordActionsAuditTrail
-from buyer.models import *
-from supplier.models import *
-from notification.models import Notification
-from national.models import Order, SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
-from users.models import *
 from accounts.models import Account, AccountHistory
 from buyer.forms import *
 from company.lib import *
 from fuelUpdates.models import SordCompanyAuditTrail
 from fuelfinder.helper_functions import random_password
+from national.models import Order, SordNationalAuditTrail, DepotFuelUpdate
+from notification.models import Notification
 from users.models import *
+from .decorators import user_role
 from .forms import SupplierContactForm, UsersUploadForm, ReportForm, ProfileEditForm, ActionForm, DepotContactForm
 
 user = get_user_model()
@@ -59,6 +53,7 @@ function for viewing allocations from NOIC, showing sord numbers, quantities, pa
 
 
 @login_required
+@user_role
 def sord_allocations(request):
     sord_allocations = SordCompanyAuditTrail.objects.filter(company=request.user.company).all()
     return render(request, 'users/sord_allocations.html', {'sord_allocations': sord_allocations})
@@ -71,6 +66,7 @@ functions for allocating fuel to depots and stations
 
 
 @login_required()
+@user_role
 def allocate(request):
     allocates = []
     fuel_object = DepotFuelUpdate.objects.first()
@@ -128,6 +124,7 @@ def allocate(request):
 
 
 @login_required()
+@user_role
 def allocated_fuel(request, sid):
     sub = Subsidiaries.objects.filter(id=sid).first()
     allocates = SuballocationFuelUpdate.objects.filter(subsidiary=sub).all()
@@ -359,6 +356,7 @@ def allocated_fuel(request, sid):
 
 
 @login_required()
+@user_role
 def allocation_update(request, id):
     if request.method == 'POST':
         if SuballocationFuelUpdate.objects.filter(id=id).exists():
@@ -581,6 +579,7 @@ def allocation_update(request, id):
 
 
 @login_required()
+@user_role
 def allocation_update_main(request, id):
     if request.method == 'POST':
         if SubsidiaryFuelUpdate.objects.filter(id=id).exists():
@@ -778,6 +777,7 @@ function for creating subsidiaries (Depots & Stations) & their fuel update objec
 
 
 @login_required()
+@user_role
 def stations(request):
     stations = Subsidiaries.objects.filter(company=request.user.company).all()
     zimbabwean_towns = ['Select City ---', 'Beitbridge', 'Bindura', 'Bulawayo', 'Chinhoyi', 'Chirundu', 'Gweru',
@@ -870,6 +870,7 @@ def stations(request):
 
 
 @login_required()
+@user_role
 def suppliers_list(request):
     suppliers = User.objects.filter(company=request.user.company).filter(~Q(user_type='S_ADMIN')).all()
     if suppliers is not None:
@@ -946,6 +947,7 @@ def suppliers_list(request):
 
 
 @login_required()
+@user_role
 def get_pdf(request):
     trans = Transaction.objects.all()
     today = datetime.datetime.today()
@@ -958,21 +960,25 @@ def get_pdf(request):
 
 
 @login_required()
+@user_role
 def account_activate(request):
     return render(request, 'users/account_activate.html')
 
 
 @login_required()
+@user_role
 def index(request):
     return render(request, 'users/index.html')
 
 
 @login_required
+@user_role
 def delivery_schedule(request):
     pass
 
 
 @login_required()
+@user_role
 def statistics(request):
     company = request.user.company
     yesterday = date.today() - timedelta(days=1)
@@ -1065,6 +1071,7 @@ def statistics(request):
 
 
 @login_required()
+@user_role
 def supplier_user_edit(request, cid):
     supplier = User.objects.filter(id=cid).first()
 
@@ -1079,6 +1086,7 @@ def supplier_user_edit(request, cid):
 
 
 @login_required
+@user_role
 def client_history(request, cid):
     buyer = User.objects.filter(id=cid).first()
     trans = []
@@ -1126,6 +1134,7 @@ def client_history(request, cid):
 
 
 @login_required
+@user_role
 def subsidiary_transaction_history(request, sid):
     subsidiary = Subsidiaries.objects.filter(id=sid).first()
     trans = []
@@ -1171,6 +1180,7 @@ def subsidiary_transaction_history(request, sid):
 
 
 @login_required()
+@user_role
 def myaccount(request):
     staff = user.objects.get(id=request.user.id)
     if request.method == 'POST':
@@ -1184,6 +1194,7 @@ def myaccount(request):
 
 
 @login_required()
+@user_role
 def report_generator(request):
     '''View to dynamically render form tables based on different criteria'''
     form = ReportForm()
@@ -1262,18 +1273,21 @@ def report_generator(request):
 
 
 @login_required()
+@user_role
 def depots(request):
     depots = Depot.objects.all()
     return render(request, 'users/depots.html', {'depots': depots})
 
 
 @login_required()
+@user_role
 def audit_trail(request):
     trails = Audit_Trail.objects.filter(company=request.user.company).all()
     return render(request, 'users/audit_trail.html', {'trails': trails})
 
 
 @login_required()
+@user_role
 def waiting_for_approval(request):
     stations = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
     depots = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company).all()
@@ -1283,6 +1297,7 @@ def waiting_for_approval(request):
 
 
 @login_required()
+@user_role
 def approve_applicant(request, id):
     if request.method == 'POST':
         if user.objects.filter(id=id).exists():
@@ -1302,6 +1317,7 @@ def approve_applicant(request, id):
 
 
 @login_required()
+@user_role
 def decline_applicant(request, id):
     applicant = user.objects.filter(id=id).first()
     applicant.delete()
@@ -1310,6 +1326,7 @@ def decline_applicant(request, id):
 
 
 @login_required()
+@user_role
 def message_is_send(request, user, password):
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
@@ -1327,6 +1344,7 @@ def message_is_send(request, user, password):
 
 
 @login_required()
+@user_role
 def message_is_sent(request, user, password):
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
@@ -1343,6 +1361,7 @@ def message_is_sent(request, user, password):
 
 
 @login_required()
+@user_role
 def suppliers_delete(request, sid):
     supplier = User.objects.filter(id=sid).first()
     if request.method == 'POST':
@@ -1356,6 +1375,7 @@ def suppliers_delete(request, sid):
 
 # DO NOT DELETE DEPOT STAFF MANAGEMENT VIEWS!!!!!!!!!!!
 @login_required()
+@user_role
 def delete_depot_staff(request, id):
     supplier = User.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -1368,6 +1388,7 @@ def delete_depot_staff(request, id):
 
 
 @login_required()
+@user_role
 def buyers_list(request):
     buyers = Profile.objects.all()
     edit_form = ProfileEditForm()
@@ -1377,6 +1398,7 @@ def buyers_list(request):
 
 
 @login_required()
+@user_role
 def buyers_delete(request, sid):
     buyer = Profile.objects.filter(id=sid).first()
     if request.method == 'POST':
@@ -1386,6 +1408,7 @@ def buyers_delete(request, sid):
 
 
 @login_required()
+@user_role
 def supplier_user_delete(request, cid, sid):
     contact = SupplierContact.objects.filter(id=cid).first()
     if request.method == 'POST':
@@ -1395,21 +1418,25 @@ def supplier_user_delete(request, cid, sid):
 
 
 @login_required()
+@user_role
 def supplier_user_create(request, sid):
     return render(request, 'users/suppliers_list.html')
 
 
 @login_required()
+@user_role
 def buyer_user_create(request, sid):
     return render(request, 'users/add_buyer.html')
 
 
 @login_required()
+@user_role
 def edit_buyer(request, id):
     return render(request, 'users/buyer_edit.html', {'form': form, 'buyer': buyer})
 
 
 @login_required()
+@user_role
 def delete_user(request, id):
     supplier = get_object_or_404(Profile, id=id)
 
@@ -1425,6 +1452,7 @@ def delete_user(request, id):
 
 
 @login_required()
+@user_role
 def depot_staff(request):
     suppliers = User.objects.filter(company=request.user.company).filter(user_type='SUPPLIER').all()
     for supplier in suppliers:
@@ -1483,6 +1511,7 @@ def depot_staff(request):
 
 
 @login_required
+@user_role
 def initial_password_change(request):
     if request.method == 'POST':
         password1 = request.POST['new_password1']
@@ -1512,6 +1541,7 @@ def initial_password_change(request):
 
 
 @login_required()
+@user_role
 def edit_subsidiary(request, id):
     if request.method == 'POST':
         if Subsidiaries.objects.filter(id=id).exists():
@@ -1535,6 +1565,7 @@ def edit_subsidiary(request, id):
 
 
 @login_required()
+@user_role
 def delete_subsidiary(request, id):
     if request.method == 'POST':
         if Subsidiaries.objects.filter(id=id).exists():
@@ -1549,6 +1580,7 @@ def delete_subsidiary(request, id):
 
 
 @login_required()
+@user_role
 def edit_fuel_prices(request, id):
     if request.method == 'POST':
         if SubsidiaryFuelUpdate.objects.filter(id=id).exists():
@@ -1580,6 +1612,7 @@ def edit_fuel_prices(request, id):
 
 
 @login_required()
+@user_role
 def edit_suballocation_fuel_prices(request, id):
     if request.method == 'POST':
         if SuballocationFuelUpdate.objects.filter(id=id).exists():
@@ -1611,6 +1644,7 @@ def edit_suballocation_fuel_prices(request, id):
 
 
 @login_required()
+@user_role
 def edit_ss_rep(request, id):
     if request.method == 'POST':
         if user.objects.filter(id=id).exists():
@@ -1629,6 +1663,7 @@ def edit_ss_rep(request, id):
 
 
 @login_required()
+@user_role
 def edit_depot_rep(request, id):
     if request.method == 'POST':
         if user.objects.filter(id=id).exists():
@@ -1647,6 +1682,7 @@ def edit_depot_rep(request, id):
 
 
 @login_required()
+@user_role
 def company_profile(request):
     compan = Company.objects.filter(id=request.user.company.id).first()
     num_of_subsidiaries = Subsidiaries.objects.filter(company=request.user.company).count()
@@ -1668,6 +1704,7 @@ def company_profile(request):
 
 
 @login_required()
+@user_role
 def company_petrol(request, id):
     if request.method == 'POST':
         if CompanyFuelUpdate.objects.filter(id=id).exists():
@@ -1684,6 +1721,7 @@ def company_petrol(request, id):
 
 
 @login_required()
+@user_role
 def company_diesel(request, id):
     if request.method == 'POST':
         if CompanyFuelUpdate.objects.filter(id=id).exists():
@@ -1700,6 +1738,7 @@ def company_diesel(request, id):
 
 
 @login_required()
+@user_role
 def edit_allocation(request, id):
     if request.method == 'POST':
         if FuelAllocation.objects.filter(id=id).exists():
@@ -1745,6 +1784,7 @@ def edit_allocation(request, id):
 
 
 @login_required()
+@user_role
 def sordactions(request, id):
     sord_actions = SordActionsAuditTrail.objects.filter(sord_num=id).all()
 
@@ -1756,17 +1796,20 @@ def sordactions(request, id):
 
 
 @login_required()
+@user_role
 def sord_station_sales(request):
     sord_sales = SordSubsidiaryAuditTrail.objects.filter(subsidiary__company=request.user.company).all()
     return render(request, 'users/sord_station_sales.html', {'sord_sales': sord_sales})
 
 
 @login_required()
+@user_role
 def delivery_schedule(request, id):
     return render(request, 'users/delivery_schedule.html')
 
 
 @login_required
+@user_role
 def client_application(request):
     context = {
         'clients': Account.objects.filter(is_verified=False, supplier_company=request.user.company).all()
@@ -1780,6 +1823,7 @@ def client_application(request):
 
 
 @login_required()
+@user_role
 def download_application(request, id):
     application = Account.objects.filter(id=id).first()
     if application:
@@ -1793,6 +1837,7 @@ def download_application(request, id):
 
 
 @login_required()
+@user_role
 def download_tax_clearance(request, id):
     application = Account.objects.filter(id=id).first()
     if application:
@@ -1806,6 +1851,7 @@ def download_tax_clearance(request, id):
 
 
 @login_required()
+@user_role
 def download_cr14(request, id):
     application = Account.objects.filter(id=id).first()
     if application:
@@ -1819,6 +1865,7 @@ def download_cr14(request, id):
 
 
 @login_required()
+@user_role
 def download_cr6(request, id):
     application = Account.objects.filter(id=id).first()
     if application:
@@ -1832,6 +1879,7 @@ def download_cr6(request, id):
 
 
 @login_required()
+@user_role
 def download_proof_of_residence(request, id):
     application = Account.objects.filter(id=id).first()
     if application:
@@ -1845,6 +1893,7 @@ def download_proof_of_residence(request, id):
 
 
 @login_required()
+@user_role
 def download_cert_of_inc(request, id):
     application = Account.objects.filter(id=id).first()
     if application:
@@ -1858,6 +1907,7 @@ def download_cert_of_inc(request, id):
 
 
 @login_required()
+@user_role
 def download_document(request, id):
     document = Account.objects.filter(id=id).first()
     if document:
@@ -1871,6 +1921,7 @@ def download_document(request, id):
 
 
 @login_required
+@user_role
 def application_approval(request, id):
     if request.method == "POST":
         new_account = request.POST['account_number']
@@ -1891,6 +1942,7 @@ def application_approval(request, id):
 
 
 @login_required
+@user_role
 def upload_users(request):
     context = {
         'form': UsersUploadForm(),
@@ -2140,6 +2192,7 @@ def upload_users(request):
 
 
 @login_required()
+@user_role
 def place_order(request):
     fuel_object = DepotFuelUpdate.objects.first()
     diesel_rtgs_price = 0
@@ -2181,7 +2234,8 @@ def place_order(request):
             message = f'{request.user.company.name.title()} placed an order of {quantity}L' \
                       f' {fuel_type.lower}'
             my_company = request.user.company
-            Notification.objects.create(message=message, company=my_company, reference_id=order.id, depot_id=noic_depot.id, action="ORDER")
+            Notification.objects.create(message=message, company=my_company, reference_id=order.id,
+                                        depot_id=noic_depot.id, action="ORDER")
             messages.success(request, 'placed order successfully')
             return redirect('users:orders')
         else:
@@ -2206,12 +2260,14 @@ def place_order(request):
             message = f'{request.user.company.name.title()} placed an order of {quantity}L' \
                       f' {fuel_type.lower}'
             my_company = request.user.company
-            Notification.objects.create(message=message, reference_id=order.id, company=my_company, depot_id=noic_depot.id, action="ORDER")
+            Notification.objects.create(message=message, reference_id=order.id, company=my_company,
+                                        depot_id=noic_depot.id, action="ORDER")
             messages.success(request, 'placed order successfully')
             return redirect('users:orders')
 
 
 @login_required()
+@user_role
 def orders(request):
     fuel_object = DepotFuelUpdate.objects.first()
     diesel_rtgs_price = 0
@@ -2245,6 +2301,7 @@ def orders(request):
 
 
 @login_required()
+@user_role
 def view_release_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     allocation.admin = request.user
@@ -2256,6 +2313,7 @@ def view_release_note(request, id):
 
 
 @login_required()
+@user_role
 def delivery_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -2270,6 +2328,7 @@ def delivery_note(request, id):
 
 
 @login_required()
+@user_role
 def download_proof(request, id):
     document = Order.objects.filter(id=id).first()
     if document:
