@@ -185,7 +185,8 @@
                                         <th style="color: white;">Quantity</th>
                                         <th style="color: white;">Currency</th>
                                         <th style="color: white;">Payment</th>
-                                        <th style="color: white;">POP</th>
+                                        <th style="color: white;">P.O.P</th>
+                                        <th style="color: white;">Status</th>
                                         <th style="color: white;">Action</th>
                                     </tr>
                                 </thead>
@@ -247,7 +248,7 @@
                                         </td>
             
                                         {% if order.payment_approved %}
-                                        <td><b style="color: rgb(59, 59, 139);">Payment Approved</b></td>
+                                        <td><b style="color: rgb(59, 59, 139);"> Approved</b></td>
                                         {% else %}
                                         <td>
                                             <div class="btn-group">
@@ -259,7 +260,8 @@
                                             </div>
                                         </td>
                                         {% endif %}
-            
+                                        
+                                        <td>{{order.status}}</td>
                                         {% if order.payment_approved %}
                                         {% if order.allocated_fuel %}
                                         <td>
