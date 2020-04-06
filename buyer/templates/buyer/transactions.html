@@ -65,7 +65,7 @@
                             <th>Statement</th>
                             <th>Status</th>
                             <th>Bank Details</th>
-                            <th>Payments</th>
+                            <th>Payments & Schedules</th>
                             <th>P.O.P</th>
                             <th>Rating</th>
                             
@@ -295,13 +295,13 @@
                             {% if transaction.offer.delivery_method == 'DELIVERY' %}
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_history' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Schedules</a>
+                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_history' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Schedules</a>
                                 </div>
                             </td>
                             {% else %}
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_release_notes' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Release Notes</a>
+                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_release_notes' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Release Notes</a>
                                 </div>
                             </td>
                             {% endif %}
