@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 
 def error_400(request, exception):
@@ -36,4 +36,6 @@ def csrf_failure(request, reason=""):
     context = {
         'title': 'CSRF',
     }
-    return render(request, 'error_pages/403_csrf.html', context=context)
+    return redirect('login')
+
+
