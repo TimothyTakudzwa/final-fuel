@@ -28,9 +28,11 @@
     </section>
     <!-- Main content -->
     <div class="content">
+        <!-- Button section -->
         <div class="">
             <button class="btn btn-default" onclick="toggle_tables()" style="border-radius: 3px;background-color: #009688;color: white;" id="toggle_button">Toggle Tables</button>
-          </div>
+        </div>
+        <!-- Complete Transactions -->
         <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0" id="complete_trans">
             <div class="panel-heading ui-sortable-handle">
                 <div class="btn-group" role="group" aria-label="Button group">
@@ -59,13 +61,12 @@
                             <th>Depot</th>
                             <th>PickUp Address</th>
                             <th>Fuel</th>
-                            <th>Expected & Paid</th>
+                            <!-- <th>Expected & Paid</th> -->
                             <th>Statement</th>
                             <th>Status</th>
-                            <!-- <th>Contact Person</th> -->
-                            <th>Banking Details</th>
-                            <th>Payments</th>
-                            <th>Upload Payment Proof</th>
+                            <th>Bank Details</th>
+                            <th>Payments & Schedules</th>
+                            <th>P.O.P</th>
                             <th>Rating</th>
                             
                         </tr>
@@ -84,48 +85,6 @@
                                 {% endif %}
                                 <td class="name truncate">{{transaction.offer.request.fuel_type}} {{transaction.offer.quantity}}L @ {{transaction.offer.price}}</td>
 
-                                <td>
-
-                                    <!--call modal-->
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#expected{{transaction.id}}">
-                                        <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
-                                    </button>
-                                    <!--view details-->
-                                    <div class="modal fade modal-success in" id="expected{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header" style="background-color: #009688; color: white">
-                                                    <span class="modal-title" id="exampleModalLabel">Expected & Paid</span>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="row">
-                                                        <!--expected-->
-                                                        <div class="col-md-3">
-                                                            <h4 style="font-weight: lighter;font-size: 14px;">Expected &nbsp;&nbsp; : &nbsp;&nbsp; ${{transaction.expected|stringformat:".2f"}}</h4>
-                                                        </div>
-                                                        {% if transaction.offer.delivery_method == 'DELIVERY' %}
-                                                         <!--transport-->
-                                                         <div class="col-md-3">
-                                                            <h4 style="font-weight: lighter;font-size: 14px;">Transport Fee &nbsp;&nbsp; : &nbsp;&nbsp;  ${{transaction.offer.transport_fee|stringformat:".2f"}}</h4>
-                                                        </div>
-                                
-                                        
-                                                        {% endif %}
-                                                       
-                                                        <!--paid-->
-                                                        <div class="col-md-3">
-                                                            <h4 style="font-weight: lighter;font-size: 14px;">Paid &nbsp;&nbsp; : &nbsp;&nbsp; ${{transaction.paid|stringformat:".2f"}}</h4>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </td>
 
 
                 <!--account statement with supplier-->
@@ -294,19 +253,19 @@
                             {% if transaction.offer.delivery_method == 'DELIVERY' %}
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_history' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Schedules</a>
+                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_history' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Schedules</a>
                                 </div>
                             </td>
                             {% else %}
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_release_notes' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Release Notes</a>
+                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_release_notes' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Release Notes</a>
                                 </div>
                             </td>
                             {% endif %}
                             {% if transaction.expected == transaction.paid %}
                                 {% if transaction.is_complete == True %}
-                                    <td><i class="fa fa-check-square-o" style="font-size:25px;color:rgb(0, 225, 255)">Done</i></td>
+                                    <td><small style="font-size:15px;color:rgb(0, 225, 255)">approved</small></td>
                                 {% elif transaction.delivery_object.confirmation_document %}
                                     <td>Received</td>
                                 {% else %}
@@ -490,6 +449,7 @@
             </div>
         </div>
 
+        <!-- incomplete Transactions -->
         <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0" id="incomplete_trans_panel">
             <div class="panel-heading ui-sortable-handle">
                 <div class="btn-group" role="group" aria-label="Button group">
@@ -519,11 +479,9 @@
                             <th>Expected & Paid</th>
                             <th>Statement</th>
                             <th>Status</th>
-                            <!-- <th>Contact Person</th> -->
-                            <th>Banking Details</th>
+                            <th>Bank Details</th>
                             <th>Payments</th>
-                            <th>Upload Payment Proof</th>
-                            <!-- <th>Rating</th> -->
+                            <th>P.O.P</th>
                             
                         </tr>
                         </thead>
@@ -591,7 +549,7 @@
 
                 <!--statement modal-->
                 <div class="modal fade modal-success in" id="activity{{ transaction.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document" style="margin: 0;">
+                    <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <span class="modal-title" id="exampleModalLabel">Activity with {{ transaction.supplier.company.name }} </span>
@@ -761,7 +719,7 @@
                             {% endif %}
                             {% if transaction.expected == transaction.paid %}
                                 {% if transaction.is_complete == True %}
-                                    <td><i class="fa fa-check-square-o" style="font-size:25px;color:rgb(0, 225, 255)">Done</i></td>
+                                    <td><small style="font-size:15px;color:rgb(0, 225, 255)">approved</small></td>
                                 {% elif transaction.delivery_object.confirmation_document %}
                                     <td>Received</td>
                                 {% else %}

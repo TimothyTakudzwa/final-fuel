@@ -91,6 +91,8 @@
     </script> -->
     <link href="{% static 'finder/assets/css/datatables.css' %}" rel="stylesheet" />
    <link href="{% static 'finder/assets/css/datatables.min.css' %}" rel="stylesheet" />
+   <link href="https://timothytakudzwa.github.io/static/new/assets/notification.css" rel="stylesheet"
+        type="text/css" /> 
     </head>
 
     <body class="hold-transition sidebar-mini">
@@ -114,25 +116,54 @@
                         <ul class="nav navbar-nav">
 
                             <!-- Notifications -->
-                            <li class="dropdown notifications-menu">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="pe-7s-bell"></i>
-                                    <span class="label label-warning" id="notification_count">0</span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li class="header"><i class="fa fa-bell"></i>Notifications</li>
-                                    <li>
-                                        <ul class="menu">
-                                            <li>
-                                            <a href="#" class="border-gray"><i class="fa fa-inbox"></i> Inbox  <span class=" label-success label label-default pull-right">0</span></a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                   <li class="footer">
-                                   <a href="#"> See all Notifications <i class=" fa fa-arrow-right"></i></a>
-                                    </li>
-                                </ul>
-                            </li>
+                            <li class="nav-item dropdown">
+                              <!-- <a class="nav-link" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-bell"></i>
+                                {% if num_of_new_orders != 0 %}
+                                <span class="notification">{{num_of_new_orders}}</span>
+                                {%else%}
+                                <span class="notification">0</span>
+  
+                                {% endif %}
+                              </a> -->
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                  <i class="pe-7s-bell"></i>
+                                  <span class="label label-warning">{{num_of_new_orders}}</span>
+                              </a>
+                              <ul class="dropdown-menu notification_menu">
+                                  <li class="header notification_header"><i class="fa fa-bell"></i>  {% if num_of_new_orders != 0 %} {{num_of_new_orders}}{%else%} No {%endif%} New Notifications</li>
+                                  <li style="position: relative;
+                                      background: #e7e7e7;">
+                                      <div class="slimScrollDiv"
+                                          style="position: relative; overflow: hidden; width: auto; height: 200px;">
+                                          <ul class="menu notification_body">
+                                              <li>
+                                                  <a href="#" class="border-gray notification_item"><i
+                                                          class="fa fa-inbox"></i> New Order - Total Zimbabwe <span
+                                                          class=" label-success label label-default pull-right">View</span></a>
+                                              </li>
+  
+                                          </ul>
+                                          <div class="slimScrollBar"
+                                              style="background: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 144.928px;">
+                                          </div>
+                                          <div class="slimScrollRail"
+                                              style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;">
+                                          </div>
+                                      </div>
+                                  </li>
+                                  <li class="footer notification_footer">
+                                      <a href="#" class="notification_footer_item"> See all Notifications <i
+                                              class=" fa fa-arrow-right"></i></a>
+                                  </li>
+                              </ul>
+  
+                              <!-- <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                                {% for order in orders_notifications %}
+                                <a class="dropdown-item" href="{% url 'noicDepot:accepted_orders' %}">new fuel order {{order.company.name}}</a>
+                                {% endfor %}
+                              </div> -->
+                          </li>
 
                             <li class="dropdown dropdown-user admin-user">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -175,11 +206,11 @@
                             </a>
                         </li>
                         <li class="{% if request.path == '/users/sord_allocations/' %} active {% endif %}">
-                            <a href="{% url 'users:sord_allocations' %}"><i class="fa fa-clipboard"></i><span>Sord Allocations Audit</span>
+                            <a href="{% url 'users:sord_allocations' %}"><i class="fa fa-clipboard"></i><span>Allocations Audit</span>
                             </a>
                         </li>
                         <li class="{% if request.path == '/users/sord_station_sales/' %} active {% endif %}">
-                            <a href="{% url 'users:sord_station_sales' %}"><i class="fa fa-exchange"></i><span>Sord Subsidiary Sales</span>
+                            <a href="{% url 'users:sord_station_sales' %}"><i class="fa fa-exchange"></i><span>Subsidiary Sales</span>
                             </a>
                         </li>
                         <li class="{% if request.path == '/users/suppliers/' %} active {% endif %}">

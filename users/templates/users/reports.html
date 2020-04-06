@@ -22,15 +22,14 @@
         {% elif revs %}
         Revenue Report {{ start }} To {{ end }}
         {% elif stock %}
-        Stock Report 
+        Stock Report
         {% elif allocations %} 
         Allocations Report {{ start }} To {{ end }}
         {% elif requests %}
         Requests Report {{ start }} To {{ end }}
         {% else %}
         Fuel Admin
-        {% endif %}
-        - Supplier Admin
+        {% endif %} - Supplier Admin
     </title>
     <meta name="description" content="&amp;lt;p&amp;gt;Health Admin is a full functional HTML Template designed  for Health, medical, doctor an...">
     <meta name="robots" content="noindex, follow" />
@@ -1289,11 +1288,13 @@ src="https://timothytakudzwa.github.io/static/datatable/js/jquery-2.2.4.min.js">
 src="https://timothytakudzwa.github.io/static/datatable/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript"
 src="https://timothytakudzwa.github.io/static/datatable/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.flash.min.js"></script>
 <script src="{% static 'finder/assets/js/core/bootstrap-material-design.min.js' %}"></script>
 <script src="{% static 'finder/assets/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
 <!-- Plugin for the momentJs  -->
 <script type="text/javascript" src="https://timothytakudzwa.github.io/static/datatable/js/jszip.min.js"></script>
-<script type="text/javascript" src="https://timothytakudzwa.github.io/static/datatable/js/pdfmake.min.js"></script>
+<!-- <script type="text/javascript" src="https://timothytakudzwa.github.io/static/datatable/js/pdfmake.min.js"></script> -->
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
 <script type="text/javascript" src="https://timothytakudzwa.github.io/static/datatable/js/vfs_fonts.js"></script>
 <script type="text/javascript"
 src="https://timothytakudzwa.github.io/static/datatable/js/buttons.html5.min.js"></script>
