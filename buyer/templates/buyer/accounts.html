@@ -291,9 +291,9 @@
                                 
                             </td>
 
-                            {% if fuel_request.fuel_type == 'Diesel' %}
+                            {% if fuel_request.fuel_type == 'Petrol' %}
                                 <td style="color: #009688;" class="">{{fuel_request.fuel_type}}</td>
-                            {% elif fuel_request.fuel_type == 'Petrol' %}
+                            {% elif fuel_request.fuel_type == 'Diesel' %}
                                 <td style="color: #ffb61e;" class="">{{fuel_request.fuel_type}}</td>
                             {% else %}
                                 <td class="">{{fuel_request.fuel_type}}</td>
@@ -304,7 +304,7 @@
 
 
                             <td class="">
-                                {{fuel_request.amount|intcomma}} Litres
+                                {{fuel_request.amount|floatformat:2|intcomma}} Litres
                             </td>
                             <td class="">
                                  {% if not fuel_request.supplier_company %}

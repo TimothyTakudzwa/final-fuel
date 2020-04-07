@@ -88,11 +88,11 @@
                                     {{fuel_request.payment_method}}
                                 </td>
                                 
-                                {% if fuel_request.fuel_type == 'Diesel' %}
+                                {% if fuel_request.fuel_type == 'Petrol' %}
                                     <td class="" style="color: #009688;">
                                         {{fuel_request.fuel_type}}
                                     </td>
-                                {% elif fuel_request.fuel_type == 'Petrol' %}
+                                {% elif fuel_request.fuel_type == 'dIESEL' %}
                                 
                                     <td class="" style="color: #ffb61e;">
                                         {{fuel_request.fuel_type}}
@@ -105,7 +105,7 @@
 
 
                                 <td class="">
-                                    {{fuel_request.amount|intcomma}} Litres
+                                    {{fuel_request.amount|floatformat:2|intcomma}} Litres
                                 </td>
                                 <td class="">
                                      {{fuel_request.date}} -- {{fuel_request.time}}
@@ -186,11 +186,11 @@
                                     {{fuel_request.payment_method}}
                                 </td>
                                 
-                                {% if fuel_request.fuel_type == 'Diesel' %}
+                                {% if fuel_request.fuel_type == 'Petrol' %}
                                     <td class="" style="color: #009688;">
                                         {{fuel_request.fuel_type}}
                                     </td>
-                                {% elif fuel_request.fuel_type == 'Petrol' %}
+                                {% elif fuel_request.fuel_type == 'Diesel' %}
                                 
                                     <td class="" style="color: #ffb61e;">
                                         {{fuel_request.fuel_type}}
@@ -203,7 +203,7 @@
 
 
                                 <td class="">
-                                    {{fuel_request.amount|intcomma}} Litres
+                                    {{fuel_request.amount|floatformat:2|intcomma}} Litres
                                 </td>
                                 <td class="">
                                      {{fuel_request.date}} -- {{fuel_request.time}}

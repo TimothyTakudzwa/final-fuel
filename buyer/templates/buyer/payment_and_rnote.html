@@ -157,13 +157,13 @@
                                                         </div>
                                                         <div class="form-group col-md-6">
                                                             <lable><b>Quantity Requested:</b></lable>
-                                                            &nbsp;{{payment.transaction.offer.request.amount|intcomma}}L
+                                                            &nbsp;{{payment.transaction.offer.request.amount|floatformat:2|intcomma}}L
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
                                                             <lable><b> Quantity Offered:</b></lable>
-                                                            &nbsp;{{payment.transaction.offer.quantity}}L
+                                                            &nbsp;{{payment.transaction.offer.quantity|floatformat:2|intcomma}}L
                                                         </div>
                                                         <div class="form-group col-md-6">
                                                             <lable><b>Price:</b></lable>
@@ -173,17 +173,17 @@
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
                                                             <lable><b> Expected:</b></lable>
-                                                            &nbsp;${{payment.transaction.expected}}
+                                                            &nbsp;${{payment.transaction.expected|floatformat:2|intcomma}}
                                                         </div>
                                                         <div class="form-group col-md-6">
                                                             <lable><b>Paid:</b></lable>
-                                                            &nbsp;${{payment.transaction.paid}}
+                                                            &nbsp;${{payment.transaction.paid|floatformat:2|intcomma}}
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
                                                             <lable><b>Delivery Quantity:</b></lable>
-                                                            &nbsp;{{payment.transaction.paid| div:payment.transaction.offer.price|floatformat}}L
+                                                            &nbsp;{{payment.transaction.paid| div:payment.transaction.offer.price|floatformat:2|intcomma}}L
                                                         </div>
                                                         <div class="form-group col-md-6">
                                                             <lable><b> Delivery Address:</b></lable>
@@ -220,8 +220,8 @@
                                 
                             </td>
                             <td>Approved</td>
-                            <td>{{payment.value}}</td>
-                            <td>{{payment.balance}}</td>
+                            <td>{{payment.value|floatformat:2|intcomma}}</td>
+                            <td>{{payment.balance|floatformat:2|intcomma}}</td>
                             {% if payment.release_date %}
                             <td>
                                 <div class="btn-group">

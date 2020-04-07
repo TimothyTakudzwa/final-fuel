@@ -83,7 +83,14 @@
                                 {% else %}
                                     <td>N/A</td>
                                 {% endif %}
-                                <td class="name truncate">{{transaction.offer.request.fuel_type}} {{transaction.offer.quantity}}L @ {{transaction.offer.price}}</td>
+                                {% if transaction.offer.request.fuel_type == 'Petrol' %}
+                                        <td class="name truncate" style="color: #009688;">{{transaction.offer.request.fuel_type}} {{transaction.offer.quantity|floatformat:2|intcomma}}L @ {{transaction.offer.price}}</td>
+
+                            
+                                {% else %}
+                                <td class="name truncate" style="color: #ffb61e;">{{transaction.offer.request.fuel_type}} {{transaction.offer.quantity|floatformat:2|intcomma}}L @ {{transaction.offer.price}}</td>
+
+                                {% endif %}    
 
 
 
@@ -168,8 +175,22 @@
                                                 <td>{{ t.transaction.date }}</td>
                                                     <td>{{ t.transaction.time }}</td>
                                                     <td>{{ t.sord_number }}</td>
-                                                    <td>{{ t.transaction.offer.quantity }}L</td>
-                                                    <td>{{ t.transaction.offer.request.fuel_type }}</td>
+                                                    <td>{{ t.transaction.offer.quantity|floatformat:2|intcomma }}L</td>
+                                                    {% if t.transaction.offer.request.fuel_type == 'Petrol' %}
+                                                        <td class="" style="color: #009688;">
+                                                            {{t.transaction.offer.request.fuel_type}}
+                                                        </td>
+                                                    {% elif t.transaction.offer.request.fuel_type == 'DIESEL' %}
+                                                    
+                                                        <td class="" style="color: #ffb61e;">
+                                                            {{t.transaction.offer.request.fuel_type}}
+                                                        </td>
+                                                    {% else %}
+                                                        <td class="">
+                                                            {{t.transaction.offer.request.fuel_type}}
+                                                        </td>
+                                                    {% endif %}    
+                                                    
                                                     <td>${{ t.transaction.offer.price }}</td>
                                                 </tr>
                                             {% endif %}
@@ -396,7 +417,7 @@
                                                         </div>
                                                         <div class="form-group col-md-6">
                                                             <label><b>Fuel Quantity:</b></label>
-                                                            &nbsp;{{transaction.paid| div:transaction.offer.price |intcomma}}
+                                                            &nbsp;{{transaction.paid| div:transaction.offer.price |floatformat:2|intcomma}}
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -495,7 +516,14 @@
                                 {% else %}
                                     <td>N/A</td>
                                 {% endif %}
-                                <td class="name truncate">{{transaction.offer.request.fuel_type}} {{transaction.offer.quantity}}L @ {{transaction.offer.price}}</td>
+                                {% if transaction.offer.request.fuel_type == 'Petrol' %}
+                                <td class="name truncate" style="color: #009688;">{{transaction.offer.request.fuel_type}} {{transaction.offer.quantity|floatformat:2|intcomma}}L @ {{transaction.offer.price}}</td>
+
+                            
+                                {% else %}
+                                <td class="name truncate" style="color: #ffb61e;">{{transaction.offer.request.fuel_type}} {{transaction.offer.quantity|floatformat:2|intcomma}}L @ {{transaction.offer.price}}</td>
+
+                                {% endif %}    
 
                                 <td>
 
@@ -517,7 +545,7 @@
                                                     <div class="row">
                                                         <!--expected-->
                                                         <div class="col-md-3">
-                                                            <h4 style="font-weight: lighter;font-size: 14px;">Expected &nbsp;&nbsp; : &nbsp;&nbsp; ${{transaction.expected|stringformat:".2f"}}</h4>
+                                                            <h4 style="font-weight: lighter;font-size: 14px;">Expected &nbsp;&nbsp; : &nbsp;&nbsp; ${{transaction.expected|floatformat:2|intcomma}}</h4>
                                                         </div>
                                                         {% if transaction.offer.delivery_method == 'DELIVERY' %}
                                                          <!--transport-->
@@ -530,7 +558,7 @@
                                                        
                                                         <!--paid-->
                                                         <div class="col-md-3">
-                                                            <h4 style="font-weight: lighter;font-size: 14px;">Paid &nbsp;&nbsp; : &nbsp;&nbsp; ${{transaction.paid|stringformat:".2f"}}</h4>
+                                                            <h4 style="font-weight: lighter;font-size: 14px;">Paid &nbsp;&nbsp; : &nbsp;&nbsp; ${{transaction.paid|floatformat:2|intcomma}}</h4>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -622,8 +650,21 @@
                                                 <td>{{ t.transaction.date }}</td>
                                                     <td>{{ t.transaction.time }}</td>
                                                     <td>{{ t.sord_number }}</td>
-                                                    <td>{{ t.transaction.offer.quantity }}L</td>
-                                                    <td>{{ t.transaction.offer.request.fuel_type }}</td>
+                                                    <td>{{ t.transaction.offer.quantity|floatformat:2|intcomma }}L</td>
+                                                    {% if t.transaction.offer.request.fuel_type == 'Petrol' %}
+                                                    <td class="" style="color: #009688;">
+                                                        {{t.transaction.offer.request.fuel_type}}
+                                                    </td>
+                                                    {% elif t.transaction.offer.request.fuel_type == 'DIESEL' %}
+                                                    
+                                                        <td class="" style="color: #ffb61e;">
+                                                            {{t.transaction.offer.request.fuel_type}}
+                                                        </td>
+                                                    {% else %}
+                                                        <td class="">
+                                                            {{t.transaction.offer.request.fuel_type}}
+                                                        </td>
+                                                    {% endif %}    
                                                     <td>${{ t.transaction.offer.price }}</td>
                                                 </tr>
                                             {% endif %}
@@ -817,7 +858,7 @@
                                                         </div>
                                                         <div class="form-group col-md-6">
                                                             <label><b>Fuel Quantity:</b></label>
-                                                            &nbsp;{{transaction.paid| div:transaction.offer.price |intcomma}}
+                                                            &nbsp;{{transaction.paid| div:transaction.offer.price |floatformat:2|intcomma}}
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
