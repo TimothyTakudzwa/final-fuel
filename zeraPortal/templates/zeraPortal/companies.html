@@ -96,7 +96,7 @@
     data-index="0">
     <div class="panel-heading ui-sortable-handle">
         <div class="btn-group"> 
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#company_registration" style="background-color: #25d366;"><i class="" style="margin-right: 11px;"></i>
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#company_registration"><i class="" style="margin-right: 11px;"></i>
                 Register Company
             </button>  
         </div>
@@ -219,8 +219,10 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <td>{{company.license_number}}</td>
                         <td>{{company.contact_person}}</td>
                         <td>{{company.phone_number}}</td>
-                        <td><a class="btn btn-success btn-sm" href="{% url 'zeraPortal:company-subsidiaries' company.id %}"><i class="fa fa-eye" style="margin-right: 11px;"></i>
-                            Subsidiaries</a></td>
+                        <td><a href="{% url 'zeraPortal:company-subsidiaries' company.id %}" type="button" class="btn btn-labeled btn-success m-b-5">
+                                <span class="btn-label"><i class="fa fa-eye"></i></span>Subsidiaries
+                            </a>
+                        </td>
                         {% if company.check_admin %}
                         <td>Active</td>
                         {% else %}

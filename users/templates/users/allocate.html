@@ -59,12 +59,12 @@
                             <th style="color: #ffb61e;">Diesel Capacity</th>
                             <th style="color: #009688;">Petrol Capacity</th>
                             <th style="color: #ffb61e;">Unallocated Diesel</th>
-                            <th>RTGS Price</th>
-                            <th>USD Price</th>
                             <th style="color: #009688;">Unallocated Petrol</th>
-                            <th>RTGS Price</th>
-                            <th>USD Price</th>
-                            <th>Action</th>
+                            <th style="color: #ffb61e;">RTGS Price Diesel</th>
+                            <th style="color: #009688;">RTGS Price Petrol</th>
+                            <th style="color: #ffb61e;">USD Price Diesel</th>
+                            <th style="color: #009688;">USD Price Petrol</th>
+                            <th >Action</th>
 
                         </tr>
                     </thead>
@@ -72,14 +72,14 @@
                         <tr>
 
                             
-                            <td>{{company_total_diesel_capacity|floatformat:2|intcomma }}</td>
-                            <td>{{company_total_petrol_capacity|floatformat:2|intcomma}}</td>
-                            <td>{{company_capacity.unallocated_diesel|floatformat:2|intcomma}}</td>
-                            <td>{{company_capacity.diesel_price}}</td>
-                            <td>{{company_capacity.usd_diesel_price}}</td>
-                            <td>{{company_capacity.unallocated_petrol|floatformat:2|intcomma}}</td>
-                            <td>{{company_capacity.petrol_price}}</td>
-                            <td>{{company_capacity.usd_petrol_price}}</td>
+                            <td style="color: #ffb61e;">{{company_total_diesel_capacity|floatformat:2|intcomma }}</td>
+                            <td style="color: #009688;">{{company_total_petrol_capacity|floatformat:2|intcomma}}</td>
+                            <td style="color: #ffb61e;">{{company_capacity.unallocated_diesel|floatformat:2|intcomma}}</td>
+                            <td style="color: #009688;">{{company_capacity.unallocated_petrol|floatformat:2|intcomma}}</td>
+                            <td style="color: #ffb61e;">{{company_capacity.diesel_price}}</td>
+                            <td style="color: #009688;">{{company_capacity.petrol_price}}</td>
+                            <td style="color: #ffb61e;">{{company_capacity.usd_diesel_price}}</td>
+                            <td style="color: #009688;">{{company_capacity.usd_petrol_price}}</td>
                             <td>
                             <div class="btn-group">
                                 <a class="btn btn-info btn-sm" data-toggle="modal"
@@ -551,11 +551,11 @@
                         {% else %}
                         <td>Service Station</td>
                         {% endif %}
-                        <td>{{allocate.diesel_quantity|floatformat:2|intcomma}} {% if allocate.diesel_quantity < 1000 %} <i
+                        <td style="color: #ffb61e;">{{allocate.diesel_quantity|floatformat:2|intcomma}} {% if allocate.diesel_quantity < 1000 %} <i
                                 class="fa fa-exclamation-triangle"
                                 style="margin-left: 2.5px;color: #ff5722;"></i>{% endif %}</td>
                         
-                        <td>{{allocate.petrol_quantity|floatformat:2|intcomma}} {% if allocate.petrol_quantity < 1000 %} <i
+                        <td style="color: #009688;">{{allocate.petrol_quantity|floatformat:2|intcomma}} {% if allocate.petrol_quantity < 1000 %} <i
                                 class="fa fa-exclamation-triangle"
                                 style="margin-left: 2.5px;color: #ff5722;"></i>{% endif %}</td>
                         
@@ -990,14 +990,14 @@
                         <td>{{alloc.sub_type}}</td>
                         <td>{{alloc.action}}</td>
                         {% if alloc.diesel_quantity != 0 %}
-                        <td>{{alloc.diesel_quantity|floatformat:2|intcomma}}</td>
+                        <td style="color: #ffb61e;">{{alloc.diesel_quantity|floatformat:2|intcomma}}</td>
                         <td>{{alloc.diesel_price}}</td>
                         {% else %}
                         <td>-</td>
                         <td>-</td>
                         {% endif %}
                         {% if alloc.petrol_quantity != 0 %}
-                        <td>{{alloc.petrol_quantity|floatformat:2|intcomma}}</td>
+                        <td style="color: #009688;">{{alloc.petrol_quantity|floatformat:2|intcomma}}</td>
                         <td>{{alloc.petrol_price}}</td>
                         {% else %}
                         <td>-</td>

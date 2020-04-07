@@ -57,9 +57,9 @@
               <td height="50"> {{subsidiary}}</td>
             </tr>
       <tr>
-          <td height="50">Petrol Quantity</td>
+          <td height="50" style="color: #009688;">Petrol Quantity</td>
           <td height="50">
-          {{updates.petrol_quantity}} {% if updates.petrol_quantity < 1000 %} 
+          {{updates.petrol_quantity|floatformat:2|intcomma}} {% if updates.petrol_quantity < 1000 %} 
           <i class="fa fa-exclamation-triangle" style="margin-left: 10px; color:#cc3300;" aria-hidden="true"></i><a href="#pablo" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
         </td>
         </tr>
@@ -68,10 +68,10 @@
             <td height="50">{{updates.petrol_price}}</td>
           </tr>
           <tr>
-              <td height="50">Diesel Quantity</td>
+              <td height="50" style="color: #ffb61e;">Diesel Quantity</td>
               
               <td height="50">
-                 {{updates.diesel_quantity}} {% if updates.diesel_quantity < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 10px; color:#cc3300;" aria-hidden="true"></i><a href="#pablo" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
+                 {{updates.diesel_quantity|floatformat:2|intcomma}} {% if updates.diesel_quantity < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 10px; color:#cc3300;" aria-hidden="true"></i><a href="#pablo" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
               </td>
             </tr>
             <tr>

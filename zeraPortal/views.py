@@ -19,7 +19,7 @@ from supplier.models import SubsidiaryFuelUpdate, FuelAllocation, DeliverySchedu
 from users.models import SordActionsAuditTrail, Activity
 from users.views import message_is_sent
 from .constants import coordinates_towns
-from .decorators import user_role
+from .decorators import user_role, user_permission
 
 user = get_user_model()
 
@@ -98,16 +98,16 @@ def noic_fuel(request):
 
 
 @login_required()
-@user_role
 def noic_allocations(request, id):
+    user_permission(request)
     depot = NoicDepot.objects.filter(id=id).first()
     allocations = SordNationalAuditTrail.objects.filter(assigned_depot=depot).all()
     return render(request, 'zeraPortal/noic_allocations.html', {'allocations': allocations, 'depot': depot})
 
 
 @login_required()
-@user_role
 def edit_company(request, id):
+    user_permission(request)
     company = Company.objects.filter(id=id).first()
     license_number = request.POST.get('license_number')
     check_license = Company.objects.filter(~Q(id=id), company_type='SUPPLIER', license_number=license_number).exists()
@@ -134,8 +134,8 @@ def edit_company(request, id):
 
 
 @login_required()
-@user_role
 def add_supplier_admin(request, id):
+    user_permission(request)
     company = Company.objects.filter(id=id).first()
     print('hhhhhhhhhhh is co', company.name)
     first_name = request.POST['first_name']
@@ -173,8 +173,8 @@ def add_supplier_admin(request, id):
 
 
 @login_required()
-@user_role
 def block_company(request, id):
+    user_permission(request)
     company = Company.objects.filter(id=id).first()
     if request.method == 'POST':
         company.is_active = False
@@ -189,8 +189,8 @@ def block_company(request, id):
 
 
 @login_required()
-@user_role
 def unblock_company(request, id):
+    user_permission(request)
     company = Company.objects.filter(id=id).first()
     if request.method == 'POST':
         company.is_active = True
@@ -205,8 +205,8 @@ def unblock_company(request, id):
 
 
 @login_required()
-@user_role
 def company_fuel(request):
+    user_permission(request)
     capacities = CompanyFuelUpdate.objects.all()
     for fuel in capacities:
         subs_total_diesel_capacity = 0
@@ -226,15 +226,15 @@ def company_fuel(request):
 
 
 @login_required()
-@user_role
 def allocations(request, id):
+    user_permission(request)
     sord_allocations = SordCompanyAuditTrail.objects.filter(company__id=id).all()
     return render(request, 'zeraPortal/fuel_allocations.html', {'sord_allocations': sord_allocations})
 
 
 @login_required()
-@user_role
 def sordactions(request, id):
+    user_permission(request)
     sord_actions = SordActionsAuditTrail.objects.filter(sord_num=id).all()
 
     if sord_actions:
@@ -245,8 +245,8 @@ def sordactions(request, id):
 
 
 @login_required()
-@user_role
 def download_release_note(request, id):
+    user_permission(request)
     document = AccountHistory.objects.filter(id=id).first()
     if document:
         filename = document.release_note.name.split('/')[-1]
@@ -259,8 +259,8 @@ def download_release_note(request, id):
 
 
 @login_required()
-@user_role
 def transactions(request, id):
+    user_permission(request)
     today = datetime.now().strftime("%m/%d/%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
     transactions = []
@@ -282,16 +282,16 @@ def transactions(request, id):
 
 
 @login_required()
-@user_role
 def payment_and_schedules(request, id):
+    user_permission(request)
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
     return render(request, 'zeraPortal/payment_and_schedules.html', {'payment_history': payment_history})
 
 
 @login_required()
-@user_role
 def view_confirmation_doc(request, id):
+    user_permission(request)
     delivery = DeliverySchedule.objects.filter(id=id).first()
     if delivery:
         filename = delivery.confirmation_document.name.split('/')[-1]
@@ -304,8 +304,8 @@ def view_confirmation_doc(request, id):
 
 
 @login_required()
-@user_role
 def view_supplier_doc(request, id):
+    user_permission(request)
     delivery = DeliverySchedule.objects.filter(id=id).first()
     if delivery:
         filename = delivery.supplier_document.name.split('/')[-1]
@@ -318,8 +318,8 @@ def view_supplier_doc(request, id):
 
 
 @login_required()
-@user_role
 def company_subsidiaries(request, id):
+    user_permission(request)
     subsidiaries = Subsidiaries.objects.filter(company__id=id).all()
     company = Company.objects.get(id=id)
     for subsidiary in subsidiaries:
@@ -329,8 +329,8 @@ def company_subsidiaries(request, id):
 
 
 @login_required()
-@user_role
 def download_application(request, id):
+    user_permission(request)
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if subsidiary:
         filename = subsidiary.application_form.name.split('/')[-1]
@@ -343,8 +343,8 @@ def download_application(request, id):
 
 
 @login_required()
-@user_role
 def download_council(request, id):
+    user_permission(request)
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if subsidiary:
         filename = subsidiary.council_approval.name.split('/')[-1]
@@ -357,8 +357,8 @@ def download_council(request, id):
 
 
 @login_required()
-@user_role
 def download_pop(request, id):
+    user_permission(request)
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if subsidiary:
         filename = subsidiary.proof_of_payment.name.split('/')[-1]
@@ -371,8 +371,8 @@ def download_pop(request, id):
 
 
 @login_required()
-@user_role
 def download_fire_brigade_doc(request, id):
+    user_permission(request)
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if subsidiary:
         filename = subsidiary.fire_brigade.name.split('/')[-1]
@@ -385,8 +385,8 @@ def download_fire_brigade_doc(request, id):
 
 
 @login_required()
-@user_role
 def download_ema(request, id):
+    user_permission(request)
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if subsidiary:
         filename = subsidiary.ema.name.split('/')[-1]
@@ -399,8 +399,8 @@ def download_ema(request, id):
 
 
 @login_required()
-@user_role
 def subsidiaries(request):
+    user_permission(request)
     subsidiaries = Subsidiaries.objects.all()
     for subsidiary in subsidiaries:
         subsidiary.fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
@@ -409,8 +409,8 @@ def subsidiaries(request):
 
 
 @login_required()
-@user_role
 def change_licence(request, id):
+    user_permission(request)
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if request.method == 'POST':
         license_num = request.POST['license_num']
@@ -431,8 +431,8 @@ def change_licence(request, id):
 
 
 @login_required()
-@user_role
 def block_licence(request, id):
+    user_permission(request)
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if request.method == 'POST':
         subsidiary.is_active = False
@@ -447,8 +447,8 @@ def block_licence(request, id):
 
 
 @login_required()
-@user_role
 def download_proof(request, id):
+    user_permission(request)
     document = AccountHistory.objects.filter(id=id).first()
     if document:
         filename = document.proof_of_payment.name.split('/')[-1]
@@ -461,8 +461,8 @@ def download_proof(request, id):
 
 
 @login_required()
-@user_role
 def view_delivery_note(request, id):
+    user_permission(request)
     delivery = AccountHistory.objects.filter(id=id).first()
     if delivery:
         filename = delivery.delivery_note.name.split('/')[-1]
@@ -475,8 +475,8 @@ def view_delivery_note(request, id):
 
 
 @login_required()
-@user_role
 def view_release_note(request, id):
+    user_permission(request)
     payment = AccountHistory.objects.filter(id=id).first()
     payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
     context = {
@@ -486,8 +486,8 @@ def view_release_note(request, id):
 
 
 @login_required()
-@user_role
 def noic_release_note(request, id):
+    user_permission(request)
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     allocation.admin = User.objects.filter(company=allocation.company).filter(user_type='S_ADMIN').first()
     allocation.rep = request.user
@@ -498,8 +498,8 @@ def noic_release_note(request, id):
 
 
 @login_required()
-@user_role
 def noic_delivery_note(request, id):
+    user_permission(request)
     delivery = SordNationalAuditTrail.objects.filter(id=id).first()
     if delivery:
         filename = delivery.d_note.name.split('/')[-1]
@@ -512,8 +512,8 @@ def noic_delivery_note(request, id):
 
 
 @login_required()
-@user_role
 def unblock_licence(request, id):
+    user_permission(request)
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if request.method == 'POST':
         subsidiary.is_active = True
@@ -528,8 +528,8 @@ def unblock_licence(request, id):
 
 
 @login_required()
-@user_role
 def add_licence(request, id):
+    user_permission(request)
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     if request.method == 'POST':
         license_num = request.POST['license_num']
@@ -579,8 +579,7 @@ def report_generator(request):
             verified_companies = None
             unverified_companies = None
         if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':
-            trans = Transaction.objects.filter(date__range=[start_date, end_date],
-                                               supplier__company=request.user.company)
+            trans = Transaction.objects.filter(date__range=[start_date, end_date])
             requests = None
             allocations = None
             revs = None
@@ -769,8 +768,8 @@ def statistics(request):
 
 
 @login_required()
-@user_role
 def clients_history(request, cid):
+    user_permission(request)
     buyer = User.objects.filter(id=cid).first()
     trans = []
     state = 'All'
@@ -814,8 +813,8 @@ def clients_history(request, cid):
 
 
 @login_required()
-@user_role
 def subsidiary_transaction_history(request, sid):
+    user_permission(request)
     subsidiary = Subsidiaries.objects.filter(id=sid).first()
     trans = []
     state = 'All'
@@ -913,8 +912,8 @@ def comments(request):
 
 
 @login_required()
-@user_role
 def sub_comments(request, id):
+    user_permission(request)
     sub = Subsidiaries.objects.filter(id=id).first()
     comments = Comment.objects.filter(station=sub)
     return render(request, 'zeraPortal/sub_comments.html', {'comments': comments, 'sub': sub})
