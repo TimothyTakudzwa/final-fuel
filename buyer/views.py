@@ -1171,7 +1171,6 @@ def payment_history(request, id):
 @login_required()
 def payment_release_notes(request, id):
     user_permission(request)
-    user_permission(request)
     form1 = DeliveryScheduleForm()
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()

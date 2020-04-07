@@ -1,4 +1,5 @@
 # from datetime import datetime, timedelta, date
+from datetime import date
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -18,7 +19,7 @@ from users.forms import DepotContactForm
 from users.models import Activity
 from zeraPortal.lib import *
 from .lib import *
-from .decorators import user_role
+from .decorators import user_role, user_permission
 
 user = get_user_model()
 
@@ -166,8 +167,8 @@ def depots(request):
 
 
 @login_required()
-@user_role
 def edit_depot(request, id):
+    user_permission(request)
     if request.method == 'POST':
         if NoicDepot.objects.filter(id=id).exists():
             depot_update = NoicDepot.objects.filter(id=id).first()
@@ -188,8 +189,8 @@ def edit_depot(request, id):
 
 
 @login_required()
-@user_role
 def delete_depot(request, id):
+    user_permission(request)
     if request.method == 'POST':
         if NoicDepot.objects.filter(id=id).exists():
             depot_update = NoicDepot.objects.filter(id=id).first()
@@ -207,8 +208,8 @@ def delete_depot(request, id):
 
 
 @login_required()
-@user_role
 def fuel_update(request, id):
+    user_permission(request)
     fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
     if request.method == 'POST':
         if request.POST['fuel_type'].lower() == 'petrol':
@@ -260,8 +261,8 @@ def fuel_update(request, id):
 
 
 @login_required()
-@user_role
 def edit_prices(request, id):
+    user_permission(request)
     fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
     if request.method == 'POST':
         fuel_update.usd_petrol_price = request.POST['usd_petrol_price']
@@ -279,8 +280,8 @@ def edit_prices(request, id):
 
 
 @login_required()
-@user_role
 def payment_approval(request, id):
+    user_permission(request)
     order = Order.objects.filter(id=id).first()
     order.payment_approved = True
     order.save()
@@ -289,8 +290,8 @@ def payment_approval(request, id):
             
 
 @login_required()
-@user_role
 def allocate_fuel(request, id):
+    user_permission(request)
     order = Order.objects.filter(id=id).first()
    
     if request.method == 'POST':
@@ -453,8 +454,8 @@ def staff(request):
 
 
 @login_required()
-@user_role
 def message_is_send(request, user, password):
+    user_permission(request)
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
     message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: {password} \n\nPlease login on Fuel Management System Website and access your assigned Depot & don't forget to change your password on user profile. \n. "

@@ -18,7 +18,7 @@ from fuelUpdates.models import SordCompanyAuditTrail
 from notification.models import Notification
 from users.models import Audit_Trail, SordActionsAuditTrail, Activity
 from whatsapp.helper_functions import send_message
-from .decorators import user_role
+from .decorators import user_role, user_permission
 from .forms import PasswordChange, CreateCompany, OfferForm
 from .lib import *
 
@@ -273,8 +273,8 @@ def clients(request):
 
 
 @login_required
-@user_role
 def verify_client(request, id):
+    user_permission(request)
     client = get_object_or_404(Account, id=id)
     if not client.is_verified:
         client.is_verified = True
@@ -288,8 +288,8 @@ def verify_client(request, id):
 
 
 @login_required
-@user_role
 def view_client_id_document(request, id):
+    user_permission(request)
     client = Account.objects.filter(id=id).first()
     if client:
         filename = client.id_document.name.split('/')[-1]
@@ -302,8 +302,8 @@ def view_client_id_document(request, id):
 
 
 @login_required
-@user_role
 def view_application_id_document(request, id):
+    user_permission(request)
     client = Account.objects.filter(id=id).first()
     if client:
         filename = client.application_document.name.split('/')[-1]
@@ -446,7 +446,9 @@ def fuel_request(request):
     return render(request, 'supplier/fuel_request.html', {'requests': requests, 'complete_requests': complete_requests})
 
 
+@login_required()
 def new_fuel_request(request, id):
+    user_permission(request)
     requests = FuelRequest.objects.filter(id=id, wait=True).all()
     return render(request, 'supplier/new_fuel_request.html', {'requests': requests})
 
@@ -465,8 +467,8 @@ def available_stock(request):
 
 
 @login_required()
-@user_role
 def stock_update(request, id):
+    user_permission(request)
     updates = SuballocationFuelUpdate.objects.filter(id=id).first()
     available_petrol = updates.petrol_quantity
     available_diesel = updates.diesel_quantity
@@ -542,8 +544,8 @@ def my_offers(request):
 
 
 @login_required()
-@user_role
 def offer(request, id):
+    user_permission(request)
     form = OfferForm(request.POST)
     if request.method == "POST":
         if float(request.POST.get('price')) != 0 and float(request.POST.get('quantity')) != 0:
@@ -631,8 +633,8 @@ def offer(request, id):
 
 
 @login_required
-@user_role
 def edit_offer(request, id):
+    user_permission(request)
     offer = Offer.objects.get(id=id)
     fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id,
                                                           payment_type='USD & RTGS').first()
@@ -695,15 +697,15 @@ def edit_offer(request, id):
 
 
 @login_required()
-@user_role
 def accepted_offer(request, id):
+    user_permission(request)
     transactions = Transaction.objects.filter(id=id).all()
     return render(request, 'supplier/new_transaction.html', {'transactions': transactions})
 
 
 @login_required()
-@user_role
 def rejected_offer(request, id):
+    user_permission(request)
     offers = Offer.objects.filter(id=id).all()
     return render(request, 'supplier/my_offer.html', {'offers': offers})
 
@@ -711,6 +713,7 @@ def rejected_offer(request, id):
 '''
 allocated quantities
 '''
+
 
 @login_required()
 @user_role
@@ -773,8 +776,8 @@ def transaction(request):
 
 
 @login_required
-@user_role
 def complete_transaction(request, id):
+    user_permission(request)
     transaction = Transaction.objects.filter(id=id).first()
     subsidiary_fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).first()
     fuel_reserve = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id,
@@ -907,8 +910,8 @@ def invoice(request, id):
 
 
 @login_required()
-@user_role
 def view_invoice(request, id):
+    user_permission(request)
     transaction = Transaction.objects.filter(supplier=request.user, id=id).all()
     for transaction in transaction:
         subsidiary = Subsidiaries.objects.filter(id=transaction.supplier.subsidiary_id).first()
@@ -939,8 +942,8 @@ def download_proof(request, id):
 
 
 @login_required
-@user_role
 def client_transaction_history(request, id):
+    user_permission(request)
     client = Account.objects.filter(id=id).first()
 
     contribution = get_customer_contributions(request.user.id, client.buyer_company)
@@ -963,8 +966,8 @@ def client_transaction_history(request, id):
 
 
 @login_required()
-@user_role
 def stock_sord_update(request, user, quantity, action, fuel_type, payment_type):
+    user_permission(request)
     initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id=request.user.subsidiary_id,
                                                            fuel_type=fuel_type, payment_type=payment_type).all()
     sord_quantity = []
@@ -1025,8 +1028,8 @@ def stock_sord_update(request, user, quantity, action, fuel_type, payment_type):
 
 
 @login_required()
-@user_role
 def transaction_sord_update(request, user, quantity, action, fuel_type, payment_type, transaction):
+    user_permission(request)
     initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id=request.user.subsidiary_id,
                                                            fuel_type=fuel_type, payment_type=payment_type).all()
     sord_quantity = []
@@ -1101,8 +1104,8 @@ Delivery Schedule Operations
 
 
 @login_required
-@user_role
 def create_delivery_schedule(request):
+    user_permission(request)
     if request.method == 'POST':
         schedule = DeliverySchedule.objects.create(
             date=request.POST['delivery_date'],
@@ -1140,8 +1143,8 @@ def create_delivery_schedule(request):
 
 
 @login_required
-@user_role
 def delivery_schedules(request):
+    user_permission(request)
     if request.method == 'POST':
         supplier_document = request.FILES.get('supplier_document')
         delivery_id = request.POST.get('delivery_id')
@@ -1163,8 +1166,8 @@ def delivery_schedules(request):
 
 
 @login_required()
-@user_role
 def view_delivery_schedule(request, id):
+    user_permission(request)
     if request.method == 'POST':
         supplier_document = request.FILES.get('supplier_document')
         delivery_id = request.POST.get('delivery_id')
@@ -1184,8 +1187,8 @@ def view_delivery_schedule(request, id):
 
 
 @login_required()
-@user_role
 def view_confirmation_doc(request, id):
+    user_permission(request)
     payment = AccountHistory.objects.filter(delivery_schedule__id=id).first()
     payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
     context = {
@@ -1195,8 +1198,8 @@ def view_confirmation_doc(request, id):
 
 
 @login_required()
-@user_role
 def view_delivery_note(request, id):
+    user_permission(request)
     delivery = AccountHistory.objects.filter(id=id).first()
     if delivery:
         filename = delivery.delivery_note.name.split('/')[-1]
@@ -1209,8 +1212,8 @@ def view_delivery_note(request, id):
 
 
 @login_required()
-@user_role
 def upload_release_note(request, id):
+    user_permission(request)
     payment_history = AccountHistory.objects.filter(id=id).first()
     transaction = Transaction.objects.filter(id=payment_history.transaction.id).first()
     if request.method == 'POST':
@@ -1234,8 +1237,8 @@ def upload_release_note(request, id):
 
 
 @login_required()
-@user_role
 def edit_release_note(request, id):
+    user_permission(request)
     release = AccountHistory.objects.filter(id=id).first()
     if request.method == 'POST':
         release.release_date = request.POST['release_date']
@@ -1249,16 +1252,16 @@ def edit_release_note(request, id):
 
 
 @login_required()
-@user_role
 def payment_release_notes(request, id):
+    user_permission(request)
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
     return render(request, 'supplier/payment_and_rnote.html', {'payment_history': payment_history})
 
 
 @login_required()
-@user_role
 def view_supplier_doc(request, id):
+    user_permission(request)
     delivery = DeliverySchedule.objects.filter(id=id).first()
     if delivery:
         filename = delivery.supplier_document.name.split('/')[-1]
@@ -1271,8 +1274,8 @@ def view_supplier_doc(request, id):
 
 
 @login_required()
-@user_role
 def del_supplier_doc(request, id):
+    user_permission(request)
     delivery = DeliverySchedule.objects.filter(id=id).first()
     delivery.supplier_document = None
     delivery.save()
@@ -1281,8 +1284,8 @@ def del_supplier_doc(request, id):
 
 
 @login_required()
-@user_role
 def supplier_release_note(request, id):
+    user_permission(request)
     transaction = Transaction.objects.filter(id=id).first()
     if request.method == 'POST':
         transaction.release_date = request.POST['release_date']
@@ -1313,16 +1316,16 @@ payment history
 
 
 @login_required()
-@user_role
 def payment_history(request, id):
+    user_permission(request)
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
     return render(request, 'supplier/payment_history.html', {'payment_history': payment_history})
 
 
 @login_required()
-@user_role
 def mark_completion(request, id):
+    user_permission(request)
     transaction = Transaction.objects.filter(id=id).first()
     transaction.is_complete = True
     transaction.save()
@@ -1332,8 +1335,8 @@ def mark_completion(request, id):
 
 
 @login_required()
-@user_role
 def view_release_note(request, id):
+    user_permission(request)
     payment = AccountHistory.objects.filter(id=id).first()
     payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
     context = {
@@ -1343,8 +1346,8 @@ def view_release_note(request, id):
 
 
 @login_required()
-@user_role
 def download_release_note(request, id):
+    user_permission(request)
     payment = AccountHistory.objects.filter(id=id).first()
     payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
     context = {
