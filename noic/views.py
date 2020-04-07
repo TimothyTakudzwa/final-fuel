@@ -33,7 +33,7 @@ def orders(request):
     for order in orders:
         order.allocation = SordNationalAuditTrail.objects.filter(order=order).first()
     
-    requests_notifications = Notification.objects.filter(depot_id=depot.id).filter(action="ORDER").filter(is_read=False).all()
+    requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
     for req in requests_notifications:
         if req is not None:
             req.is_read = True

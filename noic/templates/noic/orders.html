@@ -71,16 +71,16 @@
                     <td>{{ order.company.address|lower|title }}</td>
 
 
-                    {% if order.fuel_type == 'Diesel' %}
+                    {% if order.fuel_type == 'Petrol' %}
                         <td style="color: #009688;">{{ order.fuel_type|lower|capfirst }}</td>
-                    {% elif order.fuel_type == 'Petrol' %}
+                    {% elif order.fuel_type == 'Diesel' %}
                         <td style="color: #ffb61e;">{{ order.fuel_type|lower|capfirst }}</td>
                     {% else %}    
                         <td>{{ order.fuel_type|lower|capfirst }}</td>
                     {% endif %}    
 
 
-                    <td>{{ order.quantity|floatformat:2 }}</td>
+                    <td>{{ order.quantity|floatformat:2|intcomma }}</td>
                     <td>{{ order.currency}}</td> 
                     <td>
 
@@ -208,7 +208,7 @@
                             <h4> &nbsp;&nbsp;&nbsp;&nbsp;Quantity</h4>
                         </div>
                         <div class="col-md-6">
-                            {{ order.allocation.quantity }}
+                            {{ order.allocation.quantity|floatformat:2|intcomma }}
                         </div>
                         </div>
                         <div class="row">
@@ -270,7 +270,7 @@
                         <div class="col-md-6">
                             <h4>&nbsp;&nbsp;&nbsp;&nbsp;Total</h4>
                         </div>
-                        <div class="col-md-6">{{order.amount_paid}} {{ order.currency }}</div>
+                        <div class="col-md-6">{{order.amount_paid|floatformat:2|intcomma}} {{ order.currency }}</div>
                         </div>
                         <div class="row">
                         <div class="col-md-6">
