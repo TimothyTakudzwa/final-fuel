@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load humanize %}
 {% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html lang="en">
@@ -723,14 +724,8 @@
                                                     </td>
                                                     <td>{{tran.buyer.company.name|title}}</td>
                                                     <td>{{tran.supplier.company.name|title}}</td>
-                                                    {% if tran.offer.request.fuel_type == 'Diesel' %}
-                                                        <td style="color: #009688;">{{tran.offer.request.fuel_type|title}}</td>
-                                                    {% elif tran.offer.request.fuel_type == 'Petrol' %}
-                                                        <td style="color: #ffb61e;">{{tran.offer.request.fuel_type|title}}</td>
-                                                    {% else %}
-                                                        <td>{{tran.offer.request.fuel_type|title}}</td>
-                                                    {% endif %}
-                                                    <td>{{tran.offer.quantity}}</td>
+                                                    <td>{{tran.offer.request.fuel_type|title}}</td>
+                                                    <td>{{tran.offer.quantity|floatformat:2|intcomma}}</td>
                                                     <td>$ {{tran.offer.price|stringformat:".2f"}}</td>
                                                     <td>{{tran.buyer.first_name}} {{tran.buyer.last_name }}</td>
                                                     <td>
