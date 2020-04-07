@@ -56,14 +56,14 @@
                         </th>
 
 
-                        <th style="color:white;">
+                        <th style="color:white;" style="color: #f0c568;">
                             Diesel 
                         </th>
 
                         <th style="color:white;">
                             Price
                         </th>
-                        <th style="color:white;">
+                        <th style="color:white;" style="color: #79f7ea;">
                                Petrol
                             </th>
                             <th style="color:white;">
@@ -79,14 +79,14 @@
                             <td>{{allocation.date}}</td>
                             <td>{{allocation.action}}</td>
                             {% if allocation.diesel_quantity != 0 %}
-                            <td>{{allocation.diesel_quantity}}</td>
+                            <td>{{allocation.diesel_quantity|floatformat:2|intcomma}}</td>
                             <td>{{allocation.diesel_price}}</td>
                             {% else %}
                            <td>-</td>
                            <td>-</td>
                            {% endif %}
                            {% if allocation.petrol_quantity != 0 %}
-                            <td>{{allocation.petrol_quantity}}</td>
+                            <td>{{allocation.petrol_quantity|floatformat:2|intcomma}}</td>
                             <td>{{allocation.petrol_price}}</td>
                             {% else %}
                            <td>-</td>

@@ -1,5 +1,5 @@
-# from datetime import datetime, timedelta, date
-from datetime import date
+from datetime import datetime, timedelta, date
+# from datetime import date
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -590,7 +590,7 @@ def report_generator(request):
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
             stock = type('test', (object,), {})()
-            stock.date = datetime.today()
+            # stock.date = datetime.today()
             stock.usd, stock.zwl = get_current_usd_stock(), get_current_zwl_stock()
 
             allocations_per_supplier = None

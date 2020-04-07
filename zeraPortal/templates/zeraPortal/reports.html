@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load humanize %}
 {% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html lang="en">
@@ -395,8 +396,8 @@
                                                         <select name="report_type" class="form-control form-control-sm " id="report_options">
                                                             <option value="" selected disabled hidden>Choose here</option>
                                                             <option selected>Transactions</option>
-                                                            <option selected>Companies - Verified</option>
-                                                            <option selected>Companies - Unverified</option>
+                                                            <!-- <option selected>Companies - Verified</option>
+                                                            <option selected>Companies - Unverified</option> -->
                                                             <option value="Requests">Requests</option>
                                                             <option value="Stock">Stock</option>
                                                             <option value="Allocations">Allocations</option>
@@ -723,21 +724,15 @@
                                                     </td>
                                                     <td>{{tran.buyer.company.name|title}}</td>
                                                     <td>{{tran.supplier.company.name|title}}</td>
-                                                    {% if tran.offer.request.fuel_type == 'Diesel' %}
-                                                        <td style="color: #009688;">{{tran.offer.request.fuel_type|title}}</td>
-                                                    {% elif tran.offer.request.fuel_type == 'Petrol' %}
-                                                        <td style="color: #ffb61e;">{{tran.offer.request.fuel_type|title}}</td>
-                                                    {% else %}
-                                                        <td>{{tran.offer.request.fuel_type|title}}</td>
-                                                    {% endif %}
-                                                    <td>{{tran.offer.quantity}}</td>
+                                                    <td>{{tran.offer.request.fuel_type|title}}</td>
+                                                    <td>{{tran.offer.quantity|floatformat:2|intcomma}}</td>
                                                     <td>$ {{tran.offer.price|stringformat:".2f"}}</td>
                                                     <td>{{tran.buyer.first_name}} {{tran.buyer.last_name }}</td>
                                                     <td>
                                                         {% if tran.is_complete %}
-                                                        <i class="fa fa-check-circle" style="color: #2ecc71;" aria-hidden="true"></i>
+                                                        COMPLETE
                                                         {% else %}
-                                                        <i class="fa fa-times-circle" style="color: #e74c3c;"></i>
+                                                        INCOMPLETE
                                                         {% endif %}
                                                     </td>
         
@@ -828,10 +823,10 @@
                                                         <th style="background-color: #778899;">Last Update</th>
                                                         <th style="background-color: #778899;">Station Type</th>
                                                         <th style="background-color: #778899;">Station Name</th>
-                                                        <th style="color: #ffb61e;background-color: #778899;">Petrol (Litres)</th>
-                                                        <th style="color: #ffb61e;background-color: #778899;">Petrol Price</th>
-                                                        <th style="color: #009688;background-color: #778899;">Diesel (Litres)</th>
-                                                        <th style="color: #009688;background-color: #778899;">Diesel Price</th>
+                                                        <th style="background-color: #778899;">Petrol (Litres)</th>
+                                                        <th style="background-color: #778899;">Petrol Price</th>
+                                                        <th style="background-color: #778899;">Diesel (Litres)</th>
+                                                        <th style="background-color: #778899;">Diesel Price</th>
                                                         
                                                       
                                                     </tr>
@@ -843,10 +838,10 @@
                                                             <td>{{my_stock.last_updated}}</td>
                                                             <td>{{my_stock.sub_type}}</td>
                                                             <td>{{my_stock.subsidiary_name}}</td>
-                                                            <td style="color: #ffb61e;">{{my_stock.petrol_quantity}} l</td>
-                                                            <td style="color: #ffb61e;">{{my_stock.petrol_price}}</td>
-                                                            <td style="color: #009688;">{{my_stock.diesel_quantity}} l</td>
-                                                            <td style="color: #009688;">$ {{my_stock.diesel_price}}</td>
+                                                            <td>{{my_stock.petrol_quantity|floatformat:2|intcomma}} l</td>
+                                                            <td>$ {{my_stock.petrol_price}}</td>
+                                                            <td>{{my_stock.diesel_quantity|floatformat:2|intcomma}} l</td>
+                                                            <td>$ {{my_stock.diesel_price}}</td>
                                                             
                                                     </tr>
                                                     {%endfor%}
@@ -925,18 +920,10 @@
                                                     <td>{{req.time}}</td>
                                                     <td>{{req.name|title}}</td>
                                                     <td>$ {{req.amount|stringformat:".2f"}}</td>
-                                                    {% if req.fuel_type == 'Petrol' %}
-                                                        <td style="color: #ffb61e;">{{req.fuel_type|title}}</td>
-                                                    {% elif req.fuel_type == 'Diesel' %}
-                                                        <td style="color: #009688;">{{req.fuel_type|title}}</td>
-                                                    {% else %}   
-                                                        <td>{{req.fuel_type|title}}</td>
-                                                    {% endif %}    
-
-
-
+                                                    <td>{{req.fuel_type|title}}</td>
+                                                      
                                                     <td>
-                                                        {%if req.cash%}<i class="fa fa-dollar"></i>{%endif%} {% if req.cash %}<img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL"> {%endif%} {%if req.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {%endif%} {%if req.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH"> {%endif%} {%if req.swipe%}<i class="fa fa-cc-visa"></i> {% endif%} {%if not req.cash and not req.ecocash and not req.swipe and not req.usd%}No Payment Method {%endif%}
+                                                        {%if req.cash%}Cash{%endif%} {%if req.usd%}USD {%endif%} {%if req.ecocash%}ECOCASH{%endif%} {%if req.swipe%}SWIPE {% endif%} {%if not req.cash and not req.ecocash and not req.swipe and not req.usd%}No Payment Method {%endif%}
                                                     </td>
                                                 
                                                     
@@ -1001,8 +988,8 @@
                                                 {% for allocation in allocations %}
                                                 <tr>
                                                         <td>{{allocation.date}}</td>
-                                                        <td>{{allocation.petrol_quantity}} l</td>
-                                                        <td>{{allocation.diesel_quantity}} l</td>
+                                                        <td>{{allocation.petrol_quantity|floatformat:2|intcomma}} l</td>
+                                                        <td>{{allocation.diesel_quantity|floatformat:2|intcomma}} l</td>
                                                         <td>{{allocation.sub_type}}</td>
                                                         <td>$ {{allocation.petrol_price}}</td>
                                                         <td>$ {{allocation.diesel_price}}</td>

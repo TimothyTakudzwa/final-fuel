@@ -579,8 +579,7 @@ def report_generator(request):
             verified_companies = None
             unverified_companies = None
         if request.POST.get('report_type') == 'Transactions' or request.POST.get('report_type') == 'Revenue':
-            trans = Transaction.objects.filter(date__range=[start_date, end_date],
-                                               supplier__company=request.user.company)
+            trans = Transaction.objects.filter(date__range=[start_date, end_date])
             requests = None
             allocations = None
             revs = None
