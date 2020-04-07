@@ -92,7 +92,7 @@
                                     <td class="" style="color: #009688;">
                                         {{fuel_request.fuel_type}}
                                     </td>
-                                {% elif fuel_request.fuel_type == 'dIESEL' %}
+                                {% elif fuel_request.fuel_type == 'DIESEL' %}
                                 
                                     <td class="" style="color: #ffb61e;">
                                         {{fuel_request.fuel_type}}
@@ -190,7 +190,7 @@
                                     <td class="" style="color: #009688;">
                                         {{fuel_request.fuel_type}}
                                     </td>
-                                {% elif fuel_request.fuel_type == 'Diesel' %}
+                                {% elif fuel_request.fuel_type|lower|capfirst == 'Diesel' %}
                                 
                                     <td class="" style="color: #ffb61e;">
                                         {{fuel_request.fuel_type}}

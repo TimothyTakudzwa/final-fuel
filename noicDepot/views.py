@@ -81,7 +81,7 @@ def accepted_orders(request):
         else:
             pass
      
-    orders = Order.objects.filter(noic_depot=depot).all()
+    orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=True).all()
     return render(request, 'noicDepot/accepted_orders.html', {'orders': orders})
 
 

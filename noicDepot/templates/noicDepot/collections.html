@@ -63,8 +63,21 @@
                                 <td>{{collection.date}} {{collection.time}}</td>
                                 <td>{{collection.order.noic_depot.name}}</td>
                                 <td>{{collection.order.company.name}}</td>
-                                <td>{{collection.order.fuel_type}}</td>
-                                <td>{{collection.order.quantity}}l</td>
+                                {% if collection.order.fuel_type|lower|capfirst == 'Petrol' %}
+                                <td class="" style="color: #009688;">
+                                    {{collection.order.fuel_type|lower|capfirst}}
+                                </td>
+                            {% elif collection.order.fuel_type|lower|capfirst == 'Diesel' %}
+                            
+                                <td class="" style="color: #ffb61e;">
+                                    {{collection.order.fuel_type|lower|capfirst}}
+                                </td>
+                            {% else %}
+                                <td class="">
+                                    {{collection.order.fuel_type|lower|capfirst}}
+                                </td>
+                            {% endif %}    
+                                <td>{{collection.order.quantity|floatformat:2|intcomma}}l</td>
                                 <td>
                                     {% if collection.has_collected %}
                                         <!--view collection-->
