@@ -1152,6 +1152,20 @@ def download_release_note(request, id):
         return redirect(f'/buyer:payment_release_notes/{document.transaction.id}')
     return response
 
+@login_required()
+def download_pop(request, id):
+    user_permission(request)
+    transaction = Transaction.objects.filter(id=id)
+    document = AccountHistory.objects.filter(id=transaction).first()
+    if document:
+        filename = document.proof_of_payment.name.split('/')[-1]
+        response = HttpResponse(document.proof_of_payment, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document not found')
+        return redirect(f'/buyer:payment_release_notes/{document.transaction.id}')
+    return response    
+
 
 """
 
