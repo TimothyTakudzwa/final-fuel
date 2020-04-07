@@ -838,9 +838,9 @@
                                                             <td>{{my_stock.last_updated}}</td>
                                                             <td>{{my_stock.sub_type}}</td>
                                                             <td>{{my_stock.subsidiary_name}}</td>
-                                                            <td>{{my_stock.petrol_quantity}} l</td>
+                                                            <td>{{my_stock.petrol_quantity|floatformat:2|intcomma}} l</td>
                                                             <td>$ {{my_stock.petrol_price}}</td>
-                                                            <td>{{my_stock.diesel_quantity}} l</td>
+                                                            <td>{{my_stock.diesel_quantity|floatformat:2|intcomma}} l</td>
                                                             <td>$ {{my_stock.diesel_price}}</td>
                                                             
                                                     </tr>
