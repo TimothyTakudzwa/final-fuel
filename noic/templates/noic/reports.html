@@ -325,7 +325,7 @@
                                                                 {% if orders or pending_orders or complete_orders or allocations_per_supplier %}
                                                                 <h1 style="color: white;font-size: 15px;">Showing results from <b style="color: gold;">{{start}}</b> to <b style="color: gold;">{{end}} </b> </h1>
                                                                 {% elif stock %}
-                                                                <h1 style="color:white;font-size: 15px;">Showing Current Stock Levels  - <b style="color: gold;">{{ request.user.company.name|title}}'s Subsidiaries</b> </h1>
+                                                                <h1 style="color:white;font-size: 15px;">Showing Current Stock Levels  - <b style="color: gold;">Current Stock</b> </h1>
                                                                 {% elif verified_companies %}
                                                                 <h1 style="color: white;font-size: 15px;">Showing Current Verified Companies </h1>
                                                                 {% elif unverified_companies %}
@@ -711,10 +711,9 @@
                                                     
                                                     <td>
                                                         {% if order.payment_approved %}
-                                                        <i class="fa fa-check-circle" style="color: #2ecc71;" aria-hidden="true"></i>
+                                                        Approved
                                                         {% else %}
-                                                        <i class="fa fa-times-circle" style="color: #e74c3c;"></i>
-                                                        {% endif %}
+                                                        Approval Pending
                                                     </td>
         
                                                 </tr>
