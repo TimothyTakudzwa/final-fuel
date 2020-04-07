@@ -1163,7 +1163,7 @@ def download_pop(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document not found')
-        return redirect(f'/buyer:payment_release_notes/{document.transaction.id}')
+        redirect('buyer-transactions')
     return response    
 
 
