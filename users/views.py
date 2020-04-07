@@ -136,12 +136,12 @@ def allocated_fuel(request, sid):
         if request.POST['fuel_type'] == 'Petrol':
             if int(request.POST['quantity']) > company_quantity.unallocated_petrol:
                 messages.warning(request,
-                                 f'You can not allocate fuel above your company petrol capacity of {company_quantity.unallocated_petrol}')
+                                 f'You can not allocate fuel above your company petrol capacity of {company_quantity.unallocated_petrol}.')
                 return redirect(f'/users/allocated_fuel/{sid}')
             if request.POST['fuel_payment_type'] == "RTGS":
                 if float(request.POST['price']) > company_quantity.petrol_price:
                     messages.warning(request,
-                                     f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}')
+                                     f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}.')
                     return redirect(f'/users/allocated_fuel/{sid}')
                 else:
                     pass
@@ -173,19 +173,19 @@ def allocated_fuel(request, sid):
         else:
             if int(request.POST['quantity']) > company_quantity.unallocated_diesel:
                 messages.warning(request,
-                                 f'You can not allocate fuel above your company diesel capacity of {company_quantity.unallocated_diesel}')
+                                 f'You can not allocate fuel above your company diesel capacity of {company_quantity.unallocated_diesel}.')
                 return redirect(f'/users/allocated_fuel/{sid}')
             if request.POST['fuel_payment_type'] == "RTGS":
                 if float(request.POST['price']) > company_quantity.diesel_price:
                     messages.warning(request,
-                                     f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}')
+                                     f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}.')
                     return redirect(f'/users/allocated_fuel/{sid}')
                 else:
                     pass
             elif request.POST['fuel_payment_type'] == "USD":
                 if float(request.POST['price']) > company_quantity.usd_diesel_price:
                     messages.warning(request,
-                                     f'You can not set price above NOIC diesel price of {company_quantity.usd_diesel_price}')
+                                     f'You can not set price above NOIC diesel price of {company_quantity.usd_diesel_price}.')
                     return redirect(f'/users/allocated_fuel/{sid}')
                 else:
                     pass
@@ -205,7 +205,7 @@ def allocated_fuel(request, sid):
             depot.diesel_quantity = depot.diesel_quantity + int(request.POST['quantity'])
             company_quantity.unallocated_diesel = company_quantity.unallocated_diesel - int(request.POST['quantity'])
             company_quantity.save()
-            messages.success(request, 'Fuel allocation succesful')
+            messages.success(request, 'Fuel allocation succesfull.')
         fuel_updated.save()
         depot.save()
 
@@ -367,21 +367,21 @@ def allocation_update(request, id):
             if request.POST['fuel_type'] == 'Petrol':
                 if int(request.POST['quantity']) > company_quantity.unallocated_petrol:
                     messages.warning(request,
-                                     f'You can not allocate fuel above your company petrol quantity of {company_quantity.unallocated_petrol}')
+                                     f'You can not allocate fuel above your company petrol quantity of {company_quantity.unallocated_petrol}.')
                     return redirect('users:allocate')
                 fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['quantity'])
                 depot.petrol_quantity = depot.petrol_quantity + int(request.POST['quantity'])
                 if fuel_update.payment_type == "RTGS":
                     if float(request.POST['price']) > company_quantity.petrol_price:
                         messages.warning(request,
-                                         f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}')
+                                         f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}.')
                         return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                     else:
                         fuel_update.petrol_price = float(request.POST['price'])
                 elif fuel_update.payment_type == "USD":
                     if float(request.POST['price']) > company_quantity.usd_petrol_price:
                         messages.warning(request,
-                                         f'You can not set price above NOIC usd petrol price of {company_quantity.usd_petrol_price}')
+                                         f'You can not set price above NOIC usd petrol price of {company_quantity.usd_petrol_price}.')
                         return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                     else:
                         fuel_update.petrol_price = float(request.POST['price'])
@@ -393,7 +393,7 @@ def allocation_update(request, id):
             else:
                 if int(request.POST['quantity']) > company_quantity.unallocated_diesel:
                     messages.warning(request,
-                                     f'You can not allocate fuel above your company diesel quantity of {company_quantity.unallocated_diesel}')
+                                     f'You can not allocate fuel above your company diesel quantity of {company_quantity.unallocated_diesel}.')
                     return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                 fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['quantity'])
                 depot.diesel_quantity = depot.diesel_quantity + int(request.POST['quantity'])
@@ -401,14 +401,14 @@ def allocation_update(request, id):
                 if fuel_update.payment_type == "RTGS":
                     if float(request.POST['price']) > company_quantity.diesel_price:
                         messages.warning(request,
-                                         f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}')
+                                         f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}.')
                         return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                     else:
                         fuel_update.diesel_price = request.POST['price']
                 elif fuel_update.payment_type == "USD":
                     if float(request.POST['price']) > company_quantity.usd_diesel_price:
                         messages.warning(request,
-                                         f'You can not set price above NOIC usd diesel price of {company_quantity.usd_diesel_price}')
+                                         f'You can not set price above NOIC usd diesel price of {company_quantity.usd_diesel_price}.')
                         return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                     else:
                         fuel_update.diesel_price = request.POST['price']
@@ -563,17 +563,17 @@ def allocation_update(request, id):
                                                                               received_by=receiver)
                         depot_audit.save()
 
-            messages.success(request, 'Fuel allocation succesful')
+            messages.success(request, 'Fuel allocation successfull.')
             service_station = Subsidiaries.objects.filter(id=fuel_update.subsidiary.id).first()
             reference = 'fuel allocation'
             reference_id = fuel_update.id
-            action = f"You have allocated {request.POST['fuel_type']} quantity of {int(request.POST['quantity'])}L @ {fuel_update.petrol_price} "
+            action = f"You have allocated {request.POST['fuel_type']} quantity of {int(request.POST['quantity'])}L @ {fuel_update.petrol_price}. "
             Audit_Trail.objects.create(company=request.user.company, service_station=service_station, user=request.user,
                                        action=action, reference=reference, reference_id=reference_id)
             return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
 
         else:
-            messages.success(request, 'Subsidiary does not exists')
+            messages.success(request, 'Subsidiary does not exists.')
             return redirect('users:allocate')
     return render(request, 'users/allocate.html')
 
@@ -590,12 +590,12 @@ def allocation_update_main(request, id):
             if request.POST['fuel_type'] == 'Petrol':
                 if int(request.POST['quantity']) > company_quantity.unallocated_petrol:
                     messages.warning(request,
-                                     f'You can not allocate fuel above your company petrol quantity of {company_quantity.unallocated_petrol}')
+                                     f'You can not allocate fuel above your company petrol quantity of {company_quantity.unallocated_petrol}.')
                     return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                 fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['quantity'])
                 if float(request.POST['price']) > company_quantity.petrol_price:
                     messages.warning(request,
-                                     f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}')
+                                     f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}.')
                     return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                 else:
                     fuel_update.petrol_price = float(request.POST['price'])
@@ -605,12 +605,12 @@ def allocation_update_main(request, id):
             else:
                 if int(request.POST['quantity']) > company_quantity.unallocated_diesel:
                     messages.warning(request,
-                                     f'You can not allocate fuel above your company diesel quantity of {company_quantity.unallocated_diesel}')
+                                     f'You can not allocate fuel above your company diesel quantity of {company_quantity.unallocated_diesel}.')
                     return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                 fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['quantity'])
                 if float(request.POST['price']) > company_quantity.diesel_price:
                     messages.warning(request,
-                                     f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}')
+                                     f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}.')
                     return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                 else:
                     fuel_update.diesel_price = request.POST['price']
@@ -755,7 +755,7 @@ def allocation_update_main(request, id):
                                                                               received_by=receiver)
                         depot_audit.save()
 
-            messages.success(request, 'Fuel allocation succesful')
+            messages.success(request, 'Fuel allocation successfull.')
             service_station = Subsidiaries.objects.filter(id=fuel_update.subsidiary.id).first()
             reference = 'fuel allocation'
             reference_id = fuel_update.id
@@ -765,7 +765,7 @@ def allocation_update_main(request, id):
             return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
 
         else:
-            messages.success(request, 'Subsidiary does not exists')
+            messages.success(request, 'Subsidiary does not exists.')
             return redirect('users:allocate')
     return render(request, 'users/allocate.html')
 
@@ -846,7 +846,7 @@ def stations(request):
             fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=subsidiary,
                                                               limit=2000)
             fuel_update.save()
-            messages.success(request, 'Subsidiary created successfully')
+            messages.success(request, 'Subsidiary created successfully.')
             return render(request, 'users/service_stations.html',
                           {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo,
                            'zimbabwean_towns': zimbabwean_towns,
@@ -857,7 +857,7 @@ def stations(request):
             fuel_update = SubsidiaryFuelUpdate.objects.create(subsidiary=subsidiary,
                                                               limit=2000)
             fuel_update.save()
-            messages.success(request, 'Subsidiary created successfully')
+            messages.success(request, 'Subsidiary created successfully.')
             return render(request, 'users/service_stations.html',
                           {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo,
                            'zimbabwean_towns': zimbabwean_towns,
@@ -909,7 +909,7 @@ def suppliers_list(request):
 
         sup = User.objects.filter(email=email).first()
         if sup is not None:
-            messages.warning(request, f"{sup.email} already used in the system, please use a different email")
+            messages.warning(request, f"The email {sup.email} already used in the system, please use a different email.")
             return redirect('users:suppliers_list')
 
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
@@ -927,7 +927,7 @@ def suppliers_list(request):
                     user.stage = 'menu'
                     user.save()
                 else:
-                    messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+                    messages.warning(request, f"Oops , something went wrong, please try again")
             return render(request, 'users/suppliers_list.html',
                           {'suppliers': suppliers, 'form1': form1, 'allocate': 'show', 'fuel_update': fuel_update,
                            'form': form})
@@ -940,7 +940,7 @@ def suppliers_list(request):
                     user.stage = 'menu'
                     user.save()
                 else:
-                    messages.warning(request, f"Oops , Something Wen't Wrong, Please Try Again")
+                    messages.warning(request, f"Oops , something went wrong, please try again")
             return redirect(f'/users/allocated_fuel/{subsidiary.id}')
 
     return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1, 'form': form})
@@ -1081,7 +1081,7 @@ def supplier_user_edit(request, cid):
         supplier.supplier_role = request.POST['user_type']
         # supplier.supplier_role = request.POST['supplier_role']
         supplier.save()
-        messages.success(request, 'Your changes have been saved')
+        messages.success(request, 'Your changes have been saved.')
     return render(request, 'users/suppliers_list.html')
 
 
@@ -1188,7 +1188,7 @@ def myaccount(request):
         staff.phone_number = request.POST['phone_number']
         staff.company_position = request.POST['company_position']
         staff.save()
-        messages.success(request, 'Your changes have been saved')
+        messages.success(request, 'Your changes have been saved.')
 
     return render(request, 'users/profile.html')
 
@@ -1309,11 +1309,11 @@ def approve_applicant(request, id):
             selected_subsidiary = Subsidiaries.objects.filter(id=selected_id).first()
             applicant.subsidiary_id = selected_subsidiary.id
             applicant.save()
-            messages.success(request, f'Approval for {applicant.first_name} made successfully')
+            messages.success(request, f'{applicant.first_name.title()} has been approved successfully.')
             return redirect('users:waiting_for_approval')
 
         else:
-            messages.warning(request, 'oops! something went wrong')
+            messages.warning(request, 'Oops, something went wrong.')
             return redirect('users:waiting_for_approval')
 
 
@@ -1339,7 +1339,7 @@ def message_is_send(request, user, password):
         return True
     except Exception as e:
         messages.warning(request,
-                         f"Oops , something went wrong sending email, Please make sure you have internet access")
+                         f"Oops , something went wrong while sending email. Please make sure you have internet access.")
         return False
     return render(request, 'buyer/send_email.html')
 
@@ -1367,10 +1367,10 @@ def suppliers_delete(request, sid):
     supplier = User.objects.filter(id=sid).first()
     if request.method == 'POST':
         supplier.delete()
-        messages.success(request, f"{supplier.username} deleted successfully")
+        messages.success(request, f"{supplier.username.title()} deleted successfully")
         return redirect('users:suppliers_list')
     else:
-        messages.success(request, 'user does not exists')
+        messages.success(request, 'User does not exists.')
         return redirect('users:suppliers_list')
 
 
@@ -1384,7 +1384,7 @@ def delete_depot_staff(request, id):
         messages.success(request, f"{supplier.username} deleted successfully")
         return redirect('users:suppliers_list')
     else:
-        messages.success(request, 'user does not exists')
+        messages.success(request, 'User does not exists.')
         return redirect('users:suppliers_list')
 
 
@@ -1445,7 +1445,7 @@ def delete_user(request, id):
         form = ActionForm(request.POST)
         if form.is_valid():
             supplier.delete()
-            messages.success(request, 'User has been deleted')
+            messages.success(request, 'User has been deleted.')
         return redirect('administrator:blog_all_posts')
     form = ActionForm()
 
@@ -1473,7 +1473,7 @@ def depot_staff(request):
         email = request.POST.get('email')
         sup = User.objects.filter(email=email).first()
         if sup is not None:
-            messages.warning(request, f"{sup.email} already used in the system, please use a different email")
+            messages.warning(request, f"The emai {sup.email} is already being used in the system, please use a different email.")
             return redirect('users:suppliers_list')
 
         password = random_password()
@@ -1498,7 +1498,7 @@ def depot_staff(request):
 
                 # return render(request, 'buyer/email_send.html')
             else:
-                messages.warning(request, f"Oops , something went wrong, please try again")
+                messages.warning(request, f"Oops , something went wrong. Please try again.")
                 # return render(request, 'buyer/email_send.html')
         # messages.success(request, f"{username.lower()} Registered as Depot Rep Successfully")
         return redirect('users:suppliers_list')
@@ -1518,16 +1518,16 @@ def initial_password_change(request):
         password1 = request.POST['new_password1']
         password2 = request.POST['new_password2']
         if password1 != password2:
-            messages.warning(request, "Passwords don't match")
+            messages.warning(request, "Passwords don't match.")
             return redirect('users:initial-password-change')
         elif len(password1) < 8:
-            messages.warning(request, "Password is too short")
+            messages.warning(request, "Password is too short.")
             return redirect('users:initial-password-change')
         elif password1.isnumeric():
-            messages.warning(request, "Password can not be entirely numeric!")
+            messages.warning(request, "Password can not be entirely numeric.")
             return redirect('users:initial-password-change')
         elif not password1.isalnum():
-            messages.warning(request, "Password should be alphanumeric")
+            messages.warning(request, "Password should be alphanumeric.")
             return redirect('users:initial-password-change')
         else:
             user = request.user
@@ -1536,7 +1536,7 @@ def initial_password_change(request):
             user.save()
             update_session_auth_hash(request, user)
 
-            messages.success(request, 'Password successfully changed')
+            messages.success(request, 'Password successfully changed.')
             return redirect('users:allocate')
     return render(request, 'users/initial_pass_change.html')
 
@@ -1553,7 +1553,7 @@ def edit_subsidiary(request, id):
             subsidiary_update.opening_time = request.POST['opening_time']
             subsidiary_update.closing_time = request.POST['closing_time']
             subsidiary_update.save()
-            messages.success(request, 'Subsidiary updated successfully')
+            messages.success(request, 'Subsidiary updated successfully.')
             reference = 'subsidiary profile update'
             reference_id = subsidiary_update.id
             action = f"You have updated the profile of {subsidiary_update.name}"
@@ -1561,7 +1561,7 @@ def edit_subsidiary(request, id):
                                        user=request.user, action=action, reference=reference, reference_id=reference_id)
             return redirect('users:stations')
         else:
-            messages.success(request, 'Subsidiary does not exists')
+            messages.success(request, 'Subsidiary does not exists.')
             return redirect('users:stations')
 
 
@@ -1572,11 +1572,11 @@ def delete_subsidiary(request, id):
         if Subsidiaries.objects.filter(id=id).exists():
             subsidiary_update = Subsidiaries.objects.filter(id=id).first()
             subsidiary_update.delete()
-            messages.success(request, 'Subsidiary deleted successfully')
+            messages.success(request, 'Subsidiary deleted successfully.')
             return redirect('users:stations')
 
         else:
-            messages.success(request, 'Subsidiary does not exists')
+            messages.success(request, 'Subsidiary does not exists.')
             return redirect('users:stations')
 
 
@@ -1589,16 +1589,16 @@ def edit_fuel_prices(request, id):
             company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
             if float(request.POST['petrol_price']) > company_capacity.petrol_price:
                 messages.warning(request,
-                                 f'You can not set price above NOIC petrol price of {company_capacity.petrol_price}')
+                                 f'You can not set price above NOIC petrol price of {company_capacity.petrol_price}.')
                 return redirect('users:allocate')
             prices_update.petrol_price = request.POST['petrol_price']
             if float(request.POST['diesel_price']) > company_capacity.diesel_price:
                 messages.warning(request,
-                                 f'You can not set price above NOIC diesel price of {company_capacity.diesel_price}')
+                                 f'You can not set price above NOIC diesel price of {company_capacity.diesel_price}.')
                 return redirect('users:allocate')
             prices_update.diesel_price = request.POST['diesel_price']
             prices_update.save()
-            messages.success(request, 'Prices of fuel updated successfully')
+            messages.success(request, 'Prices of fuel updated successfully.')
             service_station = Subsidiaries.objects.filter(id=prices_update.subsidiary.id).first()
             reference = 'prices updates'
             reference_id = prices_update.id
@@ -1608,7 +1608,7 @@ def edit_fuel_prices(request, id):
             return redirect('users:allocate')
 
         else:
-            messages.success(request, 'Fuel object does not exists')
+            messages.success(request, 'Fuel object does not exists.')
             return redirect('users:allocate')
 
 
@@ -1621,16 +1621,16 @@ def edit_suballocation_fuel_prices(request, id):
             company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
             if float(request.POST['petrol_price']) > company_capacity.petrol_price:
                 messages.warning(request,
-                                 f'You can not set price above NOIC petrol price of {company_capacity.petrol_price}')
+                                 f'You can not set price above NOIC petrol price of {company_capacity.petrol_price}.')
                 return redirect(f'/users/allocated_fuel/{prices_update.subsidiary.id}')
             prices_update.petrol_price = request.POST['petrol_price']
             if float(request.POST['diesel_price']) > company_capacity.diesel_price:
                 messages.warning(request,
-                                 f'You can not set price above NOIC diesel price of {company_capacity.diesel_price}')
+                                 f'You can not set price above NOIC diesel price of {company_capacity.diesel_price}.')
                 return redirect(f'/users/allocated_fuel/{prices_update.subsidiary.id}')
             prices_update.diesel_price = request.POST['diesel_price']
             prices_update.save()
-            messages.success(request, 'Prices of fuel updated successfully')
+            messages.success(request, 'Prices of fuel updated successfully.')
             service_station = Subsidiaries.objects.filter(id=prices_update.subsidiary.id).first()
             reference = 'prices updates'
             reference_id = prices_update.id
@@ -1640,7 +1640,7 @@ def edit_suballocation_fuel_prices(request, id):
             return redirect(f'/users/allocated_fuel/{prices_update.subsidiary.id}')
 
         else:
-            messages.success(request, 'Fuel object does not exists')
+            messages.success(request, 'Fuel object does not exists.')
             return redirect('users:allocate')
 
 
@@ -1659,7 +1659,7 @@ def edit_ss_rep(request, id):
             return redirect('users:suppliers_list')
 
         else:
-            messages.success(request, 'user does not exists')
+            messages.success(request, 'User does not exists.')
             return redirect('users:suppliers_list')
 
 
@@ -1674,11 +1674,11 @@ def edit_depot_rep(request, id):
             user_update.email = request.POST['email']
             user_update.phone_number = request.POST['phone_number']
             user_update.save()
-            messages.success(request, 'User profile updated successfully')
+            messages.success(request, 'User profile updated successfully.')
             return redirect('users:suppliers_list')
 
         else:
-            messages.success(request, 'user does not exists')
+            messages.success(request, 'User does not exists.')
             return redirect('users:suppliers_list')
 
 
@@ -1698,7 +1698,7 @@ def company_profile(request):
         compan.destination_bank = request.POST['destination_bank']
         compan.account_number = request.POST['account_number']
         compan.save()
-        messages.success(request, 'Company profile updated successfully')
+        messages.success(request, 'Company profile updated successfully.')
         return redirect('users:company_profile')
 
     return render(request, 'users/company_profile.html', {'compan': compan, 'num_of_subsidiaries': num_of_subsidiaries})
@@ -1713,11 +1713,11 @@ def company_petrol(request, id):
             petrol_update.petrol_price = request.POST['petrol_price']
             petrol_update.unallocated_petrol = request.POST['petrol_quantity']
             petrol_update.save()
-            messages.success(request, 'Quantity of petrol updated successfully')
+            messages.success(request, 'Quantity of petrol updated successfully.')
             return redirect('users:allocate')
 
         else:
-            messages.success(request, 'Fuel object does not exists')
+            messages.success(request, 'Fuel object does not exists.')
             return redirect('users:allocate')
 
 
@@ -1730,11 +1730,11 @@ def company_diesel(request, id):
             diesel_update.unallocated_diesel = request.POST['diesel_quantity']
             diesel_update.diesel_price = request.POST['diesel_price']
             diesel_update.save()
-            messages.success(request, 'Quantity of diesel updated successfully')
+            messages.success(request, 'Quantity of diesel updated successfully.')
             return redirect('users:allocate')
 
         else:
-            messages.warning(request, 'Fuel object does not exists')
+            messages.warning(request, 'Fuel object does not exists.')
             return redirect('users:allocate')
 
 
@@ -1753,7 +1753,7 @@ def edit_allocation(request, id):
                 company_fuel = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
                 if int(request.POST['diesel_quantity']) > int(company_fuel.unallocated_diesel):
                     messages.warning(request,
-                                     'You can not edit an allocation to an amount greater than the company unallocated diesel quantity ')
+                                     'You can not edit an allocation to an amount greater than the company unallocated diesel quantity. ')
                     return redirect('users:allocate')
                 company_fuel.unallocated_diesel = int(company_fuel.unallocated_diesel) + int(
                     int(correction.diesel_quantity) - int(request.POST['diesel_quantity']))
@@ -1769,18 +1769,18 @@ def edit_allocation(request, id):
                 company_fuel = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
                 if int(request.POST['petrol_quantity']) > int(company_fuel.unallocated_petrol):
                     messages.warning(request,
-                                     'You can not edit an allocation to an amount greater than the company unallocated petrol quantity ')
+                                     'You can not edit an allocation to an amount greater than the company unallocated petrol quantity. ')
                     return redirect('users:allocate')
                 company_fuel.unallocated_petrol = int(company_fuel.unallocated_petrol) + int(
                     int(correction.petrol_quantity) - int(request.POST['petrol_quantity']))
                 company_fuel.save()
                 correction.petrol_quantity = request.POST['petrol_quantity']
                 correction.save()
-            messages.success(request, 'Quantity of fuel corrected successfully')
+            messages.success(request, 'Quantity of fuel corrected successfully.')
             return redirect('users:allocate')
 
         else:
-            messages.warning(request, 'Fuel object does not exists')
+            messages.warning(request, 'Fuel object does not exists.')
             return redirect('users:allocate')
 
 
@@ -1833,7 +1833,7 @@ def download_application(request, id):
         response = HttpResponse(application.application_document, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found')
+        messages.warning(request, 'Document not found.')
         return redirect('users:client-application')
     return response
 
@@ -1847,7 +1847,7 @@ def download_tax_clearance(request, id):
         response = HttpResponse(application.tax_clearance, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found')
+        messages.warning(request, 'Document not found.')
         return redirect('users:client-application')
     return response
 
@@ -1861,7 +1861,7 @@ def download_cr14(request, id):
         response = HttpResponse(application.cr14, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found')
+        messages.warning(request, 'Document not found.')
         return redirect('users:client-application')
     return response
 
@@ -1875,7 +1875,7 @@ def download_cr6(request, id):
         response = HttpResponse(application.cr6, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found')
+        messages.warning(request, 'Document not found.')
         return redirect('users:client-application')
     return response
 
@@ -1889,7 +1889,7 @@ def download_proof_of_residence(request, id):
         response = HttpResponse(application.proof_of_residence, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found')
+        messages.warning(request, 'Document not found.')
         return redirect('users:client-application')
     return response
 
@@ -1903,7 +1903,7 @@ def download_cert_of_inc(request, id):
         response = HttpResponse(application.cert_of_inc, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found')
+        messages.warning(request, 'Document not found.')
         return redirect('users:client-application')
     return response
 
@@ -1917,7 +1917,7 @@ def download_document(request, id):
         response = HttpResponse(document.id_document, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found')
+        messages.warning(request, 'Document not found.')
         return redirect('users:client-application')
     return response
 
@@ -1932,14 +1932,14 @@ def application_approval(request, id):
         for account in all_accounts:
             accounts_list.append(account.account_number)
         if new_account in accounts_list:
-            messages.warning(request, 'Account number already exists!')
+            messages.warning(request, 'Account number already exists.')
             return redirect('users:client-application')
         else:
             account = Account.objects.filter(id=id).first()
             account.is_verified = True
             account.account_number = new_account
             account.save()
-            messages.success(request, 'Account successfully approved!!!')
+            messages.success(request, 'Account successfully approved.')
             return redirect('users:client-application')
 
 
@@ -2059,10 +2059,10 @@ def upload_users(request):
                                         pass
                                         # error log should be created
 
-                        messages.success(request, 'Successfully uploaded data')
+                        messages.success(request, 'Successfully uploaded data.')
                         return redirect('users:upload_users')
                     except KeyError:
-                        messages.warning(request, 'Please use the standard file')
+                        messages.warning(request, 'Please use the standard file.')
                         return redirect('users:upload_users')
                 elif file.name.endswith('.xlsx'):
                     df = pd.DataFrame(pd.read_excel(file))
@@ -2167,13 +2167,13 @@ def upload_users(request):
                                         pass
                                         # error log should be created
 
-                        messages.success(request, 'Successfully uploaded data')
+                        messages.success(request, 'Successfully uploaded data.')
                         return redirect('users:upload_users')
                     except KeyError:
-                        messages.warning(request, 'Please use the standard file')
+                        messages.warning(request, 'Please use the standard file.')
                         return redirect('users:upload_users')
             else:
-                messages.warning(request, "Uploaded file doesn't meet the required format")
+                messages.warning(request, "Uploaded file doesn't meet the required format.")
                 return redirect('users:upload_users')
         elif request.POST.get('account_id') is not None:
             buyer_transactions = AccountHistory.objects.filter(account_id=int(request.POST.get('account_id')))
@@ -2239,7 +2239,7 @@ def place_order(request):
             my_company = request.user.company
             Notification.objects.create(message=message, company=my_company, reference_id=order.id,
                                         depot_id=noic_depot.id, action="ORDER")
-            messages.success(request, 'placed order successfully')
+            messages.success(request, 'Placed order successfully.')
             return redirect('users:orders')
         else:
             if currency == 'USD':
@@ -2266,7 +2266,7 @@ def place_order(request):
             my_company = request.user.company
             Notification.objects.create(message=message, reference_id=order.id, company=my_company,
                                         depot_id=noic_depot.id, action="ORDER")
-            messages.success(request, 'placed order successfully')
+            messages.success(request, 'Placed order successfully.')
             return redirect('users:orders')
 
 
@@ -2325,7 +2325,7 @@ def delivery_note(request, id):
             allocation.d_note = request.FILES.get('d_note')
             allocation.order.status = 'Complete'
             allocation.save()
-            messages.success(request, 'Delivery note successfully uploaded')
+            messages.success(request, 'Delivery note successfully uploaded.')
             return redirect('users:orders')
         else:
             pass
@@ -2340,6 +2340,6 @@ def download_proof(request, id):
         response = HttpResponse(document.proof_of_payment, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found')
+        messages.warning(request, 'Document not found.')
         return redirect('users:orders')
     return response

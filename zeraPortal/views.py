@@ -59,12 +59,12 @@ def dashboard(request):
             description = f"You have registered another supplier company {new_company.name}"
             Activity.objects.create(company=new_company, user=request.user, action=action, description=description,
                                     reference_id=new_company.id)
-            messages.success(request, 'Company successfully registered')
+            messages.success(request, 'Company successfully registered.')
             return render(request, 'zeraPortal/companies.html',
                           {'companies': companies, 'new_company': new_company, 'administrater': 'show',
                            'zimbabwean_towns': zimbabwean_towns})
         else:
-            messages.warning(request, 'License number already exists!!!')
+            messages.warning(request, 'License number already exists.')
             return redirect('zeraPortal:dashboard')
     return render(request, 'zeraPortal/companies.html',
                   {'companies': companies, 'administrater': 'hide', 'zimbabwean_towns': zimbabwean_towns})
@@ -126,10 +126,10 @@ def edit_company(request, id):
         description = f"You have updated supplier company {company.name}"
         Activity.objects.create(company=company, user=request.user, action=action, description=description,
                                 reference_id=company.id)
-        messages.success(request, 'Company details updated successfully')
+        messages.success(request, 'Company details updated successfully.')
         return redirect('zeraPortal:dashboard')
     else:
-        messages.warning(request, 'License number already exists!!!')
+        messages.warning(request, 'License number already exists.')
         return redirect('zeraPortal:dashboard')
 
 
@@ -145,7 +145,7 @@ def add_supplier_admin(request, id):
     check_email = User.objects.filter(email=email).exists()
     is_valid = validate_email(email, verify=True)
     if check_email:
-        messages.warning(request, f"Email already used in the system, please use a different email")
+        messages.warning(request, f"Email already used in the system, please use a different email.")
         return redirect('zeraPortal:dashboard')
     # elif not is_valid:
     #     messages.warning(request, 'The email is not valid, Please provide a valid email and try again')
@@ -168,7 +168,7 @@ def add_supplier_admin(request, id):
         description = f"You have created supplier admin for {user.first_name} for {company.name}"
         Activity.objects.create(company=company, user=request.user, action=action, description=description,
                                 reference_id=user.id)
-        messages.success(request, 'User successfully created')
+        messages.success(request, 'User successfully created.')
         return redirect('zeraPortal:dashboard')
 
 
@@ -184,7 +184,7 @@ def block_company(request, id):
         description = f"You have blocked supplier company {company.name}"
         Activity.objects.create(company=company, user=request.user, action=action, description=description,
                                 reference_id=company.id)
-        messages.success(request, f'{company.name} Successfully Blocked')
+        messages.success(request, f'{company.name.title()} successfully blocked.')
         return redirect('zeraPortal:dashboard')
 
 
@@ -200,7 +200,7 @@ def unblock_company(request, id):
         description = f"You have unblocked supplier company {company.name}"
         Activity.objects.create(company=company, user=request.user, action=action, description=description,
                                 reference_id=company.id)
-        messages.success(request, f'{company.name} Successfully Unblocked')
+        messages.success(request, f'{company.name.title()} successfully unblocked.')
         return redirect('zeraPortal:dashboard')
 
 
@@ -253,7 +253,7 @@ def download_release_note(request, id):
         response = HttpResponse(document.release_note, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document Not Found.')
         return redirect(f'/buyer:ayment_release_notes/{document.transaction.id}')
     return response
 
@@ -298,7 +298,7 @@ def view_confirmation_doc(request, id):
         response = HttpResponse(delivery.confirmation_document, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found.')
         redirect('zeraPortal:payment_and_schedules')
     return response
 
@@ -312,7 +312,7 @@ def view_supplier_doc(request, id):
         response = HttpResponse(delivery.supplier_document, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found.')
         redirect('zeraPortal:payment_and_schedules')
     return response
 
@@ -337,7 +337,7 @@ def download_application(request, id):
         response = HttpResponse(subsidiary.application_form, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found.')
         return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
     return response
 
@@ -351,7 +351,7 @@ def download_council(request, id):
         response = HttpResponse(subsidiary.council_approval, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found.')
         return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
     return response
 
@@ -365,7 +365,7 @@ def download_pop(request, id):
         response = HttpResponse(subsidiary.proof_of_payment, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found.')
         return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
     return response
 
@@ -379,7 +379,7 @@ def download_fire_brigade_doc(request, id):
         response = HttpResponse(subsidiary.fire_brigade, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found.')
         return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
     return response
 
@@ -393,7 +393,7 @@ def download_ema(request, id):
         response = HttpResponse(subsidiary.ema, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found.')
         return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
     return response
 
@@ -423,10 +423,10 @@ def change_licence(request, id):
             description = f"You have updated licence for subsidiary {subsidiary.name}"
             Activity.objects.create(subsidiary=subsidiary, user=request.user, action=action, description=description,
                                     reference_id=subsidiary.id)
-            messages.success(request, f'{subsidiary.name} License updated successfully')
+            messages.success(request, f'{subsidiary.name.title()} license updated successfully.')
             return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
         else:
-            messages.warning(request, 'License number already exists!!')
+            messages.warning(request, 'License number already exists.')
             return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
 
 
@@ -442,7 +442,7 @@ def block_licence(request, id):
         description = f"You have cancelled licence for subsidiary {subsidiary.name}"
         Activity.objects.create(subsidiary=subsidiary, user=request.user, action=action, description=description,
                                 reference_id=subsidiary.id)
-        messages.info(request, f'{subsidiary.name} License Blocked')
+        messages.info(request, f'{subsidiary.name.title()}"s license blocked successfully.')
         return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
 
 
@@ -469,7 +469,7 @@ def view_delivery_note(request, id):
         response = HttpResponse(delivery.delivery_note, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found.')
         redirect(f'/zeraPortal/payment_and_schedules/{delivery.transaction.id}')
     return response
 
@@ -506,7 +506,7 @@ def noic_delivery_note(request, id):
         response = HttpResponse(delivery.d_note, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document Not Found')
+        messages.warning(request, 'Document not found')
         redirect(f'/zeraPortal/noic_allocations/{delivery.assigned_depot.id}')
     return response
 
@@ -523,7 +523,7 @@ def unblock_licence(request, id):
         description = f"You have unblocked licence for subsidiary {subsidiary.name}"
         Activity.objects.create(subsidiary=subsidiary, user=request.user, action=action, description=description,
                                 reference_id=subsidiary.id)
-        messages.success(request, f'{subsidiary.name} License unblocked successfully')
+        messages.success(request, f'{subsidiary.name.title()}"s license unblocked successfully.')
         return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
 
 
@@ -543,10 +543,10 @@ def add_licence(request, id):
             description = f"You have approved subsidiary {subsidiary.name}"
             Activity.objects.create(subsidiary=subsidiary, user=request.user, action=action, description=description,
                                     reference_id=subsidiary.id)
-            messages.success(request, f'{subsidiary.name} Approved Successfully')
+            messages.success(request, f'{subsidiary.name.title()} approved successfully.')
             return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
         else:
-            messages.warning(request, 'License number already exists!!')
+            messages.warning(request, 'License number already exists.')
             return redirect(f'/zeraPortal/company-subsidiaries/{subsidiary.company.id}')
 
 

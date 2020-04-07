@@ -124,16 +124,16 @@ def login_user(request):
                             return redirect("noic:dashboard")
                     # wrong password
                     else:
-                        messages.info(request, 'Wrong password')
+                        messages.info(request, 'Wrong password.')
                         return redirect('login')
                 # user hasn't completed registration yet
                 else:
                     messages.info(request, 'Your account is waiting for approval. Please check your email '
-                                           'or contact your company administrator')
+                                           'or contact your company administrator.')
                     return redirect('login')
             # throw account not found error
             else:
-                messages.info(request, 'Please register first')
+                messages.info(request, 'Please register first.')
                 return redirect('login')
     return render(request, 'buyer/signin.html', context=context)
 
@@ -166,12 +166,12 @@ def token_is_send(request, auth_user):
         msg = EmailMultiAlternatives(subject, message, sender, [f'{auth_user.email}'])
         msg.send()
 
-        messages.success(request, f"{auth_user.first_name}  {auth_user.last_name} Registered successfully")
+        messages.success(request, f"{auth_user.first_name}  {auth_user.last_name} has been registered successfully.")
         return True
     except Exception:
-        messages.warning(request, f"Oops , something wentt wrong, please try again")
+        messages.warning(request, f"Oops , something went wrong, please try again.")
         return False
-        messages.success(request, ('Your profile was successfully updated!'))
+        messages.success(request, ('Your profile has been successfully updated.'))
     return render(request, 'buyer/send_email.html')
 
 
@@ -201,7 +201,7 @@ def register(request):
                                             last_name=last_name, is_active=False)
             if token_is_send(request, auth_user):
                 if auth_user.is_active:
-                    messages.success(auth_user.phone_number, "You have been registered succesfully")
+                    messages.success(auth_user.phone_number, "You have been registered successfully.")
                     auth_user.stage = 'requesting'
                     auth_user.save()
 
@@ -211,7 +211,7 @@ def register(request):
                 return render(request, 'buyer/email_send.html')
 
         else:
-            msg = "Error!!! We have a user with this user email-id"
+            msg = "Error. We have a user with this user email-id."
             messages.error(request, msg)
             return redirect('buyer-register')
     else:
@@ -258,18 +258,18 @@ def change_password(request):
 
         if authenticate(request, username=request.user.username, password=old):
             if new1 != new2:
-                messages.warning(request, "Passwords don't match")
+                messages.warning(request, "Passwords don't match.")
                 return redirect('bchange-password')
             elif new1 == old:
-                messages.warning(request, "New password can not be similar to the old one")
+                messages.warning(request, "New password can not be similar to the old one.")
                 return redirect('bchange-password')
             elif len(new1) < 8:
-                messages.warning(request, "Password is too short")
+                messages.warning(request, "Password is too short.")
                 return redirect('bchange-password')
             elif new1.isnumeric():
-                messages.warning(request, "Password can not be entirely numeric!")
+                messages.warning(request, "Password can not be entirely numeric.")
             elif not new1.isalnum():
-                messages.warning(request, "Password should be alphanumeric")
+                messages.warning(request, "Password should be alphanumeric.")
                 return redirect('bchange-password')
             else:
                 current_user = request.user
@@ -277,10 +277,10 @@ def change_password(request):
                 current_user.save()
                 update_session_auth_hash(request, current_user)
 
-                messages.success(request, 'Password successfully changed')
+                messages.success(request, 'Password has been successfully changed.')
                 return redirect('buyer-profile')
         else:
-            messages.warning(request, 'Wrong old password, please try again')
+            messages.warning(request, 'Wrong old password, please try again.')
             return redirect('bchange-password')
     return render(request, 'buyer/change_password.html', context=context)
 
@@ -303,7 +303,7 @@ def profile(request):
 
         if authenticate(request, username=request.user.username, password=old):
             if new1 != new2:
-                messages.warning(request, "Passwords don't match")
+                messages.warning(request, "Passwords don't match.")
                 return redirect('buyer-profile')
             else:
                 current_user = request.user
@@ -311,10 +311,10 @@ def profile(request):
                 current_user.save()
                 update_session_auth_hash(request, current_user)
 
-                messages.success(request, 'Password successfully changed')
+                messages.success(request, 'Password successfully changed.')
                 return redirect('buyer-profile')
         else:
-            messages.warning(request, 'Wrong old password, please try again')
+            messages.warning(request, 'Wrong old password, please try again.')
             return redirect('buyer-profile')
 
     context = {
@@ -389,7 +389,7 @@ def fuel_finder(request):
             fuel_request_item.wait = True
             fuel_request_item.save()
 
-            messages.success(request, f'Kindly note your request has been made ')
+            messages.success(request, f'Your request has been made. ')
 
             message = f'{request.user.company.name.title()} made a request of {fuel_request_item.amount}L' \
                       f' {fuel_request_item.fuel_type.lower()}'
@@ -477,7 +477,7 @@ def dashboard(request):
             description = f"You have made fuel request of {fuel_request_object.amount} {fuel_request_object.fuel_type}"
             Activity.objects.create(company=request.user.company, user=request.user, action=action,
                                     description=description, reference_id=fuel_request_object.id)
-            messages.success(request, f'Kindly note your request has been made ')
+            messages.success(request, f'Kindly note your request has been made. ')
             message = f'{request.user.first_name} {request.user.last_name} made a request of ' \
                       f'{fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()}'
             Notification.objects.create(message=message, user=request.user, reference_id=fuel_request_object.id,
@@ -512,7 +512,7 @@ def dashboard(request):
             description = f"You have made fuel request of {fuel_request_object.amount} {fuel_request_object.fuel_type}"
             Activity.objects.create(company=request.user.company, user=request.user, action=action,
                                     description=description, reference_id=fuel_request_object.id)
-            messages.success(request, f'Fuel request has been submitted successfully and now waiting for an offer')
+            messages.success(request, f'Fuel request has been submitted successfully and is now awaiting an offer.')
             message = f'{request.user.first_name} {request.user.last_name} made a request of ' \
                       f'{fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()}'
             Notification.objects.create(message=message, user=request.user, reference_id=fuel_request_object.id,
@@ -551,7 +551,7 @@ def dashboard(request):
                 else:
                     offer = Offer.objects.filter(id=offer_id).first()
                     sub = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
-                    messages.info(request, "Match found")
+                    messages.info(request, "Match found.")
 
                     action = "Fuel Request"
                     description = f"You have made fuel request of {fuel_request_object.amount} {fuel_request_object.fuel_type}"
@@ -638,11 +638,11 @@ def accept_offer(request, id):
         description = f"You have accepted offer of {offer.quantity}L {offer.request.fuel_type}"
         Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description,
                                 reference_id=offer.id)
-        messages.warning(request, "Your request has been saved successfully")
+        messages.warning(request, "Your request has been saved successfully.")
         return redirect("buyer-transactions")
     else:
         messages.info(request,
-                      f"You have no account with {offer.supplier.company.name} yet, please apply or wait for approval if you have already applied")
+                      f"You have no account with {offer.supplier.company.name} yet, please apply or wait for approval if you have already applied.")
         return redirect("accounts-status")
 
 
@@ -667,7 +667,7 @@ def reject_offer(request, id):
 
     # FuelRequest.objects.filter(id=offer.request.id).update(is_complete=True)
     messages.success(request,
-                     "Your request has been saved and as offer updates are coming you will receive notifications")
+                     "Your request has been saved and as offer updates are coming you will receive notifications.")
     return redirect("buyer-fuel-request")
 
 
@@ -711,7 +711,7 @@ def transactions(request):
                 depot=Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
                 comment=request.POST.get('comment')
             )
-            messages.success(request, 'Transaction successfully reviewed')
+            messages.success(request, 'Transaction successfully reviewed.')
             return redirect('buyer-transactions')
 
     buyer = request.user
@@ -755,7 +755,7 @@ def transactions_review_delete(request, transaction_id):
     from supplier.models import UserReview
     rev = UserReview.objects.filter(id=transaction_id).first()
     rev.delete()
-    messages.success(request, 'Review successfully deleted')
+    messages.success(request, 'Review successfully deleted.')
     return redirect("buyer-transactions")
 
 
@@ -918,7 +918,7 @@ def delivery_schedules(request):
         schedule = DeliverySchedule.objects.get(id=delivery_id)
         schedule.confirmation_date = confirmation_date
         schedule.save()
-        messages.success(request, 'Delivery successfully confirmed!!!')
+        messages.success(request, 'Delivery successfully confirmed.')
         message = f"Delivery confirmed for {schedule.transaction.buyer.company}, Click to view confirmation document"
         Notification.objects.create(user=request.user, action='DELIVERY', message=message, reference_id=schedule.id)
         return redirect('delivery-schedule')
@@ -1005,13 +1005,13 @@ def make_direct_request(request):
                 'dipping_stick_required') == "on" else False
             fuel_request_object.meter_required = True if request.POST.get('meter_required') == "on" else False
             fuel_request_object.save()
-            messages.success(request, f"Successfully made an order to {supplier.company.name}")
+            messages.success(request, f"Successfully made an order to {supplier.company.name}.")
             message = f'{request.user.company.name.title()} made a request of ' \
                       f'{fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()}'
             Notification.objects.create(user=supplier, message=message, reference_id=fuel_request_object.id,
                                         action="new_request")
         else:
-            messages.warning(request, f"Supplier not found")
+            messages.warning(request, f"Supplier not found.")
 
     return redirect('buyer:accounts')
 
@@ -1030,7 +1030,7 @@ def edit_account_details(request, id):
     if request.method == "POST":
         account.account_number = request.POST.get('account_number')
         account.save()
-        messages.success(request, f"Successfully made changes to account details")
+        messages.success(request, f"Successfully made changes to account details.")
     return redirect('buyer:accounts')
 
 
@@ -1078,7 +1078,7 @@ def make_private_request(request):
         message = f'{request.user.company.name.title()} made a private request of' \
                   f' {fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()} '
         # Notification.objects.create(user=supplier,message=message, reference_id=fuel_request.id, action="new_request")
-        messages.success(request, f"Successfully made a private order to uor suppliers")
+        messages.success(request, f"Successfully made a private order to our suppliers.")
 
     return redirect('buyer:accounts')
 
@@ -1097,7 +1097,7 @@ def proof_of_payment(request, id):
         transaction = Transaction.objects.filter(id=id).first()
         if transaction is not None:
             if transaction.pending_proof_of_payment == True:
-                messages.warning(request, 'Please wait for the supplier to approve the existing proof of payment')
+                messages.warning(request, 'Please wait for the supplier to approve the existing proof of payment.')
                 return redirect('buyer-transactions')
             else:
                 account = Account.objects.filter(buyer_company=request.user.company).first()
@@ -1114,7 +1114,7 @@ def proof_of_payment(request, id):
                 description = f"You have uploaded proof of payment for transaction of {transaction.offer.quantity}L {transaction.offer.request.fuel_type}"
                 Activity.objects.create(company=request.user.company, user=request.user, action=action,
                                         description=description, reference_id=transaction.id)
-                messages.success(request, 'Proof of payment successfully uploaded')
+                messages.success(request, 'Proof of payment successfully uploaded.')
                 return redirect('buyer-transactions')
         else:
             pass
@@ -1133,7 +1133,7 @@ def delivery_note(request, id):
             description = f"You have uploaded d-note for transaction of {payment.transaction.offer.quantity}L {payment.transaction.offer.request.fuel_type}"
             Activity.objects.create(company=request.user.company, user=request.user, action=action,
                                     description=description, reference_id=payment.transaction.id)
-            messages.success(request, 'Delivery note successfully uploaded')
+            messages.success(request, 'Delivery note successfully uploaded.')
             return redirect(f'/buyer/payment_release_notes/{payment.transaction.id}')
         else:
             pass
@@ -1148,7 +1148,7 @@ def download_release_note(request, id):
         response = HttpResponse(document.release_note, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found')
+        messages.warning(request, 'Document not found.')
         return redirect(f'/buyer:payment_release_notes/{document.transaction.id}')
     return response
 
@@ -1162,7 +1162,7 @@ def download_pop(request, id):
         response = HttpResponse(document.proof_of_payment, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found')
+        messages.warning(request, 'Document not found.')
         response = redirect('buyer-transactions')
     return response    
 
@@ -1230,7 +1230,7 @@ def download_application(request, id):
         response = HttpResponse(company.application_form, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.info(request, f'Document not found, please wait for {company.name} to upload application form')
+        messages.info(request, f'Document not found, please wait for {company.name} to upload application form.')
         return redirect('accounts-status')
     return response
 
@@ -1252,7 +1252,7 @@ def upload_application(request, id):
                                id_document=ids, applied_by=request.user, proof_of_residence=proof_of_residence,
                                cr14=cr14,
                                cr6=cr6, tax_clearance=tax_clearance, cert_of_inco=cert_of_inco)
-        messages.success(request, 'Application successfully send')
+        messages.success(request, 'Application successfully sent.')
     return redirect('accounts-status')
 
 
@@ -1267,7 +1267,7 @@ def company_profile(request):
         compan.destination_bank = request.POST['destination_bank']
         compan.account_number = request.POST['account_number']
         compan.save()
-        messages.success(request, 'Company profile updated successfully')
+        messages.success(request, 'Company profile updated successfully.')
         return redirect('buyer-profile')
 
 
@@ -1297,12 +1297,12 @@ def create_branch(request):
         description = request.POST['description']
         check_name = DeliveryBranch.objects.filter(name=name, company=request.user.company).exists()
         if check_name:
-            messages.warning(request, 'You already have a branch with a similar name!')
+            messages.warning(request, 'You already have a branch with a similar name.')
             return redirect('buyer:delivery-branches')
         else:
             DeliveryBranch.objects.create(name=name, street_name=street_name, street_number=street_number, city=city,
             company=request.user.company, description=description)
-            messages.success(request, 'Branch successfully created')
+            messages.success(request, 'Branch successfully created.')
             return redirect('buyer:delivery-branches')
 
         
@@ -1316,5 +1316,5 @@ def edit_branch(request, id):
         branch.city = request.POST['city']
         branch.description = request.POST['description']
         branch.save()
-        messages.success(request, 'Branch details updated successfully!')
+        messages.success(request, 'Branch details updated successfully.')
         return redirect('buyer:delivery-branches')

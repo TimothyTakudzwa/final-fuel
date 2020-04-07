@@ -123,7 +123,7 @@ def depots(request):
     if request.method == 'POST':
         # check if email exists
         if User.objects.filter(email=request.POST.get('email')).exists():
-            messages.warning(request, 'Invalid Email')
+            messages.warning(request, 'Invalid email.')
             return redirect('noic:depots')
 
         name = request.POST['name']
@@ -152,7 +152,7 @@ def depots(request):
         description = f"You have created another NOIC Depot {depot.name}"
         Activity.objects.create(depot=depot, user=request.user,
                                     action=action, description=description, reference_id=depot.id)
-        messages.success(request, 'Depot Created Successfully')
+        messages.success(request, 'Depot created successfully.')
         
         depots = NoicDepot.objects.all()
         
@@ -181,10 +181,10 @@ def edit_depot(request, id):
             description = f"You have updated NOIC Depot {depot_update.name}"
             Activity.objects.create(depot=depot_update, user=request.user,
                                         action=action, description=description, reference_id=depot_update.id)
-            messages.success(request, 'Depot updated successfully')
+            messages.success(request, 'Depot updated successfully.')
             return redirect('noic:depots')
         else:
-            messages.success(request, 'Depot does not exists')
+            messages.success(request, 'Depot does not exists.')
             return redirect('noic:depots')
 
 
@@ -199,11 +199,11 @@ def delete_depot(request, id):
             description = f"You have deleted NOIC Depot {depot_update.name}"
             Activity.objects.create(depot=depot_update, user=request.user,
                                         action=action, description=description, reference_id=depot_update.id)
-            messages.success(request, 'Depot deleted successfully')
+            messages.success(request, 'Depot deleted successfully.')
             return redirect('noic:depots')
 
         else:
-            messages.success(request, 'Depot does not exists')
+            messages.success(request, 'Depot does not exists.')
             return redirect('noic:depots')
 
 
@@ -222,7 +222,7 @@ def fuel_update(request, id):
                 description = f"You have allocated fuel to {fuel_update.depot.name}"
                 Activity.objects.create(depot=fuel_update.depot, user=request.user,
                                     action=action, description=description, reference_id=fuel_update.id)
-                messages.success(request, 'updated petrol quantity successfully')
+                messages.success(request, 'Updated petrol quantity successfully.')
                 return redirect('noic:dashboard')
             else:
                 fuel_update.rtgs_petrol += float(request.POST['quantity'])
@@ -233,7 +233,7 @@ def fuel_update(request, id):
                 description = f"You have allocated fuel to {fuel_update.depot.name}"
                 Activity.objects.create(depot=fuel_update.depot, user=request.user,
                                     action=action, description=description, reference_id=fuel_update.id)
-                messages.success(request, 'updated petrol quantity successfully')
+                messages.success(request, 'Updated petrol quantity successfully.')
                 return redirect('noic:dashboard')
             
         else:
@@ -246,7 +246,7 @@ def fuel_update(request, id):
                 description = f"You have allocated fuel to {fuel_update.depot.name}"
                 Activity.objects.create(depot=fuel_update.depot, user=request.user,
                                     action=action, description=description, reference_id=fuel_update.id)
-                messages.success(request, 'updated diesel quantity successfully')
+                messages.success(request, 'Updated diesel quantity successfully.')
                 return redirect('noic:dashboard')
             else:
                 fuel_update.rtgs_diesel += float(request.POST['quantity'])
@@ -256,7 +256,7 @@ def fuel_update(request, id):
                 description = f"You have allocated fuel to {fuel_update.depot.name}"
                 Activity.objects.create(depot=fuel_update.depot, user=request.user,
                                     action=action, description=description, reference_id=fuel_update.id)
-                messages.success(request, 'updated diesel quantity successfully')
+                messages.success(request, 'Updated diesel quantity successfully.')
                 return redirect('noic:dashboard')
 
 
@@ -275,7 +275,7 @@ def edit_prices(request, id):
         description = f"You have updated fuel prices for {depot_update.depot.name}"
         Activity.objects.create(depot=fuel_update.depot, user=request.user,
                                     action=action, description=description, reference_id=fuel_update.depot.id)
-        messages.success(request, 'updated prices successfully')
+        messages.success(request, 'Updated prices successfully.')
         return redirect('noic:dashboard')
 
 
@@ -285,7 +285,7 @@ def payment_approval(request, id):
     order = Order.objects.filter(id=id).first()
     order.payment_approved = True
     order.save()
-    messages.success(request, 'payment approved successfully')
+    messages.success(request, 'Payment approved successfully.')
     return redirect('noic:orders')
             
 
@@ -299,7 +299,7 @@ def allocate_fuel(request, id):
             if request.POST['currency'] == 'USD':
                 noic_capacity = NationalFuelUpdate.objects.filter(currency='USD').first()
                 if float(request.POST['quantity']) > noic_capacity.unallocated_petrol:
-                    messages.warning(request, f'you cannot allocate fuel more than your capacity of {noic_capacity.unallocated_petrol}L')
+                    messages.warning(request, f'You cannot allocate fuel more than your capacity of {noic_capacity.unallocated_petrol}L.')
                     return redirect('noic:orders')
                 else:
                     noic_capacity.unallocated_petrol -= float(request.POST['quantity'])
@@ -315,13 +315,13 @@ def allocate_fuel(request, id):
                     order.allocated_fuel = True
                     order.save()
 
-                    messages.success(request, 'fuel allocated successfully')
+                    messages.success(request, 'Fuel allocated successfully.')
                     return redirect('noic:orders')
             
             else:
                 noic_capacity = NationalFuelUpdate.objects.filter(currency='RTGS').first()
                 if float(request.POST['quantity']) > noic_capacity.unallocated_petrol:
-                    messages.warning(request, f'you cannot allocate fuel more than your capacity of {noic_capacity.unallocated_petrol}L')
+                    messages.warning(request, f'You cannot allocate fuel more than your capacity of {noic_capacity.unallocated_petrol}L.')
                     return redirect('noic:orders')
                 else:
                     noic_capacity.unallocated_petrol -= float(request.POST['quantity'])
@@ -336,7 +336,7 @@ def allocate_fuel(request, id):
                     company_update.save()
                     order.allocated_fuel = True
                     order.save()
-                    messages.success(request, 'fuel allocated successfully')
+                    messages.success(request, 'Fuel allocated successfully.')
                     return redirect('noic:orders')
             
 
@@ -344,7 +344,7 @@ def allocate_fuel(request, id):
             if request.POST['currency'] == 'USD':
                 noic_capacity = NationalFuelUpdate.objects.filter(currency='USD').first()
                 if float(request.POST['quantity']) > noic_capacity.unallocated_diesel:
-                    messages.warning(request, f'you cannot allocate fuel more than your capacity of {noic_capacity.unallocated_diesel}L')
+                    messages.warning(request, f'You cannot allocate fuel more than your capacity of {noic_capacity.unallocated_diesel}L.')
                     return redirect('noic:orders')
                 else:
                     noic_capacity.unallocated_diesel -= float(request.POST['quantity'])
@@ -359,14 +359,14 @@ def allocate_fuel(request, id):
                     company_update.save()
                     order.allocated_fuel = True
                     order.save()
-                    messages.success(request, 'fuel allocated successfully')
+                    messages.success(request, 'Fuel allocated successfully.')
                     return redirect('noic:orders')
             
             
             else:
                 noic_capacity = NationalFuelUpdate.objects.filter(currency='RTGS').first()
                 if float(request.POST['quantity']) > noic_capacity.unallocated_diesel:
-                    messages.warning(request, f'you cannot allocate fuel more than your capacity of {noic_capacity.unallocated_diesel}L')
+                    messages.warning(request, f'You cannot allocate fuel more than your capacity of {noic_capacity.unallocated_diesel}L.')
                     return redirect('noic:orders')
                 else:
                     noic_capacity.unallocated_diesel -= float(request.POST['quantity'])
@@ -381,7 +381,7 @@ def allocate_fuel(request, id):
                     company_update.save()
                     order.allocated_fuel = True
                     order.save()
-                    messages.success(request, 'fuel allocated successfully')
+                    messages.success(request, 'Fuel allocated successfully.')
                     return redirect('noic:orders')
 
 
@@ -416,7 +416,7 @@ def staff(request):
         email = request.POST.get('email')
         sup = User.objects.filter(email=email).first()
         if sup is not None:
-            messages.warning(request, f"{sup.email} already used in the system, please use a different email")
+            messages.warning(request, f"The email {sup.email} is already in the system, please use a different email.")
             return redirect('noic:staff')
 
         password = random_password()
@@ -447,7 +447,7 @@ def staff(request):
                 user.save()
 
             else:
-                messages.warning(request, f"Oops , something went wrong, please try again")
+                messages.warning(request, f"Oops , something went wrong, please try again.")
         return redirect('noic:staff')
 
     return render(request, 'noic/staff.html', {'depots': depots, 'form1': form1, 'staffs': staffs})
@@ -462,11 +462,11 @@ def message_is_send(request, user, password):
     try:
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
         msg.send()
-        messages.success(request, f"{user.first_name}  {user.last_name} Registered successfully")
+        messages.success(request, f"{user.first_name.title()}  {user.last_name.title()} has been registered successfully.")
         return True
     except Exception as e:
         messages.warning(request,
-                         f"Oops , something wen't wrong sending email, please make sure you have internet access")
+                         f"Oops , something went wrong sending email, please make sure you have internet access.")
         return False
     return render(request, 'buyer/send_email.html')
 
