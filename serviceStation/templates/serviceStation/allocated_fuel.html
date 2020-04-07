@@ -44,8 +44,8 @@
                        <tr>
                            <td>{{allocate.date}}</td>
                            <td>{{allocate.fuel_type}}</td>
-                           <td>{{allocate.allocated_quantity}}</td>
-                           <td>{{allocate.current_available_quantity}}</td>
+                           <td>{{allocate.allocated_quantity|floatformat:2|intcomma}}</td>
+                           <td>{{allocate.current_available_quantity|floatformat:2|intcomma}}</td>
                            
                            <td>
                                <div class="btn-group">
