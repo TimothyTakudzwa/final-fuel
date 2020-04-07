@@ -410,6 +410,7 @@ Landing page
 @user_role
 def dashboard(request):
     updates = []
+    branches = DeliveryBranch.objects.filter(company=request.user.company).all()
     if request.user.company.is_govnt_org:
         fuel_updates = SuballocationFuelUpdate.objects.filter(~Q(subsidiary__praz_reg_num=None)).all()
         for fuel_update in fuel_updates:
@@ -557,10 +558,10 @@ def dashboard(request):
                     Activity.objects.create(company=request.user.company, user=request.user, action=action,
                                             description=description, reference_id=fuel_request_object.id)
                     return render(request, 'buyer/dashboard.html',
-                                  {'form': form, 'updates': updates, 'offer': offer, 'sub': sub})
+                                  {'form': form, 'updates': updates, 'offer': offer, 'sub': sub, 'branches' : branches})
     else:
         form = FuelRequestForm
-    return render(request, 'buyer/dashboard.html', {'form': form, 'updates': updates})
+    return render(request, 'buyer/dashboard.html', {'form': form, 'updates': updates, 'branches' : branches})
 
 
 """
