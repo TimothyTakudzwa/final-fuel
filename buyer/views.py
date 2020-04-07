@@ -1160,11 +1160,11 @@ def download_pop(request, id):
     if document:
         filename = document.proof_of_payment.name.split('/')[-1]
         response = HttpResponse(document.proof_of_payment, content_type='text/plain')
-        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+        return response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document not found')
-        redirect('buyer-transactions')
-    return response    
+    return redirect('buyer-transactions')
+       
 
 
 """
