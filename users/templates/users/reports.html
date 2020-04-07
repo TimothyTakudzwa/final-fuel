@@ -693,7 +693,7 @@
                                                     <td>$ {{req.amount|floatformat:2|intcomma}}</td>
                                                     <td>{{req.fuel_type|title}}</td>
                                                     <td>
-                                                        {%if req.cash%}<i class="fa fa-dollar"></i>{%endif%} {% if req.cash %}<img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL"> {%endif%} {%if req.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {%endif%} {%if req.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH"> {%endif%} {%if req.swipe%}<i class="fa fa-cc-visa"></i> {% endif%} {%if not req.cash and not req.ecocash and not req.swipe and not req.usd%}No Payment Method {%endif%}
+                                                        {%if req.cash%}Cash{%endif%} {% if req.zwl %}RTGS {%endif%} {%if req.usd%}USD{%endif%} {%if req.ecocash%}ECOCASH {%endif%} {%if req.swipe%} SWIPE {% endif%} {%if not req.cash and not req.ecocash and not req.swipe and not req.usd%}No Payment Method {%endif%}
                                                     </td>
                                                 
                                                     
