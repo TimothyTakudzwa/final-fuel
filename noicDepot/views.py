@@ -13,11 +13,11 @@ from national.models import SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
 from noicDepot.util import sord_generator
 from notification.models import Notification
 from supplier.models import FuelAllocation
-from users.models import Activity
+from users.models import Activity, Audit_Trail
 from .forms import CollectionsForm
 from .lib import *
 from .models import Collections
-from .decorators import user_role
+from .decorators import user_role, user_permission
 
 today = date.today()
 user = get_user_model()
@@ -131,8 +131,8 @@ def stock(request):
 
 
 @login_required()
-@user_role
 def upload_release_note(request, id):
+    user_permission(request)
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     if request.method == 'POST':
         allocation.release_date = request.POST['release_date']
@@ -147,8 +147,8 @@ def upload_release_note(request, id):
 
 
 @login_required()
-@user_role
 def payment_approval(request, id):
+    user_permission(request)
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     noic_capacity = DepotFuelUpdate.objects.filter(depot=depot).first()
     
@@ -194,8 +194,8 @@ def payment_approval(request, id):
 
 
 @login_required()
-@user_role
 def view_release_note(request, id):
+    user_permission(request)
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     allocation.admin = User.objects.filter(company=allocation.company).filter(user_type='S_ADMIN').first()
     allocation.rep = request.user
@@ -206,8 +206,8 @@ def view_release_note(request, id):
 
 
 @login_required()
-@user_role
 def download_release_note(request, id):
+    user_permission(request)
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     allocation.admin = User.objects.filter(company=allocation.company).filter(user_type='S_ADMIN').first()
     allocation.rep = request.user
@@ -218,8 +218,8 @@ def download_release_note(request, id):
 
 
 @login_required()
-@user_role
 def allocate_fuel(request, id):
+    user_permission(request)
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders = Order.objects.filter(noic_depot=depot).all()
     for order in orders:
@@ -419,8 +419,8 @@ def allocate_fuel(request, id):
 
 
 @login_required()
-@user_role
 def download_proof(request, id):
+    user_permission(request)
     order = Order.objects.filter(id=id).first()
     if order:
         filename = order.proof_of_payment.name.split('/')[-1]
@@ -433,8 +433,8 @@ def download_proof(request, id):
 
 
 @login_required()
-@user_role
 def download_d_note(request, id):
+    user_permission(request)
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     if allocation:
         filename = allocation.d_note.name.split('/')[-1]
@@ -610,6 +610,14 @@ def collections(request):
         collection.time_collected = datetime.today().time()
         collection.has_collected = True
         collection.save()
+        company = collection.order.company
+        user = User.objects.filter(company=company, user_type='S_ADMIN').first()
+        reference = 'collection'
+        reference_id = collection.id
+        depot = collection.noic_depot.name
+        action = f"You collected {collection.order.quantity}L of {collection.order.fuel_type} from {depot} depot"
+        Audit_Trail.objects.create(company=company, service_station=depot, user=user,
+                                    action=action, reference=reference, reference_id=reference_id)
 
         messages.success(request, 'Collection saved successfully')
         return redirect('noicDepot:collections')
@@ -618,8 +626,8 @@ def collections(request):
 
 
 @login_required()
-@user_role
 def hg_notifier(request, id):
+    user_permission(request)
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     if id == 1:
         message = 'Requesting for more USD diesel fuel'

@@ -16,4 +16,4 @@ def user_role(function):
 
 def user_permission(request):
     if not request.user.user_type == 'BUYER':
-        return PermissionDenied
+        raise PermissionDenied
