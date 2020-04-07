@@ -75,9 +75,9 @@
                     <td>{{ offer.time }}</td>
                     <td>{{ offer.request.name.first_name|lower|capfirst }} {{ offer.request.name.last_name|lower|capfirst }}</td>
                     
-                    {% if offer.request.fuel_type == 'Diesel' %}
+                    {% if offer.request.fuel_type == 'Petrol' %}
                       <td style="color: #009688;" >{{ offer.request.fuel_type|lower|capfirst }}</td>
-                    {% elif offer.request.fuel_type == 'Petrol' %}
+                    {% elif offer.request.fuel_type|lower|capfirst == 'Diesel' %}
                       <td style="color: #ffb61e;" >{{ offer.request.fuel_type|lower|capfirst }}</td>
                     {% else %}  
                       <td>{{ offer.request.fuel_type|lower|capfirst }}</td>
@@ -85,7 +85,7 @@
 
 
 
-                    <td>{{ offer.quantity|intcomma }}</td>
+                    <td>{{ offer.quantity|floatformat:2|intcomma }}</td>
                     <td>{{ offer.price|intcomma }}</td>
                     <td>{{ offer.delivery_method|lower|capfirst}}</td>
                     {% if offer.transport_fee != None %}
@@ -314,9 +314,9 @@ aria-hidden="true">
                     <td>{{ offer.time }}</td>
                     <td>{{ offer.request.name.first_name|lower|capfirst }} {{ offer.request.name.last_name|lower|capfirst }}</td>
                     
-                    {% if offer.request.fuel_type == 'Diesel' %}
+                    {% if offer.request.fuel_type == 'Petrol' %}
                       <td style="color: #009688;" >{{ offer.request.fuel_type|lower|capfirst }}</td>
-                    {% elif offer.request.fuel_type == 'Petrol' %}
+                    {% elif offer.request.fuel_type|lower|capfirst == 'Diesel' %}
                       <td style="color: #ffb61e;" >{{ offer.request.fuel_type|lower|capfirst }}</td>
                     {% else %}  
                       <td>{{ offer.request.fuel_type|lower|capfirst }}</td>
@@ -324,7 +324,7 @@ aria-hidden="true">
 
 
 
-                    <td>{{ offer.quantity|intcomma }}</td>
+                    <td>{{ offer.quantity|floatformat:2|intcomma }}</td>
                     <td>{{ offer.price|intcomma }}</td>
                     <td>{{ offer.delivery_method|lower|capfirst}}</td>
                     {% if offer.transport_fee != None %}

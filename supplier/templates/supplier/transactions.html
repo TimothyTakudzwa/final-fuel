@@ -88,10 +88,10 @@
                                     <td>N/A</td>
                                 {% endif %}
                                 
-                                {% if transaction.offer.request.fuel_type == 'Diesel' %}
-                                <td style="color: #009688;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
-                                {% elif transaction.offer.request.fuel_type == 'Petrol' %}
-                                <td style="color: #ffb61e;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
+                                {% if transaction.offer.request.fuel_type|lower|capfirst == 'Petrol' %}
+                                <td style="color: #009688;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |floatformat:2|intcomma}}L @ {{ transaction.offer.price }}</td>
+                                {% elif transaction.offer.request.fuel_type|lower|capfirst == 'Diesel' %}
+                                <td style="color: #ffb61e;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |floatformat:2|intcomma}}L @ {{ transaction.offer.price }}</td>
                                 {% else %}
                                 <td>{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
                                 {% endif %}
@@ -609,12 +609,12 @@
                                     <td>N/A</td>
                                 {% endif %}
                                 
-                                {% if transaction.offer.request.fuel_type == 'Diesel' %}
-                                <td style="color: #009688;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
-                                {% elif transaction.offer.request.fuel_type == 'Petrol' %}
-                                <td style="color: #ffb61e;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
+                                {% if transaction.offer.request.fuel_type|lower|capfirst == 'Petrol' %}
+                                <td style="color: #009688;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |floatformat:2|intcomma}}L @ {{ transaction.offer.price }}</td>
+                                {% elif transaction.offer.request.|lower|capfirst == 'Diesel' %}
+                                <td style="color: #ffb61e;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |floatformat:2|intcomma}}L @ {{ transaction.offer.price }}</td>
                                 {% else %}
-                                <td>{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
+                                <td>{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |floatformat:2|intcomma}}L @ {{ transaction.offer.price }}</td>
                                 {% endif %}
                                 <!-- <td>{{ transaction.offer.quantity |intcomma}}</td>
                                 <td>{{ transaction.offer.price }}</td> -->
