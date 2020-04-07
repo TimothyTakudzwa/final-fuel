@@ -133,8 +133,8 @@
                             <th>Currency</th>
                             <th>Petrol Price</th>
                             <th>Diesel Price</th>
-                            <th>Petrol Quantity</th> 
-                            <th>Diesel Quantity</th>
+                            <th style="color: #38c0b2;">Petrol Quantity</th> 
+                            <th style="color: #ffb61e;">Diesel Quantity</th>
                             <th>Updated on</th>
                             <th>Action</th>
                         </tr>
@@ -189,39 +189,39 @@
                                     {{data.payment_type}}
                                 </td>
                                 {% if data.petrol_quantity == 0.00 %}
-                                <td style="color: #ffb61e;">
+                                <td>
                                     <p style="text-align: center;">-</p>
                                 </td>
                                 {% else %}
-                                <td style="color: #ffb61e;">
+                                <td>
                                     {{data.petrol_price}}
                                 </td>
                                 {% endif %}
                                 {% if data.diesel_quantity == 0.00 %}
-                                <td style="color: #009688;">
+                                <td>
                                     <p style="text-align: center;">-</p>
                                 </td>
                                 {% else %}
-                                <td style="color: #009688;">
+                                <td>
                                     {{data.diesel_price}}
                                 </td>
                                 {% endif %}
                                 {% if data.petrol_quantity == 0.00 %}
-                                <td style="color: #ffb61e;">
+                                <td>
                                     <p style="text-align: center;">-</p>
                                 </td>
                                 {% else %}
-                                <td style="color: #ffb61e;">
-                                    {{data.petrol_quantity|floatformat:2}}
+                                <td>
+                                    {{data.petrol_quantity|floatformat:2|intcomma}}
                                 </td>
                                 {% endif %}
                                 {% if data.diesel_quantity == 0.00 %}
-                                <td style="color: #009688;">
+                                <td>
                                     <p style="text-align: center;">-</p>
                                 </td>
                                 {% else %}
-                                <td style="color: #009688;">
-                                    {{data.diesel_quantity|floatformat:2}}
+                                <td>
+                                    {{data.diesel_quantity|floatformat:2|intcomma}}
                                 </td>
                                 {% endif %}
                                 <td>
@@ -241,6 +241,18 @@
                                     </button> 
                                 </td>
                             </tr>
+                            <!--Scipt for handling branch selection and filling in address-->
+                            <!-- <script>
+                                function BranchesFunction(){
+                                    var branch = document.getElementById("branch{{forloop.counter}}").value;
+                                    console.log(branch)
+                                    console.log(branch)
+                                    document.getElementById("s_name{{forloop.counter}}").value = branch.street_name;
+                                    document.getElementById("s_number{{forloop.counter}}").value = branch.street_number;
+                                    document.getElementById("s_town{{forloop.counter}}").value = branch.city;
+                                }
+                            </script> -->
+                            <!--End branch selection Script-->
                             <script>
                                 $(document).ready(function () {
                                     $('#choices{{forloop.counter}}').hide();
@@ -249,7 +261,24 @@
                                     $('#transporter{{forloop.counter}}').show();
                                     $('#driver{{forloop.counter}}').show();
                                     $('#driver_id{{forloop.counter}}').show();
-                                    
+
+                                    $('#branch{{forloop.counter}}').change(function(){
+                                            var street_number = $('option{{forloop.counter}}').data('value').street_number;
+                                            var street_name = $('option{{forloop.counter}}').data('value').street_name;
+                                            var city = $('option{{forloop.counter}}').data('value').city;
+                                            $('#s_number{{forloop.counter}}').val(street_number);
+                                            $('#s_name{{forloop.counter}}').val(street_name);
+                                            $('#s_town{{forloop.counter}}').val(city);                                            
+                                        });
+
+                                    $('#branch1{{forloop.counter}}').change(function(){
+                                        var street_number = $('option1{{forloop.counter}}').data('value').street_number;
+                                        var street_name = $('option1{{forloop.counter}}').data('value').street_name;
+                                        var city = $('option1{{forloop.counter}}').data('value').city;
+                                        $('#s_number1{{forloop.counter}}').val(street_number);
+                                        $('#s_name1{{forloop.counter}}').val(street_name);
+                                        $('#s_town1{{forloop.counter}}').val(city);                                            
+                                        });
 
                                     $('#delivery_method1{{forloop.counter}}').change(function () {
                                         if ($('#delivery_method1{{forloop.counter}} option:selected').text() == "Direct Delivery") {
@@ -391,6 +420,14 @@
                                                 <div class="form-group" name='choices' id='choices{{forloop.counter}}'>
                                                     <label>Delivery Address</label>
                                                     <div class="row form-group">
+                                                        <select id="branch{{forloop.counter}}">
+                                                            <option value="">---Select a delivery branch---</option>
+                                                            {% for branch in branches %}
+                                                            <option id="option{{forloop.counter}}" data-value="{{branch}}">{{branch.name|capfirst}}</option>
+                                                            {% endfor %}
+                                                          </select>
+                                                    </div>
+                                                    <div class="row form-group">
                                                         <div class="togglebutton form-group col-sm-4">
                                                             <label for="">Street Number</label>
                                                             <input type="text" class="form-control" name="s_number" id="s_number{{forloop.counter}}"
@@ -530,6 +567,14 @@
 
                                                 <div class="form-group" name='choices' id='choices1{{forloop.counter}}'>
                                                     <label>Delivery Address</label>
+                                                    <div class="form-group row-sm-12">
+                                                        <select class="form-control" id="branch1{{forloop.counter}}">
+                                                            {% for branch in branches %}
+                                                            <option value="">---Select a delivery branch---</option>
+                                                            <option id="option1{{forloop.counter}}" data-value="{{branch}}">{{branch.name|capfirst}}</option>
+                                                            {% endfor %}
+                                                          </select>
+                                                    </div>
                                                     <div class="row form-group">
                                                         <div class="togglebutton form-group col-sm-4">
                                                             <label for="">Street Number</label>

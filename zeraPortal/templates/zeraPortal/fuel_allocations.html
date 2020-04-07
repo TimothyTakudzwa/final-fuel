@@ -91,11 +91,25 @@
                             <td>{{sord.sord_no}}</td>
                             <td>{{sord.action_no}}</td>
                             <td>{{sord.action}}</td>
-                            <td>{{sord.fuel_type}}</td>
+                            
+                            {% if sord.fuel_type|lower|capfirst == 'Petrol' %}
+                                <td class="" style="color: #009688;">
+                                    {{sord.fuel_type|lower|capfirst}}
+                                </td>
+                            {% elif sord.fuel_type|lower|capfirst == 'Diesel' %}
+                            
+                                <td class="" style="color: #ffb61e;">
+                                    {{sord.fuel_type|lower|capfirst}}
+                                </td>
+                            {% else %}
+                                <td class="">
+                                    {{sord.fuel_type|lower|capfirst}}
+                                </td>
+                            {% endif %}    
                             <td>{{sord.payment_type}}</td>
-                            <td>{{sord.initial_quantity|intcomma}}</td>
-                            <td>{{sord.quantity_allocated|intcomma}}</td>
-                            <td>{{sord.end_quantity|intcomma}}</td>
+                            <td>{{sord.initial_quantity|floatformat:2|intcomma}}</td>
+                            <td>{{sord.quantity_allocated|floatformat:2|intcomma}}</td>
+                            <td>{{sord.end_quantity|floatformat:2|intcomma}}</td>
                             {% if sord.allocated_to != None %}
                             <td>{{sord.allocated_to}}</td>
                             {% else %}

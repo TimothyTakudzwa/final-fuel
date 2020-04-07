@@ -81,7 +81,7 @@ def accepted_orders(request):
         else:
             pass
      
-    orders = Order.objects.filter(noic_depot=depot).all()
+    orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=True).all()
     return render(request, 'noicDepot/accepted_orders.html', {'orders': orders})
 
 
@@ -182,6 +182,7 @@ def payment_approval(request, id):
                 return redirect(f'noicDepot:orders')            
 
     order.payment_approved = True
+    order.status = 'Accepted'
     order.save()
 
     action = "Approving Payment"
@@ -247,6 +248,7 @@ def allocate_fuel(request, id):
                     order.quantity -= noic_capacity.usd_petrol
                     noic_capacity.usd_petrol = 0
                     order.allocated_fuel = True
+                    order.status = 'Allocated'
                     order.save()
                     noic_capacity.save()
 

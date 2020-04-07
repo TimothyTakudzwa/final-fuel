@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load crispy_forms_tags %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -496,7 +497,7 @@
                                                     </td>
                                                     <td>{{tran.buyer.company.name}}</td>
                                                     <td>{{tran.offer.request.fuel_type|title}}</td>
-                                                    <td>{{tran.offer.quantity}}</td>
+                                                    <td>{{tran.offer.quantity|floatformat:2|intcomma}}</td>
                                                     <td>$ {{tran.offer.price|stringformat:".2f"}}</td>
                                                     <td>{{tran.buyer.first_name}} {{tran.buyer.last_name }}</td>
                                                     <td>
@@ -608,9 +609,9 @@
                                                             <td>{{my_stock.last_updated}}</td>
                                                             <td>{{my_stock.sub_type}}</td>
                                                             <td>{{my_stock.subsidiary_name}}</td>
-                                                            <td>{{my_stock.petrol_quantity}} l</td>
+                                                            <td>{{my_stock.petrol_quantity|floatformat:2|intcomma}} l</td>
                                                             <td>{{my_stock.petrol_price}}</td>
-                                                            <td>{{my_stock.diesel_quantity}} l</td>
+                                                            <td>{{my_stock.diesel_quantity|floatformat:2|intcomma}} l</td>
                                                             <td>$ {{my_stock.diesel_price}}</td>
                                                             
                                                     </tr>
@@ -689,7 +690,7 @@
                                                     <td>{{req.date}}</td>
                                                     <td>{{req.time}}</td>
                                                     <td>{{req.name|title}}</td>
-                                                    <td>$ {{req.amount|stringformat:".2f"}}</td>
+                                                    <td>$ {{req.amount|floatformat:2|intcomma}}</td>
                                                     <td>{{req.fuel_type|title}}</td>
                                                     <td>
                                                         {%if req.cash%}<i class="fa fa-dollar"></i>{%endif%} {% if req.cash %}<img src="{% static 'assets/img/zimbabwe.svg' %}" alt="ZWL" height="25px" width="25px" title="ZWL"> {%endif%} {%if req.usd%}<img src="{% static 'assets/img/united-states.svg' %}" alt="USD" height="25px" width="25px" title="USD"> {%endif%} {%if req.ecocash%}<img src="{% static 'assets/img/ecocash.svg' %}" alt="Ecocash" height="50px" width="50px" title="ECOCASH"> {%endif%} {%if req.swipe%}<i class="fa fa-cc-visa"></i> {% endif%} {%if not req.cash and not req.ecocash and not req.swipe and not req.usd%}No Payment Method {%endif%}
@@ -757,8 +758,8 @@
                                                 {% for allocation in allocations %}
                                                 <tr>
                                                         <td>{{allocation.date}}</td>
-                                                        <td>{{allocation.petrol_quantity}} l</td>
-                                                        <td>{{allocation.diesel_quantity}} l</td>
+                                                        <td>{{allocation.petrol_quantity|floatformat:2|intcomma}} l</td>
+                                                        <td>{{allocation.diesel_quantity|floatformat:2|intcomma}} l</td>
                                                         <td>{{allocation.sub_type}}</td>
                                                         <td>$ {{allocation.petrol_price}}</td>
                                                         <td>$ {{allocation.diesel_price}}</td>
@@ -810,7 +811,7 @@
                                             
                                             <tr>
                                                 <td>{{revs.date}}</td>
-                                                <td>{{revs.revenue}}</td>
+                                                <td>{{revs.revenue|floatformat:2|intcomma}}</td>
                                                 <td>{{revs.hits}}</td>                              
                                             </tr>
                                         

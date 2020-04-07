@@ -71,7 +71,13 @@
                                 <td>{{ transaction.date }}</td>
                                 <td>{{ transaction.depot.name }}</td>
                                 <td>{{ transaction.buyer.company.name }}</td>
-                                <td>{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |intcomma}}L @ {{ transaction.offer.price }}</td>
+                                {% if transaction.offer.request.fuel_type|lower|capfirst == 'Petrol' %}
+                                <td style="color: #009688;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |floatformat:2|intcomma}}L @ {{ transaction.offer.price }}</td>
+                                {% elif transaction.offer.request.|lower|capfirst == 'Diesel' %}
+                                <td style="color: #ffb61e;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |floatformat:2|intcomma}}L @ {{ transaction.offer.price }}</td>
+                                {% else %}
+                                <td>{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |floatformat:2|intcomma}}L @ {{ transaction.offer.price }}</td>
+                                {% endif %}
                                
                                 <td>{{ transaction.expected|intcomma}}</td>
                                 <td>{{ transaction.paid|intcomma }}</td>
@@ -169,7 +175,7 @@
                                     </div>
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Quantity: </p>
-                                        <p class="col-md-6">{{transaction.offer.request.amount}} (Litres)</p>
+                                        <p class="col-md-6">{{transaction.offer.request.amount|floatformat:2|intcomma}} (Litres)</p>
                                     </div>
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Contact Person: </p>
@@ -287,7 +293,7 @@
                                                     </div>
                                                     <div class="form-group col-md-6">
                                                         <label>Amount Received <i style="color: rgb(38, 214, 226);">as per proof of payment</i></label>
-                                                        <input type="text" class="form-control" name="paid" class="paid" value="${{transaction.paid_reserve}}" disabled/>
+                                                        <input type="text" class="form-control" name="paid" class="paid" value="${{transaction.paid_reserve|floatformat:2|intcomma}}" disabled/>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -297,7 +303,7 @@
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label>Amount for Fuel <i style="color: rgb(38, 214, 226);">amount received - transport fee</i></label>
-                                                    <input type="text" class="form-control" name="paid" class="paid" value="${{transaction.fuel_money_reserve}}" disabled/>
+                                                    <input type="text" class="form-control" name="paid" class="paid" value="${{transaction.fuel_money_reserve|floatformat:2|intcomma}}" disabled/>
                                                 </div>
                                             </div>
 

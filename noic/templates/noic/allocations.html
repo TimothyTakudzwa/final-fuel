@@ -89,7 +89,7 @@
                             <td style="width: 8%;">{{sord.sord_no}}</td>
                             <td>{{sord.company}}</td>
 
-                            {% if sord.fuel_type == 'Diesel' %}
+                            {% if sord.fuel_type == 'Petrol' %}
                                 <td style="color: #009688;">{{sord.fuel_type}}</td>
                             {% elif sord.fuel_type == 'Diesel' %}
                                 <td style="color: #ffb61e;">{{sord.fuel_type}}</td>
@@ -98,7 +98,7 @@
                             {% endif %}
 
                             <td>{{sord.currency}}</td>
-                            <td>{{sord.quantity|intcomma}}</td>
+                            <td>{{sord.quantity|floatformat:2|intcomma}}</td>
                             <td>{{sord.price}}</td>
                             <td><b style="color: rgb(7, 194, 163);width: 8%;">{{sord.assigned_depot.name}}</b></td>
                         </tr>

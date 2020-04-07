@@ -184,7 +184,8 @@
                                         <th style="color: white;">Quantity</th>
                                         <th style="color: white;">Currency</th>
                                         <th style="color: white;">Payment</th>
-                                        <th style="color: white;">POP</th>
+                                        <th style="color: white;">P.O.P</th>
+                                        <th style="color: white;">Status</th>
                                         <th style="color: white;">Action</th>
                                     </tr>
                                 </thead>
@@ -195,7 +196,20 @@
                                         <td>{{ order.time }}</td>
                                         <td>{{ order.company.name|lower|title }}</td>
                                         <td>{{ order.company.address|lower|title }}</td>
-                                        <td>{{ order.fuel_type|lower|capfirst }}</td>
+                                        {% if order.fuel_type|lower|capfirst == 'Petrol' %}
+                                            <td class="" style="color: #009688;">
+                                                {{order.fuel_type|lower|capfirst}}
+                                            </td>
+                                        {% elif order.fuel_type|lower|capfirst == 'Diesel' %}
+                                        
+                                            <td class="" style="color: #ffb61e;">
+                                                {{order.fuel_type|lower|capfirst}}
+                                            </td>
+                                        {% else %}
+                                            <td class="">
+                                                {{order.fuel_type|lower|capfirst}}
+                                            </td>
+                                        {% endif %}    
                                         <td>{{ order.quantity|floatformat:2|intcomma}}</td>
                                         <td>{{ order.currency}}</td>
                                         <td>
@@ -221,7 +235,7 @@
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <h4 style="font-weight: lighter;font-size: 14px;">Sub Total
-                                                                        &nbsp;&nbsp; : &nbsp;&nbsp; ${{order.amount_paid}}</h4>
+                                                                        &nbsp;&nbsp; : &nbsp;&nbsp; ${{order.amount_paid|floatformat:2|intcomma}}</h4>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -246,7 +260,7 @@
                                         </td>
             
                                         {% if order.payment_approved %}
-                                        <td><b style="color: rgb(59, 59, 139);">Payment Approved</b></td>
+                                        <td><b style="color: rgb(59, 59, 139);"> Approved</b></td>
                                         {% else %}
                                         <td>
                                             <div class="btn-group">
@@ -258,7 +272,8 @@
                                             </div>
                                         </td>
                                         {% endif %}
-            
+                                        
+                                        <td>{{order.status}}</td>
                                         {% if order.payment_approved %}
                                         {% if order.allocated_fuel %}
                                         <td>
@@ -317,7 +332,7 @@
                                                         <div class="col-sm-6">
                                                             <label><b style='color:#009688'>Quantity</b></label>
                                                             <input type="text" name="quantity1" class="form-control"
-                                                                value="{{order.quantity}}" disabled />
+                                                                value="{{order.quantity|floatformat:2|intcomma}}" disabled />
                                                         </div>
                                                     </div>
             

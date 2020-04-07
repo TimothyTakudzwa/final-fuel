@@ -86,17 +86,17 @@
                             <td>{{sord.date}}</td>
                             <td>{{sord.time}}</td>
                             <td>{{sord.action_num}}</td>
-
+                            
                             {% if sord.fuel_type == 'Diesel' %}
-                                <td style="color: #009688;">{{sord.fuel_type}}</td>
-                            {% elif sord.fuel_type == 'Petrol' %}
                                 <td style="color: #ffb61e;">{{sord.fuel_type}}</td>
+                            {% elif sord.fuel_type == 'Petrol' %}
+                                <td style="color: #009688;">{{sord.fuel_type}}</td>
                             {% else %}    
                                 <td>{{sord.fuel_type}}</td>
                             {% endif %}    
 
                             <td>{{sord.payment_type}}</td>
-                            <td>{{sord.allocated_quantity|floatformat:2}}</td>
+                            <td>{{sord.allocated_quantity|floatformat:2|intcomma}}</td>
                             <td>{{sord.price}}</td>
                             <td>{{sord.allocated_by}}</td>
                             <td>{{sord.allocated_to}}</td>

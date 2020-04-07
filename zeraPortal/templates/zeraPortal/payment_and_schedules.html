@@ -113,9 +113,9 @@
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
                                                             <label><b> Fuel Type:</b></label>
-                                                            {% if payment.transaction.offer.request.fuel_type == 'Diesel'%}
+                                                            {% if payment.transaction.offer.request.fuel_type == 'Petrol'%}
                                                             <b style="color: #009688; padding-left: 5px;">{{payment.transaction.offer.request.fuel_type}}</b>
-                                                            {% elif payment.transaction.offer.request.fuel_type == 'Petrol'%}
+                                                            {% elif payment.transaction.offer.request.fuel_type == 'DIESEL'%}
                                                             <b style="color: #ffb61e; padding-left: 5px;">{{payment.transaction.offer.request.fuel_type}}</b>
                                                             {% else %}
                                                             <b>{{payment.transaction.offer.request.fuel_type}}</b>
@@ -123,14 +123,14 @@
                                                         </div>
                                                         <div class="form-group col-md-6">
                                                             <label><b>Quantity Requested:</b></label>
-                                                            &nbsp;{{payment.transaction.offer.request.amount}}L
+                                                            &nbsp;{{payment.transaction.offer.request.amount|floatformat:2|intcomma}}L
                                                         </div>
                                                     </div>
 
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
                                                             <label><b> Quantity Offered:</b></label>
-                                                            &nbsp;{{payment.transaction.offer.quantity}}L
+                                                            &nbsp;{{payment.transaction.offer.quantity|floatformat:2|intcomma}}L
                                                         </div>
                                                         <div class="form-group col-md-6">
                                                             <lable><b>Price:</b></lable>
@@ -140,11 +140,11 @@
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
                                                             <lable><b> Expected:</b></lable>
-                                                            &nbsp;${{payment.transaction.expected}}
+                                                            &nbsp;${{payment.transaction.expected|intcomma}}
                                                         </div>
                                                         <div class="form-group col-md-6">
                                                             <lable><b>Paid:</b></lable>
-                                                            &nbsp;${{payment.transaction.paid}}
+                                                            &nbsp;${{payment.transaction.paid|intcomma}}
                                                         </div>
                                                     </div>
                                                     {% if payment.transaction.offer.delivery_method == 'DELIVERY' %}
@@ -201,11 +201,11 @@
                                     </div>
                             </td>
                            
-                            <td>{{payment.value|intcomma}}</td>
+                            <td>{{payment.value|floatformat:2|intcomma}}</td>
                             <td>
                                 <a class="btn btn-warning btn-sm" href="{% url 'zeraPortal:download_proof' payment.id %}" > <i class="fa fa-download" style="font-size:16px"></i> Payment Proof </a>
                             </td>
-                            <td>{{payment.balance|intcomma}}</td>
+                            <td>{{payment.balance|floatformat:2|intcomma}}</td>
                             {% if payment.delivery_schedule != None %}
                             <td>
                                 <div class="btn-group">
@@ -288,7 +288,7 @@
     
                                                 <div class="form-group col-md-6">
                                                     <label><b>Amount Paid:</b></label>
-                                                    &nbsp;{{payment.value }}
+                                                    &nbsp;{{payment.value|floatformat:2|intcomma }}
                                                 </div>
                                                 {% if payment.delivery_schedule != None %}
                                                 <div class="form-group col-md-6">
@@ -305,7 +305,7 @@
                                             <div class="row">
                                             <div class="form-group col-md-6">
                                                 <label><b>Delivery Quantity:</b></label>
-                                                &nbsp;{{payment.delivery_schedule.delivery_quantity}}
+                                                &nbsp;{{payment.delivery_schedule.delivery_quantity|floatformat:2|intcomma}}
                                             </div>
                                             {% if payment.delivery_schedule.confirmation_document %}
                                             <div class="form-group col-md-6">

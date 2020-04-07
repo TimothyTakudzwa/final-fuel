@@ -1,4 +1,5 @@
 {% extends "supplier/supplier_base.html" %}
+{% load humanize %}
 
 {% block body %}
 <!-- Content Header (Page header) -->
@@ -49,9 +50,9 @@
                         <th style="color:white;">Date</th>
                         <th style="color:white;">Time</th>
                         <th style="color:white;">Action</th>
-                        <th style="color:white;">Diesel</th>
+                        <th style="color: #e9b544;">Diesel</th>
                         <th style="color:white;">Price</th>
-                        <th style="color:white;">Petrol</th>
+                        <th style="color: #48aaa0;">Petrol</th>
                         <th style="color:white;">Price</th>                        
                         <th style="color:white;">Currency</th>
                     <tbody>
@@ -62,20 +63,20 @@
                             <td>{{allocation.time}}</td>
                             <td>{{allocation.action}}</td>
                             {% if allocation.diesel_quantity != 0 %}
-                            <td>{{allocation.diesel_quantity}}</td>
-                            <td>{{allocation.diesel_price|stringformat:".2f"}}</td>
+                            <td>{{allocation.diesel_quantity|floatformat:2|intcomma}}</td>
+                            <td>{{allocation.diesel_price}}</td>
                             {% else %}
                             <td>N/A</td>
                             <td>N/A</td>
                             {% endif %}
                             {% if allocation.petrol_quantity != 0 %}
-                            <td>{{allocation.petrol_quantity}}</td>
-                            <td>{{allocation.petrol_price|stringformat:".2f"}}</td>
+                            <td>{{allocation.petrol_quantity|floatformat:2|intcomma}}</td>
+                            <td>{{allocation.petrol_price}}</td>
                             {% else %}
                             <td>N/A</td>
                             <td>N/A</td>
                             {%endif%}
-                            <td>{%if allocation.cash%}Cash &nbsp;{%endif%} {%if allocation.usd%}USD &nbsp;{%endif%} {%if allocation.ecocash%}Ecocash &nbsp;{%endif%} {%if allocation.swipe%}Swipe &nbsp;{%endif%}</td>
+                            <td>{{allocation.fuel_payment_type}}</td>
                         </tr>
 
                         {% endfor %}

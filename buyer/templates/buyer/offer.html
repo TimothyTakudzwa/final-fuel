@@ -1,6 +1,7 @@
 {% extends "finder/buyer_base.html" %}
 {% load crispy_forms_tags %}
 {% load static %}
+{% load humanize %}
 
 {% block body%}
 
@@ -73,8 +74,8 @@
                         <td>{{offer.supplier.company}}</td>
                         <td>{{offer.depot_name}}</td>
                         <td>{{offer.collection_address}}</td>
-                        <td>{{offer.request.amount}} Litres</td>
-                        <td>{{offer.quantity}} Litres</td>
+                        <td>{{offer.request.amount|floatformat:2|intcomma}} Litres</td>
+                        <td>{{offer.quantity|floatformat:2|intcomma}} Litres</td>
                         {% if offer.request.payment_method == 'RTGS'%}
                         <td>RTGS {{offer.price}}</td>
                         {% else %}
@@ -323,8 +324,8 @@
         <td class="name truncate">{{offer.id}}</a></td> 
         <td class="name truncate">{{offer.supplier.company}}</a></td> 
         <td class="name truncate">{{offer.supplier.company.address}}</a></td> 
-        <td class="name truncate">{{offer.request.amount}}</a></td>
-        <td class="name truncate">{{offer.quantity}}</a></td>
+        <td class="name truncate">{{offer.request.amount|floatformat:2|intcomma}}</a></td>
+        <td class="name truncate">{{offer.quantity|floatformat:2|intcomma}}</a></td>
         <td class="name truncate">{{offer.price}}</a></td>
         <td class="name truncate">{{offer.date}}</a></td>  
         <td class="name truncate">{{offer.time}}</a></td>

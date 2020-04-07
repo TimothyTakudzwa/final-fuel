@@ -61,7 +61,8 @@
                     <th style="color: white;">Quantity</th>
                     <th style="color: white;">Currency</th>
                     <th style="color: white;">Payment</th>
-                    <th style="color: white;">Proof of Payment</th>
+                    <th style="color: white;">P.O.P</th>
+                    <th style="color: white;">Status</th>
                     <th style="color: white;">Action</th>
                 </tr>
             </thead>
@@ -72,8 +73,21 @@
                     <td>{{ order.time }}</td>
                     <td>{{ order.company.name|lower|title }}</td>
                     <td>{{ order.company.address|lower|title }}</td>
-                    <td>{{ order.fuel_type|lower|capfirst }}</td>
-                    <td>{{ order.quantity|intcomma }}</td>
+                    {% if order.fuel_type|lower|capfirst == 'Petrol' %}
+                    <td class="" style="color: #009688;">
+                        {{order.fuel_type|lower|capfirst}}
+                    </td>
+                {% elif order.fuel_type|lower|capfirst == 'Diesel' %}
+                
+                    <td class="" style="color: #ffb61e;">
+                        {{order.fuel_type|lower|capfirst}}
+                    </td>
+                {% else %}
+                    <td class="">
+                        {{order.fuel_type|lower|capfirst}}
+                    </td>
+                {% endif %}    
+                    <td>{{ order.quantity|floatformat:2|intcomma }}</td>
                     <td>{{ order.currency}}</td> 
                     <td>
 
@@ -94,7 +108,7 @@
                                     <div class="modal-body">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <h4 style="font-weight: lighter;font-size: 14px;">Sub Total &nbsp;&nbsp; : &nbsp;&nbsp; ${{order.amount_paid}}</h4>
+                                                <h4 style="font-weight: lighter;font-size: 14px;">Sub Total &nbsp;&nbsp; : &nbsp;&nbsp; ${{order.amount_paid|floatformat:2|intcomma}}</h4>
                                             </div>
                                         </div>
                                         <div class="row"> 
@@ -117,7 +131,7 @@
                     </td>
 
                     {% if order.payment_approved %}
-                    <td><b style="color: rgb(59, 59, 139);">Payment Approved</b></td>
+                    <td><b style="color: rgb(59, 59, 139);">Approved</b></td>
                     {% else %}
                     <td>
                         <div class="btn-group">
@@ -126,6 +140,8 @@
                         </div>
                     </td>
                     {% endif %}
+
+                    <td>{{order.status}}</td>
                     
                     {% if order.payment_approved %}
                     {% if order.allocated_fuel %}

@@ -62,11 +62,11 @@
                             <th>
                                 License 
                              </th>
-                             <th>
+                             <th style="color: #ffb61e;">
                                 Diesel (L) 
                              </th>
                             
-                             <th>
+                             <th style="color: #009688;">
                                 Petrol (L)
                              </th>
                              <th>
@@ -89,8 +89,8 @@
                             {% else %}
                             <td><b style="margin-left: 26px;">--</b></td>
                             {% endif %}
-                            <td>{{subsidiary.fuel.diesel_quantity|intcomma}}</td>
-                            <td>{{subsidiary.fuel.petrol_quantity|intcomma}}</td>
+                            <td>{{subsidiary.fuel.diesel_quantity|floatformat:2|intcomma}}</td>
+                            <td>{{subsidiary.fuel.petrol_quantity|floatformat:2|intcomma}}</td>
                             <td>
                                 <div class="btn-group">
                                     {% if subsidiary.license_num != None %}

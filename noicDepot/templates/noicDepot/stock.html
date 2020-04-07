@@ -54,16 +54,16 @@
                     <th style="color: white;">Current Stocks</th>
                     <th style="color: white;">Pending Orders</th>
                     <th style="color: white;">Action</th>
-                </tr>
+                </tr
             </thead>
            
             <tbody>
              {% for fuel in depot_stock %}
             <tr>
-                <td height="35"> USD Diesel Quantity</td>
-                <td height="35"> {{fuel.usd_diesel|intcomma}}L {% if fuel.usd_diesel < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
+                <td height="35" style="color: #ffb61e;"> USD Diesel Quantity</td>
+                <td height="35"> {{fuel.usd_diesel|floatformat:2|intcomma}}L {% if fuel.usd_diesel < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
                     {% if noic_usd_diesel != 0 %}
-                    <td height="35"> {{noic_usd_diesel}}</td>
+                    <td height="35"> {{noic_usd_diesel|floatformat:2|intcomma}}</td>
                     {% else %}
                     <td height="35"> No Pending USD Diesel Orders</td>
                     {% endif %}
@@ -85,12 +85,12 @@
                   <td height="35" width="10%"> N/A</td>
               </tr>
         <tr>
-            <td height="35">RTGS Diesel Quantity</td>
+            <td height="35" style="color: #ffb61e;">RTGS Diesel Quantity</td>
             <td height="35">
-                {{fuel.rtgs_diesel|intcomma}}L {% if fuel.rtgs_diesel < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}
+                {{fuel.rtgs_diesel|floatformat:2|intcomma}}L {% if fuel.rtgs_diesel < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}
             </td>
             {% if noic_rtgs_diesel != 0 %}
-            <td height="35"> {{noic_rtgs_diesel}}</td>
+            <td height="35"> {{noic_rtgs_diesel|floatformat:2|intcomma}}</td>
             {% else %}
             <td height="35"> No Pending RTGS Diesel Orders</td>
             {% endif %}
@@ -111,10 +111,10 @@
             </tr>
            
               <tr>
-                  <td height="35">USD Petrol Quantity</td>
-                  <td height="35">{{fuel.usd_petrol|intcomma}}L {% if fuel.usd_petrol < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
+                  <td height="35" style="color: #009688;">USD Petrol Quantity</td>
+                  <td height="35">{{fuel.usd_petrol|floatformat:2|intcomma}}L {% if fuel.usd_petrol < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
                   {% if noic_usd_petrol != 0 %}
-                  <td height="35"> {{noic_usd_petrol}}</td>
+                  <td height="35"> {{noic_usd_petrol|floatformat:2|intcomma}}</td>
                   {% else %}
                     <td height="35"> No Pending USD Petrol Orders</td>
                     {% endif %}
@@ -133,10 +133,10 @@
                   <td height="35" width="10%"> N/A</td>
                 </tr>
                 <tr>
-                  <td height="35">RTGS Petrol Quantity</td>
-                  <td height="35">{{fuel.rtgs_petrol|intcomma}}L {% if fuel.rtgs_petrol < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
+                  <td height="35" style="color: #009688;">RTGS Petrol Quantity</td>
+                  <td height="35">{{fuel.rtgs_petrol|floatformat:2|intcomma}}L {% if fuel.rtgs_petrol < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
                   {% if noic_rtgs_petrol != 0 %}
-                  <td height="35"> {{noic_rtgs_petrol}}</td>
+                  <td height="35"> {{noic_rtgs_petrol|floatformat:2|intcomma}}</td>
                   {% else %}
                 <td height="35"> No Pending RTGS Petrol Orders</td>
                 {% endif %}

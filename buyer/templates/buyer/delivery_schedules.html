@@ -84,7 +84,7 @@
                                 <td>{{ delivery.transaction.offer.request.fuel_type }}</td>
                             {% endif %}
     
-                            <td>{{ delivery.delivery_quantity }}</td>
+                            <td>{{ delivery.delivery_quantity|floatformat:2|intcomma}}</td>
                             <td>
                                 {% if delivery.transaction.offer.pump_available %} Pump &nbsp; {% endif %}
                                 {% if delivery.transaction.offer.meter_available %} Meter &nbsp; {% endif %}
@@ -317,14 +317,14 @@
                             <td>{{ future_delivery.delivery_address }}</td>
                             
                             {% if future_delivery.transaction.offer.request.fuel_type == 'Diesel' %}
-                                <td style="color: #009688;">{{ future_delivery.transaction.offer.request.fuel_type }}</td>
-                            {% elif future_delivery.transaction.offer.request.fuel_type == 'Petrol' %}
                                 <td style="color: #ffb61e;">{{ future_delivery.transaction.offer.request.fuel_type }}</td>
+                            {% elif future_delivery.transaction.offer.request.fuel_type == 'Petrol' %}
+                                <td style="color: #009688;">{{ future_delivery.transaction.offer.request.fuel_type }}</td>
                             {% else %}
                                 <td>{{ future_delivery.transaction.offer.request.fuel_type }}</td>
                             {% endif %}
     
-                            <td>{{ future_delivery.delivery_quantity }}</td>
+                            <td>{{ future_delivery.delivery_quantity|floatformat:2|intcomma}}</td>
                             <td>
                                 {% if future_delivery.transaction.offer.pump_available %} Pump &nbsp; {% endif %}
                                 {% if future_delivery.transaction.offer.meter_available %} Meter &nbsp; {% endif %}
@@ -557,15 +557,15 @@
                             <td>{{ delivery.delivery_time }}</td>-->
                             <td>{{ today_delivery.delivery_address }}</td>
                             
-                            {% if today_delivery.transaction.offer.request.fuel_type == 'Diesel' %}
+                            {% if today_delivery.transaction.offer.request.fuel_type == 'Petrol' %}
                                 <td style="color: #009688;">{{ today_delivery.transaction.offer.request.fuel_type }}</td>
-                            {% elif today_delivery.transaction.offer.request.fuel_type == 'Petrol' %}
+                            {% elif today_delivery.transaction.offer.request.fuel_type == 'Diesel' %}
                                 <td style="color: #ffb61e;">{{ today_delivery.transaction.offer.request.fuel_type }}</td>
                             {% else %}
                                 <td>{{ today_delivery.transaction.offer.request.fuel_type }}</td>
                             {% endif %}
     
-                            <td>{{ today_delivery.delivery_quantity }}</td>
+                            <td>{{ today_delivery.delivery_quantity|floatformat:2|intcomma}}</td>
                             <td>
                                 {% if today_delivery.transaction.offer.pump_available %} Pump &nbsp; {% endif %}
                                 {% if today_delivery.transaction.offer.meter_available %} Meter &nbsp; {% endif %}

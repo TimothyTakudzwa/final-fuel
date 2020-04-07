@@ -60,15 +60,15 @@
                         <td>{{ delivery.transaction.buyer.company.name|title }}</td>
                         <td>{{delivery.delivery_address}}</td>
                         
-                        {% if delivery.transaction.offer.request.fuel_type == 'Diesel' %}
-                            <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type}}</td>
-                        {% elif delivery.transaction.offer.request.fuel_type == 'Petrol' %}
+                        {% if delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Diesel' %}
+                            <td style="color: #ffb61e;">{{ delivery.transaction.offer.request.fuel_type}}</td>
+                        {% elif delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Petrol' %}
                             <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type}}</td>
                         {% else %}
                             <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type}}</td>
                         {% endif %}
                         
-                        <td style="color: #ffb61e;" >{{ delivery.delivery_quantity }} </td>
+                        <td>{{ delivery.delivery_quantity|floatformat:2|intcomma}} </td>
                         <td>{{ delivery.transport_company}}</td>
 
                        
@@ -189,7 +189,7 @@
                                     </div>
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Quantity: </p>
-                                        <p class="col-md-6">{{delivery.delivery_quantity}} (Litres)</p>
+                                        <p class="col-md-6">{{delivery.delivery_quantity|floatformat:2|intcomma}} (Litres)</p>
                                     </div>
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Contact Person: </p>
