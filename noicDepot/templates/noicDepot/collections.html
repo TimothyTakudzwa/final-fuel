@@ -82,15 +82,16 @@
                                     {% if collection.has_collected %}
                                         <!--view collection-->
                                         <div class="text-center">
-                                            <button class="btn btn-md btn-primary" data-toggle="modal"  data-target="#view_collection{{collection.id}}">
-                                                View Collection
+                                            
+                                            <button data-toggle="modal"  data-target="#view_collection{{collection.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                <span class="btn-label"><i class="fa fa-eye"></i></span>View Collection
                                             </button>
                                         </div>
                                     {% else %}
                                         <!--add collection-->
                                         <div class="text-center">
-                                            <button class="btn btn-md btn-primary" data-toggle="modal"  data-target="#add_collection{{collection.id}}">
-                                                Add Collection
+                                            <button  data-toggle="modal"  data-target="#add_collection{{collection.id}}" type="button" class="btn btn-labeled btn-danger btn-sm">
+                                                <span class="btn-label"><i class="fa fa-plus"></i></span>Add Collection
                                             </button>
                                         </div>
                                     {% endif %}

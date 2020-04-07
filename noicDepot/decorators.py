@@ -15,5 +15,5 @@ def user_role(function):
 
 
 def user_permission(request):
-    if not request.user.user_type == 'NOIC_ADMIN':
+    if not request.user.user_type == 'NOIC_STAFF':
         raise PermissionDenied
