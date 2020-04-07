@@ -464,9 +464,9 @@
                         </div>
                         </td>
                     {% if order.status == 'Accepted' %}
-                    <td style="background-color: #07a513;">{{order.status}}</td>
-                    {% elif order.status == 'Accepted' %}
-                    <td style="background-color: crimson;">{{order.status}}</td>
+                    <td style="color: #07a513;">{{order.status}}</td>
+                    {% elif order.status == 'Allocation Pending' %}
+                    <td style="color: crimson;">{{order.status}}</td>
                     {% endif %}
 
                     
