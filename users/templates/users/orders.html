@@ -463,12 +463,8 @@
                             </a>
                         </div>
                         </td>
-                    {% if order.status == 'Accepted' %}
-                    <td style="color: #07a513;">{{order.status}}</td>
-                    {% elif order.status == 'Allocation Pending' %}
-                    <td style="color: crimson;">{{order.status}}</td>
-                    {% endif %}
-
+                   
+                    <td>{{order.status}}</td>
                     
                     {% if order.allocation != None %}
                             {% if order.allocation.release_note %}
