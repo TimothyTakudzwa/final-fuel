@@ -13,7 +13,7 @@ from national.models import SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
 from noicDepot.util import sord_generator
 from notification.models import Notification
 from supplier.models import FuelAllocation
-from users.models import Activity
+from users.models import Activity, Audit_Trail
 from .forms import CollectionsForm
 from .lib import *
 from .models import Collections
@@ -610,6 +610,14 @@ def collections(request):
         collection.time_collected = datetime.today().time()
         collection.has_collected = True
         collection.save()
+        company = collection.order.company
+        user = User.objects.filter(company=company, user_type='S_ADMIN').first()
+        reference = 'collection'
+        reference_id = collection.id
+        depot = collection.noic_depot.name
+        action = f"You collected {collection.order.quantity}L of {collection.order.fuel_type} from {depot} depot"
+        Audit_Trail.objects.create(company=company, service_station=depot, user=user,
+                                    action=action, reference=reference, reference_id=reference_id)
 
         messages.success(request, 'Collection saved successfully')
         return redirect('noicDepot:collections')
