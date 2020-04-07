@@ -271,7 +271,7 @@
                                 {% if transaction.is_complete == True %}
                                     <!-- <td><small style="font-size:15px;color:rgb(0, 225, 255)">approved</small></td> -->
                                   <td> <a href="{% url 'download_pop' transaction.id %}" type="button" class="btn btn-labeled btn-success btn-sm">
-                                        <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>Download POP
+                                        <span class="btn-label"><i class="fa fa-download"></i></span>Download POP
                                     </a></td>
                                 {% elif transaction.delivery_object.confirmation_document %}
                                     <td>Received</td>
