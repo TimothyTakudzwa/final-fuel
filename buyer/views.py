@@ -1155,7 +1155,7 @@ def download_release_note(request, id):
 @login_required()
 def download_pop(request, id):
     user_permission(request)
-    transaction = Transaction.objects.filter(id=id)
+    transaction = Transaction.objects.filter(id=id).first()
     document = AccountHistory.objects.filter(id=transaction).first()
     if document:
         filename = document.proof_of_payment.name.split('/')[-1]
