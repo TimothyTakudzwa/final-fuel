@@ -2,14 +2,19 @@ zimbabwean_towns = ['Select City ---', 'Beitbridge', 'Bindura', 'Bulawayo', 'Chi
                     'Hwange', 'Juliusdale', 'Kadoma', 'Kariba', 'Karoi', 'Kwekwe', 'Marondera', 'Masvingo', 'Mutare',
                     'Mutoko', 'Nyanga', 'Victoria Falls']
 
-coordinates_towns = [(-17.825167, 31.033510), (-20.132507, 28.626478), (-19.453140, 29.815359), (-19.24555, 32.43709),
-                     (-16.03198, 28.85148),
-                     (-17.24252, 31.29958), (-21.81297, 29.94154), (-18.84066, 26.73102), (-18.36750, 32.67953),
-                     (-18.20546, 29.67708),
-                     (-16.89398, 28.57837), (-16.81904, 29.68369), (-18.92844, 29.81400), (-18.25550, 31.45441),
-                     (-20.30712, 30.88138),
-                     (-17.36153, 30.19294), (-17.42624, 32.35814), (-17.91763, 32.78981), (-17.92490, 25.85904),
-                     (-23.47353, 29.39592)]
+
+
+towns = ['Beitbridge', 'Bindura', 'Bulawayo', 'Chinhoyi', 'Chirundu', 'Gweru', 'Harare',
+        'Hwange', 'Juliusdale', 'Kadoma', 'Kariba', 'Karoi', 'Kwekwe', 'Marondera', 'Masvingo', 'Mutare',
+        'Mutoko', 'Nyanga', 'Victoria Falls']
+
+coordinates_towns = [(-22.1989, 30.0030), (-17.3013, 31.3198), (-20.1325, 28.6265), (-17.3653, 30.1936),
+                     (-16.0271, 28.8509),
+                     (-19.4685, 29.8121), (-17.8252, 31.0335), (-18.3559, 26.5020), (-18.3709, 32.6673),
+                     (-18.3269, 29.9162),
+                     (-16.5220, 28.8509), (-16.8155, 29.6905), (-18.9201, 29.8237), (-18.1930, 31.5427),
+                     (-20.0792, 30.8384),
+                     (-18.9758, 32.6504), (-17.4086, 32.2257), (-18.2201, 32.7464), (-17.9318, 25.8256),]
 
 major_cities = [{'Harare': ['Avenues', 'Budiriro', 'Dzivaresekwa', 'Kuwadzana', 'Warren Park', 'Glen Norah', 'Glen View', 'Avondale',
                             'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park', 'Borrowdale', 'Chisipiti', 'Glen Lorne',
