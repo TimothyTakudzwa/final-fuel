@@ -18,7 +18,7 @@ from national.models import DepotFuelUpdate, NoicDepot, SordNationalAuditTrail
 from supplier.models import SubsidiaryFuelUpdate, FuelAllocation, DeliverySchedule
 from users.models import SordActionsAuditTrail, Activity
 from users.views import message_is_sent
-from .constants import coordinates_towns
+from .constants import coordinates_towns, towns
 from .decorators import user_role, user_permission
 
 user = get_user_model()
@@ -892,7 +892,7 @@ def suspicious_behavior(request):
 def desperate_regions(request):
     context = {
         'regions': desperate(),
-        'mapping': dict(zip(zimbabwean_towns, coordinates_towns))
+        'mapping': dict(zip(towns, coordinates_towns))
     }
     return render(request, 'zeraPortal/desperate_regions.html', context=context)
 
