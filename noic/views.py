@@ -51,7 +51,7 @@ def orders(request):
 @user_role
 def activity(request):
     activities = Activity.objects.filter(user=request.user, date=today).all()
-    old_activities = Activity.objects.exclude(user=request.user, date=today)
+    old_activities = Activity.objects.exclude(date=today).filter(user=request.user)
     return render(request, 'noic/activity.html', {'activities': activities, 'old_activities': old_activities})
 
 
