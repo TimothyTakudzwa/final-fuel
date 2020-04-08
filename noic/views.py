@@ -21,6 +21,8 @@ from zeraPortal.lib import *
 from .lib import *
 from .decorators import user_role, user_permission
 
+today = date.today()
+
 user = get_user_model()
 
 
@@ -48,8 +50,9 @@ def orders(request):
 @login_required()
 @user_role
 def activity(request):
-    activities = Activity.objects.filter(user=request.user).all()
-    return render(request, 'noic/activity.html', {'activities': activities})
+    activities = Activity.objects.filter(user=request.user, date=today).all()
+    old_activities = Activity.objects.exclude(user=request.user, date=today)
+    return render(request, 'noic/activity.html', {'activities': activities, 'old_activities': old_activities})
 
 
 @login_required()
