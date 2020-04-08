@@ -27,6 +27,7 @@ class User(AbstractUser):
     fuel_updates_ids = models.CharField(max_length=2000, default=0)
     password_reset = models.BooleanField(default=False)
     paying_method = models.CharField(max_length=2000, default=0)
+    is_test_data = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.username}'
