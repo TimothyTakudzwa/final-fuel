@@ -190,14 +190,16 @@
                 <!-- sidebar -->
                 <div class="sidebar">
                     <!-- Sidebar user panel -->
-                    <!-- <div class="user-panel">
+                    <div class="user-panel">
                         <div class="image pull-left">
-                            <img src="{% static 'finder/assets/img/fuel.jpg' %}" class="img-circle" alt="User Image">
+                            <!-- <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar5.png"
+                                class="img-circle" alt="User Image"> -->
                         </div>
                         <div class="info">
-                            <p class="mt-2 mb-2">{{request.user.company.name}}</p>
+                            <h4>Welcome</h4>
+                            <p>{{ request.user.first_name }} {{ request.user.last_name}}</p>
                         </div>
-                    </div> -->
+                    </div>
 
                     <!-- sidebar menu -->
                     <ul class="sidebar-menu">
@@ -207,12 +209,17 @@
                         </li>
     
                         <li class="nav-item {% if request.path == '/zeraPortal/noic_fuel/' %} active {% endif %}">
-                            <a href="{% url 'zeraPortal:noic_fuel' %}"><i class="fa fa-binoculars"></i><span>NOIC Capacity & Allocations </span>
+                            <a href="{% url 'zeraPortal:noic_fuel' %}"><i class="fa fa-sliders"></i><span>NOIC Capacity & Allocations </span>
                             </a>
                         </li>
                        
                         <li class="nav-item {% if request.path == '/zeraPortal/company_fuel/' %} active {% endif %}">
-                            <a href="{% url 'zeraPortal:company_fuel' %}"><i class="fa fa-binoculars"></i><span>Company Allocations & Sales</span>
+                            <a href="{% url 'zeraPortal:company_fuel' %}"><i class="fa fa-exchange"></i><span>Company Allocations & Sales</span>
+                            </a>
+                        </li>
+    
+                        <li class="nav-item {% if request.path == '/zeraPortal/activity/' %} active {% endif %}">
+                            <a href="{% url 'zeraPortal:activity' %}"><i  class="fa fa-area-chart"></i><span>Activity</span>
                             </a>
                         </li>
                        

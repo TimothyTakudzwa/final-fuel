@@ -231,12 +231,17 @@
                         </li>
     
                         <li class="nav-item {% if request.path == '/zeraPortal/noic_fuel/' %} active {% endif %}">
-                            <a href="{% url 'zeraPortal:noic_fuel' %}"><i class="fa fa-binoculars"></i><span>NOIC Capacity & Allocations </span>
+                            <a href="{% url 'zeraPortal:noic_fuel' %}"><i class="fa fa-sliders"></i><span>NOIC Capacity & Allocations </span>
                             </a>
                         </li>
                        
                         <li class="nav-item {% if request.path == '/zeraPortal/company_fuel/' %} active {% endif %}">
-                            <a href="{% url 'zeraPortal:company_fuel' %}"><i class="fa fa-binoculars"></i><span>Company Allocations & Sales</span>
+                            <a href="{% url 'zeraPortal:company_fuel' %}"><i class="fa fa-exchange"></i><span>Company Allocations & Sales</span>
+                            </a>
+                        </li>
+    
+                        <li class="nav-item {% if request.path == '/zeraPortal/activity/' %} active {% endif %}">
+                            <a href="{% url 'zeraPortal:activity' %}"><i  class="fa fa-area-chart"></i><span>Activity</span>
                             </a>
                         </li>
                        
@@ -252,7 +257,6 @@
                             <a href="{% url 'zeraPortal:suspicious_behavior' %}"><i class="fa fa-support"></i><span>Suspicious Activity</span>
                             </a>
                         </li>
-                        
                         <li class="nav-item {% if request.path == '/zeraPortal/comments/' %} active {% endif %} ">
                             <a href="{% url 'zeraPortal:comments' %}"><i class="fa fa-comment" aria-hidden="true"></i><span>Comments</span>
                             </a>
