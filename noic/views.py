@@ -666,7 +666,7 @@ def report_generator(request):
 @login_required()
 @user_role
 def statistics(request):
-    yesterday = datetime.today() - timedelta(days=1)
+    yesterday = datetime.datetime.today() - timedelta(days=1)
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
     weekly_rev = get_weekly_sales(True)
     last_week_rev = get_weekly_sales(False)
