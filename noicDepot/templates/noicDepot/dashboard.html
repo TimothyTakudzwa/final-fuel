@@ -186,9 +186,14 @@
 
                                     <form method="POST" action="{% url 'noicDepot:upload_release_note' sord.id %}" enctype="multipart/form-data">
                                         {% csrf_token %}
-                                        <div class="form-group col-md-6">
-                                            <label>New Release Date</label>
-                                            <input type="date" name="release_date" class="form-control"  required/>
+                                        <div class="form-group col-md-12" style="padding-bottom: 20px;">
+                                            <div class="col-md-6">
+                                                <label>New Release Date</label>
+                                            </div>
+                                            <div class="col-md-6">
+
+                                                <input type="date" name="release_date" class="form-control"  required/>
+                                            </div>    
                                         </div>
                                         <br>
                                         <div class="modal-footer"> 
