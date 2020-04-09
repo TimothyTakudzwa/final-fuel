@@ -1,4 +1,5 @@
 {% extends "noic/noic_base.html" %} 
+{% load humanize %}
 {% block body %}
 
 
@@ -148,8 +149,8 @@
                       <td>{{tran.date}}</td>
                       <td>{{tran.time}}</td>
                       <td>{{depot.address}}</td>
-                      <td>{{tran.quantity}} l</td>
-                      <td>$ {{tran.amount_paid|stringformat:".2f"}}</td>
+                      <td>{{tran.quantity|floatformat:2|intcomma}} l</td>
+                      <td>$ {{tran.amount_paid|floatformat:2|intcomma}}</td>
                      <td>
                          {% if tran.payment_approved %}
                          <i class="fa fa-check-circle-o" style="color: #2ecc71;"></i>
