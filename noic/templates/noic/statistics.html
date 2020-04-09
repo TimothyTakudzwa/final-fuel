@@ -640,7 +640,7 @@
                                 </td>
                                 
                                 <td>{{sub.address}}</td>
-                                <td>$ {{sub.total_revenue|stringformat:".2f"}}</td>
+                                <td>$ {{sub.total_revenue|floatformat:2|intcomma}}</td>
                                 <td>{{sub.number_of_orders}}</td>
                                 
                                 <td style="width: 13%;">
