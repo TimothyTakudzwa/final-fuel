@@ -12,6 +12,7 @@ from validate_email import validate_email
 from accounts.models import AccountHistory
 from comments.models import Comment
 from company.models import Company
+from .models import FuelPrices
 from fuelUpdates.models import SordCompanyAuditTrail
 from fuelfinder.helper_functions import random_password
 from national.models import DepotFuelUpdate, NoicDepot, SordNationalAuditTrail
@@ -75,6 +76,46 @@ def dashboard(request):
 def activity(request):
     activities = Activity.objects.filter(user=request.user).all()
     return render(request, 'zeraPortal/activity.html', {'activities': activities})
+
+
+@login_required()
+def fuel_prices(request):
+    prices = FuelPrices.objects.first()
+
+    if request.method == 'POST':
+        if request.POST.get('fuel_type') == 'usd_diesel':
+            prices.usd_diesel_vat = request.POST['vat']
+            prices.usd_diesel_duty = request.POST['duty']
+            prices.usd_diesel_price = request.POST['price']
+            prices.save()
+            messages.success(request, 'price updated successfully')
+            return redirect('zeraPortal:fuel_prices')
+        
+        elif request.POST.get('fuel_type') == 'rtgs_diesel':
+            prices.rtgs_diesel_vat = request.POST['vat']
+            prices.rtgs_diesel_duty = request.POST['duty']
+            prices.rtgs_diesel_price = request.POST['price']
+            prices.save()
+            messages.success(request, 'price updated successfully')
+            return redirect('zeraPortal:fuel_prices')
+        
+        elif request.POST.get('fuel_type') == 'usd_petrol':
+            prices.usd_petrol_vat = request.POST['vat']
+            prices.usd_petrol_duty = request.POST['duty']
+            prices.usd_petrol_price = request.POST['price']
+            prices.save()
+            messages.success(request, 'price updated successfully')
+            return redirect('zeraPortal:fuel_prices')
+        
+        else:
+            prices.rtgs_petrol_vat = request.POST['vat']
+            prices.rtgs_petrol_duty = request.POST['duty']
+            prices.rtgs_petrol_price = request.POST['price']
+            prices.save()
+            messages.success(request, 'price updated successfully')
+            return redirect('zeraPortal:fuel_prices')
+
+    return render(request, 'zeraPortal/prices.html', {'prices': prices})
 
 
 @login_required()
