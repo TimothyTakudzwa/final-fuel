@@ -124,12 +124,12 @@
             <div class="" style="margin-top: 5px; margin-bottom: 10px">
                 <div class="text-center">
 
-                <button class="btn btn-success btn-small" data-toggle="modal" data-target="#new_user">
-                    Add Station User
+                <button class="btn btn-labeled btn-success btn-md" data-toggle="modal" data-target="#new_user">
+                    <span class="btn-label"><i class="fa fa-plus"></i></span>Add Station User
                 </button>
 
-                <button class="btn btn-info btn-md" data-toggle="modal" data-target="#new_depot_user">
-                    Add Depot User
+                <button class="btn btn-labeled btn-success btn-md" data-toggle="modal" data-target="#new_depot_user">
+                    <span class="btn-label"><i class="fa fa-plus"></i></span> Add Depot User
                 </button>
 
                 </div>
@@ -297,13 +297,17 @@
                                     <div class="btn-group">
 
                                     {% if supplier.subsidiary.is_depot %}
-                                        <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_depot_{{supplier.id}}">Edit</button>
-                                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete_depot_{{supplier.id}}">Delete</button>
+                                        <button class="btn btn-labeled btn-info btn-sm" data-toggle="modal" data-target="#edit_depot_{{supplier.id}}">
+                                            <span class="btn-label"><i class="fa fa-edit"></i></span>Edit</button>
+                                        <button class="btn btn-labeled btn-danger btn-sm" data-toggle="modal" data-target="#delete_depot_{{supplier.id}}">
+                                            <span class="btn-label"><i class="fa fa-trash"></i></span>Delete</button>
 
                                         
                                     {% else %}
-                                        <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_{{supplier.id}}">Edit</button>
-                                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete_{{supplier.id}}">Delete</button>
+                                        <button class="btn btn-labeled btn-info btn-sm" data-toggle="modal" data-target="#edit_{{supplier.id}}">
+                                            <span class="btn-label"><i class="fa fa-edit"></i></span>Edit</button>
+                                        <button class="btn btn-labeled btn-danger btn-sm" data-toggle="modal" data-target="#delete_{{supplier.id}}">
+                                            <span class="btn-label"><i class="fa fa-trash"></i></span>Delete</button>
                                         <!--<a href="{% url 'users:supplier_user_create' supplier.id %}" class="btn btn-info btn-sm">More Details</a>-->
                                     {% endif %}
                                     </div>
