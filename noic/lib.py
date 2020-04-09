@@ -54,6 +54,35 @@ def orders_made_this_week():
     number_of_orders_this_week = Order.objects.filter(date__lte=datetime.datetime.today(), date__gt=datetime.datetime.today()-datetime.timedelta(days=7)).count()
     return number_of_orders_this_week
 
+
+def get_week_days(date):
+    '''
+    Get This Weeks Dates
+    '''
+    return [date + datetime.timedelta(days=i) for i in range(0 - date.weekday(), 7 - date.weekday())]
+
+def get_weekly_orders(this_week):
+    '''
+    Get the company's weekly sales
+    '''
+    if this_week == True:
+        date = datetime.datetime.now().date()
+    else:
+        date = datetime.datetime.now().date() - datetime.timedelta(days=7)    
+    week_days = get_week_days(date)
+    weekly_data = {}
+    for day in week_days:
+        weeks_revenue = 0
+        day_trans = Order.objects.filter(date=day, payment_approved=True)
+        if day_trans:
+            for tran in day_trans:
+                weeks_revenue += tran.amount_paid
+        else:
+            weeks_revenue = 0
+        weekly_data[day.strftime("%a")] = int(weeks_revenue)
+    return weekly_data               
+      
+
 def total_orders():
     return Order.objects.all().count()    
 
@@ -73,7 +102,7 @@ def get_monthly_orders():
         months_orders = Order.objects.filter(date__year=year, date__month=counter)
         if months_orders:
             for order in months_orders :
-                months_qty += order.quantity
+                months_qty += order.amount_paid
         else:
             months_qty = 0
 
