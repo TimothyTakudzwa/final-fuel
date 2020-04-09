@@ -30,16 +30,16 @@ def initial_password_change(request):
         password1 = request.POST['new_password1']
         password2 = request.POST['new_password2']
         if password1 != password2:
-            messages.warning(request, "Passwords don't match")
+            messages.warning(request, "Passwords don't match.")
             return redirect('noicDepot:initial-password-change')
         elif len(password1) < 8:
-            messages.warning(request, "Password is too short")
+            messages.warning(request, "Password is too short.")
             return redirect('noicDepot:initial-password-change')
         elif password1.isnumeric():
-            messages.warning(request, "Password can not be entirely numeric!")
+            messages.warning(request, "Password can not be entirely numeric.")
             return redirect('noicDepot:initial-password-change')
         elif not password1.isalnum():
-            messages.warning(request, "Password should be alphanumeric")
+            messages.warning(request, "Password should be alphanumeric.")
             return redirect('noicDepot:initial-password-change')
         else:
             user = request.user
@@ -48,7 +48,7 @@ def initial_password_change(request):
             user.save()
             update_session_auth_hash(request, user)
 
-            messages.success(request, 'Password successfully changed')
+            messages.success(request, 'Password successfully changed.')
             return redirect('noicDepot:orders')
     return render(request, 'noicDepot/initial_pass_change.html')
 
@@ -142,7 +142,7 @@ def upload_release_note(request, id):
         action = "Uploading Release Note"
         description = f"You have uploaded release note to {allocation.company.name}"
         Activity.objects.create(company=allocation.company, user=request.user, action=action, description=description, reference_id=allocation.id)
-        messages.success(request, "Release note successfully created")
+        messages.success(request, "Release note successfully created.")
         return redirect('noicDepot:dashboard')
 
 
@@ -162,22 +162,21 @@ def payment_approval(request, id):
     if order.fuel_type.lower() == "petrol":
         if order.currency.lower() == 'usd':
             if noic_capacity.usd_petrol == 0.00:
-                messages.warning(request, "You Have Insufficient Petrol To Approve This Order")
+                messages.warning(request, "You have insufficient petrol to approve this order.")
                 return redirect(f'noicDepot:orders')
         else:
             if noic_capacity.rtgs_petrol == 0.00:
-                messages.warning(request, "You Have Insufficient Petrol To Approve This Order")
+                messages.warning(request, "You have insufficient petrol to approve this order.")
                 return redirect(f'noicDepot:orders')
     if order.fuel_type.lower() == "diesel":
         if order.currency.lower() == 'usd':
             if noic_capacity.usd_diesel == 0.00:
-                print('_______________________________dsdnd____________')
-                messages.warning(request, "You Have Insufficient Diesel To Approve This Order")
+                messages.warning(request, "You have insufficient diesel to approve this order.")
 
                 return redirect(f'noicDepot:orders')
         else:
             if noic_capacity.rtgs_diesel == 0.00:
-                messages.warning(request, "You Have Insufficient Diesel To Approve This Order")
+                messages.warning(request, "You have insufficient diesel to approve this order.")
 
                 return redirect(f'noicDepot:orders')            
 
@@ -189,7 +188,7 @@ def payment_approval(request, id):
     description = f"You have approved order payment from {order.company.name}"
     Activity.objects.create(company=order.company, user=request.user,
                                     action=action, description=description, reference_id=order.id)
-    messages.success(request, 'payment approved successfully')
+    messages.success(request, 'Payment approved successfully.')
     return render(request, 'noicDepot/orders.html', {'orders': orders, 'order': order, 'allocate' : 'show'})
 
 
@@ -230,6 +229,7 @@ def allocate_fuel(request, id):
     order = Order.objects.filter(id=id).first()
    
     if request.method == 'POST':
+        allocated_quantity = float(request.POST['quantity'])
         if request.POST['fuel_type'].lower() == 'petrol':
             if request.POST['currency'] == 'USD':
                 depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
@@ -253,9 +253,9 @@ def allocate_fuel(request, id):
                     noic_capacity.save()
 
                     action = "Fuel Allocation"
-                    description = f"You have allocated USD petrol to {order.company.name}"
+                    description = f"You have allocated {allocated_quantity} Litres USD petrol to {order.company.name}"
                     Activity.objects.create(company=order.company, user=request.user, action=action, description=description, reference_id=order.id)
-                    messages.success(request, f'fuel allocated successfully, with {balance} remaining')
+                    messages.success(request, f'Fuel allocated successfully, with {balance} remaining.')
                     return render(request, 'noicDepot/orders.html', {'orders': orders, 'sord_object': sord_object, 'release' : 'show'})
                 else:
                     noic_capacity.usd_petrol -= float(request.POST['quantity'])
@@ -272,9 +272,9 @@ def allocate_fuel(request, id):
                     order.save()
 
                     action = "Fuel Allocation"
-                    description = f"You have allocated USD petrol to {order.company.name}"
+                    description = f"You have allocated {allocated_quantity} Litres USD petrol to {order.company.name}"
                     Activity.objects.create(company=order.company, user=request.user, action=action, description=description, reference_id=order.id)
-                    messages.success(request, 'fuel allocated successfully')
+                    messages.success(request, 'Fuel allocated successfully.')
                     return render(request, 'noicDepot/orders.html', {'orders': orders, 'sord_object': sord_object, 'release' : 'show'})
             
             else:
@@ -298,9 +298,9 @@ def allocate_fuel(request, id):
                     noic_capacity.save()
 
                     action = "Fuel Allocation"
-                    description = f"You have allocated RTGS petrol to {order.company.name}"
+                    description = f"You have allocated {allocated_quantity} Litres RTGS petrol to {order.company.name}"
                     Activity.objects.create(company=order.company, user=request.user, action=action, description=description, reference_id=order.id)
-                    messages.success(request, f'fuel allocated successfully, with {balance} remaining')
+                    messages.success(request, f'Fuel allocated successfully, with {balance} remaining.')
                     return render(request, 'noicDepot/orders.html', {'orders': orders, 'sord_object': sord_object, 'release' : 'show'})
                 else:
                     noic_capacity.rtgs_petrol -= float(request.POST['quantity'])
@@ -317,9 +317,9 @@ def allocate_fuel(request, id):
                     order.save()
 
                     action = "Fuel Allocation"
-                    description = f"You have allocated RTGS petrol to {order.company.name}"
+                    description = f"You have allocated {allocated_quantity} Litres RTGS petrol to {order.company.name}"
                     Activity.objects.create(company=order.company, user=request.user, action=action, description=description, reference_id=order.id)
-                    messages.success(request, 'fuel allocated successfully')
+                    messages.success(request, 'Fuel allocated successfully.')
                     return render(request, 'noicDepot/orders.html', {'orders': orders, 'sord_object': sord_object, 'release' : 'show'})
             
 
@@ -345,9 +345,9 @@ def allocate_fuel(request, id):
                     noic_capacity.save()
 
                     action = "Fuel Allocation"
-                    description = f"You have allocated USD diesel to {order.company.name}"
+                    description = f"You have allocated {allocated_quantity} Litres USD diesel to {order.company.name}"
                     Activity.objects.create(company=order.company, user=request.user, action=action, description=description, reference_id=order.id)
-                    messages.success(request, f'fuel allocated successfully, with {balance} remaining')
+                    messages.success(request, f'Fuel allocated successfully, with {balance} remaining.')
                     return render(request, 'noicDepot/orders.html', {'orders': orders, 'sord_object': sord_object, 'release' : 'show'})
                 else:
                     noic_capacity.usd_diesel -= float(request.POST['quantity'])
@@ -364,9 +364,9 @@ def allocate_fuel(request, id):
                     order.save()
 
                     action = "Fuel Allocation"
-                    description = f"You have allocated USD diesel to {order.company.name}"
+                    description = f"You have allocated {allocated_quantity} Litres USD diesel to {order.company.name}"
                     Activity.objects.create(company=order.company, user=request.user, action=action, description=description, reference_id=order.id)
-                    messages.success(request, 'fuel allocated successfully')
+                    messages.success(request, 'Fuel allocated successfully.')
                     return render(request, 'noicDepot/orders.html', {'orders': orders, 'sord_object': sord_object, 'release' : 'show'})
             
             
@@ -392,9 +392,9 @@ def allocate_fuel(request, id):
                     order.save()
 
                     action = "Fuel Allocation"
-                    description = f"You have allocated RTGS diesel to {order.company.name}"
+                    description = f"You have allocated {allocated_quantity} Litres RTGS diesel to {order.company.name}"
                     Activity.objects.create(company=order.company, user=request.user, action=action, description=description, reference_id=order.id)
-                    messages.success(request, f'fuel allocated successfully, with {balance} remaining')
+                    messages.success(request, f'Fuel allocated successfully, with {balance} remaining.')
                     return render(request, 'noicDepot/orders.html', {'orders': orders, 'sord_object': sord_object, 'release' : 'show'})
                 else:
                     noic_capacity.rtgs_diesel -= float(request.POST['quantity'])
@@ -412,9 +412,9 @@ def allocate_fuel(request, id):
                     order.save()
 
                     action = "Fuel Allocation"
-                    description = f"You have allocated RTGS diesel to {order.company.name}"
+                    description = f"You have allocated {allocated_quantity} Litres RTGS diesel to {order.company.name}"
                     Activity.objects.create(company=order.company, user=request.user, action=action, description=description, reference_id=order.id)
-                    messages.success(request, 'fuel allocated successfully')
+                    messages.success(request, 'Fuel allocated successfully.')
                     return render(request, 'noicDepot/orders.html', {'orders': orders, 'sord_object': sord_object, 'release' : 'show'})
 
 
@@ -441,7 +441,7 @@ def download_d_note(request, id):
         response = HttpResponse(allocation.d_note, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found')
+        messages.warning(request, 'Document not found.')
         return redirect('noicDepot:dashboard')
     return response
 
@@ -619,7 +619,7 @@ def collections(request):
         Audit_Trail.objects.create(company=company, service_station=depot, user=user,
                                     action=action, reference=reference, reference_id=reference_id)
 
-        messages.success(request, 'Collection saved successfully')
+        messages.success(request, 'Collection saved successfully.')
         return redirect('noicDepot:collections')
 
     return render(request, 'noicDepot/collections.html', context=context)
@@ -641,5 +641,5 @@ def hg_notifier(request, id):
     else:
         message = 'Requesting for more RTGS petrol fuel'
         Notification.objects.create(message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
-    messages.success(request, "Request for more fuel made successfully")
+    messages.success(request, "Request for more fuel made successfully.")
     return redirect('noicDepot:stock')

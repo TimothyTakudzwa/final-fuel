@@ -97,11 +97,11 @@ def verification(request, token, user_id):
                 return render(request, 'supplier/verify.html',
                               {'form': form, 'industries': industries, 'companies': companies, 'jobs': job_titles})
         else:
-            messages.warning(request, 'This link has been used before')
+            messages.warning(request, 'This link has been used before.')
             return redirect('buyer-register')
 
     else:
-        messages.warning(request, 'Wrong verification token, kindly follow the link send in the email')
+        messages.warning(request, 'Wrong verification token, kindly follow the link send in the email.')
         return redirect('login')
 
     return render(request, 'supplier/verify.html',
@@ -115,16 +115,16 @@ def initial_password_change(request):
         password1 = request.POST['new_password1']
         password2 = request.POST['new_password2']
         if password1 != password2:
-            messages.warning(request, "Passwords don't match")
+            messages.warning(request, "Passwords don't match.")
             return redirect('supplier:initial-password-change')
         elif len(password1) < 8:
-            messages.warning(request, "Password is too short")
+            messages.warning(request, "Password is too short.")
             return redirect('supplier:initial-password-change')
         elif password1.isnumeric():
-            messages.warning(request, "Password can not be entirely numeric!")
+            messages.warning(request, "Password can not be entirely numeric.")
             return redirect('supplier:initial-password-change')
         elif not password1.isalnum():
-            messages.warning(request, "Password should be alphanumeric")
+            messages.warning(request, "Password should be alphanumeric.")
             return redirect('supplier:initial-password-change')
         else:
             user = request.user
@@ -133,7 +133,7 @@ def initial_password_change(request):
             user.save()
             update_session_auth_hash(request, user)
 
-            messages.success(request, 'Password successfully changed')
+            messages.success(request, 'Password successfully changed.')
             return redirect('fuel-request')
     return render(request, 'supplier/initial_pass_change.html')
 
@@ -152,19 +152,19 @@ def change_password(request):
 
         if authenticate(request, username=request.user.username, password=old):
             if new1 != new2:
-                messages.warning(request, "Passwords don't match")
+                messages.warning(request, "Passwords don't match.")
                 return redirect('change-password')
             elif new1 == old:
-                messages.warning(request, "New password can not be similar to the old one")
+                messages.warning(request, "New password can not be similar to the old one.")
                 return redirect('change-password')
             elif len(new1) < 8:
-                messages.warning(request, "Password is too short")
+                messages.warning(request, "Password is too short.")
                 return redirect('change-password')
             elif new1.isnumeric():
-                messages.warning(request, "Password can not be entirely numeric!")
+                messages.warning(request, "Password can not be entirely numeric.")
                 return redirect('change-password')
             elif not new1.isalnum():
-                messages.warning(request, "Password should be alphanumeric")
+                messages.warning(request, "Password should be alphanumeric.")
                 return redirect('change-password')
             else:
                 user = request.user
@@ -172,10 +172,10 @@ def change_password(request):
                 user.save()
                 update_session_auth_hash(request, user)
 
-                messages.success(request, 'Password successfully changed')
+                messages.success(request, 'Password successfully changed.')
                 return redirect('account')
         else:
-            messages.warning(request, 'Wrong old password, please try again')
+            messages.warning(request, 'Wrong old password, please try again.')
             return redirect('change-password')
     return render(request, 'supplier/change_password.html', context=context)
 
@@ -250,13 +250,13 @@ def activate_whatsapp(request):
     if user.activated_for_whatsapp == False:
         user.activated_for_whatsapp = True
         user.save()
-        messages.success(request, 'Your whatsApp has been activated successfully')
+        messages.success(request, 'Your whatsApp has been activated successfully.')
         return redirect('fuel-request')
 
     else:
         user.activated_for_whatsapp = False
         user.save()
-        messages.warning(request, 'Your whatsApp has been deactivated successfully')
+        messages.warning(request, 'Your whatsApp has been deactivated successfully.')
         return redirect('fuel-request')
 
 
@@ -279,11 +279,11 @@ def verify_client(request, id):
     if not client.is_verified:
         client.is_verified = True
         client.save()
-        messages.success(request, f'{client.buyer_company.name} successfully verified')
+        messages.success(request, f'{client.buyer_company.name.title()} successfully verified.')
         return redirect('supplier:clients')
     client.is_verified = False
     client.save()
-    messages.success(request, f'{client.buyer_company.name}"s verification overturned')
+    messages.success(request, f'{client.buyer_company.name.title()}"s verification overturned.')
     return redirect('supplier:clients')
 
 
@@ -296,7 +296,7 @@ def view_client_id_document(request, id):
         response = HttpResponse(client.id_document, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found')
+        messages.warning(request, 'Document not found.')
         redirect('supplier:clients')
     return response
 
@@ -310,7 +310,7 @@ def view_application_id_document(request, id):
         response = HttpResponse(client.application_document, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found')
+        messages.warning(request, 'Document not found.')
         redirect('supplier:clients')
     return response
 
@@ -327,7 +327,7 @@ def edit_delivery_schedule(request):
         if request.POST['delivery_date']:
             if delivery_schedule.date_edit_count >= 3:
                 messages.warning(request, "Sorry you have exceeded the number of permitted delivery date extensions,\
-                                     you can not proceed")
+                                     you can not proceed.")
                 return redirect('supplier:delivery_schedules')
             delivery_schedule.date = request.POST['delivery_date']
             delivery_schedule.date_edit_count += 1
@@ -338,7 +338,7 @@ def edit_delivery_schedule(request):
         description = f"You have updated delivery schedule for buyer {delivery_schedule.transaction.buyer.company.name}"
         Activity.objects.create(company=delivery_schedule.transaction.buyer.company, user=request.user, action=action,
                                 description=description, reference_id=delivery_schedule.id)
-        messages.success(request, f"Schedule successfully updated")
+        messages.success(request, f"Schedule successfully updated.")
         return redirect('supplier:delivery_schedules')
 
 
@@ -479,7 +479,7 @@ def stock_update(request, id):
             fuel_update = SuballocationFuelUpdate.objects.filter(id=id).first()
             if request.POST['fuel_type'] == 'Petrol':
                 if float(request.POST['quantity']) > available_petrol:
-                    messages.warning(request, 'You can only reduce your petrol quantity')
+                    messages.warning(request, 'You can only reduce your petrol quantity.')
                     return redirect('available_stock')
                 fuel_reduction = fuel_update.petrol_quantity - float(request.POST['quantity'])
                 fuel_update.petrol_quantity = float(request.POST['quantity'])
@@ -496,7 +496,7 @@ def stock_update(request, id):
 
             else:
                 if float(request.POST['quantity']) > available_diesel:
-                    messages.warning(request, 'You can only reduce your diesel quantity')
+                    messages.warning(request, 'You can only reduce your diesel quantity.')
                     return redirect('available_stock')
                 fuel_reduction = fuel_update.diesel_quantity - float(request.POST['quantity'])
                 fuel_update.diesel_quantity = float(request.POST['quantity'])
@@ -518,7 +518,7 @@ def stock_update(request, id):
                 fuel_update.ecocash = request.POST['ecocash']
             fuel_update.save()
 
-            messages.success(request, 'Fuel successfully updated')
+            messages.success(request, 'Fuel successfully updated.')
     return redirect('available_stock')
 
 
@@ -598,7 +598,7 @@ def offer(request, id):
                     offer.meter_available = True if request.POST.get('meter_available') == "on" else False
                     offer.save()
 
-                    messages.success(request, 'Offer uploaded successfully')
+                    messages.success(request, 'Offer uploaded successfully.')
 
                     message = f'You have a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.company.name.title()}  for your request of {fuel_request.amount}L'
                     Notification.objects.create(message=message, user=fuel_request.name, reference_id=offer.id,
@@ -621,13 +621,13 @@ def offer(request, id):
                                             description=description, reference_id=reference_id)
                     return redirect('fuel-request')
                 else:
-                    messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
+                    messages.warning(request, 'You can not make an offer greater than the requested fuel quantity.')
                     return redirect('fuel-request')
             else:
-                messages.warning(request, 'You can not offer fuel more than the available fuel stock')
+                messages.warning(request, 'You can not offer fuel more than the available fuel stock.')
                 return redirect('fuel-request')
         else:
-            messages.warning(request, "Please provide a price to complete an offer")
+            messages.warning(request, "Please provide a price to complete an offer.")
             return redirect('fuel-request')
     return render(request, 'supplier/fuel_request.html')
 
@@ -678,7 +678,7 @@ def edit_offer(request, id):
                 offer.dipping_stick_available = True if request.POST.get('dipping_stick_available') == "on" else False
                 offer.meter_available = True if request.POST.get('meter_available') == "on" else False
                 offer.save()
-                messages.success(request, 'Offer successfully updated')
+                messages.success(request, 'Offer successfully updated.')
                 message = f'You have an updated offer of {new_offer}L {offer.request.fuel_type.lower()} at ${offer.price} from {request.user.company.name.title()} for your request of {offer.request.amount}L'
                 Notification.objects.create(message=message, user=offer.request.name, reference_id=offer.id,
                                             action="new_offer")
@@ -688,7 +688,7 @@ def edit_offer(request, id):
                 # Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description, reference_id=offer.id)
                 return redirect('my_offers')
             else:
-                messages.warning(request, 'You can not make an offer greater than the requested fuel quantity!')
+                messages.warning(request, 'You can not make an offer greater than the requested fuel quantity.')
                 return redirect('my_offers')
         else:
             messages.warning(request, 'You can not offer fuel more than the available fuel stock')
@@ -749,7 +749,7 @@ def transaction(request):
             depot=Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
             comment=request.POST.get('comment')
         )
-        messages.success(request, 'Transaction successfully reviewed')
+        messages.success(request, 'Transaction successfully reviewed.')
         return redirect('transaction')
 
     today = datetime.now().strftime("%m/%d/%y")
@@ -893,7 +893,7 @@ def complete_transaction(request, id):
                                  "Proof of payment approved!, please create a delivery schedule for the buyer.")
                 return redirect('transaction')
             else:
-                messages.warning(request, "There is not enough diesel in stock to complete the transaction")
+                messages.warning(request, "There is not enough diesel in stock to complete the transaction.")
                 return redirect('transaction')
     return render(request, 'supplier/transactions.html')
 
@@ -936,7 +936,7 @@ def download_proof(request, id):
         response = HttpResponse(document.proof_of_payment, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found')
+        messages.warning(request, 'Document not found.')
         return redirect('transaction')
     return response
 
@@ -1134,7 +1134,7 @@ def create_delivery_schedule(request):
         description = f"You have created delivery schedule for {transaction.buyer.company.name}"
         Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description,
                                 reference_id=transaction.id)
-        messages.success(request, "Schedule successfully created")
+        messages.success(request, "Schedule successfully created.")
         message = f"{schedule.transaction.supplier.company} has created a delivery schedule for you, click to view schedule"
         Notification.objects.create(user=schedule.transaction.buyer, action='schedule', message=message,
                                     reference_id=schedule.id)
@@ -1151,7 +1151,7 @@ def delivery_schedules(request):
         schedule = DeliverySchedule.objects.get(id=delivery_id)
         schedule.supplier_document = supplier_document
         schedule.save()
-        messages.success(request, "File Successfully Uploaded")
+        messages.success(request, "File Successfully Uploaded.")
         msg = f"Delivery confirmed for {schedule.transaction.buyer.company}, click to view confirmation document"
         # Notification.objects.create(user=request.user, action='DELIVERY', message=msg, reference_id=schedule.id)
         return redirect('supplier:delivery_schedules')
@@ -1174,7 +1174,7 @@ def view_delivery_schedule(request, id):
         schedule = get_object_or_404(DeliverySchedule, id=delivery_id)
         schedule.supplier_document = supplier_document
         schedule.save()
-        messages.success(request, "File Successfully Uploaded")
+        messages.success(request, "File Successfully Uploaded.")
         msg = f"Delivery Confirmed for {schedule.transaction.buyer.company}, Click To View Confirmation Document"
         Notification.objects.create(user=request.user, action='DELIVERY', message=msg, reference_id=schedule.id)
         return redirect('delivery_schedules')
@@ -1206,7 +1206,7 @@ def view_delivery_note(request, id):
         response = HttpResponse(delivery.delivery_note, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found')
+        messages.warning(request, 'Document not found.')
         redirect('transactions')
     return response
 
@@ -1232,7 +1232,7 @@ def upload_release_note(request, id):
         description = f"You have created release note for {transaction.buyer.company.name}"
         Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description,
                                 reference_id=transaction.id)
-        messages.success(request, "Release note successfully created")
+        messages.success(request, "Release note successfully created.")
         return redirect(f'/supplier/payment-and-release-notes/{transaction.id}')
 
 
@@ -1268,7 +1268,7 @@ def view_supplier_doc(request, id):
         response = HttpResponse(delivery.supplier_document, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found')
+        messages.warning(request, 'Document not found.')
         redirect('supplier:delivery_schedules')
     return response
 
@@ -1279,7 +1279,7 @@ def del_supplier_doc(request, id):
     delivery = DeliverySchedule.objects.filter(id=id).first()
     delivery.supplier_document = None
     delivery.save()
-    messages.success(request, 'Document removed successfully')
+    messages.success(request, 'Document removed successfully,')
     return redirect('supplier:delivery_schedules')
 
 
@@ -1304,7 +1304,7 @@ def supplier_release_note(request, id):
         description = f"You have created release note for {transaction.buyer.company.name}"
         Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description,
                                 reference_id=transaction.id)
-        messages.success(request, "Release note successfully uploaded")
+        messages.success(request, "Release note successfully uploaded.")
         return redirect(f'/supplier/payment-and-release-notes/{id}')
 
 
@@ -1330,7 +1330,7 @@ def mark_completion(request, id):
     transaction.is_complete = True
     transaction.save()
 
-    messages.success(request, 'Transaction is now complete')
+    messages.success(request, 'Transaction is now complete.')
     return redirect('transaction')
 
 

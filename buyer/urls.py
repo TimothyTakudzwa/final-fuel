@@ -37,6 +37,7 @@ urlpatterns = [
     path('payment_release_notes/<int:id>', views.payment_release_notes, name='payment_release_notes'),
     path('delivery_note/<int:id>', views.delivery_note, name='delivery_note'),
     path('download_release_note/<int:id>', views.download_release_note, name='download_release_note'),
+    path('download_pop/<int:id>', views.download_pop, name='download_pop'),
     path('company_profile/', views.company_profile, name='company_profile'),
     path('activity/', views.activity, name='activity')
 

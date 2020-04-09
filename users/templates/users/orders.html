@@ -370,7 +370,16 @@
                         <td>{{ order.fuel_type|lower|capfirst }}</td>
                     {% endif %}    
 
+                    {% if order.fuel_type == 'Petrol'  %}
+                    <td style="color: #009688;">{{ order.quantity|floatformat:2|intcomma }}</td>
+                    {% elif order.fuel_type == 'Diesel' %}
+                    <td style="color: #ffb61e;">{{ order.quantity|floatformat:2|intcomma }}</td>
+                    {% else %}
                     <td>{{ order.quantity|floatformat:2|intcomma }}</td>
+                    {% endif %}    
+
+
+
                     <td>{{ order.currency}}</td> 
                     <td>
 
@@ -455,7 +464,8 @@
                         </div>
                         </td>
                    
-                    <td>{{order.status}}</td>
+                    <td {% if order.status == 'Accepted' %} style="color: #07a513;" {% else %} style="color: crimson;" {% endif %}>
+                    {{order.status}}</td>
                     
                     {% if order.allocation != None %}
                             {% if order.allocation.release_note %}

@@ -5,390 +5,390 @@
 {% block body %}
 
 
-{% if allocate == 'show' %}
+    {% if allocate == 'show' %}
 
-<div class="modal fade modal-success in" id="allocate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal fade modal-success in" id="allocate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
                 <span class="modal-title" id="exampleModalLongTitle">Allocate Fuel- <i style="color:azure"><small>Please
                             Note the fuel you are entering is for the
                             payment you approved</small></i></span>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
 
-            {% load crispy_forms_tags %}
-            <form action="{% url 'noicDepot:allocate_fuel' order.id %}" method="POST">
-                {% csrf_token %}
-                <input type="hidden" value="{{order.fuel_type}}" name="fuel_type" />
-                <input type="hidden" value="{{order.quantity}}" name="quantity" />
-                <input type="hidden" value="{{order.currency}}" name="currency" />
-                <input type="hidden" value="{{order.price}}" name="price" />
-                <div class="form-group row col-sm-12">
-                    <div class="col-sm-6">
-                        <label><b style='color:#009688'>Fuel Type</b></label>
-                        <input type="text" name="fuel_type1" class="form-control" value="{{order.fuel_type}}"
-                            disabled />
-                    </div>
-                    <div class="col-sm-6">
-                        <label><b style='color:#009688'>Quantity</b></label>
-                        <input type="text" name="quantity1" class="form-control" value="{{order.quantity}}" disabled />
-                    </div>
+                    {% load crispy_forms_tags %}
+                    <form action="{% url 'noicDepot:allocate_fuel' order.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{order.fuel_type}}" name="fuel_type" />
+                        <input type="hidden" value="{{order.quantity}}" name="quantity" />
+                        <input type="hidden" value="{{order.currency}}" name="currency" />
+                        <input type="hidden" value="{{order.price}}" name="price" />
+                        <div class="form-group row col-sm-12">
+                            <div class="col-sm-6">
+                                <label><b style='color:#009688'>Fuel Type</b></label>
+                                <input type="text" name="fuel_type1" class="form-control" value="{{order.fuel_type}}"
+                                       disabled />
+                            </div>
+                            <div class="col-sm-6">
+                                <label><b style='color:#009688'>Quantity</b></label>
+                                <input type="text" name="quantity1" class="form-control" value="{{order.quantity}}" disabled />
+                            </div>
+                        </div>
+
+                        <div class="form-group row col-sm-12">
+                            <div class="col-sm-6">
+                                <label><b style='color:#009688'>Currency</b></label>
+                                <input type="text" name="currency1" class="form-control" value="{{order.currency}}" disabled />
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label><b style='color:#009688'>Price</b></label>
+                                <input type="text" name="price" class="form-control" value="{{order.price}}" disabled />
+                            </div>
+
+
+                        </div>
+
+                        <div class="form-group row"
+                             style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                            <button type="button" class="btn btn-secondary col-sm-6" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="form-group row col-sm-12">
-                    <div class="col-sm-6">
-                        <label><b style='color:#009688'>Currency</b></label>
-                        <input type="text" name="currency1" class="form-control" value="{{order.currency}}" disabled />
-                    </div>
-
-                    <div class="col-sm-6">
-                        <label><b style='color:#009688'>Price</b></label>
-                        <input type="text" name="price" class="form-control" value="{{order.price}}" disabled />
-                    </div>
-
-
-                </div>
-
-                <div class="form-group row"
-                    style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                    <button type="button" class="btn btn-secondary col-sm-6" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-
-    $(document).ready(function () {
-        $('#allocate').modal('show');
-    });
-
-</script>
-{%else%}
-<script>
-    console.log("This is it 333")
-</script>
-{%endif%}
-
-{% if release == 'show' %}
-
-<div class="modal fade" tabindex="-1" role="dialog" id="myModal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #009688; color: white">
-                <span class="modal-title" id="exampleModalLabel">Upload Release Note</span>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <form method="POST" action="{% url 'noicDepot:upload_release_note' sord_object.id %}"
-                    enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group col-md-6">
-                        <label>Release Date</label>
-                        <input type="date" name="release_date" class="form-control" required />
-                    </div>
-                    <br>
-                    <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
-
-                </form>
             </div>
         </div>
-    </div>
-</div>
 
-<script>
+        <script>
 
-    $(document).ready(function () {
-        $('#myModal').modal('show');
-    });
+            $(document).ready(function () {
+                $('#allocate').modal('show');
+            });
 
-</script>
-{%else%}
-<script>
-    console.log("This is it 333")
-</script>
-{%endif%}
+        </script>
+    {%else%}
+        <script>
+            console.log("This is it 333")
+        </script>
+    {%endif%}
+
+    {% if release == 'show' %}
+
+        <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #009688; color: white">
+                        <span class="modal-title" id="exampleModalLabel">Upload Release Note</span>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <form method="POST" action="{% url 'noicDepot:upload_release_note' sord_object.id %}"
+                              enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group col-md-6">
+                                <label>Release Date</label>
+                                <input type="date" name="release_date" class="form-control" required />
+                            </div>
+                            <br>
+                            <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            $(document).ready(function () {
+                $('#myModal').modal('show');
+            });
+
+        </script>
+    {%else%}
+        <script>
+            console.log("This is it 333")
+        </script>
+    {%endif%}
 
 
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
-        <div class="input-group">
-            <input type="text" name="q" class="form-control" placeholder="Search...">
-            <span class="input-group-btn">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search...">
+                <span class="input-group-btn">
                 <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
             </span>
+            </div>
+        </form>
+        <!-- <div class="header-icon">
+            <i class="fa fa-binoculars"></i>
+        </div> -->
+        <div class="header-title" style="margin-left: 0px;">
+            <h1>Pending Orders</h1>
+            <small>Fuel Management System</small>
+            <ol class="breadcrumb hidden-xs">
+                <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
+                <li class="active">Orders</li>
+            </ol>
         </div>
-    </form>
-    <!-- <div class="header-icon">
-        <i class="fa fa-binoculars"></i>
-    </div> -->
-    <div class="header-title" style="margin-left: 0px;">
-        <h1>Pending Orders</h1>
-        <small>Fuel Management System</small>
-        <ol class="breadcrumb hidden-xs">
-            <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
-            <li class="active">Orders</li>
-        </ol>
-    </div>
-</section>
-<!-- Main content -->
-<div class="content">
-    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
-        <div class="panel-heading ui-sortable-handle">
+    </section>
+    <!-- Main content -->
+    <div class="content">
+        <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+            <div class="panel-heading ui-sortable-handle">
 
 
-            <div class="dropdown">
-                <ul class="dropdown-menu dropdown-menu-right">
+                <div class="dropdown">
+                    <ul class="dropdown-menu dropdown-menu-right">
 
 
-                </ul>
-                <div class="dropdown-toggle" data-toggle="dropdown"><span
-                        class="panel-control-icon glyphicon glyphicon-cog"></span>
+                    </ul>
+                    <div class="dropdown-toggle" data-toggle="dropdown"><span
+                            class="panel-control-icon glyphicon glyphicon-cog"></span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="panel-body">
+            <div class="panel-body">
 
 
-            <div class="table-responsive">
-                
-            <div class="col-xs-12 col-sm-12">
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs">
-                    <li class="active" ><a href="#tab1" data-toggle="tab" aria-expanded="true" style="border: rgb(211, 208, 208) 1px solid;">New Orders</a></li>
-                    <li class=""><a href="#tab2" data-toggle="tab" aria-expanded="false" style="border: rgb(211, 208, 208) 1px solid;">Completed Orders</a></li>
-                </ul>
-                <!-- Tab panels -->
-                <div class="tab-content">
-                    <div class="tab-pane fade active in" id="tab1">
-                        <div class="panel-body">
-                           
-                            <table id="allocations" class="table table-striped table-bordered" style="width:100%">
-                                <thead style="background-color: lightslategray; color:white;">
-                                    <tr>
-                                        <th style="color: white;">Date</th>
-                                        <th style="color: white;">Time</th>
-                                        <th style="color: white;">Company</th>
-                                        <th style="color: white;">Address</th>
-                                        <th style="color: white;">Fuel</th>
-                                        <th style="color: white;">Quantity</th>
-                                        <th style="color: white;">Currency</th>
-                                        <th style="color: white;">Payment</th>
-                                        <th style="color: white;">P.O.P</th>
-                                        <th style="color: white;">Status</th>
-                                        <th style="color: white;">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for order in orders %}
-                                    <tr>
-                                        <td>{{ order.date }}</td>
-                                        <td>{{ order.time }}</td>
-                                        <td>{{ order.company.name|lower|title }}</td>
-                                        <td>{{ order.company.address|lower|title }}</td>
-                                        {% if order.fuel_type|lower|capfirst == 'Petrol' %}
-                                            <td class="" style="color: #009688;">
-                                                {{order.fuel_type|lower|capfirst}}
-                                            </td>
-                                        {% elif order.fuel_type|lower|capfirst == 'Diesel' %}
-                                        
-                                            <td class="" style="color: #ffb61e;">
-                                                {{order.fuel_type|lower|capfirst}}
-                                            </td>
-                                        {% else %}
-                                            <td class="">
-                                                {{order.fuel_type|lower|capfirst}}
-                                            </td>
-                                        {% endif %}    
-                                        <td>{{ order.quantity|floatformat:2|intcomma}}</td>
-                                        <td>{{ order.currency}}</td>
-                                        <td>
-            
-                                            <!--call modal-->
-                                            <button class="btn btn-primary btn-sm" data-toggle="modal"
-                                                data-target="#payment{{order.id}}">
-                                                <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
-                                            </button>
-                                            <!--view details-->
-                                            <div class="modal fade modal-success in" id="payment{{order.id}}" tabindex="-1"
-                                                role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header" style="background-color: #009688; color: white">
-                                                            <span class="modal-title" id="exampleModalLabel">Payment Details</span>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <h4 style="font-weight: lighter;font-size: 14px;">Sub Total
-                                                                        &nbsp;&nbsp; : &nbsp;&nbsp; ${{order.amount_paid|floatformat:2|intcomma}}</h4>
+                <div class="table-responsive">
+
+                    <div class="col-xs-12 col-sm-12">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active" ><a href="#tab1" data-toggle="tab" aria-expanded="true" style="border: rgb(211, 208, 208) 1px solid;">Orders</a></li>
+                            <li class=""><a href="#tab2" data-toggle="tab" aria-expanded="false" style="border: rgb(211, 208, 208) 1px solid;">Tab 2</a></li>
+                        </ul>
+                        <!-- Tab panels -->
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="tab1">
+                                <div class="panel-body">
+
+                                    <table id="allocations" class="table table-striped table-bordered" style="width:100%">
+                                        <thead style="background-color: lightslategray; color:white;">
+                                        <tr>
+                                            <th style="color: white;">Date</th>
+                                            <th style="color: white;">Time</th>
+                                            <th style="color: white;">Company</th>
+                                            <th style="color: white;">Address</th>
+                                            <th style="color: white;">Fuel</th>
+                                            <th style="color: white;">Quantity</th>
+                                            <th style="color: white;">Currency</th>
+                                            <th style="color: white;">Payment</th>
+                                            <th style="color: white;">P.O.P</th>
+                                            <th style="color: white;">Status</th>
+                                            <th style="color: white;">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for order in orders %}
+                                            <tr>
+                                                <td>{{ order.date }}</td>
+                                                <td>{{ order.time }}</td>
+                                                <td>{{ order.company.name|lower|title }}</td>
+                                                <td>{{ order.company.address|lower|title }}</td>
+                                                {% if order.fuel_type|lower|capfirst == 'Petrol' %}
+                                                    <td class="" style="color: #009688;">
+                                                        {{order.fuel_type|lower|capfirst}}
+                                                    </td>
+                                                {% elif order.fuel_type|lower|capfirst == 'Diesel' %}
+
+                                                    <td class="" style="color: #ffb61e;">
+                                                        {{order.fuel_type|lower|capfirst}}
+                                                    </td>
+                                                {% else %}
+                                                    <td class="">
+                                                        {{order.fuel_type|lower|capfirst}}
+                                                    </td>
+                                                {% endif %}
+                                                <td>{{ order.quantity|floatformat:2|intcomma}}</td>
+                                                <td>{{ order.currency}}</td>
+                                                <td>
+
+                                                    <!--call modal-->
+                                                    <button class="btn btn-primary btn-sm" data-toggle="modal"
+                                                            data-target="#payment{{order.id}}">
+                                                        <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
+                                                    </button>
+                                                    <!--view details-->
+                                                    <div class="modal fade modal-success in" id="payment{{order.id}}" tabindex="-1"
+                                                         role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header" style="background-color: #009688; color: white">
+                                                                    <span class="modal-title" id="exampleModalLabel">Payment Details</span>
+                                                                    <button type="button" class="close" data-dismiss="modal"
+                                                                            aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
                                                                 </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <h4 style="font-weight: lighter;font-size: 14px;">Duty
-                                                                        &nbsp;&nbsp; : &nbsp;&nbsp; ${{order.duty}}</h4>
-                                                                </div>
-                                                            </div>
-            
-            
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <h4 style="font-weight: lighter;font-size: 14px;">Vat
-                                                                        &nbsp;&nbsp; : &nbsp;&nbsp; ${{order.vat}}</h4>
+                                                                <div class="modal-body">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <h4 style="font-weight: lighter;font-size: 14px;">Sub Total
+                                                                                &nbsp;&nbsp; : &nbsp;&nbsp; ${{order.amount_paid|floatformat:2|intcomma}}</h4>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <h4 style="font-weight: lighter;font-size: 14px;">Duty
+                                                                                &nbsp;&nbsp; : &nbsp;&nbsp; ${{order.duty}}</h4>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <h4 style="font-weight: lighter;font-size: 14px;">Vat
+                                                                                &nbsp;&nbsp; : &nbsp;&nbsp; ${{order.vat}}</h4>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-            
-                                        </td>
-            
-                                        {% if order.payment_approved %}
-                                        <td><b style="color: rgb(59, 59, 139);"> Approved</b></td>
-                                        {% else %}
-                                        <td>
-                                            <div class="btn-group">
-                                                <a class="btn btn-primary btn-sm" style="color: whitesmoke;"
-                                                    href="{% url 'noicDepot:download_proof' order.id %}"> <i class="fa fa-download"
-                                                        style="font-size:15px"></i> P.O.P</a>
-                                                <a class="btn btn-warning btn-sm" style="color: whitesmoke;"
-                                                    href="{% url 'noicDepot:payment_approval' order.id %}">Approve</a>
-                                            </div>
-                                        </td>
-                                        {% endif %}
-                                        
-                                        <td>{{order.status}}</td>
-                                        {% if order.payment_approved %}
-                                        {% if order.allocated_fuel %}
-                                        <td>
-                                            <div class="btn-group">
-                                                <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"
-                                                    href="{% url 'noicDepot:dashboard' %}">View Allocation</a>
-                                            </div>
-                                        </td>
-                                        {% else %}
-                                        <td>
-                                            <div class="btn-group">
-                                                <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal"
-                                                    data-target="#allocate{{order.id}}">Allocate Fuel</a>
-                                            </div>
-                                        </td>
-                                        {% endif %}
-                                        {% else %}
-                                        <td><b style="margin-left: 25px;"> <i>Pending</i></b></td>
-                                        {% endif %}
-                                    </tr>
-            
-            
-                                    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
-            
-                                    <script src="js/bootstrap.min.js"></script>
-            
-            
-            
-                                    <div class="modal fade modal-success in" id="allocate{{order.id}}" tabindex="-1" role="dialog"
-                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
+
+                                                </td>
+
+                                                {% if order.payment_approved %}
+                                                    <td><b style="color: rgb(59, 59, 139);"> Approved</b></td>
+                                                {% else %}
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <a class="btn btn-primary btn-sm" style="color: whitesmoke;"
+                                                               href="{% url 'noicDepot:download_proof' order.id %}"> <i class="fa fa-download"
+                                                                                                                        style="font-size:15px"></i> P.O.P</a>
+                                                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;"
+                                                               href="{% url 'noicDepot:payment_approval' order.id %}">Approve</a>
+                                                        </div>
+                                                    </td>
+                                                {% endif %}
+
+                                                <td>{{order.status}}</td>
+                                                {% if order.payment_approved %}
+                                                    {% if order.allocated_fuel %}
+                                                        <td>
+                                                            <div class="btn-group">
+                                                                <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"
+                                                                   href="{% url 'noicDepot:dashboard' %}">View Allocation</a>
+                                                            </div>
+                                                        </td>
+                                                    {% else %}
+                                                        <td>
+                                                            <div class="btn-group">
+                                                                <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal"
+                                                                   data-target="#allocate{{order.id}}">Allocate Fuel</a>
+                                                            </div>
+                                                        </td>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <td><b style="margin-left: 25px;"> <i>Pending</i></b></td>
+                                                {% endif %}
+                                            </tr>
+
+
+                                            <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+
+                                            <script src="js/bootstrap.min.js"></script>
+
+
+
+                                            <div class="modal fade modal-success in" id="allocate{{order.id}}" tabindex="-1" role="dialog"
+                                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
                                                     <span class="modal-title" id="exampleModalLongTitle">Allocate Fuel- <i
                                                             style="color:azure"><small>Please Note the fuel you are entering is for
                                                                 the
                                                                 payment you approved</small></i></span>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+
+                                                        {% load crispy_forms_tags %}
+                                                        <form action="{% url 'noicDepot:allocate_fuel' order.id %}" method="POST">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" value="{{order.fuel_type}}" name="fuel_type" />
+                                                            <input type="hidden" value="{{order.quantity}}" name="quantity" />
+                                                            <input type="hidden" value="{{order.currency}}" name="currency" />
+                                                            <input type="hidden" value="{{order.price}}" name="price" />
+                                                            <div class="form-group row col-sm-12">
+                                                                <div class="col-sm-6">
+                                                                    <label><b style='color:#009688'>Fuel Type</b></label>
+                                                                    <input type="text" name="fuel_type1" class="form-control"
+                                                                           value="{{order.fuel_type}}" disabled />
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <label><b style='color:#009688'>Quantity</b></label>
+                                                                    <input type="text" name="quantity1" class="form-control"
+                                                                           value="{{order.quantity|floatformat:2|intcomma}}" disabled />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group row col-sm-12">
+                                                                <div class="col-sm-6">
+                                                                    <label><b style='color:#009688'>Currency</b></label>
+                                                                    <input type="text" name="currency1" class="form-control"
+                                                                           value="{{order.currency}}" disabled />
+                                                                </div>
+
+                                                                <div class="col-sm-6">
+                                                                    <label><b style='color:#009688'>Price</b></label>
+                                                                    <input type="text" name="price" class="form-control"
+                                                                           value="{{order.price}}" disabled />
+                                                                </div>
+
+
+                                                            </div>
+
+                                                            <div class="form-group row"
+                                                                 style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                                                <button type="button" class="btn btn-secondary col-sm-6"
+                                                                        data-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
                                                 </div>
-            
-                                                {% load crispy_forms_tags %}
-                                                <form action="{% url 'noicDepot:allocate_fuel' order.id %}" method="POST">
-                                                    {% csrf_token %}
-                                                    <input type="hidden" value="{{order.fuel_type}}" name="fuel_type" />
-                                                    <input type="hidden" value="{{order.quantity}}" name="quantity" />
-                                                    <input type="hidden" value="{{order.currency}}" name="currency" />
-                                                    <input type="hidden" value="{{order.price}}" name="price" />
-                                                    <div class="form-group row col-sm-12">
-                                                        <div class="col-sm-6">
-                                                            <label><b style='color:#009688'>Fuel Type</b></label>
-                                                            <input type="text" name="fuel_type1" class="form-control"
-                                                                value="{{order.fuel_type}}" disabled />
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <label><b style='color:#009688'>Quantity</b></label>
-                                                            <input type="text" name="quantity1" class="form-control"
-                                                                value="{{order.quantity|floatformat:2|intcomma}}" disabled />
-                                                        </div>
-                                                    </div>
-            
-                                                    <div class="form-group row col-sm-12">
-                                                        <div class="col-sm-6">
-                                                            <label><b style='color:#009688'>Currency</b></label>
-                                                            <input type="text" name="currency1" class="form-control"
-                                                                value="{{order.currency}}" disabled />
-                                                        </div>
-            
-                                                        <div class="col-sm-6">
-                                                            <label><b style='color:#009688'>Price</b></label>
-                                                            <input type="text" name="price" class="form-control"
-                                                                value="{{order.price}}" disabled />
-                                                        </div>
-            
-            
-                                                    </div>
-            
-                                                    <div class="form-group row"
-                                                        style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                                                        <button type="button" class="btn btn-secondary col-sm-6"
-                                                            data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
-                                                    </div>
-                                                </form>
                                             </div>
-                                        </div>
-                                    </div>
-                                    {%endfor%}
-                                </tbody>
-                            </table>
+                                        {%endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="tab2">
+                                <div class="panel-body">
+                                    <p><strong>Lorem Ipsum is simply dummy text of the printing and. </strong></p>
+                                    <p>It is a long established fact that a reader will be distracted by the readable content of
+                                        a page when looking at its layout.
+                                        The point of using Lorem Ipsum is that it has a more-or-less normal distribution of
+                                        letters, as opposed to using 'Content
+                                        here, content here', making it look like readable English. Many desktop publishing
+                                        packages and web page editors now use
+                                        Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover
+                                        many web sites still in their infancy.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="tab2">
-                        <div class="panel-body">
-                            <p><strong>Lorem Ipsum is simply dummy text of the printing and. </strong></p>
-                            <p>It is a long established fact that a reader will be distracted by the readable content of
-                                a page when looking at its layout.
-                                The point of using Lorem Ipsum is that it has a more-or-less normal distribution of
-                                letters, as opposed to using 'Content
-                                here, content here', making it look like readable English. Many desktop publishing
-                                packages and web page editors now use
-                                Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover
-                                many web sites still in their infancy.</p>
-                        </div>
-                    </div>
+
                 </div>
+
+
+
             </div>
-
-            </div>
-
-
-
         </div>
-    </div>
 
-</div>
+    </div>
 {%endblock%}
