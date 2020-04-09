@@ -1365,8 +1365,8 @@
                                 <td>{{alloc.fuel_payment_type}}</td>
                                 <td>
 
-                                    <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal"
-                                            data-target="#change_{{alloc.id}}">Edit Allocation</button>
+                                    <button class="btn btn-labeled btn-success btn-sm"  data-toggle="modal"
+                                            data-target="#change_{{alloc.id}}"><span class="btn-label"><i class="fa fa-edit"></i></span>Edit Allocation</button>
 
                                 </td>
                             </tr>
@@ -1435,7 +1435,7 @@
                                                 <div class="modal-footer">
                                                     <button type="submit" class="btn btn-primary">Update</button>
 
-                                                    <button type="button" class="btn btn-secondary "
+                                                    <button type="button" class="btn btn-default "
                                                             data-dismiss="modal">Close</button>
                                                 </div>
                                             </form>
@@ -1444,6 +1444,14 @@
                                     </div>
                                 </div>
                             </div>
+                            <script>
+                                $('body').click(function (event) {
+                                    if(!$(event.target).closest('#change_{{alloc.id}}').length && !$(event.target).is('#change_{{alloc.id}}')) {
+                                        $("#change_{{alloc.id}}").modal('hide');
+                                    }
+                                        
+                                });
+                            </script>
 
                         {% endfor %}
                         </tbody>
