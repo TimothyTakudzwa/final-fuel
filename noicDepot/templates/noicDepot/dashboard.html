@@ -186,7 +186,7 @@
 
                                     <form method="POST" action="{% url 'noicDepot:upload_release_note' sord.id %}" enctype="multipart/form-data">
                                         {% csrf_token %}
-                                        <div class="form-group col-md-12" style="padding-bottom: 20px;">
+                                        <div class="form-group col-md-12" style="margin-top: 20px;">
                                             <div class="col-md-6">
                                                 <label>New Release Date</label>
                                             </div>
@@ -196,7 +196,7 @@
                                             </div>    
                                         </div>
                                         <br>
-                                        <div class="modal-footer"> 
+                                        <div class="modal-footer" style="margin-top: 80px;"> 
                                             <button class="btn btn-primary" type="submit">Upload</button> 
                                             <button class="btn btn-default" data-dismiss="modal" >Close</button>
                                         </div>
