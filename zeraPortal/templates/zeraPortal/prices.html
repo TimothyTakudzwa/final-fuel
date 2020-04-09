@@ -1,0 +1,316 @@
+{% extends "zeraPortal/zera_base.html" %} 
+{% block title %}Fuel Finder - ZERA {% endblock %} 
+{% load static %}
+{% load humanize %}
+{% block body %}
+<section class="content-header">
+    <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search...">
+            <span class="input-group-btn">
+                  <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+              </span>
+        </div>
+    </form>
+    <div class="header-icon">
+        <i class="fa fa-industry"></i>
+    </div>
+    <div class="header-title">
+
+        <h1>Zim Fuel Prices </h1>
+        <small>Fuel Management System</small>
+        <ol class="breadcrumb hidden-xs">
+            <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
+            <li class="active">Prices</li>
+        </ol>
+
+    </div>
+
+</section>
+<section class="content">
+    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+        <div class="panel-heading ui-sortable-handle">
+            <div class="btn-group">
+                <h4>Zim Fuel Prices</h4>
+            </div>
+            <div class="dropdown">
+                <ul class="dropdown-menu dropdown-menu-right">
+
+
+                </ul>
+                <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+
+            {% if prices %}
+            <div class="table-responsive">
+                <table id="allocations" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>
+                                Parameters
+                            </th>
+                            <th>
+                                Vat
+                             </th>
+                             <th>
+                                Duty
+                             </th>
+                             <th>
+                                Total Price
+                             </th>
+                            <th>
+                               Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                        <tr>
+                            <td>USD Diesel</td>
+                            <td>{{prices.usd_diesel_vat}}</td>
+                            <td>{{prices.usd_diesel_duty}}</td>
+                            <td>{{prices.usd_diesel_price}}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"
+                                        data-target="#update_usd_dprice">Update Price</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>RTGS Diesel</td>
+                            <td>{{prices.rtgs_diesel_vat}}</td>
+                            <td>{{prices.rtgs_diesel_duty}}</td>
+                            <td>{{prices.rtgs_diesel_price}}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"
+                                        data-target="#update_rtgs_dprice">Update Price</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>USD Petrol</td>
+                            <td>{{prices.usd_petrol_vat}}</td>
+                            <td>{{prices.usd_petrol_duty}}</td>
+                            <td>{{prices.usd_petrol_price}}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"
+                                        data-target="#update_usd_pprice">Update Price</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>RTGS Petrol</td>
+                            <td>{{prices.rtgs_petrol_vat}}</td>
+                            <td>{{prices.rtgs_petrol_duty}}</td>
+                            <td>{{prices.rtgs_petrol_price}}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"
+                                        data-target="#update_rtgs_pprice">Update Price</a>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+
+ <div class="modal fade modal-success in" id="update_usd_dprice">Update Price" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" id="exampleModalLongTitle">Update Price</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            {% load crispy_forms_tags %}
+            <form action="{% url 'zeraPortal:fuel_prices' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" value="usd_diesel" name="fuel_type" />
+
+                <div class="form-group row col-sm-12">
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Vat</b></label>
+                        <input type="text" name="vat" class="form-control" value="{{prices.usd_diesel_vat}}"
+                             />
+                    </div>
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Duty</b></label>
+                        <input type="text" name="duty" class="form-control" value="{{prices.usd_diesel_duty}}"  />
+                    </div>
+                </div>
+
+                <div class="form-group row col-sm-12">
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Total Price</b></label>
+                        <input type="text" name="price" class="form-control" value="{{prices.usd_diesel_price}}"  />
+                    </div>
+
+                </div>
+
+                <div class="form-group row"
+                    style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                    <button type="button" class="btn btn-secondary col-sm-6" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal-success in" id="update_rtgs_dprice">Update Price" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" id="exampleModalLongTitle">Update Price</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            {% load crispy_forms_tags %}
+            <form action="{% url 'zeraPortal:fuel_prices' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" value="rtgs_diesel" name="fuel_type" />
+
+                <div class="form-group row col-sm-12">
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Vat</b></label>
+                        <input type="text" name="vat" class="form-control" value="{{prices.rtgs_diesel_vat}}"
+                             />
+                    </div>
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Duty</b></label>
+                        <input type="text" name="duty" class="form-control" value="{{prices.rtgs_diesel_duty}}"  />
+                    </div>
+                </div>
+
+                <div class="form-group row col-sm-12">
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Total Price</b></label>
+                        <input type="text" name="price" class="form-control" value="{{prices.rtgs_diesel_price}}"  />
+                    </div>
+
+                </div>
+
+                <div class="form-group row"
+                    style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                    <button type="button" class="btn btn-secondary col-sm-6" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal-success in" id="update_usd_pprice">Update Price" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" id="exampleModalLongTitle">Update Price</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            {% load crispy_forms_tags %}
+            <form action="{% url 'zeraPortal:fuel_prices' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" value="usd_petrol" name="fuel_type" />
+               
+                <div class="form-group row col-sm-12">
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Vat</b></label>
+                        <input type="text" name="vat" class="form-control" value="{{prices.usd_petrol_vat}}"
+                             />
+                    </div>
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Duty</b></label>
+                        <input type="text" name="duty" class="form-control" value="{{prices.usd_petrol_duty}}"  />
+                    </div>
+                </div>
+
+                <div class="form-group row col-sm-12">
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Total Price</b></label>
+                        <input type="text" name="price" class="form-control" value="{{prices.usd_petrol_price}}"  />
+                    </div>
+
+                </div>
+
+                <div class="form-group row"
+                    style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                    <button type="button" class="btn btn-secondary col-sm-6" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal-success in" id="update_rtgs_pprice">Update Price" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" id="exampleModalLongTitle">Update Price</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            {% load crispy_forms_tags %}
+            <form action="{% url 'zeraPortal:fuel_prices' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" value="rtgs_petrol" name="fuel_type" />
+               
+                <div class="form-group row col-sm-12">
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Vat</b></label>
+                        <input type="text" name="vat" class="form-control" value="{{prices.rtgs_petrol_vat}}"
+                             />
+                    </div>
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Duty</b></label>
+                        <input type="text" name="duty" class="form-control" value="{{prices.rtgs_petrol_duty}}"  />
+                    </div>
+                </div>
+
+                <div class="form-group row col-sm-12">
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Total Price</b></label>
+                        <input type="text" name="price" class="form-control" value="{{prices.rtgs_petrol_price}}"  />
+                    </div>
+
+                </div>
+
+                <div class="form-group row"
+                    style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                    <button type="button" class="btn btn-secondary col-sm-6" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+                </table>
+            </div>
+            {% else %}
+            <p>No Allocations Available</p>
+            {% endif %}
+
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

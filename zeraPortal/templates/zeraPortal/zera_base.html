@@ -181,8 +181,10 @@
                     <li class="nav-item {% if request.path == '/zeraPortal/dashboard/' %} active {% endif %}">
                         <a href="{% url 'zeraPortal:dashboard' %}"><i class="fa fa-book"></i><span>Dashboard</span>
                         </a>
+                    </li><li class="nav-item {% if request.path == '/zeraPortal/fuel_prices/' %} active {% endif %}">
+                        <a href="{% url 'zeraPortal:fuel_prices' %}"><i class="fa fa-book"></i><span>Fuel Prices</span>
+                        </a>
                     </li>
-
                     <li class="nav-item {% if request.path == '/zeraPortal/noic_fuel/' %} active {% endif %}">
                         <a href="{% url 'zeraPortal:noic_fuel' %}"><i class="fa fa-sliders"></i><span>NOIC Capacity & Allocations </span>
                         </a>
