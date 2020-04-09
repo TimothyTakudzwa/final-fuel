@@ -712,7 +712,7 @@ def depot_history(request, did):
             state = 'Incomplete'
 
         if request.POST.get('report_type') == 'All':
-            trns = Order.objects.filter(noic_depot=depot, payment_approved=True)
+            trns = Order.objects.filter(noic_depot=depot)
             trans = []
             for tran in trns:
                 tran.revenue = tran.quantity
@@ -720,7 +720,7 @@ def depot_history(request, did):
             state = 'All'
         return render(request, 'noic/depot_history.html', {'trans': trans, 'depot': depot, 'state': state})
 
-    trns = Order.objects.filter(noic_depot=depot, payment_approved=True)
+    trns = Order.objects.filter(noic_depot=depot)
     trans = []
     for tran in trns:
         tran.revenue = tran.quantity
