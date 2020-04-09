@@ -215,9 +215,9 @@
                                                 <td>
 
                                                     <!--call modal-->
-                                                    <button class="btn btn-primary btn-sm" data-toggle="modal"
-                                                            data-target="#payment{{order.id}}">
-                                                        <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
+                                                    
+                                                    <button data-toggle="modal" data-target="#payment{{order.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                        <span class="btn-label"><i class="fa fa-eye"></i></span>Details
                                                     </button>
                                                     <!--Payment Details-->
     <div class="modal fade modal-success in" id="payment{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -295,12 +295,13 @@
                                                     <td><b style="color: rgb(59, 59, 139);"> Approved</b></td>
                                                 {% else %}
                                                     <td>
-                                                        <div class="btn-group">
-                                                            <a class="btn btn-primary btn-sm" style="color: whitesmoke;"
-                                                               href="{% url 'noicDepot:download_proof' order.id %}"> <i class="fa fa-download"
-                                                                                                                        style="font-size:15px"></i> P.O.P</a>
-                                                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;"
-                                                               href="{% url 'noicDepot:payment_approval' order.id %}">Approve</a>
+                                                        <div class="btn-group"> 
+                                                            <a href="{% url 'noicDepot:download_proof' order.id %}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                                <span class="btn-label"><i class="fa fa-download"></i></span>P.O.P.
+                                                            </a>                                                             
+                                                            <a href="{% url 'noicDepot:payment_approval' order.id %}" type="button" class="btn btn-labeled btn-warning btn-sm">
+                                                                <span class="btn-label"><i class="glyphicon glyphicon-thumbs-up"></i></span>Approve
+                                                            </a>       
                                                         </div>
                                                     </td>
                                                 {% endif %}
