@@ -99,7 +99,7 @@ def allocations(request):
     if request.method == "POST":
         html_string = render_to_string('noic/export_audit.html', {'allocations': allocations, 'date':date })
         html = HTML(string=html_string)
-        export_name = f"{request.user.company.name.title()}"
+        export_name = f"Noic Allocations Summary {date}}"
         html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
         download_file = f'media/transactions/{export_name}'
