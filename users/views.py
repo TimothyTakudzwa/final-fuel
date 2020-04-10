@@ -1280,7 +1280,7 @@ def waiting_for_approval(request):
     stations = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
     depots = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company).all()
     applicants = user.objects.filter(is_waiting=True, company=request.user.company).all()
-    return render(request, 'users/waiting_for_approval.html',
+    return render(request, 'users/suppliers_list.html',
                   {'applicants': applicants, 'stations': stations, 'depots': depots})
 
 
