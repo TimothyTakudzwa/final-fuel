@@ -1818,7 +1818,7 @@ def delivery_schedule(request, id):
 @user_role
 def clients(request):
     context = {
-        'clients': Account.objects.filter(is_verified=False, supplier_company=request.user.company).all()
+        'clients': Account.objects.filter(is_verified=False, supplier_company=request.user.company).all(),
         'form': UsersUploadForm(),
         'accounts': Account.objects.filter(supplier_company=request.user.company),
         'transactions': AccountHistory.objects.filter()
