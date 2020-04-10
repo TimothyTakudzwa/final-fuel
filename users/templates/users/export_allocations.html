@@ -60,7 +60,7 @@
             <p class="text-muted">{{ sord.payment_type }}</p>
             <p class="text-muted">{{ sord.initial_quantity|floatformat:2|intcomma }}</p>
             <p class="text-muted">{{ sord.quantity_allocated|floatformat:2|intcomma }}</p>
-            <p class="text-muted">{{ sord.end_quantity|floatformat:2|intcomma} }}</p>
+            <p class="text-muted">{{ sord.end_quantity|floatformat:2|intcomma }}</p>
             {% if sord.allocated_to == None %}
             <p class="text-muted">--</p>
             {% else %}
