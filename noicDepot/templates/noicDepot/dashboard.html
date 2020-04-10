@@ -111,10 +111,10 @@
                             {% if sord.release_note %}
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-primary btn-sm" style="color: white;" href="{% url 'noic:view_release_note' sord.id %}">View</a>
-                                    <a class="btn btn-warning btn-sm" style="color: white;" href="{% url 'noic:download_release_note' sord.id %}">Download</a>
-                                    <a class="btn btn-primary btn-sm" style="color: white;" data-toggle="modal" data-target="#edit_{{sord.id}}" class="glyphicon glyphicon-pencil">
-                                        Edit</a>
+                                    <a class="btn btn-labeled btn-success btn-sm" style="color: white;" href="{% url 'noic:view_release_note' sord.id %}"><span class="btn-label"><i class="fa fa-eye"></i></span>View</a>
+                                    <a class="btn btn-labeled btn-warning btn-sm" style="color: white;" href="{% url 'noic:download_release_note' sord.id %}"><span class="btn-label"><i class="fa fa-download"></i></span>Download</a>
+                                    <a class="btn btn-labeled btn-success btn-sm" style="color: white;" data-toggle="modal" data-target="#edit_{{sord.id}}">
+                                        <span class="btn-label"><i class="fa fa-edit"></i></span>Edit</a>
                                 </div>
                                 
                             </td> 
@@ -128,7 +128,7 @@
                             {% if sord.d_note %}
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-primary btn-sm" style="color: white;" href="{% url 'noicDepot:download_d_note' sord.id %}">Download D-Note</a>
+                                    <a class="btn btn-labeled btn-success btn-sm" style="color: white;" href="{% url 'noicDepot:download_d_note' sord.id %}"><span class="btn-label"><i class="fa fa-download"></i></span>Download D-Note</a>
                                     
                                 </div>
                                 
@@ -159,7 +159,11 @@
                                             <input type="date" name="release_date" class="form-control"  required/>
                                         </div>
                                         <br>
-                                        <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+                                        <!-- <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p> -->
+                                        <div class="modal-footer"> 
+                                            <button class="btn btn-primary" type="submit">Upload</button> 
+                                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                        </div>
 
                                     </form>
                                 </div>
@@ -182,12 +186,20 @@
 
                                     <form method="POST" action="{% url 'noicDepot:upload_release_note' sord.id %}" enctype="multipart/form-data">
                                         {% csrf_token %}
-                                        <div class="form-group col-md-6">
-                                            <label>New Release Date</label>
-                                            <input type="date" name="release_date" class="form-control"  required/>
+                                        <div class="form-group col-md-12" style="margin-top: 20px;">
+                                            <div class="col-md-6">
+                                                <label>New Release Date</label>
+                                            </div>
+                                            <div class="col-md-6">
+
+                                                <input type="date" name="release_date" class="form-control"  required/>
+                                            </div>    
                                         </div>
                                         <br>
-                                        <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+                                        <div class="modal-footer" style="margin-top: 80px;"> 
+                                            <button class="btn btn-primary" type="submit">Upload</button> 
+                                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                        </div>
 
                                     </form>
                                 </div>

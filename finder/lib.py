@@ -11,9 +11,9 @@ from buyer.constants2 import INDUSTRY_CHOICES
 '''
 Scripts to generate test data for statistics. To create test data. Offers, Requests, Transactions. 
 - Run `generate_test_data(num)` with num being the number of records you wish to generate. Eg generate_test_data(100)
-  will create 100 Requests, Buyers, Seller, Offer and Transactions.
-- To view the current number of test data in the database run `test_data_population`.
-- To see the number of dummy users in the database run `show_faker_user_population`.
+  will create 100 Requests, Buyers, Sellers, Offers and Transactions.
+- To view the current number of test data in the database run `test_data_population()`.
+- To see the number of dummy users in the database run `show_faker_user_population()`.
 - To purge the whole system of test data run. `purge_test_data`.
 '''
 
@@ -108,14 +108,11 @@ def create_users(num):
             )
         suppliers_count += 1
         f = open('passwords.txt','a')
-        f.write(f"{b.username} - {b.password} - {b.user_type}\n")
+        f.write(f"{s.username} - {s.password} - {s.user_type}\n")
         f.close()
     
     print(f'Finished Creating {suppliers_count} Sellers and {buyers_count} Buyers ...')        
             
-
-
-
 
 def generate_requests(num):
     created = 0
@@ -124,7 +121,6 @@ def generate_requests(num):
     create_users(num)
     buyers = User.objects.filter(user_type='BUYER', is_test_data=True)
     
-
     for n in range(num):
         r = FuelRequest.objects.create(
             name=random.choice(buyers),
@@ -145,6 +141,7 @@ def generate_requests(num):
 
     print(f'Finished Creating {created} Requests\nNow generating offers...')
     generate_offers(requests)
+
 
 def generate_offers(requests):
     created = 0 

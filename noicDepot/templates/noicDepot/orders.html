@@ -215,47 +215,79 @@
                                                 <td>
 
                                                     <!--call modal-->
-                                                    <button class="btn btn-primary btn-sm" data-toggle="modal"
-                                                            data-target="#payment{{order.id}}">
-                                                        <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
+                                                    
+                                                    <button data-toggle="modal" data-target="#payment{{order.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                        <span class="btn-label"><i class="fa fa-eye"></i></span>Details
                                                     </button>
-                                                    <!--view details-->
-                                                    <div class="modal fade modal-success in" id="payment{{order.id}}" tabindex="-1"
-                                                         role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header" style="background-color: #009688; color: white">
-                                                                    <span class="modal-title" id="exampleModalLabel">Payment Details</span>
-                                                                    <button type="button" class="close" data-dismiss="modal"
-                                                                            aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12">
-                                                                            <h4 style="font-weight: lighter;font-size: 14px;">Sub Total
-                                                                                &nbsp;&nbsp; : &nbsp;&nbsp; ${{order.amount_paid|floatformat:2|intcomma}}</h4>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-md-12">
-                                                                            <h4 style="font-weight: lighter;font-size: 14px;">Duty
-                                                                                &nbsp;&nbsp; : &nbsp;&nbsp; ${{order.duty}}</h4>
-                                                                        </div>
-                                                                    </div>
-
-
-                                                                    <div class="row">
-                                                                        <div class="col-md-12">
-                                                                            <h4 style="font-weight: lighter;font-size: 14px;">Vat
-                                                                                &nbsp;&nbsp; : &nbsp;&nbsp; ${{order.vat}}</h4>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <!--Payment Details-->
+    <div class="modal fade modal-success in" id="payment{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #009688; color: white">
+                    <span class="modal-title" id="exampleModalLabel">Payment Details</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                        <div class="form-group row">
+                        <div class="col-md-6">
+                           <b> &nbsp;&nbsp;&nbsp;&nbsp;Date </b>
+                        </div>
+                        <div class="col-md-6">
+                            {{ order.date }}
+                        </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <b> &nbsp;&nbsp;&nbsp;&nbsp;Company </b>
+                            </div>
+                            <div class="col-md-6">
+                                {{ order.company }}
+                            </div> 
+                            </div>
+                        <div class="form-group row">
+                        <div class="col-md-6">
+                           <b> &nbsp;&nbsp;&nbsp;&nbsp;Total </b>
+                        </div>
+                        <div class="col-md-6">{{order.amount_paid|floatformat:2|intcomma}} {{ order.currency }}</div>
+                        </div>
+                        <div class="form-group row">
+                        <div class="col-md-6">
+                           <b> &nbsp;&nbsp;&nbsp;&nbsp;Duty </b>
+                        </div>
+                        <div class="col-md-6"> {{ order.duty }} {{ order.currency }}</div>
+                        </div>
+                        <div class="form-group row">
+                        <div class="col-md-6">
+                           <b> &nbsp;&nbsp;&nbsp;&nbsp;Vat </b>
+                        </div>
+                        <div class="col-md-6">
+                            {{ order.vat }} {{ order.currency }}
+                        </div>
+                        </div>
+                        <div class="form-group row">
+                        <div class="col-md-6">
+                           <b>&nbsp;&nbsp;&nbsp;&nbsp;Status</b>
+                        </div>
+                        {% if order.payment_approved %}
+                        <div class="col-md-6">
+                            Approved
+                        </div>
+                        {% else %}
+                        <div class="col-md-6">
+                            Approval Pending...
+                        </div>
+                        {% endif %}
+                        </div>
+                    <div class="modal-footer">  
+                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End payment details-->
 
                                                 </td>
 
@@ -263,12 +295,13 @@
                                                     <td><b style="color: rgb(59, 59, 139);"> Approved</b></td>
                                                 {% else %}
                                                     <td>
-                                                        <div class="btn-group">
-                                                            <a class="btn btn-primary btn-sm" style="color: whitesmoke;"
-                                                               href="{% url 'noicDepot:download_proof' order.id %}"> <i class="fa fa-download"
-                                                                                                                        style="font-size:15px"></i> P.O.P</a>
-                                                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;"
-                                                               href="{% url 'noicDepot:payment_approval' order.id %}">Approve</a>
+                                                        <div class="btn-group"> 
+                                                            <a href="{% url 'noicDepot:download_proof' order.id %}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                                <span class="btn-label"><i class="fa fa-download"></i></span>P.O.P.
+                                                            </a>                                                             
+                                                            <a href="{% url 'noicDepot:payment_approval' order.id %}" type="button" class="btn btn-labeled btn-warning btn-sm">
+                                                                <span class="btn-label"><i class="glyphicon glyphicon-thumbs-up"></i></span>Approve
+                                                            </a>       
                                                         </div>
                                                     </td>
                                                 {% endif %}
@@ -279,13 +312,13 @@
                                                         <td>
                                                             <div class="btn-group">
                                                                 <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"
-                                                                   href="{% url 'noicDepot:dashboard' %}">View Allocation</a>
+                                                                data-target="#allocation_{{order.id}}">View Allocation</a>
                                                             </div>
                                                         </td>
                                                     {% else %}
                                                         <td>
                                                             <div class="btn-group">
-                                                                <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal"
+                                                                <a class="btn btn-danger btn-sm" style="color: whitesmoke;" data-toggle="modal"
                                                                    data-target="#allocate{{order.id}}">Allocate Fuel</a>
                                                             </div>
                                                         </td>
@@ -323,7 +356,7 @@
                                                             <input type="hidden" value="{{order.quantity}}" name="quantity" />
                                                             <input type="hidden" value="{{order.currency}}" name="currency" />
                                                             <input type="hidden" value="{{order.price}}" name="price" />
-                                                            <div class="form-group row col-sm-12">
+                                                            <div class="form-group row col-sm-12" style="padding-top: 30px;">
                                                                 <div class="col-sm-6">
                                                                     <label><b style='color:#009688'>Fuel Type</b></label>
                                                                     <input type="text" name="fuel_type1" class="form-control"
@@ -336,7 +369,7 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="form-group row col-sm-12">
+                                                            <div class="form-group row col-sm-12" style="padding-bottom: 30px;">
                                                                 <div class="col-sm-6">
                                                                     <label><b style='color:#009688'>Currency</b></label>
                                                                     <input type="text" name="currency1" class="form-control"
@@ -352,16 +385,86 @@
 
                                                             </div>
 
-                                                            <div class="form-group row"
-                                                                 style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                                                                <button type="button" class="btn btn-secondary col-sm-6"
-                                                                        data-dismiss="modal">Close</button>
-                                                                <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
-                                                            </div>
+                                                            
+                                                            <div class="modal-footer">  
+                                                                <button type="submit" class="btn btn-primary">Submit</button>
+
+                                                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                            </div> 
                                                         </form>
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <!--Allocation Modal-->
+                                            <div class="modal fade modal-success in" id="allocation_{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header" style="background-color: #009688; color: white">
+                                                            <span class="modal-title" id="exampleModalLabel">{{ order.allocation.company }} Allocation</span>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                                <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;Date</b>
+                                                                </div>
+                                                                <div class="col-md-6">{{ order.allocation.date }}</div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;SORD</b>
+                                                                </div>
+                                                                <div class="col-md-6">{{ order.allocation.sord_no}}</div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;Fuel</b>
+                                                                </div>
+                                                                <div class="col-md-6"> {{ order.allocation.fuel_type }}</div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Company</b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.allocation.company }}
+                                                                </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Quantity</b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.allocation.quantity|floatformat:2|intcomma }}
+                                                                </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;Price </b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.allocation.price }} {{ order.allocation.currency }}
+                                                                </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;Depot</b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.allocation.assigned_depot.name }}
+                                                                </div>
+                                                                </div>
+                                                            <div class="modal-footer">  
+                                                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--End allocation modal-->
                                         {%endfor%}
                                         </tbody>
                                     </table>

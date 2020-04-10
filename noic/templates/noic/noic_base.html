@@ -270,8 +270,8 @@
         </div> <!-- /.content-wrapper -->
         <footer class="main-footer">
             <div class="pull-right hidden-xs"> <b>Version</b> 1.0</div>
-            <strong>Copyright &copy; 2019 <a href="#">Intelli Africa Solutions</a>.</strong> All rights reserved.
-        </footer>
+            <strong>Copyright &copy; <b id="year_of_our_lord">2019</b> <a href="#">Intelli Africa Solutions</a>.</strong> All rights reserved.
+            </footer>
         <!-- Modals  -->
 
         <!-- Generic Fuel Finding Modal  -->
@@ -285,6 +285,11 @@
     <!-- Start Core Plugins
         =====================================================================-->
     <!-- jQuery -->
+    <script>
+        var dt = new Date();
+        $('#year_of_our_lord').html(dt.getFullYear() + " " )
+    </script>  
+
 
     <script>
         $(document).ready(function () {
