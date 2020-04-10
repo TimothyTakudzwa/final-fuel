@@ -96,7 +96,7 @@ def allocations(request):
     date = datetime.date.today().strftime("%d/%m/%y")
 
     if request.method == "POST":
-        html_string = render_to_string('noic/audit.html', {'allocations': allocations, 'date':date })
+        html_string = render_to_string('noic/export_audit.html', {'allocations': allocations, 'date':date })
         html = HTML(string=html_string)
         export_name = f"{request.user.company.name.title()}"
         html.write_pdf(target=f'media/transactions/{export_name}.pdf')
