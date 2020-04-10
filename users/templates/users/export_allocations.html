@@ -60,11 +60,11 @@
             <p class="text-muted">{{ sord.payment_type }}</p>
             <p class="text-muted">{{ sord.initial_quantity|floatformat:2|intcomma }}</p>
             <p class="text-muted">{{ sord.quantity_allocated|floatformat:2|intcomma }}</p>
-            <p class="text-muted">{{ sord.end_quantity|floatformat:2|intcomma} }}</p>
+            <p class="text-muted">{{ sord.end_quantity|floatformat:2|intcomma }}</p>
             {% if sord.allocated_to == None %}
             <p class="text-muted">--</p>
             {% else %}
-            <p class="text-muted">{{ {{sord.allocated_to}} }}</p>
+            <p class="text-muted">{{ sord.allocated_to }}</p>
             {% endif %}
         </div>
         <!--buyer-->
@@ -81,7 +81,7 @@
 
 <hr>
 
-<table style="padding-top: 20px">
+<!-- <table style="padding-top: 20px">
     <tr>
         <th>Date</th>
         <th>Time</th>
@@ -108,7 +108,7 @@
         </tr>
     {% endfor %}
 
-</table>
+</table> -->
 
 
 </body>
