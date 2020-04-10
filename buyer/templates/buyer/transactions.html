@@ -459,6 +459,16 @@
 
 
                         </tr>
+                        <script>
+                            $('body').click(function (event) {
+                                if(!$(event.target).closest('#viewBank{{transaction.id}}').length && !$(event.target).is('#viewBank{{transaction.id}}')) {
+                                    $("#viewBank{{transaction.id}}").modal('hide');
+                                }
+                                if(!$(event.target).closest('#review_{{transaction.id}}').length && !$(event.target).is('#review_{{transaction.id}}')) {
+                                    $("#review_{{transaction.id}}").modal('hide');
+                                }      
+                            });
+                        </script>
                     {%endfor%}
                     </tbody>
                 </table>
