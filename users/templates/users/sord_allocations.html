@@ -17,7 +17,7 @@
     <div class="header-title" style="margin-left: 0px;">
 
         <h1> Allocations Audit Trail </h1>
-        <small>Fuel Finder Zimbabwe</small>
+        <small>ZFMS</small>
         <ol class="breadcrumb hidden-xs">
             <li><a href="{% url 'users:allocate' %}"><i class="pe-7s-home"></i> Home</a></li>
             <li class="active">Allocations Audit Trail</li>
@@ -31,6 +31,12 @@
         <div class="panel-heading ui-sortable-handle">
             <div class="btn-group">
                 <h4>Sord Allocations</h4>
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-labeled btn-success btn-sm" style="margin-top: 13px;">
+                        <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>Export
+                    </button>
+                </form>
             </div>
             <div class="dropdown">
                 <ul class="dropdown-menu dropdown-menu-right">
@@ -85,7 +91,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for sord in sord_allocations%}
+                        {% for sord in sord_allocations %}
                         <tr>
                             <td>{{sord.sord_no}}</td>
                             <td>{{sord.action_no}}</td>

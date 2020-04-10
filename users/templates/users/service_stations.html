@@ -102,7 +102,10 @@
             $('body').click(function (event) {
                 if(!$(event.target).closest('#new_sub').length && !$(event.target).is('#new_sub')) {
                     $("#new_sub").modal('hide');
-                }        
+                }
+                if(!$(event.target).closest('#new_user').length && !$(event.target).is('#new_user')) {
+                    $("#new_user").modal('hide');
+                }         
             });
         </script>
         
