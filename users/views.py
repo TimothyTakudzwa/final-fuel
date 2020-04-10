@@ -32,6 +32,7 @@ from .forms import SupplierContactForm, UsersUploadForm, ReportForm, ProfileEdit
 from decimal import *
 
 user = get_user_model()
+today = date.today()
 
 from fuelfinder import settings
 
@@ -1270,8 +1271,9 @@ def depots(request):
 @login_required()
 @user_role
 def audit_trail(request):
-    trails = Audit_Trail.objects.filter(company=request.user.company).all()
-    return render(request, 'users/audit_trail.html', {'trails': trails})
+    trails = Audit_Trail.objects.exclude(date=today).filter(company=request.user.company)
+    current_trails = Audit_Trail.objects.filter(company=request.user.company, date=today).all()
+    return render(request, 'users/audit_trail.html', {'trails': trails, 'current_trails': current_trails})
 
 
 @login_required()
