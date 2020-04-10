@@ -62,7 +62,7 @@
                     <span class="modal-title" style="color:whitesmoke"> Filter By State</span>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <div class="modal-body" style="background:#eeee">
+                <div class="modal-body">
     
                     <form method="POST">
                         {% csrf_token %}
@@ -86,7 +86,11 @@
                         </div> 
                            
     
-                        <input class="btn btn-info" type="submit" value="Submit">
+                        <div class="modal-footer">  
+                            <button type="submit" class="btn btn-primary ">Submit</button>
+                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                        </div> 
+    
                     </form>
     
                 </div>
@@ -208,5 +212,13 @@
         </div>
     </div>
 </section>
+
+<script>
+    $('body').click(function (event) {
+        if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
+            $("#state_modal").modal('hide');
+        }      
+    });
+</script> 
 
 {% endblock %}
