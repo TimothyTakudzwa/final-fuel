@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.db.models import Count
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from decimal import *
 
