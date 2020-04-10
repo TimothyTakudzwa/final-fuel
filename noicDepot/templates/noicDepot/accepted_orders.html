@@ -162,7 +162,7 @@
                     {% if order.allocated_fuel %}
                     <td>
                         <div class="btn-group">
-                            <a href="{% url 'noicDepot:dashboard' %}" type="button" class="btn btn-labeled btn-warning btn-sm">
+                            <a data-toggle="modal" data-target="#allocate{{order.id}}" type="button" class="btn btn-labeled btn-warning btn-sm">
                                 <span class="btn-label"><i class="fa fa-eye"></i></span>View Allocation
                             </a>
                         </div>
@@ -179,6 +179,76 @@
                    {% endif %}
                 </tr>
 
+                
+                    <!--Allocation Modal-->
+                    <div class="modal fade modal-success in" id="allocation_{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #009688; color: white">
+                                    <span class="modal-title" id="exampleModalLabel">{{ order.allocation.company }} Allocation</span>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                        <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <b>&nbsp;&nbsp;&nbsp;&nbsp;Date</b>
+                                        </div>
+                                        <div class="col-md-6">{{ order.allocation.date }} </div>
+                                        </div>
+                                        <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <b>&nbsp;&nbsp;&nbsp;&nbsp;SORD</b>
+                                        </div>
+                                        <div class="col-md-6">{{ order.allocation.sord_no}}</div>
+                                        </div>
+                                        <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <b>&nbsp;&nbsp;&nbsp;&nbsp;Fuel</b>
+                                        </div>
+                                        <div class="col-md-6"> {{ order.allocation.fuel_type }}</div>
+                                        </div>
+                                        <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <b> &nbsp;&nbsp;&nbsp;&nbsp;Company</b>
+                                        </div>
+                                        <div class="col-md-6">
+                                            {{ order.allocation.company }}
+                                        </div>
+                                        </div>
+                                        <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <b> &nbsp;&nbsp;&nbsp;&nbsp;Quantity</b>
+                                        </div>
+                                        <div class="col-md-6">
+                                            {{ order.allocation.quantity|floatformat:2|intcomma }}
+                                        </div>
+                                        </div>
+                                        <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <b>&nbsp;&nbsp;&nbsp;&nbsp;Price </b>
+                                        </div>
+                                        <div class="col-md-6">
+                                            {{ order.allocation.price }} {{ order.allocation.currency }}
+                                        </div>
+                                        </div>
+                                        <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <b>&nbsp;&nbsp;&nbsp;&nbsp;Depot</b>
+                                        </div>
+                                        <div class="col-md-6">
+                                            {{ order.allocation.assigned_depot.name }}
+                                        </div>
+                                        </div>
+                                    <div class="modal-footer">  
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--End allocation modal-->
 
 
  
