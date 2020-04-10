@@ -23,6 +23,7 @@ from .constants import coordinates_towns, towns
 from .decorators import user_role, user_permission
 
 user = get_user_model()
+today = date.today()
 
 from .lib import *
 
@@ -74,8 +75,9 @@ def dashboard(request):
 @login_required()
 @user_role
 def activity(request):
-    activities = Activity.objects.filter(user=request.user).all()
-    return render(request, 'zeraPortal/activity.html', {'activities': activities})
+    activities = Activity.objects.exclude(date=today).filter(user=request.user)
+    current_activities = Activity.objects.filter(user=request.user, date=today).all()
+    return render(request, 'zeraPortal/activity.html', {'activities': activities, 'current_activities': current_activities})
 
 
 @login_required()
@@ -87,6 +89,9 @@ def fuel_prices(request):
             prices.usd_diesel_vat = request.POST['vat']
             prices.usd_diesel_duty = request.POST['duty']
             prices.usd_diesel_price = request.POST['price']
+            prices.usd_diesel_fob = request.POST['fob']
+            prices.usd_diesel_oil_cmargin = request.POST['cmargin']
+            prices.usd_diesel_dmargin = request.POST['dmargin']
             prices.save()
             messages.success(request, 'price updated successfully')
             return redirect('zeraPortal:fuel_prices')
@@ -95,6 +100,9 @@ def fuel_prices(request):
             prices.rtgs_diesel_vat = request.POST['vat']
             prices.rtgs_diesel_duty = request.POST['duty']
             prices.rtgs_diesel_price = request.POST['price']
+            prices.rtgs_diesel_fob = request.POST['fob']
+            prices.rtgs_diesel_oil_cmargin = request.POST['cmargin']
+            prices.rtgs_diesel_dmargin = request.POST['dmargin']
             prices.save()
             messages.success(request, 'price updated successfully')
             return redirect('zeraPortal:fuel_prices')
@@ -103,6 +111,9 @@ def fuel_prices(request):
             prices.usd_petrol_vat = request.POST['vat']
             prices.usd_petrol_duty = request.POST['duty']
             prices.usd_petrol_price = request.POST['price']
+            prices.usd_petrol_fob = request.POST['fob']
+            prices.usd_petrol_oil_cmargin = request.POST['cmargin']
+            prices.usd_petrol_dmargin = request.POST['dmargin']
             prices.save()
             messages.success(request, 'price updated successfully')
             return redirect('zeraPortal:fuel_prices')
@@ -111,6 +122,9 @@ def fuel_prices(request):
             prices.rtgs_petrol_vat = request.POST['vat']
             prices.rtgs_petrol_duty = request.POST['duty']
             prices.rtgs_petrol_price = request.POST['price']
+            prices.rtgs_petrol_fob = request.POST['fob']
+            prices.rtgs_petrol_oil_cmargin = request.POST['cmargin']
+            prices.rtgs_petrol_dmargin = request.POST['dmargin']
             prices.save()
             messages.success(request, 'price updated successfully')
             return redirect('zeraPortal:fuel_prices')
