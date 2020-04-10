@@ -22,6 +22,7 @@ urlpatterns = [
     path('account_activate/', views.account_activate, name="account_activate"),
     path('statistics/', views.statistics, name="statistics"),
     path('client-application/', views.client_application, name="client-application"),
+    path('clients/', views.clients, name="clients"),
     path('download-application/<int:id>', views.download_application, name="download-application"),
     path('download-document/<int:id>', views.download_document, name="download-document"),
     path('download-tax-clearance/<int:id>', views.download_tax_clearance, name="download-tax-clearance"),

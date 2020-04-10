@@ -1816,16 +1816,22 @@ def delivery_schedule(request, id):
 
 @login_required
 @user_role
-def client_application(request):
+def clients(request):
     context = {
         'clients': Account.objects.filter(is_verified=False, supplier_company=request.user.company).all()
+        'form': UsersUploadForm(),
+        'accounts': Account.objects.filter(supplier_company=request.user.company),
+        'transactions': AccountHistory.objects.filter()
     }
+    return render(request, 'users/clients_applications.html', context=context)
+
+
+def client_application(request):
     if request.method == 'POST':
         company = Company.objects.filter(id=request.user.company.id).first()
         company.application_form = request.FILES.get('application_form')
         company.save()
-        return redirect('users:client-application')
-    return render(request, 'users/clients_applications.html', context=context)
+        return redirect('users:clients')
 
 
 @login_required()
@@ -1838,7 +1844,7 @@ def download_application(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document not found.')
-        return redirect('users:client-application')
+        return redirect('users:clients')
     return response
 
 
@@ -1852,7 +1858,7 @@ def download_tax_clearance(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document not found.')
-        return redirect('users:client-application')
+        return redirect('users:clients')
     return response
 
 
@@ -1866,7 +1872,7 @@ def download_cr14(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document not found.')
-        return redirect('users:client-application')
+        return redirect('users:clients')
     return response
 
 
@@ -1880,7 +1886,7 @@ def download_cr6(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document not found.')
-        return redirect('users:client-application')
+        return redirect('users:clients')
     return response
 
 
@@ -1894,7 +1900,7 @@ def download_proof_of_residence(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document not found.')
-        return redirect('users:client-application')
+        return redirect('users:clients')
     return response
 
 
@@ -1908,7 +1914,7 @@ def download_cert_of_inc(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document not found.')
-        return redirect('users:client-application')
+        return redirect('users:clients')
     return response
 
 
@@ -1922,7 +1928,7 @@ def download_document(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document not found.')
-        return redirect('users:client-application')
+        return redirect('users:clients')
     return response
 
 
@@ -1937,24 +1943,19 @@ def application_approval(request, id):
             accounts_list.append(account.account_number)
         if new_account in accounts_list:
             messages.warning(request, 'Account number already exists.')
-            return redirect('users:client-application')
+            return redirect('users:clients')
         else:
             account = Account.objects.filter(id=id).first()
             account.is_verified = True
             account.account_number = new_account
             account.save()
             messages.success(request, 'Account successfully approved.')
-            return redirect('users:client-application')
+            return redirect('users:clients')
 
 
 @login_required
 @user_role
 def upload_users(request):
-    context = {
-        'form': UsersUploadForm(),
-        'accounts': Account.objects.filter(supplier_company=request.user.company),
-        'transactions': AccountHistory.objects.filter()
-    }
     if request.method == 'POST':
         file = request.FILES.get('file')
         if file is not None:
@@ -2064,10 +2065,10 @@ def upload_users(request):
                                         # error log should be created
 
                         messages.success(request, 'Successfully uploaded data.')
-                        return redirect('users:upload_users')
+                        return redirect('users:clients')
                     except KeyError:
                         messages.warning(request, 'Please use the standard file.')
-                        return redirect('users:upload_users')
+                        return redirect('users:clients')
                 elif file.name.endswith('.xlsx'):
                     df = pd.DataFrame(pd.read_excel(file))
                     try:
@@ -2172,13 +2173,13 @@ def upload_users(request):
                                         # error log should be created
 
                         messages.success(request, 'Successfully uploaded data.')
-                        return redirect('users:upload_users')
+                        return redirect('users:clients')
                     except KeyError:
                         messages.warning(request, 'Please use the standard file.')
-                        return redirect('users:upload_users')
+                        return redirect('users:clients')
             else:
                 messages.warning(request, "Uploaded file doesn't meet the required format.")
-                return redirect('users:upload_users')
+                return redirect('users:clients')
         elif request.POST.get('account_id') is not None:
             buyer_transactions = AccountHistory.objects.filter(account_id=int(request.POST.get('account_id')))
             html_string = render_to_string('supplier/export.html', {'transactions': buyer_transactions})
@@ -2194,7 +2195,7 @@ def upload_users(request):
                 response['Content-Disposition'] = 'attachment;filename=export.pdf'
                 return response
 
-    return render(request, 'users/clients_applications.html', context=context)
+    return redirect('users:clients')
 
 
 @login_required()
