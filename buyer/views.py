@@ -1276,7 +1276,7 @@ def company_profile(request):
 @user_role
 def activity(request):
     current_activities = Activity.objects.filter(user=request.user, date=today).all()
-    activities = Activity.objects.exclude(user=request.user).filter(user=request.user)
+    activities = Activity.objects.exclude(date=today).filter(user=request.user)
     return render(request, 'buyer/activity.html', {'activities': activities, 'current_activities': current_activities})
 
 
