@@ -100,7 +100,7 @@
 
                                 <!--statement modal-->
                                 <div class="modal fade modal-success in" id="activity{{ transaction.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document" style="margin: 0;">
+                                    <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <span class="modal-title" id="exampleModalLabel">Activity with {{ transaction.supplier.company.name }} </span>
@@ -188,9 +188,10 @@
                                                         <input type="hidden" value="{{   transaction.buyer.company.id }}" name="buyer_id">
                                                         <input type="hidden" value="{{ transaction.supplier.company.id }}" name="supplier_id">
                                                         <input type="hidden" value="{{   transaction.buyer.username }}" name="buyer_name">
-                                                        <button class="btn btn-info btn-md">
-                                                            Generate Report
-                                                        </button>
+                                                        <div class="modal-footer">  
+                                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                        </div> 
 
                                                     </form>
 
@@ -428,7 +429,7 @@
                             <!--End View Modal-->
 
                             <!--Upload Document-->
-                            <div class="modal fade modal-sucess in" id="proof_{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal fade modal-success in" id="proof_{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header" style="background-color: #009688; color: white">
@@ -443,7 +444,10 @@
                                                 {% csrf_token %}
                                                 <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="proof_of_payment" class="form-control-file" id="exampleFormControlFile1" required>
                                                 <br>
-                                                <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+                                                <div class="modal-footer">  
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                </div> 
 
                                             </form>
                                         </div>
@@ -632,9 +636,13 @@
                                                         <input type="hidden" value="{{   transaction.buyer.company.id }}" name="buyer_id">
                                                         <input type="hidden" value="{{ transaction.supplier.company.id }}" name="supplier_id">
                                                         <input type="hidden" value="{{   transaction.buyer.username }}" name="buyer_name">
-                                                        <button class="btn btn-info btn-md">
+                                                        <!-- <button class="btn btn-info btn-md">
                                                             Generate Report
-                                                        </button>
+                                                        </button> -->
+                                                        <div class="modal-footer">  
+                                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                        </div> 
 
                                                     </form>
 
@@ -861,6 +869,17 @@
 
 
                         </tr>
+
+                        <script>
+                            $('body').click(function (event) {
+                                if(!$(event.target).closest('#viewBank{{transaction.id}}').length && !$(event.target).is('#viewBank{{transaction.id}}')) {
+                                    $("#viewBank{{transaction.id}}").modal('hide');
+                                }
+                                if(!$(event.target).closest('#review_{{transaction.id}}').length && !$(event.target).is('#review_{{transaction.id}}')) {
+                                    $("#review_{{transaction.id}}").modal('hide');
+                                }      
+                            });
+                        </script>
                     {%endfor%}
                     </tbody>
                 </table>
