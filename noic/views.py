@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Count
 from django.shortcuts import render, redirect
+from decimal import *
 
 from company.models import Company
 from fuelUpdates.models import SordCompanyAuditTrail
@@ -18,6 +19,7 @@ from supplier.models import FuelAllocation
 from users.forms import DepotContactForm
 from users.models import Activity
 from zeraPortal.lib import *
+from zeraPortal.models import FuelPrices
 from .lib import *
 from .decorators import user_role, user_permission
 
@@ -214,72 +216,107 @@ def delete_depot(request, id):
 def fuel_update(request, id):
     user_permission(request)
     fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
+    prices = FuelPrices.objets.first()
     if request.method == 'POST':
         if request.POST['fuel_type'].lower() == 'petrol':
-            if request.POST['currency'] == 'USD':
-                fuel_update.usd_petrol += float(request.POST['quantity'])
-                fuel_update.usd_petrol_price = request.POST['petrol_usd_price']
-                fuel_update.save()
+            if request.POST['currency'] == 'USD': 
+                if Decimal(request.POST['petrol_usd_price']) > prices.usd_petrol_price:
+                    messages.warning(request, f'You cannot set USD petrol price higher that the ZERA max price of ${prices.usd_petrol_price}.')
+                    return redirect('noic:dashboard')
+                else:
+                    fuel_update.usd_petrol += float(request.POST['quantity'])
+                    fuel_update.usd_petrol_price = request.POST['petrol_usd_price']
+                    fuel_update.save()
 
-                action = "Fuel Allocation"
-                description = f"You have allocated fuel to {fuel_update.depot.name}"
-                Activity.objects.create(depot=fuel_update.depot, user=request.user,
-                                    action=action, description=description, reference_id=fuel_update.id)
-                messages.success(request, 'Updated petrol quantity successfully.')
-                return redirect('noic:dashboard')
+                    action = "Fuel Allocation"
+                    description = f"You have allocated fuel to {fuel_update.depot.name}"
+                    Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                                        action=action, description=description, reference_id=fuel_update.id)
+                    messages.success(request, 'Updated petrol quantity successfully.')
+                    return redirect('noic:dashboard')
             else:
-                fuel_update.rtgs_petrol += float(request.POST['quantity'])
-                fuel_update.rtgs_petrol_price = request.POST['petrol_rtgs_price']
-                fuel_update.save()
+                if Decimal(request.POST['petrol_rtgs_price']) > prices.rtgs_petrol_price:
+                    messages.warning(request, f'You cannot set RTGS petrol price higher that the ZERA max price of ${prices.rtgs_petrol_price}.')
+                    return redirect('noic:dashboard')
+                else:
+                    fuel_update.rtgs_petrol += float(request.POST['quantity'])
+                    fuel_update.rtgs_petrol_price = request.POST['petrol_rtgs_price']
+                    fuel_update.save()
 
-                action = "Fuel Allocation"
-                description = f"You have allocated fuel to {fuel_update.depot.name}"
-                Activity.objects.create(depot=fuel_update.depot, user=request.user,
-                                    action=action, description=description, reference_id=fuel_update.id)
-                messages.success(request, 'Updated petrol quantity successfully.')
-                return redirect('noic:dashboard')
+                    action = "Fuel Allocation"
+                    description = f"You have allocated fuel to {fuel_update.depot.name}"
+                    Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                                        action=action, description=description, reference_id=fuel_update.id)
+                    messages.success(request, 'Updated petrol quantity successfully.')
+                    return redirect('noic:dashboard')
             
         else:
             if request.POST['currency'] == 'USD':
-                fuel_update.usd_diesel += float(request.POST['quantity'])
-                fuel_update.usd_diesel_price = request.POST['diesel_usd_price']
-                fuel_update.save()
+                if Decimal(request.POST['diesel_usd_price']) > prices.usd_diesel_price:
+                    messages.warning(request, f'You cannot set USD diesel price higher that the ZERA max price of ${prices.usd_diesel_price}.')
+                    return redirect('noic:dashboard')
+                else:
+                    fuel_update.usd_diesel += float(request.POST['quantity'])
+                    fuel_update.usd_diesel_price = request.POST['diesel_usd_price']
+                    fuel_update.save()
 
-                action = "Fuel Allocation"
-                description = f"You have allocated fuel to {fuel_update.depot.name}"
-                Activity.objects.create(depot=fuel_update.depot, user=request.user,
-                                    action=action, description=description, reference_id=fuel_update.id)
-                messages.success(request, 'Updated diesel quantity successfully.')
-                return redirect('noic:dashboard')
+                    action = "Fuel Allocation"
+                    description = f"You have allocated fuel to {fuel_update.depot.name}"
+                    Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                                        action=action, description=description, reference_id=fuel_update.id)
+                    messages.success(request, 'Updated diesel quantity successfully.')
+                    return redirect('noic:dashboard')
             else:
-                fuel_update.rtgs_diesel += float(request.POST['quantity'])
-                fuel_update.rtgs_diesel_price = request.POST['diesel_rtgs_price']
-                fuel_update.save()
-                action = "Fuel Allocation"
-                description = f"You have allocated fuel to {fuel_update.depot.name}"
-                Activity.objects.create(depot=fuel_update.depot, user=request.user,
-                                    action=action, description=description, reference_id=fuel_update.id)
-                messages.success(request, 'Updated diesel quantity successfully.')
-                return redirect('noic:dashboard')
+                if Decimal(request.POST['diesel_rtgs_price']) > prices.rtgs_diesel_price:
+                    messages.warning(request, f'You cannot set RTGS diesel price higher that the ZERA max price of ${prices.rtgs_diesel_price}.')
+                    return redirect('noic:dashboard')
+                else:
+                    fuel_update.rtgs_diesel += float(request.POST['quantity'])
+                    fuel_update.rtgs_diesel_price = request.POST['diesel_rtgs_price']
+                    fuel_update.save()
+                    action = "Fuel Allocation"
+                    description = f"You have allocated fuel to {fuel_update.depot.name}"
+                    Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                                        action=action, description=description, reference_id=fuel_update.id)
+                    messages.success(request, 'Updated diesel quantity successfully.')
+                    return redirect('noic:dashboard')
 
 
 @login_required()
 def edit_prices(request, id):
     user_permission(request)
     fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
+    prices = FuelPrices.objets.first()
     if request.method == 'POST':
-        fuel_update.usd_petrol_price = request.POST['usd_petrol_price']
-        fuel_update.usd_diesel_price = request.POST['usd_diesel_price']
-        fuel_update.rtgs_petrol_price = request.POST['rtgs_petrol_price']
-        fuel_update.rtgs_diesel_price = request.POST['rtgs_diesel_price']
-        fuel_update.save()
+        if Decimal(request.POST['usd_petrol_price']) > prices.usd_petrol_price:
+            messages.warning(request, f'You cannot set USD petrol price higher that the ZERA max price of ${prices.usd_petrol_price}.')
+            return redirect('noic:dashboard')
+        else:
+            if Decimal(request.POST['usd_diesel_price']) > prices.usd_diesel_price:
+                messages.warning(request, f'You cannot set USD diesel price higher that the ZERA max price of ${prices.usd_diesel_price}.')
+                return redirect('noic:dashboard')
+          
+            else:
+                if Decimal(request.POST['rtgs_petrol_price']) > prices.rtgs_petrol_price:
+                    messages.warning(request, f'You cannot set RTGS petrol price higher that the ZERA max price of ${prices.rtgs_petrol_price}.')
+                    return redirect('noic:dashboard')
+                else:
+                    if Decimal(request.POST['rtgs_diesel_price']) > prices.rtgs_diesel_price:
+                        messages.warning(request, f'You cannot set RTGS diesel price higher that the ZERA max price of ${prices.rtgs_diesel_price}.')
+                        return redirect('noic:dashboard')
+                    else:
+                        fuel_update.usd_petrol_price = request.POST['usd_petrol_price']
+                        fuel_update.usd_diesel_price = request.POST['usd_diesel_price']
+                        fuel_update.rtgs_petrol_price = request.POST['rtgs_petrol_price']
+                        fuel_update.rtgs_diesel_price = request.POST['rtgs_diesel_price']
+                        fuel_update.save()
 
-        action = "Updating Prices"
-        description = f"You have updated fuel prices for {depot_update.depot.name}"
-        Activity.objects.create(depot=fuel_update.depot, user=request.user,
-                                    action=action, description=description, reference_id=fuel_update.depot.id)
-        messages.success(request, 'Updated prices successfully.')
-        return redirect('noic:dashboard')
+                        action = "Updating Prices"
+                        description = f"You have updated fuel prices for {fuel_update.depot.name}"
+                        Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                                                    action=action, description=description, reference_id=fuel_update.depot.id)
+                        messages.success(request, 'Updated prices successfully.')
+                        return redirect('noic:dashboard')
 
 
 @login_required()
