@@ -129,7 +129,7 @@ def allocate(request):
 @login_required()
 def allocated_fuel(request, sid):
     user_permission(request)
-    prices = FuelPrices.objets.first()
+    prices = FuelPrices.objects.first()
     sub = Subsidiaries.objects.filter(id=sid).first()
     allocates = SuballocationFuelUpdate.objects.filter(subsidiary=sub).all()
     company_quantity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
@@ -356,7 +356,7 @@ def allocated_fuel(request, sid):
 @login_required()
 def allocation_update(request, id):
     user_permission(request)
-    prices = FuelPrices.objets.first()
+    prices = FuelPrices.objects.first()
     if request.method == 'POST':
         if SuballocationFuelUpdate.objects.filter(id=id).exists():
             fuel_update = SuballocationFuelUpdate.objects.filter(id=id).first()
@@ -572,7 +572,7 @@ def allocation_update(request, id):
 @login_required()
 def allocation_update_main(request, id):
     user_permission(request)
-    prices = FuelPrices.objets.first()
+    prices = FuelPrices.objects.first()
     if request.method == 'POST':
         if SubsidiaryFuelUpdate.objects.filter(id=id).exists():
             fuel_update = SubsidiaryFuelUpdate.objects.filter(id=id).first()
@@ -1571,7 +1571,7 @@ def delete_subsidiary(request, id):
 @login_required()
 def edit_fuel_prices(request, id):
     user_permission(request)
-    prices = FuelPrices.objets.first()
+    prices = FuelPrices.objects.first()
     if request.method == 'POST':
         if SubsidiaryFuelUpdate.objects.filter(id=id).exists():
             prices_update = SubsidiaryFuelUpdate.objects.filter(id=id).first()
@@ -1603,7 +1603,7 @@ def edit_fuel_prices(request, id):
 @login_required()
 def edit_suballocation_fuel_prices(request, id):
     user_permission(request)
-    prices = FuelPrices.objets.first()
+    prices = FuelPrices.objects.first()
     if request.method == 'POST':
         if SuballocationFuelUpdate.objects.filter(id=id).exists():
             prices_update = SuballocationFuelUpdate.objects.filter(id=id).first()

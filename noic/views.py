@@ -216,7 +216,7 @@ def delete_depot(request, id):
 def fuel_update(request, id):
     user_permission(request)
     fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
-    prices = FuelPrices.objets.first()
+    prices = FuelPrices.objects.first()
     if request.method == 'POST':
         if request.POST['fuel_type'].lower() == 'petrol':
             if request.POST['currency'] == 'USD': 
@@ -286,7 +286,7 @@ def fuel_update(request, id):
 def edit_prices(request, id):
     user_permission(request)
     fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
-    prices = FuelPrices.objets.first()
+    prices = FuelPrices.objects.first()
     if request.method == 'POST':
         if Decimal(request.POST['usd_petrol_price']) > prices.usd_petrol_price:
             messages.warning(request, f'You cannot set USD petrol price higher that the ZERA max price of ${prices.usd_petrol_price}.')
