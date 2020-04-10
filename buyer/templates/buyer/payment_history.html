@@ -84,8 +84,8 @@
                             <td>
 
                                 <!--call modal-->
-                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{transaction.id}}">
-                                    <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
+                                <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#view{{transaction.id}}">
+                                    <span class="btn-label"><i class="fa fa-eye"></i></span> Details
                                 </button>
                                 <!--view details-->
                                 <div class="modal fade modal-success in" id="view{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -122,8 +122,8 @@
                             <td>
                                 
                                     <!--call modal-->
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#trans{{payment.id}}">
-                                        Transaction Details
+                                    <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#trans{{payment.id}}">
+                                        <span class="btn-label"><i class="fa fa-eye"></i></span>Transaction Details
                                     </button>
                                     <!--view details-->
                                     <div class="modal fade modal-success in" id="trans{{payment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -196,7 +196,8 @@
                             {% if payment.delivery_schedule != None %}
                             <td>
                                 <div class="btn-group">
-                                <button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">View Schedule</button>
+                                <button type="button" class="btn btn-labeled btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">
+                                    <span class="btn-label"><i class="fa fa-eye"></i></span>View Schedule</button>
                                 </div>
                             </td>
                             {% else %}
@@ -315,7 +316,7 @@
                                             {%endif%} 
                                         </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-default" style="background-color: lightslategray;" data-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">
                                                     Close
                                                 </button>
     
