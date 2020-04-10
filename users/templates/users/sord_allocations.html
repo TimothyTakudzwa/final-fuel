@@ -46,7 +46,8 @@
                 </div>
                 <div class="panel-body">
                     <p class="lead">
-                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#state_modal" role="button" style="color: white;">Filtered State - {{ state }}</button>
+                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#state_modal" role="button" style="color: #ffffff;">
+                            Filter By Date | {% if start_date and end_date %}{{start_date}} - {{end_date}}{% else %}All{% endif %}</button>
                     </p>
                 </div>
             

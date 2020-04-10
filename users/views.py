@@ -74,7 +74,7 @@ def sord_allocations(request):
                 end_date = end_date.date()
             sord_allocations = SordCompanyAuditTrail.objects.filter(date__range=[start_date, end_date])
         
-            return render(request, 'users/sord_allocations.html', {'sord_allocations': sord_allocations}) 
+            return render(request, 'users/sord_allocations.html', {'sord_allocations': sord_allocations, 'start_date':start_date, 'end_date': end_date }) 
 
         else:    
             html_string = render_to_string('users/export_allocations.html', {'sord_allocations': sord_allocations, 'date':today })
