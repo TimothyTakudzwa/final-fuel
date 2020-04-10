@@ -112,6 +112,9 @@
                                                         <h4>Phone &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.transaction.supplier.phone_number }}</h4>
                                                     </div>
                                                 </div>
+                                                <div class="modal-footer">  
+                                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -183,6 +186,9 @@
                                                             &nbsp;{{payment.transaction.buyer.company.address}}
                                                         </div>
                                                        
+                                                    </div>
+                                                    <div class="modal-footer">  
+                                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -327,6 +333,19 @@
                                 </div>
                             </div>
                             <!--End View Modal-->
+                            <script>
+                                $('body').click(function (event) {
+                                    if(!$(event.target).closest('#view{{transaction.id}}').length && !$(event.target).is('#view{{transaction.id}}')) {
+                                        $("#view{{transaction.id}}").modal('hide');
+                                    }
+                                    if(!$(event.target).closest('#trans{{payment.id}}').length && !$(event.target).is('#trans{{payment.id}}')) {
+                                        $("#trans{{payment.id}}").modal('hide');
+                                    }
+                                    if(!$(event.target).closest('#schedule{{payment.id}}').length && !$(event.target).is('#schedule{{payment.id}}')) {
+                                        $("#schedule{{payment.id}}").modal('hide');
+                                    }      
+                                });
+                            </script>
                   
                         {% endfor %}
                     
