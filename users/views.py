@@ -61,7 +61,7 @@ function for viewing allocations from NOIC, showing sord numbers, quantities, pa
 def sord_allocations(request):
     sord_allocations = SordCompanyAuditTrail.objects.filter(company=request.user.company).all()
     if request.method == "POST":
-        html_string = render_to_string('user/export_allocations.html', {'sord_allocations': sord_allocations})
+        html_string = render_to_string('users/export_allocations.html', {'sord_allocations': sord_allocations})
         html = HTML(string=html_string)
         export_name = f"{request.user.company.name.title()}{datetime.date.today().strftime('%d/%m/%y')}"
         html.write_pdf(target=f'media/transactions/{export_name}.pdf')
