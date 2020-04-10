@@ -60,7 +60,7 @@ function for viewing allocations from NOIC, showing sord numbers, quantities, pa
 @user_role
 def sord_allocations(request):
     sord_allocations = SordCompanyAuditTrail.objects.filter(company=request.user.company).all()
-    date = datetime.date.today().strftime("%d/%m/%y")
+    date = date.today().strftime("%d/%m/%y")
     
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :
