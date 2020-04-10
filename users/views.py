@@ -2195,8 +2195,6 @@ def upload_users(request):
                 response['Content-Disposition'] = 'attachment;filename=export.pdf'
                 return response
 
-    return redirect('users:clients')
-
 
 @login_required()
 @user_role
