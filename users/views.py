@@ -60,18 +60,34 @@ function for viewing allocations from NOIC, showing sord numbers, quantities, pa
 @user_role
 def sord_allocations(request):
     sord_allocations = SordCompanyAuditTrail.objects.filter(company=request.user.company).all()
+    date = datetime.date.today().strftime("%d/%m/%y")
+    
     if request.method == "POST":
-        html_string = render_to_string('users/export_allocations.html', {'sord_allocations': sord_allocations})
-        html = HTML(string=html_string)
-        export_name = f"{request.user.company.name.title()}"
-        html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            sord_allocations = SordCompanyAuditTrail.objects.filter(date__range=[start_date, end_date])
+        
+            return render(request, 'users/sord_allocations.html', {'sord_allocations': sord_allocations}) 
 
-        download_file = f'media/transactions/{export_name}'
+        else:    
+            html_string = render_to_string('users/export_allocations.html', {'sord_allocations': sord_allocations, 'date':date })
+            html = HTML(string=html_string)
+            export_name = f"{request.user.company.name.title()}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
-        with open(f'{download_file}.pdf', 'rb') as pdf:
-            response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-            response['Content-Disposition'] = 'attachment;filename=export.pdf'
-            return response
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name}.pdf'
+                return response
             
 
     
