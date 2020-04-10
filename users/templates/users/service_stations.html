@@ -486,9 +486,13 @@
                        <div class="row">
                        <div class="form-group col-md-6" name="city" id="city">
                                <label><b>City</b></label>
-                               <select class="form-control" name="city">
+                               <select class="form-control" name="city" required>
                                    {% for citi in zimbabwean_towns %}
+                                   {% if citi == "Select City ---" %}
+                                   <option disabled selected value>{{citi}}</option>
+                                   {% else %}
                                    <option >{{citi}}</option>
+                                   {% endif %}
                                    {% endfor %}
                                </select>
                            </div>

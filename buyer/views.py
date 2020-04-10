@@ -33,6 +33,7 @@ from .models import FuelRequest
 from .decorators import user_role, user_permission
 
 user = get_user_model()
+today = date.today()
 
 """
 
@@ -1274,8 +1275,9 @@ def company_profile(request):
 @login_required()
 @user_role
 def activity(request):
-    activities = Activity.objects.filter(user=request.user).all()
-    return render(request, 'buyer/activity.html', {'activities': activities})
+    current_activities = Activity.objects.filter(user=request.user, date=today).all()
+    activities = Activity.objects.exclude(date=today).filter(user=request.user)
+    return render(request, 'buyer/activity.html', {'activities': activities, 'current_activities': current_activities})
 
 
 '''Handling Delivery Branches'''
