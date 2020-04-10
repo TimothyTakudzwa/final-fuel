@@ -81,34 +81,69 @@
 
 <hr>
 
-<!-- <table style="padding-top: 20px">
+<table style="padding-top: 20px">
     <tr>
-        <th>Date</th>
-        <th>Time</th>
-        <th>Quantity</th>
-        <th>Fuel Type</th>
-        <th>Price</th>
+        <th>
+            Sord Number
+        </th>
+
+        <th>
+            Number of Actions
+        </th>
+
+        <th>
+            Info
+        </th>
+        <th>
+            Fuel 
+        </th>
+        <th>
+            Currency 
+        </th>
+        <th>
+            Initial
+        </th>
+        <th>
+            Allocated
+        </th>
+        <th>
+            Balance
+        </th>
+
+        <th>
+            Last Allocation
+        </th>
+
     </tr>
 
-    {% for transaction in transactions %}
+    {% for sord in sord_allocations %}
         <tr>
-            <td>{{ transaction.transaction.date }}</td>
-            <td>{{ transaction.transaction.time }}</td>
-            <td>{{ transaction.transaction.offer.quantity }}L</td>
+            <td>{{sord.sord_no}}</td>
+            <td>{{sord.action_no}}</td>
+            <td>{{sord.action}}</td>
 
-            {% if transaction.transaction.offer.request.fuel_type == 'Diesel' %}
-                <td style="color: #009688;">{{ transaction.transaction.offer.request.fuel_type }}</td>
-            {% elif transaction.transaction.offer.request.fuel_type == 'Diesel' %}
-                <td style="color: #ffb61e;">{{ transaction.transaction.offer.request.fuel_type }}</td>
+            {% if sord.fuel_type == 'Petrol' %}
+                <td style="color: #009688;">{{sord.fuel_type}}</td>
+            {% elif sord.fuel_type == 'Diesel' %}
+                <td style="color: #ffb61e;">{{sord.fuel_type}}</td>
             {% else %}    
-                <td>{{ transaction.transaction.offer.request.fuel_type }}</td>
+                <td>{{sord.fuel_type}}</td>
             {% endif %}    
 
-            <td>${{ transaction.transaction.offer.price }}</td>
+
+            <td>{{sord.payment_type}}</td>
+            <td>{{sord.initial_quantity|floatformat:2|intcomma}}</td>
+            <td>{{sord.quantity_allocated|floatformat:2|intcomma}}</td>
+            <td>{{sord.end_quantity|floatformat:2|intcomma}}</td>
+            {% if sord.allocated_to == None %}
+            <td><B style="margin-left: 25px;">--</B></td>
+            {% else %}
+            <td>{{sord.allocated_to}}</td>
+            {% endif %}
         </tr>
     {% endfor %}
 
-</table> -->
+</table>
 
 
 </body>
