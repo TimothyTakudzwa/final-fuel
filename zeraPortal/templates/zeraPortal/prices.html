@@ -17,7 +17,7 @@
     </div>
     <div class="header-title">
 
-        <h1>Zim Fuel Prices </h1>
+        <h1>Fuel Prices </h1>
         <small>Fuel Management System</small>
         <ol class="breadcrumb hidden-xs">
             <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
@@ -31,7 +31,7 @@
     <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
         <div class="panel-heading ui-sortable-handle">
             <div class="btn-group">
-                <h4>Zim Fuel Prices</h4>
+                <h4>Fuel Prices</h4>
             </div>
             <div class="dropdown">
                 <ul class="dropdown-menu dropdown-menu-right">
@@ -50,13 +50,23 @@
                     <thead>
                         <tr>
                             <th>
-                                Parameters
+                                Fuel Type
                             </th>
+                            <th>
+                                FOB ($)
+                             </th>
                             <th>
                                 Vat ($)
                              </th>
                              <th>
                                 Duty ($)
+                             </th>
+                             <th>
+                                Oil Company Margin ($)
+                             </th>
+                             
+                             <th>
+                                Dealer Margin ($)
                              </th>
                              <th>
                                 Total Price ($)
@@ -70,8 +80,11 @@
                        
                         <tr>
                             <td>USD Diesel</td>
+                            <td>{{prices.usd_diesel_fob}}</td>
                             <td>{{prices.usd_diesel_vat}}</td>
                             <td>{{prices.usd_diesel_duty}}</td>
+                            <td>{{prices.usd_diesel_oil_cmargin}}</td>
+                            <td>{{prices.usd_diesel_dmargin}}</td>
                             <td>{{prices.usd_diesel_price}}</td>
                             <td>
                                 <div class="btn-group">
@@ -82,8 +95,11 @@
                         </tr>
                         <tr>
                             <td>RTGS Diesel</td>
+                            <td>{{prices.rtgs_diesel_fob}}</td>
                             <td>{{prices.rtgs_diesel_vat}}</td>
                             <td>{{prices.rtgs_diesel_duty}}</td>
+                            <td>{{prices.rtgs_diesel_oil_cmargin}}</td>
+                            <td>{{prices.rtgs_diesel_dmargin}}</td>
                             <td>{{prices.rtgs_diesel_price}}</td>
                             <td>
                                 <div class="btn-group">
@@ -94,8 +110,11 @@
                         </tr>
                         <tr>
                             <td>USD Petrol</td>
+                            <td>{{prices.usd_petrol_fob}}</td>
                             <td>{{prices.usd_petrol_vat}}</td>
                             <td>{{prices.usd_petrol_duty}}</td>
+                            <td>{{prices.usd_petrol_oil_cmargin}}</td>
+                            <td>{{prices.usd_petrol_dmargin}}</td>
                             <td>{{prices.usd_petrol_price}}</td>
                             <td>
                                 <div class="btn-group">
@@ -106,8 +125,11 @@
                         </tr>
                         <tr>
                             <td>RTGS Petrol</td>
+                            <td>{{prices.rtgs_petrol_fob}}</td>
                             <td>{{prices.rtgs_petrol_vat}}</td>
                             <td>{{prices.rtgs_petrol_duty}}</td>
+                            <td>{{prices.rtgs_petrol_oil_cmargin}}</td>
+                            <td>{{prices.rtgs_petrol_dmargin}}</td>
                             <td>{{prices.rtgs_petrol_price}}</td>
                             <td>
                                 <div class="btn-group">
@@ -124,7 +146,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title" id="exampleModalLongTitle">Update Price</span>
+                <span class="modal-title" id="exampleModalLongTitle">Update USD Diesel Price</span>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -137,17 +159,34 @@
 
                 <div class="form-group row col-sm-12">
                     <div class="col-sm-6">
+                        <label><b style='color:#009688'>Fob</b></label>
+                        <input type="text" name="fob" class="form-control" value="{{prices.usd_diesel_fob}}"
+                             />
+                    </div>
+                    <div class="col-sm-6">
                         <label><b style='color:#009688'>Vat</b></label>
                         <input type="text" name="vat" class="form-control" value="{{prices.usd_diesel_vat}}"
                              />
                     </div>
+                </div>
+
+                <div class="form-group row col-sm-12">
+                  
                     <div class="col-sm-6">
                         <label><b style='color:#009688'>Duty</b></label>
                         <input type="text" name="duty" class="form-control" value="{{prices.usd_diesel_duty}}"  />
                     </div>
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Oil Company Margin</b></label>
+                        <input type="text" name="cmargin" class="form-control" value="{{prices.usd_diesel_oil_cmargin}}"  />
+                    </div>
                 </div>
 
                 <div class="form-group row col-sm-12">
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Dealer Margin</b></label>
+                        <input type="text" name="dmargin" class="form-control" value="{{prices.usd_diesel_dmargin}}"  />
+                    </div>
                     <div class="col-sm-6">
                         <label><b style='color:#009688'>Total Price</b></label>
                         <input type="text" name="price" class="form-control" value="{{prices.usd_diesel_price}}"  />
@@ -170,7 +209,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title" id="exampleModalLongTitle">Update Price</span>
+                <span class="modal-title" id="exampleModalLongTitle">Update RTGS Diesel Price</span>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -183,17 +222,32 @@
 
                 <div class="form-group row col-sm-12">
                     <div class="col-sm-6">
+                        <label><b style='color:#009688'>Fob</b></label>
+                        <input type="text" name="fob" class="form-control" value="{{prices.rtgs_diesel_fob}}"
+                             />
+                    </div>
+                    <div class="col-sm-6">
                         <label><b style='color:#009688'>Vat</b></label>
                         <input type="text" name="vat" class="form-control" value="{{prices.rtgs_diesel_vat}}"
                              />
                     </div>
+                </div>
+                <div class="form-group row col-sm-12">
                     <div class="col-sm-6">
                         <label><b style='color:#009688'>Duty</b></label>
                         <input type="text" name="duty" class="form-control" value="{{prices.rtgs_diesel_duty}}"  />
                     </div>
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Oil Company Margin</b></label>
+                        <input type="text" name="cmargin" class="form-control" value="{{prices.rtgs_diesel_oil_cmargin}}"  />
+                    </div>
                 </div>
 
                 <div class="form-group row col-sm-12">
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Dealer Margin</b></label>
+                        <input type="text" name="dmargin" class="form-control" value="{{prices.rtgs_diesel_dmargin}}"  />
+                    </div>
                     <div class="col-sm-6">
                         <label><b style='color:#009688'>Total Price</b></label>
                         <input type="text" name="price" class="form-control" value="{{prices.rtgs_diesel_price}}"  />
@@ -216,7 +270,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title" id="exampleModalLongTitle">Update Price</span>
+                <span class="modal-title" id="exampleModalLongTitle">Update USD Petrol Price</span>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -229,17 +283,35 @@
                
                 <div class="form-group row col-sm-12">
                     <div class="col-sm-6">
+                        <label><b style='color:#009688'>Fob</b></label>
+                        <input type="text" name="fob" class="form-control" value="{{prices.usd_petrol_fob}}"
+                             />
+                    </div>
+                    <div class="col-sm-6">
                         <label><b style='color:#009688'>Vat</b></label>
                         <input type="text" name="vat" class="form-control" value="{{prices.usd_petrol_vat}}"
                              />
                     </div>
+                   
+                </div>
+
+                <div class="form-group row col-sm-12">
+                   
                     <div class="col-sm-6">
                         <label><b style='color:#009688'>Duty</b></label>
                         <input type="text" name="duty" class="form-control" value="{{prices.usd_petrol_duty}}"  />
                     </div>
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Oil Company Margin</b></label>
+                        <input type="text" name="cmargin" class="form-control" value="{{prices.usd_petrol_oil_cmargin}}"  />
+                    </div>
                 </div>
 
                 <div class="form-group row col-sm-12">
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Dealer Margin</b></label>
+                        <input type="text" name="dmargin" class="form-control" value="{{prices.usd_petrol_dmargin}}"  />
+                    </div>
                     <div class="col-sm-6">
                         <label><b style='color:#009688'>Total Price</b></label>
                         <input type="text" name="price" class="form-control" value="{{prices.usd_petrol_price}}"  />
@@ -262,7 +334,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title" id="exampleModalLongTitle">Update Price</span>
+                <span class="modal-title" id="exampleModalLongTitle">Update RTGS Petrol Price</span>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -275,17 +347,35 @@
                
                 <div class="form-group row col-sm-12">
                     <div class="col-sm-6">
+                        <label><b style='color:#009688'>Fob</b></label>
+                        <input type="text" name="fob" class="form-control" value="{{prices.rtgs_petrol_fob}}"
+                             />
+                    </div>
+                    <div class="col-sm-6">
                         <label><b style='color:#009688'>Vat</b></label>
                         <input type="text" name="vat" class="form-control" value="{{prices.rtgs_petrol_vat}}"
                              />
                     </div>
+                  
+                </div>
+
+                <div class="form-group row col-sm-12">
+                   
                     <div class="col-sm-6">
                         <label><b style='color:#009688'>Duty</b></label>
                         <input type="text" name="duty" class="form-control" value="{{prices.rtgs_petrol_duty}}"  />
                     </div>
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Oil Company Margin</b></label>
+                        <input type="text" name="cmargin" class="form-control" value="{{prices.rtgs_petrol_oil_cmargin}}"  />
+                    </div>
                 </div>
 
                 <div class="form-group row col-sm-12">
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Dealer Margin</b></label>
+                        <input type="text" name="dmargin" class="form-control" value="{{prices.rtgs_petrol_dmargin}}"  />
+                    </div>
                     <div class="col-sm-6">
                         <label><b style='color:#009688'>Total Price</b></label>
                         <input type="text" name="price" class="form-control" value="{{prices.rtgs_petrol_price}}"  />

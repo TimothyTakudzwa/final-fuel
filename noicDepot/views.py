@@ -64,9 +64,10 @@ def dashboard(request):
 @login_required()
 @user_role
 def activity(request):
-    activities = Activity.objects.filter(user=request.user).all()
+    activities = Activity.objects.exclude(date=today).filter(user=request.user)
+    current_activities = Activity.objects.filter(user=request.user, date=today).all()
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
-    return render(request, 'noicDepot/activity.html', {'activities': activities, 'depot': depot})
+    return render(request, 'noicDepot/activity.html', {'activities': activities, 'depot': depot, 'current_activities': current_activities})
 
 
 @login_required()
@@ -82,6 +83,8 @@ def accepted_orders(request):
             pass
      
     orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=True).all()
+    for order in orders:
+            order.allocation = SordNationalAuditTrail.objects.filter(order=order).first()
     return render(request, 'noicDepot/accepted_orders.html', {'orders': orders})
 
 
