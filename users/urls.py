@@ -53,7 +53,6 @@ urlpatterns = [
     path('company_profile/', views.company_profile, name="company_profile"),
     path('company_petrol/<int:id>', views.company_petrol, name="company_petrol"),
     path('company_diesel/<int:id>', views.company_diesel, name="company_diesel"),
-    path('waiting_for_approval/', views.waiting_for_approval, name="waiting_for_approval"),
     path('approval/<int:id>', views.approve_applicant, name="approval"),
     path('decline_applicant/<int:id>', views.decline_applicant, name="decline_applicant"),
     path('edit_allocation/<int:id>', views.edit_allocation, name="edit_allocation"),
