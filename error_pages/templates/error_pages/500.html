@@ -3,7 +3,7 @@
 
 {% block body %}
 
-    <div class="middle-box">
+    <div class="middle-box" style="max-width: 50%; margin: 0 auto;">
         <div class="row">
             <div class="col-sm-12">
                 <div class="error-text">
@@ -15,9 +15,9 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="error-desc">
-                    <p>Server error, please try again or go back to home page</p>
+                    <p class="text-center">Server error, please try again or go back to home page</p>
                      <div class="text-center">
-                         <button class="btn btn-lg btn-info" onclick='location.href="{% url 'home' %}"'>
+                         <button class="btn btn-lg btn-info" style="margin-top: 50px;" onclick='location.href="{% url 'home' %}"'>
                              Go To Home
                          </button>
                      </div>
