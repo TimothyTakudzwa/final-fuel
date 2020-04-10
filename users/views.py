@@ -16,10 +16,12 @@ from django.template.loader import get_template
 from django.template.loader import render_to_string
 from weasyprint import HTML
 from xhtml2pdf import pisa
+from decimal import *
 
 from accounts.models import Account, AccountHistory
 from buyer.forms import *
 from company.lib import *
+from zeraPortal.models import FuelPrices
 from fuelUpdates.models import SordCompanyAuditTrail
 from fuelfinder.helper_functions import random_password
 from national.models import Order, SordNationalAuditTrail, DepotFuelUpdate
@@ -127,6 +129,7 @@ def allocate(request):
 @login_required()
 def allocated_fuel(request, sid):
     user_permission(request)
+    prices = FuelPrices.objets.first()
     sub = Subsidiaries.objects.filter(id=sid).first()
     allocates = SuballocationFuelUpdate.objects.filter(subsidiary=sub).all()
     company_quantity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
@@ -135,20 +138,17 @@ def allocated_fuel(request, sid):
     if request.method == 'POST':
         if request.POST['fuel_type'] == 'Petrol':
             if int(request.POST['quantity']) > company_quantity.unallocated_petrol:
-                messages.warning(request,
-                                 f'You can not allocate fuel above your company petrol capacity of {company_quantity.unallocated_petrol}.')
+                messages.warning(request, f'You can not allocate fuel above your company petrol capacity of {company_quantity.unallocated_petrol}.')
                 return redirect(f'/users/allocated_fuel/{sid}')
             if request.POST['fuel_payment_type'] == "RTGS":
-                if float(request.POST['price']) > company_quantity.petrol_price:
-                    messages.warning(request,
-                                     f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}.')
+                if Decimal(request.POST['price']) > prices.rtgs_petrol_price:
+                    messages.warning(request, f'You can not set price above ZERA max petrol price of ${prices.rtgs_petrol_price}.')
                     return redirect(f'/users/allocated_fuel/{sid}')
                 else:
                     pass
             elif request.POST['fuel_payment_type'] == "USD":
-                if float(request.POST['price']) > company_quantity.usd_petrol_price:
-                    messages.warning(request,
-                                     f'You can not set price above NOIC petrol price of {company_quantity.usd_petrol_price}')
+                if Decimal(request.POST['price']) > prices.usd_petrol_price:
+                    messages.warning(request, f'You can not set price above ZERA max petrol price of ${prices.usd_petrol_price}')
                     return redirect(f'/users/allocated_fuel/{sid}')
                 else:
                     pass
@@ -176,16 +176,14 @@ def allocated_fuel(request, sid):
                                  f'You can not allocate fuel above your company diesel capacity of {company_quantity.unallocated_diesel}.')
                 return redirect(f'/users/allocated_fuel/{sid}')
             if request.POST['fuel_payment_type'] == "RTGS":
-                if float(request.POST['price']) > company_quantity.diesel_price:
-                    messages.warning(request,
-                                     f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}.')
+                if Decimal(request.POST['price']) > prices.rtgs_diesel_price:
+                    messages.warning(request, f'You can not set price above ZERA max diesel price of ${prices.rtgs_diesel_price}.')
                     return redirect(f'/users/allocated_fuel/{sid}')
                 else:
                     pass
             elif request.POST['fuel_payment_type'] == "USD":
-                if float(request.POST['price']) > company_quantity.usd_diesel_price:
-                    messages.warning(request,
-                                     f'You can not set price above NOIC diesel price of {company_quantity.usd_diesel_price}.')
+                if Decimal(request.POST['price']) > prices.usd_diesel_price:
+                    messages.warning(request, f'You can not set price above ZERA max diesel price of ${prices.usd_diesel_price}.')
                     return redirect(f'/users/allocated_fuel/{sid}')
                 else:
                     pass
@@ -358,6 +356,7 @@ def allocated_fuel(request, sid):
 @login_required()
 def allocation_update(request, id):
     user_permission(request)
+    prices = FuelPrices.objets.first()
     if request.method == 'POST':
         if SuballocationFuelUpdate.objects.filter(id=id).exists():
             fuel_update = SuballocationFuelUpdate.objects.filter(id=id).first()
@@ -366,56 +365,48 @@ def allocation_update(request, id):
             depot = SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first()
             if request.POST['fuel_type'] == 'Petrol':
                 if int(request.POST['quantity']) > company_quantity.unallocated_petrol:
-                    messages.warning(request,
-                                     f'You can not allocate fuel above your company petrol quantity of {company_quantity.unallocated_petrol}.')
+                    messages.warning(request, f'You can not allocate fuel above your company petrol quantity of {company_quantity.unallocated_petrol}.')
                     return redirect('users:allocate')
                 fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['quantity'])
                 depot.petrol_quantity = depot.petrol_quantity + int(request.POST['quantity'])
                 if fuel_update.payment_type == "RTGS":
-                    if float(request.POST['price']) > company_quantity.petrol_price:
-                        messages.warning(request,
-                                         f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}.')
+                    if Decimal(request.POST['price']) > prices.rtgs_petrol_price:
+                        messages.warning(request, f'You can not set price above ZERA max petrol price of ${prices.rtgs_petrol_price}.')
                         return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                     else:
-                        fuel_update.petrol_price = float(request.POST['price'])
+                        fuel_update.petrol_price = Decimal(request.POST['price'])
                 elif fuel_update.payment_type == "USD":
-                    if float(request.POST['price']) > company_quantity.usd_petrol_price:
-                        messages.warning(request,
-                                         f'You can not set price above NOIC usd petrol price of {company_quantity.usd_petrol_price}.')
+                    if Decimal(request.POST['price']) > prices.usd_petrol_price:
+                        messages.warning(request, f'You can not set price above ZERA max usd petrol price of ${prices.usd_petrol_price}.')
                         return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                     else:
-                        fuel_update.petrol_price = float(request.POST['price'])
+                        fuel_update.petrol_price = Decimal(request.POST['price'])
                 if fuel_update.payment_type == 'USD & RTGS':
-                    fuel_update.petrol_usd_price = float(request.POST['usd_price'])
-                company_quantity.unallocated_petrol = company_quantity.unallocated_petrol - int(
-                    request.POST['quantity'])
+                    fuel_update.petrol_usd_price = Decimal(request.POST['usd_price'])
+                company_quantity.unallocated_petrol = company_quantity.unallocated_petrol - int(request.POST['quantity'])
                 company_quantity.save()
             else:
                 if int(request.POST['quantity']) > company_quantity.unallocated_diesel:
-                    messages.warning(request,
-                                     f'You can not allocate fuel above your company diesel quantity of {company_quantity.unallocated_diesel}.')
+                    messages.warning(request, f'You can not allocate fuel above your company diesel quantity of {company_quantity.unallocated_diesel}.')
                     return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                 fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['quantity'])
                 depot.diesel_quantity = depot.diesel_quantity + int(request.POST['quantity'])
 
                 if fuel_update.payment_type == "RTGS":
-                    if float(request.POST['price']) > company_quantity.diesel_price:
-                        messages.warning(request,
-                                         f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}.')
+                    if Decimal(request.POST['price']) > prices.rtgs_diesel_price:
+                        messages.warning(request, f'You can not set price above ZERA max diesel price of ${prices.rtgs_diesel_price}.')
                         return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                     else:
-                        fuel_update.diesel_price = request.POST['price']
+                        fuel_update.diesel_price = Decimal(request.POST['price'])
                 elif fuel_update.payment_type == "USD":
-                    if float(request.POST['price']) > company_quantity.usd_diesel_price:
-                        messages.warning(request,
-                                         f'You can not set price above NOIC usd diesel price of {company_quantity.usd_diesel_price}.')
+                    if Decimal(request.POST['price']) > prices.usd_diesel_price:
+                        messages.warning(request, f'You can not set price above ZERA max usd diesel price of ${prices.usd_diesel_price}.')
                         return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                     else:
-                        fuel_update.diesel_price = request.POST['price']
+                        fuel_update.diesel_price = Decimal(request.POST['price'])
                 if fuel_update.payment_type == 'USD & RTGS':
                     fuel_update.diesel_usd_price = float(request.POST['usd_price'])
-                company_quantity.unallocated_diesel = company_quantity.unallocated_diesel - int(
-                    request.POST['quantity'])
+                company_quantity.unallocated_diesel = company_quantity.unallocated_diesel - int(request.POST['quantity'])
                 company_quantity.save()
             fuel_update.cash = request.POST['cash']
             fuel_update.swipe = request.POST['swipe']
@@ -581,6 +572,7 @@ def allocation_update(request, id):
 @login_required()
 def allocation_update_main(request, id):
     user_permission(request)
+    prices = FuelPrices.objets.first()
     if request.method == 'POST':
         if SubsidiaryFuelUpdate.objects.filter(id=id).exists():
             fuel_update = SubsidiaryFuelUpdate.objects.filter(id=id).first()
@@ -589,31 +581,27 @@ def allocation_update_main(request, id):
 
             if request.POST['fuel_type'] == 'Petrol':
                 if int(request.POST['quantity']) > company_quantity.unallocated_petrol:
-                    messages.warning(request,
-                                     f'You can not allocate fuel above your company petrol quantity of {company_quantity.unallocated_petrol}.')
+                    messages.warning(request, f'You can not allocate fuel above your company petrol quantity of {company_quantity.unallocated_petrol}.')
                     return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                 fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['quantity'])
-                if float(request.POST['price']) > company_quantity.petrol_price:
-                    messages.warning(request,
-                                     f'You can not set price above NOIC petrol price of {company_quantity.petrol_price}.')
+                if Decimal(request.POST['price']) > prices.rtgs_petrol_price:
+                    messages.warning(request, f'You can not set price above ZERA max petrol price of ${prices.rtgs_petrol_price}.')
                     return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                 else:
-                    fuel_update.petrol_price = float(request.POST['price'])
+                    fuel_update.petrol_price = Decimal(request.POST['price'])
                 company_quantity.unallocated_petrol = company_quantity.unallocated_petrol - int(
                     request.POST['quantity'])
                 company_quantity.save()
             else:
                 if int(request.POST['quantity']) > company_quantity.unallocated_diesel:
-                    messages.warning(request,
-                                     f'You can not allocate fuel above your company diesel quantity of {company_quantity.unallocated_diesel}.')
+                    messages.warning(request, f'You can not allocate fuel above your company diesel quantity of {company_quantity.unallocated_diesel}.')
                     return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                 fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['quantity'])
-                if float(request.POST['price']) > company_quantity.diesel_price:
-                    messages.warning(request,
-                                     f'You can not set price above NOIC diesel price of {company_quantity.diesel_price}.')
+                if Decimal(request.POST['price']) > prices.rtgs_diesel_price:
+                    messages.warning(request, f'You can not set price above ZERA max diesel price of ${prices.rtgs_diesel_price}.')
                     return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                 else:
-                    fuel_update.diesel_price = request.POST['price']
+                    fuel_update.diesel_price = Decimal(request.POST['price'])
                 company_quantity.unallocated_diesel = company_quantity.unallocated_diesel - int(
                     request.POST['quantity'])
                 company_quantity.save()
@@ -1583,20 +1571,20 @@ def delete_subsidiary(request, id):
 @login_required()
 def edit_fuel_prices(request, id):
     user_permission(request)
+    prices = FuelPrices.objets.first()
     if request.method == 'POST':
         if SubsidiaryFuelUpdate.objects.filter(id=id).exists():
             prices_update = SubsidiaryFuelUpdate.objects.filter(id=id).first()
             company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
-            if float(request.POST['petrol_price']) > company_capacity.petrol_price:
-                messages.warning(request,
-                                 f'You can not set price above NOIC petrol price of {company_capacity.petrol_price}.')
+            if Decimal(request.POST['petrol_price']) > prices.rtgs_petrol_price:
+                messages.warning(request, f'You can not set price above ZERA max petrol price of ${prices.rtgs_petrol_price}.')
                 return redirect('users:allocate')
-            prices_update.petrol_price = request.POST['petrol_price']
-            if float(request.POST['diesel_price']) > company_capacity.diesel_price:
-                messages.warning(request,
-                                 f'You can not set price above NOIC diesel price of {company_capacity.diesel_price}.')
+            prices_update.petrol_price = Decimal(request.POST['petrol_price'])
+
+            if Decimal(request.POST['diesel_price']) > prices.rtgs_diesel_price:
+                messages.warning(request,  f'You can not set price above ZERA max diesel price of ${prices.rtgs_diesel_price}.')
                 return redirect('users:allocate')
-            prices_update.diesel_price = request.POST['diesel_price']
+            prices_update.diesel_price = Decimal(request.POST['diesel_price'])
             prices_update.save()
             messages.success(request, 'Prices of fuel updated successfully.')
             service_station = Subsidiaries.objects.filter(id=prices_update.subsidiary.id).first()
@@ -1615,20 +1603,19 @@ def edit_fuel_prices(request, id):
 @login_required()
 def edit_suballocation_fuel_prices(request, id):
     user_permission(request)
+    prices = FuelPrices.objets.first()
     if request.method == 'POST':
         if SuballocationFuelUpdate.objects.filter(id=id).exists():
             prices_update = SuballocationFuelUpdate.objects.filter(id=id).first()
             company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
-            if float(request.POST['petrol_price']) > company_capacity.petrol_price:
-                messages.warning(request,
-                                 f'You can not set price above NOIC petrol price of {company_capacity.petrol_price}.')
+            if Decimal(request.POST['petrol_price']) > prices.rtgs_petrol_price:
+                messages.warning(request, f'You can not set price above ZERA max petrol price of ${prices.rtgs_petrol_price}.')
                 return redirect(f'/users/allocated_fuel/{prices_update.subsidiary.id}')
-            prices_update.petrol_price = request.POST['petrol_price']
-            if float(request.POST['diesel_price']) > company_capacity.diesel_price:
-                messages.warning(request,
-                                 f'You can not set price above NOIC diesel price of {company_capacity.diesel_price}.')
+            prices_update.petrol_price = Decimal(request.POST['petrol_price'])
+            if Decimal(request.POST['diesel_price']) > prices.rtgs_diesel_price:
+                messages.warning(request, f'You can not set price above ZERA max diesel price of ${prices.rtgs_diesel_price}.')
                 return redirect(f'/users/allocated_fuel/{prices_update.subsidiary.id}')
-            prices_update.diesel_price = request.POST['diesel_price']
+            prices_update.diesel_price = Decimal(request.POST['diesel_price'])
             prices_update.save()
             messages.success(request, 'Prices of fuel updated successfully.')
             service_station = Subsidiaries.objects.filter(id=prices_update.subsidiary.id).first()
