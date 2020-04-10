@@ -35,155 +35,53 @@
                 <button class="btn btn-success btn-labeled" data-toggle="modal" data-target="#application_form_upload" type="button" class="btn btn-labeled btn-success m-b-5">
                     <span class="btn-label"><i class="fa fa-upload"></i></span>Upload Application Form
                 </button>
+                <button class="btn btn-success btn-labeled" data-toggle="modal" data-target="#new_user" type="button" class="btn btn-labeled btn-success m-b-5">
+                    <span class="btn-label"><i class="fa fa-upload"></i></span>Upload Accounts
+                </button>
             </div>
-            
-            <div class="dropdown">
-                <ul class="dropdown-menu dropdown-menu-right">
 
 
-                </ul>
-                <div class="dropdown-toggle" data-toggle="dropdown"><span
-                        class="panel-control-icon glyphicon glyphicon-cog"></span>
-                </div>
-            </div>
-        </div>
-        <div class="panel-body">              
-      
-      <div class="table-responsive">
-        <table id="client_application" class="table table-striped table-bordered" style="width:100%">
-            <thead style="background-color: lightslategray; color:white;">
-                <tr>
-                    <th style="color: white;">Date</th>
-                    <th style="color: white;">Time</th>
-                    <th style="color: white;">Company</th>
-                    <th style="color: white;">User</th>
-                    <th style="color: white;">Contact</th>
-                    <th style="color: white;">Email</th>
-                    <th style="color: white;">Documents</th>
-                    <th style="color: white;">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for client in clients %}
-                <tr>
-                    <td>{{ client.date }}</td>
-                    <td>{{ client.time }}</td>
-                    <td>{{ client.buyer_company }}</td>
-                    <td>{{ client.applied_by.first_name }} {{client.applied_by.lastname}}</td>
-                    <td>{{client.applied_by.phone_number}}</td>                    
-                    <td>{{ client.applied_by.email }}</td>
-                    <td><a class="btn btn-info btn-sm" data-toggle="modal" data-target="#documents_{{client.id}}" >Download</a></td>
-                    <td><a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#approve{{client.id}}">Approve</a></td>
-                </tr>
-
-                <!-- Documents -->
-                <div class="modal fade modal-success in" id="documents_{{client.id}}" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class=" modal-dialog" role="document" style="margin: 0;">
+            <!--Upload CSV Modal-->
+            <div class="modal fade modal-success in" id="new_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document" style="margin: 0;">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <span class="modal-title" id="exampleModalLabel">Approve {{client.name}}</span>
+                            <span class="modal-title" id="exampleModalLabel">Upload CSV or Excel Sheet</span>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
+                        
+    
                         <div class="modal-body">
-                            <form action=""
-                                method="POST">
-                                {% csrf_token %}
-                                <div class="row">
-                                <div class="form-group col-md-6">
-                                 <label>Application Form</label>
-                                </div>
-                                <div class="form-group col-md-6">
-                                 <a class="btn btn-info btn-sm" href="{% url 'users:download-application' client.id %}" >Download</a>
-                               </div>
-                                </div>
-                                <div class="row">
-                               <div class="form-group col-md-6">
-                                 <label>Tax Clearance</label>
-                               </div>
-                               <div class="form-group col-md-6">
-                                 <a class="btn btn-info btn-sm" href="{% url 'users:download-tax-clearance' client.id %}" >Download</a>
-                               </div>
-                                </div>
-                                <div class="row">
-                               <div class="form-group col-md-6">
-                                 <label>CR14</label>
-                               </div>
-                               <div class="form-group col-md-6">
-                                 <a class="btn btn-info btn-sm" href="{% url 'users:download-cr14' client.id %}" >Download</a>
-                               </div>
-                                </div>
-                                <div class="row">
-                               <div class="form-group col-md-6">
-                                 <label>CR6</label>
-                               </div>
-                               <div class="form-group col-md-6">
-                                 <a class="btn btn-info btn-sm" href="{% url 'users:download-cr6' client.id %}" >Download</a>
-                               </div>
-                                </div>
-                                <div class="row">
-                               <div class="form-group col-md-6">
-                                 <label>Proof of Residence</label>
-                               </div>
-                               <div class="form-group col-md-6">
-                                 <a class="btn btn-info btn-sm" href="{% url 'users:download-proof-of-residence' client.id %}" >Download</a>
-                               </div>
-                                </div>
-                                <div class="row">
-                               <div class="form-group col-md-6">
-                                <label>Certificate of Incorporation</label>
-                               </div>
-                               <div class="form-group col-md-6">
-                                <a class="btn btn-info btn-sm" href="{% url 'users:download-cert-of-inc' client.id %}" >Download</a>
-                              </div>
-                                </div>
-                            <div class="row">
-                              <div class="form-group col-md-6">
-                                <label>IDs of Directors</label>
-                              </div>
-                              <div class="form-group col-md-6">
-                                <a class="btn btn-info btn-sm" href="{% url 'users:download-document' client.id %}" >Download</a>
-                              </div>
+                            <div style="padding: 50px;font-stretch: ultra-condensed;font-variant:;font-size: 58px;padding-top: 1px;padding-bottom: 20px;margin-bottom: 20px;
+                                background-color: mintcream;padding-left: 25px;margin-left: 25px;">
+                                    <h3>Upload Users
+                                    
+                                    </h3>
                             </div>
+                            <div style="padding-left: 25px; padding-top: 20px; margin-left: 25px;">
+    
+                                <form method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            {{ form|crispy }}
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="modal-footer">  
+                                        <button type="submit" class="btn btn-primary ">Submit</button>
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div>
                                 </form>
+                            </div>    
+                        </div>
+    
                     </div>
                 </div>
             </div>
-            </div>
-            
-
-                <!--Approve Modal-->
-                <div class="modal fade modal-success in" id="approve{{client.id}}" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class=" modal-dialog" role="document" style="margin: 0;">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <span class="modal-title" id="exampleModalLabel">Approve Account</span>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    <div class="modal-body">
-                            <form method="POST" action="{% url 'users:application-approval' client.id %}" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <div class="col-sm-12">
-                                    <lable>Account Number</lable>
-                                    <input type="text" name="account_number" class="form-control"/>
-                                </div>
-                               <br>
-                              <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Approve"></p>
-                              
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--End Approve modal-->
-                {%endfor%}
-            </tbody>
-            </table>
+            <!--End CSV Modal-->
 
             <!--Upload Document-->
             <div class="modal fade modal-sucess in" id="application_form_upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -221,8 +119,333 @@
             </div>
             <!--End Upload Document-->
 
-</div>
-</div>
+            
+            <div class="dropdown">
+                <ul class="dropdown-menu dropdown-menu-right">
+
+
+                </ul>
+                <div class="dropdown-toggle" data-toggle="dropdown"><span
+                        class="panel-control-icon glyphicon glyphicon-cog"></span>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+
+
+            <div class="table-responsive">
+        
+                <!-- <div class="col-xs-12 col-sm-12"> -->
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs">
+                        <li class="active" ><a href="#client-applications" data-toggle="tab" aria-expanded="true" style="border: rgb(211, 208, 208) 1px solid;">Staff Applications</a></li>
+                        <li class=""><a href="#clients-accounts" data-toggle="tab" aria-expanded="false" style="border: rgb(211, 208, 208) 1px solid;">Staff Management</a></li>
+                    </ul>
+                    <!-- Tab panels -->
+                    <div class="tab-content">
+                        <div class="tab-pane fade active in" id="client-applications">
+                            <div class="panel-body">
+                                <table id="client_application" class="table table-striped table-bordered" style="width:100%">
+                                    <thead style="background-color: lightslategray; color:white;">
+                                        <tr>
+                                            <th style="color: white;">Date</th>
+                                            <th style="color: white;">Time</th>
+                                            <th style="color: white;">Company</th>
+                                            <th style="color: white;">User</th>
+                                            <th style="color: white;">Contact</th>
+                                            <th style="color: white;">Email</th>
+                                            <th style="color: white;">Documents</th>
+                                            <th style="color: white;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for client in clients %}
+                                        <tr>
+                                            <td>{{ client.date }}</td>
+                                            <td>{{ client.time }}</td>
+                                            <td>{{ client.buyer_company }}</td>
+                                            <td>{{ client.applied_by.first_name }} {{client.applied_by.lastname}}</td>
+                                            <td>{{client.applied_by.phone_number}}</td>                    
+                                            <td>{{ client.applied_by.email }}</td>
+                                            <td><a class="btn btn-info btn-sm" data-toggle="modal" data-target="#documents_{{client.id}}" >Download</a></td>
+                                            <td><a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#approve{{client.id}}">Approve</a></td>
+                                        </tr>
+                        
+                                        <!-- Documents -->
+                                        <div class="modal fade modal-success in" id="documents_{{client.id}}" tabindex="-1" role="dialog"
+                                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class=" modal-dialog" role="document" style="margin: 0;">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <span class="modal-title" id="exampleModalLabel">Approve {{client.name}}</span>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action=""
+                                                        method="POST">
+                                                        {% csrf_token %}
+                                                        <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                         <label>Application Form</label>
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                         <a class="btn btn-info btn-sm" href="{% url 'users:download-application' client.id %}" >Download</a>
+                                                       </div>
+                                                        </div>
+                                                        <div class="row">
+                                                       <div class="form-group col-md-6">
+                                                         <label>Tax Clearance</label>
+                                                       </div>
+                                                       <div class="form-group col-md-6">
+                                                         <a class="btn btn-info btn-sm" href="{% url 'users:download-tax-clearance' client.id %}" >Download</a>
+                                                       </div>
+                                                        </div>
+                                                        <div class="row">
+                                                       <div class="form-group col-md-6">
+                                                         <label>CR14</label>
+                                                       </div>
+                                                       <div class="form-group col-md-6">
+                                                         <a class="btn btn-info btn-sm" href="{% url 'users:download-cr14' client.id %}" >Download</a>
+                                                       </div>
+                                                        </div>
+                                                        <div class="row">
+                                                       <div class="form-group col-md-6">
+                                                         <label>CR6</label>
+                                                       </div>
+                                                       <div class="form-group col-md-6">
+                                                         <a class="btn btn-info btn-sm" href="{% url 'users:download-cr6' client.id %}" >Download</a>
+                                                       </div>
+                                                        </div>
+                                                        <div class="row">
+                                                       <div class="form-group col-md-6">
+                                                         <label>Proof of Residence</label>
+                                                       </div>
+                                                       <div class="form-group col-md-6">
+                                                         <a class="btn btn-info btn-sm" href="{% url 'users:download-proof-of-residence' client.id %}" >Download</a>
+                                                       </div>
+                                                        </div>
+                                                        <div class="row">
+                                                       <div class="form-group col-md-6">
+                                                        <label>Certificate of Incorporation</label>
+                                                       </div>
+                                                       <div class="form-group col-md-6">
+                                                        <a class="btn btn-info btn-sm" href="{% url 'users:download-cert-of-inc' client.id %}" >Download</a>
+                                                      </div>
+                                                        </div>
+                                                    <div class="row">
+                                                      <div class="form-group col-md-6">
+                                                        <label>IDs of Directors</label>
+                                                      </div>
+                                                      <div class="form-group col-md-6">
+                                                        <a class="btn btn-info btn-sm" href="{% url 'users:download-document' client.id %}" >Download</a>
+                                                      </div>
+                                                    </div>
+                                                        </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    
+                        
+                                        <!--Approve Modal-->
+                                        <div class="modal fade modal-success in" id="approve{{client.id}}" tabindex="-1" role="dialog"
+                                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class=" modal-dialog" role="document" style="margin: 0;">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <span class="modal-title" id="exampleModalLabel">Approve Account</span>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                            <div class="modal-body">
+                                                    <form method="POST" action="{% url 'users:application-approval' client.id %}" enctype="multipart/form-data">
+                                                        {% csrf_token %}
+                                                        <div class="col-sm-12">
+                                                            <lable>Account Number</lable>
+                                                            <input type="text" name="account_number" class="form-control"/>
+                                                        </div>
+                                                       <br>
+                                                      <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Approve"></p>
+                                                      
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--End Approve modal-->
+                                        {%endfor%}
+                                    </tbody>
+                                    </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="clients-accounts">
+                            <div class="panel-body">
+                                <table id="new_users" class="table table-striped table-bordered" style="width:100%">
+                                    <thead>
+                                    <tr>
+                                        <th class="custom-table">Company Name</th>
+                                        <th class="custom-table">Account Number</th>
+                                        <th class="custom-table">Admin Name</th>
+                                        <th class="custom-table">Admin Phone Number</th>
+                                        <th class="custom-table">Date Created</th>
+                                        <th class="custom-table">View Statement</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for account in accounts %}
+                                        <tr>
+                                            <td>{{ account.buyer_company.name }}</td>
+                                            <td>{{ account.account_number }}</td>
+                                            <td>{{ account.applied_by.first_name }}  {{ account.applied_by.last_name }}</td>
+                                            <td>{{ account.applied_by.phone_number }} </td>
+                                            <td>{{ account.date }}</td>
+                                            <td>
+                                                <!--activity button-->
+                                                <div class="text-center">
+                                                    <button class="btn btn-info btn-md" data-toggle="modal" data-target="#activity{{ account.id }}">
+                                                        Statement
+                                                    </button>
+                                                </div>
+                
+                                                <!--activity modal-->
+                                                <div class="modal fade modal-lg modal-success in" id="activity{{ account.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document" style="margin: 0;">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <span class="modal-title" id="exampleModalLabel">Activity for {{ account.buyer_company.name }} </span>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                
+                                                            <div class="modal-body" id="ignorePDF">
+                
+                                                                <!--account details-->
+                                                                <div class="row">
+                                                                    <!--supplier-->
+                                                                    <div class="col-md-12">
+                                                                        <div class="col-md-6">
+                                                                            <div style="color: white;background-color: mintcream;padding: 5px;">
+                                                                                <h2>Supplier - <small>{{ account.supplier_company.name }}</small></h2>
+                                                                            </div>    
+                                                                            <!--name-->
+                                                                            <!-- <h5 style="font-weight: bolder; color: cadetblue;">{{ account.supplier_company.name }}</h5> -->
+                                                                            <h5>Address</h5>
+                                                                            <text class="text-muted">{{ account.supplier_company.address }}</text>
+                                                                            <!--bank-->
+                                                                            <h5>Bank</h5>
+                                                                            <text class="text-muted">{{ account.supplier_company.destination_bank }}</text>
+                                                                            <text class="text-muted">A/c</text>
+                                                                            <!--account-->
+                                                                            <h5>Account Number</h5>
+                                                                            <text class="text-muted">{{ account.supplier_company.account_number }}</text>
+                                                                            <!--vat number-->
+                                                                            <h5>BPN</h5>
+                                                                            <text class="text-muted">{{ account.supplier_company.bp_num }}</text>
+                
+                                                                        </div>
+                                                                        <!--buyer-->
+                                                                        <div class="col-md-6">
+                                                                            <div style="color: white;background-color: mintcream;padding: 5px;">
+                
+                                                                                <h2>Buyer - <small>{{ account.buyer_company.name }}</small</h2>
+                                                                            </div>    
+                                                                            <!--name-->
+                                                                            <h5>Address</h5>
+                                                                            <text class="text-muted">{{ account.buyer_company.address }}</text>
+                                                                            <!--bank-->
+                                                                            <h5>Bank</h5>
+                                                                            <text class="text-muted">{{ account.buyer_company.destination_bank }}</text>
+                                                                            <!--account-->
+                                                                            <h5>Account Number</h5>
+                                                                            <text class="text-muted">{{ account.buyer_company.account_number }}</text>
+                                                                            <!--vat number-->
+                                                                            <h5>BPN</h5>
+                                                                            <text class="text-muted">{{ account.buyer_company.bp_num }}</text>
+                                                                        </div>
+                                                                    </div>    
+                                                                </div>
+                                                                <hr>
+                
+                                                                <!--statement details-->
+                                                                <div class="table-responsive">
+                                                                    <table id="activityTable" class="table table-striped table-bordered" style="width:100%">
+                                                                        <thead>
+                                                                        <tr>
+                                                                            <th class="custom-table">Date</th>
+                                                                            <th class="custom-table">Time</th>
+                                                                            <th class="custom-table">Sord Number</th>
+                                                                            <th class="custom-table">Quantity</th>
+                                                                            <th class="custom-table">Fuel Type</th>
+                                                                            <th class="custom-table">Price</th>
+                                                                        </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        {% for transaction in transactions %}
+                                                                            {% if transaction.account.id == account.id %}
+                                                                                <tr>
+                                                                                    <td>{{ transaction.transaction.date }}</td>
+                                                                                    <td>{{ transaction.transaction.time }}</td>
+                                                                                    <td>{{ transaction.sord_number }}</td>
+                                                                                    <td>{{ transaction.transaction.offer.quantity }}L</td>
+                                                                                    <td>{{ transaction.transaction.offer.request.fuel_type }}</td>
+                                                                                    <td>${{ transaction.transaction.offer.price }}</td>
+                                                                                </tr>
+                                                                            {% endif %}
+                                                                        {% endfor %}
+                                                                        </tbody>
+                                                                    </table>
+                
+                
+                                                                    <form method="POST">
+                                                                        {% csrf_token %}
+                
+                
+                                                                        <input type="hidden" value="{{ account.buyer_company.id }}" name="buyer_name">
+                
+                                                                        <input type="hidden" value="{{ account.id }}" name="account_id">
+                
+                                                                        <div class="modal-footer">  
+                                                                            <button type="submit" class="btn btn-primary ">Generate Report</button>
+                                                                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                                        </div>
+                
+                                                                    </form>
+                
+                
+                                                                </div>
+                
+                                                            </div>
+                
+                                                        </div>
+                                                    </div>
+                                                </div>
+                
+                                                <script>
+                                                    $('body').click(function (event) {
+                                                        if(!$(event.target).closest('#activity{{ account.id }}').length && !$(event.target).is('#activity{{ account.id }}')) {
+                                                            $("#activity{{ account.id }}").modal('hide');
+                                                        }        
+                                                    });
+                                                </script>
+                
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                <!-- </div> -->
+        
+            </div>
+        
+        
+        </div>
 </div>
 </div>
 
