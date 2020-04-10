@@ -14,9 +14,13 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <div class="error-text">
-                    <h1>4<span class="arrow bounce">0</span><span class="m-l-90">4</span></h1>
-                    <h3><span>Page</span><br class="hidden-xs"> Not Found</h3>
+                <div class="error-desc">
+                    <p>The request you sent to the server is not allowed.Please try again or go back to home</p>
+                     <div class="text-center">
+                         <button class="btn btn-lg btn-info" onclick='location.href="{% url 'home' %}"'>
+                             Go To Home
+                         </button>
+                     </div>
                 </div>
             </div>
         </div>
