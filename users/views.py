@@ -63,7 +63,7 @@ def sord_allocations(request):
     date = datetime.date.today().strftime("%d/%m/%y")
     
     if request.method == "POST":
-        if request.POST.get('start_date') and if request.POST.get('end_date') :
+        if request.POST.get('start_date') and request.POST.get('end_date') :
             start_date = request.POST.get('start_date')
             end_date = request.POST.get('end_date')
             if start_date:
