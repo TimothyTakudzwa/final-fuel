@@ -2194,7 +2194,7 @@ def upload_users(request):
                 response['Content-Disposition'] = 'attachment;filename=export.pdf'
                 return response
 
-    return render(request, 'users/upload_users.html', context=context)
+    return render(request, 'users/clients_applications.html', context=context)
 
 
 @login_required()
