@@ -87,8 +87,8 @@
                             <td>
 
                                 <!--call modal-->
-                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{transaction.id}}">
-                                    <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
+                                <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#view{{transaction.id}}">
+                                    <span class="btn-label"><i class="fa fa-eye"></i></span>  Details
                                 </button>
                                 <!--view details-->
                                 <div class="modal fade modal-success in" id="view{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -125,8 +125,8 @@
                             <td>
                                 
                                     <!--call modal-->
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#trans{{payment.id}}">
-                                        Transaction Details
+                                    <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#trans{{payment.id}}">
+                                        <span class="btn-label"><i class="fa fa-eye"></i></span>  Transaction Details
                                     </button>
                                     <!--view details-->
                                     <div class="modal fade modal-success in" id="trans{{payment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -269,6 +269,16 @@
                             </div>
                         </div>
                         <!--End Upload Document-->
+                        <script>
+                            $('body').click(function (event) {
+                                if(!$(event.target).closest('#trans{{payment.id}}').length && !$(event.target).is('#trans{{payment.id}}')) {
+                                    $("#trans{{payment.id}}").modal('hide');
+                                }
+                                if(!$(event.target).closest('#view{{transaction.id}}').length && !$(event.target).is('#view{{transaction.id}}')) {
+                                    $("#view{{transaction.id}}").modal('hide');
+                                }      
+                            });
+                        </script>
                         {% endfor %}
                     
                     </tbody>
