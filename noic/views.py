@@ -107,7 +107,7 @@ def allocations(request):
             if end_date:
                 end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
-            sord_allocations = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
+            allocations = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
 
             return render(request, 'noic/allocations.html', {'allocations': allocations, 'start_date':start_date, 'end_date':end_date  })
         else:
