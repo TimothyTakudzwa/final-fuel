@@ -15,6 +15,7 @@ from company.models import Company
 from fuelUpdates.models import SordCompanyAuditTrail
 from fuelfinder.helper_functions import random_password
 from national.models import DepotFuelUpdate, NoicDepot
+from weasyprint import HTML
 from notification.models import Notification
 from supplier.models import FuelAllocation
 from users.forms import DepotContactForm
