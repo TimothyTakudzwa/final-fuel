@@ -74,22 +74,20 @@ def sord_allocations(request):
                 end_date = end_date.date()
             sord_allocations = SordCompanyAuditTrail.objects.filter(date__range=[start_date, end_date])
         
-    return render(request, 'users/sord_allocations.html', {'sord_allocations': sord_allocations}) 
+        return render(request, 'users/sord_allocations.html', {'sord_allocations': sord_allocations}) 
 
-            
+        else:    
+            html_string = render_to_string('users/export_allocations.html', {'sord_allocations': sord_allocations, 'date':date })
+            html = HTML(string=html_string)
+            export_name = f"{request.user.company.name.title()}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
+            download_file = f'media/transactions/{export_name}'
 
-        html_string = render_to_string('users/export_allocations.html', {'sord_allocations': sord_allocations, 'date':date })
-        html = HTML(string=html_string)
-        export_name = f"{request.user.company.name.title()}"
-        html.write_pdf(target=f'media/transactions/{export_name}.pdf')
-
-        download_file = f'media/transactions/{export_name}'
-
-        with open(f'{download_file}.pdf', 'rb') as pdf:
-            response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-            response['Content-Disposition'] = f'attachment;filename={export_name}.pdf'
-            return response
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name}.pdf'
+                return response
             
 
     
