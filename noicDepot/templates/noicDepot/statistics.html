@@ -192,14 +192,16 @@
                 <!-- sidebar -->
                 <div class="sidebar">
                     <!-- Sidebar user panel -->
-                    <!-- <div class="user-panel">
+                    <div class="user-panel">
                         <div class="image pull-left">
-                            <img src="{% static 'finder/assets/img/fuel.jpg' %}" class="img-circle" alt="User Image">
+                            <!-- <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar5.png"
+                                class="img-circle" alt="User Image"> -->
                         </div>
                         <div class="info">
-                            <p class="mt-2 mb-2">{{request.user.company.name}}</p>
+                            <h4>Welcome</h4>
+                            <p>{{ request.user.first_name }} {{ request.user.last_name}}</p>
                         </div>
-                    </div> -->
+                    </div>
 
                     <!-- sidebar menu -->
                     <ul class="sidebar-menu">
