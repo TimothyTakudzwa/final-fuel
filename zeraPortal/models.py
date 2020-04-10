@@ -26,6 +26,8 @@ class FuelPrices(models.Model):
     usd_petrol_fob = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     usd_petrol_oil_cmargin = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     usd_petrol_dmargin = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    usd_zfms = models.DecimalField(default=0.002, max_digits=10, decimal_places=3)
+    rtgs_zfms = models.DecimalField(default=0.02, max_digits=10, decimal_places=2)
 
    
    
