@@ -31,6 +31,12 @@
         <div class="panel-heading ui-sortable-handle">
             <div class="btn-group">
                 <h4>Sord Allocations</h4>
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-labeled btn-success btn-sm" style="margin-top: 13px;">
+                        <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>Export
+                    </button>
+                </form>
             </div>
             <div class="dropdown">
                 <ul class="dropdown-menu dropdown-menu-right">
