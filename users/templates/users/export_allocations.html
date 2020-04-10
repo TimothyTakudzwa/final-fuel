@@ -42,42 +42,7 @@
 </head>
 <body>
 
-{% for sord in sord_allocations %}
-    <div class='wrapper'>
-        <!--supplier-->
-        <div class='first'>
-            <h4 style="color: lightslategrey">SUPPLIER</h4>
-            <p class="text-muted">{{ sord.sord_no }}</p>
-            <p class="text-muted">{{ sord.action_no }}</p>
-            <p class="text-muted">{{ sord.action }}</p>
-            {% if sord.fuel_type == 'Petrol' %}
-            <p style="color: #009688;" class="text-muted">{{ sord.fuel_type }}</p>
-            {% elif sord.fuel_type == 'Diesel' %}
-            <p style="color: #ffb61e;" class="text-muted">{{ sord.fuel_type }}</p>
-            {% else %}
-            <p class="text-muted">{{ sord.fuel_type }}</p>
-            {% endif %}
-            <p class="text-muted">{{ sord.payment_type }}</p>
-            <p class="text-muted">{{ sord.initial_quantity|floatformat:2|intcomma }}</p>
-            <p class="text-muted">{{ sord.quantity_allocated|floatformat:2|intcomma }}</p>
-            <p class="text-muted">{{ sord.end_quantity|floatformat:2|intcomma }}</p>
-            {% if sord.allocated_to == None %}
-            <p class="text-muted">--</p>
-            {% else %}
-            <p class="text-muted">{{ sord.allocated_to }}</p>
-            {% endif %}
-        </div>
-        <!--buyer-->
-        <!-- <div class='first' style="text-align: right">
-            <h4 style="color: lightslategrey">BUYER</h4>
-            <p class="text-muted">{{ transaction.account.buyer_company.name }}</p>
-            <p class="text-muted">{{ transaction.account.buyer_company.address }}</p>
-            <p class="text-muted">{{ transaction.account.buyer_company.destination_bank }}</p>
-            <p class="text-muted">{{ transaction.account.buyer_company.account_number }}</p>
-            <p class="text-muted">{{ transaction.account.buyer_company.bp_num }}</p>
-        </div> -->
-    </div>
-{% endfor %}
+
 
 <hr>
 
