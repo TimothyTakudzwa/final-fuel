@@ -63,7 +63,7 @@
                             </div>
                             <div style="padding-left: 25px; padding-top: 20px; margin-left: 25px;">
     
-                                <form method="POST" enctype="multipart/form-data">
+                                <form method="POST" action="{% url 'users:upload_users' %}" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="row">
                                         <div class="col-md-12">
@@ -104,7 +104,7 @@
                             </div>
                             
                             <div style="padding-left: 25px; padding-top: 20px; margin-left: 25px;">
-                                <form method="POST" action="" enctype="multipart/form-data">
+                                <form method="POST" action="{% url 'users:client-application' %}" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <input type="file" accept=".pdf, .doc,.docx" name="application_form" class="form-control-file" id="exampleFormControlFile1" required>
                                 <br>
@@ -459,5 +459,18 @@
         //     $("#new_depot_user").modal('hide');
         // }      
     });
+</script>
+<script>
+    $('body').click(function (event) {
+        if(!$(event.target).closest('#new_user').length && !$(event.target).is('#new_user')) {
+            $("#new_user").modal('hide');
+        }        
+    });
+</script>
+
+<script>
+$(document).ready( function () {
+    $('#activityTable').DataTable();
+} );
 </script>
     {%endblock%}
