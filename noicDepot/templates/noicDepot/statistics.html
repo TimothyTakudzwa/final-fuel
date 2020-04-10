@@ -58,7 +58,8 @@
 
     <title>{{ title }}</title>
 
-    <link rel="shortcut icon" href="https://timothytakudzwa.github.io/static/new/assets/dist/img/ico/favicon.png" type="image/x-icon">
+    
+    <link rel="shortcut icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png" type="image/x-icon">
     <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
     <link href="https://timothytakudzwa.github.io/static/new/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/lobipanel/lobipanel.min.css" rel="stylesheet" type="text/css"/>
@@ -192,14 +193,16 @@
                 <!-- sidebar -->
                 <div class="sidebar">
                     <!-- Sidebar user panel -->
-                    <!-- <div class="user-panel">
+                    <div class="user-panel">
                         <div class="image pull-left">
-                            <img src="{% static 'finder/assets/img/fuel.jpg' %}" class="img-circle" alt="User Image">
+                            <!-- <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar5.png"
+                                class="img-circle" alt="User Image"> -->
                         </div>
                         <div class="info">
-                            <p class="mt-2 mb-2">{{request.user.company.name}}</p>
+                            <h4>Welcome</h4>
+                            <p>{{ request.user.first_name }} {{ request.user.last_name}}</p>
                         </div>
-                    </div> -->
+                    </div>
 
                     <!-- sidebar menu -->
                     <ul class="sidebar-menu">
@@ -1526,9 +1529,9 @@
 <!--footer-->
 
 <footer class="main-footer">
-<div class="pull-right hidden-xs"> <b>Version</b> 1.0</div>
-<strong>Copyright &copy; 2019 <a href="#">Intelli Africa Solutions</a>.</strong> All rights reserved.
-</footer>
+    <div class="pull-right hidden-xs"> <b>Version</b> 1.0</div>
+    <strong>Copyright &copy; <b id="year_of_our_lord">2019</b> <a href="#">Intelli Africa Solutions</a>.</strong> All rights reserved.
+    </footer>
 
 </div>
 
@@ -1564,6 +1567,11 @@
 <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/sweetalert/sweetalert.min.js"></script>
 <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/js/classie.js"></script>
 <script src="https://timothytakudzwa.github.io/static/new/assets/dist/js/custom.js" type="text/javascript"></script>
+
+<script>
+    var dt = new Date();
+    $('#year_of_our_lord').html(dt.getFullYear() + " " )
+</script>  
 
 <script>
 "use strict"; // Start of use strict

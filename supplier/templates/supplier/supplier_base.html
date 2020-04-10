@@ -261,16 +261,19 @@
         
               {% block body %}{% endblock %}
         </div> <!-- /.content-wrapper -->
-            <footer class="main-footer">
-                <div class="pull-right hidden-xs"> <b>Version</b> 1.0</div>
-                <strong>Copyright &copy; 2019 <a href="#">Intelli Africa Solutions</a>.</strong> All rights reserved.
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs"> <b>Version</b> 1.0</div>
+            <strong>Copyright &copy; <b id="year_of_our_lord">2019</b> <a href="#">Intelli Africa Solutions</a>.</strong> All rights reserved.
             </footer>
         </div> <!-- ./wrapper -->
         <!-- ./wrapper -->
          <!-- Start Core Plugins
         =====================================================================-->
     <!-- jQuery -->
-
+    <script>
+        var dt = new Date();
+        $('#year_of_our_lord').html(dt.getFullYear() + " " )
+    </script>  
 
 
     <script>

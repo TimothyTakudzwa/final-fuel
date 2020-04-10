@@ -80,8 +80,9 @@
                                                 <td style="color: #ffb61e;">{{company_capacity.usd_diesel_price}}</td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a class="btn btn-info btn-sm" data-toggle="modal"
-                                                           data-target="#place_order{{company_capacity.id}}">Place Order</a>
+                                                        <a class="btn btn-labeled btn-success btn-sm" data-toggle="modal"
+                                                           data-target="#place_order{{company_capacity.id}}">
+                                                           <span class="btn-label"><i class="fa fa-shopping-basket"></i></span>Place Order</a>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -447,8 +448,9 @@
                                             <td style="color: #009688;">{{company_capacity.usd_petrol_price}}</td>
                                             <td>
                                                 <div class="btn-group">
-                                                    <a class="btn btn-info btn-sm" data-toggle="modal"
-                                                       data-target="#place_order{{company_capacity.id}}">Place Order</a>
+                                                    <a class="btn btn-labeled btn-success btn-sm" data-toggle="modal"
+                                                       data-target="#place_order{{company_capacity.id}}">
+                                                       <span class="btn-label"><i class="fa fa-shopping-basket"></i></span>Place Order</a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -930,8 +932,9 @@
                                         <div class="btn-group">
 
 
-                                            <a class="btn btn-success btn-sm" data-toggle="modal"
-                                               href="{%url 'users:allocatedfuel' allocate.subsidiary.id %}">View Fuel
+                                            <a class="btn btn-labeled btn-success btn-sm" data-toggle="modal"
+                                               href="{%url 'users:allocatedfuel' allocate.subsidiary.id %}">
+                                               <span class="btn-label"><i class="fa fa-eye"></i></span>View Fuel
                                                 Allocations</a>
 
                                         </div>
@@ -1365,8 +1368,8 @@
                                 <td>{{alloc.fuel_payment_type}}</td>
                                 <td>
 
-                                    <button class="btn btn-primary btn-sm" style="font-size: 8px;" data-toggle="modal"
-                                            data-target="#change_{{alloc.id}}">Edit Allocation</button>
+                                    <button class="btn btn-labeled btn-success btn-sm"  data-toggle="modal"
+                                            data-target="#change_{{alloc.id}}"><span class="btn-label"><i class="fa fa-edit"></i></span>Edit Allocation</button>
 
                                 </td>
                             </tr>
@@ -1432,11 +1435,11 @@
                                                                value="0" />
                                                     </div>
                                                 {% endif %}
-                                                <div class="form-group row"
-                                                     style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                                                    <button type="button" class="btn btn-secondary col-sm-6"
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+
+                                                    <button type="button" class="btn btn-default "
                                                             data-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary col-sm-6">Update</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -1444,6 +1447,14 @@
                                     </div>
                                 </div>
                             </div>
+                            <script>
+                                $('body').click(function (event) {
+                                    if(!$(event.target).closest('#change_{{alloc.id}}').length && !$(event.target).is('#change_{{alloc.id}}')) {
+                                        $("#change_{{alloc.id}}").modal('hide');
+                                    }
+                                        
+                                });
+                            </script>
 
                         {% endfor %}
                         </tbody>

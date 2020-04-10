@@ -221,15 +221,29 @@
                     <!-- sidebar menu -->
                     <ul class="sidebar-menu">
                         <li class="nav-item {% if request.path == '/noicDepot/orders/' %} active {% endif %}">
-                            <a href="{% url 'noicDepot:orders' %}"><i class="fa fa-book"></i><span>Dashboard</span>
+                            <a href="{% url 'noicDepot:orders' %}"><i class="fa fa-dashboard"></i><span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {% if request.path == '/noicDepot/accepted_orders/' %} active {% endif %}">
+                            <a href="{% url 'noicDepot:accepted_orders' %}"><i
+                                    class="fa fa-shopping-cart"></i><span>Orders</span>
                             </a>
                         </li>
                         <li class="nav-item {% if request.path == '/noicDepot/dashboard/' %} active {% endif %}">
-                            <a href="{% url 'noicDepot:dashboard' %}"><i class="fa fa-book"></i><span>Allocations</span>
+                            <a href="{% url 'noicDepot:dashboard' %}"><i class="fa fa-tasks"></i><span>Allocations</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {% if request.path == '/noicDepot/collections/' %} active {% endif %}">
+                            <a href="{% url 'noicDepot:collections' %} "><i class="fa fa-car"></i><span>Collections</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {% if request.path == '/noicDepot/activity/' %} active {% endif %}">
+                            <a href="{% url 'noicDepot:activity' %}"><i class="fa fa-area-chart"></i><span>Activity</span>
                             </a>
                         </li>
                         <li class="nav-item {% if request.path == '/noicDepot/statistics/' %} active {% endif %}">
-                            <a href="{% url 'noicDepot:statistics' %}"><i class="fa fa-line-chart"></i><span>Statistics</span>
+                            <a href="{% url 'noicDepot:statistics' %}"><i
+                                    class="fa fa-line-chart"></i><span>Statistics</span>
                             </a>
                         </li>
     
@@ -238,21 +252,21 @@
                             </a>
                         </li>
     
-                        <ul class="sidebar-menu">
+                        
                             <li class="nav-item {% if request.path == '/noicDepot/stock/' %} active {% endif %}">
-                                <a href="{% url 'noicDepot:stock' %}"><i class="fa fa-binoculars"></i><span>Fuel Stocks</span>
+                                <a href="{% url 'noicDepot:stock' %}"><i class="fa fa-bank"></i><span>Fuel Stocks</span>
                                 </a>
                             </li>
-                       
-                        <li class="nav-item {% if request.path == '/noicDepot/profile/' %} active {% endif %}">
-                            <a href="{% url 'noicDepot:profile' %} "><i class="fa fa-user"></i><span>User Profile</span>
-                            </a>
-                        </li>
-                        <li class="">
-                            <a class="nav-link" href="{% url 'logout' %}?next=/login/">
-                                <i class="fa fa-sign-out"></i><span>Logout</span>
-                            </a>
-                        </li>
+    
+                            <li class="nav-item {% if request.path == '/noicDepot/profile/' %} active {% endif %}">
+                                <a href="{% url 'noicDepot:profile' %} "><i class="fa fa-user"></i><span>User Profile</span>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a class="nav-link" href="{% url 'logout' %}?next=/login/">
+                                    <i class="fa fa-sign-out"></i><span>Logout</span>
+                                </a>
+                            </li>
     
     
     
@@ -1154,8 +1168,8 @@
 
             <footer class="main-footer">
                 <div class="pull-right hidden-xs"> <b>Version</b> 1.0</div>
-                <strong>Copyright &copy; 2019 <a href="#">Intelli Africa Solutions</a>.</strong> All rights reserved.
-            </footer>
+                <strong>Copyright &copy; <b id="year_of_our_lord">2019</b> <a href="#">Intelli Africa Solutions</a>.</strong> All rights reserved.
+                </footer>
 
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -1230,6 +1244,10 @@
         <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/NotificationStyles/js/classie.js"></script>
         <script src="https://timothytakudzwa.github.io/static/new/assets/dist/js/custom.js" type="text/javascript"></script>
 
+        <script>
+            var dt = new Date();
+            $('#year_of_our_lord').html(dt.getFullYear() + " " )
+        </script>  
         <script>
 
 

@@ -94,7 +94,8 @@
     <div class="panel-heading ui-sortable-handle">
         <div class="btn-group"> 
             <h4>{{request.user.company.name}}'s Subsidiaries</h4> 
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_sub" style="margin-bottom: 10px; margin-top: 10px;">Add Subsidiary </button>
+            <button type="button" class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#new_sub" style="margin-bottom: 10px; margin-top: 10px;">
+                <span class="btn-label"><i class="fa fa-eye"></i></span>Add Subsidiary </button>
 
         </div>
         <script>
@@ -171,10 +172,12 @@
                             <td style="width: 25%;">
                                 <div class="btn-group">
                                   
-                                    <button class="btn btn-danger btn-sm" data-toggle="modal"
-                                        data-target="#edit_{{station.id}}">Edit</button>
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal"
-                                        data-target="#delete_{{station.id}}">Delete</button>
+                                    <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal"
+                                        data-target="#edit_{{station.id}}">
+                                        <span class="btn-label"><i class="fa fa-edit"></i></span>Edit</button>
+                                    <button class="btn btn-labeled btn-danger btn-sm" data-toggle="modal"
+                                        data-target="#delete_{{station.id}}">
+                                        <span class="btn-label"><i class="fa fa-trash"></i></span>Delete</button>
 
 
                                 </div>
@@ -483,9 +486,13 @@
                        <div class="row">
                        <div class="form-group col-md-6" name="city" id="city">
                                <label><b>City</b></label>
-                               <select class="form-control" name="city">
+                               <select class="form-control" name="city" required>
                                    {% for citi in zimbabwean_towns %}
+                                   {% if citi == "Select City ---" %}
+                                   <option disabled selected value>{{citi}}</option>
+                                   {% else %}
                                    <option >{{citi}}</option>
+                                   {% endif %}
                                    {% endfor %}
                                </select>
                            </div>

@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Count
 from django.shortcuts import render, redirect
+from decimal import *
 
 from company.models import Company
 from fuelUpdates.models import SordCompanyAuditTrail
@@ -18,6 +19,7 @@ from supplier.models import FuelAllocation
 from users.forms import DepotContactForm
 from users.models import Activity
 from zeraPortal.lib import *
+from zeraPortal.models import FuelPrices
 from .lib import *
 from .decorators import user_role, user_permission
 
@@ -214,72 +216,107 @@ def delete_depot(request, id):
 def fuel_update(request, id):
     user_permission(request)
     fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
+    prices = FuelPrices.objects.first()
     if request.method == 'POST':
         if request.POST['fuel_type'].lower() == 'petrol':
-            if request.POST['currency'] == 'USD':
-                fuel_update.usd_petrol += float(request.POST['quantity'])
-                fuel_update.usd_petrol_price = request.POST['petrol_usd_price']
-                fuel_update.save()
+            if request.POST['currency'] == 'USD': 
+                if Decimal(request.POST['petrol_usd_price']) > prices.usd_petrol_price:
+                    messages.warning(request, f'You cannot set USD petrol price higher that the ZERA max price of ${prices.usd_petrol_price}.')
+                    return redirect('noic:dashboard')
+                else:
+                    fuel_update.usd_petrol += float(request.POST['quantity'])
+                    fuel_update.usd_petrol_price = request.POST['petrol_usd_price']
+                    fuel_update.save()
 
-                action = "Fuel Allocation"
-                description = f"You have allocated fuel to {fuel_update.depot.name}"
-                Activity.objects.create(depot=fuel_update.depot, user=request.user,
-                                    action=action, description=description, reference_id=fuel_update.id)
-                messages.success(request, 'Updated petrol quantity successfully.')
-                return redirect('noic:dashboard')
+                    action = "Fuel Allocation"
+                    description = f"You have allocated fuel to {fuel_update.depot.name}"
+                    Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                                        action=action, description=description, reference_id=fuel_update.id)
+                    messages.success(request, 'Updated petrol quantity successfully.')
+                    return redirect('noic:dashboard')
             else:
-                fuel_update.rtgs_petrol += float(request.POST['quantity'])
-                fuel_update.rtgs_petrol_price = request.POST['petrol_rtgs_price']
-                fuel_update.save()
+                if Decimal(request.POST['petrol_rtgs_price']) > prices.rtgs_petrol_price:
+                    messages.warning(request, f'You cannot set RTGS petrol price higher that the ZERA max price of ${prices.rtgs_petrol_price}.')
+                    return redirect('noic:dashboard')
+                else:
+                    fuel_update.rtgs_petrol += float(request.POST['quantity'])
+                    fuel_update.rtgs_petrol_price = request.POST['petrol_rtgs_price']
+                    fuel_update.save()
 
-                action = "Fuel Allocation"
-                description = f"You have allocated fuel to {fuel_update.depot.name}"
-                Activity.objects.create(depot=fuel_update.depot, user=request.user,
-                                    action=action, description=description, reference_id=fuel_update.id)
-                messages.success(request, 'Updated petrol quantity successfully.')
-                return redirect('noic:dashboard')
+                    action = "Fuel Allocation"
+                    description = f"You have allocated fuel to {fuel_update.depot.name}"
+                    Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                                        action=action, description=description, reference_id=fuel_update.id)
+                    messages.success(request, 'Updated petrol quantity successfully.')
+                    return redirect('noic:dashboard')
             
         else:
             if request.POST['currency'] == 'USD':
-                fuel_update.usd_diesel += float(request.POST['quantity'])
-                fuel_update.usd_diesel_price = request.POST['diesel_usd_price']
-                fuel_update.save()
+                if Decimal(request.POST['diesel_usd_price']) > prices.usd_diesel_price:
+                    messages.warning(request, f'You cannot set USD diesel price higher that the ZERA max price of ${prices.usd_diesel_price}.')
+                    return redirect('noic:dashboard')
+                else:
+                    fuel_update.usd_diesel += float(request.POST['quantity'])
+                    fuel_update.usd_diesel_price = request.POST['diesel_usd_price']
+                    fuel_update.save()
 
-                action = "Fuel Allocation"
-                description = f"You have allocated fuel to {fuel_update.depot.name}"
-                Activity.objects.create(depot=fuel_update.depot, user=request.user,
-                                    action=action, description=description, reference_id=fuel_update.id)
-                messages.success(request, 'Updated diesel quantity successfully.')
-                return redirect('noic:dashboard')
+                    action = "Fuel Allocation"
+                    description = f"You have allocated fuel to {fuel_update.depot.name}"
+                    Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                                        action=action, description=description, reference_id=fuel_update.id)
+                    messages.success(request, 'Updated diesel quantity successfully.')
+                    return redirect('noic:dashboard')
             else:
-                fuel_update.rtgs_diesel += float(request.POST['quantity'])
-                fuel_update.rtgs_diesel_price = request.POST['diesel_rtgs_price']
-                fuel_update.save()
-                action = "Fuel Allocation"
-                description = f"You have allocated fuel to {fuel_update.depot.name}"
-                Activity.objects.create(depot=fuel_update.depot, user=request.user,
-                                    action=action, description=description, reference_id=fuel_update.id)
-                messages.success(request, 'Updated diesel quantity successfully.')
-                return redirect('noic:dashboard')
+                if Decimal(request.POST['diesel_rtgs_price']) > prices.rtgs_diesel_price:
+                    messages.warning(request, f'You cannot set RTGS diesel price higher that the ZERA max price of ${prices.rtgs_diesel_price}.')
+                    return redirect('noic:dashboard')
+                else:
+                    fuel_update.rtgs_diesel += float(request.POST['quantity'])
+                    fuel_update.rtgs_diesel_price = request.POST['diesel_rtgs_price']
+                    fuel_update.save()
+                    action = "Fuel Allocation"
+                    description = f"You have allocated fuel to {fuel_update.depot.name}"
+                    Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                                        action=action, description=description, reference_id=fuel_update.id)
+                    messages.success(request, 'Updated diesel quantity successfully.')
+                    return redirect('noic:dashboard')
 
 
 @login_required()
 def edit_prices(request, id):
     user_permission(request)
     fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
+    prices = FuelPrices.objects.first()
     if request.method == 'POST':
-        fuel_update.usd_petrol_price = request.POST['usd_petrol_price']
-        fuel_update.usd_diesel_price = request.POST['usd_diesel_price']
-        fuel_update.rtgs_petrol_price = request.POST['rtgs_petrol_price']
-        fuel_update.rtgs_diesel_price = request.POST['rtgs_diesel_price']
-        fuel_update.save()
+        if Decimal(request.POST['usd_petrol_price']) > prices.usd_petrol_price:
+            messages.warning(request, f'You cannot set USD petrol price higher that the ZERA max price of ${prices.usd_petrol_price}.')
+            return redirect('noic:dashboard')
+        else:
+            if Decimal(request.POST['usd_diesel_price']) > prices.usd_diesel_price:
+                messages.warning(request, f'You cannot set USD diesel price higher that the ZERA max price of ${prices.usd_diesel_price}.')
+                return redirect('noic:dashboard')
+          
+            else:
+                if Decimal(request.POST['rtgs_petrol_price']) > prices.rtgs_petrol_price:
+                    messages.warning(request, f'You cannot set RTGS petrol price higher that the ZERA max price of ${prices.rtgs_petrol_price}.')
+                    return redirect('noic:dashboard')
+                else:
+                    if Decimal(request.POST['rtgs_diesel_price']) > prices.rtgs_diesel_price:
+                        messages.warning(request, f'You cannot set RTGS diesel price higher that the ZERA max price of ${prices.rtgs_diesel_price}.')
+                        return redirect('noic:dashboard')
+                    else:
+                        fuel_update.usd_petrol_price = request.POST['usd_petrol_price']
+                        fuel_update.usd_diesel_price = request.POST['usd_diesel_price']
+                        fuel_update.rtgs_petrol_price = request.POST['rtgs_petrol_price']
+                        fuel_update.rtgs_diesel_price = request.POST['rtgs_diesel_price']
+                        fuel_update.save()
 
-        action = "Updating Prices"
-        description = f"You have updated fuel prices for {depot_update.depot.name}"
-        Activity.objects.create(depot=fuel_update.depot, user=request.user,
-                                    action=action, description=description, reference_id=fuel_update.depot.id)
-        messages.success(request, 'Updated prices successfully.')
-        return redirect('noic:dashboard')
+                        action = "Updating Prices"
+                        description = f"You have updated fuel prices for {fuel_update.depot.name}"
+                        Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                                                    action=action, description=description, reference_id=fuel_update.depot.id)
+                        messages.success(request, 'Updated prices successfully.')
+                        return redirect('noic:dashboard')
 
 
 @login_required()
@@ -391,14 +428,36 @@ def allocate_fuel(request, id):
 @login_required()
 @user_role
 def statistics(request):
-    yesterday = date.today() - timedelta(days=1)
-    monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
-    weekly_rev = get_weekly_sales(True)
-    last_week_rev = get_weekly_sales(False)
-    city_sales_volume = get_volume_sales_by_location()
-    final_desperate_cities = []
-    desperate_cities = desperate()
-    return render(request, 'noic/statistics.html', {'monthly_rev':monthly_rev,'weekly_rev':weekly_rev,'last_week_rev': last_week_rev, 'city_sales_volume': city_sales_volume })
+    
+    monthly_rev = get_monthly_orders()
+    weekly_rev = get_weekly_orders(True)
+    last_week_rev = get_weekly_orders(False)
+
+
+    fuel_orders = Order.objects.filter(payment_approved=True).annotate(
+        number_of_orders=Count('noic_depot')).order_by('-number_of_orders')
+    all_clients = [order.noic_depot for order in fuel_orders]
+
+    new_clients = []
+    for client in all_clients:
+        total_transactions = all_clients.count(client)
+        new_client_orders = Order.objects.filter(noic_depot=client, payment_approved=True).all()
+        total_value = 0
+        total_client_orders = []
+        number_of_orders = 0
+        for tran in new_client_orders:
+            total_value += (tran.amount_paid)
+            total_client_orders.append(tran)
+            number_of_orders += 1
+        client.total_revenue = total_value
+        client.total_client_orders = total_client_orders
+        client.number_of_orders = total_transactions
+        if client not in new_clients:
+            new_clients.append(client)
+
+    clients = sorted(new_clients, key=lambda x: x.total_revenue, reverse=True)
+    
+    return render(request, 'noic/statistics.html', {'monthly_rev':monthly_rev,'weekly_rev':weekly_rev,'last_week_rev': last_week_rev, 'clients': clients })
 
 
 @login_required()
@@ -663,52 +722,45 @@ def report_generator(request):
                        'start': start, 'end': end, 'stock': stock})
 
 
+
 @login_required()
-@user_role
-def statistics(request):
-    yesterday = datetime.datetime.today() - timedelta(days=1)
-    monthly_rev = get_aggregate_monthly_sales(datetime.datetime.now().year)
-    weekly_rev = get_weekly_sales(True)
-    last_week_rev = get_weekly_sales(False)
-    city_sales_volume = get_volume_sales_by_location()
-    final_desperate_cities = []
-    desperate_cities = desperate()
-    unallocated_diesel_usd = get_current_usd_stock().diesel_quantity
-    unallocated_petrol_usd = get_current_usd_stock().petrol_quantity
-    unallocated_diesel_zwl = get_current_zwl_stock().diesel_quantity
-    unallocated_petrol_zwl = get_current_zwl_stock().petrol_quantity
+def depot_history(request, did):
+    user_permission(request)
+    depot = NoicDepot.objects.filter(id=did).first()
+    trans = []
+    state = 'All'
 
-    total_allocations_quantity = get_total_allocations()
-    orders_complete_percentage = get_complete_orders_percentage
-    orders_this_week_count = orders_made_this_week() 
-    orders_number = total_orders()
-    monthly_rev = get_monthly_orders()
+    if request.method == "POST":
 
-    fuel_orders = Order.objects.filter(payment_approved=True).annotate(
-        number_of_orders=Count('company')).order_by('-number_of_orders')
-    all_clients = [order.company for order in fuel_orders]
+        if request.POST.get('report_type') == 'Complete':
+            trns = Order.objects.filter(noic_depot=depot, payment_approved=True)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.quantity
+                trans.append(tran)
+            state = 'Complete'
 
-    all_clients = []
-    for client in all_clients:
-        total_transactions = all_clients.count(client)
-        all_clients.remove(client)
-        new_client_orders = Order.objects.filter(company=client, payment_approved=True).all()
-        total_value = 0
-        total_client_orders = []
-        number_of_orders = 0
-        for tran in new_client_orders:
-            total_value += (tran.quantity)
-            total_client_orders.append(tran)
-            number_of_orders += 1
-        client.total_revenue = total_value
-        client.total_client_orders = total_client_orders
-        client.number_of_orders = total_transactions
-        if client not in all_clients:
-            all_clients.append(clieny)
+        if request.POST.get('report_type') == 'Incomplete':
+            trns = Order.objects.filter(noic_depot=depot, payment_approved=False)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.quantity
+                trans.append(tran)
+            state = 'Incomplete'
 
-    clients = sorted(all_clients, key=lambda x: x.total_revenue, reverse=True)
-    
-    return render(request, 'noic/statistics.html', {'unallocated_diesel_usd':unallocated_diesel_usd,'unallocated_petrol_usd': unallocated_petrol_usd,
-                            'total_allocations_quantity':total_allocations_quantity, 'orders_complete_percentage': orders_complete_percentage,
-                            'orders_this_week_count':orders_this_week_count, 'orders_number':orders_number, 'monthly_rev': monthly_rev,
-                             'clients':clients, 'unallocated_diesel_zwl':unallocated_diesel_zwl, 'unallocated_petrol_zwl': unallocated_petrol_zwl })
+        if request.POST.get('report_type') == 'All':
+            trns = Order.objects.filter(noic_depot=depot)
+            trans = []
+            for tran in trns:
+                tran.revenue = tran.quantity
+                trans.append(tran)
+            state = 'All'
+        return render(request, 'noic/depot_history.html', {'trans': trans, 'depot': depot, 'state': state})
+
+    trns = Order.objects.filter(noic_depot=depot)
+    trans = []
+    for tran in trns:
+        tran.revenue = tran.quantity
+        trans.append(tran)
+
+    return render(request, 'noic/depot_history.html', {'trans': trans, 'depot': depot, 'state': state})

@@ -166,7 +166,7 @@
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs">
                             <li class="active" ><a href="#tab1" data-toggle="tab" aria-expanded="true" style="border: rgb(211, 208, 208) 1px solid;">Orders</a></li>
-                            <li class=""><a href="#tab2" data-toggle="tab" aria-expanded="false" style="border: rgb(211, 208, 208) 1px solid;">Tab 2</a></li>
+{#                            <li class=""><a href="#tab2" data-toggle="tab" aria-expanded="false" style="border: rgb(211, 208, 208) 1px solid;">Tab 2</a></li>#}
                         </ul>
                         <!-- Tab panels -->
                         <div class="tab-content">
@@ -215,9 +215,9 @@
                                                 <td>
 
                                                     <!--call modal-->
-                                                    <button class="btn btn-primary btn-sm" data-toggle="modal"
-                                                            data-target="#payment{{order.id}}">
-                                                        <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
+                                                    
+                                                    <button data-toggle="modal" data-target="#payment{{order.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                        <span class="btn-label"><i class="fa fa-eye"></i></span>Details
                                                     </button>
                                                     <!--Payment Details-->
     <div class="modal fade modal-success in" id="payment{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -295,12 +295,13 @@
                                                     <td><b style="color: rgb(59, 59, 139);"> Approved</b></td>
                                                 {% else %}
                                                     <td>
-                                                        <div class="btn-group">
-                                                            <a class="btn btn-primary btn-sm" style="color: whitesmoke;"
-                                                               href="{% url 'noicDepot:download_proof' order.id %}"> <i class="fa fa-download"
-                                                                                                                        style="font-size:15px"></i> P.O.P</a>
-                                                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;"
-                                                               href="{% url 'noicDepot:payment_approval' order.id %}">Approve</a>
+                                                        <div class="btn-group"> 
+                                                            <a href="{% url 'noicDepot:download_proof' order.id %}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                                <span class="btn-label"><i class="fa fa-download"></i></span>P.O.P.
+                                                            </a>                                                             
+                                                            <a href="{% url 'noicDepot:payment_approval' order.id %}" type="button" class="btn btn-labeled btn-warning btn-sm">
+                                                                <span class="btn-label"><i class="glyphicon glyphicon-thumbs-up"></i></span>Approve
+                                                            </a>       
                                                         </div>
                                                     </td>
                                                 {% endif %}
@@ -317,7 +318,7 @@
                                                     {% else %}
                                                         <td>
                                                             <div class="btn-group">
-                                                                <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal"
+                                                                <a class="btn btn-danger btn-sm" style="color: whitesmoke;" data-toggle="modal"
                                                                    data-target="#allocate{{order.id}}">Allocate Fuel</a>
                                                             </div>
                                                         </td>
@@ -355,7 +356,7 @@
                                                             <input type="hidden" value="{{order.quantity}}" name="quantity" />
                                                             <input type="hidden" value="{{order.currency}}" name="currency" />
                                                             <input type="hidden" value="{{order.price}}" name="price" />
-                                                            <div class="form-group row col-sm-12">
+                                                            <div class="form-group row col-sm-12" style="padding-top: 30px;">
                                                                 <div class="col-sm-6">
                                                                     <label><b style='color:#009688'>Fuel Type</b></label>
                                                                     <input type="text" name="fuel_type1" class="form-control"
@@ -368,7 +369,7 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="form-group row col-sm-12">
+                                                            <div class="form-group row col-sm-12" style="padding-bottom: 30px;">
                                                                 <div class="col-sm-6">
                                                                     <label><b style='color:#009688'>Currency</b></label>
                                                                     <input type="text" name="currency1" class="form-control"
@@ -384,12 +385,12 @@
 
                                                             </div>
 
-                                                            <div class="form-group row"
-                                                                 style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                                                                <button type="button" class="btn btn-secondary col-sm-6"
-                                                                        data-dismiss="modal">Close</button>
-                                                                <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
-                                                            </div>
+                                                            
+                                                            <div class="modal-footer">  
+                                                                <button type="submit" class="btn btn-primary">Submit</button>
+
+                                                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                            </div> 
                                                         </form>
                                                     </div>
                                                 </div>
@@ -469,19 +470,19 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="tab2">
-                                <div class="panel-body">
-                                    <p><strong>Lorem Ipsum is simply dummy text of the printing and. </strong></p>
-                                    <p>It is a long established fact that a reader will be distracted by the readable content of
-                                        a page when looking at its layout.
-                                        The point of using Lorem Ipsum is that it has a more-or-less normal distribution of
-                                        letters, as opposed to using 'Content
-                                        here, content here', making it look like readable English. Many desktop publishing
-                                        packages and web page editors now use
-                                        Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover
-                                        many web sites still in their infancy.</p>
-                                </div>
-                            </div>
+{#                            <div class="tab-pane fade" id="tab2">#}
+{#                                <div class="panel-body">#}
+{#                                    <p><strong>Lorem Ipsum is simply dummy text of the printing and. </strong></p>#}
+{#                                    <p>It is a long established fact that a reader will be distracted by the readable content of#}
+{#                                        a page when looking at its layout.#}
+{#                                        The point of using Lorem Ipsum is that it has a more-or-less normal distribution of#}
+{#                                        letters, as opposed to using 'Content#}
+{#                                        here, content here', making it look like readable English. Many desktop publishing#}
+{#                                        packages and web page editors now use#}
+{#                                        Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover#}
+{#                                        many web sites still in their infancy.</p>#}
+{#                                </div>#}
+{#                            </div>#}
                         </div>
                     </div>
 
