@@ -162,7 +162,7 @@
                     {% if order.allocated_fuel %}
                     <td>
                         <div class="btn-group">
-                            <a data-toggle="modal" data-target="#allocate{{order.id}}" type="button" class="btn btn-labeled btn-warning btn-sm">
+                            <a data-toggle="modal" data-target="#allocation_{{order.id}}" type="button" class="btn btn-labeled btn-warning btn-sm">
                                 <span class="btn-label"><i class="fa fa-eye"></i></span>View Allocation
                             </a>
                         </div>
@@ -179,7 +179,7 @@
                    {% endif %}
                 </tr>
 
-                
+
                     <!--Allocation Modal-->
                     <div class="modal fade modal-success in" id="allocation_{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
