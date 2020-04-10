@@ -893,6 +893,9 @@ def stations(request):
 @user_role
 def suppliers_list(request):
     suppliers = User.objects.filter(company=request.user.company).filter(~Q(user_type='S_ADMIN')).all()
+    stations = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
+    depots = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company).all()
+    applicants = User.objects.filter(is_waiting=True, company=request.user.company).all()
     if suppliers is not None:
         for supplier in suppliers:
             subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
@@ -963,7 +966,8 @@ def suppliers_list(request):
                     messages.warning(request, f"Oops , something went wrong, please try again")
             return redirect(f'/users/allocated_fuel/{subsidiary.id}')
 
-    return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1, 'form': form})
+    return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1, 'form': form,
+                                                        'applicants': applicants, 'stations': stations, 'depots': depots})
 
 
 @login_required()
@@ -1305,16 +1309,6 @@ def audit_trail(request):
     trails = Audit_Trail.objects.exclude(date=today).filter(company=request.user.company)
     current_trails = Audit_Trail.objects.filter(company=request.user.company, date=today).all()
     return render(request, 'users/audit_trail.html', {'trails': trails, 'current_trails': current_trails})
-
-
-@login_required()
-@user_role
-def waiting_for_approval(request):
-    stations = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
-    depots = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company).all()
-    applicants = user.objects.filter(is_waiting=True, company=request.user.company).all()
-    return render(request, 'users/suppliers_list.html',
-                  {'applicants': applicants, 'stations': stations, 'depots': depots})
 
 
 @login_required()
