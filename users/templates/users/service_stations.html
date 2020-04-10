@@ -485,10 +485,14 @@
                       
                        <div class="row">
                        <div class="form-group col-md-6" name="city" id="city">
-                               <label><b>City</b></label>
+                               <label><b>City</b></label>{{citi.1}}
                                <select class="form-control" name="city" required>
                                    {% for citi in zimbabwean_towns %}
+                                   {% if citi.1 %}
+                                   <option disabled selected value>{{citi}}</option>
+                                   {% else %}
                                    <option >{{citi}}</option>
+                                   {% endif %}
                                    {% endfor %}
                                </select>
                            </div>
