@@ -236,13 +236,9 @@
                             </a>
                         </li>
                         <li class="{% if request.path == '/users/clients/' %} active {% endif %}">
-                          <a href="{% url 'users:clients' %}"><i class="fa fa-inbox"></i><span>Client Applications</span>
+                          <a href="{% url 'users:clients' %}"><i class="fa fa-inbox"></i><span>Clients Accounts</span>
                           </a>
                       </li>
-                        <li class="{% if request.path == '/users/upload_users/' %} active {% endif %}">
-                            <a href="{% url 'users:upload_users' %}"><i class="fa fa-money"></i><span>Accounts</span>
-                            </a>
-                        </li>
                         <li class="nav-item">
                             <a href="/logout/?next=/login"><i class="fa fa-sign-out"></i><span>Logout</span>
                             </a>
