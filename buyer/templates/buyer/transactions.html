@@ -93,7 +93,8 @@
 
                             <!--account statement with supplier-->
                             <td class="name truncate">
-                                <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#activity{{ transaction.id }}"> <i class="fa fa-download" style="font-size:20px"></i> Statement
+                                <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#activity{{ transaction.id }}"> 
+                                    <span class="btn-label"><i class="fa fa-download"></i></span> Statement
                                 </button>
 
 
@@ -217,8 +218,8 @@
                             <td>
 
                                 <!--call modal-->
-                                <button class="btn btn-purple btn-sm" data-toggle="modal" data-target="#viewBank{{transaction.id}}">
-                                    <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Bank Details
+                                <button class="btn btn-labeled btn-purple btn-sm" data-toggle="modal" data-target="#viewBank{{transaction.id}}">
+                                    <span class="btn-label"><i class="fa fa-eye"></i></span> Bank Details
                                 </button>
                                 <!--view details-->
                                 <div class="modal fade modal-success in" id="viewBank{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -263,7 +264,8 @@
                             {% else %}
                                 <td>
                                     <div class="btn-group">
-                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_release_notes' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Release Notes</a>
+                                        <a class="btn btn-labeled btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_release_notes' transaction.id %}">
+                                            <span class="btn-label"><i class="fa fa-eye"></i></span> Release Notes</a>
                                     </div>
                                 </td>
                             {% endif %}
@@ -279,8 +281,8 @@
                                     <td>Pending</td>
                                 {% endif %}
                             {% else %}
-                                <td><a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#proof_{{transaction.id}}">
-                                    <i class="fa fa-upload" style="font-size:20px"></i> Payment </a></td>
+                                <td><a class="btn btn-labeled btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#proof_{{transaction.id}}">
+                                    <span class="btn-label"><i class="fa fa-upload"></i></span> Payment </a></td>
                             {% endif %}
                             <td>
                                 {% if transaction.is_complete and not transaction.review %}
@@ -483,8 +485,8 @@
                             <td>
 
                                 <!--call modal-->
-                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#expected{{transaction.id}}">
-                                    <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
+                                <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#expected{{transaction.id}}">
+                                    <span class="btn-label"><i class="fa fa-eye"></i></span> Details
                                 </button>
                                 <!--view details-->
                                 <div class="modal fade modal-success in" id="expected{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -526,7 +528,8 @@
 
                             <!--account statement with supplier-->
                             <td class="name truncate">
-                                <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#activity{{ transaction.id }}"> <i class="fa fa-download" style="font-size:20px"></i> Statement
+                                <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#activity{{ transaction.id }}"> 
+                                    <span class="btn-label"><i class="fa fa-download"></i></span> Statement
                                 </button>
 
 
@@ -650,8 +653,8 @@
                             <td>
 
                                 <!--call modal-->
-                                <button class="btn btn-purple btn-sm" data-toggle="modal" data-target="#viewBank{{transaction.id}}">
-                                    <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Bank Details
+                                <button class="btn btn-labeled btn-purple btn-sm" data-toggle="modal" data-target="#viewBank{{transaction.id}}">
+                                    <span class="btn-label"><i class="fa fa-eye"></i></span> Bank Details
                                 </button>
                                 <!--view details-->
                                 <div class="modal fade modal-success in" id="viewBank{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -690,13 +693,15 @@
                             {% if transaction.offer.delivery_method == 'DELIVERY' %}
                                 <td>
                                     <div class="btn-group">
-                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_history' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Schedules</a>
+                                        <a class="btn btn-labeled btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_history' transaction.id %}">
+                                            <span class="btn-label"><i class="fa fa-eye"></i></span> Payments & Schedules</a>
                                     </div>
                                 </td>
                             {% else %}
                                 <td>
                                     <div class="btn-group">
-                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_release_notes' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Release Notes</a>
+                                        <a class="btn btn-labeled btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_release_notes' transaction.id %}">
+                                            <span class="btn-label"><i class="fa fa-eye"></i></span> Payments & Release Notes</a>
                                     </div>
                                 </td>
                             {% endif %}
@@ -709,8 +714,8 @@
                                     <td>Pending</td>
                                 {% endif %}
                             {% else %}
-                                <td><a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#proof_{{transaction.id}}">
-                                    <i class="fa fa-upload" style="font-size:20px"></i> Payment </a></td>
+                                <td><a class="btn btn-labeled btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#proof_{{transaction.id}}">
+                                    <span class="btn-label"><i class="fa fa-upload"></i></span> Payment </a></td>
                             {% endif %}
 
 
