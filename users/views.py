@@ -32,7 +32,7 @@ from .forms import SupplierContactForm, UsersUploadForm, ReportForm, ProfileEdit
 from decimal import *
 
 user = get_user_model()
-today = date.today()
+today = datetime.date.today()
 
 from fuelfinder import settings
 
@@ -67,10 +67,10 @@ def sord_allocations(request):
             start_date = request.POST.get('start_date')
             end_date = request.POST.get('end_date')
             if start_date:
-                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
                 start_date = start_date.date()
             if end_date:
-                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
             sord_allocations = SordCompanyAuditTrail.objects.filter(date__range=[start_date, end_date])
         
