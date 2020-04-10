@@ -32,7 +32,7 @@ from .forms import SupplierContactForm, UsersUploadForm, ReportForm, ProfileEdit
 from decimal import *
 
 user = get_user_model()
-today = date.today()
+today = datetime.datetime.today()
 
 from fuelfinder import settings
 
