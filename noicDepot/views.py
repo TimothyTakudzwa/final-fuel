@@ -83,6 +83,8 @@ def accepted_orders(request):
             pass
      
     orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=True).all()
+    for order in orders:
+            order.allocation = SordNationalAuditTrail.objects.filter(order=order).first()
     return render(request, 'noicDepot/accepted_orders.html', {'orders': orders})
 
 
