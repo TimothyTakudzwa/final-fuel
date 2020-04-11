@@ -61,6 +61,17 @@ class SubsidiariesAdmin(admin.ModelAdmin):
     list_per_page = 10
     list_display = ('id', 'name')
 
+"""
+
+Delivery Branch Admin 
+
+"""
+
+
+class DeliveryBranchAdmin(admin.ModelAdmin):
+    list_per_page = 10
+    list_display = ('id', 'name', 'street_number', 'street_name', 'city')
+
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Company)
