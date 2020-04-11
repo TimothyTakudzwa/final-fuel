@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="panel-body">
-                <form method="POST" id="loginForm" enctype="multipart/form-data" novalidate >
+                <form method="POST" action="{{request.path}}" id="loginForm" enctype="multipart/form-data" novalidate >
                     {% csrf_token %}
                     <div class="form-group">
                         {% if messages %}
