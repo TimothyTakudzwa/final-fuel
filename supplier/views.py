@@ -12,6 +12,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from accounts.models import Account, AccountHistory
 from buyer.forms import BuyerUpdateForm
+from buyer.models import DeliveryBranch
 from buyer.utils import render_to_pdf
 from company.models import CompanyFuelUpdate
 from fuelUpdates.models import SordCompanyAuditTrail
@@ -211,7 +212,10 @@ def create_company(request, id):
 
             else:
                 company_name = request.POST.get('company_name')
-                address = request.POST.get('address')
+                street_number = request.POST.get('street_number')
+                street_name = request.POST.get('street_name')
+                city = request.POST.get('city')
+                address = street_number + street_name + city
                 logo = request.FILES.get('logo')
                 iban_number = request.POST.get('iban_number')
                 license_number = request.POST.get('license_number')
@@ -220,6 +224,8 @@ def create_company(request, id):
                                                                                license_number=license_number)
                 new_company.save()
                 CompanyFuelUpdate.objects.create(company=new_company)
+                DeliveryBranch.objects.create(name='main branch', street_number=street_number, street_name=street_name,
+                                                city=city, company=new_company, description='Main Branch')
                 return render(request, 'supplier/final_reg.html')
 
     return render(request, 'supplier/create_company.html',
