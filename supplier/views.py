@@ -210,7 +210,7 @@ def create_company(request, id):
                 Company.objects.filter(name=company_name).update(name=company_name, city=city, address=address,
                                                                  logo=logo,
                                                                  is_govnt_org=is_govnt_org)
-                 DeliveryBranch.objects.create(name='main branch', street_number=street_number, street_name=street_name,
+                DeliveryBranch.objects.create(name='main branch', street_number=street_number, street_name=street_name,
                                                 city=city, company=user.company, description='Main Branch')
                 return redirect('login')
 
