@@ -53,24 +53,26 @@
                     </div>
                     {% if user_type == 'BUYER' %}
                         {{ form.company_name|as_crispy_field }}                        
-                        <div class="form-group col-sm-12" name="city">
-                            <label>City</label>
-                            <select class="form-control" name="city">
-                                {% for citi in zimbabwean_towns %}
-                                    <option >{{citi}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+                        
                         <div class="row form-group">
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-4">
                                 <label for="">Street Number</label>
                                 <input type="text" class="form-control" name="street_number" value="" required>
         
                             </div>
-                            <div class="togglebutton form-group col-sm-6">
+                            <div class="form-group col-sm-4">
                                 <label for="">Street Name</label>
                                 <input type="text" class="form-control" name="street_name" value="" required>
         
+                            </div>
+
+                            <div class="form-group col-sm-4" name="city">
+                                <label>City</label>
+                                <select class="form-control" name="city">
+                                    {% for citi in zimbabwean_towns %}
+                                        <option >{{citi}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
         
                         </div>
