@@ -211,8 +211,8 @@
                                 </td>
                                 <td>
                                     {% if transaction.is_complete and not transaction.review %}
-                                        <a class="btn btn-danger btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
-                                            Rate {{transaction.buyer.company.name}}
+                                        <a class="btn btn-labeled btn-danger btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
+                                           <span><i class="fa fa-sticky-note" aria-hidden="true"></i></span> Rate {{transaction.buyer.company.name}}
                                         </a>
                                     {% elif not transaction.is_complete %}
                                         Incomplete
@@ -275,6 +275,11 @@
                                                         <input class="btn btn-info" type="submit" value="Submit">
                                                     </div>
                                                 </form>
+                                                <div class="modal-footer">
+                                                    <input class="btn btn-info" type="submit" value="Submit">
+                                                    <button class="btn btn-default" data-dismiss="modal">Close</button>
+
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -553,8 +558,8 @@
 
                             <script>
                                 $('body').click(function (event) {
-                                    if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
-                                        $("#state_modal").modal('hide');
+                                    if(!$(event.target).closest('#review_{{transaction.id}}').length && !$(event.target).is('#review_{{transaction.id}}')) {
+                                        $("#review_{{transaction.id}}").modal('hide');
                                     }
                                     if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
                                         $("#state_modal").modal('hide');
@@ -762,7 +767,7 @@
                                 <td>
                                     {% if transaction.is_complete and not transaction.review %}
                                         <a class="btn btn-labeled btn-danger btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
-                                            <span class="btn-label"> <i class="fa-review-ok"></i></span> Rate Buyer
+                                            <span class="btn-label"> <i class="fa-sticky-note-o"></i></span> Rate Buyer
                                         </a>
                                     {% elif not transaction.is_complete %}
                                         Incomplete
