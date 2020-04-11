@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="panel-body">
-                <form method="POST" id="loginForm" enctype="multipart/form-data" novalidate >
+                <form method="POST" action="{{request.path}}" id="loginForm" enctype="multipart/form-data" novalidate >
                     {% csrf_token %}
                     <div class="form-group">
                         {% if messages %}
@@ -53,29 +53,26 @@
                     </div>
                     {% if user_type == 'BUYER' %}
                         {{ form.company_name|as_crispy_field }}                        
-                        <div class="form-group col-sm-12" name="city">
-                            <label>City</label>
-                            <select class="form-control" name="city">
-                                {% for citi in zimbabwean_towns %}
-                                    <option >{{citi}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+                        
                         <div class="row form-group">
                             <div class="form-group col-sm-4">
                                 <label for="">Street Number</label>
                                 <input type="text" class="form-control" name="street_number" value="" required>
         
                             </div>
-                            <div class="togglebutton form-group col-sm-4">
+                            <div class="form-group col-sm-4">
                                 <label for="">Street Name</label>
                                 <input type="text" class="form-control" name="street_name" value="" required>
         
                             </div>
-                            <div class="togglebutton form-group col-sm-4">
-                                <label for="">Location/Town</label>
-                                <input type="text" class="form-control" name="city" value="" required>
-        
+
+                            <div class="form-group col-sm-4" name="city">
+                                <label>City</label>
+                                <select class="form-control" name="city">
+                                    {% for citi in zimbabwean_towns %}
+                                        <option >{{citi}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
         
                         </div>
