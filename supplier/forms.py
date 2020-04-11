@@ -62,7 +62,7 @@ class CreateCompany(forms.ModelForm):
 
     class Meta:
         model = Company
-        fields = ['company_name', 'address', 'logo', 'is_govnt_org']
+        fields = ['company_name', 'logo', 'is_govnt_org']
 
 
 class FuelRequestForm(forms.ModelForm):
