@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from buyer.models import User, FuelRequest
+from buyer.models import User, FuelRequest, DeliveryBranch
 from company.models import Company
 from supplier.models import Subsidiaries
 
@@ -61,9 +61,21 @@ class SubsidiariesAdmin(admin.ModelAdmin):
     list_per_page = 10
     list_display = ('id', 'name')
 
+"""
+
+Delivery Branch Admin 
+
+"""
+
+
+class DeliveryBranchAdmin(admin.ModelAdmin):
+    list_per_page = 10
+    list_display = ('id', 'name', 'street_number', 'street_name', 'city')
+
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Company)
 admin.site.register(FuelRequest, FuelRequestAdmin)
+admin.site.register(DeliveryBranch, DeliveryBranchAdmin)
 admin.site.register(Subsidiaries, SubsidiariesAdmin)
 admin.site.unregister(Group)

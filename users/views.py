@@ -22,6 +22,7 @@ from accounts.models import Account, AccountHistory
 from buyer.forms import *
 from company.lib import *
 from zeraPortal.models import FuelPrices
+from supplier.models import DeliverySchedule
 from fuelUpdates.models import SordCompanyAuditTrail
 from fuelfinder.helper_functions import random_password
 from national.models import Order, SordNationalAuditTrail, DepotFuelUpdate
@@ -2356,3 +2357,16 @@ def download_proof(request, id):
         messages.warning(request, 'Document not found.')
         return redirect('users:orders')
     return response
+
+
+def delivery_schedules(request):
+    user_permission(request)
+    schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).all()
+    for schedule in schedules:
+        schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+        if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+            schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+        else:
+            schedule.delivery_address = schedule.transaction.offer.collection_address
+
+    return render(request, 'users/delivery_schedules.html', {'schedules': schedules})
