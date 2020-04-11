@@ -213,6 +213,16 @@
                                     </div>
                                 </div>
                             </div>
+                            <script>
+                                $('body').click(function (event) {
+                                    if(!$(event.target).closest('#add_collection{{collection.id}}').length && !$(event.target).is('#add_collection{{collection.id}}')) {
+                                        $("#add_collection{{collection.id}}").modal('hide');
+                                    }
+                                    if(!$(event.target).closest('#view_collection{{collection.id}}').length && !$(event.target).is('#view_collection{{collection.id}}')) {
+                                        $("#view_collection{{collection.id}}").modal('hide');
+                                    } 
+                                });
+                            </script>
 
                         {% endfor %}
                         </tbody>

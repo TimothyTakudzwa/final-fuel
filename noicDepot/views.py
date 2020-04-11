@@ -64,8 +64,20 @@ def dashboard(request):
 @login_required()
 @user_role
 def activity(request):
-    activities = Activity.objects.exclude(date=today).filter(user=request.user)
+    activities = Activity.objects.exclude(date=today).filter(user=request.user).all()
+    for activity in activities:
+        if activity.action == 'Fuel Allocation':
+            activity.fuel_order = Order.objects.filter(id=activity.reference_id).first()
+            activity.fuel_allocation = SordNationalAuditTrail.objects.filter(order=activity.fuel_order).first()
+        else:
+            pass
     current_activities = Activity.objects.filter(user=request.user, date=today).all()
+    for activity in current_activities:
+        if activity.action == 'Fuel Allocation':
+            activity.fuel_order = Order.objects.filter(id=activity.reference_id).first()
+            activity.fuel_allocation = SordNationalAuditTrail.objects.filter(order=activity.fuel_order).first()
+        else:
+            pass
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     return render(request, 'noicDepot/activity.html', {'activities': activities, 'depot': depot, 'current_activities': current_activities})
 
@@ -599,7 +611,7 @@ def statistics(request):
 @user_role
 def collections(request):
     context = {
-        'collections': Collections.objects.filter(),
+        'collections': Collections.objects.order_by('-date_collected'),
         'form': CollectionsForm()
     }
     if request.method == 'POST':

@@ -66,7 +66,7 @@
                                             <th style="color: white;">User</th>
                                             <th style="color: white;">Action</th>
                                             <th style="color: white;">Description</th>
-                                            <th style="color: white;">Reference ID</th>
+                                            <th style="color: white;">Action</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -77,9 +77,71 @@
                                                 <td>{{activity.user.first_name}} {{activity.user.last_name}}</td>
                                                 <td>{{activity.action}}</td>
                                                 <td>{{activity.description}}</td>
-                                                <td>{{activity.reference_id}}</td>
-
+                                                {% if activity.action == 'Fuel Allocation' %}
+                                                <td>
+                                                    <div class="text-center">
+                                                        <button  data-toggle="modal"  data-target="#view_alloc{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                                {% elif activity.action == 'Approving Payment' %}
+                                                <td>
+                                                    <div class="btn-group"> 
+                                                        <a href="{% url 'noicDepot:download_proof' activity.reference_id %}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                                        </a>                                                             
+                                                             
+                                                    </div>
+                                                </td>
+                                                {% elif activity.action == 'Uploading Release Note' %}
+                                                <td>
+                                                    <div class="btn-group"> 
+                                                        <a href="{% url 'noicDepot:view_release_note' activity.reference_id %}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                                        </a>                                                             
+                                                            
+                                                    </div>
+                                                </td>
+                                                {% endif %}
                                             </tr>
+                                            <div class="modal fade modal-success in" id="view_alloc{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                            aria-hidden="true" style="overflow-y: initial !important;" >
+                                            <div class="modal-dialog modal-notice">
+                                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                    <span class="modal-title">Allocation Info</span>
+                                                </div>
+                                                    <div class="modal-body" style="padding: 30px;overflow-y: auto;">
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Buyer: </p>
+                                                            <p class="col-md-6">{{ activity.fuel_order.company.name }}</p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Fuel Type: </p>
+                                                            <p class="col-md-6">{{activity.fuel_order.currency}} {{  activity.fuel_order.fuel_type }}</p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Quantity: </p>
+                                                            <p class="col-md-6">{{activity.fuel_order.quantity|floatformat:2|intcomma}}</p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Price: </p>
+                                                            <p class="col-md-6">{{activity.fuel_order.price}}</p>
+                                                        </div>
+                                                       
+                                                      
+                                                        
+                                                        <div class="modal-footer">  
+                                                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                        </div>    
+                        
+                                                    </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
                                         {%endfor%}
                                         </tbody>
                                     </table>
@@ -95,7 +157,7 @@
                                             <th style="color: white;">User</th>
                                             <th style="color: white;">Action</th>
                                             <th style="color: white;">Description</th>
-                                            <th style="color: white;">Reference ID</th>
+                                            <th style="color: white;">Action</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -106,9 +168,73 @@
                                                 <td>{{activity.user.first_name}} {{activity.user.last_name}}</td>
                                                 <td>{{activity.action}}</td>
                                                 <td>{{activity.description}}</td>
-                                                <td>{{activity.reference_id}}</td>
+                                               {% if activity.action == 'Fuel Allocation' %}
+                                                <td>
+                                                    <div class="text-center">
+                                                        <button  data-toggle="modal"  data-target="#view_alloc{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                                {% elif activity.action == 'Approving Payment' %}
+                                                <td>
+                                                    <div class="btn-group"> 
+                                                        <a href="{% url 'noicDepot:download_proof' activity.reference_id %}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                                        </a>                                                             
+                                                             
+                                                    </div>
+                                                </td>
+                                                {% elif activity.action == 'Uploading Release Note' %}
+                                                <td>
+                                                    <div class="btn-group"> 
+                                                        <a href="{% url 'noicDepot:view_release_note' activity.reference_id %}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                                        </a>                                                             
+                                                            
+                                                    </div>
+                                                </td>
+                                                {% endif %}
 
                                             </tr>
+                                    
+                    <div class="modal fade modal-success in" id="view_alloc{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                    aria-hidden="true" style="overflow-y: initial !important;" >
+                    <div class="modal-dialog modal-notice">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <span class="modal-title">Allocation Info</span>
+                        </div>
+                            <div class="modal-body" style="padding: 30px;overflow-y: auto;">
+                                <div class="row" style="padding: 10px;">
+                                    <p class="col-md-6" style="font-weight: bold;">Buyer: </p>
+                                    <p class="col-md-6">{{ activity.fuel_order.company.name }}</p>
+                                </div>
+                                <div class="row" style="padding: 10px;">
+                                    <p class="col-md-6" style="font-weight: bold;">Fuel Type: </p>
+                                    <p class="col-md-6">{{activity.fuel_order.currency}} {{  activity.fuel_order.fuel_type }}</p>
+                                </div>
+                                <div class="row" style="padding: 10px;">
+                                    <p class="col-md-6" style="font-weight: bold;">Quantity: </p>
+                                    <p class="col-md-6">{{activity.fuel_order.quantity|floatformat:2|intcomma}}</p>
+                                </div>
+                                <div class="row" style="padding: 10px;">
+                                    <p class="col-md-6" style="font-weight: bold;">Price: </p>
+                                    <p class="col-md-6">{{activity.fuel_order.price}}</p>
+                                </div>
+                               
+                              
+                                
+                                <div class="modal-footer">  
+                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                </div>    
+
+                            </div>
+                            </div>
+                            
+                        </div>
+                    </div>
                                         {%endfor%}
                                         </tbody>
                                     </table>
