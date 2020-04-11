@@ -98,17 +98,31 @@ def allocations(request):
     date = datetime.date.today().strftime("%d/%m/%y")
 
     if request.method == "POST":
-        html_string = render_to_string('noic/export_audit.html', {'allocations': allocations, 'date':date })
-        html = HTML(string=html_string)
-        export_name = f"Noic Allocations Summary"
-        html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            allocations = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
 
-        download_file = f'media/transactions/{export_name}'
+            return render(request, 'noic/allocations.html', {'allocations': allocations, 'start_date':start_date, 'end_date':end_date  })
+        else:
+            html_string = render_to_string('noic/export_audit.html', {'allocations': allocations, 'date':date })
+            html = HTML(string=html_string)
+            export_name = f"Noic Allocations Summary"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
-        with open(f'{download_file}.pdf', 'rb') as pdf:
-            response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-            response['Content-Disposition'] = f'attachment;filename={export_name}.pdf'
-            return response
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name}.pdf'
+                return response
+
     return render(request, 'noic/allocations.html', {'allocations': allocations})
 
 

@@ -89,7 +89,7 @@
 
 <script>
     $('body').click(function (event) {
-        if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#report_modal')) {
+        if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
             $("#state_modal").modal('hide');
         }      
     });

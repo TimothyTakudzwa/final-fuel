@@ -227,6 +227,10 @@
                             <a href="{% url 'users:stations' %}"><i class="fa fa-book"></i><span>Subsidiaries</span>
                             </a>
                         </li>
+                        <li class="{% if request.path == '/users/delivery_schedules/' %} active {% endif %}">
+                          <a href="{% url 'users:delivery_schedules' %}"><i class="fa fa-car"></i><span>Delivery Schedules</span>
+                          </a>
+                      </li>
                         <li class="{% if request.path == '/users/statistics/' %} active {% endif %}">
                             <a href="{% url 'users:statistics' %}"><i class="fa fa-line-chart"></i><span>Statistics</span>
                             </a>

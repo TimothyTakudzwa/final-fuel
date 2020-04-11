@@ -612,6 +612,7 @@ def collections(request):
         collection.date_collected = date.today()
         collection.time_collected = datetime.today().time()
         collection.has_collected = True
+        collection.order.status = 'Collected'
         collection.save()
         company = collection.order.company
         user = User.objects.filter(company=company, user_type='S_ADMIN').first()
