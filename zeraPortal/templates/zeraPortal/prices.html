@@ -92,8 +92,9 @@
                             <td>{{prices.usd_diesel_price}}</td>
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"
-                                        data-target="#update_usd_dprice">Update Price</a>
+                                    <a class="btn btn-labeled btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"
+                                        data-target="#update_usd_dprice">
+                                        <span class="btn-label"><i class="fa fa-refresh" aria-hidden="true"></i></span> Update Price</a>
                                 </div>
                             </td>
                         </tr>
@@ -201,10 +202,9 @@
 
                 </div>
 
-                <div class="form-group row"
-                    style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                    <button type="button" class="btn btn-secondary col-sm-6" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>
@@ -262,10 +262,10 @@
 
                 </div>
 
-                <div class="form-group row"
-                    style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                    <button type="button" class="btn btn-secondary col-sm-6" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                <div class="modal-footer" >
+                    <button type="submit" class="btn btn-primary">Submit</button>
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>
@@ -326,10 +326,10 @@
 
                 </div>
 
-                <div class="form-group row"
-                    style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                    <button type="button" class="btn btn-secondary col-sm-6" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>
@@ -390,10 +390,9 @@
 
                 </div>
 
-                <div class="form-group row"
-                    style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                    <button type="button" class="btn btn-secondary col-sm-6" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>
@@ -409,5 +408,18 @@
         </div>
     </div>
 </section>
-
+<script>
+    $('body').click(function (event) {
+        if(!$(event.target).closest('#update_usd_dprice').length && !$(event.target).is('#update_usd_dprice')) {
+            $("#update_usd_dprice").modal('hide');
+        }
+        if(!$(event.target).closest('#update_rtgs_dprice').length && !$(event.target).is('#update_rtgs_dprice')) {
+            $("#update_rtgs_dprice").modal('hide');
+        }if(!$(event.target).closest('#update_rtgs_pprice').length && !$(event.target).is('#update_rtgs_pprice')) {
+            $("#update_rtgs_pprice").modal('hide');
+        }if(!$(event.target).closest('#update_usd_pprice').length && !$(event.target).is('#update_usd_pprice')) {
+            $("#update_usd_pprice").modal('hide');
+        }
+    });
+</script>
 {% endblock %}
