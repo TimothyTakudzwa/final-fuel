@@ -612,10 +612,12 @@
                         {% csrf_token %}
                         <input type="hidden" name="depot" value="{{ depot }}">
 
-                            <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                                <button type="button" class="btn btn-secondary col-sm-6"
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">
+                                    Add User Profile</button>
+                                <button type="button" class="btn btn-secondary"
                                     data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary col-sm-6">Add User Profile</button>
+                                
                             </div>
                     </form>
                 </div>
