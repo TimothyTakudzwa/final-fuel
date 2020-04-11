@@ -117,9 +117,11 @@
                       {% endif %}
                     {% else %}
                     {% if req.delivery_method == 'DELIVERY' %}
-                    <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#add_offer_{{req.id}}">Make Offer</button></td>
+                    <td><button type="button" class="btn btn-labeled btn-info btn-sm" data-toggle="modal" data-target="#add_offer_{{req.id}}">
+                        <span class="btn-label"><i class="fa fa-handshake-o" aria-hidden="true"></i></span> Make Offer</button></td>
                     {% else %}
-                    <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#add_offer_collection_{{req.id}}">Make Offer</button></td>
+                    <td><button type="button" class="btn btn-labeled btn-info btn-sm" data-toggle="modal" data-target="#add_offer_collection_{{req.id}}">
+                        <span class="btn-label"><i class="fa fa-handshake-o" aria-hidden="true"></i></span>Make Offer</button></td>
                     {% endif %}
                     {% endif %}
                 </tr>
@@ -727,6 +729,17 @@ aria-hidden="true">
                 </div>
                 </div>
                 <!-- end edit modal -->
+                <script>
+                    $('body').click(function (event) {
+                        if(!$(event.target).closest('#add_offer_{{req.id}}').length && !$(event.target).is('#add_offer_{{req.id}}')) {
+                            $("#add_offer_{{req.id}}").modal('hide');
+                        }
+                        if(!$(event.target).closest('#add_offer_collection_{{req.id}}').length && !$(event.target).is('#add_offer_collection_{{req.id}}')) {
+                            $("#add_offer_collection_{{req.id}}").modal('hide');
+                        }
+                         
+                    });
+                </script>
                 {%endfor%}
             {% else %}    
             No Data To Show
