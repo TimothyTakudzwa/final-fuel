@@ -70,7 +70,8 @@
                     {% if fuel.usd_diesel < noic_usd_diesel %}
                     <td height="35" width="10%"> 
                         <div class="btn-group">
-                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 1 %}">Notify HQ for more diesel</a>
+                            <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 1 %}">
+                                <span class="btn-label"><i class="fa fa-bell"></i></span>Notify HQ for more diesel</a>
                         </div>
                     </td>
                     {% endif %}
@@ -97,7 +98,8 @@
             {% if fuel.rtgs_diesel < noic_rtgs_diesel %}
             <td height="35" width="10%"> 
                 <div class="btn-group">
-                    <a class="btn btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 2 %}">Notify HQ for more diesel</a>
+                    <a class="btn btn-labeled btn-waring btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 2 %}">
+                        <span class="btn-label"><i class="fa fa-bell"></i></span>Notify HQ for more diesel</a>
                 </div>
             </td>
             {% endif %}
@@ -121,7 +123,8 @@
                     {% if fuel.usd_petrol < noic_usd_petrol %}
                     <td height="35" width="10%"> 
                         <div class="btn-group">
-                            <a class="btn btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 3 %}">Notify HQ for more petrol</a>
+                            <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 3 %}">
+                                <span class="btn-label"><i class="fa fa-bell"></i></span>Notify HQ for more petrol</a>
                         </div>
                     </td>
                     {% endif %}
@@ -143,7 +146,8 @@
                 {% if fuel.rtgs_petrol < noic_rtgs_petrol %}
                 <td height="35" width="10%"> 
                     <div class="btn-group">
-                        <a class="btn btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 4 %}">Notify HQ for more petrol</a>
+                        <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 4 %}">
+                            <span class="btn-label"><i class="fa fa-bell"></i></span>Notify HQ for more petrol</a>
                     </div>
                 </td>
                 {% endif %}
