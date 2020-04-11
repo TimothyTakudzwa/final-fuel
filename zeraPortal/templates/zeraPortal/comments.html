@@ -70,8 +70,9 @@
                             {% endif %}
 
                             <td>
-                            <button class="btn btn-primary btn-sm" data-toggle="modal"
-                            data-target="#comments_{{subsidiary.id}}">View Comments</button>
+                            <button class="btn btn-labeled btn-primary btn-sm" data-toggle="modal"
+                            data-target="#comments_{{subsidiary.id}}">
+                            <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View Comments</button>
                             </td>
                            
                         </tr>
@@ -211,13 +212,16 @@
                                 
                                 {% endfor %}
                                </div>
+                               <div class="modal-footer">
+                                <a href="{% url 'zeraPortal:sub_comments' subsidiary.id %}" type="button" class="btn btn-labeled btn-success m-b-5">
+                                    <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span>View All Comments
+                                </a>  
+                                    
+                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                            </div> 
+
                             </div>
-                            <div class="text-center" style="margin-top: 30px;">
-                            <a href="{% url 'zeraPortal:sub_comments' subsidiary.id %}" type="button" class="btn btn-labeled btn-success m-b-5">
-                                <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span>View All Comments
-                            </a>
-                                
-                            </div>
+                            
                    </div>
                </div>
                </div>
