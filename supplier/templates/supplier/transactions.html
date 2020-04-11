@@ -561,8 +561,8 @@
                                     }
                                     if(!$(event.target).closest('#view{{transaction.id}}').length && !$(event.target).is('#view{{transaction.id}}')) {
                                         $("#view{{transaction.id}}").modal('hide');
-                                    }if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
-                                        $("#state_modal").modal('hide');
+                                    }if(!$(event.target).closest('#release_note{{transaction.id}}').length && !$(event.target).is('#release_note{{transaction.id}}')) {
+                                        $("#release_note{{transaction.id}}").modal('hide');
                                     }if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
                                         $("#state_modal").modal('hide');
                                     }if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
@@ -705,7 +705,8 @@
                                             {% if transaction.offer.delivery_method == 'DELIVERY' %}
                                                 <td>
                                                     <div class="btn-group">
-                                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button>
+                                                        <button type="button" class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">
+                                                            <span class="btn-label"><i class="fa fa-plus"></i></span>Create Schedule</button>
                                                     </div>
                                                 </td>
                                             {% else %}
@@ -1087,6 +1088,10 @@
                                                 <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
 
                                             </form>
+                                            <div class="modal-footer">  
+                                                <button type="submit" class="btn btn-primary ">Submit</button>
+                                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                            </div> 
                                         </div>
                                     </div>
                                 </div>
@@ -1099,8 +1104,8 @@
                                     }
                                     if(!$(event.target).closest('#view{{transaction.id}}').length && !$(event.target).is('#view{{transaction.id}}')) {
                                         $("#view{{transaction.id}}").modal('hide');
-                                    }if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
-                                        $("#state_modal").modal('hide');
+                                    }if(!$(event.target).closest('#release_note{{transaction.id}}').length && !$(event.target).is('#release_note{{transaction.id}}')) {
+                                        $("#release_note{{transaction.id}}").modal('hide');
                                     }if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
                                         $("#state_modal").modal('hide');
                                     }if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
