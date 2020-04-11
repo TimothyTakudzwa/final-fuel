@@ -155,16 +155,22 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <input type="text" name="branch_name" class="form-control" value="{{branch.name}}" disabled/>
                                 </div>
                                 <div class="row form-group">
-                                    <div class="togglebutton form-group col-sm-6">
+                                    <div class="togglebutton form-group col-sm-4">
                                         <label for="">Street Number</label>
                                         <input type="text" class="form-control" name="street_number" value="{{branch.street_number}}" required>
                 
                                     </div>
-                                    <div class="togglebutton form-group col-sm-6">
+                                    <div class="togglebutton form-group col-sm-4">
                                         <label for="">Street Name</label>
                                         <input type="text" class="form-control" name="street_name" value="{{branch.street_name}}" required>
                 
                                     </div>
+                                    <div class="togglebutton form-group col-sm-4">
+                                        <label for="">Location/Town</label>
+                                        <input type="text" class="form-control" name="city" value="{{branch.city}}" required>
+                
+                                    </div>
+                
                                 </div>
                                 <div class="form-group row-sm-12">
                                     <label>Description</label>
