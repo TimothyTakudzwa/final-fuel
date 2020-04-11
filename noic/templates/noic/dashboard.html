@@ -411,9 +411,8 @@
                         </div>
                         <div class="modal-footer">
                             <div>
-                                <button class="btn" style="background-color: lightgray; color: #333;"
-                                    data-dismiss="modal">No</button> <button type="submit"
-                                    class="btn btn-primary ">Submit</button>
+                                <button type="submit" class="btn btn-primary ">Submit</button>
+                                <button class="btn" style="background-color: lightgray; color: #333;"data-dismiss="modal">No</button> 
                             </div>
                             </form>
                            
@@ -422,6 +421,17 @@
                  </div>
             </div>
          </div>
+
+         <script>
+            $('body').click(function (event) {
+                if(!$(event.target).closest('#add_fuel{{fuel.id}}').length && !$(event.target).is('#add_fuel{{fuel.id}}')) {
+                    $("#add_fuel{{fuel.id}}").modal('hide');
+                }
+                if(!$(event.target).closest('#edit_{{fuel.id}}').length && !$(event.target).is('#edit_{{fuel.id}}')) {
+                    $("#edit_{{fuel.id}}").modal('hide');
+                }   
+            });
+        </script>
 
     {% endfor %}
     </tbody>
