@@ -229,7 +229,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_user{{company.id}}">Assign Admin</button></td>
                         {% endif %}
                         {% if company.is_active == True %}
-                        <td style="width: 130px;">
+                        <td style="width: 220px;">
                             <div class="btn-group" role="group">
                             <button type="button" class="btn btn-labeled btn-danger btn-sm" data-toggle="modal" data-target="#block_{{company.id}}">
                                <span class="btn-label"><i class="fa fa-ban" aria-hidden="true"></i></span> Block</button>
@@ -238,7 +238,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                             </div>
                         </td>
                         {% else %}
-                        <td style="min-width: 130px;">
+                        <td style="min-width: 220px;">
                             <div class="btn-group" role="group">
                             <button type="button" class="btn btn-labeled btn-warning btn-sm" data-toggle="modal" data-target="#unblock_{{company.id}}">
                                 <span class="btn-label"><i class="fa fa-unlock" aria-hidden="true"></i></span> Unblock</button>
