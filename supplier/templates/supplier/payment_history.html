@@ -206,7 +206,8 @@
                             {% if payment.delivery_schedule != None %}
                             <td>
                                 <div class="btn-group">
-                                <button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">View Schedule</button>
+                                <button type="button" class="btn btn-labeled btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">
+                                   <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View Schedule</button>
                                 </div>
                             </td>
                             {% else %}
@@ -332,6 +333,19 @@
                                 </div>
                             </div>
                             <!--End View Modal-->
+                            <script>
+                                $('body').click(function (event) {
+                                    if(!$(event.target).closest('#view{{payment.id}}"').length && !$(event.target).is('#view{{payment.id}}"')) {
+                                        $("#view{{payment.id}}"").modal('hide');
+                                    }
+                                    if(!$(event.target).closest('#trans{{payment.id}}').length && !$(event.target).is('#trans{{payment.id}}')) {
+                                        $("#trans{{payment.id}}").modal('hide');
+                                    }if(!$(event.target).closest('#schedule{{payment.id}}').length && !$(event.target).is('#schedule{{payment.id}}')) {
+                                        $("#schedule{{payment.id}}").modal('hide');
+                                   
+                                     
+                                });
+                            </script>   
                         {% endfor %}
                     </tbody>
                 </table>
