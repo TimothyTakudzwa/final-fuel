@@ -53,7 +53,7 @@
                     </div>
                     {% if user_type == 'BUYER' %}
                         {{ form.company_name|as_crispy_field }}
-                        <div class="form-group col-sm-12" name="city">
+                        <div class="form-group row" name="city">
                             <label>City</label>
                             <select class="form-control" name="city">
                                 {% for citi in zimbabwean_towns %}
