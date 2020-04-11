@@ -12,6 +12,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from accounts.models import Account, AccountHistory
 from buyer.forms import BuyerUpdateForm
+from buyer.models import DeliveryBranch
 from buyer.utils import render_to_pdf
 from company.models import CompanyFuelUpdate
 from fuelUpdates.models import SordCompanyAuditTrail
@@ -200,18 +201,25 @@ def create_company(request, id):
             if user_type == 'BUYER':
                 company_name = request.POST.get('company_name')
                 city = request.POST.get('city')
-                address = request.POST.get('address')
+                street_number = request.POST.get('street_number')
+                street_name = request.POST.get('street_name')
+                address = street_number + street_name + city
                 is_govnt_org = request.POST.get('is_govnt_org')
                 logo = request.FILES.get('logo')
                 company_name = user.company.name
                 Company.objects.filter(name=company_name).update(name=company_name, city=city, address=address,
                                                                  logo=logo,
                                                                  is_govnt_org=is_govnt_org)
+                DeliveryBranch.objects.create(name='main branch', street_number=street_number, street_name=street_name,
+                                                city=city, company=user.company, description='Main Branch')
                 return redirect('login')
 
             else:
                 company_name = request.POST.get('company_name')
-                address = request.POST.get('address')
+                street_number = request.POST.get('street_number')
+                street_name = request.POST.get('street_name')
+                city = request.POST.get('city')
+                address = street_number + street_name + city
                 logo = request.FILES.get('logo')
                 iban_number = request.POST.get('iban_number')
                 license_number = request.POST.get('license_number')

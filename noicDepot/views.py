@@ -611,7 +611,7 @@ def statistics(request):
 @user_role
 def collections(request):
     context = {
-        'collections': Collections.objects.filter(),
+        'collections': Collections.objects.order_by('-date','-time'),
         'form': CollectionsForm()
     }
     if request.method == 'POST':
