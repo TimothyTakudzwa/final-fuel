@@ -52,6 +52,10 @@ class Activity(models.Model):
     subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.DO_NOTHING, blank=True, null=True)
     depot = models.ForeignKey(NoicDepot, on_delete=models.DO_NOTHING, blank=True, null=True)
     action = models.CharField(max_length=700, blank=True, null=True)
+    fuel_type = models.CharField(max_length=700, blank=True, null=True)
+    quantity =  models.FloatField(default=0.00)
+    currency = models.CharField(max_length=700, blank=True, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     description = models.CharField(max_length=700, blank=True, null=True)
     reference_id = models.PositiveIntegerField(default=0)
 
