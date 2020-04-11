@@ -201,13 +201,17 @@ def create_company(request, id):
             if user_type == 'BUYER':
                 company_name = request.POST.get('company_name')
                 city = request.POST.get('city')
-                address = request.POST.get('address')
+                street_number = request.POST.get('street_number')
+                street_name = request.POST.get('street_name')
+                address = street_number + street_name + city
                 is_govnt_org = request.POST.get('is_govnt_org')
                 logo = request.FILES.get('logo')
                 company_name = user.company.name
                 Company.objects.filter(name=company_name).update(name=company_name, city=city, address=address,
                                                                  logo=logo,
                                                                  is_govnt_org=is_govnt_org)
+                 DeliveryBranch.objects.create(name='main branch', street_number=street_number, street_name=street_name,
+                                                city=city, company=user.company, description='Main Branch')
                 return redirect('login')
 
             else:
@@ -224,8 +228,6 @@ def create_company(request, id):
                                                                                license_number=license_number)
                 new_company.save()
                 CompanyFuelUpdate.objects.create(company=new_company)
-                DeliveryBranch.objects.create(name='main branch', street_number=street_number, street_name=street_name,
-                                                city=city, company=new_company, description='Main Branch')
                 return render(request, 'supplier/final_reg.html')
 
     return render(request, 'supplier/create_company.html',
