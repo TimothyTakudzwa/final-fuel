@@ -49,43 +49,45 @@
 <table style="padding-top: 20px">
     <tr>
         <th>
-            Sord Number
-        </th>
+            Date 
+         </th>
+         <th>
+             Time 
+          </th>
 
-        <th>
-            Number of Actions
-        </th>
+         <th>
+             Sord Number
+         </th>
+         <th>
+             Company 
+         </th>
+         <th>
+             Fuel Type
+         </th>
+         <th>
+             Currency 
+         </th>
+        
+         <th>
+             Quantity
+         </th>
 
-        <th>
-            Info
-        </th>
-        <th>
-            Fuel 
-        </th>
-        <th>
-            Currency 
-        </th>
-        <th>
-            Initial
-        </th>
-        <th>
-            Allocated
-        </th>
-        <th>
-            Balance
-        </th>
+         <th>
+             Price
+         </th>
 
-        <th>
-            Last Allocation
-        </th>
+         <th>
+             Responsible Depot
+         </th>
 
     </tr>
 
-    {% for sord in sord_allocations %}
+    {% for sord in allocations %}
         <tr>
-            <td>{{sord.sord_no}}</td>
-            <td>{{sord.action_no}}</td>
-            <td>{{sord.action}}</td>
+            <td>{{sord.date}}</td>
+            <td>{{sord.time}}</td>
+            <td style="width: 8%;">{{sord.sord_no}}</td>
+            <td>{{sord.company}}</td>
 
             {% if sord.fuel_type == 'Petrol' %}
                 <td style="color: #009688;">{{sord.fuel_type}}</td>
@@ -93,18 +95,12 @@
                 <td style="color: #ffb61e;">{{sord.fuel_type}}</td>
             {% else %}    
                 <td>{{sord.fuel_type}}</td>
-            {% endif %}    
-
-
-            <td>{{sord.payment_type}}</td>
-            <td>{{sord.initial_quantity|floatformat:2|intcomma}}</td>
-            <td>{{sord.quantity_allocated|floatformat:2|intcomma}}</td>
-            <td>{{sord.end_quantity|floatformat:2|intcomma}}</td>
-            {% if sord.allocated_to == None %}
-            <td><B style="margin-left: 25px;">--</B></td>
-            {% else %}
-            <td>{{sord.allocated_to}}</td>
             {% endif %}
+
+            <td>{{sord.currency}}</td>
+            <td>{{sord.quantity|floatformat:2|intcomma}}</td>
+            <td>{{sord.price}}</td>
+            <td><b style="color: rgb(7, 194, 163);width: 8%;">{{sord.assigned_depot.name}}</b></td>
         </tr>
     {% endfor %}
 

@@ -1,6 +1,6 @@
-import datetime
+# import datetime
 import secrets
-from datetime import date
+from datetime import datetime, date
 from io import BytesIO
 
 import pandas as pd
@@ -33,7 +33,7 @@ from .forms import SupplierContactForm, UsersUploadForm, ReportForm, ProfileEdit
 from decimal import *
 
 user = get_user_model()
-today = date.today()
+today = datetime.today()
 
 from fuelfinder import settings
 
@@ -61,18 +61,34 @@ function for viewing allocations from NOIC, showing sord numbers, quantities, pa
 @user_role
 def sord_allocations(request):
     sord_allocations = SordCompanyAuditTrail.objects.filter(company=request.user.company).all()
+    today = date.today().strftime("%d/%m/%y")
+    
     if request.method == "POST":
-        html_string = render_to_string('users/export_allocations.html', {'sord_allocations': sord_allocations})
-        html = HTML(string=html_string)
-        export_name = f"{request.user.company.name.title()}"
-        html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            sord_allocations = SordCompanyAuditTrail.objects.filter(date__range=[start_date, end_date])
+        
+            return render(request, 'users/sord_allocations.html', {'sord_allocations': sord_allocations, 'start_date':start_date, 'end_date': end_date }) 
 
-        download_file = f'media/transactions/{export_name}'
+        else:    
+            html_string = render_to_string('users/export_allocations.html', {'sord_allocations': sord_allocations, 'date':today })
+            html = HTML(string=html_string)
+            export_name = f"{request.user.company.name.title()}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
-        with open(f'{download_file}.pdf', 'rb') as pdf:
-            response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-            response['Content-Disposition'] = 'attachment;filename=export.pdf'
-            return response
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name}.pdf'
+                return response
             
 
     
@@ -878,6 +894,9 @@ def stations(request):
 @user_role
 def suppliers_list(request):
     suppliers = User.objects.filter(company=request.user.company).filter(~Q(user_type='S_ADMIN')).all()
+    stations = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
+    depots = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company).all()
+    applicants = User.objects.filter(is_waiting=True, company=request.user.company).all()
     if suppliers is not None:
         for supplier in suppliers:
             subsidiary = Subsidiaries.objects.filter(id=supplier.subsidiary_id).first()
@@ -948,7 +967,8 @@ def suppliers_list(request):
                     messages.warning(request, f"Oops , something went wrong, please try again")
             return redirect(f'/users/allocated_fuel/{subsidiary.id}')
 
-    return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1, 'form': form})
+    return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1, 'form': form,
+                                                        'applicants': applicants, 'stations': stations, 'depots': depots})
 
 
 @login_required()
@@ -1290,16 +1310,6 @@ def audit_trail(request):
     trails = Audit_Trail.objects.exclude(date=today).filter(company=request.user.company)
     current_trails = Audit_Trail.objects.filter(company=request.user.company, date=today).all()
     return render(request, 'users/audit_trail.html', {'trails': trails, 'current_trails': current_trails})
-
-
-@login_required()
-@user_role
-def waiting_for_approval(request):
-    stations = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
-    depots = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company).all()
-    applicants = user.objects.filter(is_waiting=True, company=request.user.company).all()
-    return render(request, 'users/suppliers_list.html',
-                  {'applicants': applicants, 'stations': stations, 'depots': depots})
 
 
 @login_required()
@@ -1817,16 +1827,22 @@ def delivery_schedule(request, id):
 
 @login_required
 @user_role
-def client_application(request):
+def clients(request):
     context = {
-        'clients': Account.objects.filter(is_verified=False, supplier_company=request.user.company).all()
+        'clients': Account.objects.filter(is_verified=False, supplier_company=request.user.company).all(),
+        'form': UsersUploadForm(),
+        'accounts': Account.objects.filter(supplier_company=request.user.company),
+        'transactions': AccountHistory.objects.filter()
     }
+    return render(request, 'users/clients_applications.html', context=context)
+
+
+def client_application(request):
     if request.method == 'POST':
         company = Company.objects.filter(id=request.user.company.id).first()
         company.application_form = request.FILES.get('application_form')
         company.save()
-        return redirect('users:client-application')
-    return render(request, 'users/clients_applications.html', context=context)
+        return redirect('users:clients')
 
 
 @login_required()
@@ -1839,7 +1855,7 @@ def download_application(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document not found.')
-        return redirect('users:client-application')
+        return redirect('users:clients')
     return response
 
 
@@ -1853,7 +1869,7 @@ def download_tax_clearance(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document not found.')
-        return redirect('users:client-application')
+        return redirect('users:clients')
     return response
 
 
@@ -1867,7 +1883,7 @@ def download_cr14(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document not found.')
-        return redirect('users:client-application')
+        return redirect('users:clients')
     return response
 
 
@@ -1881,7 +1897,7 @@ def download_cr6(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document not found.')
-        return redirect('users:client-application')
+        return redirect('users:clients')
     return response
 
 
@@ -1895,7 +1911,7 @@ def download_proof_of_residence(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document not found.')
-        return redirect('users:client-application')
+        return redirect('users:clients')
     return response
 
 
@@ -1909,7 +1925,7 @@ def download_cert_of_inc(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document not found.')
-        return redirect('users:client-application')
+        return redirect('users:clients')
     return response
 
 
@@ -1923,7 +1939,7 @@ def download_document(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
         messages.warning(request, 'Document not found.')
-        return redirect('users:client-application')
+        return redirect('users:clients')
     return response
 
 
@@ -1938,24 +1954,19 @@ def application_approval(request, id):
             accounts_list.append(account.account_number)
         if new_account in accounts_list:
             messages.warning(request, 'Account number already exists.')
-            return redirect('users:client-application')
+            return redirect('users:clients')
         else:
             account = Account.objects.filter(id=id).first()
             account.is_verified = True
             account.account_number = new_account
             account.save()
             messages.success(request, 'Account successfully approved.')
-            return redirect('users:client-application')
+            return redirect('users:clients')
 
 
 @login_required
 @user_role
 def upload_users(request):
-    context = {
-        'form': UsersUploadForm(),
-        'accounts': Account.objects.filter(supplier_company=request.user.company),
-        'transactions': AccountHistory.objects.filter()
-    }
     if request.method == 'POST':
         file = request.FILES.get('file')
         if file is not None:
@@ -2065,10 +2076,10 @@ def upload_users(request):
                                         # error log should be created
 
                         messages.success(request, 'Successfully uploaded data.')
-                        return redirect('users:upload_users')
+                        return redirect('users:clients')
                     except KeyError:
                         messages.warning(request, 'Please use the standard file.')
-                        return redirect('users:upload_users')
+                        return redirect('users:clients')
                 elif file.name.endswith('.xlsx'):
                     df = pd.DataFrame(pd.read_excel(file))
                     try:
@@ -2173,13 +2184,13 @@ def upload_users(request):
                                         # error log should be created
 
                         messages.success(request, 'Successfully uploaded data.')
-                        return redirect('users:upload_users')
+                        return redirect('users:clients')
                     except KeyError:
                         messages.warning(request, 'Please use the standard file.')
-                        return redirect('users:upload_users')
+                        return redirect('users:clients')
             else:
                 messages.warning(request, "Uploaded file doesn't meet the required format.")
-                return redirect('users:upload_users')
+                return redirect('users:clients')
         elif request.POST.get('account_id') is not None:
             buyer_transactions = AccountHistory.objects.filter(account_id=int(request.POST.get('account_id')))
             html_string = render_to_string('supplier/export.html', {'transactions': buyer_transactions})
@@ -2194,8 +2205,6 @@ def upload_users(request):
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
                 response['Content-Disposition'] = 'attachment;filename=export.pdf'
                 return response
-
-    return render(request, 'users/upload_users.html', context=context)
 
 
 @login_required()
