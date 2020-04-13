@@ -212,17 +212,17 @@ def add_supplier_admin(request, id):
             username = initial_username + str(i)
             i += 1
         password = random_password()
-        user = User.objects.create(company=company, first_name=first_name, last_name=last_name, email=email,
+        new_user = User.objects.create(company=company, first_name=first_name, last_name=last_name, email=email,
                                    phone_number=phone_number.replace(' ', ''),
                                    user_type='S_ADMIN', is_active=True, username=username.lower(), password_reset=True)
-        user.set_password(password)
-        user.save()
-        message_is_sent(request, user, password)
+        new_user.set_password(password)
+        new_user.save()
+        message_is_sent(request, new_user, password)
 
         action = "Creating Supplier Admin"
-        description = f"You have created supplier admin for {user.first_name} for {company.name}"
+        description = f"You have created supplier admin for {new_user.first_name} for {company.name}"
         Activity.objects.create(company=company, user=request.user, action=action, description=description,
-                                reference_id=user.id)
+                                reference_id=user.id, created_user=new_user)
         messages.success(request, 'User successfully created.')
         return redirect('zeraPortal:dashboard')
 
