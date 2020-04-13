@@ -962,7 +962,7 @@ def client_transaction_history(request, id):
     trns = Transaction.objects.filter(supplier=request.user, buyer__company=client.buyer_company)
     transactions = []
     for tran in trns:
-        tran.revenue = tran.offer.request.amount * tran.offer.price
+        tran.revenue = float(tran.offer.request.amount) * float(tran.offer.price)
         transactions.append(tran)
 
     return render(request, 'supplier/client_activity.html', {'transactions': transactions, 'client': client,

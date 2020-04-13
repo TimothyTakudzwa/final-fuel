@@ -96,8 +96,8 @@
     data-index="0">
     <div class="panel-heading ui-sortable-handle">
         <div class="btn-group"> 
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#company_registration"><i class="" style="margin-right: 11px;"></i>
-                Register Company
+            <button type="button" class="btn btn-labeled btn-info" data-toggle="modal" data-target="#company_registration">
+               <span class="btn-label"><i class="fa fa-plus" aria-hidden="true"></i></span> Register Company
             </button>  
         </div>
 
@@ -229,17 +229,21 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_user{{company.id}}">Assign Admin</button></td>
                         {% endif %}
                         {% if company.is_active == True %}
-                        <td style="width: 130px;">
+                        <td style="width: 220px;">
                             <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#block_{{company.id}}">Block</button>
-                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#edit_{{company.id}}">Edit</button>
+                            <button type="button" class="btn btn-labeled btn-danger btn-sm" data-toggle="modal" data-target="#block_{{company.id}}">
+                               <span class="btn-label"><i class="fa fa-ban" aria-hidden="true"></i></span> Block</button>
+                            <button type="button" class="btn btn-labeled btn-primary btn-sm" data-toggle="modal" data-target="#edit_{{company.id}}">
+                                <span class="btn-label"><i class="fa fa-edit" aria-hidden="true"></i></span>Edit</button>
                             </div>
                         </td>
                         {% else %}
-                        <td style="min-width: 130px;">
+                        <td style="min-width: 220px;">
                             <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#unblock_{{company.id}}">Unblock</button>
-                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#edit_{{company.id}}">Edit</button>
+                            <button type="button" class="btn btn-labeled btn-warning btn-sm" data-toggle="modal" data-target="#unblock_{{company.id}}">
+                                <span class="btn-label"><i class="fa fa-unlock" aria-hidden="true"></i></span> Unblock</button>
+                                <button type="button" class="btn btn-labeled btn-primary btn-sm" data-toggle="modal" data-target="#edit_{{company.id}}">
+                                    <span class="btn-label"><i class="fa fa-edit" aria-hidden="true"></i></span>Edit</button>
                         </td>
                         {% endif %}
                     </tr>
@@ -289,10 +293,10 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 {% csrf_token %}
                                 <p>Are You Sure You Want To Unblock {{ company.name }}?</p>
                                                                 
-                        <div class="modal-footer" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                            <button type="button" class="btn btn-secondary col-sm-6"
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary"
                                 data-dismiss="modal">No</button>
-                            <button type="submit" class="btn btn-primary col-sm-6">Yes</button>
+                            <button type="submit" class="btn btn-primary">Yes</button>
                         </div>
                             </form>
                     </div>

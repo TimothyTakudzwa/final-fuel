@@ -85,8 +85,8 @@
                             <td>
                                 
                                     <!--call modal-->
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{payment.id}}">
-                                        Account Details
+                                    <button class="btn btn-labeled btn-primary btn-sm" data-toggle="modal" data-target="#view{{payment.id}}">
+                                       <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> Account Details
                                     </button>
                                     <!--view details-->
                                     <div class="modal fade modal-success in" id="view{{payment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -121,6 +121,10 @@
                                                             <h4>Verified &nbsp;&nbsp; : &nbsp;&nbsp; {{ payment.account.is_verified }}</h4>
                                                         </div>
                                                     </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default"  data-dismiss="modal" aria-label="Close">
+                                                            Close
+                                                        </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -131,8 +135,8 @@
                             <td>
                                 
                                     <!--call modal-->
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#trans{{payment.id}}">
-                                        Transaction Details
+                                    <button class="btn  btn-labeled btn-primary btn-sm" data-toggle="modal" data-target="#trans{{payment.id}}">
+                                       <span class="btn-label"> <i class="fa fa-eye" aria-hidden="true"></i></span> Transaction Details
                                     </button>
                                     <!--view details-->
                                     <div class="modal fade modal-success in" id="trans{{payment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -193,6 +197,10 @@
                                                         </div>
                                                        
                                                     </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default"  data-dismiss="modal" aria-label="Close">
+                                                            Close
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -206,7 +214,8 @@
                             {% if payment.delivery_schedule != None %}
                             <td>
                                 <div class="btn-group">
-                                <button type="button" class="btn btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">View Schedule</button>
+                                <button type="button" class="btn btn-labeled btn-purple btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">
+                                   <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View Schedule</button>
                                 </div>
                             </td>
                             {% else %}
@@ -321,7 +330,7 @@
                                             {%endif%} 
                                         </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-default" style="background-color: lightslategray;" data-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="btn btn-default"  data-dismiss="modal" aria-label="Close">
                                                     Close
                                                 </button>
     
@@ -332,6 +341,19 @@
                                 </div>
                             </div>
                             <!--End View Modal-->
+                            <script>
+                                $('body').click(function (event) {
+                                    if(!$(event.target).closest('#view{{payment.id}}').length && !$(event.target).is('#view{{payment.id}}')) {
+                                        $("#view{{payment.id}}").modal('hide');
+                                    }
+                                    if(!$(event.target).closest('#trans{{payment.id}}').length && !$(event.target).is('#trans{{payment.id}}')) {
+                                        $("#trans{{payment.id}}").modal('hide');
+                                    }if(!$(event.target).closest('#schedule{{payment.id}}').length && !$(event.target).is('#schedule{{payment.id}}')) {
+                                        $("#schedule{{payment.id}}").modal('hide');
+                                    }
+                                     
+                                });
+                            </script>   
                         {% endfor %}
                     </tbody>
                 </table>
