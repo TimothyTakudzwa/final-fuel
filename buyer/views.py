@@ -1114,7 +1114,7 @@ def proof_of_payment(request, id):
                 action = "Uploading Proof of Payment"
                 description = f"You have uploaded proof of payment for transaction of {transaction.offer.quantity}L {transaction.offer.request.fuel_type}"
                 Activity.objects.create(company=request.user.company, user=request.user, action=action,
-                                        description=description, reference_id=transaction.id)
+                                        description=description, reference_id=account_history.id)
                 messages.success(request, 'Proof of payment successfully uploaded.')
                 return redirect('buyer-transactions')
         else:
@@ -1133,7 +1133,7 @@ def delivery_note(request, id):
             action = "Uploading Delivery Note"
             description = f"You have uploaded d-note for transaction of {payment.transaction.offer.quantity}L {payment.transaction.offer.request.fuel_type}"
             Activity.objects.create(company=request.user.company, user=request.user, action=action,
-                                    description=description, reference_id=payment.transaction.id)
+                                    description=description, reference_id=payment.id)
             messages.success(request, 'Delivery note successfully uploaded.')
             return redirect(f'/buyer/payment_release_notes/{payment.transaction.id}')
         else:
@@ -1151,6 +1151,20 @@ def download_release_note(request, id):
     else:
         messages.warning(request, 'Document not found.')
         return redirect(f'/buyer:payment_release_notes/{document.transaction.id}')
+    return response
+
+
+@login_required()
+def download_d_note(request, id):
+    user_permission(request)
+    document = AccountHistory.objects.filter(id=id).first()
+    if document:
+        filename = document.delivery_note.name.split('/')[-1]
+        response = HttpResponse(document.delivery_note, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document not found.')
+        return redirect('buyer:activity')
     return response
 
 @login_required()
@@ -1276,7 +1290,21 @@ def company_profile(request):
 @user_role
 def activity(request):
     current_activities = Activity.objects.filter(user=request.user, date=today).all()
+    for activity in current_activities:
+        if activity.action == 'Fuel Request':
+            activity.request_object = FuelRequest.objects.filter(id=activity.reference_id).first()
+        elif activity.action == 'Accepting Offer':
+            activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+        elif activity.action == 'Rejecting Offer':
+            activity.roffer_object = Offer.objects.filter(id=activity.reference_id).first()
     activities = Activity.objects.exclude(date=today).filter(user=request.user)
+    for activity in activities:
+        if activity.action == 'Fuel Request':
+            activity.request_object = FuelRequest.objects.filter(id=activity.reference_id).first()
+        elif activity.action == 'Accepting Offer':
+            activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+        elif activity.action == 'Rejecting Offer':
+            activity.roffer_object = Offer.objects.filter(id=activity.reference_id).first()
     return render(request, 'buyer/activity.html', {'activities': activities, 'current_activities': current_activities})
 
 
@@ -1320,3 +1348,16 @@ def edit_branch(request, id):
         branch.save()
         messages.success(request, 'Branch details updated successfully.')
         return redirect('buyer:delivery-branches')
+
+
+
+def download_proof(request, id):
+    document = AccountHistory.objects.filter(id=id).first()
+    if document:
+        filename = document.proof_of_payment.name.split('/')[-1]
+        response = HttpResponse(document.proof_of_payment, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    else:
+        messages.warning(request, 'Document not found.')
+        return redirect('buyer:activity')
+    return response

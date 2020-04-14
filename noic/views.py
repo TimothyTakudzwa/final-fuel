@@ -527,22 +527,21 @@ def staff(request):
         while User.objects.filter(username=username.lower()).exists():
             username = initial_username + str(i)
             i += 1
-        user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
+        new_user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
                                    first_name=first_name, last_name=last_name, user_type='NOIC_STAFF', email=email,
                                    phone_number=phone_number, password_reset=True)
-        user.set_password(password)
+        new_user.set_password(password)
         depot = NoicDepot.objects.filter(id=subsidiary_id).first()
         depot.is_active = True
         depot.save()
 
         action = "Creating Staff"
-        description = f"You have created user {user.first_name} for {depot.name}"
-        Activity.objects.create(depot=depot, user=user,
-                                    action=action, description=description, reference_id=user.id)
-        if message_is_send(request, user, password):
-            if user.is_active:
-                user.stage = 'menu'
-                user.save()
+        description = f"You have created user {new_user.first_name} for {depot.name}"
+        Activity.objects.create(depot=depot, user=request.user, action=action, description=description, reference_id=user.id, created_user=new_user)
+        if message_is_send(request, new_user, password):
+            if new_user.is_active:
+                new_user.stage = 'menu'
+                new_user.save()
 
             else:
                 messages.warning(request, f"Oops , something went wrong, please try again.")
