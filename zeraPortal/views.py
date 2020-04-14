@@ -245,7 +245,7 @@ def block_company(request, id):
         Activity.objects.create(company=company, user=request.user, action=action, description=description,
                                 reference_id=company.id)
         messages.success(request, f'{company.name.title()} successfully blocked and deactivated its {users.count()} users.')
-        return redirect('zeraPortal:dashboard')
+        return redirect('zeraPortal:dashboard') 
 
 
 @login_required()
