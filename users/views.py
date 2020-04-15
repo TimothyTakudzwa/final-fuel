@@ -1397,9 +1397,9 @@ def message_is_send(request, user, password):
     return render(request, 'buyer/send_email.html')
 
 
-@login_required()
+# @login_required()
 def message_is_sent(request, user, password):
-    user_permission(request)
+    # user_permission(request)
     sender = "intelliwhatsappbanking@gmail.com"
     subject = 'Fuel Finder Registration'
     message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: {password} \n\nPlease download the Fuel Finder mobile app on PlayStore and login to start looking for fuel. \n. "
@@ -1411,7 +1411,7 @@ def message_is_sent(request, user, password):
     except Exception as e:
         # messages.warning(request, f"Oops , Something Wen't Wrong sending email, Please make sure you have Internet access")
         return False
-    return render(request, 'buyer/send_email.html')
+
 
 
 @login_required()
