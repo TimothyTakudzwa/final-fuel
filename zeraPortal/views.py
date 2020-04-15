@@ -222,7 +222,7 @@ def add_supplier_admin(request, id):
         action = "Creating Supplier Admin"
         description = f"You have created supplier admin for {new_user.first_name} for {company.name}"
         Activity.objects.create(company=company, user=request.user, action=action, description=description,
-                                reference_id=user.id, created_user=new_user)
+                                reference_id=request.user.id, created_user=new_user)
         messages.success(request, 'User successfully created.')
         return redirect('zeraPortal:dashboard')
 
