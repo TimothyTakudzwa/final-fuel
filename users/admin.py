@@ -5,4 +5,4 @@ from .models import Audit_Trail, SordActionsAuditTrail
 # Register your models here.
 admin.site.register(Audit_Trail)
 admin.site.register(SordActionsAuditTrail)
-
+admin.site.register(Activity)
