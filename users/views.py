@@ -778,7 +778,7 @@ def allocation_update_main(request, id):
 
             messages.success(request, 'Fuel allocation successfull.')
             service_station = Subsidiaries.objects.filter(id=fuel_update.subsidiary.id).first()
-            reference = 'fuel allocation'
+            reference = 'sfuel allocation'
             reference_id = fuel_update.id
             action = f"You have allocated {request.POST['fuel_type']} quantity of {int(request.POST['quantity'])}L @ {fuel_update.petrol_price} "
             Audit_Trail.objects.create(company=request.user.company, service_station=service_station, user=request.user,
@@ -1308,7 +1308,44 @@ def depots(request):
 @user_role
 def audit_trail(request):
     trails = Audit_Trail.objects.exclude(date=today).filter(company=request.user.company)
+    for activity in trails:
+        if activity.reference == 'offers':
+            activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'sfuel allocation':
+            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'fuel allocation':
+            activity.fuel_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'sprices updates':
+            activity.prices_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'prices updates':
+            activity.prices_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'pfuel quantity updates':
+            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'dfuel quantity updates':
+            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+
+            
+
+
     current_trails = Audit_Trail.objects.filter(company=request.user.company, date=today).all()
+    for activity in trails:
+        if activity.reference == 'offers':
+            activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'sfuel allocation':
+            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'fuel allocation':
+            activity.fuel_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'sprices updates':
+            activity.prices_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'prices updates':
+            activity.prices_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'pfuel quantity updates':
+            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'dfuel quantity updates':
+            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+
+
+
     return render(request, 'users/audit_trail.html', {'trails': trails, 'current_trails': current_trails})
 
 
@@ -1616,7 +1653,7 @@ def edit_fuel_prices(request, id):
             prices_update.save()
             messages.success(request, 'Prices of fuel updated successfully.')
             service_station = Subsidiaries.objects.filter(id=prices_update.subsidiary.id).first()
-            reference = 'prices updates'
+            reference = 'sprices updates'
             reference_id = prices_update.id
             action = f"You have changed petrol price to {request.POST['petrol_price']} and diesel price to {request.POST['diesel_price']} "
             Audit_Trail.objects.create(company=request.user.company, service_station=service_station, user=request.user,

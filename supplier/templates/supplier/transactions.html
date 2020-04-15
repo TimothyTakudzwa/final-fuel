@@ -106,7 +106,8 @@
                                 {% endif %}
                                 {% if transaction.offer.delivery_method == 'DELIVERY' %}
                                 <td>
-                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'supplier:payment_history' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Schedules</a>
+                                    <a class="btn btn-labeled btn-success btn-sm" data-toggle="modal" href="{%url 'supplier:payment_history' transaction.id %}">
+                                        <span class="btn-label"><i class="fa fa-eye"></i></span> Payments & Schedules</a>
                                 </td>
                                 {% else %}
                                     <td>
@@ -210,8 +211,8 @@
                                 </td>
                                 <td>
                                     {% if transaction.is_complete and not transaction.review %}
-                                        <a class="btn btn-danger btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
-                                            Rate {{transaction.buyer.company.name}}
+                                        <a class="btn btn-labeled btn-danger btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
+                                           <span class="btn-label"><i class="fa fa-sticky-note" aria-hidden="true"></i></span> Rate {{transaction.buyer.company.name}}
                                         </a>
                                     {% elif not transaction.is_complete %}
                                         Incomplete
@@ -270,10 +271,13 @@
                                                         <label>Comment</label>
                                                         <input type="text" name="comment" class="form-control"/>
                                                     </div>
-                                                    <div class="modal-footer">
-                                                        <input class="btn btn-info" type="submit" value="Submit">
-                                                    </div>
+                                                    
                                                 </form>
+                                                <div class="modal-footer">
+                                                    <input class="btn btn-info" type="submit" value="Submit">
+                                                    <button class="btn btn-default" data-dismiss="modal">Close</button>
+
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -446,12 +450,10 @@
 
                                                 </div>
 
-                                                <div class="modal-footer">
-                                                    <div class="row pull-left">
-
-                                                        <button type="submit" class="btn btn-primary col-sm-12" style="margin-left: 15px;">Create Schedule</button>
-                                                    </div>
-                                                </div>
+                                                <div class="modal-footer">  
+                                                    <button type="submit" class="btn btn-primary ">Submit</button>
+                                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                </div> 
 
 
                                             </form>
@@ -534,14 +536,36 @@
                                                     <input type="date" name="release_date" class="form-control"  required/>
                                                 </div>
                                                 <br>
-                                                <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+                                            
 
                                             </form>
+                                            <div class="modal-footer" style="margin-top: 40px;">  
+                                                <button type="submit" class="btn btn-primary ">Submit</button>
+                                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                            </div> 
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <!--End Upload Document-->
+
+                            <script>
+                                $('body').click(function (event) {
+                                    if(!$(event.target).closest('#review_{{transaction.id}}').length && !$(event.target).is('#review_{{transaction.id}}')) {
+                                        $("#review_{{transaction.id}}").modal('hide');
+                                    }
+                                    if(!$(event.target).closest('#view{{transaction.id}}').length && !$(event.target).is('#view{{transaction.id}}')) {
+                                        $("#view{{transaction.id}}").modal('hide');
+                                    }if(!$(event.target).closest('#release_note{{transaction.id}}').length && !$(event.target).is('#release_note{{transaction.id}}')) {
+                                        $("#release_note{{transaction.id}}").modal('hide');
+                                    }if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
+                                        $("#state_modal").modal('hide');
+                                    }if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
+                                        $("#state_modal").modal('hide');
+                                    }
+                                     
+                                });
+                            </script>      
                       
                         {%endfor%}
                 </tbody>
@@ -627,7 +651,8 @@
                                 {% endif %}
                                 {% if transaction.offer.delivery_method == 'DELIVERY' %}
                                 <td>
-                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'supplier:payment_history' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Schedules</a>
+                                    <a class="btn btn-labeled btn-success btn-sm"  href="{%url 'supplier:payment_history' transaction.id %}">
+                                    <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> Payments & Schedules</a>
                                 </td>
                                 {% else %}
                                     <td>
@@ -645,16 +670,19 @@
                                             {% if transaction.offer.delivery_method == 'DELIVERY' %}
                                                 <td>
                                                     <div class="btn-group">
-                                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button>
+                                                        <button type="button" class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">
+                                                         <span class="btn-label"><i class="fa fa-plus"></i></span> Create Schedule</button>
                                                     </div>
                                                 </td>
                                             {% else %}
-                                                    <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">Release Note</button></td>
+                                                    <td><button type="button" class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">
+                                                        <span class="btn-label"><i class="fa fa-eye"></i></span> Release Note</button></td>
                                             {% endif %}
                                         {% else %}
                                             <td>
                                                 <div class="btn-group">
-                                                    <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'supplier:mark_completion' transaction.id %}" >Complete</a>
+                                                    <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'supplier:mark_completion' transaction.id %}">
+                                                    <span class="btn-label"> <i class="fa-check-o-circle"></i></span> Complete</a>
                                                 </div>
                                             </td>
                                         {% endif %}
@@ -672,7 +700,8 @@
                                             {% if transaction.offer.delivery_method == 'DELIVERY' %}
                                                 <td>
                                                     <div class="btn-group">
-                                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">Create Schedule</button>
+                                                        <button type="button" class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">
+                                                            <span class="btn-label"><i class="fa fa-plus"></i></span>Create Schedule</button>
                                                     </div>
                                                 </td>
                                             {% else %}
@@ -731,8 +760,8 @@
                                 </td>
                                 <td>
                                     {% if transaction.is_complete and not transaction.review %}
-                                        <a class="btn btn-danger btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
-                                            Rate {{transaction.buyer.company.name}}
+                                        <a class="btn btn-labeled btn-danger btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
+                                            <span class="btn-label"> <i class="fa-sticky-note-o"></i></span> Rate Buyer
                                         </a>
                                     {% elif not transaction.is_complete %}
                                         Incomplete
@@ -787,12 +816,11 @@
                                                             <option value="5">*****</option>
                                                         </select>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <label>Comment</label>
-                                                        <input type="text" name="comment" class="form-control"/>
-                                                    </div>
+                                                    
                                                     <div class="modal-footer">
                                                         <input class="btn btn-info" type="submit" value="Submit">
+                                                        <button class="btn btn-default" data-dismiss="modal">Close</button>
+
                                                     </div>
                                                 </form>
                                             </div>
@@ -967,12 +995,10 @@
 
                                                 </div>
 
-                                                <div class="modal-footer">
-                                                    <div class="row pull-left">
-
-                                                        <button type="submit" class="btn btn-primary col-sm-12" style="margin-left: 15px;">Create Schedule</button>
-                                                    </div>
-                                                </div>
+                                                <div class="modal-footer">  
+                                                    <button type="submit" class="btn btn-primary ">Submit</button>
+                                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                </div> 
 
 
                                             </form>
@@ -1052,14 +1078,35 @@
                                                     <input type="date" name="release_date" class="form-control"  required/>
                                                 </div>
                                                 <br>
-                                                <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+                                                
 
                                             </form>
+                                            <div class="modal-footer" style="margin-top: 40px;">  
+                                                <button type="submit" class="btn btn-primary ">Submit</button>
+                                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                            </div> 
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <!--End Upload Document-->
+                            <script>
+                                $('body').click(function (event) {
+                                    if(!$(event.target).closest('#review_{{transaction.id}}').length && !$(event.target).is('#review_{{transaction.id}}')) {
+                                        $("#review_{{transaction.id}}").modal('hide');
+                                    }
+                                    if(!$(event.target).closest('#view{{transaction.id}}').length && !$(event.target).is('#view{{transaction.id}}')) {
+                                        $("#view{{transaction.id}}").modal('hide');
+                                    }if(!$(event.target).closest('#release_note{{transaction.id}}').length && !$(event.target).is('#release_note{{transaction.id}}')) {
+                                        $("#release_note{{transaction.id}}").modal('hide');
+                                    }if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
+                                        $("#state_modal").modal('hide');
+                                    }if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
+                                        $("#state_modal").modal('hide');
+                                    }
+                                     
+                                });
+                            </script>    
                       
                         {%endfor%}
                 </tbody>

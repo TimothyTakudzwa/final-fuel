@@ -56,7 +56,17 @@ def orders(request):
 @user_role
 def activity(request):
     activities = Activity.objects.filter(user=request.user, date=today).all()
+    for activity in activities:
+        if activity.action == 'Updating Prices':
+            activity.fuel_update= DepotFuelUpdate.objects.filter(depot__id=activity.reference_id).first()
+        else:
+            pass
     old_activities = Activity.objects.exclude(date=today).filter(user=request.user)
+    for activity in old_activities:
+        if activity.action == 'Updating Prices':
+            activity.fuel_update= DepotFuelUpdate.objects.filter(depot__id=activity.reference_id).first()
+        else:
+            pass
     return render(request, 'noic/activity.html', {'activities': activities, 'old_activities': old_activities})
 
 
@@ -231,10 +241,10 @@ def delete_depot(request, id):
         if NoicDepot.objects.filter(id=id).exists():
             depot_update = NoicDepot.objects.filter(id=id).first()
             depot_update.delete()
-            action = "Deleting Depot"
-            description = f"You have deleted NOIC Depot {depot_update.name}"
-            Activity.objects.create(depot=depot_update, user=request.user,
-                                        action=action, description=description, reference_id=depot_update.id)
+            # action = "Deleting Depot"
+            # description = f"You have deleted NOIC Depot {depot_update.name}"
+            # Activity.objects.create(depot=depot_update, user=request.user,
+            #                             action=action, description=description, reference_id=depot_update.id)
             messages.success(request, 'Depot deleted successfully.')
             return redirect('noic:depots')
 
@@ -261,7 +271,7 @@ def fuel_update(request, id):
 
                     action = "Fuel Allocation"
                     description = f"You have allocated fuel to {fuel_update.depot.name}"
-                    Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                    Activity.objects.create(fuel_type='Petrol', quantity=float(request.POST['quantity']), currency='USD', price= fuel_update.usd_petrol_price, depot=fuel_update.depot, user=request.user,
                                         action=action, description=description, reference_id=fuel_update.id)
                     messages.success(request, 'Updated petrol quantity successfully.')
                     return redirect('noic:dashboard')
@@ -276,7 +286,7 @@ def fuel_update(request, id):
 
                     action = "Fuel Allocation"
                     description = f"You have allocated fuel to {fuel_update.depot.name}"
-                    Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                    Activity.objects.create(fuel_type='Petrol', quantity=float(request.POST['quantity']), currency='RTGS', price= fuel_update.rtgs_petrol_price, depot=fuel_update.depot, user=request.user,
                                         action=action, description=description, reference_id=fuel_update.id)
                     messages.success(request, 'Updated petrol quantity successfully.')
                     return redirect('noic:dashboard')
@@ -293,7 +303,7 @@ def fuel_update(request, id):
 
                     action = "Fuel Allocation"
                     description = f"You have allocated fuel to {fuel_update.depot.name}"
-                    Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                    Activity.objects.create(fuel_type='Diesel', quantity=float(request.POST['quantity']), currency='USD', price= fuel_update.usd_diesel_price, depot=fuel_update.depot, user=request.user,
                                         action=action, description=description, reference_id=fuel_update.id)
                     messages.success(request, 'Updated diesel quantity successfully.')
                     return redirect('noic:dashboard')
@@ -307,12 +317,12 @@ def fuel_update(request, id):
                     fuel_update.save()
                     action = "Fuel Allocation"
                     description = f"You have allocated fuel to {fuel_update.depot.name}"
-                    Activity.objects.create(depot=fuel_update.depot, user=request.user,
+                    Activity.objects.create(fuel_type='Diesel', quantity=float(request.POST['quantity']), currency='RTGS', price= fuel_update.rtgs_diesel_price, depot=fuel_update.depot, user=request.user,
                                         action=action, description=description, reference_id=fuel_update.id)
                     messages.success(request, 'Updated diesel quantity successfully.')
                     return redirect('noic:dashboard')
 
-
+ 
 @login_required()
 def edit_prices(request, id):
     user_permission(request)
@@ -522,22 +532,21 @@ def staff(request):
         while User.objects.filter(username=username.lower()).exists():
             username = initial_username + str(i)
             i += 1
-        user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
+        new_user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
                                    first_name=first_name, last_name=last_name, user_type='NOIC_STAFF', email=email,
                                    phone_number=phone_number, password_reset=True)
-        user.set_password(password)
+        new_user.set_password(password)
         depot = NoicDepot.objects.filter(id=subsidiary_id).first()
         depot.is_active = True
         depot.save()
 
         action = "Creating Staff"
-        description = f"You have created user {user.first_name} for {depot.name}"
-        Activity.objects.create(depot=depot, user=request.user,
-                                    action=action, description=description, reference_id=user.id)
-        if message_is_send(request, user, password):
-            if user.is_active:
-                user.stage = 'menu'
-                user.save()
+        description = f"You have created user {new_user.first_name} for {depot.name}"
+        Activity.objects.create(depot=depot, user=request.user, action=action, description=description, reference_id=user.id, created_user=new_user)
+        if message_is_send(request, new_user, password):
+            if new_user.is_active:
+                new_user.stage = 'menu'
+                new_user.save()
 
             else:
                 messages.warning(request, f"Oops , something went wrong, please try again.")

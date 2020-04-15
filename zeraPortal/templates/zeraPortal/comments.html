@@ -70,8 +70,9 @@
                             {% endif %}
 
                             <td>
-                            <button class="btn btn-primary btn-sm" data-toggle="modal"
-                            data-target="#comments_{{subsidiary.id}}">View Comments</button>
+                            <button class="btn btn-labeled btn-primary btn-sm" data-toggle="modal"
+                            data-target="#comments_{{subsidiary.id}}">
+                            <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View Comments</button>
                             </td>
                            
                         </tr>
@@ -182,7 +183,7 @@
                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                            <span class="modal-title">Comments </span>
                        </div>
-                           <div class="modal-body" style="min-height: 20px;">
+                           <div class="modal-body">
                                <div class="col-md-12">
                                     
                                     <div style="background-color: mintcream; padding-top: 10px; padding-bottom: 30px;margin-bottom: 10px;">
@@ -211,13 +212,17 @@
                                 
                                 {% endfor %}
                                </div>
+                               
                             </div>
-                            <div class="text-center" style="margin-top: 30px;">
-                            <a href="{% url 'zeraPortal:sub_comments' subsidiary.id %}" type="button" class="btn btn-labeled btn-success m-b-5">
-                                <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span>View All Comments
-                            </a>
-                                
-                            </div>
+                            <div class="modal-footer" style="position: fixed;bottom: 0;right: 0;width: 100%;">
+                                <a href="{% url 'zeraPortal:sub_comments' subsidiary.id %}" type="button" class="btn btn-labeled btn-success m-b-5">
+                                    <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span>View All Comments
+                                </a>  
+                                    
+                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                            </div> 
+
+                            
                    </div>
                </div>
                </div>

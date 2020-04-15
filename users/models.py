@@ -47,11 +47,16 @@ class Audit_Trail(models.Model):
 class Activity(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True, null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='creator')
+    created_user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, blank=True, null=True)
     subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.DO_NOTHING, blank=True, null=True)
     depot = models.ForeignKey(NoicDepot, on_delete=models.DO_NOTHING, blank=True, null=True)
     action = models.CharField(max_length=700, blank=True, null=True)
+    fuel_type = models.CharField(max_length=700, blank=True, null=True)
+    quantity =  models.FloatField(default=0.00)
+    currency = models.CharField(max_length=700, blank=True, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     description = models.CharField(max_length=700, blank=True, null=True)
     reference_id = models.PositiveIntegerField(default=0)
 

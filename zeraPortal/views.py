@@ -190,7 +190,7 @@ def edit_company(request, id):
 
 @login_required()
 def add_supplier_admin(request, id):
-    user_permission(request)
+    # user_permission(request)
     company = Company.objects.filter(id=id).first()
     print('hhhhhhhhhhh is co', company.name)
     first_name = request.POST['first_name']
@@ -212,17 +212,17 @@ def add_supplier_admin(request, id):
             username = initial_username + str(i)
             i += 1
         password = random_password()
-        user = User.objects.create(company=company, first_name=first_name, last_name=last_name, email=email,
+        new_user = User.objects.create(company=company, first_name=first_name, last_name=last_name, email=email,
                                    phone_number=phone_number.replace(' ', ''),
                                    user_type='S_ADMIN', is_active=True, username=username.lower(), password_reset=True)
-        user.set_password(password)
-        user.save()
-        message_is_sent(request, user, password)
+        new_user.set_password(password)
+        new_user.save()
+        message_is_sent(request, new_user, password)
 
         action = "Creating Supplier Admin"
-        description = f"You have created supplier admin for {user.first_name} for {company.name}"
+        description = f"You have created supplier admin for {new_user.first_name} for {company.name}"
         Activity.objects.create(company=company, user=request.user, action=action, description=description,
-                                reference_id=user.id)
+                                reference_id=user.id, created_user=new_user)
         messages.success(request, 'User successfully created.')
         return redirect('zeraPortal:dashboard')
 
@@ -231,16 +231,21 @@ def add_supplier_admin(request, id):
 def block_company(request, id):
     user_permission(request)
     company = Company.objects.filter(id=id).first()
+    
     if request.method == 'POST':
         company.is_active = False
         company.save()
+        users = User.objects.filter(company=company)
+        for user in users:
+            user.is_active = False
+            user.save()
 
         action = "Blocking Company"
-        description = f"You have blocked supplier company {company.name}"
+        description = f"You have blocked supplier company {company.name} and its {users.count()} users."
         Activity.objects.create(company=company, user=request.user, action=action, description=description,
                                 reference_id=company.id)
-        messages.success(request, f'{company.name.title()} successfully blocked.')
-        return redirect('zeraPortal:dashboard')
+        messages.success(request, f'{company.name.title()} successfully blocked and deactivated its {users.count()} users.')
+        return redirect('zeraPortal:dashboard') 
 
 
 @login_required()
@@ -250,12 +255,16 @@ def unblock_company(request, id):
     if request.method == 'POST':
         company.is_active = True
         company.save()
+        users = User.objects.filter(company=company)
+        for user in users:
+            user.is_active = True
+            user.save()
 
         action = "Unblocking Company"
-        description = f"You have unblocked supplier company {company.name}"
+        description = f"You have unblocked supplier company {company.name} and reactivated {users.count()} users."
         Activity.objects.create(company=company, user=request.user, action=action, description=description,
                                 reference_id=company.id)
-        messages.success(request, f'{company.name.title()} successfully unblocked.')
+        messages.success(request, f'{company.name.title()} successfully unblocked and activated its {users.count()} users')
         return redirect('zeraPortal:dashboard')
 
 

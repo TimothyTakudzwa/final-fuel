@@ -618,7 +618,7 @@ def offer(request, id):
                     action = f"{request.user}  made an offer of {offer_quantity}L @ {request.POST.get('price')} to a request made by {fuel_request.name.username}"
                     service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
                     reference = 'offers'
-                    reference_id = fuel_request.id
+                    reference_id = offer.id
                     Audit_Trail.objects.create(company=request.user.company, service_station=service_station,
                                                user=request.user, action=action, reference=reference,
                                                reference_id=reference_id)
@@ -626,7 +626,7 @@ def offer(request, id):
                     action = "Making Offer"
                     description = f"You have made an offer of {offer_quantity}L @ {request.POST.get('price')} to a request made by {fuel_request.name.company.name}"
                     Activity.objects.create(company=request.user.company, user=request.user, action=action,
-                                            description=description, reference_id=reference_id)
+                                            description=description, reference_id=offer.id)
                     return redirect('fuel-request')
                 else:
                     messages.warning(request, 'You can not make an offer greater than the requested fuel quantity.')
@@ -840,10 +840,10 @@ def complete_transaction(request, id):
                 transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Petrol', payment_type,
                                         transaction)
 
-                action = "Approving Payment"
-                description = f"You have approved payment for fuel from {transaction.buyer.company.name}"
-                Activity.objects.create(company=request.user.company, user=request.user, action=action,
-                                        description=description, reference_id=transaction.id)
+                # action = "Approving Payment"
+                # description = f"You have approved payment for fuel from {transaction.buyer.company.name}"
+                # Activity.objects.create(company=request.user.company, user=request.user, action=action,
+                #                         description=description, reference_id=transaction.id)
 
                 messages.success(request,
                                  "Proof of payment approved!, please create a delivery schedule for the buyer or upload a release note.")
@@ -892,10 +892,10 @@ def complete_transaction(request, id):
                 transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Diesel', payment_type,
                                         transaction)
 
-                action = "Approving Payment"
-                description = f"You have approved payment for fuel from {transaction.buyer.company.name}"
-                Activity.objects.create(company=request.user.company, user=request.user, action=action,
-                                        description=description, reference_id=transaction.id)
+                # action = "Approving Payment"
+                # description = f"You have approved payment for fuel from {transaction.buyer.company.name}"
+                # Activity.objects.create(company=request.user.company, user=request.user, action=action,
+                #                         description=description, reference_id=transaction.id)
 
                 messages.success(request,
                                  "Proof of payment approved!, please create a delivery schedule for the buyer.")
@@ -962,7 +962,7 @@ def client_transaction_history(request, id):
     trns = Transaction.objects.filter(supplier=request.user, buyer__company=client.buyer_company)
     transactions = []
     for tran in trns:
-        tran.revenue = tran.offer.request.amount * tran.offer.price
+        tran.revenue = float(tran.offer.request.amount) * float(tran.offer.price)
         transactions.append(tran)
 
     return render(request, 'supplier/client_activity.html', {'transactions': transactions, 'client': client,
@@ -1141,7 +1141,7 @@ def create_delivery_schedule(request):
         action = "Creating Delivery Schedule"
         description = f"You have created delivery schedule for {transaction.buyer.company.name}"
         Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description,
-                                reference_id=transaction.id)
+                                reference_id=schedule.id)
         messages.success(request, "Schedule successfully created.")
         message = f"{schedule.transaction.supplier.company} has created a delivery schedule for you, click to view schedule"
         Notification.objects.create(user=schedule.transaction.buyer, action='schedule', message=message,
@@ -1239,7 +1239,7 @@ def upload_release_note(request, id):
         action = "Creating Release Note"
         description = f"You have created release note for {transaction.buyer.company.name}"
         Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description,
-                                reference_id=transaction.id)
+                                reference_id=payment_history.id)
         messages.success(request, "Release note successfully created.")
         return redirect(f'/supplier/payment-and-release-notes/{transaction.id}')
 
@@ -1311,7 +1311,7 @@ def supplier_release_note(request, id):
         action = "Creating Release Note"
         description = f"You have created release note for {transaction.buyer.company.name}"
         Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description,
-                                reference_id=transaction.id)
+                                reference_id=payment_history.id)
         messages.success(request, "Release note successfully uploaded.")
         return redirect(f'/supplier/payment-and-release-notes/{id}')
 
@@ -1368,6 +1368,29 @@ def download_release_note(request, id):
 @user_role
 def activity(request):
     activities = Activity.objects.exclude(date=today).filter(user=request.user)
+    for activity in activities:
+        if activity.action == 'Making Offer':
+            activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+        elif activity.action == 'Updating Fuel Stocks':
+            activity.fuel_object = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.action == 'Creating Delivery Schedule':
+            activity.delivery = DeliverySchedule.objects.filter(id=activity.reference_id).first()
+            activity.depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+        elif activity.action == 'Updating Delivery Schedule':
+            activity.delivery = DeliverySchedule.objects.filter(id=activity.reference_id).first()
+            activity.depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+        
     current_activities = Activity.objects.filter(user=request.user, date=today).all()
+    for activity in current_activities:
+        if activity.action == 'Making Offer':
+            activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+        elif activity.action == 'Updating Fuel Stocks':
+            activity.fuel_object = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.action == 'Creating Delivery Schedule':
+            activity.delivery = DeliverySchedule.objects.filter(id=activity.reference_id).first()
+            activity.depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+        elif activity.action == 'Updating Delivery Schedule':
+            activity.delivery = DeliverySchedule.objects.filter(id=activity.reference_id).first()
+            activity.depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     return render(request, 'supplier/activity.html', {'activities': activities, 'depot': depot, 'current_activities': current_activities})

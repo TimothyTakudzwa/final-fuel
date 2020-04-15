@@ -72,8 +72,8 @@
 
                         
                       
-                      <td><button class="btn btn-primary" data-toggle="modal" data-target="#additonal_information{{delivery.id}}">
-                        More Info
+                      <td><button class="btn btn-labeled btn-primary" data-toggle="modal" data-target="#additonal_information{{delivery.id}}">
+                        <span class="btn-label"><i class="fa fa-info" aria-hidden="true"></i></span> More Info
                         </button></td>
                     </tr>
                     <div class="modal fade modal-success in" id="edit_delivery_{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -126,6 +126,11 @@
                                   </div>
                                   
                                   </div>
+
+                                  <div class="modal-footer">  
+                                    
+                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                </div>   
                           </div>
 
                           <div class="modal-footer">
@@ -170,6 +175,7 @@
                                             <p class="col-md-6">{{delivery.transaction.offer.request.fuel_type}}</p>
                                         {% endif %}    
 
+                                        
 
                                     </div>
                                     <div class="row" style="padding: 10px;">
@@ -234,7 +240,12 @@
                                         {%else %}
                                         <p class="col-md-6">Status: Pending </p>    
                                         {% endif %} 
-                                    </div>           
+                                    </div>       
+                                    <div class="modal-footer">  
+                                    
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div>   
+
 
                                 </div>
                                 </div>
@@ -325,6 +336,15 @@
 
                     
 
+                    <script>
+                        $('body').click(function (event) {
+                            if(!$(event.target).closest('#additonal_information{{delivery.id}}').length && !$(event.target).is('#additonal_information{{delivery.id}}')) {
+                                $("#additonal_information{{delivery.id}}").modal('hide');
+                            }
+                              
+                        });
+                    </script>
+
 
                     {%endfor%}
                 </tbody>
@@ -383,8 +403,8 @@
 
                         
                       
-                      <td><button class="btn btn-primary" data-toggle="modal" data-target="#additonal_information{{delivery.id}}">
-                        More Info
+                      <td><button class="btn btn-labeled btn-primary" data-toggle="modal" data-target="#additonal_information{{delivery.id}}">
+                        <span class="btn-label"><i class="fa fa-info" aria-hidden="true"></i></span> More Info
                         </button></td>
                     </tr>
                     <div class="modal fade modal-success in" id="edit_delivery_{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -627,6 +647,14 @@
 
                     
 
+                    <script>
+                        $('body').click(function (event) {
+                            if(!$(event.target).closest('#additonal_information{{delivery.id}}').length && !$(event.target).is('#additonal_information{{delivery.id}}')) {
+                                $("#additonal_information{{delivery.id}}").modal('hide');
+                            }
+                             
+                        });
+                    </script>
 
                     {%endfor%}
                 </tbody>
