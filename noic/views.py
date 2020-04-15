@@ -62,6 +62,11 @@ def activity(request):
         else:
             pass
     old_activities = Activity.objects.exclude(date=today).filter(user=request.user)
+    for activity in old_activities:
+        if activity.action == 'Updating Prices':
+            activity.fuel_update= DepotFuelUpdate.objects.filter(depot__id=activity.reference_id).first()
+        else:
+            pass
     return render(request, 'noic/activity.html', {'activities': activities, 'old_activities': old_activities})
 
 
