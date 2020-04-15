@@ -231,16 +231,21 @@ def add_supplier_admin(request, id):
 def block_company(request, id):
     user_permission(request)
     company = Company.objects.filter(id=id).first()
+    
     if request.method == 'POST':
         company.is_active = False
         company.save()
+        users = User.objects.filter(company=company)
+        for user in users:
+            user.is_active = False
+            user.save()
 
         action = "Blocking Company"
-        description = f"You have blocked supplier company {company.name}"
+        description = f"You have blocked supplier company {company.name} and its {users.count()} users."
         Activity.objects.create(company=company, user=request.user, action=action, description=description,
                                 reference_id=company.id)
-        messages.success(request, f'{company.name.title()} successfully blocked.')
-        return redirect('zeraPortal:dashboard')
+        messages.success(request, f'{company.name.title()} successfully blocked and deactivated its {users.count()} users.')
+        return redirect('zeraPortal:dashboard') 
 
 
 @login_required()
@@ -250,12 +255,16 @@ def unblock_company(request, id):
     if request.method == 'POST':
         company.is_active = True
         company.save()
+        users = User.objects.filter(company=company)
+        for user in users:
+            user.is_active = True
+            user.save()
 
         action = "Unblocking Company"
-        description = f"You have unblocked supplier company {company.name}"
+        description = f"You have unblocked supplier company {company.name} and reactivated {users.count()} users."
         Activity.objects.create(company=company, user=request.user, action=action, description=description,
                                 reference_id=company.id)
-        messages.success(request, f'{company.name.title()} successfully unblocked.')
+        messages.success(request, f'{company.name.title()} successfully unblocked and activated its {users.count()} users')
         return redirect('zeraPortal:dashboard')
 
 
