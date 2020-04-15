@@ -190,13 +190,13 @@ def edit_company(request, id):
 
 @login_required()
 def add_supplier_admin(request, id):
-    # user_permission(request)
+    user_permission(request)
     company = Company.objects.filter(id=id).first()
     print('hhhhhhhhhhh is co', company.name)
-    first_name = request.POST['first_name']
-    last_name = request.POST['last_name']
-    email = request.POST['email']
-    phone_number = request.POST['phone_number']
+    first_name = request.POST.get('first_name')
+    last_name = request.POST.get('last_name')
+    email = request.POST.get('email')
+    phone_number = request.POST.get('phone_number')
     check_email = User.objects.filter(email=email).exists()
     is_valid = validate_email(email, verify=True)
     if check_email:
