@@ -190,7 +190,7 @@ def edit_company(request, id):
 
 @login_required()
 def add_supplier_admin(request, id):
-    user_permission(request)
+    # user_permission(request)
     company = Company.objects.filter(id=id).first()
     print('hhhhhhhhhhh is co', company.name)
     first_name = request.POST['first_name']
