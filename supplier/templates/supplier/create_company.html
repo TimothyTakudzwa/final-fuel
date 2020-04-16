@@ -42,7 +42,18 @@
                     {% csrf_token %}
                         {% if user_type == 'BUYER' %}
                             {{ form.company_name|as_crispy_field }}
-                            <div class="col-sm-12" name="city">
+                            <div class="row form-group">
+                                <div class="form-group col-sm-4">
+                                    <label for="">Street Number</label>
+                                    <input type="text" class="form-control" name="street_number" value="" required>
+            
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label for="">Street Name</label>
+                                    <input type="text" class="form-control" name="street_name" value="" required>
+            
+                                </div>
+                            <div class="col-sm-4" name="city">
                                 <label>City</label>
                                 <select class="form-control" name="city">
                                     {% for citi in zimbabwean_towns %}
@@ -50,6 +61,7 @@
                                     {% endfor %}
                                 </select>
                             </div>
+                           </div>
                             {{ form.address|as_crispy_field }}
                             {{ form.is_govnt_org|as_crispy_field }}
                             {{ form.logo|as_crispy_field }}
