@@ -226,7 +226,8 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                         {% if company.check_admin %}
                         <td>Active</td>
                         {% else %}
-                        <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_user{{company.id}}">Assign Admin</button></td>
+                        <td><button type="button" class="btn btn-primary btn-labeled" data-toggle="modal" data-target="#add_user{{company.id}}">
+                            <span class="btn-label"><i class="fa fa-user-plus" aria-hidden="true"></i></span> Assign Admin</button></td>
                         {% endif %}
                         {% if company.is_active == True %}
                         <td style="width: 220px;">
@@ -348,10 +349,11 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
 
                                  </div>  
                                 
-                            <div class="form-group row" style="margin-left: 2%; margin-right: 8%; margin-top: 8%; margin-bottom: 8%;">
-                                <button type="button" class="btn btn-secondary col-sm-6"
+                            <div class="modal-footer" >
+                                <button type="submit" class="btn btn-primary">Save</button>
+
+                                <button type="button" class="btn btn-secondary"
                                     data-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary col-sm-6">Save</button>
                             </div>
                                 </form>
                         </div>
@@ -424,6 +426,21 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                 </div>
                 </div>
                 <!--End edit modal-->
+                <script>
+                    $('body').click(function (event) {
+                        if(!$(event.target).closest('#add_user{{company.id}}').length && !$(event.target).is('#add_user{{company.id}}')) {
+                            $("add_user{{company.id}}").modal('hide');
+                        }
+                        if(!$(event.target).closest('#block_{{company.id}}').length && !$(event.target).is('#block_{{company.id}}')) {
+                            $("#block_{{company.id}}").modal('hide');
+                        }
+                        if(!$(event.target).closest('#unblock_{{company.id}}').length && !$(event.target).is('#unblock_{{company.id}}')) {
+                            $("#unblock_{{company.id}}").modal('hide');
+                        }
+
+                    });
+                </script>
+
                     {% endfor %}
                 </tbody>
             </table>
@@ -436,4 +453,14 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
     </div>
     </div>
     </div>
+    <script>
+        $('body').click(function (event) {
+            if(!$(event.target).closest('#company_registration').length && !$(event.target).is('#company_registration')) {
+                $("#company_registration").modal('hide');
+            }
+            if(!$(event.target).closest('#edit_{{fuel.id}}').length && !$(event.target).is('#edit_{{fuel.id}}')) {
+                $("#edit_{{fuel.id}}").modal('hide');
+            }   
+        });
+    </script>
 {% endblock %}
