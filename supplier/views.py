@@ -201,9 +201,9 @@ def create_company(request, id):
             if user_type == 'BUYER':
                 company_name = request.POST.get('company_name')
                 city = request.POST.get('city')
-                street_number = request.POST.get('street_number')
-                street_name = request.POST.get('street_name')
-                address = street_number + street_name + city
+                # street_number = request.POST.get('street_number')
+                # street_name = request.POST.get('street_name')
+                # address = street_number + street_name + city
                 is_govnt_org = request.POST.get('is_govnt_org')
                 logo = request.FILES.get('logo')
                 company_name = user.company.name
