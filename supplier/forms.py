@@ -56,7 +56,7 @@ class UserUpdateForm(forms.ModelForm):
 
 class CreateCompany(forms.ModelForm):
     company_name = forms.CharField(required=True)
-    address = forms.CharField(required=True)
+    #address = forms.CharField(required=True)
     is_govnt_org = forms.CharField(label='Government Organisation?',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
    
 
