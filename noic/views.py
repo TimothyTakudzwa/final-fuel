@@ -237,11 +237,12 @@ def delete_depot(request, id):
     if request.method == 'POST':
         if NoicDepot.objects.filter(id=id).exists():
             depot_update = NoicDepot.objects.filter(id=id).first()
-            depot_update.delete()
             activities = Activity.objects.filter(description=f"You have created another NOIC Depot {depot_update.name}, depot=depot_update",reference_id=depot_update.id )
             for activity in activities:
                 activity.delete()
-            # action = "Deleting Depot"
+            depot_update.delete()
+            
+            # action = "Deleting Depot" 
             # description = f"You have deleted NOIC Depot {depot_update.name}"
             # Activity.objects.create(depot=depot_update, user=request.user,
             #                             action=action, description=description, reference_id=depot_update.id)
