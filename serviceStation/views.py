@@ -78,7 +78,7 @@ def fuel_updates(request):
         sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Petrol')
         messages.success(request, 'Updated petrol quantitY successfully.')
         service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-        reference = 'fuel quantity updates'
+        reference = 'pfuel quantity updates'
         reference_id = updates.id
         action = f"{request.user.username} has made an update of petrol quantity to {updates.petrol_quantity}L @ {updates.petrol_price}"
         Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
@@ -108,7 +108,7 @@ def update_diesel(request, id):
         sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Diesel')
         messages.success(request, 'Updated diesel quantitY successfully.')
         service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-        reference = 'fuel quantity updates'
+        reference = 'dfuel quantity updates'
         reference_id = diesel_update.id
         action = f"{request.user.username} has made an update of diesel quantity to {diesel_update.diesel_quantity}L @ {diesel_update.diesel_price}"
         Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)

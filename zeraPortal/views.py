@@ -193,10 +193,10 @@ def add_supplier_admin(request, id):
     user_permission(request)
     company = Company.objects.filter(id=id).first()
     print('hhhhhhhhhhh is co', company.name)
-    first_name = request.POST['first_name']
-    last_name = request.POST['last_name']
-    email = request.POST['email']
-    phone_number = request.POST['phone_number']
+    first_name = request.POST.get('first_name')
+    last_name = request.POST.get('last_name')
+    email = request.POST.get('email')
+    phone_number = request.POST.get('phone_number')
     check_email = User.objects.filter(email=email).exists()
     is_valid = validate_email(email, verify=True)
     if check_email:
@@ -222,7 +222,7 @@ def add_supplier_admin(request, id):
         action = "Creating Supplier Admin"
         description = f"You have created supplier admin for {new_user.first_name} for {company.name}"
         Activity.objects.create(company=company, user=request.user, action=action, description=description,
-                                reference_id=user.id, created_user=new_user)
+                                reference_id=request.user.id, created_user=new_user)
         messages.success(request, 'User successfully created.')
         return redirect('zeraPortal:dashboard')
 

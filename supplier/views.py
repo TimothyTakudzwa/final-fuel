@@ -618,7 +618,7 @@ def offer(request, id):
                     action = f"{request.user}  made an offer of {offer_quantity}L @ {request.POST.get('price')} to a request made by {fuel_request.name.username}"
                     service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
                     reference = 'offers'
-                    reference_id = fuel_request.id
+                    reference_id = offer.id
                     Audit_Trail.objects.create(company=request.user.company, service_station=service_station,
                                                user=request.user, action=action, reference=reference,
                                                reference_id=reference_id)
@@ -892,10 +892,10 @@ def complete_transaction(request, id):
                 transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Diesel', payment_type,
                                         transaction)
 
-                action = "Approving Payment"
-                description = f"You have approved payment for fuel from {transaction.buyer.company.name}"
-                Activity.objects.create(company=request.user.company, user=request.user, action=action,
-                                        description=description, reference_id=transaction.id)
+                # action = "Approving Payment"
+                # description = f"You have approved payment for fuel from {transaction.buyer.company.name}"
+                # Activity.objects.create(company=request.user.company, user=request.user, action=action,
+                #                         description=description, reference_id=transaction.id)
 
                 messages.success(request,
                                  "Proof of payment approved!, please create a delivery schedule for the buyer.")

@@ -133,6 +133,45 @@
                                                 
                                                 {% endif %}
                                             </tr>
+
+                                            <div class="modal fade modal-success in" id="accept_offer{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                            aria-hidden="true" style="overflow-y: initial !important;" >
+                                            <div class="modal-dialog modal-notice">
+                                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                    <span class="modal-title">Offer Info</span>
+                                                </div>
+                                                <div class="modal-body" style="padding: 30px;overflow-y: auto;">
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Fuel Type: </p>
+                                                        <p class="col-md-6">{{ activity.offer_object.request.fuel_type }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Quantity: </p>
+                                                        <p class="col-md-6">{{ activity.offer_object.quantity }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Currency </p>
+                                                        <p class="col-md-6">{{activity.offer_object.request.payment_method }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Delivery Method: </p>
+                                                        <p class="col-md-6">{{activity.offer_object.request.delivery_method}}</p>
+                                                    </div>
+                                                   
+                                                    
+                                                    <div class="modal-footer">  
+                                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                    </div>    
+                    
+                                                </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+
+
                                             <div class="modal fade modal-success in" id="stock{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                                             aria-hidden="true" style="overflow-y: initial !important;" >
                                             <div class="modal-dialog modal-notice">
@@ -445,6 +484,46 @@
                                                 
                                                 {% endif %}
                                             </tr>
+
+
+                                            <div class="modal fade modal-success in" id="accept_offer{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                            aria-hidden="true" style="overflow-y: initial !important;" >
+                                            <div class="modal-dialog modal-notice">
+                                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                    <span class="modal-title">Offer Info</span>
+                                                </div>
+                                                <div class="modal-body" style="padding: 30px;overflow-y: auto;">
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Fuel Type: </p>
+                                                        <p class="col-md-6">{{ activity.offer_object.request.fuel_type }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Quantity: </p>
+                                                        <p class="col-md-6">{{ activity.offer_object.quantity }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Currency </p>
+                                                        <p class="col-md-6">{{activity.offer_object.request.payment_method }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Delivery Method: </p>
+                                                        <p class="col-md-6">{{activity.offer_object.request.delivery_method}}</p>
+                                                    </div>
+                                                   
+                                                    
+                                                    <div class="modal-footer">  
+                                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                    </div>    
+                    
+                                                </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+
+
                                             <div class="modal fade modal-success in" id="stock{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                                             aria-hidden="true" style="overflow-y: initial !important;" >
                                             <div class="modal-dialog modal-notice">
