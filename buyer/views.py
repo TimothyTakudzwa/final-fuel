@@ -30,7 +30,7 @@ from .constants import sample_data
 from .forms import BuyerRegisterForm, PasswordChange, FuelRequestForm, PasswordChangeForm, LoginForm
 from .models import FuelRequest, DeliveryBranch
 from .models import FuelRequest
-from .decorators import user_role, user_permission
+from .decorators import user_role, user_permission, ias_user_role
 
 user = get_user_model()
 today = date.today()
@@ -78,6 +78,8 @@ def login_user(request):
                 return redirect("noicDepot:orders")
         elif current_user.user_type == 'NOIC_ADMIN':
             return redirect("noic:dashboard")
+        elif current_user.user_type == 'IAS':
+            return redirect("buyer:approve_companies")
     else:
         # signing in
         if request.method == 'POST':
@@ -123,6 +125,8 @@ def login_user(request):
                                 return redirect("noicDepot:orders")
                         elif current_user.user_type == 'NOIC_ADMIN':
                             return redirect("noic:dashboard")
+                        elif current_user.user_type == 'IAS':
+                            return redirect("buyer:approve_companies")
                     # wrong password
                     else:
                         messages.info(request, 'Wrong password.')
@@ -138,7 +142,31 @@ def login_user(request):
                 return redirect('login')
     return render(request, 'buyer/signin.html', context=context)
 
+@login_required
+@ias_user_role
+def approve_companies(request):
+    companies = Company.objects.filter(~Q(company_type='SUPPLIER')).all()
+    return render(request, 'buyer/approve_companies.html', {'companies': companies})
 
+
+def activate_company(request, id):
+    company = Company.objects.filter(id=id).first()
+    company_rep = User.objects.filter(company=company).first()
+    company.is_active = True
+    company_rep.is_active = True
+    company.is_verified = True
+    company.save()
+    company_rep.save()
+    messages.success(request, f"Company {company.name} and its rep {company_rep.name} acivated successfully.")
+    return redirect('buyer:approve_companies')
+
+def decline_company(request, id):
+    company = Company.objects.filter(id=id).first()
+    company_rep = User.objects.filter(company=company).first()
+    company.declined = True
+    company.save()
+    messages.warning(request, f"Company {company.name} and its rep {company_rep.name} declined.")
+    return redirect('buyer:approve_companies')
 """
 
 The function is responsible for sending emails after successful completions of stage one registration

@@ -110,6 +110,7 @@ TYPE_CHOICES = (
     ('SS_SUPPLIER', 'Service Station Rep'),
     ('ZERA', 'ZERA'),
     ('NOIC_ADMIN', 'NOIC_ADMIN'),
+    ('IAS', 'IAS'),
     ('NOIC_STAFF', 'NOIC_STAFF')
 
 )
