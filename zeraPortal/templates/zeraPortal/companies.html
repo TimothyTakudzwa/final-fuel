@@ -226,7 +226,8 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                         {% if company.check_admin %}
                         <td>Active</td>
                         {% else %}
-                        <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_user{{company.id}}">Assign Admin</button></td>
+                        <td><button type="button" class="btn btn-primary btn-labeled" data-toggle="modal" data-target="#add_user{{company.id}}">
+                            <span class="btn-label"><i class="fa fa-user-plus" aria-hidden="true"></i></span> Assign Admin</button></td>
                         {% endif %}
                         {% if company.is_active == True %}
                         <td style="width: 220px;">
