@@ -41,7 +41,9 @@ urlpatterns = [
     path('download_pop/<int:id>', views.download_pop, name='download_pop'),
     path('download_proof/<int:id>', views.download_proof, name='download_proof'),
     path('company_profile/', views.company_profile, name='company_profile'),
-    path('activity/', views.activity, name='activity')
+    path('activity/', views.activity, name='activity'),
+    path('approve_companies/', views.approve_companies, name='approve_companies')
+    
 
     
 

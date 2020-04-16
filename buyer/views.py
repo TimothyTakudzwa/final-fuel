@@ -139,6 +139,10 @@ def login_user(request):
     return render(request, 'buyer/signin.html', context=context)
 
 
+def approve_companies(request):
+    companies = Company.objects.filter(company_type='CORPORATE').all()
+    return render(request, 'buyer/approve_companies.html', {'companies': companies})
+
 """
 
 The function is responsible for sending emails after successful completions of stage one registration
