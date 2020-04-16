@@ -184,7 +184,7 @@
                                                         <div class="row">
                                                             <div class="form-group col-md-6">
                                                                 <label>Name</label>
-                                                                <input type="text" name="name" class="form-control" value="{{station.name}}" required/>
+                                                                <input type="text" name="name" class="form-control" value="{{station.name}}" required>
                                                             </div>
 
                                                             <div class="form-group col-md-6">
@@ -407,12 +407,12 @@
                                     <div class="row">
                                         <div class="form-group col-md-6">
                                             <label>Name</label>
-                                            <input type="text" name="name" class="form-control" value=" " />
+                                            <input type="text" name="name" class="form-control" value=" " required>
                                         </div>
 
                                         <div class="form-group col-md-6" name="license" id="license">
                                             <label><b>Licence Number</b></label>
-                                            <input type="text" name="licence" class="form-control" value=" " />
+                                            <input type="text" name="licence" class="form-control" value=" " required>
                                         </div>
 
 
@@ -421,9 +421,13 @@
                                     <div class="row">
                                         <div class="form-group col-md-6" name="city" id="city">
                                             <label><b>City</b></label>
-                                            <select class="form-control" name="city">
+                                            <select class="form-control" name="city" required>
                                                 {% for citi in zimbabwean_towns %}
+                                                    {% if citi == "Select City ---" %}
+                                                    <option disabled selected value>{{citi}}</option>
+                                                    {% else %}
                                                     <option >{{citi}}</option>
+                                                    {% endif %}
                                                 {% endfor %}
                                             </select>
                                         </div>
@@ -431,7 +435,7 @@
 
                                         <div class="form-group col-md-6" name="harare" id="harare">
                                             <label><b>Location</b></label>
-                                            <select class="form-control" name="location">
+                                            <select class="form-control" name="location" required>
                                                 {% for location in Harare %}
                                                     <option >{{location}}</option>
                                                 {% endfor %}
@@ -440,7 +444,7 @@
 
                                         <div class="form-group col-md-6" name="bulawayo" id="bulawayo">
                                             <label><b>Location</b></label>
-                                            <select class="form-control" name="location">
+                                            <select class="form-control" name="location" required>
                                                 {% for locationn in Bulawayo %}
                                                     <option >{{locationn}}</option>
                                                 {% endfor %}
@@ -449,7 +453,7 @@
 
                                         <div class="form-group col-md-6" name="mutare" id="mutare">
                                             <label><b>Location</b></label>
-                                            <select class="form-control" name="location">
+                                            <select class="form-control" name="location" required>
                                                 {% for loc in Mutare %}
                                                     <option >{{loc}}</option>
                                                 {% endfor %}
@@ -458,7 +462,7 @@
 
                                         <div class="form-group col-md-6" name="gweru" id="gweru">
                                             <label><b>Location</b></label>
-                                            <select class="form-control" name="location">
+                                            <select class="form-control" name="location" required>
                                                 {% for locationy in Gweru %}
                                                     <option >{{locationy}}</option>
                                                 {% endfor %}
@@ -466,7 +470,7 @@
                                         </div>
                                         <div class="form-group col-md-6" id="default_location">
                                             <label>Location</label>
-                                            <input type="text" name="location" class="form-control" value=" " />
+                                            <input type="text" name="location" class="form-control" value=" " required/>
                                         </div>
                                     </div>
 
@@ -474,7 +478,7 @@
 
                                         <div class="form-group col-md-6">
                                             <label><b>Bank</b></label>
-                                            <select class="form-control" name="destination_bank">
+                                            <select class="form-control" name="destination_bank" required>
 
                                                 <option >CBZ</option>
                                                 <option >BancABC</option>
@@ -498,7 +502,7 @@
 
                                         <div class="form-group col-md-6">
                                             <label>Account</label>
-                                            <input type="text" name="account_number" class="form-control" value=" " />
+                                            <input type="text" name="account_number" class="form-control" value=" " required/>
                                         </div>
                                     </div>
 
@@ -506,27 +510,17 @@
 
                                         <div class="form-group col-md-6">
                                             <label>PRAZ Reg Number</label>
-                                            <input type="text" name="praz" class="form-control" value=" " />
+                                            <input type="text" name="praz" class="form-control" value=" " required/>
                                         </div>
 
 
                                         <div class="form-group col-md-6">
                                             <label>VAT Number</label>
-                                            <input type="text" name="vat" class="form-control" value=" " />
+                                            <input type="text" name="vat" class="form-control" value=" " required/>
                                         </div>
                                     </div>
 
-                                    <div class="row">
-                                        <div class="form-group col-md-6">
-                                            <label>Opening Time</label>
-                                            <input type="time" name="opening_time" class="form-control" />
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label>Closing Time</label>
-                                            <input type="time" name="closing_time" class="form-control" />
-                                        </div>
-                                    </div>
-
+                                
                                     <!--staff allocation-->
 {#                                    <div class="row">#}
 {#                                        <div class="col-md-12">#}
