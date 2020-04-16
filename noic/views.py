@@ -179,14 +179,11 @@ def depots(request):
         account_number = request.POST['account_number']
         praz_reg_num = request.POST['praz']
         vat = request.POST['vat']
-        opening_time = request.POST['opening_time']
-        closing_time = request.POST['closing_time']
         license_num = request.POST['licence']
         depot = NoicDepot.objects.create(is_active=True, license_num=license_num, praz_reg_num=praz_reg_num,
                                                  vat=vat, account_number=account_number,
                                                  destination_bank=destination_bank, city=city, address=location,
-                                                name=name,
-                                                 opening_time=opening_time, closing_time=closing_time)
+                                                name=name)
         depot.save()
 
         depot_id = depot.id
