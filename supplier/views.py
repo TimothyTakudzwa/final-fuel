@@ -211,7 +211,7 @@ def create_company(request, id):
                                                                  is_govnt_org=is_govnt_org)
                 DeliveryBranch.objects.create(name='main branch', street_number=street_number, street_name=street_name,
                                                 city=city, company=user.company, description='Main Branch')
-                # messages.success(request, 'Company registerd successfully.')
+                messages.success(request, 'Company registerd successfully.')
                 return redirect('home')
 
             else:
