@@ -62,7 +62,7 @@
                                 </select>
                             </div>
                            </div>
-                           
+                            {{ form.address|as_crispy_field }}
                             {{ form.is_govnt_org|as_crispy_field }}
                             {{ form.logo|as_crispy_field }}
                         {% else %}
