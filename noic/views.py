@@ -183,8 +183,7 @@ def depots(request):
         depot = NoicDepot.objects.create(is_active=True, license_num=license_num, praz_reg_num=praz_reg_num,
                                                  vat=vat, account_number=account_number,
                                                  destination_bank=destination_bank, city=city, address=location,
-                                                name=name,
-                                                 opening_time=opening_time, closing_time=closing_time)
+                                                name=name)
         depot.save()
 
         depot_id = depot.id
