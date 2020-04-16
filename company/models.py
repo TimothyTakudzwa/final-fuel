@@ -23,6 +23,7 @@ class Company(models.Model):
     contact_person = models.CharField(max_length=500, null=True, default='')
     vat_number = models.CharField(max_length=500, null=True, default='')
     phone_number = models.CharField(max_length=500, null=True, default='')
+    declined = models.BooleanField(default=False)
 
     
     def __str__(self):

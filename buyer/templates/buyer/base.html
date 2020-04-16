@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load crispy_forms_tags %}
+<!-- Mirrored from thememinister.com/health/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 13 Jan 2020 08:23:49 GMT -->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>ZFMS</title>
+
+    <!-- Favicon and touch icons -->
+    <link rel="shortcut icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png"
+        type="image/x-icon">
+    <!-- Start Global Mandatory Style
+   =====================================================================-->
+    <!-- jquery-ui css -->
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/jquery-ui-1.12.1/jquery-ui.min.css"
+        rel="stylesheet" type="text/css" />
+    <!-- Bootstrap -->
+    <link href="https://timothytakudzwa.github.io/static/new/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+        type="text/css" />
+    <!-- Bootstrap rtl -->
+    <!--<link href="https://timothytakudzwa.github.io/static/new/assets/bootstrap-rtl/bootstrap-rtl.min.css" rel="stylesheet" type="text/css"/>-->
+    <!-- Lobipanel css -->
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/lobipanel/lobipanel.min.css"
+        rel="stylesheet" type="text/css" />
+    <!-- Pace css -->
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/pace/flash.css" rel="stylesheet"
+        type="text/css" />
+    <!-- Font Awesome -->
+    <link href="https://timothytakudzwa.github.io/static/new/assets/font-awesome/css/font-awesome.min.css"
+        rel="stylesheet" type="text/css" />
+    <!-- Pe-icon -->
+    <link href="https://timothytakudzwa.github.io/static/new/assets/pe-icon-7-stroke/css/pe-icon-7-stroke.css"
+        rel="stylesheet" type="text/css" />
+    <!-- Datatables  -->
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css" rel="stylesheet" type="text/css"/> -->
+    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet"
+        type="text/css" />
+    <!-- Themify icons -->
+    <link href="https://timothytakudzwa.github.io/static/new/assets/themify-icons/themify-icons.css" rel="stylesheet"
+        type="text/css" />
+    <!-- End Global Mandatory Style
+        =====================================================================-->
+    <!-- Start page Label Plugins 
+        =====================================================================-->
+    <!-- Toastr css -->
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/toastr/toastr.css" rel="stylesheet"
+        type="text/css" />
+    <!-- Emojionearea -->
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/emojionearea/emojionearea.min.css"
+        rel="stylesheet" type="text/css" />
+    <!-- Monthly css -->
+    <link href="https://timothytakudzwa.github.io/static/new/assets/plugins/monthly/monthly.css" rel="stylesheet"
+        type="text/css" />
+    <!-- End page Label Plugins 
+        =====================================================================-->
+    <!-- Start Theme Layout Style
+        =====================================================================-->
+    <!-- Theme style -->
+    <link href="https://timothytakudzwa.github.io/static/new/assets/dist/css/stylehealth.min.css" rel="stylesheet"
+        type="text/css" />
+        <link href="https://timothytakudzwa.github.io/static/new/assets/notification.css" rel="stylesheet"
+        type="text/css" />    
+    <!--<link href="https://timothytakudzwa.github.io/static/new/assets/dist/css/stylehealth-rtl.css" rel="stylesheet" type="text/css"/>-->
+    <!-- End Theme Layout Style
+        =====================================================================-->
+</head>
+
+<body class="hold-transition sidebar-mini">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+        <header class="main-header">
+            <a href="" class="logo">
+                <!-- Logo -->
+                <span class="logo-mini">
+                    <!--<b>A</b>H-admin-->
+
+                </span>
+                <span class="logo-lg">
+                    <!--<b>Admin</b>H-admin-->
+                    <h1 style="text-align: left;">ZFMS</h1>
+                </span>
+            </a>
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top ">
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <!-- Sidebar toggle button-->
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="fa fa-tasks"></span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <!-- Notifications -->
+                        <!-- <li class="dropdown notifications-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="pe-7s-bell"></i>
+                                <span class="label label-warning" id="notification_count">0</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="header"><i class="fa fa-bell"></i>Notifications</li>
+                                <li>
+                                    <ul class="menu">
+                                        <li>
+                                        <a href="#" class="border-gray"><i class="fa fa-inbox"></i> Inbox  <span class=" label-success label label-default pull-right">0</span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                               <li class="footer">
+                               <a href="#"> See all Notifications <i class=" fa fa-arrow-right"></i></a>
+                                </li>
+                            </ul>
+                        </li> -->
+                        <li class="nav-item dropdown">
+                            <!-- <a class="nav-link" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="fa fa-bell"></i>
+                              {% if num_of_new_orders != 0 %}
+                              <span class="notification">{{num_of_new_orders}}</span>
+                              {%else%}
+                              <span class="notification">0</span>
+
+                              {% endif %}
+                            </a> -->
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="pe-7s-bell"></i>
+                                <span class="label label-warning">{{num_of_new_orders}}</span>
+                            </a>
+                            <ul class="dropdown-menu notification_menu">
+                                <li class="header notification_header"><i class="fa fa-bell"></i>  {% if num_of_new_orders != 0 %} {{num_of_new_orders}}{%else%} No {%endif%} New Notifications</li>
+                                <li style="position: relative;
+                                    background: #e7e7e7;">
+                                    <div class="slimScrollDiv"
+                                        style="position: relative; overflow: hidden; width: auto; height: 200px;">
+                                        <ul class="menu notification_body">
+                                            <li>
+                                                <a href="#" class="border-gray notification_item"><i
+                                                        class="fa fa-inbox"></i> New Order - Total Zimbabwe <span
+                                                        class=" label-success label label-default pull-right">View</span></a>
+                                            </li>
+
+                                        </ul>
+                                        <div class="slimScrollBar"
+                                            style="background: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 144.928px;">
+                                        </div>
+                                        <div class="slimScrollRail"
+                                            style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;">
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="footer notification_footer">
+                                    <a href="#" class="notification_footer_item"> See all Notifications <i
+                                            class=" fa fa-arrow-right"></i></a>
+                                </li>
+                            </ul>
+
+                            <!-- <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                              {% for order in orders_notifications %}
+                              <a class="dropdown-item" href="{% url 'noicDepot:accepted_orders' %}">new fuel order {{order.company.name}}</a>
+                              {% endfor %}
+                            </div> -->
+                        </li>
+                        
+                        <li class="dropdown dropdown-user admin-user">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <div class="user-image">
+                                    <!-- <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar4.png"
+                                        class="img-circle" height="40" width="40" alt="User Image"> -->
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{%url 'buyer-profile'%}"><i class="fa fa-users"></i> User Profile</a></li>
+                                <li><a href="{%url 'bchange-password'%}"><i class="fa fa-gear"></i> Change Password</a></li>
+                                <li><a href="{%url 'buyer-logout'%}?next=/login"><i class="fa fa-sign-out"></i> Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- =============================================== -->
+        <!-- Left side column. contains the sidebar -->
+        <aside class="main-sidebar">
+            <!-- sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user panel -->
+                <div class="user-panel">
+                    <div class="image pull-left">
+                        <!-- <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar5.png"
+                            class="img-circle" alt="User Image"> -->
+                    </div>
+                    <div class="info">
+                        <h4>Welcome</h4>
+                        <p>{{ request.user.first_name }} {{ request.user.last_name}}</p>
+                    </div>
+                </div>
+             
+                <!-- sidebar menu -->
+                <ul class="sidebar-menu">
+                    <li class="nav-item {% if request.path == '/buyer/approve_companies' %} active {% endif %}  ">
+                        <a href="{%url 'buyer:approve_companies'%}"><i class="fa fa-hospital-o"></i><span>Corporates</span>
+                        </a>
+                    </li>
+                   
+
+
+                </ul>
+            </div> <!-- /.sidebar -->
+        </aside>
+        <!-- =============================================== -->
+        <!-- Content Wrapper. Contains page content -->
+        <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" type="text/javascript"></script>
+        <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" type="text/javascript"></script>
+        
+        <div class="content-wrapper">
+            <script>
+                $("document").ready(function(){
+                setTimeout(function(){
+                    $("div.alert").remove();
+                }, 3000 ); // 3 secs
+
+                });
+            </script>
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+            {% if messages %}
+        
+            {% for message in messages %}
+               
+                <div class="alert alert-{{ message.tags }}" style="text-align: center">
+                    {{ message }}
+                </div>
+                
+            {% endfor %}
+        
+        {% endif %}
+          {% block body %} {% endblock %}
+        
+        </div> <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs"> <b>Version</b> 1.0</div>
+            <strong>Copyright &copy; <b id="year_of_our_lord">2019</b> <a href="#">Intelli Africa Solutions</a>.</strong> All rights reserved.
+            </footer>
+        <!-- Modals  -->
+
+        <!-- Generic Fuel Finding Modal  -->
+
+    
+        <!--/ Generic Fuel Finding Modal  -->
+
+    </div> <!-- ./wrapper -->
+
+    <!-- ./wrapper -->
+    <!-- Start Core Plugins
+        =====================================================================-->
+    <!-- jQuery -->
+
+    <script>
+        var dt = new Date();
+        $('#year_of_our_lord').html(dt.getFullYear() + " " )
+    </script>  
+
+    <script>
+        $(document).ready(function () {
+            $('#delivery_schedule').DataTable(
+                {
+                "order": false
+                }
+            );
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#delivery').DataTable(
+                {
+                "order": false,
+                "columnDefs": [
+                {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 1 ],
+                "visible": false
+            }
+                    ]
+                }
+            );
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#accounts_table').DataTable({
+                "order" : false
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#offer').DataTable(
+                {
+                "order": false,
+                "columnDefs": [
+                {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 1 ],
+                "visible": false
+            }
+                    ]
+                }
+            );
+        });
+    </script>
+
+<script>
+    $(document).ready(function () {
+        $('#suppliers').DataTable({
+                "order" : false
+            });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#delivery_branches').DataTable({
+                "order" : false
+            });
+    });
+</script>
+
+   <script>
+        $(document).ready(function () {
+            $('#fuel_updates').DataTable({
+                "order": false,
+                "columnDefs": [
+                {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 1 ],
+                "visible": false
+            }
+                    ]
+                });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#payment_history').DataTable({
+                "order": false
+                });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#fuel_requests').DataTable(
+                {
+                "order": false,
+                "columnDefs": [
+                {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 1 ],
+                "visible": false
+            }
+                    ]
+                }
+            );
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#incomplete_trans').DataTable({
+                "order" : false
+            });
+        });
+    </script>
+    <!-- jquery-ui -->
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/jquery-ui-1.12.1/jquery-ui.min.js"
+        type="text/javascript"></script>
+    <!-- Bootstrap -->
+    <script src="https://timothytakudzwa.github.io/static/new/assets/bootstrap/js/bootstrap.min.js"
+        type="text/javascript"></script>
+    <!-- lobipanel -->
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/lobipanel/lobipanel.min.js"
+        type="text/javascript"></script>
+    <!-- Pace js -->
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/pace/pace.min.js"
+        type="text/javascript"></script>
+    <!-- SlimScroll -->
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/slimScroll/jquery.slimscroll.min.js"
+        type="text/javascript"></script>
+    <!-- FastClick -->
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/fastclick/fastclick.min.js"
+        type="text/javascript"></script>
+    <!-- Hadmin frame -->
+    <script src="https://timothytakudzwa.github.io/static/new/assets/dist/js/custom1.js"
+        type="text/javascript"></script>
+    <!-- End Core Plugins
+        =====================================================================-->
+    <!-- Start Page Lavel Plugins
+        =====================================================================-->
+    <!-- Toastr js -->
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/toastr/toastr.min.js"
+        type="text/javascript"></script>
+    <!-- Sparkline js -->
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/sparkline/sparkline.min.js"
+        type="text/javascript"></script>
+    <!-- Data maps js -->
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/d3.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/topojson.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/datamaps.all.min.js"
+        type="text/javascript"></script>
+    <!-- Counter js -->
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/counterup/waypoints.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/counterup/jquery.counterup.min.js"
+        type="text/javascript"></script>
+    <!-- ChartJs JavaScript -->
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/chartJs/Chart.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/emojionearea/emojionearea.min.js"
+        type="text/javascript"></script>
+    <!-- Monthly js -->
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/monthly/monthly.js"
+        type="text/javascript"></script>
+    <!-- Data maps -->
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/d3.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/topojson.min.js"
+        type="text/javascript"></script>
+    <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/datamaps/datamaps.all.min.js"
+        type="text/javascript"></script>
+
+    <!-- End Page Lavel Plugins
+        =====================================================================-->
+    <!-- Start Theme label Script
+        =====================================================================-->
+    <!-- Dashboard js -->
+    <script src="https://timothytakudzwa.github.io/static/new/assets/dist/js/custom.js" type="text/javascript"></script>
+    {% include 'session_security/all.html' %}
+
+    <!-- End Theme label Script
+        =====================================================================-->
+
+    <script>
+        "use strict"; // Start of use strict
+        // notification
+        function MyFunction(msg){
+            setTimeout(function() {
+                toastr.options = {
+                    closeButton: true,
+                    progressBar: true,
+                    showMethod: 'slideDown',
+                    timeOut: 10000
+                };
+                toastr.success("<a class='text-center' href='" + msg.url + "'>Click to View</a>", msg.notification);
+
+            }, 1300);
+            console.log("Tapinda")
+        }    
+    </script> 
+    
+    <script>
+        function incrementNotificationCount(){
+            $('#notification_count').text(parseInt($('#notification_count').text()) + 1);
+        }
+        $(document).ready(function () {
+          var logged_user = {{request.user.id}};
+          var socket = io.connect('https://dreamhub.co.zw/new_offer');
+        console.log(socket)
+
+        socket.on('new_offer', function (msg) {
+            if (logged_user == msg.user_id) {
+                MyFunction(msg);
+                console.log("Testing New Notification");
+                incrementNotificationCount();
+            }
+        });
+
+        socket.on('schedule', function (msg) {
+            MyFunction(msg);
+            console.log("Testing New Notification");
+            incrementNotificationCount();
+ 
+        });
+
+        });
+      </script> 
+
+
+</body>
+
+<!-- Mirrored from thememinister.com/health/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 13 Jan 2020 08:24:38 GMT -->
+
+</html>

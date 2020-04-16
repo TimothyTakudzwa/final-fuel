@@ -140,9 +140,28 @@ def login_user(request):
 
 
 def approve_companies(request):
-    companies = Company.objects.filter(company_type='CORPORATE').all()
+    companies = Company.objects.filter(~Q(company_type='SUPPLIER')).all()
     return render(request, 'buyer/approve_companies.html', {'companies': companies})
 
+
+def activate_company(request, id):
+    company = Company.objects.filter(id=id).first()
+    company_rep = User.objects.filter(company=company).first()
+    company.is_active = True
+    company_rep.is_active = True
+    company.is_verified = True
+    company.save()
+    company_rep.save()
+    messages.success(request, f"Company {company.name} and its rep {company_rep.name} acivated successfully.")
+    return redirect('buyer:approve_companies')
+
+def decline_company(request, id):
+    company = Company.objects.filter(id=id).first()
+    company_rep = User.objects.filter(company=company).first()
+    company.declined = True
+    company.save()
+    messages.warning(request, f"Company {company.name} and its rep {company_rep.name} declined.")
+    return redirect('buyer:approve_companies')
 """
 
 The function is responsible for sending emails after successful completions of stage one registration
