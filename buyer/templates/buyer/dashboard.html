@@ -479,7 +479,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="submit" name="WaitForOffer" class="btn btn-info btn-sm">Wait for Offer</button>
-                                            <button type="submit" name='Recommender' class="btn btn-primary btn-sm">System Generated</button>
+                                            <button type="submit" name='Recommender' class="btn btn-warning btn-sm">System Generated</button>
                                         </div>
                                         </form>
                                     </div>
@@ -504,7 +504,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <div method="POST">
+                                        <div class="row" style="margin-bottom: 30px;">
                                             <form method="POST">
                                                 {% csrf_token %}
                                                 <div class=" row col-sm-12">
@@ -633,7 +633,7 @@
                                                 </div>
                                                 <input type="hidden" value="{{data.subsidiary.id}}" name="company_id" />
                                         </div>
-                                        <div class="modal-footer justify-content-center">
+                                        <div class="modal-footer">
                                             <button type="submit" name="MakeDeal" class="btn btn-primary ">Submit
                                                 Request</button>
                                             </form>

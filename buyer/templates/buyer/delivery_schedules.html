@@ -98,9 +98,11 @@
                                                         {% if delivery.transaction.offer.dipping_stick_available %} Stick &nbsp; {% endif %}
                                                         {% if not delivery.transaction.offer.pump_available and not delivery.transaction.offer.meter_available and not delivery.transaction.offer.dipping_stick_available %} No Equipment {% endif %}
                                                     </td>
-                                                    <td><button class="btn btn-purple btn-sm" data-toggle="modal" data-target="#additonal_information{{delivery.id}}">View Information</button></td>
+                                                    <td><button class="btn btn-labeled btn-purple btn-sm" data-toggle="modal" data-target="#additonal_information{{delivery.id}}">
+                                                        <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View Information</button></td>
                                                     {% if not delivery.confirmation_date %}
-                                                        <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#upload_{{delivery.id}}">Confirm Delivery</button></td>
+                                                        <td><button class="btn btn-labeled btn-info btn-sm" data-toggle="modal" data-target="#upload_{{delivery.id}}">
+                                                            <span class="btn-label"><i class="fa fa-check-square" aria-hidden="true"></i></span> Confirm Delivery</button></td>
                                                     {% else %}
                                                         <td>Received</td>
                                                     {% endif %}
@@ -252,10 +254,10 @@
                                                         if(!$(event.target).closest('#additonal_information{{delivery.id}}').length && !$(event.target).is('#additonal_information{{delivery.id}}')) {
                                                             $("#additonal_information{{delivery.id}}").modal('hide');
                                                         }
-                                                        // k
-                                                        // if(!$(event.target).closest('#upload_{{order.allocation.id}}').length && !$(event.target).is('#upload_{{order.allocation.id}}')) {
-                                                        //     $("#upload_{{order.allocation.id}}").modal('hide');
-                                                        // }
+                                                        k
+                                                        if(!$(event.target).closest('#upload_{{delivery.id}}').length && !$(event.target).is('#upload_{{delivery.id}}')) {
+                                                            $("#upload_{{delivery.id}}").modal('hide');
+                                                        }
 
 
                                                     });
@@ -312,9 +314,11 @@
                                                         {% if not future_delivery.transaction.offer.pump_available and not delivery.transaction.offer.meter_available and not delivery.transaction.offer.dipping_stick_available %} No Equipment {% endif %}
                                                     </td>
                                                     <!-- <td>{{delivery.transport_company}}</td> -->
-                                                    <td><button class="btn btn-purple btn-sm" data-toggle="modal" data-target="#additonal_information{{future_delivery.id}}">View Information</button></td>
+                                                    <td><button class="btn btn-labeled btn-purple btn-sm" data-toggle="modal" data-target="#additonal_information{{future_delivery.id}}">
+                                                        <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View Information</button></td>
                                                     {% if not future_delivery.confirmation_date %}
-                                                        <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#upload_{{future_delivery.id}}">Confirm Delivery</button></td>
+                                                        <td><button class="btn btn-labeled btn-info btn-sm" data-toggle="modal" data-target="#upload_{{future_delivery.id}}">
+                                                            <span class="btn-label"><i class="fa fa-check-square" aria-hidden="true"></i></span> Confirm Delivery</button></td>
                                                     {% else %}
                                                         <td>Received</td>
                                                     {% endif %}
@@ -464,12 +468,11 @@
                                                 <script>
                                                     $('body').click(function (event) {
                                                         if(!$(event.target).closest('#additonal_information{{future_delivery.id}}').length && !$(event.target).is('#additonal_information{{future_delivery.id}}')) {
-                                                            $("#additonal_information{{delivery.id}}").modal('hide');
+                                                            $("#additonal_information{{future_delivery.id}}").modal('hide');
                                                         }
-                                                        // k
-                                                        // if(!$(event.target).closest('#upload_{{order.allocation.id}}').length && !$(event.target).is('#upload_{{order.allocation.id}}')) {
-                                                        //     $("#upload_{{order.allocation.id}}").modal('hide');
-                                                        // }
+                                                        if(!$(event.target).closest('#upload_{{future_delivery.id}}').length && !$(event.target).is('#upload_{{future_delivery.id}}')) {
+                                                            $("#upload_{{future_delivery.id}}").modal('hide');
+                                                        }
 
 
                                                     });
@@ -526,9 +529,11 @@
                                                         {% if not today_delivery.transaction.offer.pump_available and not delivery.transaction.offer.meter_available and not delivery.transaction.offer.dipping_stick_available %} No Equipment {% endif %}
                                                     </td>
                                                     <!-- <td>{{delivery.transport_company}}</td> -->
-                                                    <td><button class="btn btn-purple btn-sm" data-toggle="modal" data-target="#additonal_information{{today_delivery.id}}">View Information</button></td>
+                                                    <td><button class="btn btn-labeled btn-purple btn-sm" data-toggle="modal" data-target="#additonal_information{{today_delivery.id}}">
+                                                        <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View Information</button></td>
                                                     {% if not today_delivery.confirmation_date %}
-                                                        <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#upload_{{today_delivery.id}}">Confirm Delivery</button></td>
+                                                        <td><button class="btn btn-labeled btn-info btn-sm" data-toggle="modal" data-target="#upload_{{today_delivery.id}}">
+                                                            <span class="btn-label"><i class="fa fa-check-square" aria-hidden="true"></i></span> Confirm Delivery</button></td>
                                                     {% else %}
                                                         <td>Received</td>
                                                     {% endif %}
@@ -680,10 +685,9 @@
                                                         if(!$(event.target).closest('#additonal_information{{today_delivery.id}}').length && !$(event.target).is('#additonal_information{{today_delivery.id}}')) {
                                                             $("#additonal_information{{today_delivery.id}}").modal('hide');
                                                         }
-                                                        // k
-                                                        // if(!$(event.target).closest('#upload_{{order.allocation.id}}').length && !$(event.target).is('#upload_{{order.allocation.id}}')) {
-                                                        //     $("#upload_{{order.allocation.id}}").modal('hide');
-                                                        // }
+                                                        if(!$(event.target).closest('#upload_{{today_delivery.id}}').length && !$(event.target).is('#upload_{{today_delivery.id}}')) {
+                                                            $("#upload_{{today_delivery.id}}").modal('hide');
+                                                        }
 
 
                                                     });

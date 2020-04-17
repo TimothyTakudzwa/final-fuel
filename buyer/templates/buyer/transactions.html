@@ -290,8 +290,8 @@
                             {% endif %}
                             <td>
                                 {% if transaction.is_complete and not transaction.review %}
-                                    <a class="btn btn-danger btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
-                                        Rate {{transaction.supplier.company.name}}
+                                    <a class="btn btn-labeled btn-danger btn-sm" style="color: white;" data-toggle="modal" data-target="#review_{{transaction.id}}">
+                                        <span class="btn-label"><i class="fa fa-pencil" aria-hidden="true"></i></span> Rate Supplier
                                     </a>
                                 {% elif not transaction.is_complete %}
                                     Incomplete

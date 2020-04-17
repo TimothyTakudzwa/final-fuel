@@ -45,7 +45,8 @@
             </div>
         <div class="panel-body"> 
     
-            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#private_order_form" style="margin-bottom: 20px;">Place Private Request</button>
+            <button class="btn btn-labeled btn-primary btn-sm" data-toggle="modal" data-target="#private_order_form" style="margin-bottom: 20px;">
+                <span class="btn-label"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></span> Place Private Request</button>
 
             <script>
                 $(document).ready(function () {
@@ -171,7 +172,7 @@
                                                                 <div class="col-sm-6" id="transporter{{forloop.counter}}">
                                                                     <label class="form-group">Transporter</label>
                                                                     <input type="text" class="form-control" name="transporter" 
-                                                                    aria-describedby="helpId" >
+                                                                    aria-describedby="helpId" required>
                                                                 </div>
             
                                                                 <div class="col-sm-6" id="truck_reg{{forloop.counter}}">
@@ -245,6 +246,7 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="submit" name="WaitForOffer" class="btn btn-info btn-sm">Submit</button>
+                                                        <button class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
                                                     </div>
                                                     </form>
                                                 </div>
