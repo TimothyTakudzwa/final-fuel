@@ -69,6 +69,9 @@
                                 Dealer Margin ($)
                              </th>
                              <th>
+                                Sub Price ($)
+                             </th>
+                             <th>
                                 ZFMS ($)
                              </th>
                              <th>
@@ -88,6 +91,7 @@
                             <td>{{prices.usd_diesel_duty}}</td>
                             <td>{{prices.usd_diesel_oil_cmargin}}</td>
                             <td>{{prices.usd_diesel_dmargin}}</td>
+                            <td>{{prices.usd_diesel_pumpprice}}</td>
                             <td>{{prices.usd_zfms}}</td>
                             <td>{{prices.usd_diesel_price}}</td>
                             <td>
@@ -105,6 +109,7 @@
                             <td>{{prices.rtgs_diesel_duty}}</td>
                             <td>{{prices.rtgs_diesel_oil_cmargin}}</td>
                             <td>{{prices.rtgs_diesel_dmargin}}</td>
+                            <td>{{prices.rtgs_diesel_pumpprice}}</td>
                             <td>{{prices.rtgs_zfms}}</td>
                             <td>{{prices.rtgs_diesel_price}}</td>
                             <td>
@@ -122,6 +127,7 @@
                             <td>{{prices.usd_petrol_duty}}</td>
                             <td>{{prices.usd_petrol_oil_cmargin}}</td>
                             <td>{{prices.usd_petrol_dmargin}}</td>
+                            <td>{{prices.usd_petrol_pumpprice}}</td>
                             <td>{{prices.usd_zfms}}</td>
                             <td>{{prices.usd_petrol_price}}</td>
                             <td>
@@ -139,6 +145,7 @@
                             <td>{{prices.rtgs_petrol_duty}}</td>
                             <td>{{prices.rtgs_petrol_oil_cmargin}}</td>
                             <td>{{prices.rtgs_petrol_dmargin}}</td>
+                            <td>{{prices.rtgs_petrol_pumpprice}}</td>
                             <td>{{prices.rtgs_zfms}}</td>
                             <td>{{prices.rtgs_petrol_price}}</td>
                             <td>
@@ -199,8 +206,8 @@
                         <input type="text" name="dmargin" class="form-control" value="{{prices.usd_diesel_dmargin}}"  />
                     </div>
                     <div class="col-sm-6">
-                        <label><b style='color:#009688'>Total Price</b></label>
-                        <input type="text" name="price" class="form-control" value="{{prices.usd_diesel_price}}"  />
+                        <label><b style='color:#009688'>Sub Price</b></label>
+                        <input type="text" name="price" class="form-control" value="{{prices.usd_diesel_pumpprice}}"  />
                     </div>
 
                 </div>
@@ -259,8 +266,8 @@
                         <input type="text" name="dmargin" class="form-control" value="{{prices.rtgs_diesel_dmargin}}"  />
                     </div>
                     <div class="col-sm-6">
-                        <label><b style='color:#009688'>Total Price</b></label>
-                        <input type="text" name="price" class="form-control" value="{{prices.rtgs_diesel_price}}"  />
+                        <label><b style='color:#009688'>Sub Price</b></label>
+                        <input type="text" name="price" class="form-control" value="{{prices.rtgs_diesel_pumpprice}}"  />
                     </div>
 
                 </div>
@@ -323,8 +330,8 @@
                         <input type="text" name="dmargin" class="form-control" value="{{prices.usd_petrol_dmargin}}"  />
                     </div>
                     <div class="col-sm-6">
-                        <label><b style='color:#009688'>Total Price</b></label>
-                        <input type="text" name="price" class="form-control" value="{{prices.usd_petrol_price}}"  />
+                        <label><b style='color:#009688'>Sub Price</b></label>
+                        <input type="text" name="price" class="form-control" value="{{prices.usd_petrol_pumpprice}}"  />
                     </div>
 
                 </div>
@@ -387,8 +394,8 @@
                         <input type="text" name="dmargin" class="form-control" value="{{prices.rtgs_petrol_dmargin}}"  />
                     </div>
                     <div class="col-sm-6">
-                        <label><b style='color:#009688'>Total Price</b></label>
-                        <input type="text" name="price" class="form-control" value="{{prices.rtgs_petrol_price}}"  />
+                        <label><b style='color:#009688'>Sub Price</b></label>
+                        <input type="text" name="price" class="form-control" value="{{prices.rtgs_petrol_pumpprice}}"  />
                     </div>
 
                 </div>
