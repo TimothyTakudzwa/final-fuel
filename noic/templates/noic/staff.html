@@ -77,10 +77,11 @@
                                         </div>
                                     </div> 
                                     {% csrf_token %}
-                                        <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                                            <button type="button" class="btn btn-secondary col-sm-6"
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary">Add User Profile</button>
+
+                                            <button type="button" class="btn btn-secondary"
                                                 data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary col-sm-6">Add User Profile</button>
                                         </div>
                                 </form>
                             </div>
@@ -95,8 +96,8 @@
             <div class="mt-3 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
                 <div class="panel-heading ui-sortable-handle">
                     <div class="btn-group">
-                        <button class="btn btn-info btn-md" data-toggle="modal" data-target="#new_depot_user">
-                            Add User
+                        <button class="btn btn-labeled btn-info btn-md" data-toggle="modal" data-target="#new_depot_user">
+                            <span class="btn-label"> <i class="fa fa-plus" aria-hidden="true"></i></span> Add User
                         </button>
                     </div>
                     <div class="dropdown">
@@ -133,19 +134,21 @@
                                 <td>{{staff.email}}</td>
                                 <td style="width: 25%;">
                                     <div class="btn-group">
-                                        <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_{{staff.id}}">Edit User</button>
-                                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete_{{staff.id}}">Delete User</button>
+                                        <button class="btn btn-labeled btn-info btn-sm" data-toggle="modal" data-target="#edit_depot_{{staff.id}}">
+                                            <span class="btn-label"><i class="fa fa-edit"></i></span> Edit User</button>
+                                        <button class="btn btn-labeled btn-danger btn-sm" data-toggle="modal" data-target="#delete_depot_{{staff.id}}">
+                                            <span class="btn-label"><i class="fa fa-trash" aria-hidden="true"></i></span> Delete User</button>
 
                                     </div>
                                 </td>
 
 
-                                <div class="modal fade" id="{{supplier.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document" style="margin: 0;">
+                                <div class="modal fade modal-success in" id="edit_{{staff.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
                                         
                                         <div class="modal-content">
-                                            <div class="modal-header" style="background-color: #9c27b0;color: white;">
-                                                <h5 class="modal-title" id="exampleModalLabel">Edit {{staff.username}}</h5>
+                                            <div class="modal-header">
+                                                <span class="modal-title" id="exampleModalLabel">Edit {{staff.username}}</span>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -163,7 +166,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 
-                                                <button type="button" class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-default"  data-dismiss="modal">Close</button>
 
                                             </div>
                                         </div>
@@ -172,7 +175,7 @@
 
                                 <!-- Supplier Edit Modal -->
                                 <div class="modal fade modal-success in" id="edit_depot_{{staff.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document" style="margin: 0;">
+                                    <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
 
@@ -206,10 +209,11 @@
                                                     </div>
                                                     </div>
                                                         
-                                                        <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                                                            <button type="button" class="btn btn-secondary col-sm-6"
+                                                        <div class="modal-footer" >
+                                                            <button type="submit" class="btn btn-primary">Add User Profile</button>
+
+                                                            <button type="button" class="btn btn-secondary"
                                                                 data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-primary col-sm-6">Add User Profile</button>
                                                         </div>
 
                                                 </form>
@@ -221,7 +225,7 @@
 
                                 <!-- Supplier Delete Modal -->
                                 <div class="modal fade modal-success in" id="delete_depot_{{staff.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document"  style="margin: 0;">
+                                    <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <span class="modal-title" id="exampleModalLabel">Delete {{staff.username|title}} </span>
@@ -238,11 +242,10 @@
 
                                                     <div class="modal-footer">
                                                         <div>
-
-                                                            
-                                        <button type="button" class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">No</button>
-                                                            
                                                             <button class="btn btn-primary" type="submit">Yes</button>
+                                                            
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            
                                                         </div>
                                                     </div>
                                                 </form>
@@ -252,6 +255,17 @@
                                     </div>
                                 </div>
                             </tr>
+                            <script> 
+                                $('body').click(function (event) {
+                                    if(!$(event.target).closest('#edit_depot_{{staff.id}}').length && !$(event.target).is('#edit_depot_{{staff.id}}')) {
+                                        $("#edit_depot_{{staff.id}}").modal('hide');
+                                    }
+                                    if(!$(event.target).closest('#delete_depot_{{staff.id}}').length && !$(event.target).is('#delete_depot_{{staff.id}}')) {
+                                        $("#delete_depot_{{staff.id}}").modal('hide');
+                                    }
+                        
+                                });
+                            </script>
 
                         {% endfor %}
                         </tbody>
@@ -262,5 +276,13 @@
             </div>
             </div>
     </div>
+    <script>
+        $('body').click(function (event) {
+            if(!$(event.target).closest('#new_depot_user').length && !$(event.target).is('#new_depot_user')) {
+                $("#new_depot_user").modal('hide');
+            }
+
+        });
+    </script>
 
 {% endblock %}

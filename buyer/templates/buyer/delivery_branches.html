@@ -29,8 +29,8 @@
     data-index="0">
     <div class="panel-heading ui-sortable-handle">
         <div class="btn-group"> 
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#add_branch"><i class="" style="margin-right: 11px;"></i>
-                Add New Branch
+            <button type="button" class="btn btn-labeled btn-info" data-toggle="modal" data-target="#add_branch">
+                <span class="btn-label"><i class="fa fa-plus" aria-hidden="true"></i></span> Add New Branch
             </button>  
         </div>
 
@@ -70,8 +70,8 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
 
                 </div>
                 <div class="form-group row-sm-12">
-                    <label>Description</label>
-                    <input type="text" name="description" class="form-control" required/>
+                    <label>Description - <small><i>(Maximum 50 Characters)</i></small></label>
+                    <input type="text" name="description" class="form-control" maxlength="50" required/>
                 </div>
                 
         <div class="modal-footer" style="margin-left: 1%; margin-right: 1%; margin-top: 5%; margin-bottom: 5%;">
@@ -133,7 +133,8 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <td>{{branch.city}}</td>
                         <td>{{branch.description}}</td>
                         <td>
-                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#edit_{{branch.id}}">Edit</button>                            
+                            <button type="button" class="btn btn-labeled btn-primary btn-sm" data-toggle="modal" data-target="#edit_{{branch.id}}">
+                               <span class="btn-label"><i class="fa fa-edit"></i></span> Edit</button>                            
                         </td>
                     </tr>
 
@@ -173,8 +174,8 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                 
                                 </div>
                                 <div class="form-group row-sm-12">
-                                    <label>Description</label>
-                                    <input type="text" name="description" class="form-control" value="{{branch.description}}" required/>
+                                    <label>Description - <small><i>(Maximum 50 Characters)</i></small></label>
+                                    <input type="text" name="description" maxlength="50" class="form-control" value="{{branch.description}}" required/>
                                 </div>
                                 
                         <div class="modal-footer" style="margin-left: 1%; margin-right: 1%; margin-top: 5%; margin-bottom: 5%;">
@@ -189,6 +190,13 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                 </div>
                 </div>
                 <!--End edit modal-->
+                <script>
+                    $('body').click(function (event) {
+                        if(!$(event.target).closest('#edit_{{branch.id}}').length && !$(event.target).is('#edit_{{branch.id}}')) {
+                            $("#edit_{{branch.id}}").modal('hide');
+                        }
+                    });
+                </script>
                     {% endfor %}
                 </tbody>
             </table>
@@ -198,4 +206,12 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
     </div>
     </div>
     </div>
+
+    <script>
+        $('body').click(function (event) {
+            if(!$(event.target).closest('#add_branch').length && !$(event.target).is('#add_branch')) {
+                $("#add_branch").modal('hide');
+            }
+        });
+    </script>
 {% endblock %}

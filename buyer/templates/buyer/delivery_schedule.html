@@ -78,9 +78,11 @@
                             {% if not schedule.transaction.offer.pump_available and not schedule.transaction.offer.meter_available and not schedule.transaction.offer.dipping_stick_available %} No Equipment {% endif %}
                         </td>
                         <td>{{schedule.transport_company}}</td>
-                        <td><button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#additonal_information{{schedule.id}}">View Information</button></td>                      
+                        <td><button class="btn btn-labeled btn-warning btn-sm" data-toggle="modal" data-target="#additonal_information{{schedule.id}}">
+                            <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View Information</button></td>                      
                         {% if not schedule.confirmation_document %}
-                        <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#upload_{{schedule.id}}">Confirm Delivery</button></td>
+                        <td><button class="btn btn-labele btn-info btn-sm" data-toggle="modal" data-target="#upload_{{schedule.id}}">
+                            <span class="btn-label"><i class="fa fa-check-square" aria-hidden="true"></i></span> Confirm Delivery</button></td>
                         {% else %}
                         <td>Received</td>
                         {% endif %}
