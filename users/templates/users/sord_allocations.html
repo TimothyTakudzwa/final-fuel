@@ -110,7 +110,7 @@
                 <h4>Sord Allocations</h4>
                 <form method="POST">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-labeled btn-success btn-sm" style="margin-top: 13px;">
+                    <button type="submit" class="btn btn-labeled btn-success btn-sm" style="margin-top: 13px;" {% if not sord_allocations %} disabled{% endif}>
                         <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>Export
                     </button>
                 </form>
