@@ -941,13 +941,15 @@
                                     {% else %}
                                         <div class="btn-group">
 
-                                            <a class="btn btn-info btn-sm" data-toggle="modal"
-                                               data-target="#add_petrol_fuel{{allocate.id}}">Add Petrol</a>
-                                            <a class="btn btn-warning btn-sm" data-toggle="modal"
-                                               data-target="#add_diesel_fuel{{allocate.id}}">Add Diesel</a>
-                                            <a class="btn btn-default btn-sm"
-                                               style="background-color: steelblue; color: white;border: 1px solid transparent;"
-                                               data-toggle="modal" data-target="#add_fuel{{allocate.id}}">Edit Prices</a>
+                                            <a class="btn btn-labeled btn-info btn-sm" data-toggle="modal"
+                                               data-target="#add_petrol_fuel{{allocate.id}}">
+                                               <span class="btn-label"><i class="fa fa-plus" aria-hidden="true"></i></span> Add Petrol</a>
+                                            <a class="btn btn-labeled btn-warning btn-sm" data-toggle="modal"
+                                               data-target="#add_diesel_fuel{{allocate.id}}">
+                                               <span class="btn-label"><i class="fa fa-plus" aria-hidden="true"></i></span> Add Diesel</a>
+                                            <a class="btn btn-default btn-labeled btn-purple btn-sm"
+                                               data-toggle="modal" data-target="#add_fuel{{allocate.id}}">
+                                               <span class="btn-label"><i class="fa fa-edit" aria-hidden="true"></i></span> Edit Prices</a>
                                         </div>
                                     {% endif %}
                                 </td>
