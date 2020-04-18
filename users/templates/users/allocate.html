@@ -967,64 +967,67 @@
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <div>
-                                            {% load crispy_forms_tags %}
-                                            <form action="{% url 'users:allocation_update_main' allocate.id %}" method="POST">
-                                                {% csrf_token %}
-                                                <input type="hidden" value="RTGS" name="fuel_payment_type" />
-                                                <div class="form-group row col-sm-12" style="margin-top: 5%;">
-                                                    <div class="col-sm-6">
+                                        <div class="modal-body">
+                                            <div class="row" style="margin-bottom: 30px;">
+                                                {% load crispy_forms_tags %}
+                                                <form action="{% url 'users:allocation_update_main' allocate.id %}" method="POST">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" value="RTGS" name="fuel_payment_type" />
+                                                    <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                                                        <div class="col-sm-6">
 
-                                                        <label><b style='color:#009688'>Fuel Type</b></label>
-
-
-                                                        <label><b style='color:#009688'>Fuel Type</b></label>
-                                                        <select class="form-control" name="fuel_type">
-                                                            <option>Petrol</option>
+                                                            <label><b style='color:#009688'>Fuel Type</b></label>
 
 
+                                                            <label><b style='color:#009688'>Fuel Type</b></label>
+                                                            <select class="form-control" name="fuel_type">
+                                                                <option>Petrol</option>
 
 
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <label><b style='color:#009688'>Quantity</b></label>
-                                                        <input type="number" min="0.1" step="0.01" name="quantity" class="form-control"
-                                                               placeholder="In Litres" required />
-                                                    </div>
-                                                </div>
-                                                <div class=" form-group row col-sm-12">
-                                                    <div class="col-sm-6">
-                                                        <label><b style='color:#009688'>Price</b></label>
-                                                        <input type="number" min="0.1" step="0.01" name="price" class="form-control" placeholder="Price"
-                                                               required />
-                                                    </div>
-                                                    <input type="hidden" name="cash" value="0" />
-                                                    <input type="hidden" name="swipe" value="0">
-                                                    <input type="hidden" name="ecocash" value="0">
-                                                    <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
-                                                        <label><b style='color:#009688'>Payment Method</b></label>
-                                                        <div class="col-sm-12 row">
-                                                            <input type="checkbox" class=" col-sm-6" name="cash" value="1">
-                                                            Cash<br>
-                                                            <input type="checkbox" class="col-sm-6" value="1"
-                                                                   name="swipe">Swipe<br>
-                                                            <input type="checkbox" class="col-sm-6" value="1"
-                                                                   name="ecocash">Ecocash<br>
+
+
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label><b style='color:#009688'>Quantity</b></label>
+                                                            <input type="number" min="0.1" step="0.01" name="quantity" class="form-control"
+                                                                placeholder="In Litres" required />
                                                         </div>
                                                     </div>
-                                                </div>
+                                                    <div class=" form-group row col-sm-12">
+                                                        <div class="col-sm-6">
+                                                            <label><b style='color:#009688'>Price</b></label>
+                                                            <input type="number" min="0.1" step="0.01" name="price" class="form-control" placeholder="Price"
+                                                                required />
+                                                        </div>
+                                                        <input type="hidden" name="cash" value="0" />
+                                                        <input type="hidden" name="swipe" value="0">
+                                                        <input type="hidden" name="ecocash" value="0">
+                                                        <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
+                                                            <label><b style='color:#009688'>Payment Method</b></label>
+                                                            <div class="col-sm-12 row">
+                                                                <input type="checkbox" class=" col-sm-6" name="cash" value="1">
+                                                                Cash<br>
+                                                                <input type="checkbox" class="col-sm-6" value="1"
+                                                                    name="swipe">Swipe<br>
+                                                                <input type="checkbox" class="col-sm-6" value="1"
+                                                                    name="ecocash">Ecocash<br>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                            </div>        
 
 
 
 
+                                        
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Save changes</button>
+
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            </div>
+                                            </form>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary">Save changes</button>
-
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                        </div>
-                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -1042,61 +1045,64 @@
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <div>
-                                            {% load crispy_forms_tags %}
-                                            <form action="{% url 'users:allocation_update_main' allocate.id %}" method="POST">
-                                                {% csrf_token %}
-                                                <input type="hidden" value="USD" name="fuel_payment_type" />
-                                                <div class="form-group row col-sm-12" style="margin-top: 5%;">
-                                                    <div class="col-sm-6">
+                                        <div class="modal-body">
+                                            <div class="row" style="margin-bottom: 30px;">
+                                                {% load crispy_forms_tags %}
+                                                <form action="{% url 'users:allocation_update_main' allocate.id %}" method="POST">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" value="USD" name="fuel_payment_type" />
+                                                    <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                                                        <div class="col-sm-6">
 
-                                                        <label><b style='color:#009688'>Fuel Type</b></label>
-                                                        <select class="form-control" name="fuel_type">
-                                                            <option>Diesel</option>
+                                                            <label><b style='color:#009688'>Fuel Type</b></label>
+                                                            <select class="form-control" name="fuel_type">
+                                                                <option>Diesel</option>
 
 
 
 
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <label><b style='color:#009688'>Quantity</b></label>
-                                                        <input type="number" min="0.1" step="0.01" name="quantity" class="form-control"
-                                                               placeholder="In Litres" required />
-                                                    </div>
-                                                </div>
-                                                <div class=" form-group row col-sm-12">
-                                                    <div class="col-sm-6">
-                                                        <label><b style='color:#009688'>Price</b></label>
-                                                        <input type="number" min="0.1" step="0.01" name="price" class="form-control" placeholder="Price"
-                                                               required />
-                                                    </div>
-                                                    <input type="hidden" name="cash" value="0" />
-                                                    <input type="hidden" name="swipe" value="0">
-                                                    <input type="hidden" name="ecocash" value="0">
-                                                    <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
-                                                        <label><b style='color:#009688'>Payment Method</b></label>
-                                                        <div class="col-sm-12 row">
-                                                            <input type="checkbox" class=" col-sm-6" name="cash" value="1">
-                                                            Cash<br>
-                                                            <input type="checkbox" class="col-sm-6" value="1"
-                                                                   name="swipe">Swipe<br>
-                                                            <input type="checkbox" class="col-sm-6" value="1"
-                                                                   name="ecocash">Ecocash<br>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label><b style='color:#009688'>Quantity</b></label>
+                                                            <input type="number" min="0.1" step="0.01" name="quantity" class="form-control"
+                                                                placeholder="In Litres" required />
                                                         </div>
                                                     </div>
+                                                    <div class=" form-group row col-sm-12">
+                                                        <div class="col-sm-6">
+                                                            <label><b style='color:#009688'>Price</b></label>
+                                                            <input type="number" min="0.1" step="0.01" name="price" class="form-control" placeholder="Price"
+                                                                required />
+                                                        </div>
+                                                        <input type="hidden" name="cash" value="0" />
+                                                        <input type="hidden" name="swipe" value="0">
+                                                        <input type="hidden" name="ecocash" value="0">
+                                                        <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
+                                                            <label><b style='color:#009688'>Payment Method</b></label>
+                                                            <div class="col-sm-12 row">
+                                                                <input type="checkbox" class=" col-sm-6" name="cash" value="1">
+                                                                Cash<br>
+                                                                <input type="checkbox" class="col-sm-6" value="1"
+                                                                    name="swipe">Swipe<br>
+                                                                <input type="checkbox" class="col-sm-6" value="1"
+                                                                    name="ecocash">Ecocash<br>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
                                                 </div>
+                                        
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-primary">Save changes</button>
 
-
-
-
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary">Save changes</button>
-
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                        </div>
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                </div>
+                                        
                                         </form>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -1114,63 +1120,64 @@
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <div>
-                                            {% load crispy_forms_tags %}
-                                            <form action="{% url 'users:edit_fuel_prices' allocate.id %}" method="POST">
-                                                {% csrf_token %}
-                                                <input type="hidden" value="USD" name="fuel_payment_type" />
-                                                <!-- <div class="form-group row col-sm-12" style="margin-top: 5%;">
-                                                    <div class="col-sm-6">
-                                                        <label><b style='color:#009688'>Fuel Type</b></label>
-                                                        <select class="form-control" name="fuel_type">
-                                                            <option>Petrol</option>
-                                                            <option>Diesel</option>
-                                                        </select>
+                                        <div class="modal-body">
+                                            <div class="row" style="margin-bottom: 30px;">
+                                                {% load crispy_forms_tags %}
+                                                <form action="{% url 'users:edit_fuel_prices' allocate.id %}" method="POST">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" value="USD" name="fuel_payment_type" />
+                                                    <!-- <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                                                        <div class="col-sm-6">
+                                                            <label><b style='color:#009688'>Fuel Type</b></label>
+                                                            <select class="form-control" name="fuel_type">
+                                                                <option>Petrol</option>
+                                                                <option>Diesel</option>
+                                                            </select>
+                                                        </div>
+                                                    </div> -->
+                                                    <div class=" form-group row col-sm-12" style="margin-top: 10px;">
+                                                        <div class="col-sm-6">
+                                                            <label><b style='color:#009688'>Petrol Price</b></label>
+                                                            <input type="number" min="0.1" step="0.01" name="petrol_price" class="form-control"
+                                                                placeholder="In RTGS Dollars" value="{{allocate.petrol_price}}"
+                                                                required />
+                                                        </div>
+                                                        <!-- <input type="hidden" name="cash" value="0" />
+                                                <input type="hidden" name="swipe" value="0">
+                                                <input type="hidden" name="ecocash" value="0">
+                                                <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
+                                                    <label><b style='color:#009688'>Payment Method</b></label>
+                                                    <div class="col-sm-12 row">
+                                                        <input type="checkbox" class=" col-sm-6" name="cash" value="1">
+                                                        Cash<br>
+                                                        <input type="checkbox"
+                                                            class="col-sm-6" value="1" name="swipe">Swipe<br>
+                                                        <input type="checkbox"
+                                                            class="col-sm-6" value="1" name="ecocash">Ecocash<br>
                                                     </div>
                                                 </div> -->
-                                                <div class=" form-group row col-sm-12" style="margin-top: 10px;">
-                                                    <div class="col-sm-6">
-                                                        <label><b style='color:#009688'>Petrol Price</b></label>
-                                                        <input type="number" min="0.1" step="0.01" name="petrol_price" class="form-control"
-                                                               placeholder="In RTGS Dollars" value="{{allocate.petrol_price}}"
-                                                               required />
                                                     </div>
-                                                    <!-- <input type="hidden" name="cash" value="0" />
-                                            <input type="hidden" name="swipe" value="0">
-                                            <input type="hidden" name="ecocash" value="0">
-                                            <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
-                                                <label><b style='color:#009688'>Payment Method</b></label>
-                                                <div class="col-sm-12 row">
-                                                    <input type="checkbox" class=" col-sm-6" name="cash" value="1">
-                                                    Cash<br>
-                                                    <input type="checkbox"
-                                                        class="col-sm-6" value="1" name="swipe">Swipe<br>
-                                                    <input type="checkbox"
-                                                        class="col-sm-6" value="1" name="ecocash">Ecocash<br>
-                                                </div>
-                                            </div> -->
-                                                </div>
-                                                <div class=" form-group row col-sm-12">
-                                                    <div class="col-sm-6">
-                                                        <label><b style='color:#009688'>Diesel Price</b></label>
-                                                        <input type="number" min="0.1" step="0.01" name="diesel_price" class="form-control"
-                                                               placeholder="In United States Dollars"
-                                                               value="{{allocate.diesel_price}}" required />
+                                                    <div class=" form-group row col-sm-12">
+                                                        <div class="col-sm-6">
+                                                            <label><b style='color:#009688'>Diesel Price</b></label>
+                                                            <input type="number" min="0.1" step="0.01" name="diesel_price" class="form-control"
+                                                                placeholder="In United States Dollars"
+                                                                value="{{allocate.diesel_price}}" required />
+                                                        </div>
+                                                        <input type="hidden" name="cash" value="0" />
+                                                        <input type="hidden" name="swipe" value="0">
+                                                        <!-- <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
+                                                    <label><b style='color:#009688'>Payment Method</b></label>
+                                                    <div class="col-sm-12 row">
+                                                        <input type="checkbox" class=" col-sm-6" name="cash" value="1">
+                                                        Cash<br>
+                                                        <input type="checkbox"
+                                                            class="col-sm-6" value="1" name="swipe">FCA<br>
                                                     </div>
-                                                    <input type="hidden" name="cash" value="0" />
-                                                    <input type="hidden" name="swipe" value="0">
-                                                    <!-- <div class="col-sm-6" name="payment" id="payment{{forloop.counter}}">
-                                                <label><b style='color:#009688'>Payment Method</b></label>
-                                                <div class="col-sm-12 row">
-                                                    <input type="checkbox" class=" col-sm-6" name="cash" value="1">
-                                                    Cash<br>
-                                                    <input type="checkbox"
-                                                        class="col-sm-6" value="1" name="swipe">FCA<br>
-                                                </div>
-                                            </div> -->
-                                                </div>
-                                        </div>
-                                        <div class="modal-footer"></div>
+                                                </div> -->
+                                                    </div>
+                                            </div>
+                                        <div class="modal-footer">
                                             <button type="submit" class="btn btn-primary">Save changes</button>
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                         </div>
