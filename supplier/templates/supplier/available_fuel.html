@@ -144,11 +144,11 @@
                         </div>
                     </div>
             </div>
-            <div class="form-group row"
-                style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                <button type="button" class="btn btn-secondary col-sm-6"
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Save changes</button>
+
+                <button type="button" class="btn btn-secondary"
                     data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
             </div>
             </form>
                 </div>
@@ -228,11 +228,11 @@ aria-hidden="true">
 
 
                         </div>
-                        <div class="form-group row"
-                            style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                            <button type="button" class="btn btn-secondary col-sm-6"
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+            
+                            <button type="button" class="btn btn-secondary"
                                 data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
                         </div>
                         </form>
     </div>
@@ -338,12 +338,12 @@ aria-hidden="true">
             </div>
         </div>
                                      </div>
-<div class="form-group row"
-    style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-    <button type="button" class="btn btn-secondary col-sm-6"
-        data-dismiss="modal">Close</button>
-    <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
-</div>
+            <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save changes</button>
+
+            <button type="button" class="btn btn-secondary"
+                data-dismiss="modal">Close</button>
+        </div>
 </form>
     </div>
     
@@ -432,6 +432,19 @@ aria-hidden="true">
                     </div>
                 </div>
             </div>
+            <script>
+                $('body').click(function (event) {
+                    if(!$(event.target).closest('#add_fuel{{update.id}}').length && !$(event.target).is('#add_fuel{{update.id}}')) {
+                        $("#add_fuel{{update.id}}").modal('hide');
+                    }
+                    if(!$(event.target).closest('#add_rtgs_fuel{{update.id}}').length && !$(event.target).is('#add_rtgs_fuel{{update.id}}')) {
+                        $("#add_rtgs_fuel{{update.id}}").modal('hide');
+                    }
+                    if(!$(event.target).closest('#add_usd_fuel{{update.id}}').length && !$(event.target).is('#add_usd_fuel{{update.id}}')) {
+                        $("#add_usd_fuel{{update.id}}").modal('hide');
+                    }         
+                });
+            </script>
 
             {% endfor %}
             
