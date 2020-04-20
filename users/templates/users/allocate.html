@@ -163,7 +163,7 @@
                                     </div>
                                     <div>
                                         {% load crispy_forms_tags %}
-                                        <form action="{% url 'users:place_order' %}" method="POST" enctype="multipart/form-data">
+                                        <form action="{% url 'users:place_order' %}" name="placing_order" method="POST" enctype="multipart/form-data" novalidate>
                                             {% csrf_token %}
                                             <input type="hidden"  id="quantity" name="quantity" />
                                             <div class="form-group row col-sm-12" style="margin-top: 5%;">
@@ -197,7 +197,7 @@
     
                                                     </select>
                                                 </div>
-                                                <!-- <div class="col-sm-6" id="diesel_rtgs_price">
+                                                <div class="col-sm-6" id="diesel_rtgs_price">
                                                     <label><b style='color:#009688'>Price</b></label>
                                                     <input type="number" min="0.1" step="0.01" name="diesel_rtgs_price" class="form-control"
                                                         value="{{diesel_rtgs_price}}" id="diesel_rtgs_price_input"  />
@@ -216,7 +216,7 @@
                                                     <label><b style='color:#009688'>Price</b></label>
                                                     <input type="number" min="0.1" step="0.01" name="petrol_usd_price" class="form-control"
                                                         value="{{petrol_usd_price}}" id="petrol_usd_price_input"  />
-                                                </div> -->
+                                                </div>
     
                                             </div>
     
@@ -256,16 +256,16 @@
                                                             }
     
                                                         }
-                                                        // if ($('#quantity').val() === "NaN" || $('#quantity').val() === "Infinity" ){
-                                                        //     if ($("#submit_order").is(":disabled") === false) {
-                                                        //         $('#submit_order').prop('disabled', true) 
-                                                        //     }    
-                                                        // } else{
-                                                        //     if ($("#submit_order").is(":disabled") === true) {
-                                                        //         $('#submit_order').prop('disabled', false)    
-                                                        //     }
+                                                        if ($('#quantity').val() === "NaN" || $('#quantity').val() === "Infinity" ){
+                                                            if ($("#submit_order").is(":disabled") === false) {
+                                                                $('#submit_order').prop('disabled', true) 
+                                                            }    
+                                                        } else{
+                                                            if ($("#submit_order").is(":disabled") === true) {
+                                                                $('#submit_order').prop('disabled', false)    
+                                                            }
     
-                                                        // } 
+                                                        } 
                                                     }
     
                                                     $("#fuel_paid").keyup(function(){
