@@ -18,7 +18,7 @@
     <div class="header-title">
 
         <h1> Payment History </h1>
-        <small>Fuel Finder Zimbabwe</small>
+        <small>ZFMS</small>
         <ol class="breadcrumb hidden-xs">
             <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
             <li class="active">Payment History</li>
@@ -152,47 +152,47 @@
                                                     {% csrf_token %}
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
-                                                            <lable><b> Buyer:</b></lable>
+                                                            <label><b> Buyer:</b></label>
                                                             &nbsp;{{payment.transaction.buyer.company}}
                                                         </div>
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Supplier:</b></lable>
+                                                            <label><b>Supplier:</b></label>
                                                             &nbsp;{{payment.transaction.supplier.company}}
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
-                                                            <lable><b> Fuel Type:</b></lable>
+                                                            <label><b> Fuel Type:</b></label>
                                                             &nbsp;{{payment.transaction.offer.request.fuel_type}}
                                                         </div>
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Quantity Requested:</b></lable>
+                                                            <label><b>Quantity Requested:</b></label>
                                                             &nbsp;{{payment.transaction.offer.request.amount|floatformat:2|intcomma}}L
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
-                                                            <lable><b> Quantity Offered:</b></lable>
+                                                            <label><b> Quantity Offered:</b></label>
                                                             &nbsp;{{payment.transaction.offer.quantity|floatformat:2|intcomma}}L
                                                         </div>
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Price:</b></lable>
+                                                            <label><b>Price:</b></label>
                                                             &nbsp;${{payment.transaction.offer.price}}
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
-                                                            <lable><b> Expected:</b></lable>
+                                                            <label><b> Expected:</b></label>
                                                             &nbsp;${{payment.transaction.expected|intcomma}}
                                                         </div>
                                                         <div class="form-group col-md-6">
-                                                            <lable><b>Paid:</b></lable>
+                                                            <label><b>Paid:</b></label>
                                                             &nbsp;${{payment.transaction.paid|intcomma}}
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
-                                                            <lable><b> Delivery Address:</b></lable>
+                                                            <label><b> Delivery Address:</b></label>
                                                             &nbsp;{{payment.transaction.buyer.company.address}}
                                                         </div>
                                                        
@@ -236,79 +236,79 @@
                                             {% csrf_token %}
                                             <div class="row">
                                                 <div class="form-group col-md-6">
-                                                    <lable><b> Delivery Date:</b></lable>
+                                                    <label><b> Delivery Date:</b></label>
                                                     &nbsp;{{payment.delivery_schedule.date }}
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Delivery Time:</b></lable>
+                                                    <label><b>Delivery Time:</b></label>
                                                     &nbsp;{{payment.delivery_schedule.delivery_time }}
                                                 </div>
                                             </div>
                                             <div class="row">
     
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Transporter:</b></lable>
+                                                    <label><b>Transporter:</b></label>
                                                     &nbsp;{{payment.delivery_schedule.transport_company }}
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Delivery Address:</b></lable>
+                                                    <label><b>Delivery Address:</b></label>
                                                     &nbsp;{{payment.transaction.buyer.company.address }}
                                                 </div>
                                             </div>
                                             <div class="row">
     
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Driver Name:</b></lable>
+                                                    <label><b>Driver Name:</b></label>
                                                     &nbsp;{{payment.delivery_schedule.driver_name }}
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Phone Number:</b></lable>
+                                                    <label><b>Phone Number:</b></label>
                                                     &nbsp;{{payment.delivery_schedule.phone_number }}
                                                 </div>
                                             </div>
                                             <div class="row">
     
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Id Number:</b></lable>
+                                                    <label><b>Id Number:</b></label>
                                                     &nbsp;{{payment.delivery_schedule.id_number }}
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Vehicle Reg:</b></lable>
+                                                    <label><b>Vehicle Reg:</b></label>
                                                     &nbsp;{{payment.delivery_schedule.vehicle_reg }}
                                                 </div>
                                             </div>
                                             <div class="row">
     
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Amount Paid:</b></lable>
+                                                    <label><b>Amount Paid:</b></label>
                                                     &nbsp;${{payment.value|intcomma}}
                                                 </div>
                                                 {% if payment.delivery_schedule != None %}
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Transport Charge:</b></lable>
+                                                    <label><b>Transport Charge:</b></label>
                                                     &nbsp;${{payment.value| sub:payment.delivery_schedule.amount_for_fuel}}
                                                 </div>
                                                 {% else %}
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Transport Charge:</b></lable>
+                                                    <label><b>Transport Charge:</b></label>
                                                     &nbsp;${{payment.value}}
                                                 </div>
                                                 {% endif %}
                                             </div>
                                             <div class="row">
                                             <div class="form-group col-md-6">
-                                                <lable><b>Delivery Quantity:</b></lable>
+                                                <label><b>Delivery Quantity:</b></label>
                                                 &nbsp;{{payment.delivery_schedule.delivery_quantity|floatformat:2|intcomma}}L
                                             </div>
                                             {% if payment.delivery_schedule.confirmation_document %}
                                             <div class="form-group col-md-6">
-                                                <lable><b>Status:</b></lable>
+                                                <label><b>Status:</b></label>
                                                 &nbsp;<i style="color: rgb(54, 167, 219);">Buyer Received Fuel </i>
                                             </div>
                                            
                                                 {% else %}
                                                 <div class="form-group col-md-6">
-                                                    <lable><b>Status:</b></lable>
+                                                    <label><b>Status:</b></label>
                                                     &nbsp; <i style="color: brown;">waiting for confirmation</i>
                                                 </div>
                                                
@@ -319,12 +319,12 @@
 
                                             {% if payment.delivery_schedule.confirmation_document %}
                                             <div class="form-group col-md-6">
-                                                <lable><b>Delivery Note:</b></lable>
+                                                <label><b>Delivery Note:</b></label>
                                                 &nbsp;<a class="btn btn-info btn-sm" href="{% url 'zeraPortal:view_confirmation_doc' payment.delivery_schedule.id %}" >Download Document </a>
                                             </div>
                                             {% else %}
                                             <div class="form-group col-md-6">
-                                                <lable><b></b></lable>
+                                                <label><b></b></label>
                                             </div>
                                             
                                             {%endif%} 

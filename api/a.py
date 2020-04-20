@@ -236,7 +236,7 @@ def password_reset(request):
             client.save()
             update_session_auth_hash(request, client)
 
-            sender = f'Fuel Finder Accounts<{settings.EMAIL_HOST_USER}>'
+            sender = f'ZFMS Accounts<{settings.EMAIL_HOST_USER}>'
             title = 'Password Reset'
             message = f"Your account password was reset.Please use this password when signing in : \n" \
                       f"{password}\n" \

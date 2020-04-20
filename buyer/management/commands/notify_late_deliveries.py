@@ -31,7 +31,7 @@ class Command(BaseCommand):
                           f'Late As Of {delivery.date.strftime("%D")} '
 
                 # send email
-                sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
+                sender = f'ZFMS Accounts Accounts<{settings.EMAIL_HOST_USER}>'
                 title = f'Delivery Schedule Reminder'
                 message = f"Dear {delivery.transaction.supplier.first_name}, this is mail serves to inform you " \
                           f"that the due date for the delivery of {delivery.transaction.offer.request.amount}L of {delivery.transaction.offer.request.fuel_type} to {delivery.transaction.buyer.company.name.title()} has elapsed as of {delivery.date.strftime('%A the %dth of %b %Y')}\n." \
@@ -59,7 +59,7 @@ class Command(BaseCommand):
                           f'Been Flagged For Being Extremely Late '
 
                 # send email
-                sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
+                sender = f'ZFMS Accounts Accounts<{settings.EMAIL_HOST_USER}>'
                 title = f'Delivery Schedule Reminder'
                 message = f"Dear {delivery.transaction.supplier.first_name}, this is mail serves to inform you " \
                           f"that the due date for the delivery of {delivery.transaction.offer.request.amount}L of {delivery.transaction.offer.request.fuel_type} to {delivery.transaction.buyer.company.name.title()} has exceeded the two day time limit. " \

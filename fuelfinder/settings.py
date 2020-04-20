@@ -140,7 +140,7 @@ EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False
 
-DEFAULT_FROM_EMAIL = 'Fuel Finder Accounts <tests@marlvinzw.me>'
+DEFAULT_FROM_EMAIL = 'ZFMS Accounts <tests@marlvinzw.me>'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

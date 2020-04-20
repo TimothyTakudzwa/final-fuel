@@ -143,7 +143,7 @@ def initial_password_change(request):
 @user_role
 def change_password(request):
     context = {
-        'title': 'Fuel Finder | Change Password',
+        'title': 'ZFMS | Change Password',
         'password_change': PasswordChange(user=request.user)
     }
     if request.method == 'POST':

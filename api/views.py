@@ -420,7 +420,7 @@ def password_reset(request):
                     # update session in case user is logged on somewhere
                     update_session_auth_hash(request, client)
                     # set details for sending email
-                    sender = f'Fuel Finder Accounts<{settings.EMAIL_HOST_USER}>'
+                    sender = f'ZFMS Accounts<{settings.EMAIL_HOST_USER}>'
                     title = 'Password Reset'
                     message = f"Your account password was reset.Please use this password when signing in : \n" \
                               f"{password}\n" \
@@ -436,7 +436,7 @@ def password_reset(request):
                 else:
                     # send warning
                     # set details for sending email
-                    sender = f'Fuel Finder Accounts<{settings.EMAIL_HOST_USER}>'
+                    sender = f'ZFMS Accounts<{settings.EMAIL_HOST_USER}>'
                     title = 'Password Reset'
                     message = f"An attempt to reset your password was made via the General App.Please "
                     # send email
@@ -457,7 +457,7 @@ def password_reset(request):
             # update session in case user is logged on somewhere
             update_session_auth_hash(request, client)
             # set details for sending email
-            sender = f'Fuel Finder Accounts<{settings.EMAIL_HOST_USER}>'
+            sender = f'ZFMS Accounts<{settings.EMAIL_HOST_USER}>'
             title = 'Password Reset'
             message = f"Your account password was reset.Please use this password when signing in : \n" \
                       f"{password}\n" \

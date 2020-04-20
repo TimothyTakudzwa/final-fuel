@@ -1383,8 +1383,8 @@ def decline_applicant(request, id):
 def message_is_send(request, user, password):
     user_permission(request)
     sender = "intelliwhatsappbanking@gmail.com"
-    subject = 'Fuel Finder Registration'
-    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: {password} \n\nPlease login on Fuel Finder Website and access your assigned Station & don't forget to change your password on user profile. \n. "
+    subject = 'ZFMS Registration'
+    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: {password} \n\nPlease login on ZFMS Website and access your assigned Station & don't forget to change your password on user profile. \n. "
     try:
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
         msg.send()
@@ -1401,8 +1401,8 @@ def message_is_send(request, user, password):
 def message_is_sent(request, user, password):
     # user_permission(request)
     sender = "intelliwhatsappbanking@gmail.com"
-    subject = 'Fuel Finder Registration'
-    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: {password} \n\nPlease download the Fuel Finder mobile app on PlayStore and login to start looking for fuel. \n. "
+    subject = 'ZFMS Registration'
+    message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: {password} \n\nPlease download the ZFMS mobile app on PlayStore and login to start looking for fuel. \n. "
     try:
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
         msg.send()
@@ -2051,7 +2051,7 @@ def upload_users(request):
                                         )
 
                                     # send email
-                                    sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
+                                    sender = f'ZFMS Accounts Accounts<{settings.EMAIL_HOST_USER}>'
                                     title = f'Account Creation By {request.user.company.name}'
                                     message = f"Dear {user.first_name}, {request.user.company.name} has created an account" \
                                               f"for you on Fuel Finder. Here are the details\n\n" \
@@ -2097,7 +2097,7 @@ def upload_users(request):
                                         )
 
                                     # send email
-                                    sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
+                                    sender = f'ZFMS Accounts Accounts<{settings.EMAIL_HOST_USER}>'
                                     title = f'Account Creation By Fuel Supplier {request.user.company.name}'
                                     message = f"Dear {user.first_name}, {request.user.company.name} has created an account" \
                                               f"for you on Fuel Finder. Here are the details\n\n" \
@@ -2159,7 +2159,7 @@ def upload_users(request):
                                         )
 
                                     # send email
-                                    sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
+                                    sender = f'ZFMS Accounts Accounts<{settings.EMAIL_HOST_USER}>'
                                     title = f'Account Creation By Fuel Supplier {request.user.company.name}'
                                     message = f"Dear {user.first_name}, {request.user.company.name} has created an account" \
                                               f"for you on Fuel Finder. Here are the details\n\n" \
@@ -2205,7 +2205,7 @@ def upload_users(request):
                                         )
 
                                     # send email
-                                    sender = f'Fuel Finder Accounts Accounts<{settings.EMAIL_HOST_USER}>'
+                                    sender = f'ZFMS Accounts Accounts<{settings.EMAIL_HOST_USER}>'
                                     title = f'Account Creation By {request.user.company.name}'
                                     message = f"Dear {user.first_name}, {request.user.company.name} has created an account" \
                                               f"for you on Fuel Finder. Here are the details\n\n" \

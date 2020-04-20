@@ -24,7 +24,7 @@ DELIVERY_OPTIONS = (('BULK', 'BULK'), ('REGULAR', 'REGULAR'))
 
 FUEL_CHOICES = (('Petrol', 'Petrol'), ('DIESEL', 'Diesel'))
 
-sender = f'Fuel Finder Accounts<tests@marlvinzw.me>'
+sender = f'ZFMS Accounts<tests@marlvinzw.me>'
 subject = 'User Registration'
 
 PAYING_CHOICES = (
