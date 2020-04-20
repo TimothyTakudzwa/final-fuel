@@ -227,7 +227,7 @@
                                                     placeholder="In Litres" id="quantity" disabled/>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <!-- {{ form1.depot|as_crispy_field }} -->
+                                                    {{ form1.depot|as_crispy_field }}
                                                  </div>
     
                                                 
@@ -235,12 +235,13 @@
                                             </div>
                                             <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
                                             <script>
-                                                $( "#fuel_paid" ).keyup(function() {
-                                                    console.log( "Handler for .keyup() called." );
-                                                    });
+                                                // $( "#fuel_paid" ).keyup(function() {
+                                                //     console.log( "Handler for .keyup() called." );
+                                                //     });
                                                                                 
     
                                                     function update() {
+                                                        console.log("Check Check")
                                                         if ($('#fuel_type option:selected').text() == "Diesel"){
                                                             if ($('#currency option:selected').text() == "USD") {
                                                                 $('input[name="quantity"]').val(parseFloat($('input[name="fuel_paid"]').val()/$('input[name="diesel_usd_price"]').val()).toFixed(2)) ;
