@@ -186,7 +186,7 @@ def token_is_send(request, auth_user):
     domain = request.get_host()
     url = f'https://{domain}/verification/{token}/{auth_user.id}'
     sender = "intelliwhatsappbanking@gmail.com"
-    subject = 'Fuel Finder Registration'
+    subject = 'ZFMS Registration'
     message = f"Dear {auth_user.first_name}  {auth_user.last_name}. \nYour username is: " \
               f"{auth_user.username}\n\nPlease complete " \
               f"signup here : \n {url} \n. "
@@ -277,7 +277,7 @@ Change password
 @user_role
 def change_password(request):
     context = {
-        'title': 'Fuel Finder | Change Password',
+        'title': 'ZFMS | Change Password',
         'password_change': PasswordChange(user=request.user)
     }
     if request.method == 'POST':

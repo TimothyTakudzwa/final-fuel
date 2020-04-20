@@ -75,7 +75,7 @@ zimbabwean_towns = ["Beitbridge","Bindura","Bulawayo","Chinhoyi","Chirundu","Gwe
 greetings_message = '''
 *Hie {0}, Welcome To Intelli Fuel Finder* 
 
-Intelli Fuel Finder is system that brings together individuals and corporates that are looking for fuel.
+Intelli ZFMS is system that brings together individuals and corporates that are looking for fuel.
 You can register on the plartform as a Supplier, Individual Buyer or Corporate Buyer.
 
 To begin the registration process please select one of the below options 

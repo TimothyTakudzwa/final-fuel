@@ -244,7 +244,7 @@ def logo_upload(request, id):
 
 def edit_password(request):
     context = {
-        'title': 'Fuel Finder | Change Password',
+        'title': 'ZFMS | Change Password',
         'password_change': PasswordChange(user=request.user)
     }
     if request.method == 'POST':

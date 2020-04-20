@@ -560,7 +560,7 @@ def staff(request):
 def message_is_send(request, user, password):
     user_permission(request)
     sender = "intelliwhatsappbanking@gmail.com"
-    subject = 'Fuel Finder Registration'
+    subject = 'ZFMS Registration'
     message = f"Dear {user.first_name}  {user.last_name}. \nYour Username is: {user.username}\nYour Initial Password is: {password} \n\nPlease login on Fuel Management System Website and access your assigned Depot & don't forget to change your password on user profile. \n. "
     try:
         msg = EmailMultiAlternatives(subject, message, sender, [f'{user.email}'])
