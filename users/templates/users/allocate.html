@@ -163,7 +163,7 @@
                                     </div>
                                     <div>
                                         {% load crispy_forms_tags %}
-                                        <form action="{% url 'users:place_order' %}" name="placing_order" method="POST" enctype="multipart/form-data" >
+                                        <form action="{% url 'users:place_order' %}" name="placing_order" method="POST" enctype="multipart/form-data" novalidate>
                                             {% csrf_token %}
                                             <input type="hidden"  id="quantity" name="quantity" />
                                             <div class="form-group row col-sm-12" style="margin-top: 5%;">
