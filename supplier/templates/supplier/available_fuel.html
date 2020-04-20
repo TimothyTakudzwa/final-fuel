@@ -89,7 +89,7 @@
                         {% elif update.payment_type == 'RTGS' and not update.payment_type == 'USD'%}
                         <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_rtgs_fuel{{update.id}}">
                            <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Update RTGS Fuel</button>
-                        {%else%}
+                        {% elif update.payment_type == 'RTGS' and update.payment_type == 'USD'%}
                         <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_fuel{{update.id}}">
                            <span class="btn-label"><i class="fa fa-refresh" aria-hidden="true"></i> </span> Update Both Fuel</button>
                         {%endif%}
