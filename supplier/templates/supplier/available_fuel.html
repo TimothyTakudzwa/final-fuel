@@ -97,22 +97,84 @@
                 </td>
             </tr>
 
-            <div class="modal fade modal-success in" id="add_rtgs_fuel{{update.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                  <div class="modal-title">Update RTGS Fuel- <i style="color:white"><small>Please Note the fuel you are entering is to be
-                      sold in Zimbabwean Local Currency</small></i></div>
-              </div>
-                <div class="modal-body">
-            
-                  {% load crispy_forms_tags %}
-                  <form action="{% url 'supplier:stock_update' update.id %}" method="POST">
-                    {% csrf_token %}
-                    <div class="row" style="margin-bottom: 30px;">   
-                        <input type="hidden" value="RTGS" name="fuel_payment_type" />
+    <div class="modal fade modal-success in" id="add_rtgs_fuel{{update.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <div class="modal-title">Update RTGS Fuel- <i style="color:white"><small>Please Note the fuel you are entering is to be
+              sold in Zimbabwean Local Currency</small></i></div>
+        </div>
+        <div class="modal-body">
+
+          {% load crispy_forms_tags %}
+          <form action="{% url 'supplier:stock_update' update.id %}" method="POST">
+            {% csrf_token %}
+            <div class="row" style="margin-bottom: 30px;">   
+                <input type="hidden" value="RTGS" name="fuel_payment_type" />
+                <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                    <div class="col-sm-6">
+
+                        <label><b style='color:#009688'>Fuel Type</b></label>
+                        <select class="form-control" name="fuel_type">
+
+                            <option>Petrol</option>
+                            <option>Diesel</option>
+
+
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <label><b style='color:#009688'>Quantity</b></label>
+                        <input type="text" name="quantity" class="form-control"
+                            placeholder="In Litres" required />
+                    </div>
+                </div>
+                <div class=" form-group row col-sm-12">
+                    <input type="hidden" class=" col-sm-4" name="cash" value="0" />
+                    <input type="hidden" class=" col-sm-4" name="swipe" value="0">
+                    <input type="hidden" class=" col-sm-4" name="ecocash" value="0">
+                    <div class="col-sm-12" name="payment" id="payment{{forloop.counter}}">
+                        <label><b style='color:#009688'>Payment Method</b></label>
+                        <div class="col-sm-12 row">
+                            <div class=" col-sm-4"><input type="checkbox" name="cash" value="1"> Cash<br></div>
+                            <div class="col-sm-4"><input type="checkbox" value="1" name="swipe">Swipe<br></div>
+                            <div class="col-sm-4"><input type="checkbox" class="col-sm-4" value="1" name="ecocash">Ecocash<br></div>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Save changes</button>
+
+        <button type="button" class="btn btn-secondary"
+            data-dismiss="modal">Close</button>
+    </div>
+    </form>
+        </div>
+        
+      </div>
+    </div>
+</div>  
+       
+
+<div class="modal fade modal-success in" id="add_usd_fuel{{update.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <div class="modal-title">Update USD Fuel-<i style="color:white"><small>Please Note the fuel you are entering is to be
+    sold in United States Dollars</small></i>
+</div>
+    </div>
+    <div class="modal-body">
+
+    {% load crispy_forms_tags %}
+    <form action="{% url 'supplier:stock_update' update.id %}" method="POST">
+                        {% csrf_token %}
+                <div class="row" style="margin-bottom: 30px;">        
+                        <input type="hidden" value="USD" name="fuel_payment_type" />
                         <div class="form-group row col-sm-12" style="margin-top: 5%;">
                             <div class="col-sm-6">
 
@@ -132,121 +194,56 @@
                             </div>
                         </div>
                         <div class=" form-group row col-sm-12">
-                            <input type="hidden" class=" col-sm-4" name="cash" value="0" />
-                            <input type="hidden" class=" col-sm-4" name="swipe" value="0">
-                            <input type="hidden" class=" col-sm-4" name="ecocash" value="0">
+                            <input type="hidden" name="cash" value="0" />
+                            <input type="hidden" name="swipe" value="0">
                             <div class="col-sm-12" name="payment" id="payment{{forloop.counter}}">
                                 <label><b style='color:#009688'>Payment Method</b></label>
-                                <div class="col-sm-12 row">
-                                    <div class=" col-sm-4"><input type="checkbox" name="cash" value="1"> Cash<br></div>
-                                    <div class="col-sm-4"><input type="checkbox" value="1" name="swipe">Swipe<br></div>
-                                    <div class="col-sm-4"><input type="checkbox" class="col-sm-4" value="1" name="ecocash">Ecocash<br></div>
+                                <div class="col-sm-12">
+                                    <div class="col-sm-6"><input type="checkbox" name="cash" value="1">&nbsp; Cash<br></div>
+                                    <div class="col-sm-6"><input type="checkbox" id="fca{{forloop.counter}}" value="1" name="swipe">&nbsp; FCA<br></div>
                                 </div>
                             </div>
                         </div>
-                    </div>    
-            
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Save changes</button>
+                        <div class="col-sm-12 form-group" name="bank" id="bank{{forloop.counter}}">
+                            <label><b style='color:#009688'>Bank</b></label>
+                            <select class="form-control" name="destination_bank">
 
-                <button type="button" class="btn btn-secondary"
-                    data-dismiss="modal">Close</button>
-            </div>
-            </form>
-                </div>
-                
-              </div>
-            </div>
-          
-       
-
-<div class="modal fade modal-success in" id="add_usd_fuel{{update.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"aria-hidden="true">
-    <div class="modal-dialog" role="document">
-    <div class="modal-content">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-      <div class="modal-title">
-           Update USD Fuel-<i style="color:white"><small>Please Note the fuel you are entering is to be
-          sold in United States Dollars</small></i>
-        </div>
-    </div>
-    <div class="modal-body">
-
-      {% load crispy_forms_tags %}
-      <form action="{% url 'supplier:stock_update' update.id %}" method="POST">
-                                {% csrf_token %}
-                        <div class="row" style="margin-bottom: 30px;">        
-                                <input type="hidden" value="USD" name="fuel_payment_type" />
-                                <div class="form-group row col-sm-12" style="margin-top: 5%;">
-                                    <div class="col-sm-6">
-
-                                        <label><b style='color:#009688'>Fuel Type</b></label>
-                                        <select class="form-control" name="fuel_type">
-
-                                            <option>Petrol</option>
-                                            <option>Diesel</option>
+                                <option>CBZ</option>
+                                <option>BancABC</option>
+                                <option>First Capital</option>
+                                <option>Agribank</option>
+                                <option>Ecobank</option>
+                                <option>FBC</option>
+                                <option>Nedbank</option>
+                                <option>Metbank</option>
+                                <option>NMB</option>
+                                <option>Standard Chatered</option>
+                                <option>Steward Bank</option>
+                                <option>ZB Bank</option>
+                                <option>CABS</option>
+                                <option>POSB</option>
 
 
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label><b style='color:#009688'>Quantity</b></label>
-                                        <input type="text" name="quantity" class="form-control"
-                                            placeholder="In Litres" required />
-                                    </div>
-                                </div>
-                                <div class=" form-group row col-sm-12">
-                                    <input type="hidden" name="cash" value="0" />
-                                    <input type="hidden" name="swipe" value="0">
-                                    <div class="col-sm-12" name="payment" id="payment{{forloop.counter}}">
-                                        <label><b style='color:#009688'>Payment Method</b></label>
-                                        <div class="col-sm-12">
-                                            <div class="col-sm-6"><input type="checkbox" name="cash" value="1">&nbsp; Cash<br></div>
-                                            <div class="col-sm-6"><input type="checkbox" id="fca{{forloop.counter}}" value="1" name="swipe">&nbsp; FCA<br></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 form-group" name="bank" id="bank{{forloop.counter}}">
-                                    <label><b style='color:#009688'>Bank</b></label>
-                                    <select class="form-control" name="destination_bank">
-
-                                        <option>CBZ</option>
-                                        <option>BancABC</option>
-                                        <option>First Capital</option>
-                                        <option>Agribank</option>
-                                        <option>Ecobank</option>
-                                        <option>FBC</option>
-                                        <option>Nedbank</option>
-                                        <option>Metbank</option>
-                                        <option>NMB</option>
-                                        <option>Standard Chatered</option>
-                                        <option>Steward Bank</option>
-                                        <option>ZB Bank</option>
-                                        <option>CABS</option>
-                                        <option>POSB</option>
-
-
-                                    </select>
-                                </div>
-                        </div>        
-
-
-
-                        
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Save changes</button>
-            
-                            <button type="button" class="btn btn-secondary"
-                                data-dismiss="modal">Close</button>
+                            </select>
                         </div>
-                        </form>
-    </div>
-    
-  </div>
-    </div>
-</div>
+                </div>        
 
-           
+ 
+
+                
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+
+                    <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">Close</button>
+                </div>
+                </form>
+    </div>
+    hogfat
+
+    </div>
+    </div>
+</div>           
             
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -286,7 +283,8 @@
 
             </script>
 
-<div class="modal fade modal-success in" id="add_fuel{{update.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade modal-success in" id="add_fuel{{update.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
 <div class="modal-dialog" role="document">
   <div class="modal-content">
     <div class="modal-header">
