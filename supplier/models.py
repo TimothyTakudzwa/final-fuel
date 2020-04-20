@@ -228,6 +228,7 @@ class DeliverySchedule(models.Model):
 
 class SordSubsidiaryAuditTrail(models.Model):
     from company.models import Company
+    date = models.DateField(auto_now_add=True, null=True)
     time = models.TimeField(auto_now_add=True, null=True)
     sord_no =  models.CharField(max_length=100)
     action_no = models.PositiveIntegerField()
