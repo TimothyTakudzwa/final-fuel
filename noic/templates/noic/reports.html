@@ -356,17 +356,17 @@
                                                         </div>
                                                         
                                                         {% if orders or pending_orders or stock or complete_orders or allocations_per_supplier or stock %}
-                                                        <div class="col-md-6" style="background-color: #009688;">
+                                                        <div class="col-md-6" style="background-color: #f1f3f6;">
                                                             <div class="container" style="margin-bottom: 30px">
-                                                                <blockquote class="quote-box">
+                                                                <blockquote class="quote-box" style="border-left: none;">
                                                                 {% if orders or pending_orders or complete_orders or allocations_per_supplier %}
-                                                                <h1 style="color: white;font-size: 15px;">Showing results from <b style="color: gold;">{{start}}</b> to <b style="color: gold;">{{end}} </b> </h1>
+                                                                <h1 style="color: #2a3f54;font-size: 20px;">Showing results from <b style="color: gold;">{{start}}</b> to <b style="color: gold;">{{end}} </b> </h1>
                                                                 {% elif stock %}
-                                                                <h1 style="color:white;font-size: 15px;">Showing Current Stock Levels  - <b style="color: gold;">Current Stock</b> </h1>
+                                                                <h1 style="color: #2a3f54;font-size: 20px;">Showing Current Stock Levels  - <b style="color: gold;">Current Stock</b> </h1>
                                                                 {% elif verified_companies %}
-                                                                <h1 style="color: white;font-size: 15px;">Showing Current Verified Companies </h1>
+                                                                <h1 style="color: #2a3f54;font-size: 20px;">Showing Current Verified Companies </h1>
                                                                 {% elif unverified_companies %}
-                                                                <h1 style="color: white;font-size: 15px;">Showing Current Unverified Companies </h1>
+                                                                <h1 style="color: #2a3f54;font-size: 20px;">Showing Current Unverified Companies </h1>
                             
                                                                 {% endif %}
                                                                 <hr>
@@ -379,11 +379,11 @@
                                                         <div style="/* padding: 25px; */background-color:rgb(14, 80, 100);border: #fafbfb 2px solid;border-radius: 10px;padding-left: 15px;padding-top: 30px;padding-bottom: 30px;margin-left: 15px;margin-top: -89px;">
                                                         </div>
                                                         -->
-                                                        <div class="col-md-6" style="background-color: #009688;">
+                                                        <div class="col-md-6" style="background-color: #f1f3f6;">
                                                             <div class="container col-md-12" style="margin-bottom: 30px">
-                                                                <blockquote class="quote-box">
+                                                                <blockquote class="quote-box" style="border-left: none;">
                                                                 
-                                                                <h1 style="color: white;font-size: 15px; font-weight: 400;">No Data, Generate New Report </h1>
+                                                                <h1 style="color: #2a3f54;font-size: 20px; font-weight: 400;">No Data, Generate New Report </h1>
                             
                                                                 <hr>
                                                                 <!-- <div class="blog-post-actions">
