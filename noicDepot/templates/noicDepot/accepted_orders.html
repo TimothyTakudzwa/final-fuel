@@ -280,6 +280,16 @@
                         </div>
                     </div>
                     <!--End payment details-->
+                    <script>
+                        $('body').click(function (event) {
+                            if(!$(event.target).closest('#allocation_{{order.id}}').length && !$(event.target).is('#allocation_{{order.id}}')) {
+                                $("#allocation_{{order.id}}").modal('hide');
+                            }
+                            if(!$(event.target).closest('#payment{{order.id}}').length && !$(event.target).is('#payment{{order.id}}')) {
+                                $("#payment{{order.id}}").modal('hide');
+                            } 
+                        });
+                    </script>
  
                 {%endfor%}
             </tbody>
