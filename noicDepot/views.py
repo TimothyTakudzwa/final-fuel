@@ -521,7 +521,7 @@ def report_generator(request):
             if depot:
                 allocations = SordNationalAuditTrail.objects.filter(assigned_depot=depot)
             # allocations = SordNationalAuditTrail.objects.all()
-            print(f'__________________{allocations[0].price}__________________________________')
+            print(f'__________________{allocations}__________________________________')
             print(f'__________________I am in Allocations ')
 
 
