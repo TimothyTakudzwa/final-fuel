@@ -113,12 +113,12 @@
               <form action="{% url 'serviceStation:home' %}" method="POST">
                          {% csrf_token %}
                          <div class="form-group">
-                            <lable>Petrol Quantity</lable>
+                            <label>Petrol Quantity</label>
                             <input type="text" name="petrol_quantity" class="form-control" value="{{updates.petrol_quantity}}" />
                         </div>
 
                         <div class="form-group">
-                            <lable>Queue Length</lable>
+                            <label>Queue Length</label>
                             <select name="queue_length" id="inputState" class="form-control" style="margin-left: 15px;" value="{{updates.queue_length}}">
                                 <option> short </option>
                               <option> medium long </option>
@@ -127,7 +127,7 @@
                             
                         </div>
                         <div class="form-group">
-                            <lable>Status</lable>
+                            <label>Status</label>
                             <select name="status" id="inputState" class="form-control" style="margin-left: 15px;" value="{{updates.status}}">
                                 <option> Pumping </option>
                               <option> Empty </option>
@@ -188,12 +188,12 @@
             <form action="{% url 'serviceStation:update_diesel' updates.id %}" method="POST">
                        {% csrf_token %}
                        <div class="form-group">
-                          <lable>Diesel Quantity</lable>
+                          <label>Diesel Quantity</label>
                           <input type="text" name="diesel_quantity" class="form-control" value="{{updates.diesel_quantity}}" />
                       </div>
 
                       <div class="form-group">
-                          <lable>Queue Length</lable>
+                          <label>Queue Length</label>
                           <select name="queue_length" id="inputState" class="form-control" style="margin-left: 15px;" value="{{updates.queue_length}}">
                               <option> short </option>
                             <option> medium long </option>
@@ -202,7 +202,7 @@
                           
                       </div>
                       <div class="form-group">
-                          <lable>Status</lable>
+                          <label>Status</label>
                           <select name="status" id="inputState" class="form-control" style="margin-left: 15px;" value="{{updates.status}}">
                               <option> Pumping </option>
                             <option> Empty </option>

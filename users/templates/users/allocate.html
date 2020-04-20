@@ -380,13 +380,13 @@
 
 
                                                                 <div class="form-group">
-                                                                    <lable>Petrol Capacity</lable>
+                                                                    <label>Petrol Capacity</label>
                                                                     <input type="number" min="0.1" step="0.01" name="petrol_quantity" class="form-control"
                                                                            value="{{company_capacity.petrol_quantity}}" />
                                                                 </div>
 
                                                                 <div class="form-group">
-                                                                    <lable>Petrol Price</lable>
+                                                                    <label>Petrol Price</label>
                                                                     <input type="number" min="0.1" step="0.01" name="petrol_price" class="form-control"
                                                                            value="{{company_capacity.petrol_price}}" />
                                                                 </div>
@@ -748,13 +748,13 @@
 
 
                                                             <div class="form-group">
-                                                                <lable>Petrol Capacity</lable>
+                                                                <label>Petrol Capacity</label>
                                                                 <input type="number" min="0.1" step="0.01" name="petrol_quantity" class="form-control"
                                                                        value="{{company_capacity.petrol_quantity}}" />
                                                             </div>
 
                                                             <div class="form-group">
-                                                                <lable>Petrol Price</lable>
+                                                                <label>Petrol Price</label>
                                                                 <input type="number" min="0.1" step="0.01" name="petrol_price" class="form-control"
                                                                        value="{{company_capacity.petrol_price}}" />
                                                             </div>
@@ -817,13 +817,13 @@
 
 
                                 <div class="form-group">
-                                    <lable>Diesel Capacity</lable>
+                                    <label>Diesel Capacity</label>
                                     <input type="number" min="0.1" step="0.01" name="diesel_quantity" class="form-control"
                                            value="{{company_capacity.diesel_quantity}}" />
                                 </div>
 
                                 <div class="form-group">
-                                    <lable>Diesel Price</lable>
+                                    <label>Diesel Price</label>
                                     <input type="number" min="0.1" step="0.01" name="diesel_price" class="form-control"
                                            value="{{company_capacity.diesel_price}}" />
                                 </div>
@@ -1205,13 +1205,13 @@
 
 
                                                 <div class="form-group">
-                                                    <lable>Petrol Price</lable>
+                                                    <label>Petrol Price</label>
                                                     <input type="number" min="0.1" step="0.01" name="petrol_price" class="form-control"
                                                            value="{{allocate.petrol_price}}" />
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <lable>Diesel Price</lable>
+                                                    <label>Diesel Price</label>
                                                     <input type="number" min="0.1" step="0.01" name="diesel_price" value="{{allocate.diesel_price}}"
                                                            class="form-control" />
                                                 </div>
@@ -1263,7 +1263,7 @@
                                             <form action="{% url 'users:allocation_update' allocate.id %}" method="POST">
                                                 {% csrf_token %}
                                                 <div class="form-group">
-                                                    <lable>Petrol Capacitdy</lable>
+                                                    <label>Petrol Capacitdy</label>
                                                     <input type="number" min="0.1" step="0.01" name="petrol_quantity" class="form-control" value=" "
                                                            required />
                                                 </div>
@@ -1412,13 +1412,13 @@
                                                 {% if alloc.diesel_quantity > 0 %}
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
-                                                            <lable>Diesel User Input</lable>
+                                                            <label>Diesel User Input</label>
                                                             <input type="number" min="0.1" step="0.01" class="form-control"
                                                                    value="{{alloc.diesel_quantity}}" />
                                                         </div>
 
                                                         <div class="form-group col-md-6">
-                                                            <lable>Actual Diesel Quantity</lable>
+                                                            <label>Actual Diesel Quantity</label>
                                                             <input type="number" min="0.1" step="0.01" name="diesel_quantity" class="form-control"
                                                                    value="" />
                                                         </div>
@@ -1426,7 +1426,7 @@
                                                     <div class="row">
 
                                                         <div class="form-group col-md-6">
-                                                            <lable></lable>
+                                                            <label></label>
                                                             <input type="hidden" name="petrol_quantity" class="form-control"
                                                                    value="0" />
                                                         </div>
@@ -1436,19 +1436,19 @@
                                                 {% if alloc.petrol_quantity > 0 %}
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
-                                                            <lable>Petrol User Input</lable>
+                                                            <label>Petrol User Input</label>
                                                             <input type="number" min="0.1" step="0.01" class="form-control"
                                                                    value="{{alloc.petrol_quantity}}" />
                                                         </div>
 
                                                         <div class="form-group col-md-6">
-                                                            <lable>Actual Petrol Quantity</lable>
+                                                            <label>Actual Petrol Quantity</label>
                                                             <input type="number" min="0.1" step="0.01" name="petrol_quantity" class="form-control"
                                                                    value="" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <lable></lable>
+                                                        <label></label>
                                                         <input type="hidden" name="diesel_quantity" class="form-control"
                                                                value="0" />
                                                     </div>

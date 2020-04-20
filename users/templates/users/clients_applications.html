@@ -268,7 +268,7 @@
                                                     <form method="POST" action="{% url 'users:application-approval' client.id %}" enctype="multipart/form-data">
                                                         {% csrf_token %}
                                                         <div class="col-sm-12">
-                                                            <lable>Account Number</lable>
+                                                            <label>Account Number</label>
                                                             <input type="text" name="account_number" class="form-control"/>
                                                         </div>
                                                        <br>

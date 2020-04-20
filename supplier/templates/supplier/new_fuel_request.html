@@ -256,22 +256,22 @@ aria-hidden="true">
      {% csrf_token %}
      <div class=" row col-sm-12">
      <div class="col-sm-6">
-         <lable>Fuel Type</lable>
+         <label>Fuel Type</label>
          <input type="text" name="fuel_type" class="form-control" value="{{req.fuel_type}}" disabled/>
      </div>
 
      <div class="col-sm-6">
-         <lable>Fuel Quantity</lable>
+         <label>Fuel Quantity</label>
          <input type="number" step="0.01" name="quantity" class="form-control" value="{{req.offer_quantity}}" required/>
      </div>
      </div>
      <div class=" row col-sm-12">
      <div class="col-sm-6">
-         <lable>Fuel Price</lable>
+         <label>Fuel Price</label>
          <input type="number" step="0.01" name="price" class="form-control" value="{{req.offer_price}}" required/>
      </div>
      <div class="col-sm-6">
-      <lable>Transport Fee</lable>
+      <label>Transport Fee</label>
       <input type="number" step="0.01" name="transport" class="form-control" value="{{req.transport_fee}}" required/>
   </div>
      </div>
@@ -298,16 +298,16 @@ aria-hidden="true">
      {% csrf_token %}
      <div class=" row col-sm-12">
      <div class="col-sm-4">
-         <lable>Fuel Type</lable>
+         <label>Fuel Type</label>
          <input type="text" name="fuel_type" class="form-control" value="{{req.fuel_type}}" disabled/>
      </div>
 
      <div class="col-sm-4">
-         <lable>Fuel Quantity</lable>
+         <label>Fuel Quantity</label>
          <input type="number" step="0.01" name="quantity" class="form-control" value="{{req.offer_quantity}}" required/>
      </div>
      <div class="col-sm-4">
-         <lable>Fuel Price</lable>
+         <label>Fuel Price</label>
          <input type="number" step="0.01" name="price" class="form-control" value="{{req.offer_price|stringformat:".2f"}}" required/>
      </div>
      </div>
