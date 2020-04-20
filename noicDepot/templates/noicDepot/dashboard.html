@@ -207,6 +207,13 @@
                         </div>
                     </div>
                     <!--End Upload Document-->
+                    <script>
+                        $('body').click(function (event) {
+                            if(!$(event.target).closest('#edit_{{sord.id}}').length && !$(event.target).is('#edit_{{sord.id}}')) {
+                                $("#edit_{{sord.id}}").modal('hide');
+                            } 
+                        });
+                    </script>
                         {% endfor %}
                     </tbody>
                 </table>
