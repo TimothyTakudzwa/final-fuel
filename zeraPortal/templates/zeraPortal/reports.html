@@ -355,7 +355,7 @@
                             {% if trans or revs or stock or allocations or requests or verified_companies or  unverified_companies%}
                             <div class="col-md-6" style="background-color: #f1f3f6">
                                 <div class="container" style="margin-bottom: 30px">
-                                    <blockquote class="quote-box">
+                                    <blockquote class="quote-box" style="border-left: none;">
                                     {% if trans or revs or allocations or requests %}
                                     <h1 style="color: #2a3f54;font-size: 20px;">Showing results from <b style="color: #009688;">{{start}}</b> to <b style="color: #009688;">{{end}} </b> </h1>
                                     {% elif stock %}
@@ -378,7 +378,7 @@
                             -->
                             <div class="col-md-6" style="background-color: #f1f3f6;">
                                 <div class="container col-md-12" style="margin-bottom: 30px">
-                                    <blockquote class="quote-box">
+                                    <blockquote class="quote-box" style="border-left: none;">
                                     
                                     <h1 style="color: #2a3f54;font-size: 20px; font-weight: 400;">No Data, Generate New Report </h1>
 
