@@ -422,7 +422,7 @@
                                                 <div class="form-group" name='choices' id='choices{{forloop.counter}}'>
                                                     <label>Delivery Address</label>
                                                     <div class="row form-group">
-                                                        <select id="branch{{forloop.counter}}">
+                                                        <select class="form-control" id="branch{{forloop.counter}}">
                                                             <option value="">---Select a delivery branch---</option>
                                                             {% for branch in branches %}
                                                             <option id="option{{forloop.counter}}" data-value="{{branch}}">{{branch.name|capfirst}}</option>
