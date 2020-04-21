@@ -70,6 +70,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
+                                        {% if current_activities %}    
                                         {% for activity in current_activities %}
                                             <tr>
                                                 <td>{{ activity.date }}</td>
@@ -403,6 +404,9 @@
                             </div>
                         </div>
                                         {%endfor%}
+                                        {% else %}
+                                        <p>No Data To Show</p>
+                                        {% endif %}
                                         </tbody>
                                     </table>
                                 </div>
@@ -421,340 +425,344 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {% for activity in activities %}
-                                            <tr>
-                                                <td>{{ activity.date }}</td>
-                                                <td>Supplier Depot</td>
-                                                <td>{{activity.user.first_name}} {{activity.user.last_name}}</td>
-                                                <td>{{activity.action}}</td>
-                                                <td>{{activity.description}}</td>
-                                                {% if activity.action == 'Updating Fuel Stocks' %}
-                                                <td>
-                                                    <div class="btn-group">
-                                                        <button  data-toggle="modal"  data-target="#stock{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                                {% elif activity.action == 'Making Offer' %}
-                                                <td>
-                                                    <div class="btn-group">
-                                                        <button  data-toggle="modal"  data-target="#accept_offer{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                                {% elif activity.action == 'Updating Delivery Schedule' %}
-                                                <td>
-                                                    <div class="btn-group">
-                                                        <button  data-toggle="modal"  data-target="#update_schedule{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                               
-                                                {% elif activity.action == 'Creating Delivery Schedule' %}
-                                                <td>
-                                                    <div class="btn-group">
-                                                        <button  data-toggle="modal"  data-target="#d_schedule{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                                                        </button>
-                                                    </div>
-                                                    
-                                                </td>
-                                                {% elif activity.action == 'Creating Release Note' %}
-                                                <td>
-                                                    <div class="btn-group"> 
-                                                        <a href="{% url 'supplier:view_release_note' activity.reference_id %}" type="button" class="btn btn-labeled btn-success btn-sm">
-                                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                                                        </a>                                                             
-                                                             
-                                                    </div>
-                                                </td>
-                                                {% elif activity.action == 'Updating Release Note' %}
-                                                <td>
-                                                    <div class="btn-group"> 
-                                                        <a href="{% url 'supplier:view_release_note' activity.reference_id %}" type="button" class="btn btn-labeled btn-success btn-sm">
-                                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                                                        </a>                                                             
-                                                             
-                                                    </div>
-                                                </td>
-                                               
+                                        {% if activities %}    
+                                            {% for activity in activities %}
+                                                <tr>
+                                                    <td>{{ activity.date }}</td>
+                                                    <td>Supplier Depot</td>
+                                                    <td>{{activity.user.first_name}} {{activity.user.last_name}}</td>
+                                                    <td>{{activity.action}}</td>
+                                                    <td>{{activity.description}}</td>
+                                                    {% if activity.action == 'Updating Fuel Stocks' %}
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button  data-toggle="modal"  data-target="#stock{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                                <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                    {% elif activity.action == 'Making Offer' %}
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button  data-toggle="modal"  data-target="#accept_offer{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                                <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                    {% elif activity.action == 'Updating Delivery Schedule' %}
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button  data-toggle="modal"  data-target="#update_schedule{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                                <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                                            </button>
+                                                        </div>
+                                                    </td>
                                                 
-                                                {% endif %}
-                                            </tr>
-
-
-                                            <div class="modal fade modal-success in" id="accept_offer{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                                            aria-hidden="true" style="overflow-y: initial !important;" >
-                                            <div class="modal-dialog modal-notice">
-                                                <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                    <span class="modal-title">Offer Info</span>
-                                                </div>
-                                                <div class="modal-body" style="padding: 30px;overflow-y: auto;">
-                                                    <div class="row" style="padding: 10px;">
-                                                        <p class="col-md-6" style="font-weight: bold;">Fuel Type: </p>
-                                                        <p class="col-md-6">{{ activity.offer_object.request.fuel_type }}</p>
-                                                    </div>
-                                                    <div class="row" style="padding: 10px;">
-                                                        <p class="col-md-6" style="font-weight: bold;">Quantity: </p>
-                                                        <p class="col-md-6">{{ activity.offer_object.quantity }}</p>
-                                                    </div>
-                                                    <div class="row" style="padding: 10px;">
-                                                        <p class="col-md-6" style="font-weight: bold;">Currency </p>
-                                                        <p class="col-md-6">{{activity.offer_object.request.payment_method }}</p>
-                                                    </div>
-                                                    <div class="row" style="padding: 10px;">
-                                                        <p class="col-md-6" style="font-weight: bold;">Delivery Method: </p>
-                                                        <p class="col-md-6">{{activity.offer_object.request.delivery_method}}</p>
-                                                    </div>
-                                                   
+                                                    {% elif activity.action == 'Creating Delivery Schedule' %}
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button  data-toggle="modal"  data-target="#d_schedule{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                                <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                                            </button>
+                                                        </div>
+                                                        
+                                                    </td>
+                                                    {% elif activity.action == 'Creating Release Note' %}
+                                                    <td>
+                                                        <div class="btn-group"> 
+                                                            <a href="{% url 'supplier:view_release_note' activity.reference_id %}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                                <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                                            </a>                                                             
+                                                                
+                                                        </div>
+                                                    </td>
+                                                    {% elif activity.action == 'Updating Release Note' %}
+                                                    <td>
+                                                        <div class="btn-group"> 
+                                                            <a href="{% url 'supplier:view_release_note' activity.reference_id %}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                                                <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                                            </a>                                                             
+                                                                
+                                                        </div>
+                                                    </td>
+                                                
                                                     
-                                                    <div class="modal-footer">  
-                                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                                                    </div>    
-                    
-                                                </div>
+                                                    {% endif %}
+                                                </tr>
+
+
+                                                <div class="modal fade modal-success in" id="accept_offer{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                                aria-hidden="true" style="overflow-y: initial !important;" >
+                                                <div class="modal-dialog modal-notice">
+                                                    <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                        <span class="modal-title">Offer Info</span>
                                                     </div>
-                                                    
-                                                </div>
-                                            </div>
-
-
-                                            <div class="modal fade modal-success in" id="stock{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                                            aria-hidden="true" style="overflow-y: initial !important;" >
-                                            <div class="modal-dialog modal-notice">
-                                                <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                    <span class="modal-title">Fuel Stocks Info</span>
-                                                </div>
                                                     <div class="modal-body" style="padding: 30px;overflow-y: auto;">
                                                         <div class="row" style="padding: 10px;">
-                                                            <p class="col-md-6" style="font-weight: bold;">Currency: </p>
-                                                            <p class="col-md-6">{{ activity.fuel_object.payment_type }}</p>
+                                                            <p class="col-md-6" style="font-weight: bold;">Fuel Type: </p>
+                                                            <p class="col-md-6">{{ activity.offer_object.request.fuel_type }}</p>
                                                         </div>
                                                         <div class="row" style="padding: 10px;">
-                                                            <p class="col-md-6" style="font-weight: bold;">Petrol Quantity: </p>
-                                                            <p class="col-md-6">{{ activity.fuel_object.petrol_quantity }}</p>
+                                                            <p class="col-md-6" style="font-weight: bold;">Quantity: </p>
+                                                            <p class="col-md-6">{{ activity.offer_object.quantity }}</p>
                                                         </div>
                                                         <div class="row" style="padding: 10px;">
-                                                            <p class="col-md-6" style="font-weight: bold;">Diesel Quantity </p>
-                                                            <p class="col-md-6">{{activity.fuel_object.diesel_quantity }}</p>
+                                                            <p class="col-md-6" style="font-weight: bold;">Currency </p>
+                                                            <p class="col-md-6">{{activity.offer_object.request.payment_method }}</p>
                                                         </div>
-                                                      
-                                                       
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Delivery Method: </p>
+                                                            <p class="col-md-6">{{activity.offer_object.request.delivery_method}}</p>
+                                                        </div>
+                                                    
+                                                        
                                                         <div class="modal-footer">  
                                                             <button class="btn btn-default" data-dismiss="modal" >Close</button>
                                                         </div>    
                         
                                                     </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="modal fade modal-success in" id="stock{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                                aria-hidden="true" style="overflow-y: initial !important;" >
+                                                <div class="modal-dialog modal-notice">
+                                                    <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                        <span class="modal-title">Fuel Stocks Info</span>
+                                                    </div>
+                                                        <div class="modal-body" style="padding: 30px;overflow-y: auto;">
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Currency: </p>
+                                                                <p class="col-md-6">{{ activity.fuel_object.payment_type }}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Petrol Quantity: </p>
+                                                                <p class="col-md-6">{{ activity.fuel_object.petrol_quantity }}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Diesel Quantity </p>
+                                                                <p class="col-md-6">{{activity.fuel_object.diesel_quantity }}</p>
+                                                            </div>
+                                                        
+                                                        
+                                                            <div class="modal-footer">  
+                                                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                            </div>    
+                            
+                                                        </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+
+
+                                            <div class="modal fade modal-success in" id="d_schedule{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                            aria-hidden="true" style="overflow-y: initial !important;" >
+                                            <div class="modal-dialog modal-notice">
+                                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                    <span class="modal-title">Delivery Schedule Info</span>
+                                                </div>
+                                                    <div class="modal-body" style="padding: 30px;height: 600px;overflow-y: auto;">
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Delivery Date/Time: </p>
+                                                            <p class="col-md-6">{{ activity.delivery.date }} | {{ activity.delivery.delivery_time }}</p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Recipient: </p>
+                                                            <p class="col-md-6">{{ activity.delivery.transaction.buyer.company.name|title }}</p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Address: </p>
+                                                            <p class="col-md-6">{{activity.delivery.transaction.buyer.company.address}}</p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Product: </p>
+                                                            <p class="col-md-6">{{activity.delivery.transaction.offer.request.fuel_type}}</p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Transporter </p>
+                                                            <p class="col-md-6">{{activity.delivery.transport_company}}</p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Quantity: </p>
+                                                            <p class="col-md-6">{{activity.delivery.delivery_quantity|floatformat:2|intcomma}} (Litres)</p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Contact Person: </p>
+                                                            <p class="col-md-6">{{activity.delivery.transaction.buyer.first_name|title}} {{activity.delivery.transaction.buyer.last_name|title}} </p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Contact Phone: </p>
+                                                            <p class="col-md-6">{{activity.delivery.transaction.buyer.phone_number}}</p>
+                                                        </div>       
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Driver Name: </p>
+                                                            <p class="col-md-6">{{activity.delivery.driver_name}}</p>
+                                                        </div>   
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;"> Driver Phone Number: </p>
+                                                            <p class="col-md-6">{{activity.delivery.phone_number}}</p>
+                                                        </div>   
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Id Number: </p>
+                                                            <p class="col-md-6">{{activity.delivery.id_number}}</p>
+                                                        </div>   
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Vehicle Reg: </p>
+                                                            <p class="col-md-6">{{activity.delivery.vehicle_reg}}</p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Tank Details: </p>
+                                                            <p class="col-md-6">{{activity.delivery.transaction.offer.request.storage_tanks}}</p>
+                                                        </div>
+                                                        
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Equipment Required: </p>
+                                                            <p class="col-md-6">
+                                                                {% if activity.delivery.transaction.offer.request.pump_required %}
+                                                                Pump
+                                                                {% endif %}
+                                                                {% if activity.delivery.transaction.offer.request.dipping_stick_required %}
+                                                                Dipping Stick
+                                                                {% endif %}
+                                                                {% if activity.delivery.transaction.offer.request.meter_required %}
+                                                                Meter Required
+                                                                {% else %}
+                                                                N/A
+                                                                {% endif %}
+                                                            </p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Status: </p>
+                                                            {% if activity.delivery.confirmation_date %}
+                                                            <p class="col-md-6"> 
+                                                                <a class="btn btn-purple btn-sm" href="{% url 'supplier:view_confirmation_doc' delivery.id %}">View Confirmation Doc</a>
+                                                            </p>       
+                                                            {%else %}
+                                                            <p class="col-md-6">Status: Pending </p>    
+                                                            {% endif %} 
+                                                        </div>     
+                                                        <div class="modal-footer">  
+                                                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                        </div>    
+
+                                                    </div>
                                                     </div>
                                                     
                                                 </div>
                                             </div>
 
 
-                        <div class="modal fade modal-success in" id="d_schedule{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                        aria-hidden="true" style="overflow-y: initial !important;" >
-                        <div class="modal-dialog modal-notice">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                <span class="modal-title">Delivery Schedule Info</span>
-                            </div>
-                                <div class="modal-body" style="padding: 30px;height: 600px;overflow-y: auto;">
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Delivery Date/Time: </p>
-                                        <p class="col-md-6">{{ activity.delivery.date }} | {{ activity.delivery.delivery_time }}</p>
-                                    </div>
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Recipient: </p>
-                                        <p class="col-md-6">{{ activity.delivery.transaction.buyer.company.name|title }}</p>
-                                    </div>
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Address: </p>
-                                        <p class="col-md-6">{{activity.delivery.transaction.buyer.company.address}}</p>
-                                    </div>
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Product: </p>
-                                        <p class="col-md-6">{{activity.delivery.transaction.offer.request.fuel_type}}</p>
-                                    </div>
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Transporter </p>
-                                        <p class="col-md-6">{{activity.delivery.transport_company}}</p>
-                                    </div>
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Quantity: </p>
-                                        <p class="col-md-6">{{activity.delivery.delivery_quantity|floatformat:2|intcomma}} (Litres)</p>
-                                    </div>
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Contact Person: </p>
-                                        <p class="col-md-6">{{activity.delivery.transaction.buyer.first_name|title}} {{activity.delivery.transaction.buyer.last_name|title}} </p>
-                                    </div>
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Contact Phone: </p>
-                                        <p class="col-md-6">{{activity.delivery.transaction.buyer.phone_number}}</p>
-                                    </div>       
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Driver Name: </p>
-                                        <p class="col-md-6">{{activity.delivery.driver_name}}</p>
-                                    </div>   
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;"> Driver Phone Number: </p>
-                                        <p class="col-md-6">{{activity.delivery.phone_number}}</p>
-                                    </div>   
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Id Number: </p>
-                                        <p class="col-md-6">{{activity.delivery.id_number}}</p>
-                                    </div>   
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Vehicle Reg: </p>
-                                        <p class="col-md-6">{{activity.delivery.vehicle_reg}}</p>
-                                    </div>
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Tank Details: </p>
-                                        <p class="col-md-6">{{activity.delivery.transaction.offer.request.storage_tanks}}</p>
-                                    </div>
-                                    
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Equipment Required: </p>
-                                        <p class="col-md-6">
-                                            {% if activity.delivery.transaction.offer.request.pump_required %}
-                                            Pump
-                                            {% endif %}
-                                            {% if activity.delivery.transaction.offer.request.dipping_stick_required %}
-                                            Dipping Stick
-                                            {% endif %}
-                                            {% if activity.delivery.transaction.offer.request.meter_required %}
-                                            Meter Required
-                                            {% else %}
-                                            N/A
-                                            {% endif %}
-                                        </p>
-                                    </div>
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Status: </p>
-                                        {% if activity.delivery.confirmation_date %}
-                                        <p class="col-md-6"> 
-                                            <a class="btn btn-purple btn-sm" href="{% url 'supplier:view_confirmation_doc' delivery.id %}">View Confirmation Doc</a>
-                                        </p>       
-                                        {%else %}
-                                        <p class="col-md-6">Status: Pending </p>    
-                                        {% endif %} 
-                                    </div>     
-                                    <div class="modal-footer">  
-                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                                    </div>    
+                                            <div class="modal fade modal-success in" id="update_schedule{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                            aria-hidden="true" style="overflow-y: initial !important;" >
+                                            <div class="modal-dialog modal-notice">
+                                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                    <span class="modal-title">Updated Delivery Schedule Info</span>
+                                                </div>
+                                                <div class="modal-body" style="padding: 30px;height: 600px;overflow-y: auto;">
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Delivery Date/Time: </p>
+                                                        <p class="col-md-6">{{ activity.delivery.date }} | {{ activity.delivery.delivery_time }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Recipient: </p>
+                                                        <p class="col-md-6">{{ activity.delivery.transaction.buyer.company.name|title }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Address: </p>
+                                                        <p class="col-md-6">{{activity.delivery.transaction.buyer.company.address}}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Product: </p>
+                                                        <p class="col-md-6">{{activity.delivery.transaction.offer.request.fuel_type}}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Transporter </p>
+                                                        <p class="col-md-6">{{activity.delivery.transport_company}}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Quantity: </p>
+                                                        <p class="col-md-6">{{activity.delivery.delivery_quantity|floatformat:2|intcomma}} (Litres)</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Contact Person: </p>
+                                                        <p class="col-md-6">{{activity.delivery.transaction.buyer.first_name|title}} {{activity.delivery.transaction.buyer.last_name|title}} </p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Contact Phone: </p>
+                                                        <p class="col-md-6">{{activity.delivery.transaction.buyer.phone_number}}</p>
+                                                    </div>       
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Driver Name: </p>
+                                                        <p class="col-md-6">{{activity.delivery.driver_name}}</p>
+                                                    </div>   
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;"> Driver Phone Number: </p>
+                                                        <p class="col-md-6">{{activity.delivery.phone_number}}</p>
+                                                    </div>   
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Id Number: </p>
+                                                        <p class="col-md-6">{{activity.delivery.id_number}}</p>
+                                                    </div>   
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Vehicle Reg: </p>
+                                                        <p class="col-md-6">{{activity.delivery.vehicle_reg}}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Tank Details: </p>
+                                                        <p class="col-md-6">{{activity.delivery.transaction.offer.request.storage_tanks}}</p>
+                                                    </div>
+                                                    
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Equipment Required: </p>
+                                                        <p class="col-md-6">
+                                                            {% if activity.delivery.transaction.offer.request.pump_required %}
+                                                            Pump
+                                                            {% endif %}
+                                                            {% if activity.delivery.transaction.offer.request.dipping_stick_required %}
+                                                            Dipping Stick
+                                                            {% endif %}
+                                                            {% if activity.delivery.transaction.offer.request.meter_required %}
+                                                            Meter Required
+                                                            {% else %}
+                                                            N/A
+                                                            {% endif %}
+                                                        </p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Status: </p>
+                                                        {% if activity.delivery.confirmation_date %}
+                                                        <p class="col-md-6"> 
+                                                            <a class="btn btn-purple btn-sm" href="{% url 'supplier:view_confirmation_doc' delivery.id %}">View Confirmation Doc</a>
+                                                        </p>       
+                                                        {%else %}
+                                                        <p class="col-md-6">Status: Pending </p>    
+                                                        {% endif %} 
+                                                    </div>     
+                                                    <div class="modal-footer">  
+                                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                    </div>    
 
-                                </div>
-                                </div>
-                                
-                            </div>
-                        </div>
-
-
-                        <div class="modal fade modal-success in" id="update_schedule{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                        aria-hidden="true" style="overflow-y: initial !important;" >
-                        <div class="modal-dialog modal-notice">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                <span class="modal-title">Updated Delivery Schedule Info</span>
-                            </div>
-                            <div class="modal-body" style="padding: 30px;height: 600px;overflow-y: auto;">
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Delivery Date/Time: </p>
-                                    <p class="col-md-6">{{ activity.delivery.date }} | {{ activity.delivery.delivery_time }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Recipient: </p>
-                                    <p class="col-md-6">{{ activity.delivery.transaction.buyer.company.name|title }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Address: </p>
-                                    <p class="col-md-6">{{activity.delivery.transaction.buyer.company.address}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Product: </p>
-                                    <p class="col-md-6">{{activity.delivery.transaction.offer.request.fuel_type}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Transporter </p>
-                                    <p class="col-md-6">{{activity.delivery.transport_company}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Quantity: </p>
-                                    <p class="col-md-6">{{activity.delivery.delivery_quantity|floatformat:2|intcomma}} (Litres)</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Contact Person: </p>
-                                    <p class="col-md-6">{{activity.delivery.transaction.buyer.first_name|title}} {{activity.delivery.transaction.buyer.last_name|title}} </p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Contact Phone: </p>
-                                    <p class="col-md-6">{{activity.delivery.transaction.buyer.phone_number}}</p>
-                                </div>       
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Driver Name: </p>
-                                    <p class="col-md-6">{{activity.delivery.driver_name}}</p>
-                                </div>   
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;"> Driver Phone Number: </p>
-                                    <p class="col-md-6">{{activity.delivery.phone_number}}</p>
-                                </div>   
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Id Number: </p>
-                                    <p class="col-md-6">{{activity.delivery.id_number}}</p>
-                                </div>   
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Vehicle Reg: </p>
-                                    <p class="col-md-6">{{activity.delivery.vehicle_reg}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Tank Details: </p>
-                                    <p class="col-md-6">{{activity.delivery.transaction.offer.request.storage_tanks}}</p>
-                                </div>
-                                
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Equipment Required: </p>
-                                    <p class="col-md-6">
-                                        {% if activity.delivery.transaction.offer.request.pump_required %}
-                                        Pump
-                                        {% endif %}
-                                        {% if activity.delivery.transaction.offer.request.dipping_stick_required %}
-                                        Dipping Stick
-                                        {% endif %}
-                                        {% if activity.delivery.transaction.offer.request.meter_required %}
-                                        Meter Required
+                                                </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            {%endfor%}
                                         {% else %}
-                                        N/A
+                                        <p>No Data To Show</p>    
                                         {% endif %}
-                                    </p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Status: </p>
-                                    {% if activity.delivery.confirmation_date %}
-                                    <p class="col-md-6"> 
-                                        <a class="btn btn-purple btn-sm" href="{% url 'supplier:view_confirmation_doc' delivery.id %}">View Confirmation Doc</a>
-                                    </p>       
-                                    {%else %}
-                                    <p class="col-md-6">Status: Pending </p>    
-                                    {% endif %} 
-                                </div>     
-                                <div class="modal-footer">  
-                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                                </div>    
-
-                            </div>
-                                </div>
-                                
-                            </div>
-                        </div>
-                                        {%endfor%}
                                         </tbody>
                                     </table>
                                 </div>
