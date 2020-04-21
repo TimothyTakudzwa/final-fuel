@@ -530,7 +530,7 @@
 
                                                     <div class="col-sm-6 form-group">
                                                         <label class="form-group">Pick Up Method</label>
-                                                        <select id="delivery_method1{{forloop.counter}}"
+                                                        <select class="form-control" id="delivery_method1{{forloop.counter}}"
                                                                 name="delivery_method" class="form-control">
                                                             <option value='SELF COLLECTION'>Self Collection
                                                             </option>
@@ -567,7 +567,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="form-group" name='choices' id='choices1{{forloop.counter}}'>
+                                                <div class="form-group row-sm-12" name='choices' id='choices1{{forloop.counter}}'>
                                                     <label>Delivery Address</label>
                                                     <div class="form-group row-sm-12">
                                                         <select class="form-control" id="branch1{{forloop.counter}}">
@@ -577,7 +577,7 @@
                                                             {% endfor %}
                                                           </select>
                                                     </div>
-                                                    <div class="row form-group">
+                                                    <div class="form-group row-sm-12">
                                                         <div class="togglebutton form-group col-sm-4">
                                                             <label for="">Street Number</label>
                                                             <input type="text" class="form-control" name="s_number"
@@ -602,7 +602,7 @@
                                                     {{ form.storage_tanks|as_crispy_field }}
                                                     <br>
                                                     <label>Required Equipments</label>
-                                                    <div class="row">
+                                                    <div class="row-sm-12">
                                                         <div class="col-sm-4">
                                                             <input class="form-control-md" type="hidden" value='False'
                                                                    id="pump_required" name="pump_required">
