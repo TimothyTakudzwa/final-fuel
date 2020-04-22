@@ -521,21 +521,21 @@
                                             <div class="modal-body">
                                                 <div class="row">
                                                     <!--expected-->
-                                                    <div class="col-md-3">
-                                                        <h4 style="font-weight: lighter;font-size: 14px;">Expected &nbsp;&nbsp; : &nbsp;&nbsp; ${{transaction.expected|stringformat:".2f"}}</h4>
+                                                    <div class="col-md-4">
+                                                        <h4 style="font-weight: bolder;font-size: 14px;">Expected &nbsp;&nbsp; : &nbsp;&nbsp; ${{transaction.expected|stringformat:".2f"}}</h4>
                                                     </div>
                                                     {% if transaction.offer.delivery_method == 'DELIVERY' %}
                                                         <!--transport-->
-                                                        <div class="col-md-3">
-                                                            <h4 style="font-weight: lighter;font-size: 14px;">Transport Fee &nbsp;&nbsp; : &nbsp;&nbsp;  ${{transaction.offer.transport_fee|stringformat:".2f"}}</h4>
+                                                        <div class="col-md-4">
+                                                            <h4 style="font-weight: bolder;font-size: 14px;">Transport Fee &nbsp;&nbsp; : &nbsp;&nbsp;  ${{transaction.offer.transport_fee|stringformat:".2f"}}</h4>
                                                         </div>
 
 
                                                     {% endif %}
 
                                                     <!--paid-->
-                                                    <div class="col-md-3">
-                                                        <h4 style="font-weight: lighter;font-size: 14px;">Paid &nbsp;&nbsp; : &nbsp;&nbsp; ${{transaction.paid|stringformat:".2f"}}</h4>
+                                                    <div class="col-md-4">
+                                                        <h4 style="font-weight: bolder;font-size: 14px;">Paid &nbsp;&nbsp; : &nbsp;&nbsp; ${{transaction.paid|stringformat:".2f"}}</h4>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">  

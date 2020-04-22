@@ -9,7 +9,7 @@ User = get_user_model()
 
 OPTIONS = [
     ('BUYER', ' Corporate Buyer'),
-    ('SUPPLIER', 'Fuel Supplier'),
+
 ]
 
 """

@@ -19,7 +19,7 @@ urlpatterns = [
     path('delete_depot/<int:id>', views.delete_depot, name='delete_depot'),
     path('staff/', views.staff, name='staff'),
     path('depot_history/<int:did>', views.depot_history, name="depot_history"),
-    path('activity/', views.activity, name='activity')
-
+    path('activity/', views.activity, name='activity'),
+    path('collections/', views.collections, name='collections'),
 
 ]
