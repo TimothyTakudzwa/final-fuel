@@ -135,7 +135,7 @@ def initial_password_change(request):
             update_session_auth_hash(request, user)
 
             messages.success(request, 'Password successfully changed.')
-            return redirect('fuel-request')
+            return redirect('available_stock')
     return render(request, 'supplier/initial_pass_change.html')
 
 

@@ -63,7 +63,7 @@ def login_user(request):
             if current_user.password_reset:
                 return redirect("supplier:initial-password-change")
             else:
-                return redirect("fuel-request")
+                return redirect("available_stock")
         elif current_user.user_type == 'S_ADMIN':
             if current_user.password_reset:
                 return redirect("users:initial-password-change")
@@ -195,10 +195,10 @@ def token_is_send(request, auth_user):
         msg = EmailMultiAlternatives(subject, message, sender, [f'{auth_user.email}'])
         msg.send()
 
-        messages.success(request, f"{auth_user.first_name}  {auth_user.last_name} has been registered successfully.")
+        messages.success(request, f"{auth_user.first_name}  {auth_user.last_name} has completed first stage of registration successfully.")
         return True
     except Exception:
-        messages.warning(request, f"Oops , something went wrong, please try again.")
+        messages.warning(request, f"Could not send registration details, please contact ZFMS")
         return False
         messages.success(request, ('Your profile has been successfully updated.'))
     return render(request, 'buyer/send_email.html')
@@ -230,7 +230,7 @@ def register(request):
                                             last_name=last_name, is_active=False)
             if token_is_send(request, auth_user):
                 if auth_user.is_active:
-                    messages.success(auth_user.phone_number, "You have been registered successfully.")
+                    messages.success(auth_user.phone_number, "You have completed your first stage of registration successfully.")
                     auth_user.stage = 'requesting'
                     auth_user.save()
 

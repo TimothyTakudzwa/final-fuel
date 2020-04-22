@@ -543,7 +543,7 @@ def staff(request):
 
         action = "Creating Staff"
         description = f"You have created user {new_user.first_name} for {depot.name}"
-        Activity.objects.create(depot=depot, user=request.user, action=action, description=description, reference_id=user.id, created_user=new_user)
+        Activity.objects.create(depot=depot, user=request.user, action=action, description=description, reference_id=request.user.id, created_user=new_user)
         if message_is_send(request, new_user, password):
             if new_user.is_active:
                 new_user.stage = 'menu'

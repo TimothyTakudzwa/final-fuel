@@ -269,177 +269,12 @@
                         <!-- <div class="col-xs-12 col-sm-12"> -->
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs">
-                                <li class="active" ><a href="#staff-applications" data-toggle="tab" aria-expanded="true" style="border: rgb(211, 208, 208) 1px solid;">Staff Applications</a></li>
-                                <li class=""><a href="#staff-management" data-toggle="tab" aria-expanded="false" style="border: rgb(211, 208, 208) 1px solid;">Staff Management</a></li>
+                                <li class="active" ><a href="#staff-applications" data-toggle="tab" aria-expanded="true" style="border: rgb(211, 208, 208) 1px solid;">Staff Management</a></li>
+                                <li class=""><a href="#staff-management" data-toggle="tab" aria-expanded="false" style="border: rgb(211, 208, 208) 1px solid;">Staff Applications</a></li>
                             </ul>
                             <!-- Tab panels -->
                             <div class="tab-content">
                                 <div class="tab-pane fade active in" id="staff-applications">
-                                    <div class="panel-body">
-                                        <table id="staff_applications" class="table table-striped table-bordered" style="width:100%">
-                                            <thead>
-                                                <th>
-                                                    First Name
-                                                </th>
-                                                <th>
-                                                    Surname
-                                                </th>
-                                                <th>
-                                                    Userrname
-                                                </th>
-                                                
-                                                <th>
-                                                    Phone Number 
-                                                    </th>
-                                                    <th>
-                                                    Email 
-                                                    </th>
-                                                    <th>
-                                                    Action
-                                                    </th>
-                                            </thead>
-                                            <tbody>
-                                                {% for applicant in applicants %}  
-                                                <tr>
-                                                <td>{{applicant.first_name}}</td>
-                                                <td>{{applicant.last_name}}</td>
-                                                <td>{{applicant.username}}</td>
-                                                <td>{{applicant.phone_number}}</td>
-                                                <td>{{applicant.email}}</td>
-                                                <td style="width: 33%;">
-                                                    <div class="btn-group">
-                                                        
-                                                            <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#approve{{applicant.id}}">Approve</button>
-                                                            <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#decline{{applicant.id}}">Decline</button>
-                                                            
-                    
-                                                    </div>
-                                                    </td>
-                        
-                                                <div class="modal fade modal-success in" id="approve{{applicant.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog" role="document" style="margin: 0;">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                    
-                                                            <span class="modal-title" id="exampleModalLabel">Approve {{applicant.first_name}}</span>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                
-                                                    <form action="{% url 'users:approval' applicant.id %}" method="POST">
-                                                            {% csrf_token %}
-                                                            <div class="row">
-                                                            <div class="form-group col-md-6">
-                                                                    <label><b>Depot or Station ?</b></label>
-                                                                    <select id="category{{forloop.counter}}" name="category" class="form-control">
-                                                                        <option value='Depot'>Depot</option>
-                                                                        <option value='ServiceStation'>ServiceStation</option>
-                                                                        
-                                                                    </select>
-                                                                </div>
-                    
-                                                                <div class="form-group col-md-6" name="depot" id="depot{{forloop.counter}}">
-                                                                        <label><b>Depots</b></label>
-                                                                        <select class="form-control" name="subsidiary">
-                                                                            {% for depot in depots %}
-                                                                            <option value="{{depot.id}}">{{depot.name}}</option>
-                                                                            {% endfor %}
-                                                                        </select>
-                                                                    </div>
-                                                            </div>        
-                                                            <div class="row">
-                    
-                                                            <div class="form-group col-md-6" name="service_station" id="service_station{{forloop.counter}}">
-                                                                    <label><b>Service Stations</b></label>
-                                                                    <select class="form-control" name="subsidiary">
-                                                                        {% for station in stations %}
-                                                                        <option value="{{station.id}}">{{station.name}}</option>
-                                                                        {% endfor %}
-                                                                    </select>
-                                                                </div>
-                                                            </div>    
-                    
-                                                                
-                                                                
-                                                        
-                                                            <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button><button type="submit" class="btn btn-primary ">Submit</button>
-                                                                    </div>
-                                    
-                                                    </form>
-                                                            </div>
-                                                            
-                                                        </div>
-                                                        </div>
-                                                    </div>
-                                                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-                                                    <script>
-                                                            $(document).ready(function () {
-                                                            $('#service_station{{forloop.counter}}').hide();
-                                                            $('#depot{{forloop.counter}}').show();
-                                                            
-                                                            
-                                                        
-                                                            $('#category{{forloop.counter}}').change(function () {
-                                                                if ($('#category{{forloop.counter}} option:selected').text() == "Depot") {
-                                                                $('#depot{{forloop.counter}}').show();
-                                                                $('#service_station{{forloop.counter}} :input').prop('disabled',true);
-                                                                $('#dedepot{{forloop.counter}} :input').prop('disabled',false);
-                                                                
-                                                                $('#service_station{{forloop.counter}}').hide();
-                                                                
-                                                                }
-                                                            
-                                                                else {
-                                                                $('#service_station{{forloop.counter}}').show();
-                                                                $('#dedepot{{forloop.counter}} :input').prop('disabled',true);
-                                                                $('#service_station{{forloop.counter}} :input').prop('disabled',false);
-                                                                
-                                                                $('#depot{{forloop.counter}}').hide();
-                                                                
-                                                                }
-                                                            });
-                                                            });
-                                                        
-                                                        
-                                                        </script>
-                                                    
-                                                
-                                                <div class="modal fade modal-success in" id="decline{{applicant.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog" role="document" style="margin: 0;">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                            <span class="modal-title" id="exampleModalLabel">Delete {{supplier.username}}</span>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                    {% load crispy_forms_tags %}
-                                                                    <form action="{% url 'users:decline_applicant' applicant.id %}" method="POST">
-                                                                    {{ delete_form }}
-                                                                    {% csrf_token %}
-                                                                    <p>Are You Sure You Want To Decline {{ applicant.first_name|title }}</p>
-                                                                        <div class="modal-footer">
-                                                                            
-                                                                            <button class="btn btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">No</button> 
-                                                                            <button class="btn btn-primary" type="submit">Yes</button>
-                                                                        </div>
-                                                                    </form>
-                                                            </div>
-                                                        
-                                                        </div>
-                                                        </div>
-                                                    </div>      
-                                                </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                            </table>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="staff-management">
                                     <div class="panel-body">
                                         <table id="station_staff" class="table table-striped table-bordered" style="width:100%">
                                             <thead>
@@ -451,35 +286,35 @@
                                                 <th>Phone</th>
                                                 <th>Email</th>
                                                 <th style="width: 200px;">Action</th>
-                                                
+
                                             </tr>
                                             </thead>
                                             <tbody>
                                             {% for supplier in suppliers %}
                                                 <tr>
                                                     <td style="width: 15%;">{{supplier.first_name}} {{supplier.last_name}}</td>
-                                        
+
                                                     <td>{{supplier.username}}</td>
                                                     <td>{{supplier.subsidiary.name}}</td>
                                                     <td>
                                                         {% if supplier.subsidiary.is_depot %}
-                                                            Depot 
-                                                        {% else %}    
-                                                            Service Station 
+                                                            Depot
+                                                        {% else %}
+                                                            Service Station
                                                         {% endif %}
                                                     </td>
                                                     <td>{{supplier.phone_number}}</td>
                                                     <td>{{supplier.email}}</td>
                                                     <td>
                                                         <div class="btn-group">
-                                        
+
                                                         {% if supplier.subsidiary.is_depot %}
                                                             <button class="btn btn-labeled btn-info btn-sm" data-toggle="modal" data-target="#edit_depot_{{supplier.id}}">
                                                                 <span class="btn-label"><i class="fa fa-edit"></i></span>Edit</button>
                                                             <button class="btn btn-labeled btn-danger btn-sm" data-toggle="modal" data-target="#delete_depot_{{supplier.id}}">
                                                                 <span class="btn-label"><i class="fa fa-trash"></i></span>Delete</button>
-                                        
-                                                            
+
+
                                                         {% else %}
                                                             <button class="btn btn-labeled btn-info btn-sm" data-toggle="modal" data-target="#edit_{{supplier.id}}">
                                                                 <span class="btn-label"><i class="fa fa-edit"></i></span>Edit</button>
@@ -489,9 +324,9 @@
                                                         {% endif %}
                                                         </div>
                                                     </td>
-                                                   
-                                        
-                                        
+
+
+
                                                     <div class="modal fade" id="{{supplier.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
@@ -508,9 +343,9 @@
                                                                     <p>Service Station: {{supplier.service_station}}</p>
                                                                     <p>Phone Number: {{supplier.phone_number}}</p>
                                                                     <p>Email: {{supplier.email}}</p>
-                                        
-                                        
-                                        
+
+
+
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -518,12 +353,12 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                        
+
                                                     <!-- Station User Edit Modal -->
                                                     <div class="modal fade modal-success in" id="edit_{{supplier.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                         <div class="modal-dialog" role="document" style="margin: 0;">
                                                             <div class="modal-content">
-                                                                
+
                                                                 <div class="modal-header">
                                                                     <span class="modal-title" id="exampleModalLabel">Edit {{supplier.company.name|title}}</span>
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -533,7 +368,7 @@
                                                                 <div class="modal-body">
                                                                     <form action="{% url 'users:edit_ss_rep' supplier.id %}" method="POST">
                                                                         {% csrf_token %}
-                                        
+
                                                                         <div class="row">
                                                                             <div class="form-group col-md-6">
                                                                             <label>First Name</label>
@@ -545,7 +380,7 @@
                                                                         </div>
                                                                         </div>
                                                                         <div class="row">
-                                        
+
                                                                         <div class="form-group col-md-6">
                                                                             <label>Email</label>
                                                                             <input type="email" name="email" class="form-control"  value="{{ supplier.email}}" required/>
@@ -555,21 +390,21 @@
                                                                             <input type="telephone" name="phone_number" class="form-control"  value="{{ supplier.phone_number}}" required/>
                                                                         </div>
                                                                         </div>
-                                        
+
                                                                         <!-- <div class="modal-footer">
-                                                                            <button type="button" class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">Close</button> 
+                                                                            <button type="button" class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">Close</button>
                                                                         </div> -->
-                                        
-                                                                        <div class="modal-footer">  
+
+                                                                        <div class="modal-footer">
                                                                             <button type="submit" class="btn btn-primary ">Save Changes</button>
                                                                             <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                                                                        </div> 
-                                        
-                                        
+                                                                        </div>
+
+
                                                                     </form>
-                                        
+
                                                                 </div>
-                                        
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -578,7 +413,7 @@
                                                         <div class="modal-dialog" role="document" style="margin: 0;">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                        
+
                                                                     <span class="modal-title" id="exampleModalLabel">Edit {{supplier.company.name|title}} </span>
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">&times;</span>
@@ -598,7 +433,7 @@
                                                                         </div>
                                                                         </div>
                                                                         <div class="row">
-                                        
+
                                                                         <div class="form-group col-md-6">
                                                                             <label>Email</label>
                                                                             <input type="email" name="email" class="form-control"  value="{{ supplier.email}}" required/>
@@ -608,29 +443,29 @@
                                                                             <input type="telephone" name="phone_number" class="form-control"  value="{{ supplier.phone_number}}" required/>
                                                                         </div>
                                                                         </div>
-                                                                            
-                                                                        <div class="modal-footer">  
+
+                                                                        <div class="modal-footer">
                                                                             <button type="submit" class="btn btn-primary ">Save Changes</button>
                                                                             <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                                                                        </div> 
-                                        
-                                        
+                                                                        </div>
+
+
                                                                     </form>
                                                                 </div>
-                                        
+
                                                             </div>
                                                         </div>
                                                     </div>
-                                        
+
                                                     <!-- Station User Delete Modal -->
                                                     <div class="modal fade modal-success in" id="delete_{{supplier.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                         <div class="modal-dialog" role="document" style="margin: 0;">
                                                             <div class="modal-content">
-                                                                
+
                                                                 <div class="modal-header">
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                                                     <span class="modal-title" style="font-size: 20px;">Delete {{supplier.username}}</span>
-                                                                    
+
                                                                 </div>
                                                                 <div class="modal-body">
                                                                     {% load crispy_forms_tags %}
@@ -639,12 +474,12 @@
                                                                         {% csrf_token %}
                                                                         <p>Are You Sure You Want To Delete {{ supplier.username|title }} ?</p>
                                                                         <div class="modal-footer">
-                                        
+
                                                                             <button class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">No</button> <button class="btn btn-primary" type="submit">Yes</button>
                                                                         </div>
                                                                     </form>
                                                                 </div>
-                                        
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -664,26 +499,26 @@
                                                                         {{ delete_form }}
                                                                         {% csrf_token %}
                                                                         <p> Are You Sure You Want To Delete {{ supplier.username|title }}?</p>
-                                        
+
                                                                         <div class="modal-footer">
                                                                             <div>
-                                        
-                                                                                
+
+
                                                             <button type="button" class="btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">No</button>
-                                                                                
+
                                                                                 <button class="btn btn-primary" type="submit">Yes</button>
                                                                             </div>
                                                                         </div>
                                                                     </form>
                                                                 </div>
-                                        
+
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </tr>
-                                        
+
                                                 <script>
-                                                    
+
                                                     $('body').click(function (event) {
                                                         if(!$(event.target).closest('#edit_depot_{{supplier.id}}').length && !$(event.target).is('#edit_depot_{{supplier.id}}')) {
                                                             $("#edit_depot_{{supplier.id}}").modal('hide');
@@ -696,15 +531,180 @@
                                                         }
                                                         if(!$(event.target).closest('#delete_{{supplier.id}}').length && !$(event.target).is('#delete_{{supplier.id}}')) {
                                                             $("#delete_{{supplier.id}}").modal('hide');
-                                                        }        
+                                                        }
                                                     });
-                                        
+
                                                 </script>
-                                        
+
                                             {% endfor %}
-                                        
+
                                             </tbody>
                                         </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="staff-management">
+                                    <div class="panel-body">
+                                        <table id="staff_applications" class="table table-striped table-bordered" style="width:100%">
+                                            <thead>
+                                                <th>
+                                                    First Name
+                                                </th>
+                                                <th>
+                                                    Surname
+                                                </th>
+                                                <th>
+                                                    Userrname
+                                                </th>
+
+                                                <th>
+                                                    Phone Number
+                                                    </th>
+                                                    <th>
+                                                    Email
+                                                    </th>
+                                                    <th>
+                                                    Action
+                                                    </th>
+                                            </thead>
+                                            <tbody>
+                                                {% for applicant in applicants %}
+                                                <tr>
+                                                <td>{{applicant.first_name}}</td>
+                                                <td>{{applicant.last_name}}</td>
+                                                <td>{{applicant.username}}</td>
+                                                <td>{{applicant.phone_number}}</td>
+                                                <td>{{applicant.email}}</td>
+                                                <td style="width: 33%;">
+                                                    <div class="btn-group">
+
+                                                            <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#approve{{applicant.id}}">Approve</button>
+                                                            <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#decline{{applicant.id}}">Decline</button>
+
+
+                                                    </div>
+                                                    </td>
+
+                                                <div class="modal fade modal-success in" id="approve{{applicant.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document" style="margin: 0;">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+
+                                                            <span class="modal-title" id="exampleModalLabel">Approve {{applicant.first_name}}</span>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            </div>
+                                                            <div class="modal-body">
+
+                                                    <form action="{% url 'users:approval' applicant.id %}" method="POST">
+                                                            {% csrf_token %}
+                                                            <div class="row">
+                                                            <div class="form-group col-md-6">
+                                                                    <label><b>Depot or Station ?</b></label>
+                                                                    <select id="category{{forloop.counter}}" name="category" class="form-control">
+                                                                        <option value='Depot'>Depot</option>
+                                                                        <option value='ServiceStation'>ServiceStation</option>
+
+                                                                    </select>
+                                                                </div>
+
+                                                                <div class="form-group col-md-6" name="depot" id="depot{{forloop.counter}}">
+                                                                        <label><b>Depots</b></label>
+                                                                        <select class="form-control" name="subsidiary">
+                                                                            {% for depot in depots %}
+                                                                            <option value="{{depot.id}}">{{depot.name}}</option>
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
+                                                            </div>
+                                                            <div class="row">
+
+                                                            <div class="form-group col-md-6" name="service_station" id="service_station{{forloop.counter}}">
+                                                                    <label><b>Service Stations</b></label>
+                                                                    <select class="form-control" name="subsidiary">
+                                                                        {% for station in stations %}
+                                                                        <option value="{{station.id}}">{{station.name}}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+
+
+
+                                                            <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button><button type="submit" class="btn btn-primary ">Submit</button>
+                                                                    </div>
+
+                                                    </form>
+                                                            </div>
+
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                                                    <script>
+                                                            $(document).ready(function () {
+                                                            $('#service_station{{forloop.counter}}').hide();
+                                                            $('#depot{{forloop.counter}}').show();
+
+
+
+                                                            $('#category{{forloop.counter}}').change(function () {
+                                                                if ($('#category{{forloop.counter}} option:selected').text() == "Depot") {
+                                                                $('#depot{{forloop.counter}}').show();
+                                                                $('#service_station{{forloop.counter}} :input').prop('disabled',true);
+                                                                $('#dedepot{{forloop.counter}} :input').prop('disabled',false);
+
+                                                                $('#service_station{{forloop.counter}}').hide();
+
+                                                                }
+
+                                                                else {
+                                                                $('#service_station{{forloop.counter}}').show();
+                                                                $('#dedepot{{forloop.counter}} :input').prop('disabled',true);
+                                                                $('#service_station{{forloop.counter}} :input').prop('disabled',false);
+
+                                                                $('#depot{{forloop.counter}}').hide();
+
+                                                                }
+                                                            });
+                                                            });
+
+
+                                                        </script>
+
+
+                                                <div class="modal fade modal-success in" id="decline{{applicant.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document" style="margin: 0;">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                            <span class="modal-title" id="exampleModalLabel">Delete {{supplier.username}}</span>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                    {% load crispy_forms_tags %}
+                                                                    <form action="{% url 'users:decline_applicant' applicant.id %}" method="POST">
+                                                                    {{ delete_form }}
+                                                                    {% csrf_token %}
+                                                                    <p>Are You Sure You Want To Decline {{ applicant.first_name|title }}</p>
+                                                                        <div class="modal-footer">
+
+                                                                            <button class="btn btn" style="background-color: lightgray; color: #333;" data-dismiss="modal">No</button>
+                                                                            <button class="btn btn-primary" type="submit">Yes</button>
+                                                                        </div>
+                                                                    </form>
+                                                            </div>
+
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                            </table>
                                     </div>
                                 </div>
                             </div>
