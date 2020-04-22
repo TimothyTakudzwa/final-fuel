@@ -115,7 +115,11 @@
                     </div>    
                 </form>
                 <div>
-                    <button  class="btn btn-labeled btn-purple btn-sm" style="margin-top: 13px;">
+                    <script>
+                        var today = new Date();
+                        var filename = 'Noic Allocations Summary' + ' - ' +today.toLocaleString() + '.csv'
+                    </script>
+                    <button  class="btn btn-labeled btn-purple btn-sm" style="margin-top: 13px;" onclick="exportTableToCSV(filename)">
                         <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>Csv
                     </button>
                 </div>    
