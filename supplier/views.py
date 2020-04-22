@@ -1394,3 +1394,20 @@ def activity(request):
             activity.depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     return render(request, 'supplier/activity.html', {'activities': activities, 'depot': depot, 'current_activities': current_activities})
+
+
+@login_required()
+def hq_notifier(request, id):
+    user_permission(request)
+    depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+    if id == 1:
+        message = 'Requesting for more USD fuel'
+        Notification.objects.create(message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
+    elif id == 2:
+        message = 'Requesting for more RTGS fuel'
+        Notification.objects.create(message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
+    else:
+        message = 'Requesting for more USD & RTGS fuel'
+        Notification.objects.create(message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
+    messages.success(request, "Request for more fuel made successfully.")
+    return redirect('supplier:available_stock')

@@ -42,6 +42,7 @@ urlpatterns = [
     path('view_client_application_document/<int:id>', views.view_application_id_document, name="view_application_id_document"),
     path('client_transaction_history/<int:id>', views.client_transaction_history, name="client_transaction_history"),
     path('supplier_release_note/<int:id>', views.supplier_release_note, name='supplier_release_note'),
+    path('hq_notifier/<int:id>', views.hq_notifier, name='hq_notifier'),
     path('activity/', views.activity, name='activity')
 
 
