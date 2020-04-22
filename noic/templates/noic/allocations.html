@@ -108,13 +108,17 @@
                 <h4>Sord Allocations</h4>
                 <form method="POST">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-labeled btn-success btn-sm col-md-3" style="margin-top: 13px; margin-right: 10px;">
-                        <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>Pdf
-                    </button>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-labeled btn-success btn-sm" style="margin-top: 13px; margin-right: 10px;">
+                            <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>Pdf
+                        </button>
+                    </div>    
                 </form>
-                <button type="submit" class="btn btn-labeled btn-purple btn-sm col-md-3" style="margin-top: 13px;">
-                    <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>Csv
-                </button>
+                <div class="col-md-3">
+                    <button  class="btn btn-labeled btn-purple btn-sm" style="margin-top: 13px;">
+                        <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>Csv
+                    </button>
+                </div>    
             </div>
             <div class="dropdown">
                 <ul class="dropdown-menu dropdown-menu-right">
