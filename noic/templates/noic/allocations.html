@@ -104,14 +104,25 @@
 <section class="content">
     <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
         <div class="panel-heading ui-sortable-handle">
-            <div class="btn-group">
+            <div class="col-md-6">
                 <h4>Sord Allocations</h4>
                 <form method="POST">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-labeled btn-success btn-sm" style="margin-top: 13px;">
-                        <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>Export
-                    </button>
+                    <div>
+                        <button type="submit" class="btn btn-labeled btn-default btn-sm" style="margin-top: 13px; margin-right: 10px; float: left; background-color:#cfd4ce">
+                            <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>Pdf
+                        </button>
+                    </div>    
                 </form>
+                <div>
+                    <script>
+                        var today = new Date();
+                        var filename = 'Noic Allocations Summary' + ' - ' +today.toLocaleString() + '.csv'
+                    </script>
+                    <button  class="btn btn-labeled btn-default btn-sm" style="margin-top: 13px;background-color: #cfd4ce;" onclick="exportTableToCSV(filename)">
+                        <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>Csv
+                    </button>
+                </div>    
             </div>
             <div class="dropdown">
                 <ul class="dropdown-menu dropdown-menu-right">
