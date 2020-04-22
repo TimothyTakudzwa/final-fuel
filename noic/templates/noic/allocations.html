@@ -109,9 +109,12 @@
                 <form method="POST">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-labeled btn-success btn-sm" style="margin-top: 13px;">
-                        <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>Export
+                        <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>Export To Pdf
                     </button>
                 </form>
+                <button type="submit" class="btn btn-labeled btn-purple btn-sm" style="margin-top: 13px;">
+                    <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>Export To Csv
+                </button>
             </div>
             <div class="dropdown">
                 <ul class="dropdown-menu dropdown-menu-right">
