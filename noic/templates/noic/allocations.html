@@ -120,7 +120,7 @@
                         var today = new Date();
                         var filename = 'Noic Allocations Summary' + ' - ' +today.toLocaleString() + '.csv'
                     </script>
-                    <button  class="btn btn-labeled btn-default btn-sm" style="margin-top: 13px;background-color: #cfd4ce;" onclick="exportTableToCSV(filename)" {% if not allocations %} disabled{% endif %}>
+                    <button  class="btn btn-labeled btn-default btn-sm" style="margin-top: 13px;background-color: #cfd4ce; color: #333;" onclick="exportTableToCSV(filename)" {% if not allocations %} disabled{% endif %}>
                         <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>CSV
                     </button>
                 </div>    
