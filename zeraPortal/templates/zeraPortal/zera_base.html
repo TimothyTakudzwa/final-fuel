@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load crispy_forms_tags %}
+{% load static %}
 <!-- Mirrored from thememinister.com/health/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 13 Jan 2020 08:23:49 GMT -->
 
 <head>
@@ -370,6 +371,8 @@
     <!-- Counter js -->
     <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/counterup/waypoints.js"
         type="text/javascript"></script>
+    <script src="{% static 'assets\js\plugins\exportTable2CSV.js' %}"></script>    
+
     <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/counterup/jquery.counterup.min.js"
         type="text/javascript"></script>
     <!-- ChartJs JavaScript -->

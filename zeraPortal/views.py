@@ -1,13 +1,16 @@
-from datetime import date
+from datetime import date, datetime
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.template.loader import render_to_string
 from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from validate_email import validate_email
+
+from weasyprint import HTML
 
 from accounts.models import AccountHistory
 from comments.models import Comment
@@ -299,6 +302,34 @@ def company_fuel(request):
 def allocations(request, id):
     user_permission(request)
     sord_allocations = SordCompanyAuditTrail.objects.filter(company__id=id).all()
+    date_today = date.today().strftime("%d/%m/%y")
+
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date'):
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            sord_allocations = SordCompanyAuditTrail.objects.filter(date__range=[start_date, end_date])
+
+            return render(request, 'zeraPortal/fuel_allocations.html', {'sord_allocations': sord_allocations, 'start_date':start_date, 'end_date': end_date })
+        else:
+            html_string = render_to_string('zeraPortal/export_audit.html', {'sord_allocations': sord_allocations, 'date_today': date_today})
+            html = HTML(string=html_string)
+            export_name = f"ZERA Allocations Summary"
+            html.write_pdf(target=f'media/{export_name}.pdf')
+
+            download_file = f'media/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name}.pdf'
+                return response
+
     
     return render(request, 'zeraPortal/fuel_allocations.html', {'sord_allocations': sord_allocations})
 
