@@ -3,314 +3,605 @@
 {% load humanize %}
 
 {% block body %}
-<!-- Content Header (Page header) -->
+    <!-- Content Header (Page header) -->
 
 
-<section class="content-header">
-    <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
-        <div class="input-group">
-            <input type="text" name="q" class="form-control" placeholder="Search...">
-            <span class="input-group-btn">
+    <section class="content-header">
+        <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search...">
+                <span class="input-group-btn">
                 <button type="submit" name="search" id="search-btn" class="btn"><i
                         class="fa fa-search"></i></button>
             </span>
+            </div>
+        </form>
+        <!-- <div class="header-icon">
+            <i class="fa fa-binoculars"></i>
+        </div> -->
+        <div class="header-title" style="margin-left: 0px;">
+            <h1>Company Fuel Orders</h1>
+            <small>Fuel Management System</small>
+            <ol class="breadcrumb hidden-xs">
+                <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
+                <li class="active">Orders</li>
+            </ol>
         </div>
-    </form>
-    <!-- <div class="header-icon">
-        <i class="fa fa-binoculars"></i>
-    </div> -->
-    <div class="header-title" style="margin-left: 0px;">
-        <h1>Company Fuel Orders</h1>
-        <small>Fuel Management System</small>
-        <ol class="breadcrumb hidden-xs">
-            <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
-            <li class="active">Orders</li>
-        </ol>
-    </div>
-</section>
-<!-- Main content -->
-<div class="content">
-    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
-        data-index="0">
-        <div class="panel-heading ui-sortable-handle">
-           
-            
-            <div class="dropdown">
-                <ul class="dropdown-menu dropdown-menu-right">
+    </section>
+    <!-- Main content -->
+    <div class="content">
+        <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
+             data-index="0">
+            <div class="panel-heading ui-sortable-handle">
 
 
-                </ul>
-                <div class="dropdown-toggle" data-toggle="dropdown"><span
-                        class="panel-control-icon glyphicon glyphicon-cog"></span>
+                <div class="dropdown">
+                    <ul class="dropdown-menu dropdown-menu-right">
+
+
+                    </ul>
+                    <div class="dropdown-toggle" data-toggle="dropdown"><span
+                            class="panel-control-icon glyphicon glyphicon-cog"></span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="panel-body">              
-      
-      <div class="table-responsive">
-        <table id="orders" class="table table-striped table-bordered" style="width:100%">
-            <thead style="background-color: lightslategray; color:white;">
-                <tr>
-                    <th style="color: white;">Date</th>
-                    <th style="color: white;">Time</th>
-                    <th style="color: white;">Company</th>
-                    <th style="color: white;">Address</th>
-                    <th style="color: white;">Fuel</th>
-                    <th style="color: white;">Quantity</th>
-                    <th style="color: white;">Currency</th>
-                    <th style="color: white;">Payment</th>
-                    <th style="color: white;">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in orders %}
-                <tr>
-                    <td>{{ order.date }}</td>
-                    <td>{{ order.time }}</td>
-                    <td>{{ order.company.name|lower|title }}</td>
-                    <td>{{ order.company.address|lower|title }}</td>
+            <div class="panel-body">
+
+                <div class="table-responsive">
+                    <div class="col-xs-12 col-sm-12">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active" ><a href="#tab1" data-toggle="tab" aria-expanded="true" style="border: rgb(211, 208, 208) 1px solid;">Current</a></li>
+                            <li class=""><a href="#tab2" data-toggle="tab" aria-expanded="false" style="border: rgb(211, 208, 208) 1px solid;">Previous</a></li>
+                        </ul>
+                        <!-- Tab panels -->
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="tab1">
+                                <div class="panel-body">
+                                    <table id="orders" class="table table-striped table-bordered" style="width:100%">
+                                        <thead style="background-color: lightslategray; color:white;">
+                                        <tr>
+                                            <th style="color: white;">Date</th>
+                                            <th style="color: white;">Time</th>
+                                            <th style="color: white;">Company</th>
+                                            <th style="color: white;">Address</th>
+                                            <th style="color: white;">Fuel</th>
+                                            <th style="color: white;">Quantity</th>
+                                            <th style="color: white;">Currency</th>
+                                            <th style="color: white;">Payment</th>
+                                            <th style="color: white;">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for order in new_orders %}
+                                            <tr>
+                                                <td>{{ order.date }}</td>
+                                                <td>{{ order.time }}</td>
+                                                <td>{{ order.company.name|lower|title }}</td>
+                                                <td>{{ order.company.address|lower|title }}</td>
 
 
-                    {% if order.fuel_type == 'Petrol' %}
-                        <td style="color: #009688;">{{ order.fuel_type|lower|capfirst }}</td>
-                    {% elif order.fuel_type == 'Diesel' %}
-                        <td style="color: #ffb61e;">{{ order.fuel_type|lower|capfirst }}</td>
-                    {% else %}    
-                        <td>{{ order.fuel_type|lower|capfirst }}</td>
-                    {% endif %}    
+                                                {% if order.fuel_type == 'Petrol' %}
+                                                    <td style="color: #009688;">{{ order.fuel_type|lower|capfirst }}</td>
+                                                {% elif order.fuel_type == 'Diesel' %}
+                                                    <td style="color: #ffb61e;">{{ order.fuel_type|lower|capfirst }}</td>
+                                                {% else %}
+                                                    <td>{{ order.fuel_type|lower|capfirst }}</td>
+                                                {% endif %}
 
 
-                    <td>{{ order.quantity|floatformat:2|intcomma }}</td>
-                    <td>{{ order.currency}}</td> 
-                    <td>
+                                                <td>{{ order.quantity|floatformat:2|intcomma }}</td>
+                                                <td>{{ order.currency }}</td>
+                                                <td>
 
-                        <!--call modal-->
-                        <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#payment{{order.id}}">
-                            <span class="btn-label"><i class="fa fa-eye"></i></span> Details
-                        </button>
+                                                    <!--call modal-->
+                                                    <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal"
+                                                            data-target="#payment{{ order.id }}">
+                                                        <span class="btn-label"><i class="fa fa-eye"></i></span> Details
+                                                    </button>
 
-                    </td>
+                                                </td>
 
-                    
-                    {% if order.payment_approved %}
-                    {% if order.allocated_fuel %}
-                    <td>
-                        <div class="btn-group">
-                            <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal"  data-target="#allocation_{{order.id}}" >
-                                <span class="btn-label"><i class="fa fa-eye"></i></span>View Allocations</a>
-                            </div>
-                    </td>
-                    {% else %}
-                   <td>
-                  <i style="color: brown;">Pending</i> 
-                </td>
-                  {% endif %}
-                   {% else %}
-                   <td><b style="margin-left: 25px;"> <i>Pending</i></b></td>
-                   {% endif %}
-                </tr>
-                <div class="modal fade modal-success in" id="allocate{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
+
+                                                {% if order.payment_approved %}
+                                                    {% if order.allocated_fuel %}
+                                                        <td>
+                                                            <div class="btn-group">
+                                                                <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"
+                                                                   data-toggle="modal" data-target="#allocation_{{ order.id }}">
+                                                                    <span class="btn-label"><i class="fa fa-eye"></i></span>View
+                                                                    Allocations</a>
+                                                            </div>
+                                                        </td>
+                                                    {% else %}
+                                                        <td>
+                                                            <i style="color: brown;">Pending</i>
+                                                        </td>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <td><b style="margin-left: 25px;"> <i>Pending</i></b></td>
+                                                {% endif %}
+                                            </tr>
+                                            <div class="modal fade modal-success in" id="allocate{{ order.id }}" tabindex="-1"
+                                                 role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
                             <span class="modal-title" id="exampleModalLongTitle">Allocate Fuel- <i
-                                    style="color:azure"><small>Please Note the fuel you are entering is for the 
+                                    style="color:azure"><small>Please Note the fuel you are entering is for the
                                         payment you approved</small></i></span>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div>
-                            {% load crispy_forms_tags %}
-                            <form action="{% url 'noic:allocate_fuel' order.id %}" method="POST">
-                                {% csrf_token %}
-                                <input type="hidden" value="{{order.fuel_type}}" name="fuel_type" />
-                                <input type="hidden" value="{{order.quantity}}" name="quantity" />
-                                <input type="hidden" value="{{order.currency}}" name="currency" />
-                                <div class="form-group row col-sm-12" style="margin-top: 5%;">
-                                    <div class="col-sm-6">
-                                        <label><b style='color:#009688'>Fuel Type</b></label>
-                                        <input type="text" name="fuel_type1" class="form-control"
-                                            value="{{order.fuel_type}}" disabled />
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label><b style='color:#009688'>Quantity</b></label>
-                                        <input type="text" name="quantity1" class="form-control"
-                                            value="{{order.quantity}}" disabled />
-                                    </div>
-                                </div>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div>
+                                                            {% load crispy_forms_tags %}
+                                                            <form action="{% url 'noic:allocate_fuel' order.id %}" method="POST">
+                                                                {% csrf_token %}
+                                                                <input type="hidden" value="{{ order.fuel_type }}" name="fuel_type"/>
+                                                                <input type="hidden" value="{{ order.quantity }}" name="quantity"/>
+                                                                <input type="hidden" value="{{ order.currency }}" name="currency"/>
+                                                                <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                                                                    <div class="col-sm-6">
+                                                                        <label><b style='color:#009688'>Fuel Type</b></label>
+                                                                        <input type="text" name="fuel_type1" class="form-control"
+                                                                               value="{{ order.fuel_type }}" disabled/>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <label><b style='color:#009688'>Quantity</b></label>
+                                                                        <input type="text" name="quantity1" class="form-control"
+                                                                               value="{{ order.quantity }}" disabled/>
+                                                                    </div>
+                                                                </div>
 
-                                <div class="form-group row col-sm-12" style="margin-top: 5%;">
-                                    <div class="col-sm-6">
-                                        <label><b style='color:#009688'>Currency</b></label>
-                                        <input type="text" name="currency1" class="form-control"
-                                            value="{{order.currency}}" disabled />
-                                    </div>
-                                    <div class="form-group col-md-6 mb-0">
-                                        {{ form1.depot|as_crispy_field }}
-                                    </div>
-                                   
-                                </div>
-                                
-        
-        
-                        </div>
-                        <div class="form-group row"
-                            style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                            <button type="button" class="btn btn-secondary col-sm-6"
-                                data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
-                        </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+                                                                <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                                                                    <div class="col-sm-6">
+                                                                        <label><b style='color:#009688'>Currency</b></label>
+                                                                        <input type="text" name="currency1" class="form-control"
+                                                                               value="{{ order.currency }}" disabled/>
+                                                                    </div>
+                                                                    <div class="form-group col-md-6 mb-0">
+                                                                        {{ form1.depot|as_crispy_field }}
+                                                                    </div>
 
-            <!--Allocation Modal-->
-    <div class="modal fade modal-success in" id="allocation_{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header" style="background-color: #009688; color: white">
-                    <span class="modal-title" id="exampleModalLabel">{{ order.allocation.company }} Allocation</span>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                        <div class="form-group row">
-                        <div class="col-md-6">
-                            <b>&nbsp;&nbsp;&nbsp;&nbsp;Date</b>
+                                                                </div>
+
+
+                                                        </div>
+                                                        <div class="form-group row"
+                                                             style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                                            <button type="button" class="btn btn-secondary col-sm-6"
+                                                                    data-dismiss="modal">Close
+                                                            </button>
+                                                            <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                                                        </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!--Allocation Modal-->
+                                            <div class="modal fade modal-success in" id="allocation_{{ order.id }}" tabindex="-1"
+                                                 role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header" style="background-color: #009688; color: white">
+                                            <span class="modal-title"
+                                                  id="exampleModalLabel">{{ order.allocation.company }} Allocation</span>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;Date</b>
+                                                                </div>
+                                                                <div class="col-md-6">{{ order.allocation.date }}</div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;SORD</b>
+                                                                </div>
+                                                                <div class="col-md-6">{{ order.allocation.sord_no }}</div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;Fuel</b>
+                                                                </div>
+                                                                <div class="col-md-6"> {{ order.allocation.fuel_type }}</div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Company</b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.allocation.company }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Quantity</b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.allocation.quantity|floatformat:2|intcomma }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;Price </b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.allocation.price }} {{ order.allocation.currency }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;Depot</b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.allocation.assigned_depot.name }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--End allocation modal-->
+
+                                            <!--Payment Details-->
+                                            <div class="modal fade modal-success in" id="payment{{ order.id }}" tabindex="-1"
+                                                 role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header" style="background-color: #009688; color: white">
+                                                            <span class="modal-title" id="exampleModalLabel">Payment Details</span>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Date </b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.date }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Company </b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.company }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Total </b>
+                                                                </div>
+                                                                <div class="col-md-6">{{ order.amount_paid|floatformat:2|intcomma }} {{ order.currency }}</div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Duty </b>
+                                                                </div>
+                                                                <div class="col-md-6"> {{ order.duty }} {{ order.currency }}</div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Vat </b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.vat }} {{ order.currency }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;Status</b>
+                                                                </div>
+                                                                {% if order.payment_approved %}
+                                                                    <div class="col-md-6">
+                                                                        Approved
+                                                                    </div>
+                                                                {% else %}
+                                                                    <div class="col-md-6">
+                                                                        Approval Pending...
+                                                                    </div>
+                                                                {% endif %}
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--End payment details-->
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="tab2">
+                                <div class="panel-body">
+                                    <table id="orders" class="table table-striped table-bordered" style="width:100%">
+                                        <thead style="background-color: lightslategray; color:white;">
+                                        <tr>
+                                            <th style="color: white;">Date</th>
+                                            <th style="color: white;">Time</th>
+                                            <th style="color: white;">Company</th>
+                                            <th style="color: white;">Address</th>
+                                            <th style="color: white;">Fuel</th>
+                                            <th style="color: white;">Quantity</th>
+                                            <th style="color: white;">Currency</th>
+                                            <th style="color: white;">Payment</th>
+                                            <th style="color: white;">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for order in orders %}
+                                            <tr>
+                                                <td>{{ order.date }}</td>
+                                                <td>{{ order.time }}</td>
+                                                <td>{{ order.company.name|lower|title }}</td>
+                                                <td>{{ order.company.address|lower|title }}</td>
+
+
+                                                {% if order.fuel_type == 'Petrol' %}
+                                                    <td style="color: #009688;">{{ order.fuel_type|lower|capfirst }}</td>
+                                                {% elif order.fuel_type == 'Diesel' %}
+                                                    <td style="color: #ffb61e;">{{ order.fuel_type|lower|capfirst }}</td>
+                                                {% else %}
+                                                    <td>{{ order.fuel_type|lower|capfirst }}</td>
+                                                {% endif %}
+
+
+                                                <td>{{ order.quantity|floatformat:2|intcomma }}</td>
+                                                <td>{{ order.currency }}</td>
+                                                <td>
+
+                                                    <!--call modal-->
+                                                    <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal"
+                                                            data-target="#payment{{ order.id }}">
+                                                        <span class="btn-label"><i class="fa fa-eye"></i></span> Details
+                                                    </button>
+
+                                                </td>
+
+
+                                                {% if order.payment_approved %}
+                                                    {% if order.allocated_fuel %}
+                                                        <td>
+                                                            <div class="btn-group">
+                                                                <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"
+                                                                   data-toggle="modal" data-target="#allocation_{{ order.id }}">
+                                                                    <span class="btn-label"><i class="fa fa-eye"></i></span>View
+                                                                    Allocations</a>
+                                                            </div>
+                                                        </td>
+                                                    {% else %}
+                                                        <td>
+                                                            <i style="color: brown;">Pending</i>
+                                                        </td>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <td><b style="margin-left: 25px;"> <i>Pending</i></b></td>
+                                                {% endif %}
+                                            </tr>
+                                            <div class="modal fade modal-success in" id="allocate{{ order.id }}" tabindex="-1"
+                                                 role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                            <span class="modal-title" id="exampleModalLongTitle">Allocate Fuel- <i
+                                    style="color:azure"><small>Please Note the fuel you are entering is for the
+                                        payment you approved</small></i></span>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div>
+                                                            {% load crispy_forms_tags %}
+                                                            <form action="{% url 'noic:allocate_fuel' order.id %}" method="POST">
+                                                                {% csrf_token %}
+                                                                <input type="hidden" value="{{ order.fuel_type }}" name="fuel_type"/>
+                                                                <input type="hidden" value="{{ order.quantity }}" name="quantity"/>
+                                                                <input type="hidden" value="{{ order.currency }}" name="currency"/>
+                                                                <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                                                                    <div class="col-sm-6">
+                                                                        <label><b style='color:#009688'>Fuel Type</b></label>
+                                                                        <input type="text" name="fuel_type1" class="form-control"
+                                                                               value="{{ order.fuel_type }}" disabled/>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <label><b style='color:#009688'>Quantity</b></label>
+                                                                        <input type="text" name="quantity1" class="form-control"
+                                                                               value="{{ order.quantity }}" disabled/>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                                                                    <div class="col-sm-6">
+                                                                        <label><b style='color:#009688'>Currency</b></label>
+                                                                        <input type="text" name="currency1" class="form-control"
+                                                                               value="{{ order.currency }}" disabled/>
+                                                                    </div>
+                                                                    <div class="form-group col-md-6 mb-0">
+                                                                        {{ form1.depot|as_crispy_field }}
+                                                                    </div>
+
+                                                                </div>
+
+
+                                                        </div>
+                                                        <div class="form-group row"
+                                                             style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                                            <button type="button" class="btn btn-secondary col-sm-6"
+                                                                    data-dismiss="modal">Close
+                                                            </button>
+                                                            <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                                                        </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!--Allocation Modal-->
+                                            <div class="modal fade modal-success in" id="allocation_{{ order.id }}" tabindex="-1"
+                                                 role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header" style="background-color: #009688; color: white">
+                                            <span class="modal-title"
+                                                  id="exampleModalLabel">{{ order.allocation.company }} Allocation</span>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;Date</b>
+                                                                </div>
+                                                                <div class="col-md-6">{{ order.allocation.date }}</div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;SORD</b>
+                                                                </div>
+                                                                <div class="col-md-6">{{ order.allocation.sord_no }}</div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;Fuel</b>
+                                                                </div>
+                                                                <div class="col-md-6"> {{ order.allocation.fuel_type }}</div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Company</b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.allocation.company }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Quantity</b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.allocation.quantity|floatformat:2|intcomma }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;Price </b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.allocation.price }} {{ order.allocation.currency }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;Depot</b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.allocation.assigned_depot.name }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--End allocation modal-->
+
+                                            <!--Payment Details-->
+                                            <div class="modal fade modal-success in" id="payment{{ order.id }}" tabindex="-1"
+                                                 role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header" style="background-color: #009688; color: white">
+                                                            <span class="modal-title" id="exampleModalLabel">Payment Details</span>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Date </b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.date }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Company </b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.company }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Total </b>
+                                                                </div>
+                                                                <div class="col-md-6">{{ order.amount_paid|floatformat:2|intcomma }} {{ order.currency }}</div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Duty </b>
+                                                                </div>
+                                                                <div class="col-md-6"> {{ order.duty }} {{ order.currency }}</div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Vat </b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ order.vat }} {{ order.currency }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b>&nbsp;&nbsp;&nbsp;&nbsp;Status</b>
+                                                                </div>
+                                                                {% if order.payment_approved %}
+                                                                    <div class="col-md-6">
+                                                                        Approved
+                                                                    </div>
+                                                                {% else %}
+                                                                    <div class="col-md-6">
+                                                                        Approval Pending...
+                                                                    </div>
+                                                                {% endif %}
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--End payment details-->
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6">{{ order.allocation.date }}</div>
-                        </div>
-                        <div class="form-group row">
-                        <div class="col-md-6">
-                            <b>&nbsp;&nbsp;&nbsp;&nbsp;SORD</b>
-                        </div>
-                        <div class="col-md-6">{{ order.allocation.sord_no}}</div>
-                        </div>
-                        <div class="form-group row">
-                        <div class="col-md-6">
-                            <b>&nbsp;&nbsp;&nbsp;&nbsp;Fuel</b>
-                        </div>
-                        <div class="col-md-6"> {{ order.allocation.fuel_type }}</div>
-                        </div>
-                        <div class="form-group row">
-                        <div class="col-md-6">
-                            <b> &nbsp;&nbsp;&nbsp;&nbsp;Company</b>
-                        </div>
-                        <div class="col-md-6">
-                            {{ order.allocation.company }}
-                        </div>
-                        </div>
-                        <div class="form-group row">
-                        <div class="col-md-6">
-                            <b> &nbsp;&nbsp;&nbsp;&nbsp;Quantity</b>
-                        </div>
-                        <div class="col-md-6">
-                            {{ order.allocation.quantity|floatformat:2|intcomma }}
-                        </div>
-                        </div>
-                        <div class="form-group row">
-                        <div class="col-md-6">
-                            <b>&nbsp;&nbsp;&nbsp;&nbsp;Price </b>
-                        </div>
-                        <div class="col-md-6">
-                            {{ order.allocation.price }} {{ order.allocation.currency }}
-                        </div>
-                        </div>
-                        <div class="form-group row">
-                        <div class="col-md-6">
-                            <b>&nbsp;&nbsp;&nbsp;&nbsp;Depot</b>
-                        </div>
-                        <div class="col-md-6">
-                            {{ order.allocation.assigned_depot.name }}
-                        </div>
-                        </div>
-                    <div class="modal-footer">  
-                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!--End allocation modal-->
-
-    <!--Payment Details-->
-    <div class="modal fade modal-success in" id="payment{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header" style="background-color: #009688; color: white">
-                    <span class="modal-title" id="exampleModalLabel">Payment Details</span>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                        <div class="form-group row">
-                        <div class="col-md-6">
-                           <b> &nbsp;&nbsp;&nbsp;&nbsp;Date </b>
-                        </div>
-                        <div class="col-md-6">
-                            {{ order.date }}
-                        </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-6">
-                                <b> &nbsp;&nbsp;&nbsp;&nbsp;Company </b>
-                            </div>
-                            <div class="col-md-6">
-                                {{ order.company }}
-                            </div> 
-                            </div>
-                        <div class="form-group row">
-                        <div class="col-md-6">
-                           <b> &nbsp;&nbsp;&nbsp;&nbsp;Total </b>
-                        </div>
-                        <div class="col-md-6">{{order.amount_paid|floatformat:2|intcomma}} {{ order.currency }}</div>
-                        </div>
-                        <div class="form-group row">
-                        <div class="col-md-6">
-                           <b> &nbsp;&nbsp;&nbsp;&nbsp;Duty </b>
-                        </div>
-                        <div class="col-md-6"> {{ order.duty }} {{ order.currency }}</div>
-                        </div>
-                        <div class="form-group row">
-                        <div class="col-md-6">
-                           <b> &nbsp;&nbsp;&nbsp;&nbsp;Vat </b>
-                        </div>
-                        <div class="col-md-6">
-                            {{ order.vat }} {{ order.currency }}
-                        </div>
-                        </div>
-                        <div class="form-group row">
-                        <div class="col-md-6">
-                           <b>&nbsp;&nbsp;&nbsp;&nbsp;Status</b>
-                        </div>
-                        {% if order.payment_approved %}
-                        <div class="col-md-6">
-                            Approved
-                        </div>
-                        {% else %}
-                        <div class="col-md-6">
-                            Approval Pending...
-                        </div>
-                        {% endif %}
-                        </div>
-                    <div class="modal-footer">  
-                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--End payment details-->
-                {%endfor%}
-            </tbody>
-            </table>
-
-</div>
-</div>
-</div>
-</div>
-    {%endblock%}
+{% endblock %}

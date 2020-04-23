@@ -106,14 +106,15 @@ def orders(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(action="ORDER").filter(is_read=False).all()
     num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(action="ORDER").filter(is_read=False).count()
-    orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=False).all()
+    orders = Order.objects.exclude(date=today).filter(noic_depot=depot).filter(allocated_fuel=False).all()
+    new_orders = Order.objects.filter(noic_depot=depot, date=today).filter(allocated_fuel=False).all()
     # print(orders)
     for order in orders:
         if order is not None:
             alloc = SordNationalAuditTrail.objects.filter(order=order).first()
             if alloc is not None:
                 order.allocation = alloc
-    return render(request, 'noicDepot/orders.html', {'orders': orders, 'orders_notifications': orders_notifications, 'num_of_new_orders': num_of_new_orders,'allocate' : 'hide', 'release' : 'hide'})
+    return render(request, 'noicDepot/orders.html', {'orders': orders, 'orders_notifications': orders_notifications, 'num_of_new_orders': num_of_new_orders,'allocate' : 'hide', 'release' : 'hide', 'new_orders': new_orders})
 
 
 @login_required()
