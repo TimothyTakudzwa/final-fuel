@@ -293,7 +293,7 @@ def fuel_update(request, id):
             else:
                 if Decimal(request.POST['petrol_rtgs_price']) > prices.rtgs_petrol_pumpprice:
                     messages.warning(request,
-                                     f'You cannot set RTGS petrol price higher that the ZERA max price of ${prices.rtgs_petrtgs_petrol_pumppricerol_price}.')
+                                     f'You cannot set RTGS petrol price higher that the ZERA max price of ${prices.rtgs_petrol_pumpprice}.')
                     return redirect('noic:dashboard')
                 else:
                     fuel_update.rtgs_petrol += float(request.POST['quantity'])
