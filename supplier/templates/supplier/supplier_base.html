@@ -188,7 +188,11 @@
                     <li class="nav-item {% if request.path == '/available_stock/' %} active {% endif %} ">
                         <a href="{%url 'available_stock'%}"><i class="fa fa-bank"></i><span>Current Stocks</span>
                         </a>
-                    </li>                    
+                    </li> 
+                    <li class="nav-item {% if request.path == '/allocated_quantity/' %} active {% endif %} ">
+                        <a href="{% url 'allocated_quantity' %}"><i class="fa fa-th-list"></i><span>Fuel Allocations</span>
+                        </a>
+                    </li>                   
                     <li class="nav-item {% if request.path == '/fuel-request/' %} active {% endif %}  ">
                           <a href="{%url 'fuel-request'%}"><i class="fa fa-binoculars"></i><span>Requests</span>
                           </a>
@@ -213,10 +217,7 @@
                         <a href="{%url 'supplier:clients'%}"><i class="fa fa-address-card" aria-hidden="true"></i><span>Clients</span>
                         </a>
                     </li>
-                      <li class="nav-item {% if request.path == '/allocated_quantity/' %} active {% endif %} ">
-                          <a href="{% url 'allocated_quantity' %}"><i class="fa fa-th-list"></i><span>Fuel Allocations</span>
-                          </a>
-                      </li>
+                      
                       <li class="nav-item {% if request.path == '/account/' %} active {% endif %} ">
                           <a href="{%url 'account'%}"><i class="fa fa-user-circle-o"></i><span>User Profile</span>
                           </a>

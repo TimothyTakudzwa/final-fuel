@@ -213,7 +213,7 @@
                     });
                 </script>
 
-
+    
             <div class="modal fade modal-success in" id="add_fuel{{fuel.id}}" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class=" modal-dialog" role="document">
@@ -228,7 +228,7 @@
                     </div>
                     <div>
                         {% load crispy_forms_tags %}
-                        <form action="{% url 'noic:fuel_update' fuel.id %}" method="POST" enctype="multipart/form-data">
+                        <form action="{% url 'noic:fuel_update' fuel.id %}" method="POST" enctype="multipart/form-data" onSubmit="return confirm('Are you sure you put the right quantity to allocate?') ">
                             {% csrf_token %}
                             <input type="hidden"  id="quantity" name="quantity" />
                             <div class="form-group row col-sm-12" style="margin-top: 5%;">
@@ -288,7 +288,7 @@
                         
                     </div>
                     <div class="modal-footer">  
-                        <button type="submit" class="btn btn-primary ">Submit</button>
+                        <button type="submit" class="btn btn-primary" >Submit</button>
                         <button class="btn btn-default" data-dismiss="modal" >Close</button>
                     </div> 
                     </form>
