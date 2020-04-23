@@ -33,7 +33,7 @@ function exportTableToCSV(filename) {
         
         for (var j = 0; j < cols.length; j++) 
             row.push(cols[j].innerText);
-            console.log("Debugging: ------->", cols[j].innerText);
+            // console.log("Debugging: ------->", cols[j].innerText);
         
         csv.push(row.join(";"));        
     }
