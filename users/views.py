@@ -29,7 +29,7 @@ from national.models import Order, SordNationalAuditTrail, DepotFuelUpdate
 from notification.models import Notification
 from users.models import *
 from .decorators import user_role, user_permission
-from .forms import SupplierContactForm, UsersUploadForm, ReportForm, ProfileEditForm, ActionForm, DepotContactForm
+from .forms import SupplierContactForm, UsersUploadForm, ReportForm, ProfileEditForm, ActionForm, DepotContactForm, PasswordChange
 from decimal import *
 
 user = get_user_model()
@@ -1564,6 +1564,10 @@ def depot_staff(request):
     return render(request, 'users/depot_staff.html', {'suppliers': suppliers, 'form1': form1})
 
 
+'''
+Password Change Functions
+'''
+
 @login_required
 @user_role
 def initial_password_change(request):
@@ -1592,6 +1596,48 @@ def initial_password_change(request):
             messages.success(request, 'Password successfully changed.')
             return redirect('users:allocate')
     return render(request, 'users/initial_pass_change.html')
+
+
+@login_required()
+@user_role
+def change_password(request):
+    context = {
+        'title': 'ZFMS | Change Password',
+        'password_change': PasswordChange(user=request.user)
+    }
+    if request.method == 'POST':
+        old = request.POST.get('old_password')
+        new1 = request.POST.get('new_password1')
+        new2 = request.POST.get('new_password2')
+
+        if authenticate(request, username=request.user.username, password=old):
+            if new1 != new2:
+                messages.warning(request, "Passwords don't match.")
+                return redirect('users:change-password')
+            elif new1 == old:
+                messages.warning(request, "New password can not be similar to the old one.")
+                return redirect('users:change-password')
+            elif len(new1) < 8:
+                messages.warning(request, "Password is too short.")
+                return redirect('users:change-password')
+            elif new1.isnumeric():
+                messages.warning(request, "Password can not be entirely numeric.")
+                return redirect('users:change-password')
+            elif not new1.isalnum():
+                messages.warning(request, "Password should be alphanumeric.")
+                return redirect('users:change-password')
+            else:
+                user = request.user
+                user.set_password(new1)
+                user.save()
+                update_session_auth_hash(request, user)
+
+                messages.success(request, 'Password successfully changed.')
+                return redirect('users:myaccount')
+        else:
+            messages.warning(request, 'Wrong old password, please try again.')
+            return redirect('users:change-password')
+    return render(request, 'users/change_password.html', context=context)
 
 
 @login_required()
@@ -2407,3 +2453,9 @@ def delivery_schedules(request):
             schedule.delivery_address = schedule.transaction.offer.collection_address
 
     return render(request, 'users/delivery_schedules.html', {'schedules': schedules})
+
+
+'''
+Change Password operation
+'''
+

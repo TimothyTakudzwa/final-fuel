@@ -106,8 +106,10 @@
                                 <td>
                                     
                                 <div class="btn-group">
-                                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:noic_release_note' sord.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
-                                    <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:noic_delivery_note' sord.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Delivery Note</a>
+                                    <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:noic_release_note' sord.id %}" > 
+                                        <span class=btn-label> <i class="fa fa-download"></i></span> Release Note</a>
+                                    <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:noic_delivery_note' sord.id %}" >  
+                                        <span class=btn-label> <i class="fa fa-download"></i></span>Delivery Note</a>
                                 </div>
                                     
                                 </td>
@@ -115,7 +117,8 @@
                                 <td>
                                     
                                     <div class="btn-group">
-                                        <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:noic_release_note' sord.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
+                                        <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:noic_release_note' sord.id %}" > 
+                                            <span class=btn-label> <i class="fa fa-download"></i></span> Release Note</a>
                                     </div>
                                         
                                     </td>

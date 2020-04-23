@@ -31,6 +31,7 @@ urlpatterns = [
     path('download-cert-of-inc/<int:id>', views.download_cert_of_inc, name="download-cert-of-inc"),
     path('download-proof-of-residence/<int:id>', views.download_proof_of_residence, name="download-proof-of-residence"),
     path('report_generator/', views.report_generator, name="report_generator"),
+    path('change-password/', views.change_password, name="change-password"),
     path('buyers/', views.buyers_list, name="buyers_list"),
     path('supplier_user_create/<int:sid>', views.supplier_user_create, name="supplier_user_create"),
     path('client_history/<int:cid>', views.client_history, name="client_history"),

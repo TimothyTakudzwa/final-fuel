@@ -1,5 +1,15 @@
 from django import forms
+from django.contrib.auth.forms import PasswordChangeForm
 from buyer.models import User
+
+
+class PasswordChange(PasswordChangeForm):
+    class Meta:
+        widgets = {
+
+        }
+        model = User
+        fields = ['old_password', 'new_password1', 'new_password2']
 
 
 class ZeraProfileUpdateForm(forms.ModelForm):

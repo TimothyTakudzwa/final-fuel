@@ -20,6 +20,7 @@ from supplier.models import SubsidiaryFuelUpdate, FuelAllocation, DeliverySchedu
 from users.models import SordActionsAuditTrail, Activity
 from users.views import message_is_sent
 from .constants import coordinates_towns, towns
+from .forms import PasswordChange
 from .decorators import user_role, user_permission
 from decimal import *
 
@@ -298,6 +299,7 @@ def company_fuel(request):
 def allocations(request, id):
     user_permission(request)
     sord_allocations = SordCompanyAuditTrail.objects.filter(company__id=id).all()
+    
     return render(request, 'zeraPortal/fuel_allocations.html', {'sord_allocations': sord_allocations})
 
 
@@ -986,3 +988,49 @@ def sub_comments(request, id):
     sub = Subsidiaries.objects.filter(id=id).first()
     comments = Comment.objects.filter(station=sub)
     return render(request, 'zeraPortal/sub_comments.html', {'comments': comments, 'sub': sub})
+
+
+'''
+Password operations
+'''
+
+@login_required()
+@user_role
+def change_password(request):
+    context = {
+        'title': 'ZFMS | Change Password',
+        'password_change': PasswordChange(user=request.user)
+    }
+    if request.method == 'POST':
+        old = request.POST.get('old_password')
+        new1 = request.POST.get('new_password1')
+        new2 = request.POST.get('new_password2')
+
+        if authenticate(request, username=request.user.username, password=old):
+            if new1 != new2:
+                messages.warning(request, "Passwords don't match.")
+                return redirect('zeraPortal:change-password')
+            elif new1 == old:
+                messages.warning(request, "New password can not be similar to the old one.")
+                return redirect('zeraPortal:change-password')
+            elif len(new1) < 8:
+                messages.warning(request, "Password is too short.")
+                return redirect('zeraPortal:change-password')
+            elif new1.isnumeric():
+                messages.warning(request, "Password can not be entirely numeric.")
+                return redirect('zeraPortal:change-password')
+            elif not new1.isalnum():
+                messages.warning(request, "Password should be alphanumeric.")
+                return redirect('zeraPortal:change-password')
+            else:
+                user = request.user
+                user.set_password(new1)
+                user.save()
+                update_session_auth_hash(request, user)
+
+                messages.success(request, 'Password successfully changed.')
+                return redirect('zeraPortal:profile')
+        else:
+            messages.warning(request, 'Wrong old password, please try again.')
+            return redirect('zeraPortal:change-password')
+    return render(request, 'zeraPortal/change_password.html', context=context)

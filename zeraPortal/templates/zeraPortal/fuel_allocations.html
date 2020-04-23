@@ -42,7 +42,7 @@
         </div>
         <div class="panel-body">
 
-            <!-- {% if sord_allocations %} -->
+            
             <div class="table-responsive">
                 <table id="allocations" class="table table-striped table-bordered" style="width:100%">
                     <thead>
@@ -118,7 +118,8 @@
 
 
                                     
-                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'zeraPortal:sordactions' sord.sord_no %}">View All Actions</a>
+                                    <a class="btn btn-labeled btn-success btn-sm" data-toggle="modal" href="{%url 'zeraPortal:sordactions' sord.sord_no %}">
+                                        <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View All Actions</a>
 
                                 </div>
                             </td>
@@ -128,9 +129,7 @@
                     </tbody>
                 </table>
             </div>
-            <!-- {% else %}
-            <p>No Allocations Available</p>
-            {% endif %} -->
+            
 
 
         </div>

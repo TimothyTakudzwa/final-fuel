@@ -6,6 +6,7 @@ urlpatterns = [
     path('company_fuel/', views.company_fuel, name='company_fuel'),
     path('allocations/<int:id>', views.allocations, name='allocations'),
     path('report_generator/', views.report_generator, name='report_generator'),
+    path('change-password/', views.change_password, name="change-password"),
     path('statistics/', views.statistics, name='statistics'),
     path('subsidiaries/', views.subsidiaries, name='subsidiaries'),
     path('company-subsidiaries/<int:id>', views.company_subsidiaries, name='company-subsidiaries'),
