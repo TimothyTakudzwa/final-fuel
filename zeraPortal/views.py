@@ -328,8 +328,8 @@ def allocations(request, id):
             if end_date:
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
-
-            sord_allocations = SordCompanyAuditTrail.objects.filter(date__range=[start_date, end_date])
+            if end_date and start_date:
+                sord_allocations = SordCompanyAuditTrail.objects.filter(date__range=[start_date, end_date])
 
             df = convert_to_dataframe(sord_allocations)
             print(f"------Tave muno------------->>^>{request.POST.get('csv_start_date')}")
@@ -350,8 +350,8 @@ def allocations(request, id):
             if end_date:
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
-
-            sord_allocations = SordCompanyAuditTrail.objects.filter(date__range=[start_date, end_date])
+            if end_date and start_date:
+                sord_allocations = SordCompanyAuditTrail.objects.filter(date__range=[start_date, end_date])
             html_string = render_to_string('zeraPortal/export_audit.html', {'sord_allocations': sord_allocations, 'date_today': date_today})
             html = HTML(string=html_string)
             export_name = f"ZERA Allocations Summary"
