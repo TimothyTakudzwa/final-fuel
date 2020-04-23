@@ -111,6 +111,35 @@ def dashboard(request):
 
 @login_required()
 @user_role
+def edit_fuel(request):
+    usd_fuel = NationalFuelUpdate.objects.filter(currency == 'USD').first()
+    rtgs_fuel = NationalFuelUpdate.objects.filter(currency == 'RTGS').first()
+    if request.method == 'POST':
+        quantity = float(request.POST['quantity'])
+        if request.POST['fuel_type'].lower() == 'petrol':
+            if request.POST['currency'] == 'USD':
+                usd_fuel.unallocated_petrol = quantity
+                usd_fuel.save()
+                messages.success(request, 'USD Petrol updated successfully')
+            else:
+                rtgs_fuel.unallocated_petrol = quantity
+                rtgs_fuel.save()
+                messages.success(request, 'RTGS petrol updated successfully')
+        else:
+            if request.POST['currency'] == 'USD':
+                usd_fuel.unallocated_diesel = quantity
+                usd_fuel.save()
+                messages.success(request, 'USD diesel updated successfully')
+            else:
+                rtgs_fuel.unallocated_diesel = quantity
+                rtgs_fuel.save()
+                messages.success(request, 'RTGS diesel updated successfully')
+    return redirect('noic:dashboard')
+
+
+
+@login_required()
+@user_role
 def allocations(request):
     allocations = SordNationalAuditTrail.objects.all()
     date = datetime.date.today().strftime("%d/%m/%y")
