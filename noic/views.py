@@ -113,8 +113,8 @@ def dashboard(request):
 @login_required()
 @user_role
 def edit_fuel(request):
-    usd_fuel = NationalFuelUpdate.objects.filter(currency == 'USD').first()
-    rtgs_fuel = NationalFuelUpdate.objects.filter(currency == 'RTGS').first()
+    usd_fuel = NationalFuelUpdate.objects.filter(currency='USD').first()
+    rtgs_fuel = NationalFuelUpdate.objects.filter(currency='RTGS').first()
     if request.method == 'POST':
         quantity = float(request.POST['quantity'])
         if request.POST['fuel_type'].lower() == 'petrol':
