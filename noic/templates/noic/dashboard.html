@@ -213,7 +213,12 @@
                     });
                 </script>
 
-
+    <script type="text/javascript">
+    function conf()
+    {
+    var con=confirm("Are you sure you put the right quantity to allocate?");
+    }
+    </script>
             <div class="modal fade modal-success in" id="add_fuel{{fuel.id}}" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class=" modal-dialog" role="document">
@@ -288,7 +293,7 @@
                         
                     </div>
                     <div class="modal-footer">  
-                        <button type="submit" class="btn btn-primary ">Submit</button>
+                        <button type="submit" class="btn btn-primary" onClick="conf()">Submit</button>
                         <button class="btn btn-default" data-dismiss="modal" >Close</button>
                     </div> 
                     </form>

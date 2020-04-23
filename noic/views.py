@@ -273,9 +273,9 @@ def fuel_update(request, id):
     if request.method == 'POST':
         if request.POST['fuel_type'].lower() == 'petrol':
             if request.POST['currency'] == 'USD':
-                if Decimal(request.POST['petrol_usd_price']) > prices.usd_petrol_price:
+                if Decimal(request.POST['petrol_usd_price']) > prices.usd_petrol_pumpprice:
                     messages.warning(request,
-                                     f'You cannot set USD petrol price higher that the ZERA max price of ${prices.usd_petrol_price}.')
+                                     f'You cannot set USD petrol price higher that the ZERA max price of ${prices.usd_petrol_pumpprice}.')
                     return redirect('noic:dashboard')
                 else:
                     fuel_update.usd_petrol += float(request.POST['quantity'])
@@ -291,9 +291,9 @@ def fuel_update(request, id):
                     messages.success(request, 'Updated petrol quantity successfully.')
                     return redirect('noic:dashboard')
             else:
-                if Decimal(request.POST['petrol_rtgs_price']) > prices.rtgs_petrol_price:
+                if Decimal(request.POST['petrol_rtgs_price']) > prices.rtgs_petrol_pumpprice:
                     messages.warning(request,
-                                     f'You cannot set RTGS petrol price higher that the ZERA max price of ${prices.rtgs_petrol_price}.')
+                                     f'You cannot set RTGS petrol price higher that the ZERA max price of ${prices.rtgs_petrtgs_petrol_pumppricerol_price}.')
                     return redirect('noic:dashboard')
                 else:
                     fuel_update.rtgs_petrol += float(request.POST['quantity'])
@@ -311,9 +311,9 @@ def fuel_update(request, id):
 
         else:
             if request.POST['currency'] == 'USD':
-                if Decimal(request.POST['diesel_usd_price']) > prices.usd_diesel_price:
+                if Decimal(request.POST['diesel_usd_price']) > prices.usd_diesel_pumpprice:
                     messages.warning(request,
-                                     f'You cannot set USD diesel price higher that the ZERA max price of ${prices.usd_diesel_price}.')
+                                     f'You cannot set USD diesel price higher that the ZERA max price of ${prices.usd_diesel_pumpprice}.')
                     return redirect('noic:dashboard')
                 else:
                     fuel_update.usd_diesel += float(request.POST['quantity'])
@@ -329,9 +329,9 @@ def fuel_update(request, id):
                     messages.success(request, 'Updated diesel quantity successfully.')
                     return redirect('noic:dashboard')
             else:
-                if Decimal(request.POST['diesel_rtgs_price']) > prices.rtgs_diesel_price:
+                if Decimal(request.POST['diesel_rtgs_price']) > prices.rtgs_diesel_pumpprice:
                     messages.warning(request,
-                                     f'You cannot set RTGS diesel price higher that the ZERA max price of ${prices.rtgs_diesel_price}.')
+                                     f'You cannot set RTGS diesel price higher that the ZERA max price of ${prices.rtgs_diesel_pumpprice}.')
                     return redirect('noic:dashboard')
                 else:
                     fuel_update.rtgs_diesel += float(request.POST['quantity'])
@@ -353,25 +353,25 @@ def edit_prices(request, id):
     fuel_update = DepotFuelUpdate.objects.filter(id=id).first()
     prices = FuelPrices.objects.first()
     if request.method == 'POST':
-        if Decimal(request.POST['usd_petrol_price']) > prices.usd_petrol_price:
+        if Decimal(request.POST['usd_petrol_price']) > prices.usd_petrol_pumpprice:
             messages.warning(request,
-                             f'You cannot set USD petrol price higher that the ZERA max price of ${prices.usd_petrol_price}.')
+                             f'You cannot set USD petrol price higher that the ZERA max price of ${prices.usd_petrol_pumpprice}.')
             return redirect('noic:dashboard')
         else:
-            if Decimal(request.POST['usd_diesel_price']) > prices.usd_diesel_price:
+            if Decimal(request.POST['usd_diesel_price']) > prices.usd_diesel_pumpprice:
                 messages.warning(request,
-                                 f'You cannot set USD diesel price higher that the ZERA max price of ${prices.usd_diesel_price}.')
+                                 f'You cannot set USD diesel price higher that the ZERA max price of ${prices.usd_diesel_pumpprice}.')
                 return redirect('noic:dashboard')
 
             else:
-                if Decimal(request.POST['rtgs_petrol_price']) > prices.rtgs_petrol_price:
+                if Decimal(request.POST['rtgs_petrol_price']) > prices.rtgs_petrol_pumpprice:
                     messages.warning(request,
-                                     f'You cannot set RTGS petrol price higher that the ZERA max price of ${prices.rtgs_petrol_price}.')
+                                     f'You cannot set RTGS petrol price higher that the ZERA max price of ${prices.rtgs_petrol_pumpprice}.')
                     return redirect('noic:dashboard')
                 else:
-                    if Decimal(request.POST['rtgs_diesel_price']) > prices.rtgs_diesel_price:
+                    if Decimal(request.POST['rtgs_diesel_price']) > prices.rtgs_diesel_pumpprice:
                         messages.warning(request,
-                                         f'You cannot set RTGS diesel price higher that the ZERA max price of ${prices.rtgs_diesel_price}.')
+                                         f'You cannot set RTGS diesel price higher that the ZERA max price of ${prices.rtgs_diesel_pumpprice}.')
                         return redirect('noic:dashboard')
                     else:
                         fuel_update.usd_petrol_price = request.POST['usd_petrol_price']
