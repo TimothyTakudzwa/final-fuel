@@ -79,9 +79,7 @@
             Last Allocation
         </th>
 
-        <th>
-            Action
-        </th>
+        
     </tr>
     {% for sord in sord_allocations %}
     <tr>
@@ -112,16 +110,7 @@
         {% else %}
         <td>--</td>
         {% endif %}
-        <td>
-            <div class="btn-group">
-
-
-                
-                <a class="btn btn-labeled btn-success btn-sm" data-toggle="modal" href="{%url 'zeraPortal:sordactions' sord.sord_no %}">
-                    <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View All Actions</a>
-
-            </div>
-        </td>
+        
 
     </tr>
     {% endfor %}

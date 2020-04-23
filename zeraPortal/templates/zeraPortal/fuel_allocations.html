@@ -16,7 +16,7 @@
     <div class="header-title"  style="margin-left: 0px;">
 
         <h1> Allocations Audit Trail </h1>
-        <small>Fuel Management System </small>
+        <small>Zimbabwe Fuel Management System </small>
         <ol class="breadcrumb hidden-xs">
             <li><a href=""></i> Home</a></li>
             <li class="active">Allocations Audit Trail</li>
@@ -109,6 +109,8 @@
                 <h4>Sord Allocations</h4>
                 <form method="POST">
                     {% csrf_token %}
+                    <input type="text" name="pdf_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                        <input type="text" name="pdf_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
                     <div>
                         <button type="submit" class="btn btn-labeled btn-default btn-sm" style="margin-top: 13px; margin-right: 10px; float: left; background-color:#cfd4ce"
                         {% if not sord_allocations %} disabled{% endif %}>
@@ -117,13 +119,20 @@
                     </div>    
                 </form>
                 <div>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="text" name="export_to_csv" value="csv" hidden>
+                        <input type="text" name="csv_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                        <input type="text" name="csv_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+
                     <script>
                         var today = new Date();
                         var filename = 'ZERA Allocations Summary' + ' - ' +today.toLocaleString() + '.csv'
                     </script>
-                    <button  class="btn btn-labeled btn-default btn-sm" style="margin-top: 13px;background-color: #cfd4ce; color: #333;" onclick="exportTableToCSV(filename)" {% if not sord_allocations %} disabled{% endif %}>
+                    <button  class="btn btn-labeled btn-default btn-sm" style="margin-top: 13px;background-color: #cfd4ce; color: #333;" type="submit" {% if not sord_allocations %} disabled{% endif %}>
                         <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>CSV
                     </button>
+                    </form>
                 </div> 
             </div>
             <div class="dropdown">
@@ -142,6 +151,9 @@
                 <table id="allocations" class="table table-striped table-bordered" style="width:100%">
                     <thead>
                         <tr>
+                            <th>
+                                Date
+                            </th>
                             <th>
                                 Sord
                             </th>
@@ -181,6 +193,7 @@
                     <tbody>
                         {% for sord in sord_allocations%}
                         <tr>
+                            <td> {{ sord.date }}</td>
                             <td>{{sord.sord_no}}</td>
                             <td>{{sord.action_no}}</td>
                             <td>{{sord.action}}</td>
