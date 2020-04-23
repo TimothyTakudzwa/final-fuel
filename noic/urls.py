@@ -6,7 +6,7 @@ from . import views
 urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('allocations/', views.allocations, name='allocations'),
-    path('profile/', views.predit-fuelofile, name='profile'),
+    path('profile/', views.profile, name='profile'),
     path('orders/', views.orders, name='orders'),
     path('edit-fuel/', views.edit_fuel, name=''),
     path('fuel_update/<int:id>', views.fuel_update, name='fuel_update'),
