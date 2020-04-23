@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from .models import *
 from supplier.models import *
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
 from users.models import *
 
 from .utils import *
@@ -22,6 +23,14 @@ def validate_user_email(value):
         raise ValidationError('%(value)s is already registered',
             params={'value': value},)
 
+
+class PasswordChange(PasswordChangeForm):
+    class Meta:
+        widgets = {
+
+        }
+        model = User
+        fields = ['old_password', 'new_password1', 'new_password2']
 
 class ReportForm(forms.Form):
     CHOICES = (('Transactions', 'Transactions'),('Fuel Requests', 'Fuel Requests'), ('Allocations', 'Allocations'))
