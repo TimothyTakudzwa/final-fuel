@@ -83,15 +83,36 @@
                 <td>
                     <div class="btn-group">
                         {% if update.payment_type == 'USD' and not update.payment_type == 'RTGS' %}
-                        <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_usd_fuel{{update.id}}">
+                            {% if update.petrol_quantity < 5000 %}
+                            <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_usd_fuel{{update.id}}">
                            <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Update USD Fuel</button>
+                           <button class="btn btn-labeled btn-warning btn-sm" style="font-size: 12px;"  href="{% url 'supplier:hq_notifier' 1 %}">
+                            <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span>Notify Admin</button>
+                           {% else %}
+                           <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_usd_fuel{{update.id}}">
+                            <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Update USD Fuel</button>
+                            {% endif %}
                 
                         {% elif update.payment_type == 'RTGS' and not update.payment_type == 'USD'%}
-                        <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_rtgs_fuel{{update.id}}">
+                            {% if update.petrol_quantity < 5000 %}
+                            <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_rtgs_fuel{{update.id}}">
                            <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Update RTGS Fuel</button>
-                        {% elif update.payment_type == 'RTGS' and update.payment_type == 'USD'%}
-                        <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_fuel{{update.id}}">
+                           <button class="btn btn-labeled btn-warning btn-sm" style="font-size: 12px;" href="{% url 'supplier:hq_notifier' 2 %}">
+                            <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Notify Admin</button>
+                            {% else %}
+                            <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_rtgs_fuel{{update.id}}">
+                                <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Update RTGS Fuel</button>
+                            {% endif %}
+                        {% elif update.payment_type == 'USD & RTGS' %}
+                            {% if update.petrol_quantity < 5000 %}
+                            <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_fuel{{update.id}}">
                            <span class="btn-label"><i class="fa fa-refresh" aria-hidden="true"></i> </span> Update Both Fuel</button>
+                           <button class="btn btn-labeled btn-warning btn-sm" style="font-size: 12px;" href="{% url 'supplier:hq_notifier' 3 %}">
+                            <span class="btn-label"><i class="fa fa-refresh" aria-hidden="true"></i> </span> Notify Admin</button>
+                            {% else %}
+                            <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_fuel{{update.id}}">
+                                <span class="btn-label"><i class="fa fa-refresh" aria-hidden="true"></i> </span> Update Both Fuel</button>
+                            {% endif %}
                         {%endif%}
                     </div>
                 </td>

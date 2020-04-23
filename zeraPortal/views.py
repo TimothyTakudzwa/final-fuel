@@ -299,6 +299,7 @@ def company_fuel(request):
 def allocations(request, id):
     user_permission(request)
     sord_allocations = SordCompanyAuditTrail.objects.filter(company__id=id).all()
+    
     return render(request, 'zeraPortal/fuel_allocations.html', {'sord_allocations': sord_allocations})
 
 
