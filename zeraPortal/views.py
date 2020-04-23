@@ -1,13 +1,17 @@
-from datetime import date
+from datetime import date, datetime
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.template.loader import render_to_string
 from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from validate_email import validate_email
+
+from weasyprint import HTML
+import pandas as pd
 
 from accounts.models import AccountHistory
 from comments.models import Comment
@@ -21,6 +25,7 @@ from users.models import SordActionsAuditTrail, Activity
 from users.views import message_is_sent
 from .constants import coordinates_towns, towns
 from .forms import PasswordChange
+from .lib import *
 from .decorators import user_role, user_permission
 from decimal import *
 
@@ -299,8 +304,82 @@ def company_fuel(request):
 def allocations(request, id):
     user_permission(request)
     sord_allocations = SordCompanyAuditTrail.objects.filter(company__id=id).all()
+    date_today = date.today().strftime("%d/%m/%y")
+
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date'):
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            sord_allocations = SordCompanyAuditTrail.objects.filter(date__range=[start_date, end_date])
+
+            return render(request, 'zeraPortal/fuel_allocations.html', {'sord_allocations': sord_allocations, 'start_date':start_date, 'end_date': end_date })
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                sord_allocations = SordCompanyAuditTrail.objects.filter(date__range=[start_date, end_date])
+
+            df = convert_to_dataframe(sord_allocations)
+            print(f"------Tave muno------------->>^>{request.POST.get('csv_start_date')}")
+            filename = 'media/Zera Allocations Summary - {date_today}.csv'
+
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename=test.csv'
+                return response      
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                sord_allocations = SordCompanyAuditTrail.objects.filter(date__range=[start_date, end_date])
+            html_string = render_to_string('zeraPortal/export_audit.html', {'sord_allocations': sord_allocations, 'date_today': date_today})
+            html = HTML(string=html_string)
+            export_name = f"ZERA Allocations Summary"
+            html.write_pdf(target=f'media/{export_name}.pdf')
+
+            download_file = f'media/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name}.pdf'
+                return response
+
     
     return render(request, 'zeraPortal/fuel_allocations.html', {'sord_allocations': sord_allocations})
+
+
+def export_to_csv(request):
+    sord_allocations = SordCompanyAuditTrail.objects.all()
+    df = convert_to_dataframe(sord_allocations)
+
+    df.to_csv(f'media/test.csv', index=None, header=True)
+
+    with open(f'media/test.csv', 'rb') as csv_name:
+        response = HttpResponse(csv_name.read())
+        response['Content-Disposition'] = f'attachment;filename=test.csv'
+        return response
+
+
 
 
 @login_required()

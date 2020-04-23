@@ -36,7 +36,8 @@ user = get_user_model()
 @login_required()
 @user_role
 def orders(request):
-    orders = Order.objects.all()
+    orders = Order.objects.exclude(date=today)
+    new_orders = Order.objects.filter(date=today)
     form1 = DepotContactForm()
     depots = NoicDepot.objects.all()
     form1.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots]
@@ -51,7 +52,7 @@ def orders(request):
         else:
             pass
 
-    return render(request, 'noic/orders.html', {'orders': orders, 'form1': form1})
+    return render(request, 'noic/orders.html', {'orders': orders, 'form1': form1, 'new_orders': new_orders})
 
 
 @login_required()

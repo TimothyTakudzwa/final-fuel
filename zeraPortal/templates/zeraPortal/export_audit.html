@@ -1,0 +1,122 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Sord Allocations Summary</title>
+
+    <style>
+        @page {size: a3 landscape;}
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        .first {
+            width: 50%;
+            float:left;
+            font-size: 12px;
+
+        }
+        .wrapper {
+            width: 100%;
+            margin: auto;
+            padding: 10px;
+            overflow: hidden;
+        }
+        .text-muted{
+            color:#6c757d!important;
+        }
+    </style>
+
+</head>
+<body>
+
+
+<h3 style="text-align: center;">Sord Allocations Statement - {{ date_today }}</h3>
+
+<table style="padding-top: 20px">
+    <tr>
+        <th>
+            Sord
+        </th>
+
+        <th>
+           Actions
+        </th>
+
+        <th>
+            Info
+        </th>
+        <th>
+            Fuel 
+        </th>
+        <th>
+            Payment 
+        </th>
+        <th>
+            Initial 
+        </th>
+        <th>
+            Allocated 
+        </th>
+        <th>
+            Balance 
+        </th>
+
+        <th>
+            Last Allocation
+        </th>
+
+        
+    </tr>
+    {% for sord in sord_allocations %}
+    <tr>
+        <td>{{sord.sord_no}}</td>
+        <td>{{sord.action_no}}</td>
+        <td>{{sord.action}}</td>
+        
+        {% if sord.fuel_type|lower|capfirst == 'Petrol' %}
+            <td class="" style="color: #009688;">
+                {{sord.fuel_type|lower|capfirst}}
+            </td>
+        {% elif sord.fuel_type|lower|capfirst == 'Diesel' %}
+        
+            <td class="" style="color: #ffb61e;">
+                {{sord.fuel_type|lower|capfirst}}
+            </td>
+        {% else %}
+            <td class="">
+                {{sord.fuel_type|lower|capfirst}}
+            </td>
+        {% endif %}    
+        <td>{{sord.payment_type}}</td>
+        <td>{{sord.initial_quantity|floatformat:2|intcomma}}</td>
+        <td>{{sord.quantity_allocated|floatformat:2|intcomma}}</td>
+        <td>{{sord.end_quantity|floatformat:2|intcomma}}</td>
+        {% if sord.allocated_to != None %}
+        <td>{{sord.allocated_to}}</td>
+        {% else %}
+        <td>--</td>
+        {% endif %}
+        
+
+    </tr>
+    {% endfor %}
+
+</table>
+
+
+</body>
+</html>

@@ -456,3 +456,93 @@
 </div>
 
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+<table id="allocations" class="table table-striped table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                Fuel Type
+            </th>
+            <th>
+                Current Stocks 
+             </th>
+            <th>
+                Pending Orders
+             </th>
+            
+            <th>
+               Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for fuel in depot_stock %}
+        <tr>
+            <td>USD Diesel Quantity</td>
+            <td height="35"> {{fuel.usd_diesel|floatformat:2|intcomma}}L {% if fuel.usd_diesel < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
+            {% if noic_usd_diesel != 0 %}
+            <td height="35"> {{noic_usd_diesel|floatformat:2|intcomma}}</td>
+            {% else %}
+            <td height="35"> No Pending USD Diesel Orders</td>
+            {% endif %}
+            
+            <td>
+                <div class="btn-group">
+                    <a class="btn btn-labeled btn-success btn-sm" style="color: whitesmoke;" data-toggle="modal"
+                        data-target="#update_usd_dprice">
+                        <span class="btn-label"><i class="fa fa-refresh" aria-hidden="true"></i></span> Update Price</a>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>RTGS Diesel Quantity</td>
+            <td>{{prices.rtgs_diesel_fob}}</td>
+            <td>{{prices.rtgs_diesel_vat}}</td>
+           
+            <td>
+                <div class="btn-group">
+                    <a class="btn btn-success btn-labeled btn-sm" style="color: whitesmoke;" data-toggle="modal"
+                        data-target="#update_rtgs_dprice">
+                        <span class="btn-label"><i class="fa fa-refresh" aria-hidden="true"></i></span> Update Price</a>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>USD Petrol Quantity</td>
+            <td>{{prices.usd_petrol_fob}}</td>
+            <td>{{prices.usd_petrol_vat}}</td>
+           
+            <td>
+                <div class="btn-group">
+                    <a class="btn btn-success btn-labeled btn-sm" style="color: whitesmoke;" data-toggle="modal"
+                        data-target="#update_usd_pprice">
+                        <span class="btn-label"><i class="fa fa-refresh" aria-hidden="true"></i></span>Update Price</a>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>RTGS Petrol Quantity</td>
+            <td>{{prices.rtgs_petrol_fob}}</td>
+            <td>{{prices.rtgs_petrol_vat}}</td>
+           
+            <td>
+                <div class="btn-group">
+                    <a class="btn btn-success btn-labeled btn-sm" style="color: whitesmoke;" data-toggle="modal"
+                        data-target="#update_rtgs_pprice">
+                        <span class="btn-label"><i class="fa fa-refresh" aria-hidden="true"></i></span>Update Price</a>
+                </div>
+            </td>
+        </tr>
+        
+    </tbody>
+
+</table>
