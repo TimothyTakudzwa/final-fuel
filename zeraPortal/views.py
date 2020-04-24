@@ -336,7 +336,7 @@ def allocations(request, id):
            
             filename = 'media/Zera Allocations Summary - {date_today}.csv'
 
-            df.dropna(axis=0, how='any', thresh=None, subset=None, inplace=False)
+            df.drop(['company'], axis = 1)
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
