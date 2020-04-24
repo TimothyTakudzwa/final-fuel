@@ -200,7 +200,7 @@ def allocations(request):
 
             with open(f'{download_file}.pdf', 'rb') as pdf:
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-                response['Content-Disposition'] = f'attachment;filename={export_name}.pdf'
+                response['Content-Disposition'] = f'attachment;filename={export_name} - {date_today}.pdf'
                 return response
 
     return render(request, 'noic/allocations.html', {'allocations': allocations})
