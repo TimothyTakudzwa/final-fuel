@@ -172,7 +172,7 @@ def allocations(request):
                 allocations = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
 
             df = convert_to_dataframe(allocations)
-            filename = 'media/Noic Allocations Summary - {date_today}.csv'
+            filename = f'media/Noic Allocations Summary - {date_today}.csv'
 
             df.to_csv(filename, index=None, header=True)
 
@@ -193,7 +193,7 @@ def allocations(request):
                 allocations = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
             html_string = render_to_string('noic/export_audit.html', {'allocations': allocations, 'date': date})
             html = HTML(string=html_string)
-            export_name = f"Noic Allocations Summary"
+            export_name = f"Noic Allocations Summary - {date}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
             download_file = f'media/transactions/{export_name}'
