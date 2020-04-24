@@ -340,7 +340,7 @@ def allocations(request, id):
 
             with open(filename, 'rb') as csv_name:
                 response = HttpResponse(csv_name.read())
-                response['Content-Disposition'] = f'attachment;filename={ filename } - { company.name|title }.csv'
+                response['Content-Disposition'] = f'attachment;filename={ filename } - { company.name }.csv'
                 return response      
         else:
             start_date = request.POST.get('pdf_start_date')
