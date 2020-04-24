@@ -73,11 +73,42 @@ def sord_allocations(request):
             if end_date:
                 end_date = datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
-            sord_allocations = SordCompanyAuditTrail.objects.filter(date__range=[start_date, end_date])
+            sord_allocations = SordCompanyAuditTrail.objects.filter(company=request.user.company, date__range=[start_date, end_date])
         
-            return render(request, 'users/sord_allocations.html', {'sord_allocations': sord_allocations, 'start_date':start_date, 'end_date': end_date }) 
+            return render(request, 'users/sord_allocations.html', {'sord_allocations': sord_allocations, 'start_date':start_date, 'end_date': end_date })
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                sord_allocations = SordCompanyAuditTrail.objects.filter(company=request.user.company, date__range=[start_date, end_date])
 
-        else:    
+            df = convert_to_dataframe(sord_allocations)
+            filename = 'Supplier Admin Summary.csv'
+
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename=test.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                sord_allocations = SordCompanyAuditTrail.objects.filter(company=request.user.company, date__range=[start_date, end_date])   
             html_string = render_to_string('users/export_allocations.html', {'sord_allocations': sord_allocations, 'date':today })
             html = HTML(string=html_string)
             export_name = f"{request.user.company.name.title()}"
