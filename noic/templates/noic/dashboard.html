@@ -19,7 +19,7 @@
     </div> -->
     <div class="header-title" style="margin-left: 0px;">
         <h1>NOIC Available Fuel</h1>
-        <small>Fuel Management System</small>
+        <small>Zimbabwe Fuel Management System</small>
         <ol class="breadcrumb hidden-xs">
             <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
             <li class="active">capacities</li>
@@ -49,27 +49,94 @@
         <table id="orders" class="table table-striped table-bordered" style="width:100%">
             <thead style="background-color: lightslategray; color:white;">
                 <tr>
-                    <th style="color: #a9f0e9;">USD Petrol Quantity</th>
-                    <th style="color: #f1d597;">USD Diesel Quantity</th>
-                    <th style="color: #b5f3ed;">RTGS Petrol Quantity</th>
-                    <th style="color: #e9d3a3;">RTGS Diesel Quantity</th>
+                    <th>USD Petrol Quantity</th>
+                    <th>USD Diesel Quantity</th>
+                    <th>RTGS Petrol Quantity</th>
+                    <th>RTGS Diesel Quantity</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 
             <tr>
 
-                <td>{{noic_usd_petrol|floatformat:2|intcomma}} Litres {% if noic_usd_petrol < 10000 %} 
+                <td style="color: #a9f0e9;">{{noic_usd_petrol|floatformat:2|intcomma}} Litres {% if noic_usd_petrol < 10000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
-                <td>{{noic_usd_diesel|floatformat:2|intcomma}} Litres {% if noic_usd_diesel < 1000 %} <i
+                <td style="color: #f1d597;">{{noic_usd_diesel|floatformat:2|intcomma}} Litres {% if noic_usd_diesel < 1000 %} <i
                         class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
-                <td>{{noic_rtgs_petrol|floatformat:2|intcomma}} Litres {% if noic_rtgs_petrol < 1000 %} <i
+                <td style="color: #a9f0e9;">{{noic_rtgs_petrol|floatformat:2|intcomma}} Litres {% if noic_rtgs_petrol < 1000 %} <i
                     class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
-                <td>{{noic_rtgs_diesel|floatformat:2|intcomma}} Litres {% if noic_rtgs_diesel < 1000 %} <i
+                <td style="color: #f1d597;">{{noic_rtgs_diesel|floatformat:2|intcomma}} Litres {% if noic_rtgs_diesel < 1000 %} <i
                     class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
+                <td>
+                    <a type="button" class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#edit_fuel" style="margin-right: 10px;">
+                    <span class="btn-label"><i class="fa fa-edit"></i></span>Edit Fuel</a>
+                </td>
 
                 
             </tr>
+
+            <!--Edit Fuel capacity modal-->
+            <div class="modal fade modal-success in" id="edit_fuel" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class=" modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title" id="exampleModalLongTitle">Add Fuel- <i
+                            style="color:azure"><small>Please Note the fuel you are entering is to be
+                                sold either in United States Dollars or RTGS</small></i></span>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div>
+                        {% load crispy_forms_tags %}
+                        <form action="{% url 'noic:edit-fuel' %}" method="POST" enctype="multipart/form-data" onSubmit="return confirm('Are you sure you put the right quantity to allocate?') ">
+                            {% csrf_token %}
+                            <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                                <div class="col-sm-6">
+
+                                    <label><b style='color:#009688'>Fuel Type</b></label>
+                                    <select class="form-control" name="fuel_type">
+
+                                        <option>Petrol</option>
+                                        <option>Diesel</option>
+
+
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+
+                                    <label><b style='color:#009688'>Currency</b></label>
+                                    <select class="form-control" name="currency">
+
+                                        <option>RTGS</option>
+                                        <option>USD</option>
+
+
+                                    </select>
+                                </div>
+                                
+                               
+                            </div>
+                            <div class=" form-group row col-sm-12">
+                                <div class="col-sm-12">
+                                    <label><b style='color:#009688'>Quantity</b></label>
+                                    <input type="text" name="quantity" class="form-control"/>
+                                </div>
+
+                            </div> 
+
+                        
+                    </div>
+                    <div class="modal-footer">  
+                        <button type="submit" class="btn btn-primary" >Submit</button>
+                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                    </div> 
+                    </form>
+                </div>
+            </div>
+        </div>
 
            
             </tbody>
@@ -107,13 +174,13 @@
             <thead style="background-color: lightslategray; color:white;">
                 <tr>
                     <th style="color: white;">Depot</th>
-                    <th style="color: #eecf8d;">USD Diesel</th>
+                    <th style="color: white">USD Diesel</th>
                     <th style="color: white;">Price</th>
-                    <th style="color: #f5d389;">RTGS Diesel</th>
+                    <th style="color: white">RTGS Diesel</th>
                     <th style="color: white;">Price</th>
-                    <th style="color: #a5ece5;">USD Petrol </th>
+                    <th style="color: white;">USD Petrol </th>
                     <th style="color: white;">Price</th>
-                    <th style="color: #a2ece5;">RTGS Petrol </th>
+                    <th style="color: white;">RTGS Petrol </th>
                     <th style="color: white;">Price</th>
                     <th style="color: white;">Action</th>
                 </tr>
@@ -122,15 +189,15 @@
                 {% for fuel in depots %}
             <tr>
                 <td>{{fuel.depot.name}}</td>
-                <td>{{fuel.usd_diesel|floatformat:2|intcomma}} {% if fuel.usd_diesel < 1000 %} 
+                <td style="color: #f5d389;"></td>{{fuel.usd_diesel|floatformat:2|intcomma}} {% if fuel.usd_diesel < 1000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"> </i>{% endif %}</td>
                 <td>{{fuel.usd_diesel_price}}</td>
-                <td>{{fuel.rtgs_diesel|floatformat:2|intcomma}} {% if fuel.rtgs_diesel < 1000 %} 
+                <td style="color: #f5d389;">{{fuel.rtgs_diesel|floatformat:2|intcomma}} {% if fuel.rtgs_diesel < 1000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"> </i>{% endif %}</td>
                 <td>{{fuel.rtgs_diesel_price}}</td>
-                <td>{{fuel.usd_petrol|floatformat:2|intcomma}} {% if fuel.usd_petrol < 1000 %} 
+                <td style="color: #a9f0e9;">{{fuel.usd_petrol|floatformat:2|intcomma}} {% if fuel.usd_petrol < 1000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
-                <td>{{fuel.usd_petrol_price}}</td>
+                <td style="color: #a9f0e9;">{{fuel.usd_petrol_price}}</td>
                 <td>{{fuel.rtgs_petrol|floatformat:2|intcomma}} {% if fuel.rtgs_petrol < 1000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
                 <td>{{fuel.rtgs_petrol_price}}</td>

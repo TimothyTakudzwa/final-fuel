@@ -8,6 +8,7 @@ urlpatterns = [
     path('allocations/', views.allocations, name='allocations'),
     path('profile/', views.profile, name='profile'),
     path('orders/', views.orders, name='orders'),
+    path('edit-fuel/', views.edit_fuel, name='edit-fuel'),
     path('fuel_update/<int:id>', views.fuel_update, name='fuel_update'),
     path('edit_prices/<int:id>', views.edit_prices, name='edit_prices'),
     path('payment_approval/<int:id>', views.payment_approval, name='payment_approval'),
