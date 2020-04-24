@@ -631,7 +631,7 @@ def collections(request):
         user = User.objects.filter(company=company, user_type='S_ADMIN').first()
         reference = 'collection'
         reference_id = collection.id
-        depot = collection.noic_depot.name
+        depot = collection.order.noic_depot.name
         action = f"You collected {collection.order.quantity}L of {collection.order.fuel_type} from {depot} depot"
         Audit_Trail.objects.create(company=company, service_station=depot, user=user,
                                     action=action, reference=reference, reference_id=reference_id)
