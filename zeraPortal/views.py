@@ -340,7 +340,7 @@ def allocations(request, id):
 
             with open(filename, 'rb') as csv_name:
                 response = HttpResponse(csv_name.read())
-                response['Content-Disposition'] = f'attachment;filename={ filename } - { company.name }.csv'
+                response['Content-Disposition'] = f'attachment;filename=Zera Allocations Summary - { company.name } - date_today .csv'
                 return response      
         else:
             start_date = request.POST.get('pdf_start_date')
@@ -362,7 +362,7 @@ def allocations(request, id):
 
             with open(f'{download_file}.pdf', 'rb') as pdf:
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-                response['Content-Disposition'] = f'attachment;filename={export_name}.pdf'
+                response['Content-Disposition'] = f'attachment;filename={export_name} - {company.name} - {date_today}.pdf'
                 return response
 
     
