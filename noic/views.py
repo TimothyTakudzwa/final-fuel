@@ -172,7 +172,7 @@ def allocations(request):
                 allocations = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
 
             df = convert_to_dataframe(allocations)
-            filename = 'Noic Allocations Summary -' + date_today + '.csv'
+            filename = 'Noic Allocations Summary.csv'
 
             df.to_csv(filename, index=None, header=True)
 
