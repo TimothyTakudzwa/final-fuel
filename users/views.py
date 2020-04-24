@@ -96,7 +96,7 @@ def sord_allocations(request):
 
             with open(filename, 'rb') as csv_name:
                 response = HttpResponse(csv_name.read())
-                response['Content-Disposition'] = f'attachment;filename=test.csv'
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
                 return response     
 
         else:
@@ -119,7 +119,7 @@ def sord_allocations(request):
 
             with open(f'{download_file}.pdf', 'rb') as pdf:
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-                response['Content-Disposition'] = f'attachment;filename={export_name}.pdf'
+                response['Content-Disposition'] = f'attachment;filename={export_name} - {today}.pdf'
                 return response
             
 
