@@ -163,10 +163,10 @@ def allocations(request):
             start_date = request.POST.get('csv_start_date')
             end_date = request.POST.get('csv_end_date')
             if start_date:
-                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = datetime.datetime.strptime(start_date, '%b %d, %Y')
                 start_date = start_date.date()
             if end_date:
-                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = datetime.datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
                 allocations = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
@@ -184,10 +184,10 @@ def allocations(request):
             start_date = request.POST.get('pdf_start_date')
             end_date = request.POST.get('pdf_end_date')
             if start_date:
-                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = datetime.datetime.strptime(start_date, '%b %d, %Y')
                 start_date = start_date.date()
             if end_date:
-                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = datetime.datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
                 allocations = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
