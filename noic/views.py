@@ -143,7 +143,7 @@ def edit_fuel(request):
 @user_role
 def allocations(request):
     allocations = SordNationalAuditTrail.objects.all()
-    date = datetime.date.today().strftime("%d/%m/%y")
+    date_today = datetime.date.today().strftime("%d/%m/%y")
 
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date'):
