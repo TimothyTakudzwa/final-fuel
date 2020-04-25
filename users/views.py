@@ -815,7 +815,7 @@ def allocation_update_main(request, id):
             action = f"You have allocated {request.POST['fuel_type']} quantity of {int(request.POST['quantity'])}L @ {fuel_update.petrol_price} "
             Audit_Trail.objects.create(company=request.user.company, service_station=service_station, user=request.user,
                                        action=action, reference=reference, reference_id=reference_id)
-            return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
+            return redirect('users:allocate')
 
         else:
             messages.success(request, 'Subsidiary does not exists.')
@@ -2385,10 +2385,12 @@ def place_order(request):
             driver = request.POST['driver']
             driver_id = request.POST['driver_id']
             status='Pending'
-            Order.objects.create(status=status, price=price, noic_depot=noic_depot, amount_paid=amount_paid, transporter=transporter,
+            order = Order.objects.create(status=status, price=price, noic_depot=noic_depot, amount_paid=amount_paid, transporter=transporter,
                                  truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id,
                                  company=company, quantity=quantity, currency=currency, fuel_type=fuel_type,
                                  proof_of_payment=proof_of_payment)
+
+            order.save()
 
             message = f'{request.user.company.name.title()} placed an order of {quantity}L' \
                       f' {fuel_type.lower}'
@@ -2477,14 +2479,20 @@ def download_proof(request, id):
 def delivery_schedules(request):
     user_permission(request)
     schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).all()
+    completed_schedules = []
+    pending_schedules =[]
     for schedule in schedules:
         schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
         if schedule.transaction.offer.delivery_method.lower() == 'delivery':
             schedule.delivery_address = schedule.transaction.offer.request.delivery_address
         else:
             schedule.delivery_address = schedule.transaction.offer.collection_address
+        if schedule.confirmation_date:
+            completed_schedules.append(schedule)
+        else:
+            pending_schedules.append(schedule)
 
-    return render(request, 'users/delivery_schedules.html', {'schedules': schedules})
+    return render(request, 'users/delivery_schedules.html', {'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules})
 
 
 '''
