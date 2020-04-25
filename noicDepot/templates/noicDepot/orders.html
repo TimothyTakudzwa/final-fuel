@@ -466,6 +466,13 @@
                                                 </div>
                                             </div>
                                             <!--End allocation modal-->
+                                            <script>
+                                                $('body').click(function (event) {
+                                                    if(!$(event.target).closest('#payment{{ order.id }}"').length && !$(event.target).is('#payment{{ order.id }}"')) {
+                                                        $("#payment{{ order.id }}").modal('hide');
+                                                    }
+                                                });
+                                            </script>
                                         {%endfor%}
                                         </tbody>
                                     </table>
@@ -767,6 +774,13 @@
                                                 </div>
                                             </div>
                                             <!--End allocation modal-->
+                                            <script>
+                                                $('body').click(function (event) {
+                                                    if(!$(event.target).closest('#payment{{ order.id }}"').length && !$(event.target).is('#payment{{ order.id }}"')) {
+                                                        $("#payment{{ order.id }}").modal('hide');
+                                                    }
+                                                });
+                                            </script>
                                         {%endfor%}
                                         </tbody>
                                     </table>
