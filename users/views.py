@@ -2385,10 +2385,12 @@ def place_order(request):
             driver = request.POST['driver']
             driver_id = request.POST['driver_id']
             status='Pending'
-            Order.objects.create(status=status, price=price, noic_depot=noic_depot, amount_paid=amount_paid, transporter=transporter,
+            order = Order.objects.create(status=status, price=price, noic_depot=noic_depot, amount_paid=amount_paid, transporter=transporter,
                                  truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id,
                                  company=company, quantity=quantity, currency=currency, fuel_type=fuel_type,
                                  proof_of_payment=proof_of_payment)
+
+            order.save()
 
             message = f'{request.user.company.name.title()} placed an order of {quantity}L' \
                       f' {fuel_type.lower}'
