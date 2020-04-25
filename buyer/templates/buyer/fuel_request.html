@@ -21,7 +21,7 @@
             <h1> Fuel Requests</h1>
             <small> List of all Fuel Requests you have made</small>
             <ol class="breadcrumb hidden-xs">
-                <li><a href="index.html"><i class="pe-7s-home"></i> Home</a></li>
+                <li><a href="#"><i class="pe-7s-home"></i> Home</a></li>
                 <li class="active">Requests</li>
             </ol>
         </div>
@@ -149,7 +149,6 @@
                                             <th>Fuel Type</th>
                                             <th>Quantity</th>
                                             <th>Requested On</th>
-                                            <th>Action</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -188,23 +187,6 @@
                                                 </td>
                                                 <td class="">
                                                     {{fuel_request.date}} -- {{fuel_request.time}}
-                                                </td>
-                                                <td>
-                                                    {% if fuel_request.has_offers == True%}
-
-                                                        <a type="button" class="btn btn-labeled btn-success m-b-5"  href="{% url 'fuel-offers' fuel_request.id %}">
-                                            <span class="btn-label"><i
-                                                    class="glyphicon glyphicon-info-sign"></i></span>View Offers
-                                                        </a>
-
-                                                        </a>
-
-                                                    {% else %}
-                                                        <button type="button" disabled class="btn btn-labeled btn-danger m-b-5">
-                                        <span class="btn-label"><i
-                                                class="glyphicon glyphicon-remove"></i></span>No offers Yet
-                                                        </button>
-                                                    {% endif %}
                                                 </td>
                                             </tr>
                                         {% endfor %}
