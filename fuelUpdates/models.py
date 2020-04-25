@@ -22,6 +22,6 @@ class SordCompanyAuditTrail(models.Model):
         return f'{self.id} -- SordCompanyAuditTrail'
 
     class Meta:
-        ordering = ['date']
+        ordering = ['-date']
         
 
