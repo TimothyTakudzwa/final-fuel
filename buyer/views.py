@@ -860,7 +860,7 @@ def view_release_note(request, id):
 def delivery_schedules(request):
     today_min = datetime.combine(date.today(), time.min)
     today_max = datetime.combine(date.today(), time.max)
-    # today = datetime.today() -timedelta(days=100) 
+    # today = datetime.today() - timedelta(days=100) 
     today_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user, date__range=(today_min, today_max))
     future_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user, date__gt=datetime.today())
     past_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user, date__lt=datetime.today())
@@ -944,7 +944,7 @@ def delivery_schedules(request):
         confirmation_date = request.FILES.get('delivery_date')
         delivery_id = request.POST.get('delivery_id')
 
-        schedule = DeliverySchedule.objects.get(id=delivery_id)
+        schedule = DeliverySchedule.objects.get(id=int(delivery_id))
         schedule.confirmation_date = confirmation_date
         schedule.save()
         messages.success(request, 'Delivery successfully confirmed.')
