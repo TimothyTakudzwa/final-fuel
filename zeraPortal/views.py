@@ -305,6 +305,7 @@ def allocations(request, id):
     user_permission(request)
     sord_allocations = SordCompanyAuditTrail.objects.filter(company__id=id).all()
     date_today = date.today().strftime("%d/%m/%y")
+    company = Company.objects.filter(id=id).first()
 
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date'):
@@ -316,7 +317,7 @@ def allocations(request, id):
             if end_date:
                 end_date = datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
-            sord_allocations = SordCompanyAuditTrail.objects.filter(date__range=[start_date, end_date])
+            sord_allocations = SordCompanyAuditTrail.objects.filter(company__id=id, date__range=[start_date, end_date])
 
             return render(request, 'zeraPortal/fuel_allocations.html', {'sord_allocations': sord_allocations, 'start_date':start_date, 'end_date': end_date })
         if request.POST.get('export_to_csv')=='csv':
@@ -329,17 +330,18 @@ def allocations(request, id):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                sord_allocations = SordCompanyAuditTrail.objects.filter(date__range=[start_date, end_date])
+                sord_allocations = SordCompanyAuditTrail.objects.filter(company__id=id, date__range=[start_date, end_date])
 
             df = convert_to_dataframe(sord_allocations)
-            print(f"------Tave muno------------->>^>{request.POST.get('csv_start_date')}")
+           
             filename = 'media/Zera Allocations Summary - {date_today}.csv'
 
+            del df['company']
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
                 response = HttpResponse(csv_name.read())
-                response['Content-Disposition'] = f'attachment;filename=test.csv'
+                response['Content-Disposition'] = f'attachment;filename=Zera Allocations Summary - { company.name } - {date_today} .csv'
                 return response      
         else:
             start_date = request.POST.get('pdf_start_date')
@@ -351,8 +353,8 @@ def allocations(request, id):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                sord_allocations = SordCompanyAuditTrail.objects.filter(date__range=[start_date, end_date])
-            html_string = render_to_string('zeraPortal/export_audit.html', {'sord_allocations': sord_allocations, 'date_today': date_today})
+                sord_allocations = SordCompanyAuditTrail.objects.filter(company__id=id, date__range=[start_date, end_date])
+            html_string = render_to_string('zeraPortal/export_audit.html', {'sord_allocations': sord_allocations, 'date_today': date_today, 'company': company})
             html = HTML(string=html_string)
             export_name = f"ZERA Allocations Summary"
             html.write_pdf(target=f'media/{export_name}.pdf')
@@ -361,7 +363,7 @@ def allocations(request, id):
 
             with open(f'{download_file}.pdf', 'rb') as pdf:
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-                response['Content-Disposition'] = f'attachment;filename={export_name}.pdf'
+                response['Content-Disposition'] = f'attachment;filename={export_name} - {company.name} - {date_today}.pdf'
                 return response
 
     

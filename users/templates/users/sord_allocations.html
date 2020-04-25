@@ -110,19 +110,30 @@
                 <h4>Sord Allocations</h4>
                 <form method="POST">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-labeled btn-default btn-sm" style="margin-top: 13px; margin-right: 10px; float: left; background-color:#cfd4ce" {% if not sord_allocations %} disabled{% endif %}>
+                    <input type="text" name="pdf_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                    <input type="text" name="pdf_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+                    <button type="submit" class="btn btn-labeled btn-default btn-sm" style="margin-top: 13px; margin-right: 10px; float: left; background-color:#cfd4ce; color: #333;"
+                     {% if not sord_allocations %} disabled{% endif %} title="{% if sord_allocations %} Export To PDF {%else%} No Data To Export {% endif %}">
                         <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>PDF
                     </button>
                 </form>
-                <div>
+                <div> 
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="text" name="export_to_csv" value="csv" hidden>
+                        <input type="text" name="csv_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                        <input type="text" name="csv_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+
                     <script>
                         var today = new Date();
                         var filename = 'Supplier Admin Allocations Summary' + ' - ' +today.toLocaleString() + '.csv'
                     </script>
-                    <button  class="btn btn-labeled btn-default btn-sm" style="margin-top: 13px;background-color: #cfd4ce;" onclick="exportTableToCSV(filename)" {% if not sord_allocations %} disabled{% endif %}>
+                    <button  class="btn btn-labeled btn-default btn-sm" style="margin-top: 13px;background-color: #cfd4ce; color: #333;" type="submit" {% if not sord_allocations %} disabled{% endif %}
+                    title="{% if sord_allocations %} Export To CSV {%else%} No Data To Export {% endif %}">
                         <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>CSV
                     </button>
-                </div> 
+                    </form>
+                </div>
             </div>
             <div class="dropdown">
                 <ul class="dropdown-menu dropdown-menu-right">

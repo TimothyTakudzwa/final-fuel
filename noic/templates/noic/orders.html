@@ -21,7 +21,7 @@
         </div> -->
         <div class="header-title" style="margin-left: 0px;">
             <h1>Company Fuel Orders</h1>
-            <small>Fuel Management System</small>
+            <small>Zimbabwe Fuel Management System</small>
             <ol class="breadcrumb hidden-xs">
                 <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
                 <li class="active">Orders</li>
@@ -322,6 +322,13 @@
                                                 </div>
                                             </div>
                                             <!--End payment details-->
+                                            <script>
+                                                $('body').click(function (event) {
+                                                    if(!$(event.target).closest('#payment{{ order.id }}"').length && !$(event.target).is('#payment{{ order.id }}"')) {
+                                                        $("#payment{{ order.id }}").modal('hide');
+                                                    }
+                                                });
+                                            </script>
                                         {% endfor %}
                                         </tbody>
                                     </table>
@@ -593,6 +600,13 @@
                                                 </div>
                                             </div>
                                             <!--End payment details-->
+                                            <script>
+                                                $('body').click(function (event) {
+                                                    if(!$(event.target).closest('#payment{{ order.id }}"').length && !$(event.target).is('#payment{{ order.id }}"')) {
+                                                        $("#payment{{ order.id }}").modal('hide');
+                                                    }
+                                                });
+                                            </script>
                                         {% endfor %}
                                         </tbody>
                                     </table>
