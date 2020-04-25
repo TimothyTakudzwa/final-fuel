@@ -2445,14 +2445,20 @@ def download_proof(request, id):
 def delivery_schedules(request):
     user_permission(request)
     schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).all()
+    completed_schedules = []
+    pending_schedules =[]
     for schedule in schedules:
         schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
         if schedule.transaction.offer.delivery_method.lower() == 'delivery':
             schedule.delivery_address = schedule.transaction.offer.request.delivery_address
         else:
             schedule.delivery_address = schedule.transaction.offer.collection_address
+        if schedule.confirmation_date:
+            completed_schedules.append(schedule)
+        else:
+            pending_schedules.append(schedule)
 
-    return render(request, 'users/delivery_schedules.html', {'schedules': schedules})
+    return render(request, 'users/delivery_schedules.html', {'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules})
 
 
 '''
