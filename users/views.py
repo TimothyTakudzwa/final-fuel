@@ -815,7 +815,7 @@ def allocation_update_main(request, id):
             action = f"You have allocated {request.POST['fuel_type']} quantity of {int(request.POST['quantity'])}L @ {fuel_update.petrol_price} "
             Audit_Trail.objects.create(company=request.user.company, service_station=service_station, user=request.user,
                                        action=action, reference=reference, reference_id=reference_id)
-            return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
+            return redirect('users:allocate')
 
         else:
             messages.success(request, 'Subsidiary does not exists.')
