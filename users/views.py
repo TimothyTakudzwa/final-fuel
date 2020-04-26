@@ -1360,7 +1360,7 @@ def audit_trail(request):
 
 
     current_trails = Audit_Trail.objects.filter(company=request.user.company, date=today).all()
-    for activity in trails:
+    for activity in current_trails:
         if activity.reference == 'offers':
             activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
         elif activity.reference == 'sfuel allocation':

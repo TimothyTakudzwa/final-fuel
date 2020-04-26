@@ -27,6 +27,9 @@ class SordActionsAuditTrail(models.Model):
     supplied_from = models.CharField(max_length=150, blank=True, null=True)
     action_type = models.CharField(max_length=150, blank=True, null=True)
 
+    class Meta:
+        ordering = ['-date']
+
 
 class Audit_Trail(models.Model):
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING)
