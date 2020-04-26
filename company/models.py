@@ -40,6 +40,7 @@ class Company(models.Model):
 
    
 class CompanyFuelUpdate(models.Model):
+    date = models.DateField(auto_now_add=True, blank=True, null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='company_fuel_update')
     allocated_petrol =  models.FloatField(default=0.00)
     allocated_diesel =  models.FloatField(default=0.00)
@@ -55,4 +56,4 @@ class CompanyFuelUpdate(models.Model):
 
 
     class Meta:
-        ordering = ['company']
+        ordering = ['-date']
