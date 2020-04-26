@@ -111,3 +111,6 @@ class DepotFuelUpdate(models.Model):
     usd_diesel_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     usd_petrol_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     status = models.CharField(max_length=1000, blank=True, null=True)
+
+    class Meta:
+        ordering = ['-date']
