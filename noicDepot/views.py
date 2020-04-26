@@ -49,7 +49,7 @@ def initial_password_change(request):
             update_session_auth_hash(request, user)
 
             messages.success(request, 'Password successfully changed.')
-            return redirect('noicDepot:orders')
+            return redirect('noicDepot:accepted_orders')
     return render(request, 'noicDepot/initial_pass_change.html')
 
 
@@ -96,10 +96,11 @@ def accepted_orders(request):
         else:
             pass
 
-    orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=True).all()
+    orders = Order.objects.exclude(date=today).filter(noic_depot=depot).filter(allocated_fuel=True).all()
+    new_orders = Order.objects.filter(date=today).filter(noic_depot=depot).filter(allocated_fuel=True).all()
     for order in orders:
         order.allocation = SordNationalAuditTrail.objects.filter(order=order).first()
-    return render(request, 'noicDepot/accepted_orders.html', {'orders': orders})
+    return render(request, 'noicDepot/accepted_orders.html', {'orders': orders, 'new_orders': new_orders})
 
 
 @login_required()
