@@ -63,4 +63,7 @@ class Activity(models.Model):
     description = models.CharField(max_length=700, blank=True, null=True)
     reference_id = models.PositiveIntegerField(default=0)
 
+    class Meta:
+        ordering = ['-date']
+
     
