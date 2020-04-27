@@ -298,7 +298,7 @@ def company_fuel(request):
 
         # fuel.diesel_capacity = '{:,}'.format(fuel.diesel_capacity)
         # fuel.petrol_capacity = '{:,}'.format(fuel.petrol_capacity)
-    capacities.order_by('company.name')     
+    capacities.order_by('company.name')  
       
 
     return render(request, 'zeraPortal/company_fuel.html', {'capacities': capacities})
