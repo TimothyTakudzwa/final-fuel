@@ -83,7 +83,7 @@ def dashboard(request):
 @user_role
 def activity(request):
     activities = Activity.objects.exclude(date=today).filter(user=request.user)
-    current_activities = Activity.objects.filter(user=request.user, date=today).all()
+    current_activities = Activity.objects.filter(date=today).filter(user=request.user)
     return render(request, 'zeraPortal/activity.html', {'activities': activities, 'current_activities': current_activities})
 
 
