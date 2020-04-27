@@ -936,6 +936,7 @@ def depot_history(request, did):
 @user_role
 def collections(request):
     context = {
-        'collections': Collections.objects.filter()
+        'collections': Collections.objects.exclude(date=today).order_by('-date', '-time'),
+        'new_collections': Collections.objects.filter(date=today).order_by('-time')
     }
     return render(request, 'noic/collections.html', context=context)
