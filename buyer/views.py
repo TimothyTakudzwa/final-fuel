@@ -896,9 +896,9 @@ def delivery_schedules(request):
 
     if request.method == 'POST':
         confirmation_date = request.FILES.get('delivery_date')
-        delivery_id = request.POST.get('delivery_id')
+        delivery_id = int(request.POST.get('delivery_id'))
 
-        schedule = DeliverySchedule.objects.get(id=int(delivery_id))
+        schedule = DeliverySchedule.objects.filter(id=delivery_id).first()
         schedule.confirmation_date = confirmation_date
         schedule.save()
         messages.success(request, 'Delivery successfully confirmed.')

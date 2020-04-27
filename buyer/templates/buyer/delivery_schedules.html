@@ -211,25 +211,32 @@
                                                             </div>
                                                             <div class="row" style="padding: 10px;">
                                                                 <p class="col-md-6" style="font-weight: bold;">Status: </p>
-                                                                {% if delivery.confirmation_document %}
+                                                                {% if delivery.confirmation_date %}
                                                                     <p class="col-md-6">
                                                                         Received
                                                                     </p>
                                                                 {%else %}
                                                                     <form method="POST" action="" enctype="multipart/form-data">
                                                                         {% csrf_token %}
-                                                                        <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
-                                                                        {{form|crispy}}
-                                                                        <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Confirm Delivery"></p>
+                                                                        <input type="hidden" name="delivery_id" value="{{delivery.id}}" />
+                                                                        <div class="row">
+                                                                            <div class="form-group" style="padding-left: 50px;">
+                                                                                <div class="form-group col-md-12">
+                                                                                    <label>Delivery Date</label>
+                                                                                    <input type="date" name="delivery_date" class="form-control"  required/>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button class="btn btn-info" type="submit" >Confirm Delivery</button>
+                                                                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
+            
+                                                                        </div>
                                                                     </form>
                                                                 {% endif %}
                                                             </div>
 
-                                                            <div class="modal-footer">
-                                                                <button class="btn btn-info" type="submit" >Confirm Delivery</button>
-                                                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
-
-                                                            </div>
+                                                           
 
                                                         </div>
                                                     </div>
