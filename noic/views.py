@@ -62,18 +62,22 @@ def orders(request):
 @login_required()
 @user_role
 def activity(request):
-    current_activities = Activity.objects.filter(user=request.user, date=today).all()
-    for activity in current_activities:
+    current_activities = []
+    previous_activities = []
+    activities = Activity.objects.filter(user=request.user).all()
+    for activity in activities:
         if activity.action == 'Updating Prices':
             activity.fuel_update = DepotFuelUpdate.objects.filter(depot__id=activity.reference_id).first()
         else:
             pass
-    previous_activities = Activity.objects.filter(~Q(date=today), user=request.user).all()
-    for activity in previous_activities:
-        if activity.action == 'Updating Prices':
-            activity.fuel_update = DepotFuelUpdate.objects.filter(depot__id=activity.reference_id).first()
+        if activity.date == today:
+            current_activities.append(activity)
         else:
             pass
+        if activity in current_activities:
+            pass
+        else:
+            previous_activities.append(activity)
     return render(request, 'noic/activity.html', {'current_activities': current_activities, 'previous_activities': previous_activities})
 
 
