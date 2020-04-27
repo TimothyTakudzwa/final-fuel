@@ -70,7 +70,7 @@ def activity(request):
             activity.fuel_update = DepotFuelUpdate.objects.filter(depot__id=activity.reference_id).first()
         else:
             pass
-        if activity.date == date.today():
+        if activity.date == today:
             current_activities.append(activity)
         else:
             previous_activities.append(activity)
