@@ -2421,8 +2421,9 @@ def orders(request):
     form1 = DepotContactForm()
     depots = NoicDepot.objects.filter(is_active=True).all()
     form1.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots]
-    orders = Order.objects.filter(company=request.user.company).all()
-    for order in orders:
+    accepted_orders = Order.objects.filter(company=request.user.company).filter(~Q(status='Pending')).all()
+    pending_orders = Order.objects.filter(company=request.user.company).filter(status='Pending').all()
+    for order in accepted_orders:
         sord = SordNationalAuditTrail.objects.filter(order=order).first()
         if sord is not None:
             order.allocation = sord
@@ -2432,7 +2433,7 @@ def orders(request):
     return render(request, 'users/orders.html',
                   {'depots': depots, 'form1': form1, 'diesel_rtgs_price': diesel_rtgs_price,
                    'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price,
-                   'petrol_usd_price': petrol_usd_price, 'orders': orders})
+                   'petrol_usd_price': petrol_usd_price, 'accepted_orders': accepted_orders, 'pending_orders': pending_orders})
 
 
 @login_required()
