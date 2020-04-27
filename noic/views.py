@@ -73,10 +73,6 @@ def activity(request):
         if activity.date == today:
             current_activities.append(activity)
         else:
-            pass
-        if activity in current_activities:
-            pass
-        else:
             previous_activities.append(activity)
     return render(request, 'noic/activity.html', {'current_activities': current_activities, 'previous_activities': previous_activities})
 
