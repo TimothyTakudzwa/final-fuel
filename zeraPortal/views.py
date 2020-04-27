@@ -283,7 +283,7 @@ def unblock_company(request, id):
 @login_required()
 def company_fuel(request):
     user_permission(request)
-    capacities = CompanyFuelUpdate.objects.all()
+    capacities = CompanyFuelUpdate.objects.all().order_by('-date')
     
     for fuel in capacities:
         subs_total_diesel_capacity = 0
@@ -298,7 +298,7 @@ def company_fuel(request):
 
         # fuel.diesel_capacity = '{:,}'.format(fuel.diesel_capacity)
         # fuel.petrol_capacity = '{:,}'.format(fuel.petrol_capacity)
-    capacities = capacities.order_by('-date')  
+    # capacities = capacities.order_by('-date')  
       
 
     return render(request, 'zeraPortal/company_fuel.html', {'capacities': capacities})
