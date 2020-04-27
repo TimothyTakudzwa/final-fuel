@@ -53,7 +53,6 @@
                                         <thead style="background-color: lightslategray;">
                                         <tr style="background-color: gray;color: white;">
                                             <th style="color: white;">Date</th>
-                                            <th style="color: white;">Time</th>
                                             <th style="color: white;">Supplier</th>
                                             <th style="color: white;">Address</th>
                                             <th style="color: white;">Product</th>
@@ -69,7 +68,6 @@
                                         {% for delivery in pending_schedules %}
                                             <tr>
                                                 <td>{{ delivery.date }}</td>
-                                                <td>{{ delivery.time }}</td>
                                                 <td>{{ delivery.subsidiary }}</td>
 
                                                 <td>{{ delivery.delivery_address }}</td>
@@ -269,7 +267,6 @@
                                         <thead style="background-color: lightslategray;">
                                         <tr style="background-color: gray;color: white;">
                                             <th style="color: white;">Date</th>
-                                            <th style="color: white;">Time</th>
                                             <th style="color: white;">Supplier</th>
                                             <th style="color: white;">Address</th>
                                             <th style="color: white;">Product</th>
@@ -284,7 +281,6 @@
                                         {% for delivery in completed_schedules %}
                                             <tr>
                                                 <td>{{ delivery.date }}</td>
-                                                <td>{{ delivery.time }}</td>
                                                 <td>{{ delivery.subsidiary }}</td>
 
                                                 <td>{{ delivery.delivery_address }}</td>
