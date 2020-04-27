@@ -34,7 +34,7 @@ from .forms import SupplierContactForm, UsersUploadForm, ReportForm, ProfileEdit
 from decimal import *
 
 user = get_user_model()
-today = datetime.today()
+today = date.today()
 
 from fuelfinder import settings
 
@@ -1339,8 +1339,7 @@ def depots(request):
 @login_required()
 @user_role
 def audit_trail(request):
-    today = datetime.today()
-    trails = Audit_Trail.objects.exclude(date=today).filter(company=request.user.company)
+    trails = Audit_Trail.objects.exclude(date__gt=today).filter(company=request.user.company)
     for activity in trails:
         if activity.reference == 'offers':
             activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
@@ -1360,7 +1359,7 @@ def audit_trail(request):
             
 
 
-    current_trails = Audit_Trail.objects.filter(company=request.user.company, date=today).all()
+    current_trails = Audit_Trail.objects.filter(company=request.user.company, date__gt=today).all()
     for activity in current_trails:
         if activity.reference == 'offers':
             activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
