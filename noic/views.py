@@ -174,6 +174,7 @@ def allocations(request):
             df = convert_to_dataframe(allocations)
             filename = 'Noic Allocations Summary.csv'
 
+            df = df['date','time','sord_no','company','fuel_type','currency','quantity','price','assigned_depot']
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
