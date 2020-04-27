@@ -394,8 +394,13 @@
                         <td>{{ account.supplier_company.name|title}}</td>
                         <td>{{ account.buyer_company.address}}</td>
                         <td>{{account.account_number}} </td>
+                        {% if account.is_verified == True %}
                         <td> <button type="button" class="btn btn-purple btn-sm" data-toggle="modal"
-                            data-target="#order_{{account.id}}">Place Order</button></td>
+                            data-target="#order_{{account.id}}">Place Order</button>
+                        </td>
+                        {% else %}
+                        <td>Approval Pending</td>
+                        {% endif %}
                       <td>
                         <button type="button" class="btn btn-purple btn-sm" data-toggle="modal"
                             data-target="#edit_account_details{{account.id}}">Edit Details</button>
