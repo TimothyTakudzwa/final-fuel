@@ -48,7 +48,7 @@ class Audit_Trail(models.Model):
 
 
 class Activity(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='creator')
     created_user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)

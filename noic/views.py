@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from decimal import *
@@ -62,19 +62,19 @@ def orders(request):
 @login_required()
 @user_role
 def activity(request):
-    activities = Activity.objects.filter(user=request.user, date=today).all()
+    current_activities = []
+    previous_activities = []
+    activities = Activity.objects.filter(user=request.user).all()
     for activity in activities:
         if activity.action == 'Updating Prices':
             activity.fuel_update = DepotFuelUpdate.objects.filter(depot__id=activity.reference_id).first()
         else:
             pass
-    old_activities = Activity.objects.exclude(date=today).filter(user=request.user)
-    for activity in old_activities:
-        if activity.action == 'Updating Prices':
-            activity.fuel_update = DepotFuelUpdate.objects.filter(depot__id=activity.reference_id).first()
+        if activity.date == today:
+            current_activities.append(activity)
         else:
-            pass
-    return render(request, 'noic/activity.html', {'activities': activities, 'old_activities': old_activities})
+            previous_activities.append(activity)
+    return render(request, 'noic/activity.html', {'current_activities': current_activities, 'previous_activities': previous_activities})
 
 
 @login_required()
