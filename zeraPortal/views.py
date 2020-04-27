@@ -284,7 +284,7 @@ def unblock_company(request, id):
 def company_fuel(request):
     user_permission(request)
     capacities = CompanyFuelUpdate.objects.all()
-    capacities.order_by('-date') 
+    capacities.order_by('date') 
     for fuel in capacities:
         subs_total_diesel_capacity = 0
         subs_total_petrol_capacity = 0
