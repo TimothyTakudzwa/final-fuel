@@ -36,8 +36,12 @@ user = get_user_model()
 @login_required()
 @user_role
 def orders(request):
-    orders = Order.objects.exclude(date=today)
-    new_orders = Order.objects.filter(date=today)
+    new_orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=True).order_by('-date', '-time')
+    orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=False).order_by('-date', '-time')
+    for order in orders:
+        order.allocation = SordNationalAuditTrail.objects.filter(order=order).first()
+    for order in new_orders:
+        order.allocation = SordNationalAuditTrail.objects.filter(order=order).first()
     form1 = DepotContactForm()
     depots = NoicDepot.objects.all()
     form1.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots]
