@@ -157,6 +157,7 @@ def noic_fuel(request):
         noic_rtgs_diesel += depot.rtgs_diesel
         noic_usd_petrol += depot.usd_petrol
         noic_rtgs_petrol += depot.rtgs_petrol
+    depots.order_by('-date')    
 
     return render(request, 'zeraPortal/noic_fuel.html',
                   {'depots': depots, 'noic_usd_diesel': noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel,
@@ -296,6 +297,7 @@ def company_fuel(request):
 
         # fuel.diesel_capacity = '{:,}'.format(fuel.diesel_capacity)
         # fuel.petrol_capacity = '{:,}'.format(fuel.petrol_capacity)
+    capacities.order_by('-date')   
 
     return render(request, 'zeraPortal/company_fuel.html', {'capacities': capacities})
 
