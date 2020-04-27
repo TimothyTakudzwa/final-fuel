@@ -157,6 +157,7 @@ def noic_fuel(request):
         noic_rtgs_diesel += depot.rtgs_diesel
         noic_usd_petrol += depot.usd_petrol
         noic_rtgs_petrol += depot.rtgs_petrol
+    depots.order_by('-date')    
 
     return render(request, 'zeraPortal/noic_fuel.html',
                   {'depots': depots, 'noic_usd_diesel': noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel,
@@ -282,7 +283,8 @@ def unblock_company(request, id):
 @login_required()
 def company_fuel(request):
     user_permission(request)
-    capacities = CompanyFuelUpdate.objects.all()
+    capacities = CompanyFuelUpdate.objects.all().order_by('-date')
+    
     for fuel in capacities:
         subs_total_diesel_capacity = 0
         subs_total_petrol_capacity = 0
@@ -296,6 +298,8 @@ def company_fuel(request):
 
         # fuel.diesel_capacity = '{:,}'.format(fuel.diesel_capacity)
         # fuel.petrol_capacity = '{:,}'.format(fuel.petrol_capacity)
+    # capacities = capacities.order_by('-date')  
+      
 
     return render(request, 'zeraPortal/company_fuel.html', {'capacities': capacities})
 
@@ -335,8 +339,8 @@ def allocations(request, id):
             df = convert_to_dataframe(sord_allocations)
            
             filename = 'media/Zera Allocations Summary - {date_today}.csv'
-
-            del df['company']
+            
+            df = df[['date','sord_no', 'action_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity','quantity_allocated', 'end_quantity']]
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:

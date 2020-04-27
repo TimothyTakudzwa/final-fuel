@@ -1339,8 +1339,7 @@ def depots(request):
 @login_required()
 @user_role
 def audit_trail(request):
-    # today = datetime.today()
-    trails = Audit_Trail.objects.exclude(date=today).filter(company=request.user.company)
+    trails = Audit_Trail.objects.exclude(date__gt=today).filter(company=request.user.company)
     for activity in trails:
         if activity.reference == 'offers':
             activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
@@ -1360,7 +1359,7 @@ def audit_trail(request):
             
 
 
-    current_trails = Audit_Trail.objects.filter(company=request.user.company, date=today).all()
+    current_trails = Audit_Trail.objects.filter(company=request.user.company, date__gt=today).all()
     for activity in current_trails:
         if activity.reference == 'offers':
             activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
@@ -1379,7 +1378,7 @@ def audit_trail(request):
 
 
 
-    return render(request, 'users/audit_trail.html', {'trails': trails, 'current_trails': current_trails, 'today':today}
+    return render(request, 'users/audit_trail.html', {'trails': trails, 'current_trails': current_trails, 'today':today})
 
 
 @login_required()
@@ -2422,8 +2421,9 @@ def orders(request):
     form1 = DepotContactForm()
     depots = NoicDepot.objects.filter(is_active=True).all()
     form1.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots]
-    orders = Order.objects.filter(company=request.user.company).all()
-    for order in orders:
+    accepted_orders = Order.objects.filter(company=request.user.company).filter(~Q(status='Pending')).all()
+    pending_orders = Order.objects.filter(company=request.user.company).filter(status='Pending').all()
+    for order in accepted_orders:
         sord = SordNationalAuditTrail.objects.filter(order=order).first()
         if sord is not None:
             order.allocation = sord
@@ -2433,7 +2433,7 @@ def orders(request):
     return render(request, 'users/orders.html',
                   {'depots': depots, 'form1': form1, 'diesel_rtgs_price': diesel_rtgs_price,
                    'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price,
-                   'petrol_usd_price': petrol_usd_price, 'orders': orders})
+                   'petrol_usd_price': petrol_usd_price, 'accepted_orders': accepted_orders, 'pending_orders': pending_orders})
 
 
 @login_required()
