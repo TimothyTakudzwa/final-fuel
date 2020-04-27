@@ -1339,6 +1339,7 @@ def depots(request):
 @login_required()
 @user_role
 def audit_trail(request):
+    today = datetime.today()
     trails = Audit_Trail.objects.exclude(date=today).filter(company=request.user.company)
     for activity in trails:
         if activity.reference == 'offers':
@@ -1378,7 +1379,7 @@ def audit_trail(request):
 
 
 
-    return render(request, 'users/audit_trail.html', {'trails': trails, 'current_trails': current_trails})
+    return render(request, 'users/audit_trail.html', {'trails': trails, 'current_trails': current_trails, 'today':today})
 
 
 @login_required()

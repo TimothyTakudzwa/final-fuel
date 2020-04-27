@@ -858,14 +858,11 @@ def view_release_note(request, id):
 @login_required
 @user_role
 def delivery_schedules(request):
-    today_min = datetime.combine(date.today(), time.min)
-    today_max = datetime.combine(date.today(), time.max)
-    # today = datetime.today() - timedelta(days=100) 
-    today_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user, date__range=(today_min, today_max))
-    future_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user, date__gt=datetime.today())
-    past_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user, date__lt=datetime.today())
+    completed_schedules = []
+    pending_schedules =[]
+    schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user).all()
 
-    for schedule in today_schedules:
+    for schedule in schedules:
         schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
         if schedule.transaction.offer.delivery_method.lower() == 'delivery':
             if schedule.transaction.offer.request.delivery_address.strip() == "":
@@ -887,59 +884,16 @@ def delivery_schedules(request):
                 else:
                     depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
                     schedule.delivery_address = depot.location
-
-    for schedule in future_schedules:
-        schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
-        if schedule.transaction.offer.delivery_method.lower() == 'delivery':
-            if schedule.transaction.offer.request.delivery_address.strip() == "":
-                depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
-                schedule.delivery_address = depot.location
-            else:
-                if schedule.transaction.offer.request.delivery_address != None:
-                    schedule.delivery_address = schedule.transaction.offer.request.delivery_address
-                else:
-                    depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
-                    schedule.delivery_address = depot.location
+        if schedule.confirmation_date:
+            completed_schedules.append(schedule)
         else:
-            if schedule.transaction.offer.collection_address.strip() == "":
-                depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
-                schedule.delivery_address = depot.location
-            else:
-                if schedule.transaction.offer.collection_address != None:
-                    schedule.delivery_address = schedule.transaction.offer.collection_address
-                else:
-                    depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
-                    schedule.delivery_address = depot.location
-
-    for schedule in past_schedules:
-        schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
-        if schedule.transaction.offer.delivery_method.lower() == 'delivery':
-            if schedule.transaction.offer.request.delivery_address.strip() == "":
-                depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
-                schedule.delivery_address = depot.location
-            else:
-                if schedule.transaction.offer.request.delivery_address != None:
-                    schedule.delivery_address = schedule.transaction.offer.request.delivery_address
-                else:
-                    depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
-                    schedule.delivery_address = depot.location
-        else:
-            if schedule.transaction.offer.collection_address.strip() == "":
-                depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
-                schedule.delivery_address = depot.location
-            else:
-                if schedule.transaction.offer.collection_address != None:
-                    schedule.delivery_address = schedule.transaction.offer.collection_address
-                else:
-                    depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
-                    schedule.delivery_address = depot.location
+            pending_schedules.append(schedule)
 
     context = {
-        'today_schedules': today_schedules,
-        'future_schedules': future_schedules,
-        'past_schedules': past_schedules
-
+        'pending_schedules': pending_schedules,
+        'completed_schedules': completed_schedules
     }
+
     if request.method == 'POST':
         confirmation_date = request.FILES.get('delivery_date')
         delivery_id = request.POST.get('delivery_id')
