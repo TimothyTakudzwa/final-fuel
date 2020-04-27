@@ -78,7 +78,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for capacity in capacities %}
+                        {% for capacity in capacities reversed %}
                         <tr>
                             <td>{{ capacity.date}} </td>
                             <td>{{capacity.company.name}}</td>

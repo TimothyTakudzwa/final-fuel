@@ -55,5 +55,5 @@ class CompanyFuelUpdate(models.Model):
         return f'{self.id} {self.company.name} -- Fuel Update'
 
 
-    # class Meta:
-    #     ordering = ['-date']
+    class Meta:
+        ordering = ['-date']
