@@ -86,7 +86,7 @@ class FuelRequest(models.Model):
     is_test_data = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['date', 'time']
+        ordering = ['-date', '-time']
 
 
 class DeliveryBranch(models.Model):
