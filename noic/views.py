@@ -68,7 +68,7 @@ def activity(request):
             activity.fuel_update = DepotFuelUpdate.objects.filter(depot__id=activity.reference_id).first()
         else:
             pass
-    previous_activities = Activity.objects.filter(user=request.user, ~Q(date=today))
+    previous_activities = Activity.objects.filter(~Q(date=today), user=request.user).all()
     for activity in previous_activities:
         if activity.action == 'Updating Prices':
             activity.fuel_update = DepotFuelUpdate.objects.filter(depot__id=activity.reference_id).first()
