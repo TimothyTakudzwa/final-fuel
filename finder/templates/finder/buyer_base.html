@@ -408,6 +408,20 @@
     </script>
     <script>
         $(document).ready(function () {
+            $('#pending_schedules').DataTable({
+                "order": false
+                });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#complete_schedules').DataTable({
+                "order": false
+                });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
             $('#fuel_requests').DataTable(
                 {
                 "order": false,
