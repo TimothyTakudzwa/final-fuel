@@ -122,7 +122,7 @@ def login_user(request):
                             if current_user.password_reset:
                                 return redirect("noicDepot:initial-password-change")
                             else:
-                                return redirect("noicDepot:orders")
+                                return redirect("noicDepot:accepted_orders")
                         elif current_user.user_type == 'NOIC_ADMIN':
                             return redirect("noic:dashboard")
                         elif current_user.user_type == 'IAS':

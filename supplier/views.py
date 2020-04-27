@@ -1176,7 +1176,7 @@ def delivery_schedules(request):
             completed_schedules.append(schedule)
         else:
             pending_schedules.append(schedule)
-    return render(request, 'supplier/delivery_admi.html', {'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules})
+    return render(request, 'supplier/delivery_schedules.html', {'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules})
 
 
 @login_required()
