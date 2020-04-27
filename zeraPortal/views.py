@@ -337,8 +337,8 @@ def allocations(request, id):
             df = convert_to_dataframe(sord_allocations)
            
             filename = 'media/Zera Allocations Summary - {date_today}.csv'
-
-            del df['company']
+            
+            df = df[['date','sord_no', 'action_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity','quantity_allocated', 'end_quantity']]
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
