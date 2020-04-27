@@ -64,6 +64,6 @@ class Activity(models.Model):
     reference_id = models.PositiveIntegerField(default=0)
 
     class Meta:
-        ordering = ['-date']
+        ordering = ['-date', '-time']
 
     
