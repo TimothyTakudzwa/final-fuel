@@ -113,14 +113,14 @@
                               background-color: mintcream;padding-left: 25px;margin-left: 25px;font-variant: petite-caps;">
                                                                 <h3>Upload Document To Confirm
                                                                     <strong style="color: #009688;">
-                                                                        Delivery From Sam Sepiol Inc
+                                                                        Delivery 
                                                                     </strong>.
                                                                 </h3>
                                                             </div>
 
                                                             <form method="POST" action="" enctype="multipart/form-data">
                                                                 {% csrf_token %}
-                                                                <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
+                                                                <input type="hidden" name="delivery_id" value="{{delivery.id}}" />
                                                                 <div class="row">
                                                                     <div class="form-group" style="padding-left: 50px;">
                                                                         <div class="form-group col-md-12">

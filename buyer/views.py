@@ -892,7 +892,7 @@ def delivery_schedules(request):
     context = {
         'pending_schedules': pending_schedules,
         'completed_schedules': completed_schedules
-    }
+       }
 
     if request.method == 'POST':
         confirmation_date = request.FILES.get('delivery_date')
