@@ -41,7 +41,7 @@ class Audit_Trail(models.Model):
     reference_id = models.PositiveIntegerField(default=0)
 
     class Meta:
-        ordering = ['date']
+        ordering = ['-date']
 
     def __str__(self):
         return f'{self.user.username} - {self.company.name}'

@@ -1165,12 +1165,18 @@ def delivery_schedules(request):
         return redirect('supplier:delivery_schedules')
 
     schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user).all()
+    completed_schedules = []
+    pending_schedules =[]
     for schedule in schedules:
         if schedule.transaction.offer.delivery_method.lower() == 'delivery':
             schedule.delivery_address = schedule.transaction.offer.request.delivery_address
         else:
             schedule.delivery_address = schedule.transaction.offer.collection_address
-    return render(request, 'supplier/delivery_schedules.html', {'schedules': schedules})
+        if schedule.confirmation_date:
+            completed_schedules.append(schedule)
+        else:
+            pending_schedules.append(schedule)
+    return render(request, 'supplier/delivery_admi.html', {'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules})
 
 
 @login_required()

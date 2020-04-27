@@ -215,7 +215,7 @@ def payment_approval(request, id):
     Activity.objects.create(company=order.company, user=request.user,
                             action=action, description=description, reference_id=order.id)
     messages.success(request, 'Payment approved successfully.')
-    return render(request, 'noicDepot/orders.html', {'orders': orders, 'order': order, 'allocate': 'show'})
+    return render(request, 'noicDepot/accepted_orders.html', {'orders': orders, 'order': order, 'allocate': 'show'})
 
 
 @login_required()
@@ -293,7 +293,7 @@ def allocate_fuel(request, id):
                     Activity.objects.create(company=order.company, user=request.user, action=action,
                                             description=description, reference_id=order.id)
                     messages.success(request, f'Fuel allocated successfully, with {balance} remaining.')
-                    return render(request, 'noicDepot/orders.html',
+                    return render(request, 'noicDepot/accepted_orders.html',
                                   {'orders': orders, 'sord_object': sord_object, 'release': 'show'})
                 else:
                     noic_capacity.usd_petrol -= float(request.POST['quantity'])
@@ -317,6 +317,7 @@ def allocate_fuel(request, id):
                     company_update.usd_petrol_price = noic_capacity.usd_petrol_price
                     company_update.save()
                     order.allocated_fuel = True
+                    order.status = 'Allocated'
                     order.save()
 
                     action = "Fuel Allocation"
@@ -324,7 +325,7 @@ def allocate_fuel(request, id):
                     Activity.objects.create(company=order.company, user=request.user, action=action,
                                             description=description, reference_id=order.id)
                     messages.success(request, 'Fuel allocated successfully.')
-                    return render(request, 'noicDepot/orders.html',
+                    return render(request, 'noicDepot/accepted_orders.html',
                                   {'orders': orders, 'sord_object': sord_object, 'release': 'show'})
 
             else:
@@ -352,6 +353,7 @@ def allocate_fuel(request, id):
                     company_update.petrol_price = noic_capacity.rtgs_petrol_price
                     company_update.save()
                     order.allocated_fuel = True
+                    order.status = 'Allocated'
                     order.quantity -= noic_capacity.rtgs_petrol
                     noic_capacity.rtgs_petrol = 0
                     order.save()
@@ -362,7 +364,7 @@ def allocate_fuel(request, id):
                     Activity.objects.create(company=order.company, user=request.user, action=action,
                                             description=description, reference_id=order.id)
                     messages.success(request, f'Fuel allocated successfully, with {balance} remaining.')
-                    return render(request, 'noicDepot/orders.html',
+                    return render(request, 'noicDepot/accepted_orders.html',
                                   {'orders': orders, 'sord_object': sord_object, 'release': 'show'})
                 else:
                     noic_capacity.rtgs_petrol -= float(request.POST['quantity'])
@@ -386,6 +388,7 @@ def allocate_fuel(request, id):
                     company_update.petrol_price = noic_capacity.rtgs_petrol_price
                     company_update.save()
                     order.allocated_fuel = True
+                    order.status = 'Allocated'
                     order.save()
 
                     action = "Fuel Allocation"
@@ -393,7 +396,7 @@ def allocate_fuel(request, id):
                     Activity.objects.create(company=order.company, user=request.user, action=action,
                                             description=description, reference_id=order.id)
                     messages.success(request, 'Fuel allocated successfully.')
-                    return render(request, 'noicDepot/orders.html',
+                    return render(request, 'noicDepot/accepted_orders.html',
                                   {'orders': orders, 'sord_object': sord_object, 'release': 'show'})
 
 
@@ -426,6 +429,7 @@ def allocate_fuel(request, id):
                     order.quantity = noic_capacity.usd_diesel
                     order.allocated_fuel = True
                     noic_capacity.usd_diesel = 0
+                    order.status = 'Allocated'
                     order.save()
                     noic_capacity.save()
 
@@ -434,7 +438,7 @@ def allocate_fuel(request, id):
                     Activity.objects.create(company=order.company, user=request.user, action=action,
                                             description=description, reference_id=order.id)
                     messages.success(request, f'Fuel allocated successfully, with {balance} remaining.')
-                    return render(request, 'noicDepot/orders.html',
+                    return render(request, 'noicDepot/accepted_orders.html',
                                   {'orders': orders, 'sord_object': sord_object, 'release': 'show'})
                 else:
                     noic_capacity.usd_diesel -= float(request.POST['quantity'])
@@ -458,6 +462,7 @@ def allocate_fuel(request, id):
                     company_update.usd_diesel_price = noic_capacity.usd_diesel_price
                     company_update.save()
                     order.allocated_fuel = True
+                    order.status = 'Allocated'
                     order.save()
 
                     action = "Fuel Allocation"
@@ -465,7 +470,7 @@ def allocate_fuel(request, id):
                     Activity.objects.create(company=order.company, user=request.user, action=action,
                                             description=description, reference_id=order.id)
                     messages.success(request, 'Fuel allocated successfully.')
-                    return render(request, 'noicDepot/orders.html',
+                    return render(request, 'noicDepot/accepted_orders.html',
                                   {'orders': orders, 'sord_object': sord_object, 'release': 'show'})
 
 
@@ -497,6 +502,7 @@ def allocate_fuel(request, id):
                     company_update.save()
                     order.quantity -= noic_capacity.noic_capacity.rtgs_diesel
                     order.allocated_fuel = True
+                    order.status = 'Allocated'
                     noic_capacity.rtgs_diesel = 0
                     noic_capacity.save()
                     order.save()
@@ -506,7 +512,7 @@ def allocate_fuel(request, id):
                     Activity.objects.create(company=order.company, user=request.user, action=action,
                                             description=description, reference_id=order.id)
                     messages.success(request, f'Fuel allocated successfully, with {balance} remaining.')
-                    return render(request, 'noicDepot/orders.html',
+                    return render(request, 'noicDepot/accepted_orders.html',
                                   {'orders': orders, 'sord_object': sord_object, 'release': 'show'})
                 else:
                     noic_capacity.rtgs_diesel -= float(request.POST['quantity'])
@@ -531,6 +537,7 @@ def allocate_fuel(request, id):
                     company_update.diesel_price = noic_capacity.rtgs_diesel_price
                     company_update.save()
                     order.allocated_fuel = True
+                    order.status = 'Allocated'
                     order.save()
 
                     action = "Fuel Allocation"
@@ -538,7 +545,7 @@ def allocate_fuel(request, id):
                     Activity.objects.create(company=order.company, user=request.user, action=action,
                                             description=description, reference_id=order.id)
                     messages.success(request, 'Fuel allocated successfully.')
-                    return render(request, 'noicDepot/orders.html',
+                    return render(request, 'noicDepot/accepted_orders.html',
                                   {'orders': orders, 'sord_object': sord_object, 'release': 'show'})
 
 

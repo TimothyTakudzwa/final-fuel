@@ -1,4 +1,4 @@
-{% extends "users/base.html" %}
+{% extends "supplier/supplier_base.html" %}
 {% load humanize %}
 
 {% block body %}
@@ -11,7 +11,7 @@
       <h1>Delievery Schedules</h1>
       <small>Zimbabwe Fuel Management System</small>
       <ol class="breadcrumb hidden-xs">
-          <li><a href="#"><i class="pe-7s-home"></i> Home</a></li>
+          <li><a href="{%url 'fuel-request'%}"><i class="pe-7s-home"></i> Home</a></li>
           <li class="active">Schedules</li>
       </ol>
     </div>
@@ -48,27 +48,26 @@
                         <div class="tab-content">
                             <div class="tab-pane fade active in" id="pending-schedules">
                                 <div class="panel-body">
-                                <table id="delivery_schedules" class="table table-striped table-bordered" style="width:100%">
+                                <table id="delivery_schedule" class="table table-striped table-bordered" style="width:100%">
                                         <thead style="background-color: lightslategray; color:white;">
                                             <tr>
-                                                
-                                                <th style="color: white;">Buyer</th>
+                                                <th></th>
+                                                <th style="color: white;">Recipient</th>
                                                 <th style="color: white;">Address</th>
-                                                <th style="color: white;">Depot</th>
                                                 <th style="color: white;">Product</th>
                                                 <th style="color: white;">Quantity</th>
                                                 <th style="color: white;">Transporter</th>
                                                 <th style="color: white;">Status</th>
+                                                <th style="color: white;">Action</th>
                                                 <th style="color: white;">Add. Information</th>  
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {% for delivery in pending_schedules %}
                                             <tr>
-                                                
+                                                <td></td>
                                                 <td>{{ delivery.transaction.buyer.company.name|title }}</td>
                                                 <td>{{delivery.delivery_address}}</td>
-                                                <td>{{delivery.depot.name}}</td>
                                                 
                                                 {% if delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Diesel' %}
                                                     <td style="color: #ffb61e;">{{ delivery.transaction.offer.request.fuel_type}}</td>
@@ -91,7 +90,12 @@
                                                 Pending
                                                 {%endif%}
                                               </td>
-                                            
+                                              <td>
+                                                
+                                                <button class="btn btn-success btn-labeled" data-toggle="modal" data-target="#edit_delivery_{{delivery.id}}" type="button" class="btn btn-labeled btn-success m-b-5">
+                                                    <span class="btn-label"><i class="fa fa-edit"></i></span>Edit Schedule
+                                                </button>    
+                                              </td>
                                               <td>
                                                   
                                                 <button class="btn btn-success btn-labeled" data-toggle="modal" data-target="#additonal_information{{delivery.id}}" type="button" class="btn btn-labeled btn-success m-b-5">
@@ -99,7 +103,69 @@
                                                 </button> 
                                             </td>
                                             </tr>
-                                 
+                                            <div class="modal fade modal-success in" id="edit_delivery_{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                                  aria-hidden="true">
+                                                  <div class="modal-dialog modal-notice">
+                                                  <div class="modal-content">
+                                                  <div class="modal-header">
+                                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                      <span class="modal-title">Edit Delivery Schedule</span>
+                                                  </div>
+                                                  <div class="modal-body" style="margin-bottom: 150px;">
+                                                  <form method="POST" action="{% url 'supplier:edit_delivery_schedule' %}">
+                                                      {% csrf_token %}
+                                                      <div class=" row col-sm-12" style="margin-bottom: 5px;">
+                                                      
+                        
+                                                      <div class="col-sm-4" style="margin-bottom: 10px;">
+                                                          <label style="margin-bottom: 5px;">Driver Name</label>
+                                                          <input type="text" name="driver_name" class="form-control" value="{{delivery.driver_name}}" />
+                                                      </div>
+                                                      <div class="col-sm-4" style="margin-bottom: 10px;">
+                                                          <label style="margin-bottom: 5px;">Phone Number</label>
+                                                          <input type="text" name="phone_number" class="form-control" value="{{delivery.phone_number}}"/>
+                                                      </div>
+                                                      <div class="col-sm-4" style="margin-bottom: 10px;">
+                                                        <label style="margin-bottom: 5px;">Tran. Company</label>
+                                                        <input type="text" name="transport_company" class="form-control" value="{{delivery.transport_company}}"/>
+                                                    </div>
+                                                      </div>
+                                                      <div class=" row col-sm-12">
+                                                        <div class="col-sm-4" style="margin-bottom: 10px;">
+                                                            <label style="margin-bottom: 5px;">Id Number</label>
+                                                            <input type="text" name="id_number" class="form-control" value="{{delivery.id_number}}" />
+                                                        </div>
+                          
+                                                        <div class="col-sm-4" style="margin-bottom: 10px;">
+                                                            <label style="margin-bottom: 5px;">Vehicle Registration</label>
+                                                            <input type="text" name="vehicle_reg" class="form-control" value="{{delivery.vehicle_reg}}" />
+                                                        </div>
+                                                        <div class="col-sm-4" style="margin-bottom: 10px;">
+                                                            <label style="margin-bottom: 5px;">Delivery Date</label>
+                                                            <input type="date" name="delivery_date" class="form-control" value="{{delivery.date}}"/>
+                                                        </div>
+                                                        </div>
+                                                      
+                                                        <div class=" row col-sm-12">
+                            
+                                                          <div class="col-sm-4" style="margin-bottom: 10px;">
+                                                              <input type="hidden" name="delivery_id" class="form-control" value="{{delivery.id}}"/>
+                                                          </div>
+                                                          
+                                                          </div>
+                                                  </div>
+                        
+                                                  <div class="modal-footer">
+                                                    <div class="row pull-right" style="margin-right: 15px;">                
+                                                        <button class="btn btn-primary" type="submit">Save Changes</button>
+                                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                        
+                                                    </div>
+                                                </div>
+                                                  </form>
+                                                  </div>
+                                                  </div>
+                                            </div>
                            
                                             <div class="modal fade modal-success in" id="additonal_information{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                                                 aria-hidden="true" style="overflow-y: initial !important;" >
@@ -115,7 +181,7 @@
                                                                 <p class="col-md-6">{{ delivery.date }} | {{ delivery.delivery_time }}</p>
                                                             </div>
                                                             <div class="row" style="padding: 10px;">
-                                                                <p class="col-md-6" style="font-weight: bold;">Buyer: </p>
+                                                                <p class="col-md-6" style="font-weight: bold;">Recipient: </p>
                                                                 <p class="col-md-6">{{ delivery.transaction.buyer.company.name|title }}</p>
                                                             </div>
                                                             <div class="row" style="padding: 10px;">
@@ -182,9 +248,11 @@
                                                             <div class="row" style="padding: 10px;">
                                                                 <p class="col-md-6" style="font-weight: bold;">Status: </p>
                                                                 {% if delivery.confirmation_date %}
-                                                                <p class="col-md-6">Buyer Received Fuel </p>       
+                                                                <p class="col-md-6"> 
+                                                                    <a class="btn btn-purple btn-sm" href="{% url 'supplier:view_confirmation_doc' delivery.id %}">View Confirmation Doc</a>
+                                                                </p>       
                                                                 {%else %}
-                                                                <p class="col-md-6">Pending </p>    
+                                                                <p class="col-md-6">Status: Pending </p>    
                                                                 {% endif %} 
                                                             </div>     
                                                             <div class="modal-footer">  
@@ -196,6 +264,7 @@
                                                         
                                                     </div>
                                                 </div>
+                                            </div> 
                         
                                             <div class="modal fade modal-success in" id="state_{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                                                   aria-hidden="true">
@@ -289,6 +358,12 @@
                                                     }         
                                                 });
                                             </script>
+                                            
+                        
+                        
+                                            
+                        
+                        
                                             {%endfor%}
                                         </tbody>
                                         </table>
@@ -298,13 +373,12 @@
                             
                             <div class="tab-pane fade" id="completed-schedules">
                                 <div class="panel-body">
-                                    <table id="completed_schedules" class="table table-striped table-bordered" style="width:100%">
+                                    <table id="completed_schedule" class="table table-striped table-bordered" style="width:100%">
                                         <thead style="background-color: lightslategray; color:white;">
                                             <tr>
-                                                
-                                                <th style="color: white;">Buyer</th>
+                                                <th></th>
+                                                <th style="color: white;">Recipient</th>
                                                 <th style="color: white;">Address</th>
-                                                <th style="color: white;">Depot</th>
                                                 <th style="color: white;">Product</th>
                                                 <th style="color: white;">Quantity</th>
                                                 <th style="color: white;">Transporter</th>
@@ -314,10 +388,9 @@
                                         <tbody>
                                             {% for delivery in completed_schedules %}
                                             <tr>
-                                                
+                                                <td></td>
                                                 <td>{{ delivery.transaction.buyer.company.name|title }}</td>
                                                 <td>{{delivery.delivery_address}}</td>
-                                                <td>{{delivery.depot.name}}</td>
                                                 
                                                 {% if delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Diesel' %}
                                                     <td style="color: #ffb61e;">{{ delivery.transaction.offer.request.fuel_type}}</td>
@@ -329,7 +402,6 @@
                                                 
                                                 <td>{{ delivery.delivery_quantity|floatformat:2|intcomma}} </td>
                                                 <td>{{ delivery.transport_company}}</td>
-                                            
                                               <td>
                                                   
                                                 <button class="btn btn-success btn-labeled" data-toggle="modal" data-target="#additonal_information{{delivery.id}}" type="button" class="btn btn-labeled btn-success m-b-5">
@@ -337,7 +409,6 @@
                                                 </button> 
                                             </td>
                                             </tr>
-                                 
                            
                                             <div class="modal fade modal-success in" id="additonal_information{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                                                 aria-hidden="true" style="overflow-y: initial !important;" >
@@ -353,7 +424,7 @@
                                                                 <p class="col-md-6">{{ delivery.date }} | {{ delivery.delivery_time }}</p>
                                                             </div>
                                                             <div class="row" style="padding: 10px;">
-                                                                <p class="col-md-6" style="font-weight: bold;">Buyer: </p>
+                                                                <p class="col-md-6" style="font-weight: bold;">Recipient: </p>
                                                                 <p class="col-md-6">{{ delivery.transaction.buyer.company.name|title }}</p>
                                                             </div>
                                                             <div class="row" style="padding: 10px;">
@@ -416,7 +487,7 @@
                                                                     N/A
                                                                     {% endif %}
                                                                 </p>
-                                                            </div>  
+                                                            </div>    
                                                             <div class="modal-footer">  
                                                                 <button class="btn btn-default" data-dismiss="modal" >Close</button>
                                                             </div>    
@@ -424,84 +495,6 @@
                                                         </div>
                                                         </div>
                                                         
-                                                    </div>
-                                                </div>
-                        
-                                            <div class="modal fade modal-success in" id="state_{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                                                  aria-hidden="true">
-                                                <div class="modal-dialog modal-notice">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                            <span class="modal-title">Delivery Status
-                                                            {%if not delivery.supplier_document%}
-                                                            (Not Reconciled)
-                                                            {% else %}
-                                                            (Reconciled)
-                                                            {%endif%}
-                        
-                                                            </span>
-                                                        </div>
-                                                        <div class="modal-body" style="margin-bottom: 15px;">
-                                                            <div class="row" style="padding-left: 15px;">
-                                                            <!-- Confirmation Documents -->
-                                                            <div class="col-md-6">
-                                                                <h4>Buyer Confirmation</h4>
-                                                                <div class="col-md-6" style="padding: 10px;">
-                                                                <!-- <p class="col-md-12" style="font-weight: 100; margin-bottom: 30px;">View {{delivery.transaction.buyer.company.name|title}}'s Confirmation: </p> -->
-                        
-                                                                <a class="btn btn-info btn-sm" href="{% url 'supplier:view_confirmation_doc' delivery.id %}" >View Confirmation </a>
-                        
-                                                                </div>
-                                                            </div>
-                                                            <!--end of confirmation docx  -->
-                                                            <!-- Support Documents -->
-                                                            <div class="col-md-6">
-                                                            <h4>Supplier Confirmation</h4>
-                                                            {% if not delivery.supplier_document %}
-                                                            <p class="col-md-12" style="font-weight: 100; margin-bottom:30px;">Upload Confirmation Document: </p>
-                                                            <div style="padding-left: 15px;">
-                                                            <form method="POST" action="" enctype="multipart/form-data">
-                                                            {% csrf_token %}
-                                                            <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
-                                                            <div class="form-group">
-                                                            <input type="file" name="supplier_document" class="form-control-file" id="exampleFormControlFile1">
-                                                            </div>
-                                                            <div class="form-group">
-                                                            <input class="btn btn-info btn-sm" type="submit" value="Submit">
-                                                            </div>
-                                                            </form>
-                                                            </div>    
-                                                            {% else %}
-                                                            <div class="" style="padding: 10px;">
-                                                            <!-- <p class="col-md-12" style="font-weight: 100; margin-bottom: 30px;">View Uploaded Doc: </p> -->
-                        
-                                                            <div class="btn-group">
-                                                            <a class="btn btn-info btn-sm pull-left" href="{% url 'supplier:view_supplier_doc' delivery.id %}" >View Document </a>
-                                                            <a class="btn btn-info btn-purple btn-sm" href="{% url 'supplier:del_supplier_doc' delivery.id %}" >Upload Another </a>
-                        
-                        
-                                                            </div> 
-                                                            {%endif%}
-                        
-                                                            </div>
-                                                            <!--end of support docx  -->
-                        
-                        
-                                                            </div>
-                        
-                        
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        
-                                                            </div>
-                        
-                                                        </div>
-                        
-                        
-                        
-                        
                                                     </div>
                                                 </div>
                                             </div>
@@ -519,6 +512,12 @@
                                                     }         
                                                 });
                                             </script>
+                                            
+                        
+                        
+                                            
+                        
+                        
                                             {%endfor%}
                                         </tbody>
                                         </table>
