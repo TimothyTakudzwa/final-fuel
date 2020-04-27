@@ -906,7 +906,7 @@ def delivery_schedules(request):
         Notification.objects.create(user=request.user, action='DELIVERY', message=message, reference_id=schedule.id)
         return redirect('delivery-schedule')
 
-    return render(request, 'buyer/trial_schedules.html', context=context)
+    return render(request, 'buyer/delivery_schedules.html', context=context)
 
 
 @login_required()
