@@ -1,718 +1,466 @@
 {% extends "finder/buyer_base.html" %}
 {% load crispy_forms_tags %}
 {% load humanize %}
+
 {% block body %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <!-- <div class="header-icon">
+      <i class="fa fa-truck"></i>
+    </div> -->
+    <div class="header-title" style="margin-left: 0px;">
+      <h1>Delievery Schedules</h1>
+      <small>Zimbabwe Fuel Management System</small>
+      <ol class="breadcrumb hidden-xs">
+          <li><a href="#"><i class="pe-7s-home"></i> Home</a></li>
+          <li class="active">Schedules</li>
+      </ol>
+    </div>
+  </section>
 
-    <!-- Section Header -->
-    <section class="content-header">
-        <!-- <div class="header-icon">
-            <i class="fa fa-address-card" aria-hidden="true"></i>
-        </div> -->
-        <div class="header-title" style="margin-left: 0px;">
-            <h1>Delivery Schedules</h1>
-            <small>{{ request.user.company.name|title }}</small>
-            <ol class="breadcrumb hidden-xs">
-                <li><a href="{%url 'fuel-request'%}"><i class="pe-7s-home"></i> Home</a></li>
-                <li class="active">Schedules</li>
-            </ol>
-        </div>
-    </section>
-
-    <!-- Content -->
-    <section class="content">
-
-        <div class="content" style="min-height: 50px;">
-
-            <!--Schedules -->
-            <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
-                 data-index="0" id="past_schedules">
-                <div class="panel-heading ui-sortable-handle">
-
-                    <div class="btn-group" role="group" aria-label="Button group">
-                        <span>Schedules</span>
-                    </div>
-
-                    <div class="dropdown">
-                        <ul class="dropdown-menu dropdown-menu-right">
-
-
-                        </ul>
-                        <div class="dropdown-toggle" data-toggle="dropdown"><span
-                                class="panel-control-icon glyphicon glyphicon-cog"></span>
-                        </div>
+    <div class="container">
+        <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
+            data-index="0">
+            <div class="panel-heading ui-sortable-handle">
+                <div class="btn-group"> 
+                    <h4>Delivery Schedules</h4>
+                </div>
+                
+                <div class="dropdown">
+                    <ul class="dropdown-menu dropdown-menu-right">
+    
+    
+                    </ul>
+                    <div class="dropdown-toggle" data-toggle="dropdown"><span
+                            class="panel-control-icon glyphicon glyphicon-cog"></span>
                     </div>
                 </div>
-                <div class="panel-body">
-
-
-                    <div class="table-responsive">
-
-                        <div class="col-xs-12 col-sm-12">
-                            <!-- Nav tabs -->
-                            <ul class="nav nav-tabs">
-                                <li class="active" ><a href="#tab1" data-toggle="tab" aria-expanded="true" style="border: rgb(211, 208, 208) 1px solid;">Past</a></li>
-                                <li class=""><a href="#tab2" data-toggle="tab" aria-expanded="false" style="border: rgb(211, 208, 208) 1px solid;">Future</a></li>
-                                <li class=""><a href="#tab3" data-toggle="tab" aria-expanded="false" style="border: rgb(211, 208, 208) 1px solid;">Present</a></li>
-                            </ul>
-                            <!-- Tab panels -->
-                            <div class="tab-content">
-                                <div class="tab-pane fade active in" id="tab1">
-                                    <div class="panel-body">
-                                        <table id="fuel_requests" class="table table-striped table-bordered" style="width:100%">
-                                            <thead style="background-color: lightslategray;">
-                                            <tr style="background-color: gray;color: white;">
-                                                <th style="color: white;">Date</th>
-                                                <th style="color: white;">Time</th>
-                                                <th style="color: white;">Supplier</th>
-                                                <th style="color: white;">Address</th>
-                                                <th style="color: white;">Product</th>
-                                                <th style="color: white;">Quantity</th>
-                                                <!-- <th style="color: white;">Equipment</th> -->
-                                                <th style="color: white;">Transporter</th>
-                                                <th style="color: white;">Add. Information</th>
-                                                <th style="color: white;">Status</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-
-                                            {% for delivery in past_schedules %}
-                                                <tr>
-                                                    <td>{{ delivery.date }}</td>
-                                                    <td>{{ delivery.time }}</td>
-                                                    <td>{{ delivery.subsidiary }}</td>
-
-                                                    <td>{{ delivery.delivery_address }}</td>
-
-                                                    {% if delivery.transaction.offer.request.fuel_type == 'Diesel' %}
-                                                        <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type }}</td>
-                                                    {% elif delivery.transaction.offer.request.fuel_type == 'Petrol' %}
-                                                        <td style="color: #ffb61e;">{{ delivery.transaction.offer.request.fuel_type }}</td>
-                                                    {% else %}
-                                                        <td>{{ delivery.transaction.offer.request.fuel_type }}</td>
-                                                    {% endif %}
-
-                                                    <td>{{ delivery.delivery_quantity|floatformat:2|intcomma}}</td>
-                                                    <td>
-                                                        {% if delivery.transaction.offer.pump_available %} Pump &nbsp; {% endif %}
-                                                        {% if delivery.transaction.offer.meter_available %} Meter &nbsp; {% endif %}
-                                                        {% if delivery.transaction.offer.dipping_stick_available %} Stick &nbsp; {% endif %}
-                                                        {% if not delivery.transaction.offer.pump_available and not delivery.transaction.offer.meter_available and not delivery.transaction.offer.dipping_stick_available %} No Equipment {% endif %}
-                                                    </td>
-                                                    <td><button class="btn btn-labeled btn-purple btn-sm" data-toggle="modal" data-target="#additonal_information{{delivery.id}}">
-                                                        <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View Information</button></td>
-                                                    {% if not delivery.confirmation_date %}
-                                                        <td><button class="btn btn-labeled btn-info btn-sm" data-toggle="modal" data-target="#upload_{{delivery.id}}">
-                                                            <span class="btn-label"><i class="fa fa-check-square" aria-hidden="true"></i></span> Confirm Delivery</button></td>
-                                                    {% else %}
-                                                        <td>Received</td>
-                                                    {% endif %}
-                                                </tr>
-
-
-                                                <!-- Modals -->
-                                                <div class="modal fade modal-sucess in" id="upload_{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header" style="background-color: #009688; color: white">
-                                                                <span class="modal-title" id="exampleModalLabel">Confirm Delivery</span>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div style="padding: 50px;font-stretch: ultra-condensed;font-variant:;font-size: 58px;padding-top: 1px;padding-bottom: 20px;margin-bottom: 20px;
-                                  background-color: mintcream;padding-left: 25px;margin-left: 25px;font-variant: petite-caps;">
-                                                                    <h3>Upload Document To Confirm
-                                                                        <strong style="color: #009688;">
-                                                                            Delivery From Sam Sepiol Inc
-                                                                        </strong>.
-                                                                    </h3>
-                                                                </div>
-
-                                                                <form method="POST" action="" enctype="multipart/form-data">
-                                                                    {% csrf_token %}
-                                                                    <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
-                                                                    <div class="row">
-                                                                        <div class="form-group" style="padding-left: 50px;">
-                                                                            <div class="form-group col-md-12">
-                                                                                <label>Delivery Date</label>
-                                                                                <input type="date" name="delivery_date" class="form-control"  required/>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button class="btn btn-info" type="submit" >Confirm Delivery</button>
-                                                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
-
-                                                                    </div>
-
-                                                                </form>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!--End Upload Document-->
-
-                                                <!--Additional Information Modal-->
-                                                <div class="modal fade modal-success in" id="additonal_information{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                                                     aria-hidden="true">
-                                                    <div class="modal-dialog modal-notice" style="overflow-y: initial !important;">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                                <span class="modal-title">Additional Information</span>
-                                                            </div>
-                                                            <div class="modal-body" style="padding: 30px;height: 600px;overflow-y: auto;">
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Delivery date/Time: </p>
-                                                                    <p class="col-md-6">{{delivery.date}} | {{ delivery.delivery_time }}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Delivery Address: </p>
-                                                                    <p class="col-md-6">{{delivery.delivery_address}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Supplier Name: </p>
-                                                                    <p class="col-md-6">{{delivery.transaction.supplier.first_name|title}} {{delivery.transaction.supplier.last_name|title}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Supplier Contact: </p>
-                                                                    <p class="col-md-6">{{delivery.transaction.supplier.phone_number}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Transporter: </p>
-                                                                    <p class="col-md-6">{{delivery.transport_company}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Driver Name: </p>
-                                                                    <p class="col-md-6">{{delivery.driver_name}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Driver Phone: </p>
-                                                                    <p class="col-md-6">{{delivery.phone_number}}</p>f
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Id Number: </p>
-                                                                    <p class="col-md-6">{{delivery.id_number}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Vehicle Reg: </p>
-                                                                    <p class="col-md-6">{{delivery.vehicle_reg}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Tank Details: </p>
-                                                                    <p class="col-md-6">{{delivery.transaction.offer.request.storage_tanks}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Equipment Required: </p>
-                                                                    <p class="col-md-6">
-                                                                        {% if delivery.transaction.offer.request.pump_required %}
-                                                                            Pump
-                                                                        {% endif %}
-                                                                        {% if delivery.transaction.offer.request.dipping_stick_required %}
-                                                                            Dipping Stick
-                                                                        {% endif %}
-                                                                        {% if delivery.transaction.offer.request.meter_required %}
-                                                                            Meter Required
-                                                                        {% else %}
-                                                                            N/A
-                                                                        {% endif %}
-                                                                    </p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Status: </p>
-                                                                    {% if delivery.confirmation_document %}
-                                                                        <p class="col-md-6">
-                                                                            Received
-                                                                        </p>
-                                                                    {%else %}
-                                                                        <form method="POST" action="" enctype="multipart/form-data">
-                                                                            {% csrf_token %}
-                                                                            <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
-                                                                            {{form|crispy}}
-                                                                            <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Confirm Delivery"></p>
-                                                                        </form>
-                                                                    {% endif %}
-                                                                </div>
-
-                                                                <div class="modal-footer">
-                                                                    <button class="btn btn-info" type="submit" >Confirm Delivery</button>
-                                                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
-
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>>
-
-                                                </div>
-                                                <!-- End -->
-
-                                                <script>
-                                                    $('body').click(function (event) {
-                                                        if(!$(event.target).closest('#additonal_information{{delivery.id}}').length && !$(event.target).is('#additonal_information{{delivery.id}}')) {
-                                                            $("#additonal_information{{delivery.id}}").modal('hide');
-                                                        }
-                                                        k
-                                                        if(!$(event.target).closest('#upload_{{delivery.id}}').length && !$(event.target).is('#upload_{{delivery.id}}')) {
-                                                            $("#upload_{{delivery.id}}").modal('hide');
-                                                        }
-
-
-                                                    });
-                                                </script>
-
-
-                                            {% endfor %}
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="tab2">
-                                    <div class="panel-body">
-                                        <table id="accounts_table" class="table table-striped table-bordered" style="width:100%">
-                                            <thead>
-                                            <tr style="background-color: gray;color: white;">
-                                                <th style="color: white;">Date</th>
-                                                <th style="color: white;">Time</th>
-                                                <th style="color: white;">Supplier</th>
-                                                <th style="color: white;">Address</th>
-                                                <th style="color: white;">Product</th>
-                                                <th style="color: white;">Quantity</th>
-                                                <!-- <th style="color: white;">Equipment</th> -->
-                                                <th style="color: white;">Transporter</th>
-                                                <th style="color: white;">Add. Information</th>
-                                                <th style="color: white;">Status</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-
-                                            {% for future_delivery in future_schedules %}
-                                                <tr>
-                                                    <td>{{ future_delivery.date }}</td>
-                                                    <td>{{ future_delivery.time }}</td>
-                                                    <td>{{ future_delivery.subsidiary }}</td>
-                                                    <!--<td>{{ delivery.date }}</td>
-                            <td>{{ delivery.delivery_time }}</td>-->
-                                                    <td>{{ future_delivery.delivery_address }}</td>
-
-                                                    {% if future_delivery.transaction.offer.request.fuel_type == 'Diesel' %}
-                                                        <td style="color: #ffb61e;">{{ future_delivery.transaction.offer.request.fuel_type }}</td>
-                                                    {% elif future_delivery.transaction.offer.request.fuel_type == 'Petrol' %}
-                                                        <td style="color: #009688;">{{ future_delivery.transaction.offer.request.fuel_type }}</td>
-                                                    {% else %}
-                                                        <td>{{ future_delivery.transaction.offer.request.fuel_type }}</td>
-                                                    {% endif %}
-
-                                                    <td>{{ future_delivery.delivery_quantity|floatformat:2|intcomma}}</td>
-                                                    <td>
-                                                        {% if future_delivery.transaction.offer.pump_available %} Pump &nbsp; {% endif %}
-                                                        {% if future_delivery.transaction.offer.meter_available %} Meter &nbsp; {% endif %}
-                                                        {% if future_delivery.transaction.offer.dipping_stick_available %} Stick &nbsp; {% endif %}
-                                                        {% if not future_delivery.transaction.offer.pump_available and not delivery.transaction.offer.meter_available and not delivery.transaction.offer.dipping_stick_available %} No Equipment {% endif %}
-                                                    </td>
-                                                    <!-- <td>{{delivery.transport_company}}</td> -->
-                                                    <td><button class="btn btn-labeled btn-purple btn-sm" data-toggle="modal" data-target="#additonal_information{{future_delivery.id}}">
-                                                        <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View Information</button></td>
-                                                    {% if not future_delivery.confirmation_date %}
-                                                        <td><button class="btn btn-labeled btn-info btn-sm" data-toggle="modal" data-target="#upload_{{future_delivery.id}}">
-                                                            <span class="btn-label"><i class="fa fa-check-square" aria-hidden="true"></i></span> Confirm Delivery</button></td>
-                                                    {% else %}
-                                                        <td>Received</td>
-                                                    {% endif %}
-                                                </tr>
-
-
-                                                <!-- Modals -->
-                                                <div class="modal fade modal-sucess in" id="upload_{{future_delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header" style="background-color: #009688; color: white">
-                                                                <span class="modal-title" id="exampleModalLabel">Confirm Delivery</span>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div style="padding: 50px;font-stretch: ultra-condensed;font-variant:;font-size: 58px;padding-top: 1px;padding-bottom: 20px;margin-bottom: 20px;
-                                  background-color: mintcream;padding-left: 25px;margin-left: 25px;font-variant: petite-caps;">
-                                                                    <h3>Upload Document To Confirm
-                                                                        <strong style="color: #009688;">
-                                                                            Delivery From Sam Sepiol Inc
-                                                                        </strong>.
-                                                                    </h3>
-                                                                </div>
-
-                                                                <form method="POST" action="" enctype="multipart/form-data">
-                                                                    {% csrf_token %}
-                                                                    <input type="text" name="delivery_id" value="{{future_delivery.id}}" hidden/>
-                                                                    <div class="row">
-                                                                        <div class="form-group" style="padding-left: 50px;">
-                                                                            <div class="form-group col-md-12">
-                                                                                <label>Delivery Date</label>
-                                                                                <input type="date" name="delivery_date" class="form-control"  required/>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button class="btn btn-info" type="submit" >Confirm Delivery</button>
-                                                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
-
-                                                                    </div>
-
-                                                                </form>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!--End Upload Document-->
-
-                                                <!--Additional Information Modal-->
-                                                <div class="modal fade modal-success in" id="additonal_information{{future_delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                                                     aria-hidden="true">
-                                                    <div class="modal-dialog modal-notice" style="overflow-y: initial !important;">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                                <span class="modal-title">Additional Information</span>
-                                                            </div>
-                                                            <div class="modal-body" style="padding: 30px;height: 600px;overflow-y: auto;">
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Delivery date/Time: </p>
-                                                                    <p class="col-md-6">{{future_delivery.date}} | {{ future_delivery.delivery_time }}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Delivery Address: </p>
-                                                                    <p class="col-md-6">{{future_delivery.delivery_address}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Supplier Name: </p>
-                                                                    <p class="col-md-6">{{future_delivery.transaction.supplier.first_name|title}} {{future_delivery.transaction.supplier.last_name|title}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Supplier Contact: </p>
-                                                                    <p class="col-md-6">{{future_delivery.transaction.supplier.phone_number}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Transporter: </p>
-                                                                    <p class="col-md-6">{{future_delivery.transport_company}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Driver Name: </p>
-                                                                    <p class="col-md-6">{{future_delivery.driver_name}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Driver Phone: </p>
-                                                                    <p class="col-md-6">{{future_delivery.phone_number}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Id Number: </p>
-                                                                    <p class="col-md-6">{{future_delivery.id_number}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Vehicle Reg: </p>
-                                                                    <p class="col-md-6">{{future_delivery.vehicle_reg}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Tank Details: </p>
-                                                                    <p class="col-md-6">{{future_delivery.transaction.offer.request.storage_tanks}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Equipment Required: </p>
-                                                                    <p class="col-md-6">
-                                                                        {% if future_delivery.transaction.offer.request.pump_required %}
-                                                                            Pump
-                                                                        {% endif %}
-                                                                        {% if future_delivery.transaction.offer.request.dipping_stick_required %}
-                                                                            Dipping Stick
-                                                                        {% endif %}
-                                                                        {% if future_delivery.transaction.offer.request.meter_required %}
-                                                                            Meter Required
-                                                                        {% else %}
-                                                                            N/A
-                                                                        {% endif %}
-                                                                    </p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Status: </p>
-                                                                    {% if future_delivery.confirmation_document %}
-                                                                        <p class="col-md-6">
-                                                                            Received
-                                                                        </p>
-                                                                    {%else %}
-                                                                        <form method="POST" action="" enctype="multipart/form-data">
-                                                                            {% csrf_token %}
-                                                                            <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
-                                                                            {{form|crispy}}
-                                                                            <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Confirm Delivery"></p>
-                                                                        </form>
-                                                                    {% endif %}
-                                                                </div>
-
-                                                                <div class="modal-footer">
-                                                                    <button class="btn btn-info" type="submit" >Confirm Delivery</button>
-                                                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
-
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <!-- End -->
-
-                                                <script>
-                                                    $('body').click(function (event) {
-                                                        if(!$(event.target).closest('#additonal_information{{future_delivery.id}}').length && !$(event.target).is('#additonal_information{{future_delivery.id}}')) {
-                                                            $("#additonal_information{{future_delivery.id}}").modal('hide');
-                                                        }
-                                                        if(!$(event.target).closest('#upload_{{future_delivery.id}}').length && !$(event.target).is('#upload_{{future_delivery.id}}')) {
-                                                            $("#upload_{{future_delivery.id}}").modal('hide');
-                                                        }
-
-
-                                                    });
-                                                </script>
-
-
-                                            {% endfor %}
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="tab3">
-                                    <div class="panel-body">
-                                        <table id="delivery_schedule" class="table table-striped table-bordered" style="width:100%">
-                                            <thead>
-                                            <tr style="background-color: gray;color: white;">
-                                                <th style="color: white;">Date</th>
-                                                <th style="color: white;">Time</th>
-                                                <th style="color: white;">Supplier</th>
-                                                <th style="color: white;">Address</th>
-                                                <th style="color: white;">Product</th>
-                                                <th style="color: white;">Quantity</th>
-                                                <!-- <th style="color: white;">Equipment</th> -->
-                                                <th style="color: white;">Transporter</th>
-                                                <th style="color: white;">Add. Information</th>
-                                                <th style="color: white;">Status</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-
-                                            {% for today_delivery in today_schedules %}
-                                                <tr>
-                                                    <td>{{ today_delivery.date }}</td>
-                                                    <td>{{ today_delivery.time }}</td>
-                                                    <td>{{ today_delivery.subsidiary }}</td>
-                                                    <!--<td>{{ delivery.date }}</td>
-                            <td>{{ delivery.delivery_time }}</td>-->
-                                                    <td>{{ today_delivery.delivery_address }}</td>
-
-                                                    {% if today_delivery.transaction.offer.request.fuel_type == 'Petrol' %}
-                                                        <td style="color: #009688;">{{ today_delivery.transaction.offer.request.fuel_type }}</td>
-                                                    {% elif today_delivery.transaction.offer.request.fuel_type == 'Diesel' %}
-                                                        <td style="color: #ffb61e;">{{ today_delivery.transaction.offer.request.fuel_type }}</td>
-                                                    {% else %}
-                                                        <td>{{ today_delivery.transaction.offer.request.fuel_type }}</td>
-                                                    {% endif %}
-
-                                                    <td>{{ today_delivery.delivery_quantity|floatformat:2|intcomma}}</td>
-                                                    <td>
-                                                        {% if today_delivery.transaction.offer.pump_available %} Pump &nbsp; {% endif %}
-                                                        {% if today_delivery.transaction.offer.meter_available %} Meter &nbsp; {% endif %}
-                                                        {% if today_delivery.transaction.offer.dipping_stick_available %} Stick &nbsp; {% endif %}
-                                                        {% if not today_delivery.transaction.offer.pump_available and not delivery.transaction.offer.meter_available and not delivery.transaction.offer.dipping_stick_available %} No Equipment {% endif %}
-                                                    </td>
-                                                    <!-- <td>{{delivery.transport_company}}</td> -->
-                                                    <td><button class="btn btn-labeled btn-purple btn-sm" data-toggle="modal" data-target="#additonal_information{{today_delivery.id}}">
-                                                        <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View Information</button></td>
-                                                    {% if not today_delivery.confirmation_date %}
-                                                        <td><button class="btn btn-labeled btn-info btn-sm" data-toggle="modal" data-target="#upload_{{today_delivery.id}}">
-                                                            <span class="btn-label"><i class="fa fa-check-square" aria-hidden="true"></i></span> Confirm Delivery</button></td>
-                                                    {% else %}
-                                                        <td>Received</td>
-                                                    {% endif %}
-                                                </tr>
-
-
-                                                <!-- Modals -->
-                                                <div class="modal fade modal-sucess in" id="upload_{{today_delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header" style="background-color: #009688; color: white">
-                                                                <span class="modal-title" id="exampleModalLabel">Confirm Delivery</span>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div style="padding: 50px;font-stretch: ultra-condensed;font-variant:;font-size: 58px;padding-top: 1px;padding-bottom: 20px;margin-bottom: 20px;
-                                  background-color: mintcream;padding-left: 25px;margin-left: 25px;font-variant: petite-caps;">
-                                                                    <h3>Upload Document To Confirm
-                                                                        <strong style="color: #009688;">
-                                                                            Delivery From Sam Sepiol Inc
-                                                                        </strong>.
-                                                                    </h3>
-                                                                </div>
-
-                                                                <form method="POST" action="" enctype="multipart/form-data">
-                                                                    {% csrf_token %}
-                                                                    <input type="text" name="delivery_id" value="{{today_delivery.id}}" hidden/>
-                                                                    <div class="row">
-                                                                        <div class="form-group" style="padding-left: 50px;">
-                                                                            <div class="form-group col-md-12">
-                                                                                <label>Delivery Date</label>
-                                                                                <input type="date" name="delivery_date" class="form-control"  required/>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button class="btn btn-info" type="submit" >Confirm Delivery</button>
-                                                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
-
-                                                                    </div>
-
-                                                                </form>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!--End Upload Document-->
-
-                                                <!--Additional Information Modal-->
-                                                <div class="modal fade modal-success in" id="additonal_information{{today_delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                                                     aria-hidden="true">
-                                                    <div class="modal-dialog modal-notice" style="overflow-y: initial !important;">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                                <span class="modal-title">Additional Information</span>
-                                                            </div>
-                                                            <div class="modal-body" style="padding: 30px;height: 600px;overflow-y: auto;">
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Delivery date/Time: </p>
-                                                                    <p class="col-md-6">{{today_delivery.date}} | {{ today_delivery.delivery_time }}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Delivery Address: </p>
-                                                                    <p class="col-md-6">{{today_delivery.delivery_address}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Supplier Name: </p>
-                                                                    <p class="col-md-6">{{today_delivery.transaction.supplier.first_name|title}} {{today_delivery.transaction.supplier.last_name|title}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Supplier Contact: </p>
-                                                                    <p class="col-md-6">{{today_delivery.transaction.supplier.phone_number}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Transporter: </p>
-                                                                    <p class="col-md-6">{{today_delivery.transport_company}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Driver Name: </p>
-                                                                    <p class="col-md-6">{{today_delivery.driver_name}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Driver Phone: </p>
-                                                                    <p class="col-md-6">{{today_delivery.phone_number}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Id Number: </p>
-                                                                    <p class="col-md-6">{{today_delivery.id_number}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Vehicle Reg: </p>
-                                                                    <p class="col-md-6">{{today_delivery.vehicle_reg}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Tank Details: </p>
-                                                                    <p class="col-md-6">{{today_delivery.transaction.offer.request.storage_tanks}}</p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Equipment Required: </p>
-                                                                    <p class="col-md-6">
-                                                                        {% if today_delivery.transaction.offer.request.pump_required %}
-                                                                            Pump
-                                                                        {% endif %}
-                                                                        {% if today_delivery.transaction.offer.request.dipping_stick_required %}
-                                                                            Dipping Stick
-                                                                        {% endif %}
-                                                                        {% if today_delivery.transaction.offer.request.meter_required %}
-                                                                            Meter Required
-                                                                        {% else %}
-                                                                            N/A
-                                                                        {% endif %}
-                                                                    </p>
-                                                                </div>
-                                                                <div class="row" style="padding: 10px;">
-                                                                    <p class="col-md-6" style="font-weight: bold;">Status: </p>
-                                                                    {% if today_delivery.confirmation_document %}
-                                                                        <p class="col-md-6">
-                                                                            Received
-                                                                        </p>
-                                                                    {%else %}
-                                                                        <form method="POST" action="" enctype="multipart/form-data">
-                                                                            {% csrf_token %}
-                                                                            <input type="text" name="delivery_id" value="{{today_delivery.id}}" hidden/>
-                                                                            {{form|crispy}}
-                                                                            <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Confirm Delivery"></p>
-                                                                        </form>
-                                                                    {% endif %}
-                                                                </div>
-
-                                                                <div class="modal-footer">
-                                                                    <button class="btn btn-info" type="submit" >Confirm Delivery</button>
-                                                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
-
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <!-- End -->
-
-                                                <script>
-                                                    $('body').click(function (event) {
-                                                        if(!$(event.target).closest('#additonal_information{{today_delivery.id}}').length && !$(event.target).is('#additonal_information{{today_delivery.id}}')) {
-                                                            $("#additonal_information{{today_delivery.id}}").modal('hide');
-                                                        }
-                                                        if(!$(event.target).closest('#upload_{{today_delivery.id}}').length && !$(event.target).is('#upload_{{today_delivery.id}}')) {
-                                                            $("#upload_{{today_delivery.id}}").modal('hide');
-                                                        }
-
-
-                                                    });
-                                                </script>
-
-
-                                            {% endfor %}
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-
-                </div>
-
-
             </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                
+                    <!-- <div class="col-xs-12 col-sm-12"> -->
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active" ><a href="#pending-schedules" data-toggle="tab" aria-expanded="true" style="border: rgb(211, 208, 208) 1px solid;">Pending Deliveries</a></li>
+                            <li class=""><a href="#completed-schedules" data-toggle="tab" aria-expanded="false" style="border: rgb(211, 208, 208) 1px solid;">Completed Deliveries</a></li>
+                        </ul>
+                        <!-- Tab panels -->
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="pending-schedules">
+                                <div class="panel-body">
+                                    <table id="pending_schedules" class="table table-striped table-bordered" style="width:100%">
+                                        <thead style="background-color: lightslategray;">
+                                        <tr style="background-color: gray;color: white;">
+                                            <th style="color: white;">Date</th>
+                                            <th style="color: white;">Time</th>
+                                            <th style="color: white;">Supplier</th>
+                                            <th style="color: white;">Address</th>
+                                            <th style="color: white;">Product</th>
+                                            <th style="color: white;">Quantity</th>
+                                            <!-- <th style="color: white;">Equipment</th> -->
+                                            <th style="color: white;">Transporter</th>
+                                            <th style="color: white;">Add. Information</th>
+                                            <th style="color: white;">Status</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
 
-        </div>
-    </section>
+                                        {% for delivery in pending_schedules %}
+                                            <tr>
+                                                <td>{{ delivery.date }}</td>
+                                                <td>{{ delivery.time }}</td>
+                                                <td>{{ delivery.subsidiary }}</td>
+
+                                                <td>{{ delivery.delivery_address }}</td>
+
+                                                {% if delivery.transaction.offer.request.fuel_type == 'Diesel' %}
+                                                    <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type }}</td>
+                                                {% elif delivery.transaction.offer.request.fuel_type == 'Petrol' %}
+                                                    <td style="color: #ffb61e;">{{ delivery.transaction.offer.request.fuel_type }}</td>
+                                                {% else %}
+                                                    <td>{{ delivery.transaction.offer.request.fuel_type }}</td>
+                                                {% endif %}
+
+                                                <td>{{ delivery.delivery_quantity|floatformat:2|intcomma}}</td>
+                                                <td>
+                                                    {% if delivery.transaction.offer.pump_available %} Pump &nbsp; {% endif %}
+                                                    {% if delivery.transaction.offer.meter_available %} Meter &nbsp; {% endif %}
+                                                    {% if delivery.transaction.offer.dipping_stick_available %} Stick &nbsp; {% endif %}
+                                                    {% if not delivery.transaction.offer.pump_available and not delivery.transaction.offer.meter_available and not delivery.transaction.offer.dipping_stick_available %} No Equipment {% endif %}
+                                                </td>
+                                                <td><button class="btn btn-labeled btn-purple btn-sm" data-toggle="modal" data-target="#additonal_information{{delivery.id}}">
+                                                    <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View Information</button></td>
+                                                {% if not delivery.confirmation_date %}
+                                                    <td><button class="btn btn-labeled btn-info btn-sm" data-toggle="modal" data-target="#upload_{{delivery.id}}">
+                                                        <span class="btn-label"><i class="fa fa-check-square" aria-hidden="true"></i></span> Confirm Delivery</button></td>
+                                                {% else %}
+                                                    <td>Received</td>
+                                                {% endif %}
+                                            </tr>
 
 
-{% endblock %}
+                                            <!-- Modals -->
+                                            <div class="modal fade modal-sucess in" id="upload_{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header" style="background-color: #009688; color: white">
+                                                            <span class="modal-title" id="exampleModalLabel">Confirm Delivery</span>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div style="padding: 50px;font-stretch: ultra-condensed;font-variant:;font-size: 58px;padding-top: 1px;padding-bottom: 20px;margin-bottom: 20px;
+                              background-color: mintcream;padding-left: 25px;margin-left: 25px;font-variant: petite-caps;">
+                                                                <h3>Upload Document To Confirm
+                                                                    <strong style="color: #009688;">
+                                                                        Delivery From Sam Sepiol Inc
+                                                                    </strong>.
+                                                                </h3>
+                                                            </div>
+
+                                                            <form method="POST" action="" enctype="multipart/form-data">
+                                                                {% csrf_token %}
+                                                                <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
+                                                                <div class="row">
+                                                                    <div class="form-group" style="padding-left: 50px;">
+                                                                        <div class="form-group col-md-12">
+                                                                            <label>Delivery Date</label>
+                                                                            <input type="date" name="delivery_date" class="form-control"  required/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button class="btn btn-info" type="submit" >Confirm Delivery</button>
+                                                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
+
+                                                                </div>
+
+                                                            </form>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--End Upload Document-->
+
+                                            <!--Additional Information Modal-->
+                                            <div class="modal fade modal-success in" id="additonal_information{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                                 aria-hidden="true">
+                                                <div class="modal-dialog modal-notice" style="overflow-y: initial !important;">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                            <span class="modal-title">Additional Information</span>
+                                                        </div>
+                                                        <div class="modal-body" style="padding: 30px;height: 600px;overflow-y: auto;">
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Delivery date/Time: </p>
+                                                                <p class="col-md-6">{{delivery.date}} | {{ delivery.delivery_time }}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Delivery Address: </p>
+                                                                <p class="col-md-6">{{delivery.delivery_address}}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Supplier Name: </p>
+                                                                <p class="col-md-6">{{delivery.transaction.supplier.first_name|title}} {{delivery.transaction.supplier.last_name|title}}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Supplier Contact: </p>
+                                                                <p class="col-md-6">{{delivery.transaction.supplier.phone_number}}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Transporter: </p>
+                                                                <p class="col-md-6">{{delivery.transport_company}}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Driver Name: </p>
+                                                                <p class="col-md-6">{{delivery.driver_name}}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Driver Phone: </p>
+                                                                <p class="col-md-6">{{delivery.phone_number}}</p>f
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Id Number: </p>
+                                                                <p class="col-md-6">{{delivery.id_number}}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Vehicle Reg: </p>
+                                                                <p class="col-md-6">{{delivery.vehicle_reg}}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Tank Details: </p>
+                                                                <p class="col-md-6">{{delivery.transaction.offer.request.storage_tanks}}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Equipment Required: </p>
+                                                                <p class="col-md-6">
+                                                                    {% if delivery.transaction.offer.request.pump_required %}
+                                                                        Pump
+                                                                    {% endif %}
+                                                                    {% if delivery.transaction.offer.request.dipping_stick_required %}
+                                                                        Dipping Stick
+                                                                    {% endif %}
+                                                                    {% if delivery.transaction.offer.request.meter_required %}
+                                                                        Meter Required
+                                                                    {% else %}
+                                                                        N/A
+                                                                    {% endif %}
+                                                                </p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Status: </p>
+                                                                {% if delivery.confirmation_document %}
+                                                                    <p class="col-md-6">
+                                                                        Received
+                                                                    </p>
+                                                                {%else %}
+                                                                    <form method="POST" action="" enctype="multipart/form-data">
+                                                                        {% csrf_token %}
+                                                                        <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
+                                                                        {{form|crispy}}
+                                                                        <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Confirm Delivery"></p>
+                                                                    </form>
+                                                                {% endif %}
+                                                            </div>
+
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-info" type="submit" >Confirm Delivery</button>
+                                                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>>
+
+                                            </div>
+                                            <!-- End -->
+
+                                            <script>
+                                                $('body').click(function (event) {
+                                                    if(!$(event.target).closest('#additonal_information{{delivery.id}}').length && !$(event.target).is('#additonal_information{{delivery.id}}')) {
+                                                        $("#additonal_information{{delivery.id}}").modal('hide');
+                                                    }
+                                                    k
+                                                    if(!$(event.target).closest('#upload_{{delivery.id}}').length && !$(event.target).is('#upload_{{delivery.id}}')) {
+                                                        $("#upload_{{delivery.id}}").modal('hide');
+                                                    }
+
+
+                                                });
+                                            </script>
+
+
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                </div> 
+                                
+                            
+                            <div class="tab-pane fade" id="completed-schedules">
+                                <div class="panel-body">
+                                    <table id="completed_schedules" class="table table-striped table-bordered" style="width:100%">
+                                        <thead style="background-color: lightslategray;">
+                                        <tr style="background-color: gray;color: white;">
+                                            <th style="color: white;">Date</th>
+                                            <th style="color: white;">Time</th>
+                                            <th style="color: white;">Supplier</th>
+                                            <th style="color: white;">Address</th>
+                                            <th style="color: white;">Product</th>
+                                            <th style="color: white;">Quantity</th>
+                                            <!-- <th style="color: white;">Equipment</th> -->
+                                            <th style="color: white;">Transporter</th>
+                                            <th style="color: white;">Add. Information</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        {% for delivery in completed_schedules %}
+                                            <tr>
+                                                <td>{{ delivery.date }}</td>
+                                                <td>{{ delivery.time }}</td>
+                                                <td>{{ delivery.subsidiary }}</td>
+
+                                                <td>{{ delivery.delivery_address }}</td>
+
+                                                {% if delivery.transaction.offer.request.fuel_type == 'Diesel' %}
+                                                    <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type }}</td>
+                                                {% elif delivery.transaction.offer.request.fuel_type == 'Petrol' %}
+                                                    <td style="color: #ffb61e;">{{ delivery.transaction.offer.request.fuel_type }}</td>
+                                                {% else %}
+                                                    <td>{{ delivery.transaction.offer.request.fuel_type }}</td>
+                                                {% endif %}
+
+                                                <td>{{ delivery.delivery_quantity|floatformat:2|intcomma}}</td>
+                                                <td>
+                                                    {% if delivery.transaction.offer.pump_available %} Pump &nbsp; {% endif %}
+                                                    {% if delivery.transaction.offer.meter_available %} Meter &nbsp; {% endif %}
+                                                    {% if delivery.transaction.offer.dipping_stick_available %} Stick &nbsp; {% endif %}
+                                                    {% if not delivery.transaction.offer.pump_available and not delivery.transaction.offer.meter_available and not delivery.transaction.offer.dipping_stick_available %} No Equipment {% endif %}
+                                                </td>
+                                                <td><button class="btn btn-labeled btn-purple btn-sm" data-toggle="modal" data-target="#additonal_information{{delivery.id}}">
+                                                    <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View Information</button></td>
+                                            </tr>
+
+
+                                            <!-- Modals -->
+                                            <div class="modal fade modal-sucess in" id="upload_{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header" style="background-color: #009688; color: white">
+                                                            <span class="modal-title" id="exampleModalLabel">Confirm Delivery</span>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div style="padding: 50px;font-stretch: ultra-condensed;font-variant:;font-size: 58px;padding-top: 1px;padding-bottom: 20px;margin-bottom: 20px;
+                              background-color: mintcream;padding-left: 25px;margin-left: 25px;font-variant: petite-caps;">
+                                                                <h3>Upload Document To Confirm
+                                                                    <strong style="color: #009688;">
+                                                                        Delivery From Sam Sepiol Inc
+                                                                    </strong>.
+                                                                </h3>
+                                                            </div>
+
+                                                            <form method="POST" action="" enctype="multipart/form-data">
+                                                                {% csrf_token %}
+                                                                <input type="text" name="delivery_id" value="{{delivery.id}}" hidden/>
+                                                                <div class="row">
+                                                                    <div class="form-group" style="padding-left: 50px;">
+                                                                        <div class="form-group col-md-12">
+                                                                            <label>Delivery Date</label>
+                                                                            <input type="date" name="delivery_date" class="form-control"  required/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button class="btn btn-info" type="submit" >Confirm Delivery</button>
+                                                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
+
+                                                                </div>
+
+                                                            </form>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--End Upload Document-->
+
+                                            <!--Additional Information Modal-->
+                                            <div class="modal fade modal-success in" id="additonal_information{{delivery.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                                 aria-hidden="true">
+                                                <div class="modal-dialog modal-notice" style="overflow-y: initial !important;">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                            <span class="modal-title">Additional Information</span>
+                                                        </div>
+                                                        <div class="modal-body" style="padding: 30px;height: 600px;overflow-y: auto;">
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Delivery date/Time: </p>
+                                                                <p class="col-md-6">{{delivery.date}} | {{ delivery.delivery_time }}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Delivery Address: </p>
+                                                                <p class="col-md-6">{{delivery.delivery_address}}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Supplier Name: </p>
+                                                                <p class="col-md-6">{{delivery.transaction.supplier.first_name|title}} {{delivery.transaction.supplier.last_name|title}}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Supplier Contact: </p>
+                                                                <p class="col-md-6">{{delivery.transaction.supplier.phone_number}}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Transporter: </p>
+                                                                <p class="col-md-6">{{delivery.transport_company}}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Driver Name: </p>
+                                                                <p class="col-md-6">{{delivery.driver_name}}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Driver Phone: </p>
+                                                                <p class="col-md-6">{{delivery.phone_number}}</p>f
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Id Number: </p>
+                                                                <p class="col-md-6">{{delivery.id_number}}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Vehicle Reg: </p>
+                                                                <p class="col-md-6">{{delivery.vehicle_reg}}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Tank Details: </p>
+                                                                <p class="col-md-6">{{delivery.transaction.offer.request.storage_tanks}}</p>
+                                                            </div>
+                                                            <div class="row" style="padding: 10px;">
+                                                                <p class="col-md-6" style="font-weight: bold;">Equipment Required: </p>
+                                                                <p class="col-md-6">
+                                                                    {% if delivery.transaction.offer.request.pump_required %}
+                                                                        Pump
+                                                                    {% endif %}
+                                                                    {% if delivery.transaction.offer.request.dipping_stick_required %}
+                                                                        Dipping Stick
+                                                                    {% endif %}
+                                                                    {% if delivery.transaction.offer.request.meter_required %}
+                                                                        Meter Required
+                                                                    {% else %}
+                                                                        N/A
+                                                                    {% endif %}
+                                                                </p>
+                                                            </div>
+
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>>
+
+                                            </div>
+                                            <!-- End -->
+
+                                            <script>
+                                                $('body').click(function (event) {
+                                                    if(!$(event.target).closest('#additonal_information{{delivery.id}}').length && !$(event.target).is('#additonal_information{{delivery.id}}')) {
+                                                        $("#additonal_information{{delivery.id}}").modal('hide');
+                                                    }
+                                                    k
+                                                    if(!$(event.target).closest('#upload_{{delivery.id}}').length && !$(event.target).is('#upload_{{delivery.id}}')) {
+                                                        $("#upload_{{delivery.id}}").modal('hide');
+                                                    }
+
+
+                                                });
+                                            </script>
+
+
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table>
+                                        </div>
+                                        </div>
+                                </div>
+            </div>
+    </div>
+    </div>
+    </div>
+
+
+
+  
+{%endblock%}
