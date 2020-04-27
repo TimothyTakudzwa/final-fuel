@@ -294,8 +294,8 @@ def company_fuel(request):
         fuel.diesel_capacity = fuel.unallocated_diesel + subs_total_diesel_capacity
         fuel.petrol_capacity = fuel.unallocated_petrol + subs_total_petrol_capacity
 
-        fuel.diesel_capacity = '{:,}'.format(fuel.diesel_capacity)
-        fuel.petrol_capacity = '{:,}'.format(fuel.petrol_capacity)
+        # fuel.diesel_capacity = '{:,}'.format(fuel.diesel_capacity)
+        # fuel.petrol_capacity = '{:,}'.format(fuel.petrol_capacity)
 
     return render(request, 'zeraPortal/company_fuel.html', {'capacities': capacities})
 

@@ -1375,10 +1375,10 @@ def activity(request):
             activity.fuel_object = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
         elif activity.action == 'Creating Delivery Schedule':
             activity.delivery = DeliverySchedule.objects.filter(id=activity.reference_id).first()
-            activity.depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+            activity.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         elif activity.action == 'Updating Delivery Schedule':
             activity.delivery = DeliverySchedule.objects.filter(id=activity.reference_id).first()
-            activity.depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+            activity.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         
     current_activities = Activity.objects.filter(user=request.user, date=today).all()
     for activity in current_activities:
@@ -1388,10 +1388,10 @@ def activity(request):
             activity.fuel_object = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
         elif activity.action == 'Creating Delivery Schedule':
             activity.delivery = DeliverySchedule.objects.filter(id=activity.reference_id).first()
-            activity.depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+            activity.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
         elif activity.action == 'Updating Delivery Schedule':
             activity.delivery = DeliverySchedule.objects.filter(id=activity.reference_id).first()
-            activity.depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+            activity.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     return render(request, 'supplier/activity.html', {'activities': activities, 'depot': depot, 'current_activities': current_activities})
 

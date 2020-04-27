@@ -815,7 +815,7 @@ def allocation_update_main(request, id):
             action = f"You have allocated {request.POST['fuel_type']} quantity of {int(request.POST['quantity'])}L @ {fuel_update.petrol_price} "
             Audit_Trail.objects.create(company=request.user.company, service_station=service_station, user=request.user,
                                        action=action, reference=reference, reference_id=reference_id)
-            return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
+            return redirect('users:allocate')
 
         else:
             messages.success(request, 'Subsidiary does not exists.')
@@ -1360,7 +1360,7 @@ def audit_trail(request):
 
 
     current_trails = Audit_Trail.objects.filter(company=request.user.company, date=today).all()
-    for activity in trails:
+    for activity in current_trails:
         if activity.reference == 'offers':
             activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
         elif activity.reference == 'sfuel allocation':
@@ -2385,10 +2385,12 @@ def place_order(request):
             driver = request.POST['driver']
             driver_id = request.POST['driver_id']
             status='Pending'
-            Order.objects.create(status=status, price=price, noic_depot=noic_depot, amount_paid=amount_paid, transporter=transporter,
+            order = Order.objects.create(status=status, price=price, noic_depot=noic_depot, amount_paid=amount_paid, transporter=transporter,
                                  truck_reg=truck_reg, trailer_reg=trailer_reg, driver=driver, driver_id=driver_id,
                                  company=company, quantity=quantity, currency=currency, fuel_type=fuel_type,
                                  proof_of_payment=proof_of_payment)
+
+            order.save()
 
             message = f'{request.user.company.name.title()} placed an order of {quantity}L' \
                       f' {fuel_type.lower}'

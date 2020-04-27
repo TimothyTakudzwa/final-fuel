@@ -23,9 +23,9 @@
 
 </section>
 
-<section class="content" style="padding-left: 0;padding-right: 50px;">
 
-    <div class="jumbotron jumbotron-fluid" style="padding-bottom: 0px;">
+
+    <!-- <div class="jumbotron jumbotron-fluid" style="padding-bottom: 0px;">
         <div class="container" style="padding-left: 0;margin-left: 30px;width: 100%;">
             <div class="panel panel-bd">
                 <div class="panel-heading">
@@ -50,7 +50,7 @@
             
             </div>
         </div>
-    </div>
+    </div> -->
     
     <div class="modal fade modal-success in" id="state_modal" role="dialog">
         <div class="modal-dialog">
@@ -95,13 +95,15 @@
         </div>
     </div>
 
-</section>
+
 
 <section class="content">
     <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
         <div class="panel-heading ui-sortable-handle">
             <div class="col-md-6">
                 <h4>Sord Allocations</h4>
+                <button data-toggle="modal" data-target="#state_modal" class="btn btn-labeled btn-default btn-sm" style="margin-top: 13px; margin-right: 10px; float: left;background-color:#cfd4ce; color: #333;">
+                    <span class="btn-label"><i class="glyphicon glyphicon-filter"></i></span> Pick A Date | Showing {% if start_date and end_date %}<b style="color: #009688;">{{start_date}} - {{end_date}}</b>{% else %}<b style="color: #009688;">All</b>{% endif %} </button>
                 <form method="POST">
                     {% csrf_token %}
                     <div>

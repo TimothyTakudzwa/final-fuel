@@ -101,6 +101,7 @@ class SordNationalAuditTrail(models.Model):
 
 
 class DepotFuelUpdate(models.Model):
+    date = models.DateField(auto_now_add=True, blank=True, null=True)
     depot = models.ForeignKey(NoicDepot, on_delete=models.CASCADE, blank=True, null=True)
     usd_petrol = models.FloatField(default=0.00)
     usd_diesel = models.FloatField(default=0.00)
@@ -111,3 +112,6 @@ class DepotFuelUpdate(models.Model):
     usd_diesel_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     usd_petrol_price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     status = models.CharField(max_length=1000, blank=True, null=True)
+
+    class Meta:
+        ordering = ['-date']

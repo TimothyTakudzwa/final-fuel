@@ -27,6 +27,9 @@ class SordActionsAuditTrail(models.Model):
     supplied_from = models.CharField(max_length=150, blank=True, null=True)
     action_type = models.CharField(max_length=150, blank=True, null=True)
 
+    class Meta:
+        ordering = ['-date']
+
 
 class Audit_Trail(models.Model):
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING)
@@ -59,5 +62,8 @@ class Activity(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     description = models.CharField(max_length=700, blank=True, null=True)
     reference_id = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['-date']
 
     
