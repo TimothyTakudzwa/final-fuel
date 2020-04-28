@@ -1408,12 +1408,12 @@ def hq_notifier(request, id):
     depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     if id == 1:
         message = 'Requesting for more USD fuel'
-        Notification.objects.create(message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
+        Notification.objects.create(message=message, reference_id=id, responsible_subsidiary=depot, action="MORE_FUEL")
     elif id == 2:
         message = 'Requesting for more RTGS fuel'
-        Notification.objects.create(message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
+        Notification.objects.create(message=message, reference_id=id, responsible_subsidiary=depot, action="MORE_FUEL")
     else:
         message = 'Requesting for more USD & RTGS fuel'
-        Notification.objects.create(message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
+        Notification.objects.create(message=message, reference_id=id, responsible_subsidiary=depot, action="MORE_FUEL")
     messages.success(request, "Request for more fuel made successfully.")
     return redirect('supplier:available_stock')
