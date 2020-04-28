@@ -60,13 +60,13 @@
                 
             <tr>
 
-                <td style="color: #9df7ee;">{{noic_usd_petrol|floatformat:2|intcomma}} Litres {% if noic_usd_petrol < 10000 %} 
+                <td style="color: #7cf8ec;">{{noic_usd_petrol|floatformat:2|intcomma}} Litres {% if noic_usd_petrol < 10000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
-                <td style="color: #fcd684;">{{noic_usd_diesel|floatformat:2|intcomma}} Litres {% if noic_usd_diesel < 1000 %} <i
+                <td style="color: #e5fc62;">{{noic_usd_diesel|floatformat:2|intcomma}} Litres {% if noic_usd_diesel < 1000 %} <i
                         class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
-                <td style="color: #8ef0e6;">{{noic_rtgs_petrol|floatformat:2|intcomma}} Litres {% if noic_rtgs_petrol < 1000 %} <i
+                <td style="color: #6cf8ea;">{{noic_rtgs_petrol|floatformat:2|intcomma}} Litres {% if noic_rtgs_petrol < 1000 %} <i
                     class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
-                <td style="color: #f3ce7d;">{{noic_rtgs_diesel|floatformat:2|intcomma}} Litres {% if noic_rtgs_diesel < 1000 %} <i
+                <td style="color: #f7d156;">{{noic_rtgs_diesel|floatformat:2|intcomma}} Litres {% if noic_rtgs_diesel < 1000 %} <i
                     class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
                 <td>
                     <a type="button" class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#edit_fuel" style="margin-right: 10px;">
@@ -189,16 +189,16 @@
                 {% for fuel in depots %}
             <tr>
                 <td>{{fuel.depot.name}}</td>
-                <td style="color: #f5cc74;"></td>{{fuel.usd_diesel|floatformat:2|intcomma}} {% if fuel.usd_diesel < 1000 %} 
+                <td style="color: #f1e85c;"></td>{{fuel.usd_diesel|floatformat:2|intcomma}} {% if fuel.usd_diesel < 1000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"> </i>{% endif %}</td>
                 <td>{{fuel.usd_diesel_price}}</td>
-                <td style="color: #f8cd71;">{{fuel.rtgs_diesel|floatformat:2|intcomma}} {% if fuel.rtgs_diesel < 1000 %} 
+                <td style="color: #fffc58;">{{fuel.rtgs_diesel|floatformat:2|intcomma}} {% if fuel.rtgs_diesel < 1000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"> </i>{% endif %}</td>
                 <td>{{fuel.rtgs_diesel_price}}</td>
-                <td style="color: #93f7ed;">{{fuel.usd_petrol|floatformat:2|intcomma}} {% if fuel.usd_petrol < 1000 %} 
+                <td style="color: #6ef0e3;">{{fuel.usd_petrol|floatformat:2|intcomma}} {% if fuel.usd_petrol < 1000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
-                <td style="color: #92f3e9;">{{fuel.usd_petrol_price}}</td>
-                <td>{{fuel.rtgs_petrol|floatformat:2|intcomma}} {% if fuel.rtgs_petrol < 1000 %} 
+                <td>{{fuel.usd_petrol_price}}</td>
+                <td style="color: #68e7db;">{{fuel.rtgs_petrol|floatformat:2|intcomma}} {% if fuel.rtgs_petrol < 1000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
                 <td>{{fuel.rtgs_petrol_price}}</td>
                 <td>
