@@ -20,9 +20,9 @@ class Company(models.Model):
     is_govnt_org = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     application_form = models.FileField(upload_to='company_app_forms', null=True, blank=True)
-    contact_person = models.CharField(max_length=500, null=True, default='')
-    vat_number = models.CharField(max_length=500, null=True, default='')
-    phone_number = models.CharField(max_length=500, null=True, default='')
+    contact_person = models.CharField(max_length=500, blank=True, null=True)
+    vat_number = models.CharField(max_length=500, blank=True, null=True)
+    phone_number = models.CharField(max_length=500, blank=True, null=True)
     declined = models.BooleanField(default=False)
 
     
