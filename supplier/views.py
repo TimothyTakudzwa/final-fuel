@@ -207,7 +207,7 @@ def create_company(request, id):
                 is_govnt_org = request.POST.get('is_govnt_org')
                 logo = request.FILES.get('logo')
                 company_name = user.company.name
-                Company.objects.filter(name=company_name).update(name=company_name, city=city, address=address, logo=logo,
+                Company.objects.filter(name=company_name).update(contact_person=user.first_name, phone_number=user.phone_number, name=company_name, city=city, address=address, logo=logo,
                                                                  is_govnt_org=is_govnt_org)
                 DeliveryBranch.objects.create(name='main branch', street_number=street_number, street_name=street_name,
                                                 city=city, company=user.company, description='Main Branch')
