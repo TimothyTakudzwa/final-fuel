@@ -58,10 +58,10 @@
                         <div class="tab-content">
                             <div class="tab-pane fade active in" id="tab1">
                                 <div class="panel-body">
-                                    <table id="orders" class="table table-striped table-bordered" style="width:100%">
+                                    <table id="current_activity" class="table table-striped table-bordered" style="width:100%">
                                         <thead style="background-color: lightslategray; color:white;">
                                         <tr>
-                                            <th style="color: white;">Date</th>
+                                            <th style="color: white;">Today</th>
                                             <th style="color: white;">Organisation</th>
                                             <th style="color: white;">User</th>
                                             <th style="color: white;">Action</th>
@@ -71,7 +71,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {% for activity in activities %}
+                                        {% for activity in current_activities %}
                                             <tr>
                                                 <td width=100px>{{ activity.date }}</td>
                                                 <td>NOIC</td>
@@ -340,7 +340,7 @@
                             </div>
                             <div class="tab-pane fade" id="tab2">
                                 <div class="panel-body">
-                                    <table id="depots" class="table table-striped table-bordered" style="width:100%">
+                                    <table id="previous_activity" class="table table-striped table-bordered" style="width:100%">
                                         <thead style="background-color: lightslategray; color:white;">
                                         <tr>
                                             <th style="color: white;">Date</th>
@@ -353,7 +353,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {% for activity in old_activities %}
+                                        {% for activity in previous_activities %}
                                             <tr>
                                                 <td width=100px>{{ activity.date }}</td>
                                                 <td>NOIC</td>
