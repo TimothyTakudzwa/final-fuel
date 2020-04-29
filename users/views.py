@@ -2459,10 +2459,10 @@ def orders(request):
                 pending_orders = Order.objects.filter(company=request.user.company).filter(status='Pending').filter(date__range=[start_date, end_date])
             df_accepted_orders = convert_to_dataframe(accepted_orders)
             df_pending_orders = convert_to_dataframe(pending_orders)
-            frames = [df_accepted_orders,df_pending_orders]
-            df = pd.concat(frames, keys=['Accepted', 'Pending']) 
+            
+            df = df_accepted_orders.combine(df_pending_orders)
             # df = [['date', 'noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
-            filename = f'{{request.user.company.name}}.csv'
+            filename = f'{{{request.user.company.name}}}.csv'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
