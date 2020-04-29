@@ -79,7 +79,7 @@
                 <a class="btn btn-labeled btn-success btn-sm" data-toggle="modal"
                     data-target="#place_order">
                     <span class="btn-label"><i class="fa fa-shopping-basket"></i></span>Place Order</a>
-                    <button data-toggle="modal" data-target="#state_modal" class="btn btn-labeled btn-default btn-sm" style="margin-top: 13px; margin-right: 10px; float: left;background-color:#cfd4ce; color: #333;">
+                    <button data-toggle="modal" data-target="#state_modal" class="btn btn-labeled btn-default btn-sm" style="margin-right: 10px; float: left;background-color:#cfd4ce; color: #333;">
                         <span class="btn-label"><i class="glyphicon glyphicon-filter"></i></span> Pick A Date | Showing - {% if start_date and end_date %}<b style="color: #009688;">{{start_date}} - {{end_date}}</b>{% else %}<b style="color: #009688;">All</b>{% endif %} </button>
             </div>
 
@@ -363,8 +363,12 @@
 
        <script>
         $('body').click(function (event) {
+            
             if(!$(event.target).closest('#place_order').length && !$(event.target).is('#place_order')) {
                 $("#place_order").modal('hide');
+            }
+            if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
+                $("#state_modal").modal('hide');
             }
             if(!$(event.target).closest('#new_depot_user').length && !$(event.target).is('#new_depot_user')) {
                 $("#new_depot_user").modal('hide');
