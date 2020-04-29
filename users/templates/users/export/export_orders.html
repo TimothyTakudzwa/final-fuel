@@ -47,7 +47,7 @@
 <h1 style="text-align: center;">Orders Statement - {{ date }}</h1>
 
 {% if accepted_orders %}
-<h3 style="padding-top: 20px;">Accepted Orders {% if start_date and end_date%} (<b style="color: #007f73;">{{start_date}}</b> - <b style="color: #007f73;">{{end_date}})</b>{% else %}<b style="color: #007f73;">{{today}}</b>{% endif %}</h3>
+<h3 style="padding-top: 20px;">Accepted Orders {% if start_date and end_date%} (<b style="color: #007f73;">{{start_date}}</b> - <b style="color: #007f73;">{{end_date}})</b>{% else %}<b style="color: #007f73;">{{date}}</b>{% endif %}</h3>
 
 <table style="padding-top: 20px; margin-bottom: 30px;">
     <tr>
@@ -154,7 +154,7 @@
 
 {% if pending_orders %}
 
-<h3 style="padding-top: 20px;">Pending Orders {% if start_date and end_date%} (<b style="color: #007f73;">{{start_date}}</b> - <b style="color: #007f73;">{{end_date}})</b>{% else %}<b style="color: #007f73;">{{today}}</b>{% endif %}</h3>
+<h3 style="padding-top: 20px;">Pending Orders {% if start_date and end_date%} (<b style="color: #007f73;">{{start_date}}</b> - <b style="color: #007f73;">{{end_date}})</b>{% else %}<b style="color: #007f73;">{{date}}</b>{% endif %}</h3>
 
 <table style="padding-top: 20px">
     <tr>
