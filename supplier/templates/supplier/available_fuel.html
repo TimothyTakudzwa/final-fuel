@@ -62,7 +62,7 @@
             <tr>
 
                 <td><b style='color:#009688'>{{update.payment_type}} </b></td>
-                <td>{{update.petrol_quantity|floatformat:2|intcomma}} Litres {% if update.petrol_quantity < 1000 %} 
+                <td>{{update.petrol_quantity|floatformat:2|intcomma}} Litres {% if update.petrol_quantity < 5000 %} 
                     <i class="fa fa-exclamation-triangle" style="color: crimson;"> Petrol quantity too low</i>{% endif %}</td>
 
                 <td> {% if update.payment_type == 'USD & RTGS' %} <b style='color:#009688'>RTGS</b>
@@ -72,7 +72,7 @@
                     {{update.petrol_price|stringformat:".2f"}}{% endif %}</td>
 
 
-                <td>{{update.diesel_quantity|floatformat:2|intcomma}} Litres {% if update.diesel_quantity < 1000 %} 
+                <td>{{update.diesel_quantity|floatformat:2|intcomma}} Litres {% if update.diesel_quantity < 5000 %} 
                     <i class="fa fa-exclamation-triangle" style="color: crimson;"> Diesel quantity too low</i>{% endif %}</td>
                 <td> {% if update.payment_type == 'USD & RTGS' %} <b style='color:#009688'>RTGS</b>
                     {{update.diesel_price|stringformat:".2f"}} | <b style='color:#009688'>USD</b>
@@ -86,8 +86,8 @@
                             {% if update.petrol_quantity < 5000 %}
                             <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_usd_fuel{{update.id}}">
                            <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Update USD Fuel</button>
-                           <button class="btn btn-labeled btn-warning btn-sm" style="font-size: 12px;"  href="{% url 'supplier:hq_notifier' 1 %}">
-                            <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span>Notify Admin</button>
+                           <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'supplier:hq_notifier' 1 %}">
+                            <span class="btn-label"><i class="fa fa-bell"></i></span>Notify HQ</a>
                            {% else %}
                            <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_usd_fuel{{update.id}}">
                             <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Update USD Fuel</button>
@@ -97,8 +97,9 @@
                             {% if update.petrol_quantity < 5000 %}
                             <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_rtgs_fuel{{update.id}}">
                            <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Update RTGS Fuel</button>
-                           <button class="btn btn-labeled btn-warning btn-sm" style="font-size: 12px;" href="{% url 'supplier:hq_notifier' 2 %}">
-                            <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Notify Admin</button>
+                           
+                            <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'supplier:hq_notifier' 2 %}">
+                                <span class="btn-label"><i class="fa fa-bell"></i></span>Notify HQ</a>
                             {% else %}
                             <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_rtgs_fuel{{update.id}}">
                                 <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Update RTGS Fuel</button>
@@ -107,8 +108,8 @@
                             {% if update.petrol_quantity < 5000 %}
                             <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_fuel{{update.id}}">
                            <span class="btn-label"><i class="fa fa-refresh" aria-hidden="true"></i> </span> Update Both Fuel</button>
-                           <button class="btn btn-labeled btn-warning btn-sm" style="font-size: 12px;" href="{% url 'supplier:hq_notifier' 3 %}">
-                            <span class="btn-label"><i class="fa fa-refresh" aria-hidden="true"></i> </span> Notify Admin</button>
+                           <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'supplier:hq_notifier' 3 %}">
+                            <span class="btn-label"><i class="fa fa-bell"></i></span>Notify HQ</a>
                             {% else %}
                             <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_fuel{{update.id}}">
                                 <span class="btn-label"><i class="fa fa-refresh" aria-hidden="true"></i> </span> Update Both Fuel</button>

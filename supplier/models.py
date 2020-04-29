@@ -246,4 +246,4 @@ class SordSubsidiaryAuditTrail(models.Model):
         return f'{self.id} -- SordSubsidiaryAuditTrail'
     
     class Meta:
-        ordering = ['last_updated']
+        ordering = ['-date']
