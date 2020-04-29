@@ -24,6 +24,10 @@ class NoicDepot(models.Model):
     application_form = models.FileField(upload_to='subsidiary_docs', blank=True, null=True)
     bank_branch = models.CharField(max_length=500, null=True, blank=True)
 
+    def __str__(self):
+        return f"{self.name} - NOIC Depot"
+    
+
 
 class Order(models.Model):
     date = models.DateField(auto_now_add=True)
