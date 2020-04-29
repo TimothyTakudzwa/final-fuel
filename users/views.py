@@ -2460,7 +2460,7 @@ def orders(request):
             df_accepted_orders = convert_to_dataframe(accepted_orders)
             df_pending_orders = convert_to_dataframe(pending_orders)
             
-            df = df_accepted_orders.combine(df_pending_orders)
+            df = df_accepted_orders.append(df_pending_orders)
             # df = [['date', 'noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = f'{{{request.user.company.name}}}.csv'
             df.to_csv(filename, index=None, header=True)
