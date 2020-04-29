@@ -2414,10 +2414,7 @@ def orders(request):
         diesel_usd_price = fuel_object.usd_diesel_price
         petrol_rtgs_price = fuel_object.rtgs_petrol_price
         petrol_usd_price = fuel_object.usd_petrol_price
-    diesel_rtgs_price = fuel_object.rtgs_diesel_price
-    diesel_usd_price = fuel_object.usd_diesel_price
-    petrol_rtgs_price = fuel_object.rtgs_petrol_price
-    petrol_usd_price = fuel_object.usd_petrol_price
+    
     form1 = DepotContactForm()
     depots = NoicDepot.objects.filter(is_active=True).all()
     form1.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots]
@@ -2481,7 +2478,7 @@ def orders(request):
             if end_date and start_date:
                 accepted_orders = Order.objects.filter(company=request.user.company).filter(~Q(status='Pending')).filter(date__range=[start_date, end_date])
                 pending_orders = Order.objects.filter(company=request.user.company).filter(status='Pending').filter(date__range=[start_date, end_date])   
-            html_string = render_to_string('users/export/export_orders.html', {'sord_allocations': sord_allocations, 'date':today })
+            html_string = render_to_string('users/export/export_orders.html', {'accepted_orders': accepted_orders,'pending_orders':pending_orders,'date':today })
             html = HTML(string=html_string)
             export_name = f"{request.user.company.name.title()}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
