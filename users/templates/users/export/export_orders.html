@@ -44,10 +44,10 @@
 <body>
 
 
-<h3 style="text-align: center;">Orders Statement - {{ date }}</h3>
+<h1 style="text-align: center;">Orders Statement - {{ date }}</h1>
 
 {% if accepted_orders %}
-<h6 style="padding-top: 20px;">Accepted Orders</h6>
+<h3 style="padding-top: 20px;">Accepted Orders</h3>
 
 <table style="padding-top: 20px; margin-bottom: 30px;">
     <tr>
@@ -57,7 +57,6 @@
         <th>Fuel</th>
         <th>Quantity</th>
         <th>Currency</th>
-        <th>Payment</th>
         <th>Proof of Payment</th>
         <th>Status</th>
         <th>Release Note</th>
@@ -89,88 +88,16 @@
 
 
         <td>{{ order.currency}}</td> 
-        <td>
-
-            <!--call modal-->
-
-            <button class="btn btn-primary btn-sm btn-labeled m-b-5" data-toggle="modal" data-target="#payment{{order.id}}" type="button">
-                <span class="btn-label"><i class="fa fa-eye"></i></span>Details
-            </button>
-            <!--view details-->
-          
-
-
-
-            <div class="modal fade modal-success in" id="payment{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document" style="margin: 0;">
-                    <div class="modal-content">
-                        <div class="modal-header" style="background-color: #009688; color: white">
-                            <span class="modal-title" id="exampleModalLabel">Payment Details</span>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            {% csrf_token %}
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label><b> Fuel Type:</b></label>
-                                    
-                                    {% if  order.fuel_type == 'Diesel' %}
-                                        <b style="color: #009688;">{{order.fuel_type}}</b>
-                                    {% elif order.fuel_type == 'Petrol' %}
-                                        <b style="color: #ffb61e;">{{order.fuel_type}}</b>
-                                    {% else %}    
-                                        <b>{{order.fuel_type}}</b>
-                                    {% endif %}    
-
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label><b>Price:</b></label>
-                                    &nbsp;$24
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label><b> Sub Total:</b></label>
-                                    &nbsp;${{order.amount_paid}}
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label><b>Duty:</b></label>
-                                    &nbsp;${{order.duty}}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label><b> Vat:</b></label>
-                                    &nbsp;${{order.vat}}
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label><b>Quantiy:</b></label>
-                                    &nbsp;{{order.quantity}}L
-                                </div>
-                            </div>
-                            
-                            
-                        </div>
-                        <div class="modal-footer">  
-                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </td>
+        
 
        
-        <td>
-            <div class="btn-group">
-                <!-- <a class="btn btn-primary btn-sm" style="color: whitesmoke;"  > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a> -->
-                <a  href="{% url 'users:download_proof' order.id %}" class="btn btn-primary btn-sm btn-labeled m-b-5" type="button">
-                    <span class="btn-label"><i class="fa fa-download"></i></span> Proof of Payment
-                </a>
-            </div>
-            </td>
+        <td>   
+            <!-- <a class="btn btn-primary btn-sm" style="color: whitesmoke;"  > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a> -->
+            <a  href="{% url 'users:download_proof' order.id %}">
+                Proof of Payment
+            </a>
+            
+        </td>
        
         <td {% if order.status == 'Accepted' %} style="color: #07a513;" {% else %} style="color: crimson;" {% endif %}>
         {{order.status}}</td>
@@ -178,18 +105,16 @@
         {% if order.allocation != None %}
                 {% if order.allocation.release_note %}
                 <td>
-                    <div class="btn-group">
-                       
-                        <a  href="{% url 'users:view_release_note' order.allocation.id %}" class="btn btn-primary btn-sm btn-labeled m-b-5" type="button">
-                            <span class="btn-label"><i class="fa fa-download"></i></span> Download Release Note
-                        </a>
-                    </div>
-                    
+                              
+                    <a  href="{% url 'users:view_release_note' order.allocation.id %}">
+                        Download Release Note
+                    </a>
+                         
                 </td> 
                 {% else %}
                 <td>
                     
-                  Pending
+                    Release Note Pending
                    
                 </td>
                 {% endif %}
@@ -206,52 +131,10 @@
                
                 {% else %}
                 <td>
-                    <div class="btn-group">
-                       
-                        <a  data-toggle="modal" data-target="#upload_{{order.allocation.id}}" class="btn btn-warning btn-sm btn-labeled m-b-5" type="button">
-                            <span class="btn-label"><i class="fa fa-upload"></i></span> Upload D-Note
-                        </a>
-                    </div>
+                    D-Note Pending
 
                  </td>
-                <!--Upload Document-->
-                <div class="modal fade modal-sucess in" id="upload_{{order.allocation.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document" style="margin: 0;">
-                        <div class="modal-content">
-                            <div class="modal-header" style="background-color: #009688; color: white">
-                                <span class="modal-title" id="exampleModalLabel">Upload Delivery Note</span>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                               
-                                <form method="POST" action="{% url 'users:delivery_note' order.allocation.id %}" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    <div class="row" style="margin-left: 25px;margin-top: 30px;border: #eaeaea 2px solid;margin-right: 40px;padding-top: 15px;border-radius: 15px;">
-                                        <div class="form-group col-md-6">
-                                            <i class="fa fa-upload" aria-hidden="true"></i>
-                                            <label for="">Select D-Note File</label>
-                                        </div>    
-
-                                        <div class="form-group col-md-6">
-                                        <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="d_note" class="form-control-file" id="exampleFormControlFile1" required>
-                                        </div>
-                                    </div>    
-                                    <br>
-
-                                    <!-- <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p> -->
-                                    <div class="modal-footer">  
-                                        <button type="submit" class="btn btn-primary ">Upload</button>
-                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                                      </div>
-                                </form>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--End Upload Document-->
+                
                 {% endif %}
 
         {% else %}
@@ -271,7 +154,7 @@
 
 {% if pending_orders %}
 
-<h6 style="padding-top: 20px;">Pending Orders</h6>
+<h3 style="padding-top: 20px;">Pending Orders</h3>
 
 <table style="padding-top: 20px">
     <tr>
@@ -281,7 +164,6 @@
         <th>Fuel</th>
         <th>Quantity</th>
         <th>Currency</th>
-        <th>Payment</th>
         <th>Proof of Payment</th>
         <th>Status</th>
         <th>Release Note</th>
@@ -313,88 +195,15 @@
 
 
         <td>{{ order.currency}}</td> 
+        
         <td>
-
-            <!--call modal-->
-
-            <button class="btn btn-primary btn-sm btn-labeled m-b-5" data-toggle="modal" data-target="#payment{{order.id}}" type="button">
-                <span class="btn-label"><i class="fa fa-eye"></i></span>Details
-            </button>
-            <!--view details-->
-          
-
-
-
-            <div class="modal fade modal-success in" id="payment{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document" style="margin: 0;">
-                    <div class="modal-content">
-                        <div class="modal-header" style="background-color: #009688; color: white">
-                            <span class="modal-title" id="exampleModalLabel">Payment Details</span>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            {% csrf_token %}
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label><b> Fuel Type:</b></label>
-                                    
-                                    {% if  order.fuel_type == 'Diesel' %}
-                                        <b style="color: #009688;">{{order.fuel_type}}</b>
-                                    {% elif order.fuel_type == 'Petrol' %}
-                                        <b style="color: #ffb61e;">{{order.fuel_type}}</b>
-                                    {% else %}    
-                                        <b>{{order.fuel_type}}</b>
-                                    {% endif %}    
-
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label><b>Price:</b></label>
-                                    &nbsp;$24
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label><b> Sub Total:</b></label>
-                                    &nbsp;${{order.amount_paid}}
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label><b>Duty:</b></label>
-                                    &nbsp;${{order.duty}}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label><b> Vat:</b></label>
-                                    &nbsp;${{order.vat}}
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label><b>Quantiy:</b></label>
-                                    &nbsp;{{order.quantity}}L
-                                </div>
-                            </div>
-                            
-                            
-                        </div>
-                        <div class="modal-footer">  
-                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            
+            <!-- <a class="btn btn-primary btn-sm" style="color: whitesmoke;"  > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a> -->
+            <a  href="{% url 'users:download_proof' order.id %}" >
+                 Proof of Payment
+            </a>
+            
         </td>
-
-       
-        <td>
-            <div class="btn-group">
-                <!-- <a class="btn btn-primary btn-sm" style="color: whitesmoke;"  > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a> -->
-                <a  href="{% url 'users:download_proof' order.id %}" class="btn btn-primary btn-sm btn-labeled m-b-5" type="button">
-                    <span class="btn-label"><i class="fa fa-download"></i></span> Proof of Payment
-                </a>
-            </div>
-            </td>
        
         <td {% if order.status == 'Accepted' %} style="color: #07a513;" {% else %} style="color: crimson;" {% endif %}>
         {{order.status}}</td>
@@ -402,12 +211,12 @@
         {% if order.allocation != None %}
                 {% if order.allocation.release_note %}
                 <td>
-                    <div class="btn-group">
+                    
                        
-                        <a  href="{% url 'users:view_release_note' order.allocation.id %}" class="btn btn-primary btn-sm btn-labeled m-b-5" type="button">
-                            <span class="btn-label"><i class="fa fa-download"></i></span> Download Release Note
+                        <a  href="{% url 'users:view_release_note' order.allocation.id %}" >
+                             Download Release Note
                         </a>
-                    </div>
+                    
                     
                 </td> 
                 {% else %}
@@ -430,52 +239,10 @@
                
                 {% else %}
                 <td>
-                    <div class="btn-group">
-                       
-                        <a  data-toggle="modal" data-target="#upload_{{order.allocation.id}}" class="btn btn-warning btn-sm btn-labeled m-b-5" type="button">
-                            <span class="btn-label"><i class="fa fa-upload"></i></span> Upload D-Note
-                        </a>
-                    </div>
+                    D-Note Pending
 
                  </td>
-                <!--Upload Document-->
-                <div class="modal fade modal-sucess in" id="upload_{{order.allocation.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document" style="margin: 0;">
-                        <div class="modal-content">
-                            <div class="modal-header" style="background-color: #009688; color: white">
-                                <span class="modal-title" id="exampleModalLabel">Upload Delivery Note</span>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                               
-                                <form method="POST" action="{% url 'users:delivery_note' order.allocation.id %}" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    <div class="row" style="margin-left: 25px;margin-top: 30px;border: #eaeaea 2px solid;margin-right: 40px;padding-top: 15px;border-radius: 15px;">
-                                        <div class="form-group col-md-6">
-                                            <i class="fa fa-upload" aria-hidden="true"></i>
-                                            <label for="">Select D-Note File</label>
-                                        </div>    
-
-                                        <div class="form-group col-md-6">
-                                        <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="d_note" class="form-control-file" id="exampleFormControlFile1" required>
-                                        </div>
-                                    </div>    
-                                    <br>
-
-                                    <!-- <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p> -->
-                                    <div class="modal-footer">  
-                                        <button type="submit" class="btn btn-primary ">Upload</button>
-                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                                      </div>
-                                </form>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--End Upload Document-->
+                
                 {% endif %}
 
         {% else %}
