@@ -2478,7 +2478,8 @@ def orders(request):
             if end_date and start_date:
                 accepted_orders = Order.objects.filter(company=request.user.company).filter(~Q(status='Pending')).filter(date__range=[start_date, end_date])
                 pending_orders = Order.objects.filter(company=request.user.company).filter(status='Pending').filter(date__range=[start_date, end_date])   
-            html_string = render_to_string('users/export/export_orders.html', {'accepted_orders': accepted_orders,'pending_orders':pending_orders,'date':today })
+            html_string = render_to_string('users/export/export_orders.html', {'accepted_orders': accepted_orders,'pending_orders':pending_orders,'date':today, 'start_date':start_date, /
+             'end_date':end_date})
             html = HTML(string=html_string)
             export_name = f"{request.user.company.name.title()}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')

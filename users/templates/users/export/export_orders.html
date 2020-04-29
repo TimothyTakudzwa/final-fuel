@@ -47,7 +47,7 @@
 <h1 style="text-align: center;">Orders Statement - {{ date }}</h1>
 
 {% if accepted_orders %}
-<h3 style="padding-top: 20px;">Accepted Orders</h3>
+<h3 style="padding-top: 20px;">Accepted Orders {{start_date}} - {{end_date}}</h3>
 
 <table style="padding-top: 20px; margin-bottom: 30px;">
     <tr>
@@ -154,7 +154,7 @@
 
 {% if pending_orders %}
 
-<h3 style="padding-top: 20px;">Pending Orders</h3>
+<h3 style="padding-top: 20px;">Pending Orders {{start_date}} - {{end_date}}</h3>
 
 <table style="padding-top: 20px">
     <tr>
