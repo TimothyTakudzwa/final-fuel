@@ -79,7 +79,7 @@
                 <a class="btn btn-labeled btn-success btn-sm" data-toggle="modal"
                     data-target="#place_order">
                     <span class="btn-label"><i class="fa fa-shopping-basket"></i></span>Place Order</a>
-                    <button data-toggle="modal" data-target="#state_modal" class="btn btn-labeled btn-default btn-sm" style="float: left;background-color:#cfd4ce; color: #333;">
+                    <button data-toggle="modal" title="Pick A Date Range To Filter Records" data-target="#state_modal" class="btn btn-labeled btn-default btn-sm" style="float: left;background-color:#cfd4ce; color: #333;">
                         <span class="btn-label"><i class="glyphicon glyphicon-filter"></i></span> Pick A Date | Showing - {% if start_date and end_date %}<b style="color: #009688;">{{start_date}} - {{end_date}}</b>{% else %}<b style="color: #009688;">All</b>{% endif %} </button>
                         <form method="POST">
                             {% csrf_token %}
@@ -89,7 +89,22 @@
                              {% if not accepted_orders and not pending_orders %} disabled{% endif %} title="{% if accepted_orders and not pending_orders %} Export To PDF {%else%} No Data To Export {% endif %}">
                                 <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>PDF
                             </button>
-                        </form>    
+                        </form> 
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="text" name="export_to_csv" value="csv" hidden>
+                            <input type="text" name="csv_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                            <input type="text" name="csv_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+    
+                        <script>
+                            var today = new Date();
+                            var filename = 'Supplier Admin Allocations Summary' + ' - ' +today.toLocaleString() + '.csv'
+                        </script>
+                        <button  class="btn btn-labeled btn-default btn-sm" style="background-color: #cfd4ce; color: #333;" type="submit" {% if not accepted_orders and not pending_orders %} disabled{% endif %}
+                        title="{% if accepted_orders and not pending_orders %} Export To CSV {%else%} No Data To Export {% endif %}">
+                            <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>CSV
+                        </button>
+                        </form>   
             </div>
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
