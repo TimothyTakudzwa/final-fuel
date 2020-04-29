@@ -2479,8 +2479,9 @@ def orders(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                sord_allocations = SordCompanyAuditTrail.objects.filter(company=request.user.company, date__range=[start_date, end_date])   
-            html_string = render_to_string('users/export_allocations.html', {'sord_allocations': sord_allocations, 'date':today })
+                accepted_orders = Order.objects.filter(company=request.user.company).filter(~Q(status='Pending')).filter(date__range=[start_date, end_date])
+                pending_orders = Order.objects.filter(company=request.user.company).filter(status='Pending').filter(date__range=[start_date, end_date])   
+            html_string = render_to_string('users/export/export_orders.html', {'sord_allocations': sord_allocations, 'date':today })
             html = HTML(string=html_string)
             export_name = f"{request.user.company.name.title()}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
@@ -2489,7 +2490,7 @@ def orders(request):
 
             with open(f'{download_file}.pdf', 'rb') as pdf:
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-                response['Content-Disposition'] = f'attachment;filename={export_name} - {today}.pdf'
+                response['Content-Disposition'] = f'attachment;filename={export_name} -Orders - {today}.pdf'
                 return response        
 
     return render(request, 'users/orders.html',

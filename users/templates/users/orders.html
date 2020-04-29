@@ -79,7 +79,7 @@
                 <a class="btn btn-labeled btn-success btn-sm" data-toggle="modal"
                     data-target="#place_order">
                     <span class="btn-label"><i class="fa fa-shopping-basket"></i></span>Place Order</a>
-                    <button data-toggle="modal" data-target="#state_modal" class="btn btn-labeled btn-default btn-sm" style="margin-right: 10px; float: left;background-color:#cfd4ce; color: #333;">
+                    <button data-toggle="modal" data-target="#state_modal" class="btn btn-labeled btn-default btn-sm" style="float: left;background-color:#cfd4ce; color: #333;">
                         <span class="btn-label"><i class="glyphicon glyphicon-filter"></i></span> Pick A Date | Showing - {% if start_date and end_date %}<b style="color: #009688;">{{start_date}} - {{end_date}}</b>{% else %}<b style="color: #009688;">All</b>{% endif %} </button>
                         <form method="POST">
                             {% csrf_token %}
