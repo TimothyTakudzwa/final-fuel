@@ -1977,7 +1977,7 @@ def sord_station_sales(request):
                 end_date = end_date.date()
             if end_date and start_date:
                 sord_sales = SordSubsidiaryAuditTrail.objects.filter(subsidiary__company=request.user.company, date__range=[start_date, end_date])   
-            html_string = render_to_string('users/export_station_sales.html', {'sord_sales': sord_sales, 'date':today, 'start_date':start_date, 'end_date':end_date})
+            html_string = render_to_string('users/export/export_station_sales.html', {'sord_sales': sord_sales, 'date':today, 'start_date':start_date, 'end_date':end_date})
             html = HTML(string=html_string)
             export_name = f"{request.user.company.name.title()}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
