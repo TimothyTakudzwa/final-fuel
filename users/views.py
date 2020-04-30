@@ -1340,6 +1340,7 @@ def depots(request):
 @login_required()
 @user_role
 def audit_trail(request):
+    filtered = False;
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :
             filtered = True;
@@ -1475,7 +1476,7 @@ def audit_trail(request):
 
 
 
-    return render(request, 'users/audit_trail.html', {'trails': trails, 'current_trails': current_trails, 'today':today})
+    return render(request, 'users/audit_trail.html', {'trails': trails,'filtered': filtered, 'current_trails': current_trails, 'today':today})
 
 
 @login_required()
