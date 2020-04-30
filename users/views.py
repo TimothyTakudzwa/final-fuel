@@ -1340,6 +1340,101 @@ def depots(request):
 @login_required()
 @user_role
 def audit_trail(request):
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            filtered_trails = Audit_Trail.objects.exclude(date__gt=today).filter(company=request.user.company).filter(date__range=[start_date, end_date])
+            return render(request, 'users/audit_trail.html', {'trails': trails, 'current_trails': current_trails,'filtered_trails':filtered_trails, 'today':today})
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                filtered_trails = Audit_Trail.objects.exclude(date__gt=today).filter(company=request.user.company).filter(date__range=[start_date, end_date])   
+          
+            for activity in filtered_trails:
+                if activity.reference == 'offers':
+                    activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'sfuel allocation':
+                    activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'fuel allocation':
+                    activity.fuel_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'sprices updates':
+                    activity.prices_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'prices updates':
+                    activity.prices_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'pfuel quantity updates':
+                    activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'dfuel quantity updates':
+                    activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+
+            
+            df_accepted_orders = convert_to_dataframe(accepted_orders)
+            df_pending_orders = convert_to_dataframe(pending_orders)
+            
+            df = df_accepted_orders.append(df_pending_orders)
+            df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
+            filename = f'{request.user.company.name} - {date}.csv'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                filtered_trails = Audit_Trail.objects.exclude(date__gt=today).filter(company=request.user.company).filter(date__range=[start_date, end_date])
+
+            for activity in filtered_trails:
+                if activity.reference == 'offers':
+                    activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'sfuel allocation':
+                    activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'fuel allocation':
+                    activity.fuel_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'sprices updates':
+                    activity.prices_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'prices updates':
+                    activity.prices_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'pfuel quantity updates':
+                    activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'dfuel quantity updates':
+                    activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+
+            html_string = render_to_string('users/export/export_orders.html', {'accepted_orders': accepted_orders,'pending_orders':pending_orders,'date':today, 'start_date':start_date, 'end_date':end_date})
+            html = HTML(string=html_string)
+            export_name = f"{request.user.company.name.title()}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} -Orders - {today}.pdf'
+                return response 
+                
     trails = Audit_Trail.objects.exclude(date__gt=today).filter(company=request.user.company)
     for activity in trails:
         if activity.reference == 'offers':
