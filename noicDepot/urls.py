@@ -19,5 +19,8 @@ urlpatterns = [
     path('activity/', views.activity, name='activity'),
     path('accepted_orders/', views.accepted_orders, name='accepted_orders'),
     path('collections/', views.collections, name='collections'),
-    path('hg_notifier/<int:id>', views.hg_notifier, name='hg_notifier')
+    path('notication_reader/', views.notication_reader, name='notication_reader'),
+    path('hg_notifier/<int:id>', views.hg_notifier, name='hg_notifier'),
+    path('notication_handler/<int:id>', views.notication_handler, name='notication_handler')
+    
 ]
