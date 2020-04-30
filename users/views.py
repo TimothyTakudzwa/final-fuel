@@ -1393,7 +1393,6 @@ def audit_trail(request):
             , 'end_date':end_date})
 
         if request.POST.get('export_to_csv')=='csv':
-            filtered = True
             start_date = request.POST.get('csv_start_date')
             end_date = request.POST.get('csv_end_date')
             if start_date:
@@ -1422,7 +1421,7 @@ def audit_trail(request):
                     elif activity.reference == 'dfuel quantity updates':
                         activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
 
-            if filtered:
+            if filtered_trails:
                 df = convert_to_dataframe(filtered_trails)
             else:
                 df_current = convert_to_dataframe(current_trails)
@@ -1439,7 +1438,6 @@ def audit_trail(request):
                 return response     
 
         else:
-            filtered = True
             start_date = request.POST.get('pdf_start_date')
             end_date = request.POST.get('pdf_end_date')
             if start_date:
