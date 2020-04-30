@@ -1436,6 +1436,7 @@ def audit_trail(request):
                 return response     
 
         else:
+            filtered = True
             start_date = request.POST.get('pdf_start_date')
             end_date = request.POST.get('pdf_end_date')
             if start_date:
