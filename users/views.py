@@ -1342,6 +1342,7 @@ def depots(request):
 def audit_trail(request):
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :
+            filtered = True;
             start_date = request.POST.get('start_date')
             end_date = request.POST.get('end_date')
             if start_date:
@@ -1351,7 +1352,7 @@ def audit_trail(request):
                 end_date = datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
             filtered_trails = Audit_Trail.objects.exclude(date__gt=today).filter(company=request.user.company).filter(date__range=[start_date, end_date])
-            return render(request, 'users/audit_trail.html', {'trails': trails, 'current_trails': current_trails,'filtered_trails':filtered_trails, 'today':today})
+            return render(request, 'users/audit_trail.html', {'filtered_trails':filtered_trails,'filtered':filtered ,'today':today})
 
         if request.POST.get('export_to_csv')=='csv':
             start_date = request.POST.get('csv_start_date')
