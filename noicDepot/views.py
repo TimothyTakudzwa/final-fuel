@@ -87,20 +87,20 @@ def activity(request):
 @user_role
 def accepted_orders(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
-    orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(action="ORDER").filter(
-        is_read=False).all()
-    for order in orders_notifications:
-        if order is not None:
-            order.is_read = True
-            order.save()
-        else:
-            pass
+    orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
+    num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).count()
+    # for order in orders_notifications:
+    #     if order is not None:
+    #         order.is_read = True
+    #         order.save()
+    #     else:
+    #         pass
 
     orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=True).order_by('-date', '-time')
     new_orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=False).order_by('-date', '-time')
     for order in orders:
         order.allocation = SordNationalAuditTrail.objects.filter(order=order).first()
-    return render(request, 'noicDepot/accepted_orders.html', {'orders': orders, 'new_orders': new_orders})
+    return render(request, 'noicDepot/accepted_orders.html', {'orders': orders,'num_of_new_orders': num_of_new_orders, 'orders_notifications': orders_notifications, 'allocate': 'hide', 'release': 'hide','new_orders': new_orders})
 
 
 @login_required()

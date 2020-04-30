@@ -2522,6 +2522,12 @@ def delivery_note(request, id):
             allocation.order.status = 'Complete'
             allocation.save()
             messages.success(request, 'Delivery note successfully uploaded.')
+
+            message = f'{request.user.company.name.title()} uploaded delivery note'
+            my_company = request.user.company
+            noic_depot = allocation.order.noic_depot
+            Notification.objects.create(message=message, company=my_company, reference_id=allocation.order.id,
+                                        depot_id=noic_depot.id, action="D-NOTE")
             return redirect('users:orders')
         else:
             pass
