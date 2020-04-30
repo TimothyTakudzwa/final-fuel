@@ -1446,7 +1446,7 @@ def audit_trail(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                filtered_trails = Audit_Trail.objects.filter(company=request.user.company).filter(date__range=[start_date, end_date])
+                filtered_trails = Audit_Trail.objects.filter(company=request.user.company).filter(date__date__range=[start_date, end_date])
 
             if filtered_trails:
                 for activity in filtered_trails:
