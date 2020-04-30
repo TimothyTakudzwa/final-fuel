@@ -91,7 +91,7 @@
             <th>Service Station & Depots</th>
             <th>Event</th>
             <th>Reference</th>
-            <th>Action</th>
+            
         </tr>
 
         {% for activity in current_trails %}
@@ -103,77 +103,7 @@
             <td>{{activity.service_station.name}}</td>
             <td>{{activity.action}}</td>
             <td>{{activity.reference}}</td>
-            {% if activity.reference == 'fuel allocation' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_alloc{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.reference == 'offers' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#accept_offer{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.reference == 'subsidiary profile update' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_subsidiary{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-        
-            {% elif activity.reference == 'sfuel allocation' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#station_alloc{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-                
-            </td>
-            {% elif activity.action == 'sprices updates' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#station_prices{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'prices updates' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_prices{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
 
-            {% elif activity.action == 'pfuel quantity updates' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#stock{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-
-            {% elif activity.action == 'dfuel quantity updates' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#dstock{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-        
-            
-            {% endif %}
         </tr>
         {% endfor %}
 
@@ -194,7 +124,6 @@
             <th>Service Station & Depots</th>
             <th>Event</th>
             <th>Reference</th>
-            <th>Action</th>
         </tr>
 
         {% for activity in filtered_trails %}
@@ -206,77 +135,7 @@
             <td>{{activity.service_station.name}}</td>
             <td>{{activity.action}}</td>
             <td>{{activity.reference}}</td>
-            {% if activity.reference == 'fuel allocation' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_alloc{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.reference == 'offers' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#accept_offer{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.reference == 'subsidiary profile update' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_subsidiary{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-        
-            {% elif activity.reference == 'sfuel allocation' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#station_alloc{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-                
-            </td>
-            {% elif activity.action == 'sprices updates' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#station_prices{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'prices updates' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_prices{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
 
-            {% elif activity.action == 'pfuel quantity updates' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#stock{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-
-            {% elif activity.action == 'dfuel quantity updates' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#dstock{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-        
-            
-            {% endif %}
         </tr>
         {% endfor %}
         
