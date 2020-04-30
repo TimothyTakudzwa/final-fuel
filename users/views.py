@@ -1463,7 +1463,7 @@ def audit_trail(request):
                     elif activity.reference == 'dfuel quantity updates':
                         activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
 
-            html_string = render_to_string('users/export/export_activity.html', {'filtered_trails': filtered_trails,'filtered': filtered,'date':today, 'start_date':start_date,
+            html_string = render_to_string('users/export/export_activity.html', {'filtered_trails': filtered_trails,'filtered': filtered,'date':today, 'start_date':start_date
             ,'trails': trails, 'current_trails':current_trails, 'end_date':end_date})
             html = HTML(string=html_string)
             export_name = f"{request.user.company.name.title()}"
