@@ -777,3 +777,27 @@ def hg_notifier(request, id):
         Notification.objects.create(message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
     messages.success(request, "Request for more fuel made successfully.")
     return redirect('noicDepot:stock')
+
+
+def notication_handler(request, id):
+    my_handler = id
+    if my_handler == 1:
+        notifications = Notification.objects.filter(handler_id=my_handler).all()
+        for notification in notifications:
+            notification.is_read = True
+            notification.save()
+        return redirect('noicDepot:accepted_orders')
+    else:
+        notifications = Notification.objects.filter(handler_id=my_handler).all()
+        for notification in notifications:
+            notification.is_read = True
+            notification.save()
+        return redirect('noicDepot:dashboard')
+
+def notication_reader(request):
+    depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+    notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
+    for notification in notifications:
+        notification.is_read = True
+        notification.save()
+    return redirect('noicDepot:accepted_orders')

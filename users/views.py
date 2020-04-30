@@ -2367,7 +2367,7 @@ def place_order(request):
             message = f'{request.user.company.name.title()} placed an order of {quantity}L' \
                       f' {fuel_type.lower}'
             my_company = request.user.company
-            Notification.objects.create(message=message, company=my_company, reference_id=order.id,
+            Notification.objects.create(handler_id=1, message=message, company=my_company, reference_id=order.id,
                                         depot_id=noic_depot.id, action="ORDER")
             messages.success(request, 'Placed order successfully.')
             return redirect('users:orders')
@@ -2396,7 +2396,7 @@ def place_order(request):
             message = f'{request.user.company.name.title()} placed an order of {quantity}L' \
                       f' {fuel_type.lower}'
             my_company = request.user.company
-            Notification.objects.create(message=message, reference_id=order.id, company=my_company,
+            Notification.objects.create(handler_id=1, message=message, reference_id=order.id, company=my_company,
                                         depot_id=noic_depot.id, action="ORDER")
             messages.success(request, 'Placed order successfully.')
             return redirect('users:orders')
@@ -2526,7 +2526,7 @@ def delivery_note(request, id):
             message = f'{request.user.company.name.title()} uploaded delivery note'
             my_company = request.user.company
             noic_depot = allocation.order.noic_depot
-            Notification.objects.create(message=message, company=my_company, reference_id=allocation.order.id,
+            Notification.objects.create(handler_id=2, message=message, company=my_company, reference_id=allocation.order.id,
                                         depot_id=noic_depot.id, action="D-NOTE")
             return redirect('users:orders')
         else:

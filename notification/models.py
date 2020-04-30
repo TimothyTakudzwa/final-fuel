@@ -18,6 +18,7 @@ class Notification(models.Model):
     responsible_subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.DO_NOTHING, blank=True, null=True)
     depot_id = models.PositiveIntegerField(default=0) 
     is_noic_depot = models.BooleanField(default=False) 
+    handler_id = models.PositiveIntegerField(default=0)
 
     
     def __str__(self):
