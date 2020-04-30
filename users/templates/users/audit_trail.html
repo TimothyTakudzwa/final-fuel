@@ -93,7 +93,7 @@
                                 <input type="text" name="pdf_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
                                 <input type="text" name="pdf_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
                                 <button type="submit" class="btn btn-labeled btn-default btn-sm" style="float: left; background-color:#cfd4ce; color: #333;margin-right: 10px;"
-                                 {% if not trails and current_trails %} disabled{% endif %} title="{% if trails and current_trails %} Export To PDF {%else%} No Data To Export {% endif %}">
+                                 {% if not trails and not current_trails %} disabled{% endif %} title="{% if trails or current_trails %} Export To PDF {%else%} No Data To Export {% endif %}">
                                     <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>PDF
                                 </button>
                             </form> 
@@ -107,8 +107,8 @@
                                 var today = new Date();
                                 var filename = 'Supplier Admin Allocations Summary' + ' - ' +today.toLocaleString() + '.csv'
                             </script>
-                            <button  class="btn btn-labeled btn-default btn-sm" style="background-color: #cfd4ce; color: #333; margin-right: 10px;" type="submit" {% if not trails and current_trails %} disabled{% endif %}
-                            title="{% if trails and current_trails %} Export To CSV {%else%} No Data To Export {% endif %}">
+                            <button  class="btn btn-labeled btn-default btn-sm" style="background-color: #cfd4ce; color: #333; margin-right: 10px;" type="submit" {% if not trails and not current_trails %} disabled{% endif %}
+                            title="{% if trails or current_trails %} Export To CSV {%else%} No Data To Export {% endif %}">
                                 <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>CSV
                             </button>
                             </form>
