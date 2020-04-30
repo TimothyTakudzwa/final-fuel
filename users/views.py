@@ -1387,9 +1387,8 @@ def audit_trail(request):
             if end_date:
                 end_date = datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
-            filtered_trails = Audit_Trail.objects.filter(company=request.user.company).filter(date__range=[start_date, end_date])
+            filtered_trails = Audit_Trail.objects.filter(company=request.user.company)filter.(date__gte=start_date,date__lte=end_date)
             return render(request, 'users/audit_trail.html', {'filtered_trails':filtered_trails,'filtered':filtered ,'today':today, 'start_date': start_date
-            ,'end_date': end_date})
 
         if request.POST.get('export_to_csv')=='csv':
             start_date = request.POST.get('csv_start_date')
