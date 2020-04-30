@@ -1,0 +1,131 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Orders {{request.company.name}} Summary</title>
+
+    <style>
+        @page {size: a3 landscape;}
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        .first {
+            width: 50%;
+            float:left;
+            font-size: 12px;
+
+        }
+        .wrapper {
+            width: 100%;
+            margin: auto;
+            padding: 10px;
+            overflow: hidden;
+        }
+        .text-muted{
+            color:#6c757d!important;
+        }
+    </style>
+
+</head>
+<body>
+
+
+<h1 style="text-align: center;">Sord Station Sales Summary - {{ date }}</h1>
+
+
+<h3 style="padding-top: 20px;">Sales {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">({{date}})</small>{% endif %}</h3>
+
+<table style="padding-top: 20px; margin-bottom: 30px;">
+    <tr>
+        <th>
+            Date
+        </th>
+        <th>
+            Time
+        </th>
+        <th>
+            Subsidiary
+        </th>
+        <th>
+            Sord Num
+        </th>
+
+        <th>
+            Action Num
+        </th>
+        <th>
+            Action
+        </th>
+        <th>
+            Fuel Type
+        </th>
+        <th>
+            Payment
+        </th>
+        <th>
+            Initial Quantity
+        </th>
+        <th>
+            Quantity Sold
+        </th>
+        <th>
+            Balance
+        </th>
+
+
+        <th>
+            Received By
+        </th>
+    </tr>
+
+    {% for sord in sord_sales%}
+    <tr>
+        <td>{{sord.date}}</td>
+        <td>{{sord.time}}</td>
+        <td>{{sord.subsidiary.name}}</td>
+        <td>{{sord.sord_no}}</td>
+        <td>{{sord.action_no}}</td>
+        <td>{{sord.action}}</td>
+
+        {% if sord.fuel_type == 'Petrol' %}
+        <td style="color: #009688;">{{sord.fuel_type}}</td>
+        {% elif sord.fuel_type == 'Diesel' %}
+            <td style="color: #ffb61e;">{{sord.fuel_type}}</td>
+        {% else %}    
+            <td>{{sord.fuel_type}}</td>
+        {% endif %}
+
+        <td>{{sord.payment_type}}</td>
+        <td>{{sord.initial_quantity|floatformat:2|intcomma}}</td>
+        <td>{{sord.quantity_sold|floatformat:2|intcomma}}</td>
+        <td>{{sord.end_quantity|floatformat:2|intcomma}}</td>
+        <td>{{sord.received_by}}</td>
+        
+
+    </tr>
+    {% endfor %}
+
+</table>
+
+
+
+
+
+
+
+</body>
+</html>
