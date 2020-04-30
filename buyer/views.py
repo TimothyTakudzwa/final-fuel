@@ -895,7 +895,7 @@ def delivery_schedules(request):
        }
 
     if request.method == 'POST':
-        confirmation_date = request.FILES.get('delivery_date')
+        confirmation_date = request.POST.get('delivery_date')
         delivery_id = int(request.POST.get('delivery_id'))
 
         schedule = DeliverySchedule.objects.filter(id=delivery_id).first()
