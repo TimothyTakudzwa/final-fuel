@@ -1958,7 +1958,7 @@ def sord_station_sales(request):
 
             df = convert_to_dataframe(sord_sales)
             filename = 'Supplier Admin Sord Sales Summary.csv'
-            df = df[['date','subsidiary','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_allocated', 'end_quantity', 'received_by']]
+            df = df[['date','subsidiary','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity', 'received_by']]
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
