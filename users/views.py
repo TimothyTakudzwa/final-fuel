@@ -1340,7 +1340,8 @@ def depots(request):
 @login_required()
 @user_role
 def audit_trail(request):
-    filtered = False;
+    filtered = False
+    filtered_trails = None
     trails = Audit_Trail.objects.exclude(date__gt=today).filter(company=request.user.company)
     for activity in trails:
         if activity.reference == 'offers':
