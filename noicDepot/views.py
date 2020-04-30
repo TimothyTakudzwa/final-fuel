@@ -87,8 +87,8 @@ def activity(request):
 @user_role
 def accepted_orders(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
-    orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(action="ORDER").filter(is_read=False).all()
-    num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(action="ORDER").filter(is_read=False).count()
+    orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
+    num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).count()
     # for order in orders_notifications:
     #     if order is not None:
     #         order.is_read = True
