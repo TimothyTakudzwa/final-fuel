@@ -1943,7 +1943,7 @@ def sord_station_sales(request):
                 end_date = end_date.date()
             sord_sales = SordSubsidiaryAuditTrail.objects.filter(subsidiary__company=request.user.company, date__range=[start_date, end_date])
         
-            return render(request, 'users/sord_station_sales.html', {'sord_sales': sord_sales})
+            return render(request, 'users/sord_station_sales.html', {'sord_sales': sord_sales, 'start_date':start_date, 'end_date':end_date })
         if request.POST.get('export_to_csv')=='csv':
             start_date = request.POST.get('csv_start_date')
             end_date = request.POST.get('csv_end_date')
