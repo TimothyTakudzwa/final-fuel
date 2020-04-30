@@ -1341,6 +1341,40 @@ def depots(request):
 @user_role
 def audit_trail(request):
     filtered = False;
+    trails = Audit_Trail.objects.exclude(date__gt=today).filter(company=request.user.company)
+    for activity in trails:
+        if activity.reference == 'offers':
+            activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'sfuel allocation':
+            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'fuel allocation':
+            activity.fuel_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'sprices updates':
+            activity.prices_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'prices updates':
+            activity.prices_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'pfuel quantity updates':
+            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'dfuel quantity updates':
+            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+
+    current_trails = Audit_Trail.objects.filter(company=request.user.company, date__gt=today).all()
+    for activity in current_trails:
+        if activity.reference == 'offers':
+            activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'sfuel allocation':
+            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'fuel allocation':
+            activity.fuel_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'sprices updates':
+            activity.prices_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'prices updates':
+            activity.prices_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'pfuel quantity updates':
+            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+        elif activity.reference == 'dfuel quantity updates':
+            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :
             filtered = True;
@@ -1366,30 +1400,32 @@ def audit_trail(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                filtered_trails = Audit_Trail.objects.exclude(date__gt=today).filter(company=request.user.company).filter(date__range=[start_date, end_date])   
-          
-            for activity in filtered_trails:
-                if activity.reference == 'offers':
-                    activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
-                elif activity.reference == 'sfuel allocation':
-                    activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
-                elif activity.reference == 'fuel allocation':
-                    activity.fuel_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
-                elif activity.reference == 'sprices updates':
-                    activity.prices_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
-                elif activity.reference == 'prices updates':
-                    activity.prices_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
-                elif activity.reference == 'pfuel quantity updates':
-                    activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
-                elif activity.reference == 'dfuel quantity updates':
-                    activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+                filtered_trails = Audit_Trail.objects.filter(company=request.user.company).filter(date__range=[start_date, end_date])   
+            if filtered_trails:  
+                for activity in filtered_trails:
+                    if activity.reference == 'offers':
+                        activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+                    elif activity.reference == 'sfuel allocation':
+                        activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+                    elif activity.reference == 'fuel allocation':
+                        activity.fuel_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+                    elif activity.reference == 'sprices updates':
+                        activity.prices_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+                    elif activity.reference == 'prices updates':
+                        activity.prices_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+                    elif activity.reference == 'pfuel quantity updates':
+                        activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+                    elif activity.reference == 'dfuel quantity updates':
+                        activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
 
-            
-            df_accepted_orders = convert_to_dataframe(accepted_orders)
-            df_pending_orders = convert_to_dataframe(pending_orders)
-            
-            df = df_accepted_orders.append(df_pending_orders)
-            df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
+            if filtered:
+                df = convert_to_dataframe(filtered_trails)
+            else:
+                df_current = convert_to_dataframe(current_trails)
+                df_previous = convert_to_dataframe(trails)
+                df = df_current.append(df_previous)
+
+            df = df[['date','user', 'service_station', 'action', 'reference',]]
             filename = f'{request.user.company.name} - {date}.csv'
             df.to_csv(filename, index=None, header=True)
 
@@ -1408,25 +1444,26 @@ def audit_trail(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                filtered_trails = Audit_Trail.objects.exclude(date__gt=today).filter(company=request.user.company).filter(date__range=[start_date, end_date])
+                filtered_trails = Audit_Trail.objects.filter(company=request.user.company).filter(date__range=[start_date, end_date])
 
-            for activity in filtered_trails:
-                if activity.reference == 'offers':
-                    activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
-                elif activity.reference == 'sfuel allocation':
-                    activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
-                elif activity.reference == 'fuel allocation':
-                    activity.fuel_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
-                elif activity.reference == 'sprices updates':
-                    activity.prices_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
-                elif activity.reference == 'prices updates':
-                    activity.prices_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
-                elif activity.reference == 'pfuel quantity updates':
-                    activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
-                elif activity.reference == 'dfuel quantity updates':
-                    activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+            if filtered_trails:
+                for activity in filtered_trails:
+                    if activity.reference == 'offers':
+                        activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+                    elif activity.reference == 'sfuel allocation':
+                        activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+                    elif activity.reference == 'fuel allocation':
+                        activity.fuel_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+                    elif activity.reference == 'sprices updates':
+                        activity.prices_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+                    elif activity.reference == 'prices updates':
+                        activity.prices_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+                    elif activity.reference == 'pfuel quantity updates':
+                        activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+                    elif activity.reference == 'dfuel quantity updates':
+                        activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
 
-            html_string = render_to_string('users/export/export_orders.html', {'accepted_orders': accepted_orders,'pending_orders':pending_orders,'date':today, 'start_date':start_date, 'end_date':end_date})
+            html_string = render_to_string('users/export/export_activity.html', {'accepted_orders': accepted_orders,'pending_orders':pending_orders,'date':today, 'start_date':start_date, 'end_date':end_date})
             html = HTML(string=html_string)
             export_name = f"{request.user.company.name.title()}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
@@ -1438,43 +1475,7 @@ def audit_trail(request):
                 response['Content-Disposition'] = f'attachment;filename={export_name} -Orders - {today}.pdf'
                 return response 
                 
-    trails = Audit_Trail.objects.exclude(date__gt=today).filter(company=request.user.company)
-    for activity in trails:
-        if activity.reference == 'offers':
-            activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
-        elif activity.reference == 'sfuel allocation':
-            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
-        elif activity.reference == 'fuel allocation':
-            activity.fuel_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
-        elif activity.reference == 'sprices updates':
-            activity.prices_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
-        elif activity.reference == 'prices updates':
-            activity.prices_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
-        elif activity.reference == 'pfuel quantity updates':
-            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
-        elif activity.reference == 'dfuel quantity updates':
-            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
-
-            
-
-
-    current_trails = Audit_Trail.objects.filter(company=request.user.company, date__gt=today).all()
-    for activity in current_trails:
-        if activity.reference == 'offers':
-            activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
-        elif activity.reference == 'sfuel allocation':
-            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
-        elif activity.reference == 'fuel allocation':
-            activity.fuel_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
-        elif activity.reference == 'sprices updates':
-            activity.prices_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
-        elif activity.reference == 'prices updates':
-            activity.prices_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
-        elif activity.reference == 'pfuel quantity updates':
-            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
-        elif activity.reference == 'dfuel quantity updates':
-            activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
-
+    
 
 
     return render(request, 'users/audit_trail.html', {'trails': trails,'filtered': filtered, 'current_trails': current_trails, 'today':today})
