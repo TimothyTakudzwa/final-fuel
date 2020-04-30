@@ -1387,7 +1387,7 @@ def audit_trail(request):
             if end_date:
                 end_date = datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
-            filtered_trails = Audit_Trail.objects.filter(company=request.user.company).filter(date__gt=start_date, date__lt=end_date)
+            filtered_trails = Audit_Trail.objects.filter(company=request.user.company).all()
             return render(request, 'users/audit_trail.html', {'filtered_trails':filtered_trails,'filtered':filtered ,'today':today, 'start_date': start_date
             , 'end_date':end_date})
 
