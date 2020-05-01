@@ -375,7 +375,6 @@
             <table id="accounts_table" class="table table-striped table-bordered" style="width:100%">
                 <thead style="background-color: lightslategray; color:white;">
                     <tr>
-                        <th></th>
                         <th style="color: white;">Date Joined</th>
                         <th style="color: white;">Supplier</th>
                         <th style="color: white;">Address</th>
@@ -389,16 +388,16 @@
                 <tbody>
                     {% for account in accounts %}
                     <tr>
-                        <td></td>
                         <td>{{ account.date }}</td>
                         <td>{{ account.supplier_company.name|title}}</td>
-                        <td>{{ account.buyer_company.address}}</td>
-                        <td>{{account.account_number}} </td>
+                        <td>{{ account.supplier_company.address}}</td>                        
                         {% if account.is_verified == True %}
+                        <td>{{account.account_number}} </td>
                         <td> <button type="button" class="btn btn-purple btn-sm" data-toggle="modal"
                             data-target="#order_{{account.id}}">Place Order</button>
                         </td>
                         {% else %}
+                        <td>Approval Pending</td>
                         <td>Approval Pending</td>
                         {% endif %}
                       <td>
@@ -675,7 +674,7 @@
                                               </div>
                                           </div>
 
-                                          <div class="row col-sm-12">
+                                          <div class="row form-group">
                                               <div class="col-sm-6" id="driver1{{forloop.counter}}">
                                                   <label class="form-group">Driver</label>
                                                   <input type="text" class="form-control" name="driver" 
