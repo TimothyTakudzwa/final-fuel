@@ -1238,7 +1238,7 @@ def upload_release_note(request, id):
         transaction.save()
         payment_history.value += transaction.paid_reserve
         payment_history.balance -= transaction.paid_reserve
-        payment_history.release_note = request.POST['release_date']
+        payment_history.release_date = request.POST['release_date']
         payment_history.release_activated = True
         payment_history.save()
 
