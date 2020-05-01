@@ -89,13 +89,7 @@ def accepted_orders(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
     num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).count()
-    # for order in orders_notifications:
-    #     if order is not None:
-    #         order.is_read = True
-    #         order.save()
-    #     else:
-    #         pass
-
+    
     orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=True).order_by('-date', '-time')
     new_orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=False).order_by('-date', '-time')
     for order in orders:
@@ -765,15 +759,39 @@ def hg_notifier(request, id):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     if id == 1:
         message = 'Requesting for more USD diesel fuel'
-        Notification.objects.create(message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
+        Notification.objects.create(handler_id=3, message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
     elif id == 2:
         message = 'Requesting for more RTGS diesel fuel'
-        Notification.objects.create(message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
+        Notification.objects.create(handler_id=3, message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
     elif id == 3:
         message = 'Requesting for more USD petrol fuel'
-        Notification.objects.create(message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
+        Notification.objects.create(handler_id=3, message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
     else:
         message = 'Requesting for more RTGS petrol fuel'
-        Notification.objects.create(message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
+        Notification.objects.create(handler_id=3, message=message, reference_id=id, responsible_depot=depot, action="MORE_FUEL")
     messages.success(request, "Request for more fuel made successfully.")
     return redirect('noicDepot:stock')
+
+
+def notication_handler(request, id):
+    my_handler = id
+    if my_handler == 1:
+        notifications = Notification.objects.filter(handler_id=my_handler).all()
+        for notification in notifications:
+            notification.is_read = True
+            notification.save()
+        return redirect('noicDepot:accepted_orders')
+    else:
+        notifications = Notification.objects.filter(handler_id=my_handler).all()
+        for notification in notifications:
+            notification.is_read = True
+            notification.save()
+        return redirect('noicDepot:dashboard')
+
+def notication_reader(request):
+    depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+    notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
+    for notification in notifications:
+        notification.is_read = True
+        notification.save()
+    return redirect('noicDepot:accepted_orders')

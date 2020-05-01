@@ -122,7 +122,7 @@
                                         <ul class="menu notification_body">
                                             {% for notication in orders_notifications %}
                                             <li>
-                                                <a href="#" class="border-gray notification_item"><i
+                                                <a href="{% url 'noicDepot:notication_handler' notication.handler_id %}" class="border-gray notification_item"><i
                                                         class="fa fa-inbox"></i> New {{notication.action}} - {{notication.company.name}} <span
                                                         class=" label-success label label-default pull-right">View</span></a>
                                             </li>
@@ -138,16 +138,12 @@
                                     </div>
                                 </li>
                                 <li class="footer notification_footer">
-                                    <a href="#" class="notification_footer_item"> mark all notifications as read <i
+                                    <a href="{% url 'noicDepot:notication_reader' %}" class="notification_footer_item"> mark all notifications as read <i
                                             class=" fa fa-arrow-right"></i></a>
                                 </li>
                             </ul>
 
-                            <!-- <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                              {% for order in orders_notifications %}
-                              <a class="dropdown-item" href="{% url 'noicDepot:accepted_orders' %}">new fuel order {{order.company.name}}</a>
-                              {% endfor %}
-                            </div> -->
+                            
                         </li>
                         <li class="dropdown dropdown-user admin-user">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
