@@ -85,8 +85,11 @@
                                 {% else %}
                                 <td>
                                     <div class="btn-group">               
-                                        <button class="btn btn-success btn-sm" href="{% url 'buyer:activate_company' company.id %}">Activate Company</button>
-                                        <button class="btn btn-warning btn-sm" href="{% url 'buyer:decline_company' company.id %}">Decline Company</button>
+                                        
+                                        <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'buyer:activate_company' company.id %}">
+                                            <span class="btn-label"><i class="fa fa-bell"></i></span>Activate Company</a>
+                                            <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'buyer:decline_company' company.id %}">
+                                                <span class="btn-label"><i class="fa fa-bell"></i></span>Decline Company</a>
                                     </div>
                                     </td>
                                 {% endif %}
