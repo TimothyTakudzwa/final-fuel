@@ -189,16 +189,16 @@
                 {% for fuel in depots %}
             <tr>
                 <td>{{fuel.depot.name}}</td>
-                <td style="color: #f1e85c;">{{fuel.usd_diesel|floatformat:2|intcomma}} {% if fuel.usd_diesel < 1000 %} 
+                <td style="color: #009688;">{{fuel.usd_diesel|floatformat:2|intcomma}} {% if fuel.usd_diesel < 1000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"> </i>{% endif %}</td>
                 <td>{{fuel.usd_diesel_price}}</td>
-                <td style="color: #fffc58;">{{fuel.rtgs_diesel|floatformat:2|intcomma}} {% if fuel.rtgs_diesel < 1000 %} 
+                <td style="color: #ffb61e;">{{fuel.rtgs_diesel|floatformat:2|intcomma}} {% if fuel.rtgs_diesel < 1000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"> </i>{% endif %}</td>
                 <td>{{fuel.rtgs_diesel_price}}</td>
-                <td style="color: #6ef0e3;">{{fuel.usd_petrol|floatformat:2|intcomma}} {% if fuel.usd_petrol < 1000 %} 
+                <td style="color: #009688;">{{fuel.usd_petrol|floatformat:2|intcomma}} {% if fuel.usd_petrol < 1000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
                 <td>{{fuel.usd_petrol_price}}</td>
-                <td style="color: #68e7db;">{{fuel.rtgs_petrol|floatformat:2|intcomma}} {% if fuel.rtgs_petrol < 1000 %} 
+                <td style="color: #009688;">{{fuel.rtgs_petrol|floatformat:2|intcomma}} {% if fuel.rtgs_petrol < 1000 %} 
                     <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
                 <td>{{fuel.rtgs_petrol_price}}</td>
                 <td>
