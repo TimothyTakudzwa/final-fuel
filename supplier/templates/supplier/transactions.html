@@ -113,7 +113,7 @@
                                                     <td>${{ transaction.expected|intcomma}}</td>
                                                     <td>${{ transaction.paid|intcomma }}</td>
                                                     
-                                                    <td style="color: #009688; font-size: 25px;" aria-hidden="true"> Complete</td>
+                                                    <td style="color: #009688;" aria-hidden="true"> Complete</td>
                                                     
                                                     {% if transaction.offer.delivery_method == 'DELIVERY' %}
                                                     <td>
@@ -130,7 +130,7 @@
                                                     {% endif %}
                                                     {% if transaction.expected == transaction.paid %}
                                                         {% if transaction.is_complete == True %}
-                                                        <td style="color: #009688; font-size: 25px;" aria-hidden="true"> Complete</td>
+                                                        <td style="color: #009688;" aria-hidden="true"> Complete</td>
                                                         {% else %}
                                                             {% if transaction.proof_of_payment %}
                                                                 {% if transaction.offer.delivery_method == 'DELIVERY' %}
