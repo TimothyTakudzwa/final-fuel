@@ -390,13 +390,14 @@
                     <tr>
                         <td>{{ account.date }}</td>
                         <td>{{ account.supplier_company.name|title}}</td>
-                        <td>{{ account.supplier_company.address}}</td>
-                        <td>{{account.account_number}} </td>
+                        <td>{{ account.supplier_company.address}}</td>                        
                         {% if account.is_verified == True %}
+                        <td>{{account.account_number}} </td>
                         <td> <button type="button" class="btn btn-purple btn-sm" data-toggle="modal"
                             data-target="#order_{{account.id}}">Place Order</button>
                         </td>
                         {% else %}
+                        <td>Approval Pending</td>
                         <td>Approval Pending</td>
                         {% endif %}
                       <td>
