@@ -390,7 +390,7 @@
                     <tr>
                         <td>{{ account.date }}</td>
                         <td>{{ account.supplier_company.name|title}}</td>
-                        <td>{{ account.buyer_company.address}}</td>
+                        <td>{{ account.supplier_company.address}}</td>
                         <td>{{account.account_number}} </td>
                         {% if account.is_verified == True %}
                         <td> <button type="button" class="btn btn-purple btn-sm" data-toggle="modal"
