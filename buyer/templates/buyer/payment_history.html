@@ -296,7 +296,7 @@
                                                 <form method="POST" action="{% url 'buyer:delivery-schedule' %}" enctype="multipart/form-data">
                                                     {% csrf_token %}
                                                     <input type="text" name="delivery_id" value="{{payment.delivery_schedule.id}}" hidden/>
-                                                    <div class="form-group col-md-6">
+                                                    <div class="form-group col-md-12">
                                                         <label>Delivery Date</label>
                                                         <input type="date" name="delivery_date" class="form-control"  required/>
                                                     </div>
