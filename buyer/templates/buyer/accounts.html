@@ -629,11 +629,16 @@
                                         {% csrf_token %}
                                         <div class="row form-group">
                                             <div class="col-sm-6">
-                                                {{ form.fuel_type|as_crispy_field }}
+                                                <label>Fuel Type</label>
+                                                <select name="fuel_type" class="select form-control">
+                                                    <option value="Petrol">Petrol</option>                                                  
+                                                    <option value="Diesel">Diesel</option>                                                  
+                                                </select>
                                             </div>
 
                                             <div class="col-sm-6">
-                                                {{ form.amount|as_crispy_field }}
+                                                <label>Fuel Quantity</label>
+                                                <input type="number" min="1" step="0.01" name="amount" class="form-control" required/>
                                             </div>
                                         </div>
                                         <div class="row form-group">
