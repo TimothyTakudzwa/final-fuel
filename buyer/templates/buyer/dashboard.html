@@ -421,7 +421,7 @@
                                                 </div>
                                                 <div class="form-group" name='choices' id='choices{{forloop.counter}}'>
                                                     <label>Delivery Address</label>
-                                                    <div class="form-group row-sm-12">
+                                                    <div class="form-group col-sm-12">
                                                         <select class="form-control" id="branch{{forloop.counter}}">
                                                             <option value="">---Select a delivery branch---</option>
                                                             {% for branch in branches %}
@@ -565,9 +565,9 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="form-group row-sm-12" name='choices' id='choices1{{forloop.counter}}'>
-                                                    <label>Delivery Address</label>
-                                                    <div class="form-group row-sm-12">
+                                                <div class="form-group" name='choices' id='choices1{{forloop.counter}}'>
+                                                    <label style="margin-left: 18px;">Delivery Address</label>
+                                                    <div class="form-group col-sm-12">
                                                         <select class="form-control" id="branch1{{forloop.counter}}">
                                                             {% for branch in branches %}
                                                             <option value="">---Select a delivery branch---</option>
@@ -596,10 +596,12 @@
                                                         </div>
 
                                                     </div>
-
-                                                    {{ form.storage_tanks|as_crispy_field }}
+                                                    <div class="form-group col-sm-12">
+                                                        {{ form.storage_tanks|as_crispy_field }}
+                                                    </div>
+                                                   
                                                     <br>
-                                                    <label>Required Equipments</label>
+                                                    <label style="margin-left: 18px;">Required Equipments</label>
                                                     <div class="row-sm-12">
                                                         <div class="col-sm-4">
                                                             <input class="form-control-md" type="hidden" value='False'
