@@ -517,14 +517,12 @@
                                                     </div>
                                                 </div>
                                                 <div class="row col-sm-12">
-                                                    <div class="col-sm-6 form-group">
+                                                    <div class="col-sm-6 form-group" id="payment_method" name="fuel_payment_method">
 
                                                         <label for="payment_method" class="form-group">Payment Method</label>
-                                                        <select id="payment_method" name="fuel_payment_method" class="form-control">
-                                                            <option value='USD'>USD</option>
-                                                            <option value='RTGS'>RTGS</option>
-                                                            <option value='USD & RTGS'>USD & RTGS</option>
-                                                        </select>
+                                                       
+                                                        <input type="text" name="fuel_payment_method" class="form-control" name="transporter" 
+                                                        aria-describedby="helpId" id="payment_method" value={{data.payment_type}}>
 
                                                     </div>
 

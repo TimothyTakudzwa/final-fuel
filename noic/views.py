@@ -945,3 +945,23 @@ def collections(request):
         'new_collections': Collections.objects.filter(date=today).order_by('-time')
     }
     return render(request, 'noic/collections.html', context=context)
+
+
+def notication_handler(request, id):
+    my_handler = id
+    if my_handler == 3:
+        notifications = Notification.objects.filter(handler_id=my_handler).all()
+        for notification in notifications:
+            notification.is_read = True
+            notification.save()
+        return redirect('noic:dashboard')
+    else:
+        return redirect('noic:dashboard')
+
+
+def notication_reader(request):
+    notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
+    for notification in notifications:
+        notification.is_read = True
+        notification.save()
+    return redirect('noic:dashboard')
