@@ -21,6 +21,8 @@ urlpatterns = [
     path('staff/', views.staff, name='staff'),
     path('depot_history/<int:did>', views.depot_history, name="depot_history"),
     path('activity/', views.activity, name='activity'),
+    path('notication_reader/', views.notication_reader, name='notication_reader'),
     path('collections/', views.collections, name='collections'),
+    path('notication_handler/<int:id>', views.notication_handler, name='notication_handler')
 
 ]
