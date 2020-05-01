@@ -665,7 +665,7 @@ def edit_offer(request, id):
                 available_fuel = fuel.diesel_quantity + fuel_reserve.diesel_quantity
             else:
                 available_fuel = fuel.diesel_quantity
-        new_offer = int(request.POST.get('quantity'))
+        new_offer = float(request.POST.get('quantity'))
         request_quantity = offer.request.amount
         if new_offer <= available_fuel:
             if new_offer <= request_quantity:
