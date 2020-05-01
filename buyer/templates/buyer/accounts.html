@@ -674,7 +674,7 @@
                                               </div>
                                           </div>
 
-                                          <div class="row form-group">
+                                          <div class="row form-group col-sm-12">
                                               <div class="col-sm-6" id="driver1{{forloop.counter}}">
                                                   <label class="form-group">Driver</label>
                                                   <input type="text" class="form-control" name="driver" 
@@ -747,11 +747,10 @@
                                           <input type="hidden" value="{{data.subsidiary.id}}" name="company_id" />
                                   </div>
                                 </div>
-                                  <div class="modal-footer justify-content-center">
-                                      <button type="submit" name="MakeDeal" class="btn btn-primary ">Submit
-                                          Request</button>
-                                      </form>
-                                  </div>                              
+                                <div class="modal-footer">
+                                    <button type="submit" name="WaitForOffer" class="btn btn-info btn-sm">Submit</button>
+                                    <button class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                </div>                             
                           </div>
                       </div>
                   </div>
