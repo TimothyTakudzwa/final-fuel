@@ -157,7 +157,7 @@ def activate_company(request, id):
     company.is_verified = True
     company.save()
     company_rep.save()
-    messages.success(request, f"Company {company.name} and its rep {company_rep.name} acivated successfully.")
+    messages.success(request, f"Company {company.name} and its rep {company_rep.first_name} acivated successfully.")
     return redirect('buyer:approve_companies')
 
 def decline_company(request, id):
