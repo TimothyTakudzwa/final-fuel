@@ -220,56 +220,62 @@
                  
                     <!-- sidebar menu -->
                     <ul class="sidebar-menu">
-                        <li class="nav-item {% if request.path == '/noicDepot/orders/' %} active {% endif %}">
-                            <a href="{% url 'noicDepot:orders' %}"><i class="fa fa-dashboard"></i><span>Dashboard</span>
-                            </a>
-                        </li>
-                        <li class="nav-item {% if request.path == '/noicDepot/accepted_orders/' %} active {% endif %}">
-                            <a href="{% url 'noicDepot:accepted_orders' %}"><i
-                                    class="fa fa-shopping-cart"></i><span>Orders</span>
-                            </a>
-                        </li>
-                        <li class="nav-item {% if request.path == '/noicDepot/dashboard/' %} active {% endif %}">
-                            <a href="{% url 'noicDepot:dashboard' %}"><i class="fa fa-tasks"></i><span>Allocations</span>
-                            </a>
-                        </li>
-                        <li class="nav-item {% if request.path == '/noicDepot/collections/' %} active {% endif %}">
-                            <a href="{% url 'noicDepot:collections' %} "><i class="fa fa-car"></i><span>Collections</span>
-                            </a>
-                        </li>
-                        <li class="nav-item {% if request.path == '/noicDepot/activity/' %} active {% endif %}">
-                            <a href="{% url 'noicDepot:activity' %}"><i class="fa fa-area-chart"></i><span>Activity</span>
-                            </a>
-                        </li>
-                        <li class="nav-item {% if request.path == '/noicDepot/statistics/' %} active {% endif %}">
-                            <a href="{% url 'noicDepot:statistics' %}"><i
-                                    class="fa fa-line-chart"></i><span>Statistics</span>
-                            </a>
-                        </li>
-    
-                        <li class="nav-item {% if request.path == '/noicDepot/reports/' %} active {% endif %}">
-                            <a href="{% url 'noicDepot:report_generator' %}"><i class="fa fa-cogs"></i><span>Reports</span>
-                            </a>
-                        </li>
-    
+                        {#                    <li class="nav-item {% if request.path == '/noicDepot/orders/' %} active {% endif %}">#}
+                        {#                        <a href="{% url 'noicDepot:orders' %}"><i class="fa fa-dashboard"></i><span>Dashboard</span>#}
+                        {#                        </a>#}
+                        {#                    </li>#}
+                                            <li class="nav-item {% if request.path == '/noicDepot/accepted_orders/' %} active {% endif %}">
+                                                <a href="{% url 'noicDepot:accepted_orders' %}"><i
+                                                        class="fa fa-shopping-cart"></i><span>Orders</span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item {% if request.path == '/noicDepot/stock/' %} active {% endif %}">
+                                                <a href="{% url 'noicDepot:stock' %}"><i class="fa fa-bank"></i><span>Fuel Stocks</span>
+                                                </a>
+                                            </li>
+                        {#                    <li class="nav-item {% if request.path == '/noicDepot/accepted_orders/' %} active {% endif %}">#}
+                        {#                        <a href="{% url 'noicDepot:accepted_orders' %}"><i#}
+                        {#                                class="fa fa-shopping-cart"></i><span>Orders</span>#}
+                        {#                        </a>#}
+                        {#                    </li>#}
+                                            <li class="nav-item {% if request.path == '/noicDepot/dashboard/' %} active {% endif %}">
+                                                <a href="{% url 'noicDepot:dashboard' %}"><i class="fa fa-tasks"></i><span>Allocations</span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item {% if request.path == '/noicDepot/collections/' %} active {% endif %}">
+                                                <a href="{% url 'noicDepot:collections' %} "><i class="fa fa-car"></i><span>Collections</span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item {% if request.path == '/noicDepot/activity/' %} active {% endif %}">
+                                                <a href="{% url 'noicDepot:activity' %}"><i class="fa fa-area-chart"></i><span>Activity</span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item {% if request.path == '/noicDepot/statistics/' %} active {% endif %}">
+                                                <a href="{% url 'noicDepot:statistics' %}"><i
+                                                        class="fa fa-line-chart"></i><span>Statistics</span>
+                                                </a>
+                                            </li>
                         
-                            <li class="nav-item {% if request.path == '/noicDepot/stock/' %} active {% endif %}">
-                                <a href="{% url 'noicDepot:stock' %}"><i class="fa fa-bank"></i><span>Fuel Stocks</span>
-                                </a>
-                            </li>
-    
-                            <li class="nav-item {% if request.path == '/noicDepot/profile/' %} active {% endif %}">
-                                <a href="{% url 'noicDepot:profile' %} "><i class="fa fa-user"></i><span>User Profile</span>
-                                </a>
-                            </li>
-                            <li class="">
-                                <a class="nav-link" href="{% url 'logout' %}?next=/login/">
-                                    <i class="fa fa-sign-out"></i><span>Logout</span>
-                                </a>
-                            </li>
-    
-    
-    
+                                            <li class="nav-item {% if request.path == '/noicDepot/reports/' %} active {% endif %}">
+                                                <a href="{% url 'noicDepot:report_generator' %}"><i class="fa fa-pie-chart"></i><span>Reports</span>
+                                                </a>
+                                            </li>
+                        
+                                            
+                                                
+                        
+                                                <li class="nav-item {% if request.path == '/noicDepot/profile/' %} active {% endif %}">
+                                                    <a href="{% url 'noicDepot:profile' %} "><i class="fa fa-user"></i><span>User Profile</span>
+                                                    </a>
+                                                </li>
+                                                <li class="">
+                                                    <a class="nav-link" href="{% url 'logout' %}?next=/login/">
+                                                        <i class="fa fa-sign-out"></i><span>Logout</span>
+                                                    </a>
+                                                </li>
+                        
+                        
+                        
                     </ul>
                 </div> <!-- /.sidebar -->
             </aside>
