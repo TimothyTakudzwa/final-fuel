@@ -1427,14 +1427,16 @@ def audit_trail(request):
                     elif activity.reference == 'dfuel quantity updates':
                         activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
 
+            fields = ['date','user', 'service_station__name', 'action', 'reference',]
+            filtered_trails = filtered_trails.values('date','user', 'service_station__name', 'action', 'reference')
+
             if filtered_trails:
-                df = convert_to_dataframe(filtered_trails)
+                df = pd.DataFrame(filtered_trails, columns=fields)
             else:
-                df_current = convert_to_dataframe(current_trails)
-                df_previous = convert_to_dataframe(trails)
+                df_current = pd.DataFrame(current_trails.values('date','user', 'service_station__name', 'action', 'reference'), columns=fields)
+                df_previous = pd.DataFrame(trails.values('date','user', 'service_station__name', 'action', 'reference'), columns=fields)
                 df = df_current.append(df_previous)
 
-            df = df[['date','user', 'service_station', 'action', 'reference',]]
             filename = f'{request.user.company.name} - {today}.csv'
             df.to_csv(filename, index=None, header=True)
 
