@@ -2731,9 +2731,9 @@ def delivery_schedules(request):
     #     else:
     #         pending_schedules.append(schedule) 
     completed_schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user
-    .company).filter(date__range=[start_date, end_date]).filter(confirmation_date__isnull=False)
+    .company).filter(confirmation_date__isnull=False)
     pending_schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user
-    .company).filter(date__range=[start_date, end_date]).filter(confirmation_date__isnull=True)
+    .company).filter(confirmation_date__isnull=True)
 
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :
