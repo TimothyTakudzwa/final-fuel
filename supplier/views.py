@@ -1430,17 +1430,17 @@ def notication_handler(request, id):
         for notification in notifications:
             notification.is_read = True
             notification.save()
-        return redirect('supplier:fuel_request')
+        return redirect('fuel-request')
     else:
         notifications = Notification.objects.filter(handler_id=my_handler).all()
         for notification in notifications:
             notification.is_read = True
             notification.save()
-        return redirect('supplier:fuel_request')
+        return redirect('fuel-request')
 
 def notication_reader(request):
     notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
     for notification in notifications:
         notification.is_read = True
         notification.save()
-    return redirect('supplier:fuel_request')
+    return redirect('fuel-request')
