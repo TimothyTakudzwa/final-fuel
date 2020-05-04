@@ -2801,7 +2801,8 @@ def delivery_schedules(request):
             # df_pending_schedules = pd.DataFrame(pending_schedules, fields)
 
             df = df_completed_schedules.append(df_pending_schedules)
-            df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
+            df = df[['date','transaction','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time',
+            'confirmation_date',  'transport_company','delivery_quantity','amount_for_fuel']]
             filename = f'{request.user.company.name} - Delivery Schedules - {today}.csv'
             df.to_csv(filename, index=None, header=True)
 
