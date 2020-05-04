@@ -51,7 +51,7 @@
 
 <table style="padding-top: 20px; margin-bottom: 30px;">
 
-    <h5 style="color: #007f73;"> Product Details</h5>
+    <caption style="color: #007f73;"> Product Details</caption>
     <tr> 
         <th>Date</th>
         <th>Buyer</th>
@@ -112,30 +112,34 @@
         </td>   
     </tr>
     {%endfor%}
+</table>
 
-    <h5 style="color: #007f73;"> Transporter Details</h5>
+<table style="padding-top: 20px; margin-bottom: 30px;">
 
-    <tr>
-        <th>Transporter</th>
-        <th>Driver Name</th>
-        <th>Id Number</th>
-        <th>Vehicle Reg</th>
-        <th>Driver Phone</th>   
-    </tr>
-    {% for delivery in completed_schedules %}
 
-    <tr>
-        <td>{{ delivery.transport_company }}</td>
-        <td>{{ delivery.driver_name }} </td>
-        <td>{{ delivery.id_number }} </td>
-        <td>{{ delivery.vehicle_reg }} </td>
-        <td>{{ delivery.phone_number }} </td>
-    </tr>
-    {%endfor%}
+        <caption style="color: #007f73;"> Transporter Details</caption>
+
+        <tr>
+            <th>Transporter</th>
+            <th>Driver Name</th>
+            <th>Id Number</th>
+            <th>Vehicle Reg</th>
+            <th>Driver Phone</th>   
+        </tr>
+        {% for delivery in completed_schedules %}
+
+        <tr>
+            <td>{{ delivery.transport_company }}</td>
+            <td>{{ delivery.driver_name }} </td>
+            <td>{{ delivery.id_number }} </td>
+            <td>{{ delivery.vehicle_reg }} </td>
+            <td>{{ delivery.phone_number }} </td>
+        </tr>
+        {%endfor%}
+</table>        
 
  
 
-</table>
 
 {% endif %}
 
