@@ -11,7 +11,7 @@ class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notification_name', blank = True, null= True)
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, blank=True, null=True)
     message = models.CharField(max_length=5000)
-    action = models.CharField(max_length=30, choices=(('REQUEST' , 'REQUEST'), ('OFFER' , 'OFFER'), ('DELVERY','DELVERY'),('ORDER', 'ORDER'), ('D-NOTE', 'D-NOTE'), ('MORE_FUEL', 'MORE_FUEL')))
+    action = models.CharField(max_length=30, choices=(('REQUEST' , 'REQUEST'), ('OFFER' , 'OFFER'),  ('FOR_FUEL' , 'FOR_FUEL'), ('NEW_SUBSIDIARY' , 'NEW_SUBSIDIARY'), ('DELVERY','DELVERY'),('ORDER', 'ORDER'), ('D-NOTE', 'D-NOTE'), ('MORE_FUEL', 'MORE_FUEL')))
     reference_id = models.PositiveIntegerField(default=0)
     is_read = models.BooleanField(default=False) 
     responsible_depot = models.ForeignKey(NoicDepot, on_delete=models.DO_NOTHING, blank=True, null=True)

@@ -43,7 +43,9 @@ urlpatterns = [
     path('client_transaction_history/<int:id>', views.client_transaction_history, name="client_transaction_history"),
     path('supplier_release_note/<int:id>', views.supplier_release_note, name='supplier_release_note'),
     path('hq_notifier/<int:id>', views.hq_notifier, name='hq_notifier'),
-    path('activity/', views.activity, name='activity')
+    path('notication_handler/<int:id>', views.notication_handler, name='notication_handler'),
+    path('activity/', views.activity, name='activity'),
+    path('notication_reader/', views.notication_reader, name='notication_reader')
 
 
 

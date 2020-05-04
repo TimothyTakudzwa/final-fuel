@@ -165,7 +165,7 @@ def decline_company(request, id):
     company_rep = User.objects.filter(company=company).first()
     company.declined = True
     company.save()
-    messages.warning(request, f"Company {company.name} and its rep {company_rep.name} declined.")
+    messages.danger(request, f"Company {company.name} and its rep {company_rep.name} declined.")
     return redirect('buyer:approve_companies')
 """
 
@@ -198,7 +198,7 @@ def token_is_send(request, auth_user):
         messages.success(request, f"{auth_user.first_name}  {auth_user.last_name} has completed first stage of registration successfully.")
         return True
     except Exception:
-        messages.warning(request, f"Could not send registration details, please contact ZFMS")
+        messages.danger(request, f"Could not send registration details, please contact ZFMS")
         return False
         messages.success(request, ('Your profile has been successfully updated.'))
     return render(request, 'buyer/send_email.html')
@@ -287,18 +287,18 @@ def change_password(request):
 
         if authenticate(request, username=request.user.username, password=old):
             if new1 != new2:
-                messages.warning(request, "Passwords don't match.")
+                messages.danger(request, "Passwords don't match.")
                 return redirect('bchange-password')
             elif new1 == old:
-                messages.warning(request, "New password can not be similar to the old one.")
+                messages.danger(request, "New password can not be similar to the old one.")
                 return redirect('bchange-password')
             elif len(new1) < 8:
-                messages.warning(request, "Password is too short.")
+                messages.danger(request, "Password is too short.")
                 return redirect('bchange-password')
             elif new1.isnumeric():
-                messages.warning(request, "Password can not be entirely numeric.")
+                messages.danger(request, "Password can not be entirely numeric.")
             elif not new1.isalnum():
-                messages.warning(request, "Password should be alphanumeric.")
+                messages.danger(request, "Password should be alphanumeric.")
                 return redirect('bchange-password')
             else:
                 current_user = request.user
@@ -309,7 +309,7 @@ def change_password(request):
                 messages.success(request, 'Password has been successfully changed.')
                 return redirect('buyer-profile')
         else:
-            messages.warning(request, 'Wrong old password, please try again.')
+            messages.danger(request, 'Wrong old password, please try again.')
             return redirect('bchange-password')
     return render(request, 'buyer/change_password.html', context=context)
 
@@ -332,7 +332,7 @@ def profile(request):
 
         if authenticate(request, username=request.user.username, password=old):
             if new1 != new2:
-                messages.warning(request, "Passwords don't match.")
+                messages.danger(request, "Passwords don't match.")
                 return redirect('buyer-profile')
             else:
                 current_user = request.user
@@ -343,7 +343,7 @@ def profile(request):
                 messages.success(request, 'Password successfully changed.')
                 return redirect('buyer-profile')
         else:
-            messages.warning(request, 'Wrong old password, please try again.')
+            messages.danger(request, 'Wrong old password, please try again.')
             return redirect('buyer-profile')
 
     context = {
@@ -438,6 +438,8 @@ Landing page
 @login_required
 @user_role
 def dashboard(request):
+    notifications = Notification.objects.filter(company=request.user.company).filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(is_read=False).count()
     updates = []
     branches = DeliveryBranch.objects.filter(company=request.user.company).all()
     if request.user.company.is_govnt_org:
@@ -509,7 +511,7 @@ def dashboard(request):
             messages.success(request, f'Kindly note your request has been made. ')
             message = f'{request.user.first_name} {request.user.last_name} made a request of ' \
                       f'{fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()}'
-            Notification.objects.create(message=message, user=request.user, reference_id=fuel_request_object.id,
+            Notification.objects.create(handler_id=15, message=message, user=request.user, reference_id=fuel_request_object.id,
                                         action="new_request")
             return redirect('buyer-dashboard')
 
@@ -590,7 +592,7 @@ def dashboard(request):
                                   {'form': form, 'updates': updates, 'offer': offer, 'sub': sub, 'branches' : branches})
     else:
         form = FuelRequestForm
-    return render(request, 'buyer/dashboard.html', {'form': form, 'updates': updates, 'branches' : branches})
+    return render(request, 'buyer/dashboard.html', {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'form': form, 'updates': updates, 'branches' : branches})
 
 
 """
@@ -994,7 +996,7 @@ def make_direct_request(request):
             Notification.objects.create(user=supplier, message=message, reference_id=fuel_request_object.id,
                                         action="new_request")
         else:
-            messages.warning(request, f"Supplier not found.")
+            messages.danger(request, f"Supplier not found.")
 
     return redirect('buyer:accounts')
 
@@ -1080,7 +1082,7 @@ def proof_of_payment(request, id):
         transaction = Transaction.objects.filter(id=id).first()
         if transaction is not None:
             if transaction.pending_proof_of_payment == True:
-                messages.warning(request, 'Please wait for the supplier to approve the existing proof of payment.')
+                messages.danger(request, 'Please wait for the supplier to approve the existing proof of payment.')
                 return redirect('buyer-transactions')
             else:
                 account = Account.objects.filter(buyer_company=request.user.company).first()
@@ -1131,7 +1133,7 @@ def download_release_note(request, id):
         response = HttpResponse(document.release_note, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found.')
+        messages.danger(request, 'Document not found.')
         return redirect(f'/buyer:payment_release_notes/{document.transaction.id}')
     return response
 
@@ -1145,7 +1147,7 @@ def download_d_note(request, id):
         response = HttpResponse(document.delivery_note, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found.')
+        messages.danger(request, 'Document not found.')
         return redirect('buyer:activity')
     return response
 
@@ -1159,7 +1161,7 @@ def download_pop(request, id):
         response = HttpResponse(document.proof_of_payment, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found.')
+        messages.danger(request, 'Document not found.')
         response = redirect('buyer-transactions')
     return response    
 
@@ -1309,7 +1311,7 @@ def create_branch(request):
         description = request.POST['description']
         check_name = DeliveryBranch.objects.filter(name=name, company=request.user.company).exists()
         if check_name:
-            messages.warning(request, 'You already have a branch with a similar name.')
+            messages.danger(request, 'You already have a branch with a similar name.')
             return redirect('buyer:delivery-branches')
         else:
             DeliveryBranch.objects.create(name=name, street_name=street_name, street_number=street_number, city=city,
@@ -1340,6 +1342,29 @@ def download_proof(request, id):
         response = HttpResponse(document.proof_of_payment, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.warning(request, 'Document not found.')
+        messages.danger(request, 'Document not found.')
         return redirect('buyer:activity')
     return response
+
+
+def notication_handler(request, id):
+    my_handler = id
+    if my_handler == 10:
+        notifications = Notification.objects.filter(handler_id=my_handler).all()
+        for notification in notifications:
+            notification.is_read = True
+            notification.save()
+        return redirect('buyer:offers')
+    else:
+        notifications = Notification.objects.filter(handler_id=my_handler).all()
+        for notification in notifications:
+            notification.is_read = True
+            notification.save()
+        return redirect('buyer:offers')
+
+def notication_reader(request):
+    notifications = Notification.objects.filter(company=request.user.company).filter(is_read=False).all()
+    for notification in notifications:
+        notification.is_read = True
+        notification.save()
+    return redirect('buyer:dashboard')

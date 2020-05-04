@@ -149,6 +149,8 @@ def allocate(request):
         petrol_rtgs_price = fuel_object.rtgs_petrol_price
         petrol_usd_price = fuel_object.usd_petrol_price
     form1 = DepotContactForm()
+    notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
     depots = NoicDepot.objects.filter(is_active=True).all()
     form1.fields['depot'].choices = [((depot.id, depot.name)) for depot in depots]
     company_capacity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
@@ -184,7 +186,7 @@ def allocate(request):
     else:
         allocations = allocations
     return render(request, 'users/allocate.html',
-                  {'depots': depots, 'form1': form1, 'diesel_rtgs_price': diesel_rtgs_price,
+                  {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'depots': depots, 'form1': form1, 'diesel_rtgs_price': diesel_rtgs_price,
                    'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price,
                    'petrol_usd_price': petrol_usd_price, 'allocates': allocates, 'allocations': allocations,
                    'company_capacity': company_capacity,
@@ -901,6 +903,8 @@ def stations(request):
                                                               limit=2000)
             fuel_update.save()
             messages.success(request, 'Subsidiary created successfully.')
+            message = 'Registering new subsdiary'
+            Notification.objects.create(handler_id=5, message=message, reference_id=subsidiary.id, responsible_subsidiary=subsidiary, action="NEW_SUBSIDIARY")
             return render(request, 'users/service_stations.html',
                           {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo,
                            'zimbabwean_towns': zimbabwean_towns,
@@ -912,6 +916,8 @@ def stations(request):
                                                               limit=2000)
             fuel_update.save()
             messages.success(request, 'Subsidiary created successfully.')
+            message = 'Registering new subsdiary'
+            Notification.objects.create(handler_id=5, message=message, reference_id=subsidiary.id, responsible_subsidiary=subsidiary, action="NEW_SUBSIDIARY")
             return render(request, 'users/service_stations.html',
                           {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo,
                            'zimbabwean_towns': zimbabwean_towns,
@@ -2731,3 +2737,22 @@ def delivery_schedules(request):
 Change Password operation
 '''
 
+
+def notication_handler(request, id):
+    my_handler = id
+    if my_handler == 7:
+        notifications = Notification.objects.filter(handler_id=my_handler).all()
+        for notification in notifications:
+            notification.is_read = True
+            notification.save()
+        return redirect('users:allocate')
+    else:
+        return redirect('users:allocate')
+
+
+def notication_reader(request):
+    notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
+    for notification in notifications:
+        notification.is_read = True
+        notification.save()
+    return redirect('users:allocate')

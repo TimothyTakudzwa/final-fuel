@@ -42,6 +42,8 @@ def dashboard(request):
                         "Hwange", "Juliusdale", "Kadoma", "Kariba", "Karoi", "Kwekwe", "Marondera", "Masvingo",
                         "Chinhoyi", "Mutoko", "Nyanga", "Victoria Falls"]
     companies = Company.objects.filter(company_type='SUPPLIER').all()
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
     for company in companies:
         company.num_of_depots = Subsidiaries.objects.filter(company=company, is_depot='True').count()
         company.num_of_stations = Subsidiaries.objects.filter(company=company, is_depot='False').count()
@@ -76,7 +78,7 @@ def dashboard(request):
             messages.warning(request, 'License number already exists.')
             return redirect('zeraPortal:dashboard')
     return render(request, 'zeraPortal/companies.html',
-                  {'companies': companies, 'administrater': 'hide', 'zimbabwean_towns': zimbabwean_towns})
+                  {'companies': companies, 'administrater': 'hide', 'zimbabwean_towns': zimbabwean_towns, 'notifications': notifications, 'num_of_notifications': num_of_notifications})
 
 
 @login_required()
@@ -1119,3 +1121,23 @@ def change_password(request):
             messages.warning(request, 'Wrong old password, please try again.')
             return redirect('zeraPortal:change-password')
     return render(request, 'zeraPortal/change_password.html', context=context)
+
+
+def notication_handler(request, id):
+    my_handler = id
+    if my_handler == 5:
+        notifications = Notification.objects.filter(handler_id=my_handler).all()
+        for notification in notifications:
+            notification.is_read = True
+            notification.save()
+        return redirect('zeraPortal:dashboard')
+    else:
+        return redirect('zeraPortal:dashboard')
+
+
+def notication_reader(request):
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    for notification in notifications:
+        notification.is_read = True
+        notification.save()
+    return redirect('zeraPortal:dashboard')

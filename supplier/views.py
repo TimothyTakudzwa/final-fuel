@@ -358,6 +358,8 @@ Fuel Requests
 @login_required()
 @user_role
 def fuel_request(request):
+    notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).count()
     sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     requests = []
     complete_requests = []
@@ -451,7 +453,7 @@ def fuel_request(request):
         else:
             buyer_request.price = 0.00
         complete_requests = FuelRequest.objects.filter(is_complete=True).all()
-    return render(request, 'supplier/fuel_request.html', {'requests': requests, 'complete_requests': complete_requests})
+    return render(request, 'supplier/fuel_request.html', {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'requests': requests, 'complete_requests': complete_requests})
 
 
 @login_required()
@@ -608,8 +610,10 @@ def offer(request, id):
 
                     messages.success(request, 'Offer uploaded successfully.')
 
+                    my_company = fuel_request.name.company
+            
                     message = f'You have a new offer of {offer_quantity}L {fuel_request.fuel_type.lower()} at ${offer.price} from {request.user.company.name.title()}  for your request of {fuel_request.amount}L'
-                    Notification.objects.create(message=message, user=fuel_request.name, reference_id=offer.id,
+                    Notification.objects.create(handler_id=10, company=my_company, responsible_subsidiary=subsidiary, message=message, user=fuel_request.name, reference_id=offer.id,
                                                 action="new_offer")
                     click_url = f'https://fuelfinderzim.com/new_fuel_offer/{offer.id}'
                     if offer.request.name.activated_for_whatsapp:
@@ -1408,12 +1412,35 @@ def hq_notifier(request, id):
     depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     if id == 1:
         message = 'Requesting for more USD fuel'
-        Notification.objects.create(message=message, reference_id=id, responsible_subsidiary=depot, action="MORE_FUEL")
+        Notification.objects.create(handler_id=7, message=message, reference_id=id, responsible_subsidiary=depot, action="FOR_FUEL")
     elif id == 2:
         message = 'Requesting for more RTGS fuel'
-        Notification.objects.create(message=message, reference_id=id, responsible_subsidiary=depot, action="MORE_FUEL")
+        Notification.objects.create(handler_id=7, message=message, reference_id=id, responsible_subsidiary=depot, action="FOR_FUEL")
     else:
         message = 'Requesting for more USD & RTGS fuel'
-        Notification.objects.create(message=message, reference_id=id, responsible_subsidiary=depot, action="MORE_FUEL")
+        Notification.objects.create(handler_id=7, message=message, reference_id=id, responsible_subsidiary=depot, action="FOR_FUEL")
     messages.success(request, "Request for more fuel made successfully.")
     return redirect('supplier:available_stock')
+
+
+def notication_handler(request, id):
+    my_handler = id
+    if my_handler == 15:
+        notifications = Notification.objects.filter(handler_id=my_handler).all()
+        for notification in notifications:
+            notification.is_read = True
+            notification.save()
+        return redirect('supplier:fuel_request')
+    else:
+        notifications = Notification.objects.filter(handler_id=my_handler).all()
+        for notification in notifications:
+            notification.is_read = True
+            notification.save()
+        return redirect('supplier:fuel_request')
+
+def notication_reader(request):
+    notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
+    for notification in notifications:
+        notification.is_read = True
+        notification.save()
+    return redirect('supplier:fuel_request')
