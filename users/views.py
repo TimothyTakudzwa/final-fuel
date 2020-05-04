@@ -1428,9 +1428,9 @@ def audit_trail(request):
                         activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
 
             fields = ['date','user', 'service_station__name', 'action', 'reference',]
-            filtered_trails = filtered_trails.values('date','user', 'service_station__name', 'action', 'reference')
-
+            
             if filtered_trails:
+                filtered_trails = filtered_trails.values('date','user', 'service_station__name', 'action', 'reference')
                 df = pd.DataFrame(filtered_trails, columns=fields)
             else:
                 df_current = pd.DataFrame(current_trails.values('date','user', 'service_station__name', 'action', 'reference'), columns=fields)
