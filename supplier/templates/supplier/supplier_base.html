@@ -125,7 +125,7 @@
                                             {% for notication in notifications %}
                                             <li>
                                                 <a href="{% url 'supplier:notication_handler' notication.handler_id %}" class="border-gray notification_item"><i
-                                                        class="fa fa-inbox"></i> New {{notication.action}} - {{notication.company.name} <span
+                                                        class="fa fa-inbox"></i> {{notication.action}} - {{notication.company.name} <span
                                                         class=" label-success label label-default pull-right">View</span></a>
                                             </li>
                                             {% endfor %}
