@@ -438,8 +438,8 @@ Landing page
 @login_required
 @user_role
 def dashboard(request):
-    notifications = Notification.objects.filter(company=request.user.company).filter(is_read=False).all()
-    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(is_read=False).count()
+    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     updates = []
     branches = DeliveryBranch.objects.filter(company=request.user.company).all()
     if request.user.company.is_govnt_org:
@@ -1363,7 +1363,7 @@ def notication_handler(request, id):
         return redirect('buyer:offers')
 
 def notication_reader(request):
-    notifications = Notification.objects.filter(company=request.user.company).filter(is_read=False).all()
+    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
     for notification in notifications:
         notification.is_read = True
         notification.save()
