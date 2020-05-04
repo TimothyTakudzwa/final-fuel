@@ -2627,7 +2627,7 @@ def orders(request):
             
             accepted_orders = accepted_orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
             pending_orders =  pending_orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
-            fields = ['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']
+            fields = ['date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status']
             
             df_accepted_orders = pd.DataFrame(accepted_orders, columns=fields)
             df_pending_orders = pd.DataFrame(pending_orders, columns=fields)
