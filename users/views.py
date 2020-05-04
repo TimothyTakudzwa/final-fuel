@@ -2754,7 +2754,7 @@ def delivery_schedules(request):
                     completed_schedules.append(schedule)
                 else:
                     pending_schedules.append(schedule)
-                    
+
             return render(request, 'users/delivery_schedules.html', {'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules,
             'start_date':start_date, 'end_date':end_date })
 
@@ -2788,8 +2788,8 @@ def delivery_schedules(request):
             # df_completed_schedules = convert_to_dataframe(completed_schedules)
             # df_pending_schedules = convert_to_dataframe(pending_schedules)
 
-            df_completed_schedules = pd.DataFreame(completed_schedules, fields)
-            df_pending_schedules = pd.DataFreame(pending_schedules, fields)
+            df_completed_schedules = pd.DataFrame(completed_schedules, fields)
+            df_pending_schedules = pd.DataFrame(pending_schedules, fields)
 
             df = df_completed_schedules.append(df_pending_schedules)
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
