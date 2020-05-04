@@ -2791,14 +2791,14 @@ def delivery_schedules(request):
                 .company).filter(date__range=[start_date, end_date]).filter(confirmation_date__isnull=True)
 
 
-            fields = ['date','transaction','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time',
-            'confirmation_date',  'transport_company','delivery_quantity','amount_for_fuel']
+            # fields = ['date','transaction','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time',
+            # 'confirmation_date',  'transport_company','delivery_quantity','amount_for_fuel']
 
-            # df_completed_schedules = convert_to_dataframe(completed_schedules)
-            # df_pending_schedules = convert_to_dataframe(pending_schedules)
+            df_completed_schedules = convert_to_dataframe(completed_schedules)
+            df_pending_schedules = convert_to_dataframe(pending_schedules)
 
-            df_completed_schedules = pd.DataFrame(completed_schedules, fields)
-            df_pending_schedules = pd.DataFrame(pending_schedules, fields)
+            # df_completed_schedules = pd.DataFrame(completed_schedules, fields)
+            # df_pending_schedules = pd.DataFrame(pending_schedules, fields)
 
             df = df_completed_schedules.append(df_pending_schedules)
             df = df[['date','transaction','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time',
