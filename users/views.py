@@ -2730,6 +2730,112 @@ def delivery_schedules(request):
         else:
             pending_schedules.append(schedule)
 
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).filter(date__range=[start_date, end_date])
+            completed_schedules = []
+            pending_schedules =[]
+            for schedule in schedules:
+                schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+                    schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+                else:
+                    schedule.delivery_address = schedule.transaction.offer.collection_address
+                if schedule.confirmation_date:
+                    completed_schedules.append(schedule)
+                else:
+                    pending_schedules.append(schedule)
+            
+        return render(request, 'users/delivery_schedules.html', {'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules,
+        'start_date':start_date, 'end_date':end_date })
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).filter(date__range=[start_date, end_date])
+                completed_schedules = []
+                pending_schedules =[]
+                for schedule in schedules:
+                    schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                    if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+                        schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+                    else:
+                        schedule.delivery_address = schedule.transaction.offer.collection_address
+                    if schedule.confirmation_date:
+                        completed_schedules.append(schedule)
+                    else:
+                        pending_schedules.append(schedule)
+
+            fields = ['date','transaction','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time',
+            'confirmation_date',  'transport_company','delivery_quantity','amount_for_fuel']
+
+            # df_completed_schedules = convert_to_dataframe(completed_schedules)
+            # df_pending_schedules = convert_to_dataframe(pending_schedules)
+
+            df_completed_schedules = pd.DataFreame(completed_schedules, fields)
+            df_pending_schedules = pd.DataFreame(pending_schedules, fields)
+
+            df = df_completed_schedules.append(df_pending_schedules)
+            # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
+            filename = f'{request.user.company.name} - Delivery Schedules - {today}.csv'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).filter(date__range=[start_date, end_date])
+                completed_schedules = []
+                pending_schedules =[]
+                for schedule in schedules:
+                    schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                    if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+                        schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+                    else:
+                        schedule.delivery_address = schedule.transaction.offer.collection_address
+                    if schedule.confirmation_date:
+                        completed_schedules.append(schedule)
+                    else:
+                        pending_schedules.append(schedule)  
+            html_string = render_to_string('users/export/export_delivery_schedules.html', {'completed_schedules': completed_schedules,'pending_schedules':pending_schedules,'date':today, 'start_date':start_date, 'end_date':end_date})
+            html = HTML(string=html_string)
+            export_name = f"{request.user.company.name.title()}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} -Orders - {today}.pdf'
+                return response        
+        
+
     return render(request, 'users/delivery_schedules.html', {'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules})
 
 
