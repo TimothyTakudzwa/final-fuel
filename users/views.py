@@ -1429,7 +1429,7 @@ def audit_trail(request):
                 df = df_current.append(df_previous)
 
             df = df[['date','user', 'service_station', 'action', 'reference',]]
-            filename = f'{request.user.company.name} - {date}.csv'
+            filename = f'{request.user.company.name} - {today}.csv'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
