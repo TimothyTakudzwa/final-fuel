@@ -2039,7 +2039,7 @@ def sordactions(request, sid):
 @login_required()
 @user_role
 def sord_station_sales(request):
-    sord_sales = SordSubsidiaryAuditTrail.objects.filter(subsidiary__company=request.user.company).all()
+    sord_sales = SordSubsidiaryAuditTrail.objects.filter(subsidiary__company=request.user.company)
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :
             start_date = request.POST.get('start_date')
