@@ -2714,6 +2714,7 @@ def download_proof(request, id):
     return response
 
 
+@login_required()
 def delivery_schedules(request):
     user_permission(request)
     schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).all()
@@ -2753,9 +2754,9 @@ def delivery_schedules(request):
                     completed_schedules.append(schedule)
                 else:
                     pending_schedules.append(schedule)
-            
-        return render(request, 'users/delivery_schedules.html', {'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules,
-        'start_date':start_date, 'end_date':end_date })
+                    
+            return render(request, 'users/delivery_schedules.html', {'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules,
+            'start_date':start_date, 'end_date':end_date })
 
         if request.POST.get('export_to_csv')=='csv':
             start_date = request.POST.get('csv_start_date')
