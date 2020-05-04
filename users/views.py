@@ -2067,9 +2067,10 @@ def sord_station_sales(request):
             if end_date and start_date:
                 sord_sales = SordSubsidiaryAuditTrail.objects.filter(subsidiary__company=request.user.company, date__range=[start_date, end_date])
 
-            df = convert_to_dataframe(sord_sales)
+            fields = ['date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity', 'received_by']
+            df = pd.DataFrame(sord_sales.values('date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity', 'received_by'),
+            columns=fields)
             filename = 'Supplier Admin Sord Sales Summary.csv'
-            df = df[['date','subsidiary','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity', 'received_by']]
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
