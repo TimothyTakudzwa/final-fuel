@@ -20,7 +20,7 @@
     </div>
     <div class="header-title" style="margin-left: 0px;">
         <h1>Client Applications</h1>
-        <small>Fuel Management System</small>
+        <small>Zimbabwe Fuel Management System</small>
         <ol class="breadcrumb hidden-xs">
             <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
             <li class="active">clients</li>
@@ -254,31 +254,33 @@
                                     
                         
                                         <!--Approve Modal-->
-                                        <div class="modal fade modal-success in" id="approve{{client.id}}" tabindex="-1" role="dialog"
-                                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                        <div class=" modal-dialog" role="document" style="margin: 0;">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <span class="modal-title" id="exampleModalLabel">Approve Account</span>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                            <div class="modal-body">
-                                                    <form method="POST" action="{% url 'users:application-approval' client.id %}" enctype="multipart/form-data">
-                                                        {% csrf_token %}
-                                                        <div class="col-sm-12">
-                                                            <label>Account Number</label>
-                                                            <input type="text" name="account_number" class="form-control"/>
+                                        <div class="modal fade modal-success in" id="approve{{client.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-notice">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                            <span class="modal-title" id="myModalLabel">Approve Account</span>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
                                                         </div>
-                                                       <br>
-                                                      <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Approve"></p>
-                                                      
-                                                    </form>
+                                                        <div class="modal-body">
+                                                            <form  action = "{% url 'users:application-approval' client.id %}" method="POST">
+                                                                {% csrf_token %}
+                                                                <div class="row form-group">
+                                                                    <div class="col-sm-12">
+                                                                        <label>Account Number</label>
+                                                                        <input type="text" name="account_number" class="form-control"/>
+                                                                    </div>
+                                                                </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" name="Approve" class="btn btn-info btn-sm">Submit</button>
+                                                            <button class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                        </form>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
                                     <!--End Approve modal-->
                                         {%endfor%}
                                     </tbody>
