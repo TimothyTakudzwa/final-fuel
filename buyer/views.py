@@ -438,6 +438,8 @@ Landing page
 @login_required
 @user_role
 def dashboard(request):
+    notifications = Notification.objects.filter(company=request.user.company).filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(is_read=False).count()
     updates = []
     branches = DeliveryBranch.objects.filter(company=request.user.company).all()
     if request.user.company.is_govnt_org:
@@ -509,7 +511,7 @@ def dashboard(request):
             messages.success(request, f'Kindly note your request has been made. ')
             message = f'{request.user.first_name} {request.user.last_name} made a request of ' \
                       f'{fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()}'
-            Notification.objects.create(message=message, user=request.user, reference_id=fuel_request_object.id,
+            Notification.objects.create(handler_id=15, message=message, user=request.user, reference_id=fuel_request_object.id,
                                         action="new_request")
             return redirect('buyer-dashboard')
 
@@ -590,7 +592,7 @@ def dashboard(request):
                                   {'form': form, 'updates': updates, 'offer': offer, 'sub': sub, 'branches' : branches})
     else:
         form = FuelRequestForm
-    return render(request, 'buyer/dashboard.html', {'form': form, 'updates': updates, 'branches' : branches})
+    return render(request, 'buyer/dashboard.html', {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'form': form, 'updates': updates, 'branches' : branches})
 
 
 """
@@ -1343,3 +1345,26 @@ def download_proof(request, id):
         messages.danger(request, 'Document not found.')
         return redirect('buyer:activity')
     return response
+
+
+def notication_handler(request, id):
+    my_handler = id
+    if my_handler == 10:
+        notifications = Notification.objects.filter(handler_id=my_handler).all()
+        for notification in notifications:
+            notification.is_read = True
+            notification.save()
+        return redirect('buyer:offers')
+    else:
+        notifications = Notification.objects.filter(handler_id=my_handler).all()
+        for notification in notifications:
+            notification.is_read = True
+            notification.save()
+        return redirect('buyer:offers')
+
+def notication_reader(request):
+    notifications = Notification.objects.filter(company=request.user.company).filter(is_read=False).all()
+    for notification in notifications:
+        notification.is_read = True
+        notification.save()
+    return redirect('buyer:dashboard')
