@@ -511,7 +511,7 @@ def dashboard(request):
             messages.success(request, f'Kindly note your request has been made. ')
             message = f'{request.user.first_name} {request.user.last_name} made a request of ' \
                       f'{fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()}'
-            Notification.objects.create(handler_id=15, message=message, user=request.user, reference_id=fuel_request_object.id,
+            Notification.objects.create(company=request.user.company, handler_id=15, message=message, user=request.user, reference_id=fuel_request_object.id,
                                         action="new_request")
             return redirect('buyer-dashboard')
 
@@ -546,7 +546,7 @@ def dashboard(request):
             messages.success(request, f'Fuel request has been submitted successfully and is now awaiting an offer.')
             message = f'{request.user.first_name} {request.user.last_name} made a request of ' \
                       f'{fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()}'
-            Notification.objects.create(message=message, user=request.user, reference_id=fuel_request_object.id,
+            Notification.objects.create(company=request.user.company, handler_id=15, message=message, user=request.user, reference_id=fuel_request_object.id,
                                         action="new_request")
             return redirect('buyer-dashboard')
 
