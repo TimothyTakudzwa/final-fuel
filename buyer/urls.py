@@ -42,11 +42,11 @@ urlpatterns = [
     path('download_proof/<int:id>', views.download_proof, name='download_proof'),
     path('activate_company/<int:id>', views.activate_company, name='activate_company'),
     path('decline_company/<int:id>', views.decline_company, name='decline_company'),
+    path('notication_handler/<int:id>', views.notication_handler, name='notication_handler'),
     path('company_profile/', views.company_profile, name='company_profile'),
     path('activity/', views.activity, name='activity'),
-    path('approve_companies/', views.approve_companies, name='approve_companies')
-    
-
+    path('approve_companies/', views.approve_companies, name='approve_companies'),
+    path('notication_reader/', views.notication_reader, name='notication_reader')
     
 
 ]
