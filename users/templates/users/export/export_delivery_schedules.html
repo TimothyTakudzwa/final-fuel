@@ -47,11 +47,11 @@
 <h1 style="text-align: center;">Delivery Schedules Statement - {{ date }}</h1>
 
 {% if completed_schedules %}
-<h3 style="padding-top: 20px;">Completed Schedules {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">({{date}})</small>{% endif %}</h3>
+<h3 style="padding-top: 20px;text-align: center;">Completed Schedules {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">({{date}})</small>{% endif %}</h3>
 
 <table style="padding-top: 20px; margin-bottom: 30px;">
 
-    <caption style="color: #007f73;margin-bottom: 10px;"> Product Details</caption>
+    <caption style="color: #007f73;margin-bottom: 20px;"> Product Details</caption>
     <tr> 
         <th>Date</th>
         <th>Buyer</th>
@@ -117,7 +117,7 @@
 <table style="padding-top: 20px; margin-bottom: 30px;">
 
 
-        <caption style="color: #007f73; margin-bottom: 10px;"> Transporter Details</caption>
+        <caption style="color: #007f73; margin-bottom: 20px;"> Transporter Details</caption>
 
         <tr>
             <th>Transporter</th>
