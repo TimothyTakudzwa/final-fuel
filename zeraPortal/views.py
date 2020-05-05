@@ -196,7 +196,7 @@ def noic_fuel(request):
             
             df = pd.DataFrame(depots, columns=fields)
 
-            filename = f'{request.user.company.name} - {date}.csv'
+            filename = f'ZERA NOIC FUEL SUMMARY - {today}.csv'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
