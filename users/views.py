@@ -287,8 +287,7 @@ def allocated_fuel(request, sid):
 
             while proceed:
                 sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company, fuel_type="Petrol",
-                                                                       payment_type=fuel_updated.payment_type,
-                                                                       ~Q(end_quantity=0)).first()
+                                                                       payment_type=fuel_updated.payment_type).filter(~Q(end_quantity=0)).first()
                 if sord_allocation.end_quantity >= amount_cf:
                     sord_allocation.quantity_allocated += amount_cf
                     sord_allocation.end_quantity -= amount_cf
@@ -351,8 +350,7 @@ def allocated_fuel(request, sid):
 
             while proceed:
                 sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company, fuel_type="Diesel",
-                                                                       payment_type=fuel_updated.payment_type,
-                                                                       ~Q(end_quantity=0)).first()
+                                                                       payment_type=fuel_updated.payment_type).filter(~Q(end_quantity=0)).first()
                 if sord_allocation.end_quantity >= amount_cf:
                     sord_allocation.quantity_allocated += amount_cf
                     sord_allocation.end_quantity -= amount_cf
@@ -497,8 +495,7 @@ def allocation_update(request, id):
                 while proceed:
                     sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company,
                                                                            fuel_type="Petrol",
-                                                                           payment_type=fuel_update.payment_type,
-                                                                           ~Q(end_quantity=0)).first()
+                                                                           payment_type=fuel_update.payment_type).filter(~Q(end_quantity=0)).first()
                     if sord_allocation.end_quantity >= amount_cf:
                         sord_allocation.quantity_allocated += amount_cf
                         sord_allocation.end_quantity -= amount_cf
@@ -565,8 +562,7 @@ def allocation_update(request, id):
                 while proceed:
                     sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company,
                                                                            fuel_type="Diesel",
-                                                                           payment_type=fuel_update.payment_type,
-                                                                           ~Q(end_quantity=0)).first()
+                                                                           payment_type=fuel_update.payment_type).filter(~Q(end_quantity=0)).first()
                     if sord_allocation.end_quantity >= amount_cf:
                         sord_allocation.quantity_allocated += amount_cf
                         sord_allocation.end_quantity -= amount_cf
@@ -691,8 +687,7 @@ def allocation_update_main(request, id):
 
                 while proceed:
                     sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company,
-                                                                           fuel_type="Petrol", payment_type="RTGS",
-                                                                           ~Q(end_quantity=0)).first()
+                                                                           fuel_type="Petrol", payment_type="RTGS").filter(~Q(end_quantity=0)).first()
                     if sord_allocation.end_quantity >= amount_cf:
                         sord_allocation.quantity_allocated += amount_cf
                         sord_allocation.end_quantity -= amount_cf
@@ -756,8 +751,7 @@ def allocation_update_main(request, id):
 
                 while proceed:
                     sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company,
-                                                                           fuel_type="Diesel", payment_type="RTGS",
-                                                                           ~Q(end_quantity=0)).first()
+                                                                           fuel_type="Diesel", payment_type="RTGS").filter(~Q(end_quantity=0)).first()
                     if sord_allocation.end_quantity >= amount_cf:
                         sord_allocation.quantity_allocated += amount_cf
                         sord_allocation.end_quantity -= amount_cf
