@@ -16,6 +16,7 @@ import pandas as pd
 from accounts.models import AccountHistory
 from comments.models import Comment
 from company.models import Company
+from notification.models import Notification
 from .models import FuelPrices
 from fuelUpdates.models import SordCompanyAuditTrail
 from fuelfinder.helper_functions import random_password
