@@ -151,7 +151,7 @@ def activity(request):
             'start_date':start_date,'current_activities': current_activities, 'activities':activities, 'end_date':end_date,
             'date':today})
             html = HTML(string=html_string)
-            export_name = f"{request.user.first_name} - {request.user.last_name}"
+            export_name = f"ZERA - {today}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
             download_file = f'media/transactions/{export_name}'
