@@ -121,7 +121,7 @@ def activity(request):
             
             if filtered_activities:
                 filtered_activities = filtered_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id')
-                df = pd.DataFrame(filtered_trails, columns=fields)
+                df = pd.DataFrame(filtered_activities, columns=fields)
             else:
                 df_current = pd.DataFrame(current_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
                 df_previous = pd.DataFrame(activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
