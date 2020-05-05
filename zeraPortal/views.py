@@ -218,14 +218,14 @@ def noic_fuel(request):
                    
             html_string = render_to_string('zeraPortal/export/noic_fuel_export.html', {'depots': depots,'date':today, 'start_date':start_date, 'end_date':end_date})
             html = HTML(string=html_string)
-            export_name = f"{request.user.company.name.title()}"
+            export_name = "ZERA PORTAL"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
             download_file = f'media/transactions/{export_name}'
 
             with open(f'{download_file}.pdf', 'rb') as pdf:
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-                response['Content-Disposition'] = f'attachment;filename={export_name} -Orders - {today}.pdf'
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Noic Fuel Update - {today}.pdf'
                 return response        
     
 
