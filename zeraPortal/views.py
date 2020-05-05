@@ -189,9 +189,9 @@ def noic_fuel(request):
             if end_date and start_date:
                 depots = DepotFuelUpdate.objects.filter(date__range=[start_date, end_date])
                 
-            depots = depots.values('date','noic_depot__name','usd_petrol','usd_petrol_price','usd_diesel','usd_diesel_price',
+            depots = depots.values('date','depot__name','usd_petrol','usd_petrol_price','usd_diesel','usd_diesel_price',
             'rtgs_petrol','rtgs_petrol_price', 'rtgs_diesel', 'rtgs_diesel_price')
-            fields = ['date','noic_depot__name','usd_petrol','usd_petrol_price','usd_diesel','usd_diesel_price',
+            fields = ['date','depot__name','usd_petrol','usd_petrol_price','usd_diesel','usd_diesel_price',
             'rtgs_petrol','rtgs_petrol_price', 'rtgs_diesel', 'rtgs_diesel_price']
             
             df = pd.DataFrame(depots, columns=fields)
