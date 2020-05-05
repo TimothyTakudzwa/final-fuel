@@ -46,7 +46,7 @@
 
 <h1 style="text-align: center;">Activities Statement - {{ date }}</h1>
 
-<!-- {% if not filtered_activities %}
+{% if not filtered_activities %}
     {% if current_activities %}
     <h3 style="padding-top: 20px;">Current Activity  {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">({{date}})</small>{% endif %}</h3>
 
@@ -202,78 +202,7 @@
             <td>{{activity.user.first_name}} {{activity.user.last_name}}</td>
             <td>{{activity.action}}</td>
             <td>{{activity.description}}</td>
-            {% if activity.action == 'Company Registration' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_company{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'Updating Company' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_comp_update{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'Creating Supplier Admin' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_supplieradmin{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'Blocking Company' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_blocked_comp{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'Unblocking Company' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_unblocked_comp{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'Updating Licence' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_updated_licence{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'Cancelling Licence' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_cancelled_sub{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'Unblocking Licence' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_unblockedlicence{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'Approving Subsidiary' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_approve_sub{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
+ 
             
             
             {% endif %}
@@ -283,106 +212,7 @@
 
     </table>
 
-{% endif %} -->
-
-<h3 style="padding-top: 20px;">Filtered Activities : {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">( {{date}} )</small>{% endif %}</h3>
-
-    <table style="padding-top: 20px">
-        <tr>
-            <th>Date</th>
-            <th>Organization</th>
-            <th>User</th>
-            <th>Action</th>
-            <th>Description</th>
-        </tr>
-
-        {% for activity in filtered_activities %}
-        <tr>
-            <td>{{ activity.date }}</td>
-            <td>ZERA</td>
-            <td>{{activity.user.first_name}} {{activity.user.last_name}}</td>
-            <td>{{activity.action}}</td>
-            <td>{{activity.description}}</td>
-            {% if activity.action == 'Company Registration' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_company{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'Updating Company' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_comp_update{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'Creating Supplier Admin' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_supplieradmin{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'Blocking Company' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_blocked_comp{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'Unblocking Company' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_unblocked_comp{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'Updating Licence' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_updated_licence{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'Cancelling Licence' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_cancelled_sub{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'Unblocking Licence' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_unblockedlicence{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            {% elif activity.action == 'Approving Subsidiary' %}
-            <td>
-                <div class="btn-group">
-                    <button  data-toggle="modal"  data-target="#view_approve_sub{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                    </button>
-                </div>
-            </td>
-            
-            
-            {% endif %}
-        </tr>
-        {% endfor %}
-        
-
-    </table>
+{% endif %}
 
 
 
