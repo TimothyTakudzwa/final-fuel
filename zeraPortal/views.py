@@ -161,8 +161,8 @@ def noic_fuel(request):
         noic_usd_petrol += depot.usd_petrol
         noic_rtgs_petrol += depot.rtgs_petrol
     depots.order_by('-date')
-
     
+        
 
     return render(request, 'zeraPortal/noic_fuel.html',
                   {'depots': depots, 'noic_usd_diesel': noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel,
