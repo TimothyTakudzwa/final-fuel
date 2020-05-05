@@ -958,12 +958,12 @@ Direct Request
 
 @login_required()
 @user_role
-def make_direct_request(request):
+def make_direct_request(request, id):
     """
     Function To Make Direct Requests With A Particular Supplier
     """
     if request.method == "POST":
-        supplier = User.objects.filter(company__id=int(request.POST.get('supplier_id'))).first()
+        supplier = User.objects.filter(company__id=id).first()
         if supplier:
             fuel_request_object = FuelRequest.objects.create(
                 name=request.user,
