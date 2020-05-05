@@ -1033,14 +1033,14 @@
                                             <tbody>
                                                 {% for allocation in allocations %}
                                                 <tr>
-                                                        <td>{{allocation.date}} <small>{{allocation.time}}</small></td>
+                                                        <td>{{allocation.date}} <small style="color: lightseagreen;">{{allocation.time}}</small></td>
                                                         <td>{{allocation.quantity|floatformat:2|intcomma}} </td>
                                                         <td>{{allocation.fuel_type}}</td>
                                                         <td>{{allocation.currency}}</td>
                                                         <td>{{allocation.price}}</td>
                                                         <td>{{allocation.allocated_to.name|title}}</td>
                                                         <td>{{allocation.allocated_by.first_name|title}} {{allocation.allocated_by.last_name|title}}</td>
-                                                        <td>{{allocation.noic_depot.name|title}}</td> 
+                                                        <td>{{allocation.assigned_depot.name|title}}</td> 
                                                     
                                                         
                                                     </tr>
