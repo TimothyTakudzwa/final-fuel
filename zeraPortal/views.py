@@ -383,7 +383,7 @@ def company_fuel(request):
                 end_date = datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
             capacities = CompanyFuelUpdate.objects.filter(date__range=[start_date, end_date])
-            return render(request, 'zeraPortal/noic_fuel.html',
+            return render(request, 'zeraPortal/company_fuel.html',
                 {'capacities': capacities,'start_date':start_date, 'end_date':end_date})
         if request.POST.get('export_to_csv')=='csv':
             start_date = request.POST.get('csv_start_date')
