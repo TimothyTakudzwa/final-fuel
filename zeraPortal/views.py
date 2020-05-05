@@ -148,7 +148,8 @@ def activity(request):
                 filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
 
             html_string = render_to_string('zeraPortal/export/activities_export.html', {'filtered_activities': filtered_activities,
-            'start_date':start_date,'current_activities': current_activities, 'activities':activities, 'end_date':end_date})
+            'start_date':start_date,'current_activities': current_activities, 'activities':activities, 'end_date':end_date,
+            'date':date})
             html = HTML(string=html_string)
             export_name = f"{request.user.first_name} - {request.user.last_name}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
@@ -157,7 +158,7 @@ def activity(request):
 
             with open(f'{download_file}.pdf', 'rb') as pdf:
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-                response['Content-Disposition'] = f'attachment;filename={export_name} -Orders - {today}.pdf'
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Activities - {today}.pdf'
                 return response
 
 
