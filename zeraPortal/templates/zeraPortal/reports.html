@@ -1002,34 +1002,45 @@
                                         <table id="allocations" class="table table-striped table-bordered" style="width:100%">
                                             <thead style="color:white; background:lightslategray">
                                                 <th style="color:white;">
-                                                Date
+                                                Date\Time
                                                 </th>
                                                 <th style="color:white;">
-                                                Diesel Quantity (Litres)
+                                                Quantity (Litres)
                                                 </th>
                                                 <th style="color:white;">
-                                                Petrol Quantity (Litres)
+                                                Fuel Type
                                                 </th>
                                                 <th style="color:white;">
-                                                Sub Type
+                                                Currency
                                                 </th>
                                                 <th style="color:white;">
-                                                Petrol Price
+                                                Price ($)
                                                 </th>
                                                 <th style="color:white;">
-                                                Diesel Price
+                                                   Recipient
                                                 </th>
+                                                <th style="color:white;">
+                                                    Allocator
+                                                </th>
+                                                <th style="color:white;">
+                                                    Depot
+                                                </th>
+                                                
+
+
                                                 
                                                     
                                             <tbody>
                                                 {% for allocation in allocations %}
                                                 <tr>
-                                                        <td>{{allocation.date}}</td>
-                                                        <td>{{allocation.petrol_quantity|floatformat:2|intcomma}} l</td>
-                                                        <td>{{allocation.diesel_quantity|floatformat:2|intcomma}} l</td>
-                                                        <td>{{allocation.sub_type}}</td>
-                                                        <td>$ {{allocation.petrol_price}}</td>
-                                                        <td>$ {{allocation.diesel_price}}</td>
+                                                        <td>{{allocation.date}} <small style="color: lightseagreen;">{{allocation.time}}</small></td>
+                                                        <td>{{allocation.quantity|floatformat:2|intcomma}} </td>
+                                                        <td>{{allocation.fuel_type}}</td>
+                                                        <td>{{allocation.currency}}</td>
+                                                        <td>{{allocation.price}}</td>
+                                                        <td>{{allocation.allocated_to.name|title}}</td>
+                                                        <td>{{allocation.allocated_by.first_name|title}} {{allocation.allocated_by.last_name|title}}</td>
+                                                        <td>{{allocation.assigned_depot.name|title}}</td> 
                                                     
                                                         
                                                     </tr>

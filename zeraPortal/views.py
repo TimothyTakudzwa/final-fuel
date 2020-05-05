@@ -804,7 +804,7 @@ def report_generator(request):
             verified_companies = None
         if request.POST.get('report_type') == 'Allocations':
             print("__________________________I am in allocations____________________________")
-            allocations = FuelAllocation.objects.all()
+            allocations = SordNationalAuditTrail.objects.all()
             print(f'________________________________{allocations}__________________________')
             requests = None
             revs = None

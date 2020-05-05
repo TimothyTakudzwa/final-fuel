@@ -1318,7 +1318,7 @@ def report_generator(request):
             stock = None
             revs = None
         if request.POST.get('report_type') == 'Allocations':
-            allocations = FuelAllocation.objects.all()
+            allocations = SordCompanyAuditTrail.objects.filter(company=request.user.company, date__range=[start_date, end_date])
             requests = None
             revs = None
             stock = None

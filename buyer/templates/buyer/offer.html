@@ -108,7 +108,7 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             {% if offer.account and offer.account.is_verified %}
-                <div class="modal-body">
+                <div class="modal-body" style="max-height: 500px;overflow-y: auto;">
                     <h4 style="color: #374767">By clicking <strong>YES</strong> you are confirming to accepting an offer from {{offer.supplier.company}}, 
                     {{offer.depot_name}} Depot
                     </h4>
@@ -138,7 +138,7 @@
             </div>
 
             {% else %}
-            <div class="modal-body">
+            <div class="modal-body" style="max-height: 520px;overflow-y: auto;">
                 <div class="">
                     <div class="">
                         <div style="padding: 28px;background-color: mintcream;">
