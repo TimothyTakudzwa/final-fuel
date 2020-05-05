@@ -85,8 +85,82 @@ def dashboard(request):
 @login_required()
 @user_role
 def activity(request):
+    filtered_activities = None
     activities = Activity.objects.exclude(date=today).filter(user=request.user)
     current_activities = Activity.objects.filter(date=today).filter(user=request.user)
+
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            filtered = True;
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            
+            filtered_activities = Activity.objects.filter(user=request.user).filter(date__date__range=[start_date, end_date])
+            return render(request, 'zeraPortal/activity.html', {'filtered_activities':filtered_activities,'today':today, 'start_date': start_date
+            , 'end_date':end_date})
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                filtered_activities = Activity.objects.filter(user=request.user).filter(date__date__range=[start_date, end_date])
+                      
+            fields = ['date','time', 'company__name', 'action', 'description', 'reference_id']
+            
+            if filtered_activities:
+                filtered_activities = filtered_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id')
+                df = pd.DataFrame(filtered_trails, columns=fields)
+            else:
+                df_current = pd.DataFrame(current_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+                df_previous = pd.DataFrame(activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+                df = df_current.append(df_previous)
+
+            filename = f'{request.user.first_name} - {request.user.last_name} - {today}.csv'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                filtered_activities = Activity.objects.filter(user=request.user).filter(date__date__range=[start_date, end_date])
+
+            html_string = render_to_string('zeraPortal/export/activities_export.html', {'filtered_activities': filtered_activities,
+            'start_date':start_date,'current_activities': current_activities, 'activities':activities, 'end_date':end_date})
+            html = HTML(string=html_string)
+            export_name = f"{request.user.first_name} - {request.user.last_name}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} -Orders - {today}.pdf'
+                return response
+
+
     return render(request, 'zeraPortal/activity.html', {'activities': activities, 'current_activities': current_activities})
 
 
