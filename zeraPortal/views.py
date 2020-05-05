@@ -101,7 +101,7 @@ def activity(request):
                 end_date = datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
             
-            filtered_activities = Activity.objects.filter(user=request.user).filter(date__date__range=[start_date, end_date])
+            filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
             return render(request, 'zeraPortal/activity.html', {'filtered_activities':filtered_activities,'today':today, 'start_date': start_date
             , 'end_date':end_date})
 
@@ -115,7 +115,7 @@ def activity(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                filtered_activities = Activity.objects.filter(user=request.user).filter(date__date__range=[start_date, end_date])
+                filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
                       
             fields = ['date','time', 'company__name', 'action', 'description', 'reference_id']
             
@@ -145,7 +145,7 @@ def activity(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                filtered_activities = Activity.objects.filter(user=request.user).filter(date__date__range=[start_date, end_date])
+                filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
 
             html_string = render_to_string('zeraPortal/export/activities_export.html', {'filtered_activities': filtered_activities,
             'start_date':start_date,'current_activities': current_activities, 'activities':activities, 'end_date':end_date})
