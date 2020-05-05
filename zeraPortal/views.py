@@ -160,7 +160,74 @@ def noic_fuel(request):
         noic_rtgs_diesel += depot.rtgs_diesel
         noic_usd_petrol += depot.usd_petrol
         noic_rtgs_petrol += depot.rtgs_petrol
-    depots.order_by('-date')    
+    depots.order_by('-date')
+
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            depots = DepotFuelUpdate.objects.filter(date__range=[start_date, end_date])
+            return render(request, 'zeraPortal/noic_fuel.html',
+                  {'depots': depots, 'noic_usd_diesel': noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel,
+                   'noic_usd_petrol': noic_usd_petrol, 'noic_rtgs_petrol': noic_rtgs_petrol,
+                   'start_date':start_date, 'end_date':end_date})
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                depots = DepotFuelUpdate.objects.filter(date__range=[start_date, end_date])
+                
+            depots = depots.values('date','noic_depot__name','usd_petrol','usd_petrol_price','usd_diesel','usd_diesel_price',
+            'rtgs_petrol','rtgs_petrol_price', 'rtgs_diesel', 'rtgs_diesel_price')
+            fields = ['date','noic_depot__name','usd_petrol','usd_petrol_price','usd_diesel','usd_diesel_price',
+            'rtgs_petrol','rtgs_petrol_price', 'rtgs_diesel', 'rtgs_diesel_price']
+            
+            df = pd.DataFrame(depots, columns=fields)
+
+            filename = f'{request.user.company.name} - {date}.csv'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                depots = DepotFuelUpdate.objects.filter(date__range=[start_date, end_date])
+                   
+            html_string = render_to_string('zeraPortal/export/noic_fuel_export.html', {'depots': depots,'date':today, 'start_date':start_date, 'end_date':end_date})
+            html = HTML(string=html_string)
+            export_name = f"{request.user.company.name.title()}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} -Orders - {today}.pdf'
+                return response        
+    
 
     return render(request, 'zeraPortal/noic_fuel.html',
                   {'depots': depots, 'noic_usd_diesel': noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel,
