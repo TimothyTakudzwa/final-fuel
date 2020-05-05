@@ -1427,14 +1427,16 @@ def audit_trail(request):
                     elif activity.reference == 'dfuel quantity updates':
                         activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
 
+            fields = ['date','user', 'service_station__name', 'action', 'reference',]
+            
             if filtered_trails:
-                df = convert_to_dataframe(filtered_trails)
+                filtered_trails = filtered_trails.values('date','user', 'service_station__name', 'action', 'reference')
+                df = pd.DataFrame(filtered_trails, columns=fields)
             else:
-                df_current = convert_to_dataframe(current_trails)
-                df_previous = convert_to_dataframe(trails)
+                df_current = pd.DataFrame(current_trails.values('date','user', 'service_station__name', 'action', 'reference'), columns=fields)
+                df_previous = pd.DataFrame(trails.values('date','user', 'service_station__name', 'action', 'reference'), columns=fields)
                 df = df_current.append(df_previous)
 
-            df = df[['date','user', 'service_station', 'action', 'reference',]]
             filename = f'{request.user.company.name} - {today}.csv'
             df.to_csv(filename, index=None, header=True)
 
@@ -2039,7 +2041,7 @@ def sordactions(request, sid):
 @login_required()
 @user_role
 def sord_station_sales(request):
-    sord_sales = SordSubsidiaryAuditTrail.objects.filter(subsidiary__company=request.user.company).all()
+    sord_sales = SordSubsidiaryAuditTrail.objects.filter(subsidiary__company=request.user.company)
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :
             start_date = request.POST.get('start_date')
@@ -2065,9 +2067,10 @@ def sord_station_sales(request):
             if end_date and start_date:
                 sord_sales = SordSubsidiaryAuditTrail.objects.filter(subsidiary__company=request.user.company, date__range=[start_date, end_date])
 
-            df = convert_to_dataframe(sord_sales)
+            fields = ['date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity', 'received_by']
+            df = pd.DataFrame(sord_sales.values('date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity', 'received_by'),
+            columns=fields)
             filename = 'Supplier Admin Sord Sales Summary.csv'
-            df = df[['date','subsidiary','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity', 'received_by']]
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
@@ -2624,11 +2627,28 @@ def orders(request):
             if end_date and start_date:
                 accepted_orders = Order.objects.filter(company=request.user.company).filter(~Q(status='Pending')).filter(date__range=[start_date, end_date])
                 pending_orders = Order.objects.filter(company=request.user.company).filter(status='Pending').filter(date__range=[start_date, end_date])
-            df_accepted_orders = convert_to_dataframe(accepted_orders)
-            df_pending_orders = convert_to_dataframe(pending_orders)
+            
+            accepted_orders = accepted_orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
+            pending_orders =  pending_orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
+            fields = ['date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status']
+            
+            df_accepted_orders = pd.DataFrame(accepted_orders, columns=fields)
+            df_pending_orders = pd.DataFrame(pending_orders, columns=fields)
+
+            # df_accepted_orders.noic_depot  = df_accepted_orders.noic_depot.astype(str)  
+            
+            # for i, row in df_accepted_orders.iterrows():
+            #     df_accepted_orders.at[i,'noic_depot'] = NoicDepot.objects.filter(id=int(df_accepted_orders.at[i,'noic_depot'])).first().name
+
+            # df_pending_orders = convert_to_dataframe(pending_orders)
+            # df_pending_orders.noic_depot  = df_pending_orders.noic_depot.astype(str)  
+
+            # for i, row in df_pending_orders.iterrows():
+            #     df_pending_orders.at[i,'noic_depot'] = NoicDepot.objects.filter(id=int(df_pending_orders.at[i,'noic_depot'])).first().name
             
             df = df_accepted_orders.append(df_pending_orders)
-            df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
+
+            # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = f'{request.user.company.name} - {date}.csv'
             df.to_csv(filename, index=None, header=True)
 
@@ -2714,21 +2734,26 @@ def download_proof(request, id):
     return response
 
 
+@login_required()
 def delivery_schedules(request):
     user_permission(request)
-    schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).all()
-    completed_schedules = []
-    pending_schedules =[]
-    for schedule in schedules:
-        schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
-        if schedule.transaction.offer.delivery_method.lower() == 'delivery':
-            schedule.delivery_address = schedule.transaction.offer.request.delivery_address
-        else:
-            schedule.delivery_address = schedule.transaction.offer.collection_address
-        if schedule.confirmation_date:
-            completed_schedules.append(schedule)
-        else:
-            pending_schedules.append(schedule)
+    # schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).all()
+    # completed_schedules = []
+    # pending_schedules =[]
+    # for schedule in schedules:
+    #     schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+    #     if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+    #         schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+    #     else:
+    #         schedule.delivery_address = schedule.transaction.offer.collection_address
+    #     if schedule.confirmation_date:
+    #         completed_schedules.append(schedule)
+    #     else:
+    #         pending_schedules.append(schedule) 
+    completed_schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user
+    .company).filter(confirmation_date__isnull=False)
+    pending_schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user
+    .company).filter(confirmation_date__isnull=True)
 
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :
@@ -2753,9 +2778,9 @@ def delivery_schedules(request):
                     completed_schedules.append(schedule)
                 else:
                     pending_schedules.append(schedule)
-            
-        return render(request, 'users/delivery_schedules.html', {'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules,
-        'start_date':start_date, 'end_date':end_date })
+
+            return render(request, 'users/delivery_schedules.html', {'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules,
+            'start_date':start_date, 'end_date':end_date })
 
         if request.POST.get('export_to_csv')=='csv':
             start_date = request.POST.get('csv_start_date')
@@ -2767,31 +2792,37 @@ def delivery_schedules(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).filter(date__range=[start_date, end_date])
-                completed_schedules = []
-                pending_schedules =[]
-                for schedule in schedules:
-                    schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
-                    if schedule.transaction.offer.delivery_method.lower() == 'delivery':
-                        schedule.delivery_address = schedule.transaction.offer.request.delivery_address
-                    else:
-                        schedule.delivery_address = schedule.transaction.offer.collection_address
-                    if schedule.confirmation_date:
-                        completed_schedules.append(schedule)
-                    else:
-                        pending_schedules.append(schedule)
+                # schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).filter(date__range=[start_date, end_date])
+                # completed_schedules = []
+                # pending_schedules =[]
+                # for schedule in schedules:
+                #     schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                #     if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+                #         schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+                #     else:
+                #         schedule.delivery_address = schedule.transaction.offer.collection_address
+                #     if schedule.confirmation_date:
+                #         completed_schedules.append(schedule)
+                #     else:
+                #         pending_schedules.append(schedule)
+                completed_schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user
+                .company).filter(date__range=[start_date, end_date]).filter(confirmation_date__isnull=False)
+                pending_schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user
+                .company).filter(date__range=[start_date, end_date]).filter(confirmation_date__isnull=True)
 
-            fields = ['date','transaction','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time',
-            'confirmation_date',  'transport_company','delivery_quantity','amount_for_fuel']
 
-            # df_completed_schedules = convert_to_dataframe(completed_schedules)
-            # df_pending_schedules = convert_to_dataframe(pending_schedules)
+            # fields = ['date','transaction','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time',
+            # 'confirmation_date',  'transport_company','delivery_quantity','amount_for_fuel']
 
-            df_completed_schedules = pd.DataFreame(completed_schedules, fields)
-            df_pending_schedules = pd.DataFreame(pending_schedules, fields)
+            df_completed_schedules = convert_to_dataframe(completed_schedules)
+            df_pending_schedules = convert_to_dataframe(pending_schedules)
+
+            # df_completed_schedules = pd.DataFrame(completed_schedules, fields)
+            # df_pending_schedules = pd.DataFrame(pending_schedules, fields)
 
             df = df_completed_schedules.append(df_pending_schedules)
-            # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
+            df = df[['date','transaction','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time',
+            'confirmation_date',  'transport_company','delivery_quantity','amount_for_fuel']]
             filename = f'{request.user.company.name} - Delivery Schedules - {today}.csv'
             df.to_csv(filename, index=None, header=True)
 
