@@ -371,7 +371,71 @@ def company_fuel(request):
 
         # fuel.diesel_capacity = '{:,}'.format(fuel.diesel_capacity)
         # fuel.petrol_capacity = '{:,}'.format(fuel.petrol_capacity)
-    # capacities = capacities.order_by('-date')  
+    # capacities = capacities.order_by('-date')
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            capacities = CompanyFuelUpdate.objectsfilter(date__range=[start_date, end_date])
+            return render(request, 'zeraPortal/noic_fuel.html',
+                {'capacities': capacities,'start_date':start_date, 'end_date':end_date})
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                capacities = CompanyFuelUpdate.objects.filter(date__range=[start_date, end_date])
+                
+            capacities = capacities.values('date','company__name','allocated_petrol','allocated_diesel','unallocated_petrol','unallocated_diesel',
+            'usd_diesel_price','usd_petrol_price', 'diesel_price', 'petrol_price')
+            fields = ['date','company__name','allocated_petrol','allocated_diesel','unallocated_petrol','unallocated_diesel',
+            'usd_diesel_price','usd_petrol_price', 'diesel_price', 'petrol_price']
+            
+            df = pd.DataFrame(capacities, columns=fields)
+
+            filename = f'ZERA COMPANY FUEL SUMMARY - {today}.csv'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                capacities = CompanyFuelUpdate.objects.filter(date__range=[start_date, end_date])
+                   
+            html_string = render_to_string('zeraPortal/export/company_fuel_export.html', {'capacities': capacities,'date':today, 'start_date':start_date, 'end_date':end_date})
+            html = HTML(string=html_string)
+            export_name = "ZERA PORTAL"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Noic Fuel Update - {today}.pdf'
+                return response        
+      
       
 
     return render(request, 'zeraPortal/company_fuel.html', {'capacities': capacities})
