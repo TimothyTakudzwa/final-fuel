@@ -436,6 +436,17 @@ def company_fuel(request):
                 end_date = end_date.date()
             if end_date and start_date:
                 capacities = CompanyFuelUpdate.objects.filter(date__range=[start_date, end_date])
+
+                for fuel in capacities:
+                    subs_total_diesel_capacity = 0
+                    subs_total_petrol_capacity = 0
+                    subsidiaries_fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary__company=fuel.company).all()
+                    for sub_fuel in subsidiaries_fuel:
+                        subs_total_diesel_capacity += sub_fuel.diesel_quantity
+                        subs_total_petrol_capacity += sub_fuel.petrol_quantity
+
+                    fuel.diesel_capacity = fuel.unallocated_diesel + subs_total_diesel_capacity
+                    fuel.petrol_capacity = fuel.unallocated_petrol + subs_total_petrol_capacity
                    
             html_string = render_to_string('zeraPortal/export/company_fuel_export.html', {'capacities': capacities,'date':today, 'start_date':start_date, 'end_date':end_date})
             html = HTML(string=html_string)
