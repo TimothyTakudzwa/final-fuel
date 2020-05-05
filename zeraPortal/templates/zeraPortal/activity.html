@@ -1765,7 +1765,27 @@
         $('body').click(function (event) {
             if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
                 $("#state_modal").modal('hide');
-            }        
+            }
+            if(!$(event.target).closest("#view_company{{activity.id}}").length && !$(event.target).is("#view_company{{activity.id}}")) {
+                $("#view_company{{activity.id}}").modal('hide');
+            } if(!$(event.target).closest("#view_comp_update{{activity.id}}").length && !$(event.target).is("#view_comp_update{{activity.id}}")) {
+                $("#view_comp_update{{activity.id}}").modal('hide');
+            } if(!$(event.target).closest("#view_supplieradmin{{activity.id}}").length && !$(event.target).is("#view_supplieradmin{{activity.id}}")) {
+                $("#view_supplieradmin{{activity.id}}").modal('hide');
+            } if(!$(event.target).closest("#view_blocked_comp{{activity.id}}").length && !$(event.target).is("#view_blocked_comp{{activity.id}}")) {
+                $("#view_blocked_comp{{activity.id}}").modal('hide');
+            }if(!$(event.target).closest("#view_unblocked_comp{{activity.id}}").length && !$(event.target).is("#view_unblocked_comp{{activity.id}}")) {
+                $("#view_unblocked_comp{{activity.id}}").modal('hide');
+            }if(!$(event.target).closest("#view_cancelled_sub{{activity.id}}").length && !$(event.target).is("#view_cancelled_sub{{activity.id}}")) {
+                $("#view_cancelled_sub{{activity.id}}").modal('hide');
+            }if(!$(event.target).closest("#view_unblockedlicence{{activity.id}}").length && !$(event.target).is("#view_unblockedlicence{{activity.id}}")) {
+                $("#view_unblockedlicence{{activity.id}}").modal('hide');
+            }if(!$(event.target).closest("#view_approve_sub{{activity.id}}").length && !$(event.target).is("#view_approve_sub{{activity.id}}")) {
+                $("#view_approve_sub{{activity.id}}").modal('hide');
+            }if(!$(event.target).closest("#view_updated_licence{{activity.id}}").length && !$(event.target).is('#view_updated_licence{{activity.id}}')) {
+                $("#view_updated_licence{{activity.id}}").modal('hide');
+            }
+                     
         });
     </script>
 
