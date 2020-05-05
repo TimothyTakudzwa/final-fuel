@@ -660,7 +660,7 @@
                             </div>
                             <div class="tab-pane fade" id="tab2">
                                 <div class="panel-body">
-                                    <table id="depots" class="table table-striped table-bordered" style="width:100%">
+                                    <table id="payments" class="table table-striped table-bordered" style="width:100%">
                                         <thead style="background-color: lightslategray; color:white;">
                                         <tr>
                                             <th style="color: white;">Date</th>
@@ -1236,7 +1236,7 @@
             <div class="panel-body">
     
                 <div class="table-responsive">
-                    <table id="sord_station_sales" class="table table-striped table-bordered" style="width:100%">
+                    <table id="payments" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr>
                                 <th style="color: white;">Date</th>
@@ -1660,5 +1660,14 @@
         </div>
     </section>
     {% endif %}
+
+
+    <script>
+        $('body').click(function (event) {
+            if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
+                $("state_modal").modal('hide');
+            }        
+        });
+    </script>
 
 {%endblock%}
