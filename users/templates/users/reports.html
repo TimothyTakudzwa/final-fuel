@@ -755,19 +755,22 @@
                                                 Date
                                                 </th>
                                                 <th style="color:white;">
-                                                Diesel Quantity (Litres)
+                                                SORD
                                                 </th>
                                                 <th style="color:white;">
-                                                Petrol Quantity (Litres)
+                                                Quantity (Litres)
                                                 </th>
                                                 <th style="color:white;">
-                                                Sub Type
+                                                Fuel Type
                                                 </th>
                                                 <th style="color:white;">
-                                                Petrol Price
+                                                Currency
                                                 </th>
                                                 <th style="color:white;">
-                                                Diesel Price
+                                                Recipient
+                                                </th>
+                                                <th style="color:white;">
+                                                Allocator
                                                 </th>
                                                 
                                                     
@@ -775,11 +778,15 @@
                                                 {% for allocation in allocations %}
                                                 <tr>
                                                         <td>{{allocation.date}}</td>
-                                                        <td>{{allocation.petrol_quantity|floatformat:2|intcomma}} l</td>
-                                                        <td>{{allocation.diesel_quantity|floatformat:2|intcomma}} l</td>
-                                                        <td>{{allocation.sub_type}}</td>
-                                                        <td>$ {{allocation.petrol_price}}</td>
-                                                        <td>$ {{allocation.diesel_price}}</td>
+                                                        <td>{{allocation.sord_no}}</td>
+                                                        <td>{{allocation.quantity_allocated|floatformat:2|intcomma}} l</td>
+                                                        <td>{{allocation.fuel_type}}</td>
+                                                        <td>{{allocation.payment_type}}</td>
+                                                        <td>{{allocation.allocated_to.name}}</td>
+                                                        <td>{{allocation.allocated_by.first_name|title}}
+                                                            {{allocation.allocated_by.last_name|title}}
+                                                        </td>
+
                                                     
                                                         
                                                     </tr>
