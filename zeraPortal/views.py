@@ -127,7 +127,7 @@ def activity(request):
                 df_previous = pd.DataFrame(activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
                 df = df_current.append(df_previous)
 
-            filename = f'{request.user.first_name} - {request.user.last_name} - {today}.csv'
+            filename = f'ZERA - {today}.csv'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
