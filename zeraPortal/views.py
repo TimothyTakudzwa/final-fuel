@@ -149,7 +149,7 @@ def activity(request):
 
             html_string = render_to_string('zeraPortal/export/activities_export.html', {'filtered_activities': filtered_activities,
             'start_date':start_date,'current_activities': current_activities, 'activities':activities, 'end_date':end_date,
-            'date':date})
+            'date':today})
             html = HTML(string=html_string)
             export_name = f"{request.user.first_name} - {request.user.last_name}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
