@@ -29,7 +29,7 @@
 <!-- Main content -->
 
 <div class="modal fade modal-success in" id="state_modal" role="dialog">
-    <div class="modal-dialog" style="margin: 0;">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title" style="color:whitesmoke"> Filter By State</span>
@@ -101,7 +101,7 @@
                             var today = new Date();
                             var filename = 'Supplier Admin Allocations Summary' + ' - ' +today.toLocaleString() + '.csv'
                         </script>
-                        <button  class="btn btn-labeled btn-default btn-sm" style="background-color: #cfd4ce; color: #333; margin-right: 10px;" type="submit" {% if not depot %} disabled{% endif %}
+                        <button  class="btn btn-labeled btn-default btn-sm" style="background-color: #cfd4ce; color: #333; margin-right: 10px;" type="submit" {% if not depots %} disabled{% endif %}
                         title="{% if depots  %} Export To CSV {%else%} No Data To Export {% endif %}">
                             <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>CSV
                         </button>
