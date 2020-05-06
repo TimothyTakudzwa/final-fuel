@@ -546,13 +546,20 @@
 
                         </tr>
                         <script>
+                            
                             $('body').click(function (event) {
                                 if(!$(event.target).closest('#viewBank{{transaction.id}}').length && !$(event.target).is('#viewBank{{transaction.id}}')) {
                                     $("#viewBank{{transaction.id}}").modal('hide');
                                 }
                                 if(!$(event.target).closest('#review_{{transaction.id}}').length && !$(event.target).is('#review_{{transaction.id}}')) {
                                     $("#review_{{transaction.id}}").modal('hide');
-                                }      
+                                }
+                                if(!$(event.target).closest('#activity{{ transaction.id }}').length && !$(event.target).is('#activity{{ transaction.id }}')) {
+                                    $("#activity{{ transaction.id }}").modal('hide');
+                                } 
+                                if(!$(event.target).closest('#proof_{{transaction.id}}').length && !$(event.target).is('#proof_{{transaction.id}}')) {
+                                    $("#proof_{{transaction.id}}").modal('hide');
+                                }         
                             });
                         </script>
                     {%endfor%}
@@ -953,7 +960,10 @@
                                                 {% csrf_token %}
                                                 <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="proof_of_payment" class="form-control-file" id="exampleFormControlFile1" required>
                                                 <br>
-                                                <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+                                                <div class="modal-footer">  
+                                                    <button type="submit" class="btn btn-primary ">Submit</button>
+                                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                </div> 
 
                                             </form>
                                         </div>
@@ -967,13 +977,20 @@
                         </tr>
 
                         <script>
+                            
                             $('body').click(function (event) {
                                 if(!$(event.target).closest('#viewBank{{transaction.id}}').length && !$(event.target).is('#viewBank{{transaction.id}}')) {
                                     $("#viewBank{{transaction.id}}").modal('hide');
                                 }
                                 if(!$(event.target).closest('#review_{{transaction.id}}').length && !$(event.target).is('#review_{{transaction.id}}')) {
                                     $("#review_{{transaction.id}}").modal('hide');
-                                }      
+                                }
+                                if(!$(event.target).closest('#activity{{ transaction.id }}').length && !$(event.target).is('#activity{{ transaction.id }}')) {
+                                    $("#activity{{ transaction.id }}").modal('hide');
+                                }
+                                if(!$(event.target).closest('#expected{{transaction.id}}').length && !$(event.target).is('#expected{{transaction.id}}')) {
+                                    $("#expected{{transaction.id}}").modal('hide');
+                                }           
                             });
                         </script>
                     {%endfor%}
