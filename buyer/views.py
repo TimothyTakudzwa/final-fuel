@@ -423,28 +423,17 @@ def fuel_request(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                accepted_orders = Order.objects.filter(company=request.user.company).filter(~Q(status='Pending')).filter(date__range=[start_date, end_date])
-                pending_orders = Order.objects.filter(company=request.user.company).filter(status='Pending').filter(date__range=[start_date, end_date])
+                fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).filter(date__range=[start_date, end_date])
+                complete_requests = FuelRequest.objects.filter(name=user_logged, is_complete=True).filter(date__range=[start_date, end_date])
             
-            accepted_orders = accepted_orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
-            pending_orders =  pending_orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
-            fields = ['date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status']
+            fuel_requests = fuel_requests.values('date','delivery_method','payment_method','fuel_type', 'amount')
+            complete_requests =  complete_requests.values('date','delivery_method','payment_method','fuel_type', 'amount')
+            fields = ['date','delivery_method','payment_method','fuel_type', 'amount']
             
-            df_accepted_orders = pd.DataFrame(accepted_orders, columns=fields)
-            df_pending_orders = pd.DataFrame(pending_orders, columns=fields)
+            df_fuel_requests = pd.DataFrame(fuel_requests, columns=fields)
+            df_complete_requests = pd.DataFrame(complete_requests, columns=fields)
 
-            # df_accepted_orders.noic_depot  = df_accepted_orders.noic_depot.astype(str)  
-            
-            # for i, row in df_accepted_orders.iterrows():
-            #     df_accepted_orders.at[i,'noic_depot'] = NoicDepot.objects.filter(id=int(df_accepted_orders.at[i,'noic_depot'])).first().name
-
-            # df_pending_orders = convert_to_dataframe(pending_orders)
-            # df_pending_orders.noic_depot  = df_pending_orders.noic_depot.astype(str)  
-
-            # for i, row in df_pending_orders.iterrows():
-            #     df_pending_orders.at[i,'noic_depot'] = NoicDepot.objects.filter(id=int(df_pending_orders.at[i,'noic_depot'])).first().name
-            
-            df = df_accepted_orders.append(df_pending_orders)
+            df = df_fuel_requests.append(df_complete_requests)
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = f'{request.user.company.name} - {date}.csv'
@@ -452,7 +441,7 @@ def fuel_request(request):
 
             with open(filename, 'rb') as csv_name:
                 response = HttpResponse(csv_name.read())
-                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                response['Content-Disposition'] = f'attachment;filename={filename} - Requests - {today}.csv'
                 return response     
 
         else:
@@ -465,9 +454,18 @@ def fuel_request(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                accepted_orders = Order.objects.filter(company=request.user.company).filter(~Q(status='Pending')).filter(date__range=[start_date, end_date])
-                pending_orders = Order.objects.filter(company=request.user.company).filter(status='Pending').filter(date__range=[start_date, end_date])   
-            html_string = render_to_string('users/export/export_orders.html', {'accepted_orders': accepted_orders,'pending_orders':pending_orders,'date':today, 'start_date':start_date, 'end_date':end_date})
+                fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).filter(date__range=[start_date, end_date])
+                complete_requests = FuelRequest.objects.filter(name=user_logged, is_complete=True).filter(date__range=[start_date, end_date]) 
+
+            context = {
+                'fuel_requests': fuel_requests,
+                'complete_requests': complete_requests,
+                'start_date': start_date,
+                'date': today,
+                'end_date': end_date
+            }    
+
+            html_string = render_to_string('buyer/export/export_requests.html', context=context)
             html = HTML(string=html_string)
             export_name = f"{request.user.company.name.title()}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
