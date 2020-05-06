@@ -954,6 +954,7 @@ def transactions(request):
                 'incomplete_transactions': in_complete_trans.order_by('-date', '-time'),
                 'subsidiary': Subsidiaries.objects.filter(),
                 'all_transactions': AccountHistory.objects.filter().order_by('-date', '-time')
+                'date': today
             }
 
             html_string = render_to_string('buyer/export/export_transactions.html', context=context)
