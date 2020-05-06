@@ -873,7 +873,7 @@ def transactions(request):
                 'transactions': complete_trans.order_by('-date', '-time'),
                 'incomplete_transactions': in_complete_trans.order_by('-date', '-time'),
                 'subsidiary': Subsidiaries.objects.filter(),
-                'all_transactions': AccountHistory.objects.filter().order_by('-date', '-time')
+                'all_transactions': AccountHistory.objects.filter().order_by('-date', '-time'),
                 'start_date': start_date,
                 'end_date': end_date
 
