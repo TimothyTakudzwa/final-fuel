@@ -802,7 +802,6 @@ Transaction Handlers
 def transactions(request):
 
     buyer = request.user
-    start_date, end_date = None, None
 
     all_transactions = Transaction.objects.filter(buyer=buyer).all()
     for transaction in all_transactions:
@@ -840,12 +839,12 @@ def transactions(request):
         if request.POST.get('start_date') and request.POST.get('end_date') :
             start_date = request.POST.get('start_date')
             end_date = request.POST.get('end_date')
-        if start_date:
-            start_date = datetime.strptime(start_date, '%Y-%m-%d')
-            start_date = start_date.date()
-        if end_date:
-            end_date = datetime.strptime(end_date, '%Y-%m-%d')
-            end_date = end_date.date()
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
 
             all_transactions = Transaction.objects.filter(buyer=buyer).filter(date__range=[start_date, end_date])
             for transaction in all_transactions:
@@ -878,7 +877,7 @@ def transactions(request):
             }
 
 
-        return render(request, 'buyer/transactions.html', context=context)
+            return render(request, 'buyer/transactions.html', context=context)
 
 
         if request.POST.get('export_to_csv')=='csv':
