@@ -689,8 +689,8 @@ def transactions(request, id):
                 delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
                 company = Company.objects.filter(id=tran.supplier.company.id).first()
                 tran.depot = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
-                    if delivery_sched:
-                    tran.delivery_sched = delivery_sched
+                if delivery_sched:
+                tran.delivery_sched = delivery_sched
 
             context = {
             'transactions': transactions,
