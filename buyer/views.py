@@ -437,7 +437,7 @@ def fuel_request(request):
             df = df_fuel_requests.append(df_complete_requests)
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
-            filename = f'{request.user.company.name} - {today}.csv'
+            filename = f'{request.user.company.name}.csv'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
