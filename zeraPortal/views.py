@@ -765,8 +765,8 @@ def transactions(request, id):
 
             html_string = render_to_string('zeraPortal/export/transactions_export.html', context=context )
             html = HTML(string=html_string)
-            export_name = f"ZERA - {today}"
-            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+            # export_name = f"ZERA - {today}"
+            html.write_pdf(target=f'media/transactions/Transaction Report.pdf')
 
             download_file = f'media/transactions/{export_name}'
 
