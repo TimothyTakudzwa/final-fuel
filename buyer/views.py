@@ -890,17 +890,21 @@ def transactions(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).filter(date__range=[start_date, end_date])
-                complete_requests = FuelRequest.objects.filter(name=user_logged, is_complete=True).filter(date__range=[start_date, end_date])
+                all_transactions = Transaction.objects.filter(buyer=buyer).filter(date__range=[start_date, end_date])
             
-            fuel_requests = fuel_requests.values('date','delivery_method','payment_method','fuel_type', 'amount')
-            complete_requests =  complete_requests.values('date','delivery_method','payment_method','fuel_type', 'amount')
-            fields = ['date','delivery_method','payment_method','fuel_type', 'amount']
+            complete_trans = all_transactions.filter(is_complete=True)
+            in_complete_trans = all_transactions.filter(is_complete=False)    
             
-            df_fuel_requests = pd.DataFrame(fuel_requests, columns=fields)
-            df_complete_requests = pd.DataFrame(complete_requests, columns=fields)
+            complete_trans = complete_trans.values('date','time','payment_method', 'supplier__company__name',
+             'offer__request__fuel_type', 'offer__request__amount', 'is_complete')
+            in_complete_trans =  in_complete_trans.values('date','time','payment_method', 'supplier__company__name',
+             'offer__request__fuel_type', 'offer__request__amount', 'is_complete')
+            fields = ['date','time','payment_method', 'supplier__company__name', 'offer__request__fuel_type', 'offer__request__amount', 'is_complete']
+            
+            df_complete_trans = pd.DataFrame(complete_trans, columns=fields)
+            df_in_complete_trans = pd.DataFrame(in_complete_trans, columns=fields)
 
-            df = df_fuel_requests.append(df_complete_requests)
+            df = df_complete_trans.append(df_in_complete_trans)
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = f'{request.user.company.name}.csv'
@@ -908,7 +912,7 @@ def transactions(request):
 
             with open(filename, 'rb') as csv_name:
                 response = HttpResponse(csv_name.read())
-                response['Content-Disposition'] = f'attachment;filename={filename} - Requests - {today}.csv'
+                response['Content-Disposition'] = f'attachment;filename={filename} - Transactions - {today}.csv'
                 return response     
 
         if request.POST.get('export_to_pdf') == 'pdf':
@@ -921,18 +925,38 @@ def transactions(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).filter(date__range=[start_date, end_date])
-                complete_requests = FuelRequest.objects.filter(name=user_logged, is_complete=True).filter(date__range=[start_date, end_date]) 
-
+                all_transactions = Transaction.objects.filter(buyer=buyer).filter(date__range=[start_date, end_date])
+                
+            for transaction in all_transactions:
+                subsidiary = Subsidiaries.objects.filter(id=transaction.supplier.subsidiary_id).first()
+                delivery_schedules = DeliverySchedule.objects.filter(transaction__id=transaction.id).exists()
+                if delivery_schedules:
+                    transaction.delivery_schedule = True
+                    transaction.delivery_object = DeliverySchedule.objects.filter(transaction__id=transaction.id).first()
+                else:
+                    transaction.delivery_schedule = False
+                    transaction.delivery_object = None
+                if subsidiary is not None:
+                    transaction.depot = subsidiary.name
+                    # transaction.address = subsidiary.location
+                from supplier.models import UserReview
+                transaction.review = UserReview.objects.filter(transaction=transaction).first()
+                # if transaction.is_complete == True:
+                #     complete_trans.append(transaction)
+                # else:
+                #     in_complete_trans.append(transaction)
+            complete_trans = all_transactions.filter(is_complete=True)
+            in_complete_trans = all_transactions.filter(is_complete=False)
+                
+        
             context = {
-                'fuel_requests': fuel_requests,
-                'complete_requests': complete_requests,
-                'start_date': start_date,
-                'date': today,
-                'end_date': end_date
-            }    
+                'transactions': complete_trans.order_by('-date', '-time'),
+                'incomplete_transactions': in_complete_trans.order_by('-date', '-time'),
+                'subsidiary': Subsidiaries.objects.filter(),
+                'all_transactions': AccountHistory.objects.filter().order_by('-date', '-time')
+            }
 
-            html_string = render_to_string('buyer/export/export_requests.html', context=context)
+            html_string = render_to_string('buyer/export/export_transactions.html', context=context)
             html = HTML(string=html_string)
             export_name = f"{request.user.company.name.title()}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
@@ -941,7 +965,7 @@ def transactions(request):
 
             with open(f'{download_file}.pdf', 'rb') as pdf:
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-                response['Content-Disposition'] = f'attachment;filename={export_name} -Orders - {today}.pdf'
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Transactions - {today}.pdf'
                 return response        
 
 
