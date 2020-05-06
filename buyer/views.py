@@ -868,11 +868,10 @@ def transactions(request):
             complete_trans = all_transactions.filter(is_complete=True)
             in_complete_trans = all_transactions.filter(is_complete=False)
                 
-            in_complete_trans.sort(key=attrgetter('date', 'time'), reverse=True)
-            complete_trans.sort(key=attrgetter('date', 'time'), reverse=True)
+        
             context = {
-                'transactions': complete_trans,
-                'incomplete_transactions': in_complete_trans,
+                'transactions': complete_trans.order_by('-date', '-time'),
+                'incomplete_transactions': in_complete_trans.order_by('-date', '-time'),
                 'subsidiary': Subsidiaries.objects.filter(),
                 'all_transactions': AccountHistory.objects.filter().order_by('-date', '-time')
             }
