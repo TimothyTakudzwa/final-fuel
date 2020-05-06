@@ -655,15 +655,15 @@ def transactions(request, id):
     user_permission(request)
     today = datetime.now().strftime("%m/%d/%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
-    transactions = []
+    transactions = Transaction.objects.filter(supplier__company__id=id).all()
     company = ""
-    for tran in Transaction.objects.filter(supplier__company__id=id).all():
+    for tran in transactions:
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
         company = Company.objects.filter(id=tran.supplier.company.id).first()
         tran.depot = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
         if delivery_sched:
             tran.delivery_sched = delivery_sched
-        transactions.append(tran)
+        
     context = {
         'transactions': transactions,
         'transporters': transporters,
