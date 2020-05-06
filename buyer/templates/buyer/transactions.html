@@ -90,6 +90,7 @@
                             <span class="btn-label"><i class="glyphicon glyphicon-filter"></i></span> Pick A Date | Showing - {% if start_date and end_date %}<b style="color: #009688;">{{start_date}} - {{end_date}}</b>{% else %}<b style="color: #009688;">All</b>{% endif %} </button>
                             <form method="POST">
                                 {% csrf_token %}
+                                <input type="text" name="export_to_pdf" value="pdf" hidden>
                                 <input type="text" name="pdf_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
                                 <input type="text" name="pdf_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
                                 <button type="submit" class="btn btn-labeled btn-default btn-sm" style="float: left; background-color:#cfd4ce; color: #333;margin-right: 10px;"

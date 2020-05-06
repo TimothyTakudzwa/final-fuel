@@ -800,7 +800,151 @@ Transaction Handlers
 @login_required
 @user_role
 def transactions(request):
+
+    buyer = request.user
+
+    all_transactions = Transaction.objects.filter(buyer=buyer).all()
+    for transaction in all_transactions:
+        subsidiary = Subsidiaries.objects.filter(id=transaction.supplier.subsidiary_id).first()
+        delivery_schedules = DeliverySchedule.objects.filter(transaction__id=transaction.id).exists()
+        if delivery_schedules:
+            transaction.delivery_schedule = True
+            transaction.delivery_object = DeliverySchedule.objects.filter(transaction__id=transaction.id).first()
+        else:
+            transaction.delivery_schedule = False
+            transaction.delivery_object = None
+        if subsidiary is not None:
+            transaction.depot = subsidiary.name
+            # transaction.address = subsidiary.location
+        from supplier.models import UserReview
+        transaction.review = UserReview.objects.filter(transaction=transaction).first()
+        # if transaction.is_complete == True:
+        #     complete_trans.append(transaction)
+        # else:
+        #     in_complete_trans.append(transaction)
+    complete_trans = all_transactions.filter(is_complete=True)
+    in_complete_trans = all_transactions.filter(is_complete=False)
+        
+    in_complete_trans.sort(key=attrgetter('date', 'time'), reverse=True)
+    complete_trans.sort(key=attrgetter('date', 'time'), reverse=True)
+    context = {
+        'transactions': complete_trans,
+        'incomplete_transactions': in_complete_trans,
+        'subsidiary': Subsidiaries.objects.filter(),
+        'all_transactions': AccountHistory.objects.filter().order_by('-date', '-time')
+    }
+
     if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+        if start_date:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            start_date = start_date.date()
+        if end_date:
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')
+            end_date = end_date.date()
+
+            all_transactions = Transaction.objects.filter(buyer=buyer).filter(date__range=[start_date, end_date])
+            for transaction in all_transactions:
+                subsidiary = Subsidiaries.objects.filter(id=transaction.supplier.subsidiary_id).first()
+                delivery_schedules = DeliverySchedule.objects.filter(transaction__id=transaction.id).exists()
+                if delivery_schedules:
+                    transaction.delivery_schedule = True
+                    transaction.delivery_object = DeliverySchedule.objects.filter(transaction__id=transaction.id).first()
+                else:
+                    transaction.delivery_schedule = False
+                    transaction.delivery_object = None
+                if subsidiary is not None:
+                    transaction.depot = subsidiary.name
+                    # transaction.address = subsidiary.location
+                from supplier.models import UserReview
+                transaction.review = UserReview.objects.filter(transaction=transaction).first()
+                # if transaction.is_complete == True:
+                #     complete_trans.append(transaction)
+                # else:
+                #     in_complete_trans.append(transaction)
+            complete_trans = all_transactions.filter(is_complete=True)
+            in_complete_trans = all_transactions.filter(is_complete=False)
+                
+            in_complete_trans.sort(key=attrgetter('date', 'time'), reverse=True)
+            complete_trans.sort(key=attrgetter('date', 'time'), reverse=True)
+            context = {
+                'transactions': complete_trans,
+                'incomplete_transactions': in_complete_trans,
+                'subsidiary': Subsidiaries.objects.filter(),
+                'all_transactions': AccountHistory.objects.filter().order_by('-date', '-time')
+            }
+
+
+        return render(request, 'buyer/transactions.html', context=context)
+
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).filter(date__range=[start_date, end_date])
+                complete_requests = FuelRequest.objects.filter(name=user_logged, is_complete=True).filter(date__range=[start_date, end_date])
+            
+            fuel_requests = fuel_requests.values('date','delivery_method','payment_method','fuel_type', 'amount')
+            complete_requests =  complete_requests.values('date','delivery_method','payment_method','fuel_type', 'amount')
+            fields = ['date','delivery_method','payment_method','fuel_type', 'amount']
+            
+            df_fuel_requests = pd.DataFrame(fuel_requests, columns=fields)
+            df_complete_requests = pd.DataFrame(complete_requests, columns=fields)
+
+            df = df_fuel_requests.append(df_complete_requests)
+
+            # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
+            filename = f'{request.user.company.name}.csv'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - Requests - {today}.csv'
+                return response     
+
+        if request.POST.get('export_to_pdf') == 'pdf':
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).filter(date__range=[start_date, end_date])
+                complete_requests = FuelRequest.objects.filter(name=user_logged, is_complete=True).filter(date__range=[start_date, end_date]) 
+
+            context = {
+                'fuel_requests': fuel_requests,
+                'complete_requests': complete_requests,
+                'start_date': start_date,
+                'date': today,
+                'end_date': end_date
+            }    
+
+            html_string = render_to_string('buyer/export/export_requests.html', context=context)
+            html = HTML(string=html_string)
+            export_name = f"{request.user.company.name.title()}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} -Orders - {today}.pdf'
+                return response        
+
+
         if request.POST.get('buyer_id') is not None:
             buyer_transactions = AccountHistory.objects.filter(
                 transaction__buyer__company__id=int(request.POST.get('buyer_id')),
@@ -832,38 +976,6 @@ def transactions(request):
             )
             messages.success(request, 'Transaction successfully reviewed.')
             return redirect('buyer-transactions')
-
-    buyer = request.user
-    complete_trans = []
-    in_complete_trans = []
-    all_transactions = Transaction.objects.filter(buyer=buyer).all()
-    for transaction in all_transactions:
-        subsidiary = Subsidiaries.objects.filter(id=transaction.supplier.subsidiary_id).first()
-        delivery_schedules = DeliverySchedule.objects.filter(transaction__id=transaction.id).exists()
-        if delivery_schedules:
-            transaction.delivery_schedule = True
-            transaction.delivery_object = DeliverySchedule.objects.filter(transaction__id=transaction.id).first()
-        else:
-            transaction.delivery_schedule = False
-            transaction.delivery_object = None
-        if subsidiary is not None:
-            transaction.depot = subsidiary.name
-            # transaction.address = subsidiary.location
-        from supplier.models import UserReview
-        transaction.review = UserReview.objects.filter(transaction=transaction).first()
-        if transaction.is_complete == True:
-            complete_trans.append(transaction)
-        else:
-            in_complete_trans.append(transaction)
-
-    in_complete_trans.sort(key=attrgetter('date', 'time'), reverse=True)
-    complete_trans.sort(key=attrgetter('date', 'time'), reverse=True)
-    context = {
-        'transactions': complete_trans,
-        'incomplete_transactions': in_complete_trans,
-        'subsidiary': Subsidiaries.objects.filter(),
-        'all_transactions': AccountHistory.objects.filter().order_by('-date', '-time')
-    }
 
     return render(request, 'buyer/transactions.html', context=context)
 
