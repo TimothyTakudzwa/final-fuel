@@ -950,7 +950,6 @@ def transactions(request):
                 #     in_complete_trans.append(transaction)
             complete_trans = all_transactions.filter(is_complete=True)
             in_complete_trans = all_transactions.filter(is_complete=False)
-                
         
             context = {
                 'transactions': complete_trans.order_by('-date', '-time'),
