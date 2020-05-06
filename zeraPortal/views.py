@@ -697,7 +697,7 @@ def transactions(request, id):
             'transporters': transporters,
             'today': today,
             'start_date':start_date,
-            'end_date':end_date 
+            'end_date':end_date,
             'company': company
             }
 
