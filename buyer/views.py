@@ -391,6 +391,93 @@ def fuel_request(request):
         'complete_requests': complete_requests
     }
 
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).filter(date__range=[start_date, end_date])
+            complete_requests = FuelRequest.objects.filter(name=user_logged, is_complete=True).filter(date__range=[start_date, end_date])  
+            
+            context = {
+                'fuel_requests': fuel_requests,
+                'complete_requests': complete_requests
+            }
+
+            return render(request, 'buyer/fuel_request.html', context=context)
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                accepted_orders = Order.objects.filter(company=request.user.company).filter(~Q(status='Pending')).filter(date__range=[start_date, end_date])
+                pending_orders = Order.objects.filter(company=request.user.company).filter(status='Pending').filter(date__range=[start_date, end_date])
+            
+            accepted_orders = accepted_orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
+            pending_orders =  pending_orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
+            fields = ['date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status']
+            
+            df_accepted_orders = pd.DataFrame(accepted_orders, columns=fields)
+            df_pending_orders = pd.DataFrame(pending_orders, columns=fields)
+
+            # df_accepted_orders.noic_depot  = df_accepted_orders.noic_depot.astype(str)  
+            
+            # for i, row in df_accepted_orders.iterrows():
+            #     df_accepted_orders.at[i,'noic_depot'] = NoicDepot.objects.filter(id=int(df_accepted_orders.at[i,'noic_depot'])).first().name
+
+            # df_pending_orders = convert_to_dataframe(pending_orders)
+            # df_pending_orders.noic_depot  = df_pending_orders.noic_depot.astype(str)  
+
+            # for i, row in df_pending_orders.iterrows():
+            #     df_pending_orders.at[i,'noic_depot'] = NoicDepot.objects.filter(id=int(df_pending_orders.at[i,'noic_depot'])).first().name
+            
+            df = df_accepted_orders.append(df_pending_orders)
+
+            # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
+            filename = f'{request.user.company.name} - {date}.csv'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                accepted_orders = Order.objects.filter(company=request.user.company).filter(~Q(status='Pending')).filter(date__range=[start_date, end_date])
+                pending_orders = Order.objects.filter(company=request.user.company).filter(status='Pending').filter(date__range=[start_date, end_date])   
+            html_string = render_to_string('users/export/export_orders.html', {'accepted_orders': accepted_orders,'pending_orders':pending_orders,'date':today, 'start_date':start_date, 'end_date':end_date})
+            html = HTML(string=html_string)
+            export_name = f"{request.user.company.name.title()}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} -Orders - {today}.pdf'
+                return response        
+
+
     return render(request, 'buyer/fuel_request.html', context=context)
 
 
