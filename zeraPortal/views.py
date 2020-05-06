@@ -772,7 +772,7 @@ def transactions(request, id):
 
             with open(f'{download_file}.pdf', 'rb') as pdf:
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-                response['Content-Disposition'] = f'attachment;filename={export_name} - Transactions - {today}.pdf'
+                response['Content-Disposition'] = f'attachment;filename={export_name}.pdf'
                 return response
 
 
