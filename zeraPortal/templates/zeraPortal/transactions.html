@@ -90,13 +90,15 @@
                                 {% if transaction.offer.delivery_method == 'DELIVERY' %}
                                 <td>
                                     <div class="btn-group">
-                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'zeraPortal:payment_and_schedules' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Schedules</a>
+                                        <a class="btn btn-labeled btn-success btn-sm" data-toggle="modal" href="{%url 'zeraPortal:payment_and_schedules' transaction.id %}">
+                                            <span class="btn-label"><i class="fa fa-eye"></i></span> Payments & Schedules</a>
                                     </div>
                                 </td>
                                 {% else %}
                                 <td>
                                     <div class="btn-group">
-                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'zeraPortal:payment_and_schedules' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Payments & Release Notes</a>
+                                        <a class="btn btn-success btn-labeled btn-sm" data-toggle="modal" href="{%url 'zeraPortal:payment_and_schedules' transaction.id %}">
+                                           <span class="btn-label"> <i class="fa fa-eye"></i></span> Payments & Release Notes</a>
                                     </div>
                                 </td>
                                 {% endif %}
@@ -104,8 +106,8 @@
                                 <td>
                                     <div>
                                         <!--call modal-->
-                                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#view{{transaction.id}}">
-                                            <i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Details
+                                        <button class="btn btn-labeled  btn-primary btn-sm" data-toggle="modal" data-target="#view{{transaction.id}}">
+                                            <span class="btn-label"> <i class="fa fa-eye"></i></span> Details
                                         </button>
                                         <!--view details-->
                                         <div class="modal fade modal-success in" id="view{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -382,6 +384,22 @@
                                     </div>
                                 </div>
                             </div>
+
+                            
+                            
+
+                            <script>
+                                $('body').click(function (event) {
+                                    if(!$(event.target).closest('#view{{transaction.id}}').length && !$(event.target).is('#view{{transaction.id}}')) {
+                                        $("#view{{transaction.id}}").modal('hide');
+                                    }
+                                    if(!$(event.target).closest('#schedule{{transaction.id}}').length && !$(event.target).is('#schedule{{transaction.id}}')) {
+                                        $("#schedule{{transaction.id}}").modal('hide');
+                                    }
+                        
+                                             
+                                });
+                            </script>
 
 
                         {%endfor%}
