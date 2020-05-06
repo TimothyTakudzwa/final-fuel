@@ -858,8 +858,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th style="background-color: #778899;">Last Update</th>
-                                                        <th style="background-color: #778899;">Station Type</th>
-                                                        <th style="background-color: #778899;">Station Name</th>
+                                                        <th style="background-color: #778899;">Company</th>
                                                         <th style="background-color: #778899;">Petrol (Litres)</th>
                                                         <th style="background-color: #778899;">Petrol Price</th>
                                                         <th style="background-color: #778899;">Diesel (Litres)</th>
@@ -872,12 +871,11 @@
                                                     {%for my_stock in stock %}
                                                     <tr>
                                                         
-                                                            <td>{{my_stock.last_updated}}</td>
-                                                            <td>{{my_stock.sub_type}}</td>
-                                                            <td>{{my_stock.subsidiary_name}}</td>
-                                                            <td>{{my_stock.petrol_quantity|floatformat:2|intcomma}} l</td>
+                                                            <td>{{my_stock.date}}</td>
+                                                            <td>{{my_stock.company}</td>
+                                                            <td>{{my_stock.unallocated_petrol|floatformat:2|intcomma}} l</td>
                                                             <td>$ {{my_stock.petrol_price}}</td>
-                                                            <td>{{my_stock.diesel_quantity|floatformat:2|intcomma}} l</td>
+                                                            <td>{{my_stock.unallocated_diesel|floatformat:2|intcomma}} l</td>
                                                             <td>$ {{my_stock.diesel_price}}</td>
                                                             
                                                     </tr>
