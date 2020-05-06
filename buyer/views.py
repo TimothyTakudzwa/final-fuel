@@ -406,7 +406,9 @@ def fuel_request(request):
             
             context = {
                 'fuel_requests': fuel_requests,
-                'complete_requests': complete_requests
+                'complete_requests': complete_requests,
+                'start_date': start_date,
+                'end_date': end_date
             }
 
             return render(request, 'buyer/fuel_request.html', context=context)
