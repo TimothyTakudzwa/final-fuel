@@ -1,0 +1,101 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Orders {{request.company.name}} Summary</title>
+
+    <style>
+        @page {size: a3 landscape;}
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        .first {
+            width: 50%;
+            float:left;
+            font-size: 12px;
+
+        }
+        .wrapper {
+            width: 100%;
+            margin: auto;
+            padding: 10px;
+            overflow: hidden;
+        }
+        .text-muted{
+            color:#6c757d!important;
+        }
+    </style>
+
+</head>
+<body>
+
+
+<h1 style="text-align: center;">Transactions Statement - {{ date }}</h1>
+
+
+<h3 style="padding-top: 20px;">Filtered Transactions : {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">( {{date}} )</small>{% endif %}</h3>
+
+    <table style="padding-top: 20px">
+        <tr>
+            <th></th>
+            <th>Date</th>
+            <th>Depot</th>
+            <th>Buyer Company</th>
+            <th>Fuel </th>
+            <th>Expected ($)</th>
+            <th>Paid ($)</th>
+            <th>Status</th>
+            
+        </tr>
+
+        {% for transaction in transactions %}
+        <tr>
+            <td></td>
+            <td>{{ transaction.date }}</td>
+            <td>{{ transaction.depot.name }}</td>
+            <td>{{ transaction.buyer.company.name }}</td>
+            {% if transaction.offer.request.fuel_type|lower|capfirst == 'Petrol' %}
+            <td style="color: #009688;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |floatformat:2|intcomma}}L @ {{ transaction.offer.price }}</td>
+            {% elif transaction.offer.request.|lower|capfirst == 'Diesel' %}
+            <td style="color: #ffb61e;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |floatformat:2|intcomma}}L @ {{ transaction.offer.price }}</td>
+            {% else %}
+            <td>{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |floatformat:2|intcomma}}L @ {{ transaction.offer.price }}</td>
+            {% endif %}
+           
+            <td>{{ transaction.expected|intcomma}}</td>
+            <td>{{ transaction.paid|intcomma }}</td>
+            {% if transaction.is_complete == True %}
+            <td><p style="color: #007f73;">Complete</p></td>
+            {% else %}
+            <td><p style="color: crimson">Incomplete</p></td>
+            {% endif %}
+
+            
+            
+            
+        </tr>
+        {% endfor %}
+        
+
+    </table>
+
+
+
+
+
+</body>
+</html>
