@@ -898,11 +898,11 @@ def transactions(request):
             complete_trans = all_transactions.filter(is_complete=True)
             in_complete_trans = all_transactions.filter(is_complete=False)    
             
-            complete_trans = complete_trans.values('date','time','payment_method', 'supplier__company__name',
+            complete_trans = complete_trans.values('date','time', 'supplier__company__name',
              'offer__request__fuel_type', 'offer__request__amount', 'is_complete')
-            in_complete_trans =  in_complete_trans.values('date','time','payment_method', 'supplier__company__name',
+            in_complete_trans =  in_complete_trans.values('date','time', 'supplier__company__name',
              'offer__request__fuel_type', 'offer__request__amount', 'is_complete')
-            fields = ['date','time','payment_method', 'supplier__company__name', 'offer__request__fuel_type', 'offer__request__amount', 'is_complete']
+            fields = ['date','time', 'supplier__company__name', 'offer__request__fuel_type', 'offer__request__amount', 'is_complete']
             
             df_complete_trans = pd.DataFrame(complete_trans, columns=fields)
             df_in_complete_trans = pd.DataFrame(in_complete_trans, columns=fields)
