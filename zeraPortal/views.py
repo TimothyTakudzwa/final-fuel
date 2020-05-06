@@ -653,7 +653,7 @@ def download_release_note(request, id):
 @login_required()
 def transactions(request, id):
     user_permission(request)
-    today = datetime.now().strftime("%m/%d/%y")
+    today = datetime.now().strftime("%m-%d-%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
     transactions = Transaction.objects.filter(supplier__company__id=id).all()
     company = ""
