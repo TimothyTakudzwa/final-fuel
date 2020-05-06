@@ -61,7 +61,6 @@
             <th>Fuel Type</th>
             <th>Quantity</th>
             <th>Requested On</th>
-            <th>Action</th>
         </tr>
             
         
@@ -106,23 +105,7 @@
             <td class="">
                 {{fuel_request.date}} -- {{fuel_request.time}}
             </td>
-            <td>
-                {% if fuel_request.has_offers == True%}
-
-                    <a type="button" class="btn btn-labeled btn-success m-b-5"  href="{% url 'fuel-offers' fuel_request.id %}">
-        <span class="btn-label"><i
-                class="glyphicon glyphicon-info-sign"></i></span>View Offers
-                    </a>
-
-                    </a>
-
-                {% else %}
-                    <button type="button" disabled class="btn btn-labeled btn-danger m-b-5">
-    <span class="btn-label"><i
-            class="glyphicon glyphicon-remove"></i></span>No offers Yet
-                    </button>
-                {% endif %}
-            </td>
+            
         </tr>
         {% endfor %}
 
@@ -145,7 +128,6 @@
             <th>Fuel Type</th>
             <th>Quantity</th>
             <th>Requested On</th>
-            <th>Action</th>
         </tr>
             
 
@@ -190,23 +172,7 @@
             <td class="">
                 {{fuel_request.date}} -- {{fuel_request.time}}
             </td>
-            <td>
-                {% if fuel_request.has_offers == True%}
-
-                    <a type="button" class="btn btn-labeled btn-success m-b-5"  href="{% url 'fuel-offers' fuel_request.id %}">
-        <span class="btn-label"><i
-                class="glyphicon glyphicon-info-sign"></i></span>View Offers
-                    </a>
-
-                    </a>
-
-                {% else %}
-                    <button type="button" disabled class="btn btn-labeled btn-danger m-b-5">
-    <span class="btn-label"><i
-            class="glyphicon glyphicon-remove"></i></span>No offers Yet
-                    </button>
-                {% endif %}
-            </td>
+            
         </tr>
         {% endfor %}
 
