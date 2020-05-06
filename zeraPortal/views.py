@@ -768,7 +768,7 @@ def transactions(request, id):
             # export_name = f"ZERA - {today}"
             html.write_pdf(target=f'media/transactions/Transaction Report.pdf')
 
-            download_file = f'media/transactions/{export_name}'
+            download_file = 'media/transactions/export_name'
 
             with open(f'{download_file}.pdf', 'rb') as pdf:
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
