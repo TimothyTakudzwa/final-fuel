@@ -726,7 +726,7 @@ def transactions(request, id):
             #     df_previous = pd.DataFrame(activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
             #     df = df_current.append(df_previous)
 
-            filename = f'ZERA - {today}.csv'
+            filename = f'ZERA - Transactions -{today}.csv'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
@@ -765,10 +765,10 @@ def transactions(request, id):
 
             html_string = render_to_string('zeraPortal/export/transactions_export.html', context=context )
             html = HTML(string=html_string)
-            # export_name = f"ZERA - {today}"
-            html.write_pdf(target=f'media/transactions/Transaction Report.pdf')
+            export_name = f"ZERA - {today}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
-            download_file = 'media/transactions/export_name'
+            download_file = f'media/transactions/{export_name}'
 
             with open(f'{download_file}.pdf', 'rb') as pdf:
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
