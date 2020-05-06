@@ -802,6 +802,7 @@ Transaction Handlers
 def transactions(request):
 
     buyer = request.user
+    start_date, end_date = None
 
     all_transactions = Transaction.objects.filter(buyer=buyer).all()
     for transaction in all_transactions:
