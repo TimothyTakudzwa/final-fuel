@@ -719,7 +719,7 @@ def transactions(request, id):
             fields = ['date','buyer__company__name', 'offer__request__fuel_type', 'expected', 'paid', 'is_complete']
             
             if transactions:
-                transactions = filtered_activities.values('date','buyer__company__name', 'offer__request__fuel_type', 'expected', 'paid', 'is_complete')
+                transactions = transactions.values('date','buyer__company__name', 'offer__request__fuel_type', 'expected', 'paid', 'is_complete')
                 df = pd.DataFrame(transactions, columns=fields)
             # else:
             #     df_current = pd.DataFrame(current_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
