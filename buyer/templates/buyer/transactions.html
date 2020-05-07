@@ -143,13 +143,11 @@
                         <div class="tab-content">
                             <div class="tab-pane fade active in" id="tab1">
                                 <div class="panel-body">
-                                    <table id="fuel_updates" class="table table-striped table-bordered" style="width:100%">
+                                    <table id="complete_trans" class="table table-striped table-bordered" style="width:100%">
                     <thead>
                     <tr style="background-color: gray;color: white;">
                         <th>Date</th>
                         <th>Time</th>
-                        <th>Depot</th>
-                        <th>PickUp Address</th>
                         <th>Fuel</th>
                         <!-- <th>Expected & Paid</th> -->
                         <th>Statement</th>
@@ -167,12 +165,6 @@
                         <tr>
                             <td>{{transaction.date}}</td>
                             <td>{{transaction.time}}</td>
-                            <td class="name truncate">{{transaction.depot}}</td>
-                            {% if transaction.offer.collection_address != None %}
-                                <td class="name truncate">{{transaction.offer.collection_address}}</td>
-                            {% else %}
-                                <td>N/A</td>
-                            {% endif %}
                             <td class="name truncate">{{transaction.offer.request.fuel_type}} {{transaction.offer.quantity}}L @ {{transaction.offer.price}}</td>
 
 
@@ -572,8 +564,8 @@
                                 <table id="incomplete_trans" class="table table-striped table-bordered" style="width:100%">
                     <thead>
                     <tr style="background-color: gray;color: white;">
-                        <th>Depot</th>
-                        <th>PickUp Address</th>
+                        <th>Date</th>
+                        <th>Time</th>
                         <th>Fuel</th>
                         <th>Expected & Paid</th>
                         <th>Statement</th>
@@ -588,12 +580,8 @@
 
                     {% for transaction in incomplete_transactions %}
                         <tr>
-                            <td class="name truncate">{{transaction.depot}}</td>
-                            {% if transaction.offer.collection_address != None %}
-                                <td class="name truncate">{{transaction.offer.collection_address}}</td>
-                            {% else %}
-                                <td>N/A</td>
-                            {% endif %}
+                            <td>{{transaction.date}}</td>
+                            <td>{{transaction.time}}</td>
                             <td class="name truncate">{{transaction.offer.request.fuel_type}} {{transaction.offer.quantity}}L @ {{transaction.offer.price}}</td>
 
                             <td>
