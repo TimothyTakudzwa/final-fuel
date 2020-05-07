@@ -155,7 +155,7 @@ def accepted_orders(request):
 
             df = df_orders.append(df_new_orders)
 
-            filename = f'{request.user.company.name}'
+            filename = f'Noic Depot -'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
@@ -188,7 +188,7 @@ def accepted_orders(request):
             html_string = render_to_string('noicDepot/export/export_accept_orders.html',
             context=context)
             html = HTML(string=html_string)
-            export_name = f"Noic Depot - "
+            export_name = f"Noic Depot "
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
             download_file = f'media/transactions/{export_name}'
