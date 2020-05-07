@@ -1148,7 +1148,7 @@ def delivery_schedules(request):
                 end_date = datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
             
-            completed_schedules = schedules.objects.filter(confirmation_date__isnull=False)filter(date__range=[start_date, end_date])
+            completed_schedules = schedules.objects.filter(confirmation_date__isnull=False).filter(date__range=[start_date, end_date])
             pending_schedules = schedules.objects.filter(confirmation_date__isnull=True).filter(date__range=[start_date, end_date])  
             
             context = {
