@@ -155,7 +155,7 @@ def accepted_orders(request):
 
             df = df_orders.append(df_new_orders)
 
-            filename = f'Noic Depot -'
+            filename = f'Noic Depot '
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
@@ -195,7 +195,7 @@ def accepted_orders(request):
 
             with open(f'{download_file}.pdf', 'rb') as pdf:
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-                response['Content-Disposition'] = f'attachment;filename={export_name} -Orders - {today}.pdf'
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Orders - {today}.pdf'
                 return response        
 
 
