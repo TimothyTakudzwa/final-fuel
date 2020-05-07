@@ -1562,19 +1562,25 @@ def activity(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                current_activities = Activity.objects.filter(user=request.user, date=today).filter(date__range=[start_date, end_date])
-                activities = Activity.objects.exclude(date=today).filter(user=request.user).filter(date__range=[start_date, end_date])    
-            
-            current_activities = current_activities.values('date','time', 'user__username',
-             'action', 'description')
-            activities =  activities.values('date','time', 'user__username',
-             'action', 'description')
-            fields = ['date','time', 'user__username', 'action', 'description']
-            
-            df_current_activities = pd.DataFrame(current_activities, columns=fields)
-            df_activities = pd.DataFrame(activities, columns=fields)
+                filtered_activities = Activity.objects.filter(user=request.user, date=today).filter(date__range=[start_date, end_date])
+                
+            if not filtered_activities:
+                current_activities = current_activities.values('date','time', 'user__username',
+                'action', 'description')
+                activities =  activities.values('date','time', 'user__username',
+                'action', 'description')
+                fields = ['date','time', 'user__username', 'action', 'description']
+                
+                df_current_activities = pd.DataFrame(current_activities, columns=fields)
+                df_activities = pd.DataFrame(activities, columns=fields)
 
-            df = df_current_activities.append(df_activities)
+                df = df_current_activities.append(df_activities)
+            else:
+                filtered_activities = filtered_activities.values('date','time', 'user__username',
+                'action', 'description')
+                
+                df = pd.DataFrame(filtered_activities, columns=fields)
+                    
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = f'{request.user.company.name}.csv'
