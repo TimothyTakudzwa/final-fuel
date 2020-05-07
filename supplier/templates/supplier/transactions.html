@@ -69,7 +69,6 @@
                                         <table id="transactions" class="table table-striped table-bordered" style="width:100%">
                                             <thead style="background-color: lightslategray; color:white;">
                                             <tr>
-                                                <th style="color: white;"></th>
                                                 <th style="color: white;"> Date </th>
                                                 <th style="color: white;"> Time </th>
                                                 <th style="color: white;">Company</th>
@@ -91,7 +90,6 @@
                                             <tbody>
                                             {% for transaction in transactions %}
                                                 <tr>
-                                                    <td></td>
                                                     <td>{{ transaction.date }}</td>
                                                     <td>{{ transaction.time }}</td>
                                                     <td>{{ transaction.buyer.company.name }}</td>
@@ -560,7 +558,6 @@
                                         <table id="transaction_incomplete_table" class="table table-striped table-bordered" style="width:100%">
                                             <thead style="background-color: lightslategray; color:white;">
                                             <tr>
-                                                <th style="color: white;"></th>
                                                 <th style="color: white;"> Date </th>
                                                 <th style="color: white;"> Time </th>
                                                 <th style="color: white;">Company</th>
@@ -582,7 +579,6 @@
                                             <tbody>
                                             {% for transaction in transactions_pending %}
                                                 <tr>
-                                                    <td></td>
                                                     <td>{{ transaction.date }}</td>
                                                     <td>{{ transaction.time }}</td>
                                                     <td>{{ transaction.buyer.company.name }}</td>
