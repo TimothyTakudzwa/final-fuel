@@ -1,0 +1,313 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Delivery Schedules {{request.company.name}} Summary</title>
+
+    <style>
+        @page {size: a3 landscape;}
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        .first {
+            width: 50%;
+            float:left;
+            font-size: 12px;
+
+        }
+        .wrapper {
+            width: 100%;
+            margin: auto;
+            padding: 10px;
+            overflow: hidden;
+        }
+        .text-muted{
+            color:#6c757d!important;
+        }
+    </style>
+
+</head>
+<body>
+
+
+<h1 style="text-align: center;">Delivery Schedules Statement - {{ date }}</h1>
+
+{% if completed_schedules %}
+<h3 style="padding-top: 20px;text-align: center;">Completed Schedules {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">({{date}})</small>{% endif %}</h3>
+
+<table style="padding-top: 20px; margin-bottom: 30px;">
+
+    <caption style="color: #007f73;margin-bottom: 20px;text-align: center;"> Product Details</caption>
+    <tr> 
+        <th>Date</th>
+        <th>Buyer</th>
+        <th>Address</th>
+        <th>Delivery Date - Time</th>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Contact Person</th>
+        <th>Contact Phone</th>
+        <!-- <th>Tank Details</th>                                 -->
+        <th>Depot</th>
+        <th>Quantity</th>
+        <th>Status</th>
+    </tr>
+
+    {% for delivery in completed_schedules %}
+
+    <tr>
+        <td>{{ delivery.date }} | {{ delivery.delivery_time }}</td>
+        <td>{{ delivery.transaction.buyer.company.name|title }}</td>
+        <td>{{ delivery.transaction.buyer.company.address }}</td>
+        <td>
+            {% if delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Diesel' %}
+            <td style="color: #ffb61e;">{{ delivery.transaction.offer.request.fuel_type}}</td>
+            {% elif delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Petrol' %}
+                <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type}}</td>
+            {% else %}
+                <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type}}</td>
+            {% endif %}
+        </td>
+        <td>{{ delivery.delivery_quantity|floatformat:2|intcomma }} (Litres)</td>
+        <td>{{ delivery.transaction.buyer.first_name|title}} {{delivery.transaction.buyer.last_name|title}}</td>
+        <td>{{ delivery.transaction.buyer.phone_number }} </td>
+        
+        <!-- <td>{% if delivery.transaction.offer.request.pump_required %}
+            Pump
+            {% endif %}
+            {% if delivery.transaction.offer.request.dipping_stick_required %}
+            Dipping Stick
+            {% endif %}
+            {% if delivery.transaction.offer.request.meter_required %}
+            Meter Required
+            {% else %}
+            N/A
+            {% endif %}</td> -->          
+        <td>{{delivery.depot.name}}</td>
+        <td>{{ delivery.delivery_quantity|floatformat:2|intcomma}} </td>          
+        <td>                            
+        {% if delivery.confirmation_date %}
+            {% if not delivery.supplier_document %}
+                (Not Reconciled)
+            {% else %}
+                (Reconciled)
+            {%endif%}
+        {% else %}
+            Pending
+        {%endif%}
+        </td>   
+    </tr>
+    {%endfor%}
+</table>
+
+<table style="padding-top: 20px; margin-bottom: 30px;">
+
+
+        <caption style="color: #007f73; margin-bottom: 20px; text-align: center;"> Transporter Details</caption>
+
+        <tr>
+            <th>Transporter</th>
+            <th>Driver Name</th>
+            <th>Id Number</th>
+            <th>Vehicle Reg</th>
+            <th>Driver Phone</th>   
+        </tr>
+        {% for delivery in completed_schedules %}
+
+        <tr>
+            <td>{{ delivery.transport_company }}</td>
+            <td>{{ delivery.driver_name }} </td>
+            <td>{{ delivery.id_number }} </td>
+            <td>{{ delivery.vehicle_reg }} </td>
+            <td>{{ delivery.phone_number }} </td>
+        </tr>
+        {%endfor%}
+</table>        
+
+ 
+
+
+{% endif %}
+
+{% if pending_schedules %}
+
+<h3 style="padding-top: 20px;text-align: center;">Pending Schedules {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">( {{date}} )</small>{% endif %}</h3>
+
+<table style="padding-top: 20px; margin-bottom: 30px;">
+
+    <caption style="color: #007f73;margin-bottom: 20px;text-align: center;"> Product Details</caption>
+    <tr> 
+        <th>Date</th>
+        <th>Buyer</th>
+        <th>Address</th>
+        <th>Delivery Date - Time</th>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Contact Person</th>
+        <th>Contact Phone</th>
+        <!-- <th>Tank Details</th>                                 -->
+        <th>Depot</th>
+        <th>Quantity</th>
+        <th>Status</th>
+    </tr>
+
+    {% for delivery in pending_schedules %}
+
+    <tr>
+        <td>{{ delivery.date }} | {{ delivery.delivery_time }}</td>
+        <td>{{ delivery.transaction.buyer.company.name|title }}</td>
+        <td>{{ delivery.transaction.buyer.company.address }}</td>
+        <td>
+            {% if delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Diesel' %}
+            <td style="color: #ffb61e;">{{ delivery.transaction.offer.request.fuel_type}}</td>
+            {% elif delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Petrol' %}
+                <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type}}</td>
+            {% else %}
+                <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type}}</td>
+            {% endif %}
+        </td>
+        <td>{{ delivery.delivery_quantity|floatformat:2|intcomma }} (Litres)</td>
+        <td>{{ delivery.transaction.buyer.first_name|title}} {{delivery.transaction.buyer.last_name|title}}</td>
+        <td>{{ delivery.transaction.buyer.phone_number }} </td>
+        
+        <!-- <td>{% if delivery.transaction.offer.request.pump_required %}
+            Pump
+            {% endif %}
+            {% if delivery.transaction.offer.request.dipping_stick_required %}
+            Dipping Stick
+            {% endif %}
+            {% if delivery.transaction.offer.request.meter_required %}
+            Meter Required
+            {% else %}
+            N/A
+            {% endif %}</td> -->          
+        <td>{{delivery.depot.name}}</td>
+        <td>{{ delivery.delivery_quantity|floatformat:2|intcomma}} </td>          
+        <td>                            
+        {% if delivery.confirmation_date %}
+            {% if not delivery.supplier_document %}
+                (Not Reconciled)
+            {% else %}
+                (Reconciled)
+            {%endif%}
+        {% else %}
+            Pending
+        {%endif%}
+        </td>   
+    </tr>
+    {%endfor%}
+</table>
+
+<table style="padding-top: 20px; margin-bottom: 30px;">
+
+
+        <caption style="color: #007f73; margin-bottom: 20px; text-align: center;"> Transporter Details</caption>
+
+        <tr>
+            <th>
+               Date 
+            </th>
+            <th>
+                Time 
+             </th>
+
+            <th>
+                Sord Number
+            </th>
+            <th>
+                Company 
+            </th>
+            <th>
+                Fuel Type
+            </th>
+            <th>
+                Currency 
+            </th>
+           
+            <th>
+                Quantity
+            </th>
+
+            <th>
+                Price
+            </th>
+
+            <th>
+                Release Note
+            </th>
+            <th>
+                D-Note
+            </th>
+        </tr>
+        {% for sord in orders %}
+        <tr>
+            <td>{{sord.date}}</td>
+            <td>{{sord.time}}</td>
+            <td>{{sord.sord_no}}</td>
+            <td>{{sord.company}}</td>
+            {% if sord.fuel_type|lower|capfirst == 'Petrol' %}
+                <td class="" style="color: #009688;">
+                    {{sord.fuel_type|lower|capfirst}}
+                </td>
+            {% elif sord.fuel_type|lower|capfirst == 'Diesel' %}
+            
+                <td class="" style="color: #ffb61e;">
+                    {{sord.fuel_type|lower|capfirst}}
+                </td>
+            {% else %}
+                <td class="">
+                    {{sord.fuel_type|lower|capfirst}}
+                </td>
+            {% endif %}    
+            <td>{{sord.currency}}</td>
+            <td>{{sord.quantity|floatformat:2|intcomma}}</td>
+            <td>{{sord.price}}</td>
+            {% if sord.release_note %}
+            <td>
+                Release Note Available
+                
+            </td> 
+            {% else %}
+            <td>
+                Release Note Unavailable
+
+               
+            </td>
+            {% endif %} 
+            
+            {% if sord.d_note %}
+            <td style="color: #007f73;"> 
+                D-note Available
+                
+            </td> 
+            {% else %}
+            <td style="color: crimson;">
+                Pending
+            </td>
+            {% endif %} 
+        </tr>
+
+  
+        {% endfor %}
+</table>     
+
+{% endif %}
+
+
+
+</body>
+</html>

@@ -62,6 +62,88 @@ def initial_password_change(request):
 def dashboard(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders = SordNationalAuditTrail.objects.filter(assigned_depot=depot).all()
+
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+
+            depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+            orders = SordNationalAuditTrail.objects.filter(assigned_depot=depot).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
+
+            context = {
+                'orders': orders,
+                'start_date': start_date,
+                'end_date': end_date
+            }
+
+            return render(request, 'noicDepot/dashboard.html', context=context)
+        
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                orders = SordNationalAuditTrail.objects.filter(assigned_depot=depot).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
+                
+            orders = orders.values('date','sord_no', 'company__name', 'fuel_type', 'currency', 'quantity', 'price')
+            fields = ['date','sord_no', 'company__name', 'fuel_type', 'currency', 'quantity', 'price']
+            
+            df = pd.DataFrame(orders, columns=fields)
+           
+            filename = f'Noic Depot '
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - Allocations - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                orders = SordNationalAuditTrail.objects.filter(assigned_depot=depot).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
+                
+            context = {
+                'orders': orders,
+                'start_date': start_date,
+                'end_date': end_date,
+                'date': today
+
+            }    
+
+            html_string = render_to_string('noicDepot/export/export_allocations.html',
+            context=context)
+            html = HTML(string=html_string)
+            export_name = f"Noic Depot "
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Allocations - {today}.pdf'
+                return response        
+
     return render(request, 'noicDepot/dashboard.html', {'orders': orders})
 
 
