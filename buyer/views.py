@@ -1126,7 +1126,7 @@ def delivery_schedules(request):
        }
 
     if request.method == 'POST':
-        if delivery_id:
+        if request.POST.get('delivery_id'):
             confirmation_date = request.POST.get('delivery_date')
             delivery_id = int(request.POST.get('delivery_id'))
 
