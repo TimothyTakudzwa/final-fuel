@@ -1565,11 +1565,11 @@ def activity(request):
                 current_activities = Activity.objects.filter(user=request.user, date=today).filter(date__range=[start_date, end_date])
                 activities = Activity.objects.exclude(date=today).filter(user=request.user).filter(date__range=[start_date, end_date])    
             
-            current_activities = current_activities.values('date','time', 'supplier__company__name',
-             'offer__request__fuel_type', 'offer__request__amount', 'is_complete')
-            activities =  activities.values('date','time', 'supplier__company__name',
-             'offer__request__fuel_type', 'offer__request__amount', 'is_complete')
-            fields = ['date','time', 'supplier__company__name', 'offer__request__fuel_type', 'offer__request__amount', 'is_complete']
+            current_activities = current_activities.values('date','time', 'user__username',
+             'action', 'description')
+            activities =  activities.values('date','time', 'user__username',
+             'action', 'description')
+            fields = ['date','time', 'user__username', 'action', 'description']
             
             df_current_activities = pd.DataFrame(current_activities, columns=fields)
             df_activities = pd.DataFrame(activities, columns=fields)
