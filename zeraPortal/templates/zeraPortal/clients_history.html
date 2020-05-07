@@ -10,14 +10,11 @@
                   <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
               </span>
           </div>
-      </form>   
-  <div class="header-icon">
-      <i class="fa fa-book"></i>
-  </div>
-  <div class="header-title">
+      </form>
+  <div class="header-title" style="margin-left: 0px;">
 
-      <h1> {{buyer.company.name|title}}'s</h1>
-      <small>Transaction History</small>
+      <h1> {{buyer.company.name|title}} Transactions</h1>
+      <small>Zimbabwe Fuel Management System</small>
       <ol class="breadcrumb hidden-xs">
           <li><a href="{% url 'zeraPortal:dashboard' %}"><i class="pe-7s-home"></i> Home</a></li>
           <li class="active"> {{buyer.company.name|title}} Transaction History</li>
@@ -98,7 +95,7 @@
 <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
     <div class="panel-heading ui-sortable-handle">
         <div class="btn-group"> 
-            <h4>Subsidiaries - {{ request.user.company.name|title}}</h4> 
+            <h4></h4> 
         </div>
     <div class="dropdown">
         <ul class="dropdown-menu dropdown-menu-right">
@@ -132,6 +129,9 @@
               <th>
                 Supplier
                 </th>
+                <th>
+                    Fuel
+                </th>
               <th>
               Quantity (Litres)
               </th>
@@ -151,10 +151,11 @@
                  <tr>
                       <td>{{tran.date}}</td>
                       <td>{{tran.time}}</td>
-                      <td>{{tran.buyer}}</td>
+                      <td>{{tran.buyer.company}}</td>
                       <td>{{tran.offer.request.delivery_address}}</td>
                       <td>{{tran.supplier}}</td>
-                      <td>{{tran.offer.request.amount}} l</td>
+                      <td>{{tran.offer.request.fuel_type}} </td>
+                      <td>{{tran.offer.request.amount}} L</td>
                       <td>$ {{tran.revenue|stringformat:".2f"}}</td>
                      <td>
                          {% if tran.is_complete %}
