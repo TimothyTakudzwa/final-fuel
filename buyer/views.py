@@ -1213,7 +1213,7 @@ def delivery_schedules(request):
             df = df_completed_schedules.append(df_pending_schedules)
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
-            filename = f'{request.user.company.name}.csv'
+            filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
