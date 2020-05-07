@@ -68,7 +68,6 @@
                                     <table id="fuel_request" class="table table-striped table-bordered" style="width:100%">
                                         <thead style="background-color: lightslategray; color:white;">
                                             <tr>
-                                                <th style="color: white;"></th>
                                                 <th style="color: white;">Date</th>
                                                 <th style="color: white;">Time</th>
                                                 <th style="color: white;">Buyer</th>
@@ -85,7 +84,6 @@
                                         <tbody>
                                             {% for req in requests %}
                                             <tr>
-                                                <td></td>
                                                 <td>{{ req.date }}</td>
                                                 <td>{{ req.time }}</td>
                                                 <td>{{ req.name.company.name|lower|title }}</td>
