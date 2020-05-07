@@ -1171,7 +1171,7 @@ def delivery_schedules(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                completed_schedules = schedules.objects.filter(confirmation_date__isnull=False)filter(date__range=[start_date, end_date])
+                completed_schedules = schedules.objects.filter(confirmation_date__isnull=False).filter(date__range=[start_date, end_date])
                 pending_schedules = schedules.objects.filter(confirmation_date__isnull=True).filter(date__range=[start_date, end_date])
             
             completed_schedules = completed_schedules.values('date','transaction__supplier__company__name', 'transaction__offer__request__delivery_address', 'transaction__offer__request__fuel_type',
