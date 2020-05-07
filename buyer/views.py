@@ -1126,16 +1126,17 @@ def delivery_schedules(request):
        }
 
     if request.method == 'POST':
-        confirmation_date = request.POST.get('delivery_date')
-        delivery_id = int(request.POST.get('delivery_id'))
+        if delivery_id:
+            confirmation_date = request.POST.get('delivery_date')
+            delivery_id = int(request.POST.get('delivery_id'))
 
-        schedule = DeliverySchedule.objects.filter(id=delivery_id).first()
-        schedule.confirmation_date = confirmation_date
-        schedule.save()
-        messages.success(request, 'Delivery successfully confirmed.')
-        message = f"Delivery confirmed for {schedule.transaction.buyer.company}, Click to view confirmation document"
-        Notification.objects.create(user=request.user, action='DELIVERY', message=message, reference_id=schedule.id)
-        return redirect('delivery-schedule')
+            schedule = DeliverySchedule.objects.filter(id=delivery_id).first()
+            schedule.confirmation_date = confirmation_date
+            schedule.save()
+            messages.success(request, 'Delivery successfully confirmed.')
+            message = f"Delivery confirmed for {schedule.transaction.buyer.company}, Click to view confirmation document"
+            Notification.objects.create(user=request.user, action='DELIVERY', message=message, reference_id=schedule.id)
+            return redirect('delivery-schedule')
 
 
         if request.POST.get('start_date') and request.POST.get('end_date') :
