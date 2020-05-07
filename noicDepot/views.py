@@ -99,12 +99,13 @@ def accepted_orders(request):
         if request.POST.get('start_date') and request.POST.get('end_date') :
             start_date = request.POST.get('start_date')
             end_date = request.POST.get('end_date')
-        if start_date:
-            start_date = datetime.strptime(start_date, '%Y-%m-%d')
-            start_date = start_date.date()
-        if end_date:
-            end_date = datetime.strptime(end_date, '%Y-%m-%d')
-            end_date = end_date.date()
+            
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
 
         depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
         orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
