@@ -97,8 +97,8 @@ def accepted_orders(request):
 
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :
-        start_date = request.POST.get('start_date')
-        end_date = request.POST.get('end_date')
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
         if start_date:
             start_date = datetime.strptime(start_date, '%Y-%m-%d')
             start_date = start_date.date()
