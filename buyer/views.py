@@ -1585,7 +1585,7 @@ def activity(request):
                 response['Content-Disposition'] = f'attachment;filename={filename} - Activities - {today}.csv'
                 return response     
 
-        if else:
+        else:
             start_date = request.POST.get('pdf_start_date')
             end_date = request.POST.get('pdf_end_date')
             if start_date:
