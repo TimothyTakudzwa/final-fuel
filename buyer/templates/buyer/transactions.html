@@ -26,10 +26,96 @@
             </ol>
         </div>
     </section>
+
+     <!-- Date Filter Modal -->
+     <div class="modal fade modal-success in" id="state_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title" style="color:whitesmoke"> Filter By State</span>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+    
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="row report_dates" style="margin-bottom: 25px; margin-top: 25px">
+                            <div class="form-group col-md-6">
+                                <label for="exampleInputEmail1">Starting Date</label>
+                                <input name="start_date" type="date" class="form-control"
+                                    id="starting_date" aria-describedby="emailHelp"
+                                    placeholder="Enter email" required>
+                                <small id="emailHelp" class="form-text text-muted">Please Pick A Starting
+                                    Date.</small>
+                            </div>
+    
+                            <div class="form-group col-md-6">
+                                <label for="exampleInputEmail1">Ending Date</label>
+                                <input name="end_date" type="date" class="form-control" id="ending_date"
+                                    aria-describedby="emailHelp" placeholder="Enter email" required>
+                                <small id="emailHelp" class="form-text text-muted"
+                                    style="color: lightslategray;">Please Pick A Ending Date.</small>
+                            </div>
+                        </div> 
+                            
+    
+                        <div class="modal-footer">  
+                            <button type="submit" class="btn btn-primary ">Submit</button>
+                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                        </div> 
+    
+                    </form>
+    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  End Of Date Filter Modal -->
+
+
+
+
     <!-- Main content -->
     <div class="content">
         <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
             <div class="panel-heading ui-sortable-handle">
+
+                <div class="btn-group" style="margin-left: 25px;width: 100%;">
+                    <div class="row" style="margin-bottom: 20px;">
+                        <h4> Requests </h4>
+                    </div>
+                
+                    <div class="row">
+                        <button data-toggle="modal" title="Pick A Date Range To Filter Records" data-target="#state_modal" class="btn btn-labeled btn-default btn-sm" style="float: left;background-color:#cfd4ce; color: #333; margin-right: 10px;">
+                            <span class="btn-label"><i class="glyphicon glyphicon-filter"></i></span> Pick A Date | Showing - {% if start_date and end_date %}<b style="color: #009688;">{{start_date}} - {{end_date}}</b>{% else %}<b style="color: #009688;">All</b>{% endif %} </button>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="text" name="export_to_pdf" value="pdf" hidden>
+                                <input type="text" name="pdf_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                                <input type="text" name="pdf_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+                                <button type="submit" class="btn btn-labeled btn-default btn-sm" style="float: left; background-color:#cfd4ce; color: #333;margin-right: 10px;"
+                                {% if not transactions and not incomplete_transactions %} disabled{% endif %} title="{% if transactions or incomplete_transactions %} Export To PDF {%else%} No Data To Export {% endif %}">
+                                    <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>PDF
+                                </button>
+                            </form> 
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="text" name="export_to_csv" value="csv" hidden>
+                                <input type="text" name="csv_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                                <input type="text" name="csv_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+        
+                            <script>
+                                var today = new Date();
+                                var filename = 'Supplier Admin Allocations Summary' + ' - ' +today.toLocaleString() + '.csv'
+                            </script>
+                            <button  class="btn btn-labeled btn-default btn-sm" style="background-color: #cfd4ce; color: #333; margin-right: 10px;" type="submit" {% if not transactions and not incomplete_transactions %} disabled{% endif %}
+                            title="{% if transactions or incomplete_transactions %} Export To CSV {%else%} No Data To Export {% endif %}">
+                                <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>CSV
+                            </button>
+                            </form>
+                    </div> 
+                </div>
+
 
 
                 <div class="dropdown">
@@ -189,7 +275,7 @@
                                                         <input type="hidden" value="{{ transaction.supplier.company.id }}" name="supplier_id">
                                                         <input type="hidden" value="{{   transaction.buyer.username }}" name="buyer_name">
                                                         <div class="modal-footer">  
-                                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                                            <button type="submit" class="btn btn-primary">Download</button>
                                                             <button class="btn btn-default" data-dismiss="modal" >Close</button>
                                                         </div> 
 
@@ -262,7 +348,8 @@
                             {% if transaction.offer.delivery_method == 'DELIVERY' %}
                                 <td>
                                     <div class="btn-group">
-                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_history' transaction.id %}"><i class="fa fa-eye" style="font-size:16px;color:rgb(0, 225, 255)"></i> Schedules</a>
+                                        <a class="btn btn-labeled btn-success btn-sm" style="padding-right: 31px;" data-toggle="modal" href="{%url 'buyer:payment_history' transaction.id %}">
+                                            <span class="btn-label"> <i class="fa fa-eye" ></i> </span> Schedules</a>
                                     </div>
                                 </td>
                             {% else %}
@@ -460,13 +547,20 @@
 
                         </tr>
                         <script>
+                            
                             $('body').click(function (event) {
                                 if(!$(event.target).closest('#viewBank{{transaction.id}}').length && !$(event.target).is('#viewBank{{transaction.id}}')) {
                                     $("#viewBank{{transaction.id}}").modal('hide');
                                 }
                                 if(!$(event.target).closest('#review_{{transaction.id}}').length && !$(event.target).is('#review_{{transaction.id}}')) {
                                     $("#review_{{transaction.id}}").modal('hide');
-                                }      
+                                }
+                                if(!$(event.target).closest('#activity{{ transaction.id }}').length && !$(event.target).is('#activity{{ transaction.id }}')) {
+                                    $("#activity{{ transaction.id }}").modal('hide');
+                                } 
+                                if(!$(event.target).closest('#proof_{{transaction.id}}').length && !$(event.target).is('#proof_{{transaction.id}}')) {
+                                    $("#proof_{{transaction.id}}").modal('hide');
+                                }         
                             });
                         </script>
                     {%endfor%}
@@ -867,7 +961,10 @@
                                                 {% csrf_token %}
                                                 <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="proof_of_payment" class="form-control-file" id="exampleFormControlFile1" required>
                                                 <br>
-                                                <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+                                                <div class="modal-footer">  
+                                                    <button type="submit" class="btn btn-primary ">Submit</button>
+                                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                </div> 
 
                                             </form>
                                         </div>
@@ -881,13 +978,20 @@
                         </tr>
 
                         <script>
+                            
                             $('body').click(function (event) {
                                 if(!$(event.target).closest('#viewBank{{transaction.id}}').length && !$(event.target).is('#viewBank{{transaction.id}}')) {
                                     $("#viewBank{{transaction.id}}").modal('hide');
                                 }
                                 if(!$(event.target).closest('#review_{{transaction.id}}').length && !$(event.target).is('#review_{{transaction.id}}')) {
                                     $("#review_{{transaction.id}}").modal('hide');
-                                }      
+                                }
+                                if(!$(event.target).closest('#activity{{ transaction.id }}').length && !$(event.target).is('#activity{{ transaction.id }}')) {
+                                    $("#activity{{ transaction.id }}").modal('hide');
+                                }
+                                if(!$(event.target).closest('#expected{{transaction.id}}').length && !$(event.target).is('#expected{{transaction.id}}')) {
+                                    $("#expected{{transaction.id}}").modal('hide');
+                                }           
                             });
                         </script>
                     {%endfor%}
@@ -905,4 +1009,14 @@
         </div>
 
     </div>
+
+    <script>
+        $('body').click(function (event) {
+            if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
+                $("#state_modal").modal('hide');
+            }
+    
+                        
+        });
+    </script>  
 {%endblock%}

@@ -653,23 +653,130 @@ def download_release_note(request, id):
 @login_required()
 def transactions(request, id):
     user_permission(request)
-    today = datetime.now().strftime("%m/%d/%y")
+    today = datetime.now().strftime("%m-%d-%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
-    transactions = []
+    transactions = Transaction.objects.filter(supplier__company__id=id).all()
     company = ""
-    for tran in Transaction.objects.filter(supplier__company__id=id).all():
+    for tran in transactions:
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
         company = Company.objects.filter(id=tran.supplier.company.id).first()
         tran.depot = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
         if delivery_sched:
             tran.delivery_sched = delivery_sched
-        transactions.append(tran)
+        
     context = {
         'transactions': transactions,
         'transporters': transporters,
         'today': today,
         'company': company
     }
+
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            filtered = True;
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            
+            transactions = Transaction.objects.filter(supplier__company__id=id).filter(date__range=[start_date, end_date])
+
+            for tran in transactions:
+                delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
+                company = Company.objects.filter(id=tran.supplier.company.id).first()
+                tran.depot = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
+                if delivery_sched:
+                    tran.delivery_sched = delivery_sched
+
+            context = {
+            'transactions': transactions,
+            'transporters': transporters,
+            'today': today,
+            'start_date':start_date,
+            'end_date':end_date,
+            'company': company
+            }
+
+            return render(request, 'zeraPortal/transactions.html', context=context )
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                transactions = Transaction.objects.filter(supplier__company__id=id).filter(date__range=[start_date, end_date])
+
+                      
+            fields = ['date','buyer__company__name', 'offer__request__fuel_type', 'expected', 'paid', 'is_complete']
+            
+            if transactions:
+                transactions = transactions.values('date','buyer__company__name', 'offer__request__fuel_type', 'expected', 'paid', 'is_complete')
+                df = pd.DataFrame(transactions, columns=fields)
+            # else:
+            #     df_current = pd.DataFrame(current_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+            #     df_previous = pd.DataFrame(activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+            #     df = df_current.append(df_previous)
+
+            filename = f'ZERA - Transactions -{today}.csv'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                transactions = Transaction.objects.filter(supplier__company__id=id).filter(date__range=[start_date, end_date])
+
+            if transactions:
+                for tran in transactions:
+                    delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
+                    company = Company.objects.filter(id=tran.supplier.company.id).first()
+                    tran.depot = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
+                    if delivery_sched:
+                        tran.delivery_sched = delivery_sched
+            
+            context = {
+                'transactions': transactions,
+                'start_date':start_date,
+                'end_date':end_date,
+                'date':today
+            }
+              
+
+
+            html_string = render_to_string('zeraPortal/export/transactions_export.html', context=context )
+            html = HTML(string=html_string)
+            export_name = f"ZERA - Transactions - {today}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name}.pdf'
+                return response
+
+
+
     return render(request, 'zeraPortal/transactions.html', context=context)
 
 
