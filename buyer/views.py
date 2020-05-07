@@ -1611,6 +1611,7 @@ def activity(request):
                 'activities' : activities,
                 'current_activities' : current_activities,
                 'start_date': start_date,
+                'date': today,
                 'end_date': end_date
             }
 
