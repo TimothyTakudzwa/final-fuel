@@ -387,15 +387,7 @@
             });
         });
     </script>
-    <script>
-        $('body').click(function (event) {
-            if(!$(event.target).closest('.modal-success.in').length && !$(event.target).is('.modal-success.in')) {
-                $(".modal-success.in").modal('hide');
-            }
-    
-                        
-        });
-    </script>    
+       
     <!-- jquery-ui -->
     <script src="https://timothytakudzwa.github.io/static/new/assets/plugins/jquery-ui-1.12.1/jquery-ui.min.js"
         type="text/javascript"></script>
@@ -510,6 +502,15 @@
 
         });
       </script> 
+      <script>
+        $('body').click(function (event) {
+            if(!$(event.target).closest('.modal-success.in').length && !$(event.target).is('.modal-success.in')) {
+                $(".modal-success.in").modal('hide');
+            }
+    
+                        
+        });
+    </script> 
 
 
 </body>
