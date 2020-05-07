@@ -120,7 +120,10 @@ def accepted_orders(request):
                     'orders_notifications': orders_notifications,
                     'allocate': 'hide',
                     'release': 'hide',
-                    'new_orders': new_orders
+                    'new_orders': new_orders,
+                    'start_date': start_date,
+                    'end_date': end_date
+
         }
 
         return render(request, 'noicDepot/accepted_orders.html', context=context)
