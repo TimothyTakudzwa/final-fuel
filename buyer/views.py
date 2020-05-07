@@ -1597,14 +1597,14 @@ def activity(request):
             if end_date and start_date:
                 filtered_activities = Activity.objects.filter(user=request.user, date=today).filter(date__range=[start_date, end_date])
 
-            if  filtered_activities:
+            if filtered_activities:
                 for activity in filtered_activities:
                     if activity.action == 'Fuel Request':
                         activity.request_object = FuelRequest.objects.filter(id=activity.reference_id).first()
                     elif activity.action == 'Accepting Offer':
                         activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
                     elif activity.action == 'Rejecting Offer':
-                        activity.roffer_object = Offer.objects.filter(id=activity.reference_id).first()
+                        activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
 
             context = {
                 'filtered_activities': filtered_activities,
@@ -1624,7 +1624,7 @@ def activity(request):
 
             with open(f'{download_file}.pdf', 'rb') as pdf:
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-                response['Content-Disposition'] = f'attachment;filename={export_name} - Transactions - {today}.pdf'
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Activities - {today}.pdf'
                 return response        
 
 
