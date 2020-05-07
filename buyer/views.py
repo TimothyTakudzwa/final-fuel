@@ -1503,6 +1503,7 @@ def company_profile(request):
 @user_role
 def activity(request):
     current_activities = Activity.objects.filter(user=request.user, date=today).all()
+    filtered_activities = None
     for activity in current_activities:
         if activity.action == 'Fuel Request':
             activity.request_object = FuelRequest.objects.filter(id=activity.reference_id).first()
@@ -1530,17 +1531,8 @@ def activity(request):
                 end_date = datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
 
-            current_activities = Activity.objects.filter(user=request.user, date=today).filter(date__range=[start_date, end_date])
-            for activity in current_activities:
-                if activity.action == 'Fuel Request':
-                    activity.request_object = FuelRequest.objects.filter(id=activity.reference_id).first()
-                elif activity.action == 'Accepting Offer':
-                    activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
-                elif activity.action == 'Rejecting Offer':
-                    activity.roffer_object = Offer.objects.filter(id=activity.reference_id).first()
-
-            activities = Activity.objects.exclude(date=today).filter(user=request.user).filter(date__range=[start_date, end_date])
-            for activity in activities:
+            filtered_activities = Activity.objects.filter(user=request.user, date=today).filter(date__range=[start_date, end_date])
+            for activity in filtered_activities:
                 if activity.action == 'Fuel Request':
                     activity.request_object = FuelRequest.objects.filter(id=activity.reference_id).first()
                 elif activity.action == 'Accepting Offer':
@@ -1549,6 +1541,7 @@ def activity(request):
                     activity.roffer_object = Offer.objects.filter(id=activity.reference_id).first()
 
             context = {
+                'filtered_activities': filtered_activities,
                 'activities' : activities,
                 'current_activities' : current_activities,
                 'start_date': start_date,
@@ -1569,21 +1562,19 @@ def activity(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                all_transactions = Transaction.objects.filter(buyer=buyer).filter(date__range=[start_date, end_date])
+                current_activities = Activity.objects.filter(user=request.user, date=today).filter(date__range=[start_date, end_date])
+                activities = Activity.objects.exclude(date=today).filter(user=request.user).filter(date__range=[start_date, end_date])    
             
-            complete_trans = all_transactions.filter(is_complete=True)
-            in_complete_trans = all_transactions.filter(is_complete=False)    
-            
-            complete_trans = complete_trans.values('date','time', 'supplier__company__name',
+            current_activities = current_activities.values('date','time', 'supplier__company__name',
              'offer__request__fuel_type', 'offer__request__amount', 'is_complete')
-            in_complete_trans =  in_complete_trans.values('date','time', 'supplier__company__name',
+            activities =  activities.values('date','time', 'supplier__company__name',
              'offer__request__fuel_type', 'offer__request__amount', 'is_complete')
             fields = ['date','time', 'supplier__company__name', 'offer__request__fuel_type', 'offer__request__amount', 'is_complete']
             
-            df_complete_trans = pd.DataFrame(complete_trans, columns=fields)
-            df_in_complete_trans = pd.DataFrame(in_complete_trans, columns=fields)
+            df_current_activities = pd.DataFrame(current_activities, columns=fields)
+            df_activities = pd.DataFrame(activities, columns=fields)
 
-            df = df_complete_trans.append(df_in_complete_trans)
+            df = df_current_activities.append(df_activities)
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = f'{request.user.company.name}.csv'
@@ -1591,7 +1582,7 @@ def activity(request):
 
             with open(filename, 'rb') as csv_name:
                 response = HttpResponse(csv_name.read())
-                response['Content-Disposition'] = f'attachment;filename={filename} - Transactions - {today}.csv'
+                response['Content-Disposition'] = f'attachment;filename={filename} - Activities - {today}.csv'
                 return response     
 
         if request.POST.get('export_to_pdf') == 'pdf':
@@ -1604,40 +1595,25 @@ def activity(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                all_transactions = Transaction.objects.filter(buyer=buyer).filter(date__range=[start_date, end_date])
+                filtered_activities = Activity.objects.filter(user=request.user, date=today).filter(date__range=[start_date, end_date])
                 
-            for transaction in all_transactions:
-                subsidiary = Subsidiaries.objects.filter(id=transaction.supplier.subsidiary_id).first()
-                delivery_schedules = DeliverySchedule.objects.filter(transaction__id=transaction.id).exists()
-                if delivery_schedules:
-                    transaction.delivery_schedule = True
-                    transaction.delivery_object = DeliverySchedule.objects.filter(transaction__id=transaction.id).first()
-                else:
-                    transaction.delivery_schedule = False
-                    transaction.delivery_object = None
-                if subsidiary is not None:
-                    transaction.depot = subsidiary.name
-                    # transaction.address = subsidiary.location
-                from supplier.models import UserReview
-                transaction.review = UserReview.objects.filter(transaction=transaction).first()
-                # if transaction.is_complete == True:
-                #     complete_trans.append(transaction)
-                # else:
-                #     in_complete_trans.append(transaction)
-            complete_trans = all_transactions.filter(is_complete=True)
-            in_complete_trans = all_transactions.filter(is_complete=False)
-        
+            for activity in filtered_activities:
+                if activity.action == 'Fuel Request':
+                    activity.request_object = FuelRequest.objects.filter(id=activity.reference_id).first()
+                elif activity.action == 'Accepting Offer':
+                    activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+                elif activity.action == 'Rejecting Offer':
+                    activity.roffer_object = Offer.objects.filter(id=activity.reference_id).first()
+
             context = {
-                'transactions': complete_trans.order_by('-date', '-time'),
-                'incomplete_transactions': in_complete_trans.order_by('-date', '-time'),
-                'subsidiary': Subsidiaries.objects.filter(),
-                'all_transactions': AccountHistory.objects.filter().order_by('-date', '-time'),
-                'date': today,
+                'filtered_activities': filtered_activities,
+                'activities' : activities,
+                'current_activities' : current_activities,
                 'start_date': start_date,
                 'end_date': end_date
             }
 
-            html_string = render_to_string('buyer/export/export_transactions.html', context=context)
+            html_string = render_to_string('buyer/export/export_activities.html', context=context)
             html = HTML(string=html_string)
             export_name = f"{request.user.company.name.title()}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
@@ -1650,7 +1626,8 @@ def activity(request):
                 return response        
 
 
-    return render(request, 'buyer/activity.html', {'activities': activities, 'current_activities': current_activities})
+    return render(request, 'buyer/activity.html', {'activities': activities, 'current_activities': current_activities,
+    'filtered_activities':filtered_activities})
 
 
 '''Handling Delivery Branches'''
