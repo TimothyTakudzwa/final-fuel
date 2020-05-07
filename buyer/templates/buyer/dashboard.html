@@ -16,7 +16,7 @@
         {% endfor %}
     {% endif %}
     <!-- Content Header (Page header) -->
-    <div class="modal" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId">
+    <div class="modal modal-success in" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: rgb(55, 71, 103);color: white;">
@@ -66,9 +66,9 @@
                             </tr>
                             </tbody>
                         </table>
-                        <div class=" row col-sm-12">
-                            <a href="reject/{{offer.id}}" class="btn btn-danger col-sm-6 ">Reject and wait for offers</a>
-                            <a href="accept/{{offer.id}}" class="btn btn-primary col-sm-6 ">Accept Offer</a>
+                        <div class="modal-footer">
+                            <a href="reject/{{offer.id}}" class="btn btn-danger">Reject and wait for offers</a>
+                            <a href="accept/{{offer.id}}" class="btn btn-primary">Accept Offer</a>
                         </div>
                     </div>
 
