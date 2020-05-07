@@ -19,7 +19,7 @@
   </section>
 
 <div class="modal fade modal-success in" id="state_modal" role="dialog">
-<div class="modal-dialog" style="margin: 0;">
+<div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
             <span class="modal-title" style="color:whitesmoke"> Filter By State</span>
@@ -547,6 +547,14 @@
 </div>
 </div>
 </div>
+<script>
+    $('body').click(function (event) {
+        if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
+            $("#state_modal").modal('hide');
+        }    
+            
+    });
+</script>
 
     
 
