@@ -79,7 +79,7 @@
                                           <td></td>
                                           <td>{{ offer.date }}</td>
                                           <td>{{ offer.time }}</td>
-                                          <td>{{ offer.request.name.first_name|lower|capfirst }} {{ offer.request.name.last_name|lower|capfirst }}</td>
+                                          <td>{{ offer.request.name.company }}</td>
                                           
                                           {% if offer.request.fuel_type == 'Petrol' %}
                                             <td style="color: #009688;" >{{ offer.request.fuel_type|lower|capfirst }}</td>
