@@ -188,7 +188,7 @@ def accepted_orders(request):
             html_string = render_to_string('noicDepot/export/export_accept_orders.html',
             context=context)
             html = HTML(string=html_string)
-            export_name = f"{request.user.company.name.title()}"
+            export_name = f"Noic Depot - "
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
             download_file = f'media/transactions/{export_name}'
