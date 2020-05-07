@@ -8,6 +8,10 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import pandas as pd
+
 from fuelUpdates.models import SordCompanyAuditTrail
 from national.models import SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
 from noicDepot.util import sord_generator
