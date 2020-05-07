@@ -51,7 +51,6 @@
                                 <table id="pending_schedule" class="table table-striped table-bordered" style="width:100%">
                                         <thead style="background-color: lightslategray; color:white;">
                                             <tr>
-                                                <th></th>
                                                 <th style="color: white;">Recipient</th>
                                                 <th style="color: white;">Address</th>
                                                 <th style="color: white;">Product</th>
@@ -65,7 +64,6 @@
                                         <tbody>
                                             {% for delivery in pending_schedules %}
                                             <tr>
-                                                <td></td>
                                                 <td>{{ delivery.transaction.buyer.company.name|title }}</td>
                                                 <td>{{delivery.delivery_address}}</td>
                                                 
@@ -376,7 +374,6 @@
                                     <table id="completed_schedule" class="table table-striped table-bordered" style="width:100%">
                                         <thead style="background-color: lightslategray; color:white;">
                                             <tr>
-                                                <th></th>
                                                 <th style="color: white;">Recipient</th>
                                                 <th style="color: white;">Address</th>
                                                 <th style="color: white;">Product</th>
@@ -388,7 +385,6 @@
                                         <tbody>
                                             {% for delivery in completed_schedules %}
                                             <tr>
-                                                <td></td>
                                                 <td>{{ delivery.transaction.buyer.company.name|title }}</td>
                                                 <td>{{delivery.delivery_address}}</td>
                                                 

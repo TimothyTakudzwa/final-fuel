@@ -9,7 +9,7 @@
   </div> -->
   <div class="header-title" style="margin-left: 0px;">
     <h1>Offers</h1>
-    <small>List of all offers you have made</small>
+    <small>Zimbabawe Fuel Management System</small>
     <ol class="breadcrumb hidden-xs">
         <li><a href="{%url 'fuel-request'%}"><i class="pe-7s-home"></i> Home</a></li>
         <li class="active">Offers</li>
@@ -79,7 +79,7 @@
                                           <td></td>
                                           <td>{{ offer.date }}</td>
                                           <td>{{ offer.time }}</td>
-                                          <td>{{ offer.request.name.first_name|lower|capfirst }} {{ offer.request.name.last_name|lower|capfirst }}</td>
+                                          <td>{{ offer.request.name.company }}</td>
                                           
                                           {% if offer.request.fuel_type == 'Petrol' %}
                                             <td style="color: #009688;" >{{ offer.request.fuel_type|lower|capfirst }}</td>
