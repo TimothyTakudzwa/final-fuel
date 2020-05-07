@@ -1116,8 +1116,8 @@ def delivery_schedules(request):
                     depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
                     schedule.delivery_address = depot.location
         
-    completed_schedules = schedules.objects.filter(confirmation_date__isnull=False)
-    pending_schedules = schedules.objects.filter(confirmation_date__isnull=True)
+    completed_schedules = schedules.filter(confirmation_date__isnull=False)
+    pending_schedules = schedules.filter(confirmation_date__isnull=True)
 
 
     context = {
@@ -1147,9 +1147,34 @@ def delivery_schedules(request):
             if end_date:
                 end_date = datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
+
+            schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user).filter(date__range=[start_date, end_date])
+
+            for schedule in schedules:
+                schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+                    if schedule.transaction.offer.request.delivery_address.strip() == "":
+                        depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                        schedule.delivery_address = depot.location
+                    else:
+                        if schedule.transaction.offer.request.delivery_address != None:
+                            schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+                        else:
+                            depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                            schedule.delivery_address = depot.location
+                else:
+                    if schedule.transaction.offer.collection_address.strip() == "":
+                        depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                        schedule.delivery_address = depot.location
+                    else:
+                        if schedule.transaction.offer.collection_address != None:
+                            schedule.delivery_address = schedule.transaction.offer.collection_address
+                        else:
+                            depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                            schedule.delivery_address = depot.location      
             
-            completed_schedules = schedules.objects.filter(confirmation_date__isnull=False).filter(date__range=[start_date, end_date])
-            pending_schedules = schedules.objects.filter(confirmation_date__isnull=True).filter(date__range=[start_date, end_date])  
+            completed_schedules = schedules.filter(confirmation_date__isnull=False)
+            pending_schedules = schedules.filter(confirmation_date__isnull=True) 
             
             context = {
                 'start_date': start_date,
@@ -1171,8 +1196,8 @@ def delivery_schedules(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                completed_schedules = schedules.objects.filter(confirmation_date__isnull=False).filter(date__range=[start_date, end_date])
-                pending_schedules = schedules.objects.filter(confirmation_date__isnull=True).filter(date__range=[start_date, end_date])
+                completed_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user).filter(confirmation_date__isnull=False).filter(date__range=[start_date, end_date])
+                pending_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user).filter(confirmation_date__isnull=True).filter(date__range=[start_date, end_date])
             
             completed_schedules = completed_schedules.values('date','transaction__supplier__company__name', 'transaction__offer__request__delivery_address', 'transaction__offer__request__fuel_type',
              'delivery_quantity', 'transport_company', 'driver_name', 'id_number', 'vehicle_reg' )
@@ -1205,8 +1230,8 @@ def delivery_schedules(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                completed_schedules = schedules.objects.filter(confirmation_date__isnull=False).filter(date__range=[start_date, end_date])
-                pending_schedules = schedules.objects.filter(confirmation_date__isnull=True).filter(date__range=[start_date, end_date])
+                completed_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user).filter(confirmation_date__isnull=False).filter(date__range=[start_date, end_date])
+                pending_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user).filter(confirmation_date__isnull=True).filter(date__range=[start_date, end_date])
 
             context = {
                 'start_date': start_date,
