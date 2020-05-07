@@ -84,7 +84,7 @@
 
                 <div class="btn-group" style="margin-left: 25px;width: 100%;">
                     <div class="row" style="margin-bottom: 20px;">
-                        <h4> Requests </h4>
+                        <h4> Activities </h4>
                     </div>
                 
                     <div class="row">
@@ -518,4 +518,15 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $('body').click(function (event) {
+            if(!$(event.target).closest('.modal-success.in').length && !$(event.target).is('.modal-success.in')) {
+                $(".modal-success.in").modal('hide');
+            }
+    
+                        
+        });
+    </script>    
+
 {%endblock%}
