@@ -107,27 +107,27 @@ def accepted_orders(request):
                 end_date = datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
 
-        depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
-        orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
-        num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).count()    
-        orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=True).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
-        new_orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=False).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
-        
-        for order in orders:
-            order.allocation = SordNationalAuditTrail.objects.filter(order=order).first()
+            depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+            orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
+            num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).count()    
+            orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=True).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
+            new_orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=False).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
+            
+            for order in orders:
+                order.allocation = SordNationalAuditTrail.objects.filter(order=order).first()
 
-        context = {'orders': orders,
-                    'num_of_new_orders': num_of_new_orders,
-                    'orders_notifications': orders_notifications,
-                    'allocate': 'hide',
-                    'release': 'hide',
-                    'new_orders': new_orders,
-                    'start_date': start_date,
-                    'end_date': end_date
+            context = {'orders': orders,
+                        'num_of_new_orders': num_of_new_orders,
+                        'orders_notifications': orders_notifications,
+                        'allocate': 'hide',
+                        'release': 'hide',
+                        'new_orders': new_orders,
+                        'start_date': start_date,
+                        'end_date': end_date
 
-        }
+            }
 
-        return render(request, 'noicDepot/accepted_orders.html', context=context)
+            return render(request, 'noicDepot/accepted_orders.html', context=context)
         
         if request.POST.get('export_to_csv')=='csv':
             start_date = request.POST.get('csv_start_date')
