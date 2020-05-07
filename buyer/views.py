@@ -1564,12 +1564,13 @@ def activity(request):
             if end_date and start_date:
                 filtered_activities = Activity.objects.filter(user=request.user, date=today).filter(date__range=[start_date, end_date])
                 
+            fields = ['date','time', 'user__username', 'action', 'description']
+
             if not filtered_activities:
                 current_activities = current_activities.values('date','time', 'user__username',
                 'action', 'description')
                 activities =  activities.values('date','time', 'user__username',
                 'action', 'description')
-                fields = ['date','time', 'user__username', 'action', 'description']
                 
                 df_current_activities = pd.DataFrame(current_activities, columns=fields)
                 df_activities = pd.DataFrame(activities, columns=fields)
