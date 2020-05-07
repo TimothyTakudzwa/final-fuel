@@ -1596,14 +1596,15 @@ def activity(request):
                 end_date = end_date.date()
             if end_date and start_date:
                 filtered_activities = Activity.objects.filter(user=request.user, date=today).filter(date__range=[start_date, end_date])
-                
-            for activity in filtered_activities:
-                if activity.action == 'Fuel Request':
-                    activity.request_object = FuelRequest.objects.filter(id=activity.reference_id).first()
-                elif activity.action == 'Accepting Offer':
-                    activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
-                elif activity.action == 'Rejecting Offer':
-                    activity.roffer_object = Offer.objects.filter(id=activity.reference_id).first()
+
+            if  filtered_activities:
+                for activity in filtered_activities:
+                    if activity.action == 'Fuel Request':
+                        activity.request_object = FuelRequest.objects.filter(id=activity.reference_id).first()
+                    elif activity.action == 'Accepting Offer':
+                        activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+                    elif activity.action == 'Rejecting Offer':
+                        activity.roffer_object = Offer.objects.filter(id=activity.reference_id).first()
 
             context = {
                 'filtered_activities': filtered_activities,
