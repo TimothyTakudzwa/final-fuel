@@ -453,6 +453,9 @@ def fuel_request(request):
         else:
             buyer_request.price = 0.00
         complete_requests = FuelRequest.objects.filter(is_complete=True).all()
+        for buyer_request in complete_requests:
+            if buyer_request.dipping_stick_required == buyer_request.meter_required == buyer_request.pump_required == False:
+                buyer_request.no_equipment = True
     return render(request, 'supplier/fuel_request.html', {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'requests': requests, 'complete_requests': complete_requests})
 
 

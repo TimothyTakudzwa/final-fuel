@@ -58,8 +58,8 @@
                     <div class="col-xs-12 col-sm-12">
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs">
-                            <li class="active" ><a href="#tab2" data-toggle="tab" aria-expanded="true" style="border: rgb(211, 208, 208) 1px solid;">Complete</a></li>
                             <li class=""><a href="#tab1" data-toggle="tab" aria-expanded="false" style="border: rgb(211, 208, 208) 1px solid;">Incomplete</a></li>
+                            <li class="active" ><a href="#tab2" data-toggle="tab" aria-expanded="true" style="border: rgb(211, 208, 208) 1px solid;">Complete</a></li>                            
                         </ul>
                         <!-- Tab panels -->
                         <div class="tab-content">
@@ -107,7 +107,7 @@
                                                 {% else %}
                                                 <td>N/A</td> 
                                                 {% endif %}                                 
-                                                <td>{% if req.dipping_stick_required %}Stick &nbsp;{% endif %}{% if req.pump_required %}Pump_{{req.req.no_equipment}} &nbsp;{% endif %}{% if req.meter_required %}Meter&nbsp;{% endif %}{% if req.no_equipment %}N/A{% endif %}</td>
+                                                <td>{% if req.dipping_stick_required %}Stick &nbsp;{% endif %}{% if req.pump_required %}Pump &nbsp;{% endif %}{% if req.meter_required %}Meter&nbsp;{% endif %}{% if req.no_equipment %}N/A{% endif %}</td>
                                                 <td>{{ req.my_offer }}</td>
                                                 {% if req.my_offer != 'No Offer' %}
                                                 {% if req.delivery_method == 'DELIVERY' %}
