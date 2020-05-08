@@ -1102,9 +1102,16 @@ def collections(request):
             if end_date and start_date:
                 filtered_collections = Collections.objects.filter(date__range=[start_date, end_date])
 
-            html_string = render_to_string('noicDepot/export/export_collections.html', {'filtered_activities': filtered_activities,
-            'start_date':start_date,'current_activities': current_activities, 'activities':activities, 'end_date':end_date,
-            'date':today})
+            context = {
+                'start_date': start_date,
+                'end_date': end_date,
+                'date': today,
+                'collections': collections,
+                'new_collections': new_collections,
+                'filtered_collections': filtered_collections
+            }    
+
+            html_string = render_to_string('noicDepot/export/export_collections.html', context=context)
             html = HTML(string=html_string)
             export_name = f"ZERA - {today}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
