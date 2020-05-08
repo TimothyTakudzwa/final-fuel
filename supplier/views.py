@@ -429,7 +429,7 @@ def fuel_request(request):
         else:
             fuel = None
         if buyer_request.dipping_stick_required == buyer_request.meter_required == buyer_request.pump_required == False:
-            buyer_request.no_equipments = True
+            buyer_request.no_equipment = True
         if buyer_request.cash == buyer_request.ecocash == buyer_request.swipe == buyer_request.usd == False:
             buyer_request.no_payment = True
         # if not buyer_request.delivery_address.strip():
