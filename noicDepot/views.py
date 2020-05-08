@@ -1013,27 +1013,29 @@ def collections(request):
     }
     if request.method == 'POST':
         collection = Collections.objects.filter(id=request.POST.get('collection_id')).first()
-        collection.transporter = request.POST.get('transporter')
-        collection.truck_reg = request.POST.get('truck_reg')
-        collection.trailer_reg = request.POST.get('trailer_reg')
-        collection.driver = request.POST.get('driver')
-        collection.driver_id = request.POST.get('driver_id')
-        collection.date_collected = date.today()
-        collection.time_collected = datetime.today().time()
-        collection.has_collected = True
-        collection.order.status = 'Collected'
-        collection.save()
-        company = collection.order.company
-        user = User.objects.filter(company=company, user_type='S_ADMIN').first()
-        reference = 'collection'
-        reference_id = collection.id
-        depot = collection.order.noic_depot.name
-        action = f"You collected {collection.order.quantity}L of {collection.order.fuel_type} from {depot} depot"
-        Audit_Trail.objects.create(company=company, service_station=depot, user=user,
-                                   action=action, reference=reference, reference_id=reference_id)
+        
+        if collection:
+            collection.transporter = request.POST.get('transporter')
+            collection.truck_reg = request.POST.get('truck_reg')
+            collection.trailer_reg = request.POST.get('trailer_reg')
+            collection.driver = request.POST.get('driver')
+            collection.driver_id = request.POST.get('driver_id')
+            collection.date_collected = date.today()
+            collection.time_collected = datetime.today().time()
+            collection.has_collected = True
+            collection.order.status = 'Collected'
+            collection.save()
+            company = collection.order.company
+            user = User.objects.filter(company=company, user_type='S_ADMIN').first()
+            reference = 'collection'
+            reference_id = collection.id
+            depot = collection.order.noic_depot.name
+            action = f"You collected {collection.order.quantity}L of {collection.order.fuel_type} from {depot} depot"
+            Audit_Trail.objects.create(company=company, service_station=depot, user=user,
+                                    action=action, reference=reference, reference_id=reference_id)
 
-        messages.success(request, 'Collection saved successfully.')
-        return redirect('noicDepot:collections')
+            messages.success(request, 'Collection saved successfully.')
+            return redirect('noicDepot:collections')
     
         if request.POST.get('start_date') and request.POST.get('end_date') :
             filtered = True;
