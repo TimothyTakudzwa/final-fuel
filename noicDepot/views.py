@@ -1005,9 +1005,13 @@ def statistics(request):
 @user_role
 def collections(request):
     filtered_collections = None
+
+    new_collections = Collections.objects.filter(date=today).order_by('-date', '-time')
+    collections = Collections.objects.exclude(date=today).order_by('-date', '-time')
+
     context = {
-        'collections': Collections.objects.exclude(date=today).order_by('-date', '-time'),
-        'new_collections': Collections.objects.filter(date=today).order_by('-date', '-time'),
+        'collections': collections,
+        'new_collections': new_collections,
         'form': CollectionsForm(),
         'filtered_activities': filtered_collections
     }
