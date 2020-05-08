@@ -1,0 +1,266 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Orders {{request.company.name}} Summary</title>
+
+    <style>
+        @page {size: a3 landscape;}
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        .first {
+            width: 50%;
+            float:left;
+            font-size: 12px;
+
+        }
+        .wrapper {
+            width: 100%;
+            margin: auto;
+            padding: 10px;
+            overflow: hidden;
+        }
+        .text-muted{
+            color:#6c757d!important;
+        }
+    </style>
+
+</head>
+<body>
+
+
+<h1 style="text-align: center;">Orders Statement - {{ date }}</h1>
+
+{% if orders %}
+<h3 style="padding-top: 20px;">Complete Orders {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">({{date}})</small>{% endif %}</h3>
+
+<table style="padding-top: 20px; margin-bottom: 30px;">
+    <tr>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Depot</th>
+        <th>Fuel</th>
+        <th>Quantity</th>
+        <th>Currency</th>
+        <th>Proof of Payment</th>
+        <th>Status</th>
+        <th>Release Note</th>
+        <th>Delivery Note</th>
+    </tr>
+
+    {% for order in orders %}
+    <tr>
+        <td>{{ order.date }}</td>
+        <td>{{ order.time }}</td>
+        <td>{{ order.noic_depot.name }}</td>
+
+        {% if order.fuel_type == 'Petrol'  %}
+            <td style="color: #009688;">{{ order.fuel_type|lower|capfirst }}</td>
+        {% elif order.fuel_type == 'Diesel' %}
+            <td style="color: #ffb61e;">{{ order.fuel_type|lower|capfirst }}</td>
+        {% else %}    
+            <td>{{ order.fuel_type|lower|capfirst }}</td>
+        {% endif %}    
+
+        {% if order.fuel_type == 'Petrol'  %}
+        <td style="color: #009688;">{{ order.quantity|floatformat:2|intcomma }}</td>
+        {% elif order.fuel_type == 'Diesel' %}
+        <td style="color: #ffb61e;">{{ order.quantity|floatformat:2|intcomma }}</td>
+        {% else %}
+        <td>{{ order.quantity|floatformat:2|intcomma }}</td>
+        {% endif %}    
+
+
+
+        <td>{{ order.currency}}</td> 
+        
+
+       
+        <td>   
+            <!-- <a class="btn btn-primary btn-sm" style="color: whitesmoke;"  > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a> -->
+            <a  href="{% url 'users:download_proof' order.id %}">
+                Proof of Payment
+            </a>
+            
+        </td>
+       
+        <td {% if order.status == 'Accepted' %} style="color: #07a513;" {% else %} style="color: crimson;" {% endif %}>
+        {{order.status}}</td>
+        
+        {% if order.allocation != None %}
+                {% if order.allocation.release_note %}
+                <td>
+                              
+                    <a  href="{% url 'users:view_release_note' order.allocation.id %}">
+                        Download Release Note
+                    </a>
+                         
+                </td> 
+                {% else %}
+                <td>
+                    
+                    Release Note Pending
+                   
+                </td>
+                {% endif %}
+
+        {% else %}
+        <td>
+            Allocation Pending
+         </td>
+         {% endif %}
+
+         {% if order.allocation != None %}
+                {% if order.allocation.d_note %}
+                <td><i style="color: blue;">Uploaded</i></td>
+               
+                {% else %}
+                <td>
+                    D-Note Pending
+
+                 </td>
+                
+                {% endif %}
+
+        {% else %}
+        <td>
+            Allocation Pending
+         </td>
+         {% endif %}
+        
+        
+         
+    </tr>
+    {% endfor %}
+
+</table>
+
+{% endif %}
+
+{% if new_orders %}
+
+<h3 style="padding-top: 20px;">Incomplete Orders {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">( {{date}} )</small>{% endif %}</h3>
+
+<table style="padding-top: 20px">
+    <tr>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Depot</th>
+        <th>Fuel</th>
+        <th>Quantity</th>
+        <th>Currency</th>
+        <th>Proof of Payment</th>
+        <th>Status</th>
+        <th>Release Note</th>
+        <th>Delivery Note</th>
+    </tr>
+
+    {% for order in new_orders %}
+    <tr>
+        <td>{{ order.date }}</td>
+        <td>{{ order.time }}</td>
+        <td>{{ order.noic_depot.name }}</td>
+
+        {% if order.fuel_type == 'Petrol'  %}
+            <td style="color: #009688;">{{ order.fuel_type|lower|capfirst }}</td>
+        {% elif order.fuel_type == 'Diesel' %}
+            <td style="color: #ffb61e;">{{ order.fuel_type|lower|capfirst }}</td>
+        {% else %}    
+            <td>{{ order.fuel_type|lower|capfirst }}</td>
+        {% endif %}    
+
+        {% if order.fuel_type == 'Petrol'  %}
+        <td style="color: #009688;">{{ order.quantity|floatformat:2|intcomma }}</td>
+        {% elif order.fuel_type == 'Diesel' %}
+        <td style="color: #ffb61e;">{{ order.quantity|floatformat:2|intcomma }}</td>
+        {% else %}
+        <td>{{ order.quantity|floatformat:2|intcomma }}</td>
+        {% endif %}    
+
+
+
+        <td>{{ order.currency}}</td> 
+        
+        <td>
+            
+            <!-- <a class="btn btn-primary btn-sm" style="color: whitesmoke;"  > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a> -->
+            <a  href="{% url 'users:download_proof' order.id %}" >
+                 Proof of Payment
+            </a>
+            
+        </td>
+       
+        <td {% if order.status == 'Accepted' %} style="color: #07a513;" {% else %} style="color: crimson;" {% endif %}>
+        {{order.status}}</td>
+        
+        {% if order.allocation != None %}
+                {% if order.allocation.release_note %}
+                <td>
+                    
+                       
+                        <a  href="{% url 'users:view_release_note' order.allocation.id %}" >
+                             Download Release Note
+                        </a>
+                    
+                    
+                </td> 
+                {% else %}
+                <td>
+                    
+                  Pending
+                   
+                </td>
+                {% endif %}
+
+        {% else %}
+        <td>
+            Allocation Pending
+         </td>
+         {% endif %}
+
+         {% if order.allocation != None %}
+                {% if order.allocation.d_note %}
+                <td><i style="color: blue;">Uploaded</i></td>
+               
+                {% else %}
+                <td>
+                    D-Note Pending
+
+                 </td>
+                
+                {% endif %}
+
+        {% else %}
+        <td>
+            Allocation Pending
+         </td>
+         {% endif %}
+        
+        
+         
+    </tr>
+    {% endfor %}
+
+</table>
+
+{% endif %}
+
+
+
+</body>
+</html>

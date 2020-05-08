@@ -1115,10 +1115,10 @@ def delivery_schedules(request):
                 else:
                     depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
                     schedule.delivery_address = depot.location
-        if schedule.confirmation_date:
-            completed_schedules.append(schedule)
-        else:
-            pending_schedules.append(schedule)
+        
+    completed_schedules = schedules.filter(confirmation_date__isnull=False)
+    pending_schedules = schedules.filter(confirmation_date__isnull=True)
+
 
     context = {
         'pending_schedules': pending_schedules,
@@ -1126,16 +1126,135 @@ def delivery_schedules(request):
        }
 
     if request.method == 'POST':
-        confirmation_date = request.POST.get('delivery_date')
-        delivery_id = int(request.POST.get('delivery_id'))
+        if request.POST.get('delivery_id'):
+            confirmation_date = request.POST.get('delivery_date')
+            delivery_id = int(request.POST.get('delivery_id'))
 
-        schedule = DeliverySchedule.objects.filter(id=delivery_id).first()
-        schedule.confirmation_date = confirmation_date
-        schedule.save()
-        messages.success(request, 'Delivery successfully confirmed.')
-        message = f"Delivery confirmed for {schedule.transaction.buyer.company}, Click to view confirmation document"
-        Notification.objects.create(user=request.user, action='DELIVERY', message=message, reference_id=schedule.id)
-        return redirect('delivery-schedule')
+            schedule = DeliverySchedule.objects.filter(id=delivery_id).first()
+            schedule.confirmation_date = confirmation_date
+            schedule.save()
+            messages.success(request, 'Delivery successfully confirmed.')
+            message = f"Delivery confirmed for {schedule.transaction.buyer.company}, Click to view confirmation document"
+            Notification.objects.create(user=request.user, action='DELIVERY', message=message, reference_id=schedule.id)
+            return redirect('delivery-schedule')
+
+
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+
+            schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user).filter(date__range=[start_date, end_date])
+
+            for schedule in schedules:
+                schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+                    if schedule.transaction.offer.request.delivery_address.strip() == "":
+                        depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                        schedule.delivery_address = depot.location
+                    else:
+                        if schedule.transaction.offer.request.delivery_address != None:
+                            schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+                        else:
+                            depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                            schedule.delivery_address = depot.location
+                else:
+                    if schedule.transaction.offer.collection_address.strip() == "":
+                        depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                        schedule.delivery_address = depot.location
+                    else:
+                        if schedule.transaction.offer.collection_address != None:
+                            schedule.delivery_address = schedule.transaction.offer.collection_address
+                        else:
+                            depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                            schedule.delivery_address = depot.location      
+            
+            completed_schedules = schedules.filter(confirmation_date__isnull=False)
+            pending_schedules = schedules.filter(confirmation_date__isnull=True) 
+            
+            context = {
+                'start_date': start_date,
+                'end_date': end_date,
+                'pending_schedules': pending_schedules,
+                'completed_schedules': completed_schedules
+            }
+
+            return render(request, 'buyer/delivery_schedules.html', context=context)
+                
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                completed_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user).filter(confirmation_date__isnull=False).filter(date__range=[start_date, end_date])
+                pending_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user).filter(confirmation_date__isnull=True).filter(date__range=[start_date, end_date])
+            
+            completed_schedules = completed_schedules.values('date','transaction__supplier__company__name', 'transaction__offer__request__delivery_address', 'transaction__offer__request__fuel_type',
+             'delivery_quantity', 'transport_company', 'driver_name', 'id_number', 'vehicle_reg' )
+            pending_schedules =  pending_schedules.values('date','transaction__supplier__company__name', 'transaction__offer__request__delivery_address', 'transaction__offer__request__fuel_type',
+             'delivery_quantity', 'transport_company', 'driver_name', 'id_number', 'vehicle_reg' )
+            fields = ['date','transaction__supplier__company__name', 'transaction__offer__request__delivery_address', 'transaction__offer__request__fuel_type',
+             'delivery_quantity', 'transport_company', 'driver_name', 'id_number', 'vehicle_reg' ]
+            
+            df_completed_schedules = pd.DataFrame(completed_schedules, columns=fields)
+            df_pending_schedules = pd.DataFrame(pending_schedules, columns=fields)
+
+            df = df_completed_schedules.append(df_pending_schedules)
+
+            # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
+            filename = f'{request.user.company.name}'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} -Delivery Schedules -{today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                completed_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user).filter(confirmation_date__isnull=False).filter(date__range=[start_date, end_date])
+                pending_schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user).filter(confirmation_date__isnull=True).filter(date__range=[start_date, end_date])
+
+            context = {
+                'start_date': start_date,
+                'end_date': end_date,
+                'pending_schedules': pending_schedules,
+                'date': today,
+                'completed_schedules': completed_schedules
+            }
+
+
+            html_string = render_to_string('buyer/export/export_delivery_schedules.html', context=context)
+            html = HTML(string=html_string)
+            export_name = f"{request.user.company.name.title()}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} -Orders - {today}.pdf'
+                return response        
+
 
     return render(request, 'buyer/delivery_schedules.html', context=context)
 
@@ -1503,6 +1622,7 @@ def company_profile(request):
 @user_role
 def activity(request):
     current_activities = Activity.objects.filter(user=request.user, date=today).all()
+    filtered_activities = None
     for activity in current_activities:
         if activity.action == 'Fuel Request':
             activity.request_object = FuelRequest.objects.filter(id=activity.reference_id).first()
@@ -1530,17 +1650,8 @@ def activity(request):
                 end_date = datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
 
-            current_activities = Activity.objects.filter(user=request.user, date=today).filter(date__range=[start_date, end_date])
-            for activity in current_activities:
-                if activity.action == 'Fuel Request':
-                    activity.request_object = FuelRequest.objects.filter(id=activity.reference_id).first()
-                elif activity.action == 'Accepting Offer':
-                    activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
-                elif activity.action == 'Rejecting Offer':
-                    activity.roffer_object = Offer.objects.filter(id=activity.reference_id).first()
-
-            activities = Activity.objects.exclude(date=today).filter(user=request.user).filter(date__range=[start_date, end_date])
-            for activity in activities:
+            filtered_activities = Activity.objects.filter(user=request.user, date=today).filter(date__range=[start_date, end_date])
+            for activity in filtered_activities:
                 if activity.action == 'Fuel Request':
                     activity.request_object = FuelRequest.objects.filter(id=activity.reference_id).first()
                 elif activity.action == 'Accepting Offer':
@@ -1549,6 +1660,7 @@ def activity(request):
                     activity.roffer_object = Offer.objects.filter(id=activity.reference_id).first()
 
             context = {
+                'filtered_activities': filtered_activities,
                 'activities' : activities,
                 'current_activities' : current_activities,
                 'start_date': start_date,
@@ -1569,21 +1681,26 @@ def activity(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                all_transactions = Transaction.objects.filter(buyer=buyer).filter(date__range=[start_date, end_date])
-            
-            complete_trans = all_transactions.filter(is_complete=True)
-            in_complete_trans = all_transactions.filter(is_complete=False)    
-            
-            complete_trans = complete_trans.values('date','time', 'supplier__company__name',
-             'offer__request__fuel_type', 'offer__request__amount', 'is_complete')
-            in_complete_trans =  in_complete_trans.values('date','time', 'supplier__company__name',
-             'offer__request__fuel_type', 'offer__request__amount', 'is_complete')
-            fields = ['date','time', 'supplier__company__name', 'offer__request__fuel_type', 'offer__request__amount', 'is_complete']
-            
-            df_complete_trans = pd.DataFrame(complete_trans, columns=fields)
-            df_in_complete_trans = pd.DataFrame(in_complete_trans, columns=fields)
+                filtered_activities = Activity.objects.filter(user=request.user, date=today).filter(date__range=[start_date, end_date])
+                
+            fields = ['date','time', 'user__username', 'action', 'description']
 
-            df = df_complete_trans.append(df_in_complete_trans)
+            if not filtered_activities:
+                current_activities = current_activities.values('date','time', 'user__username',
+                'action', 'description')
+                activities =  activities.values('date','time', 'user__username',
+                'action', 'description')
+                
+                df_current_activities = pd.DataFrame(current_activities, columns=fields)
+                df_activities = pd.DataFrame(activities, columns=fields)
+
+                df = df_current_activities.append(df_activities)
+            else:
+                filtered_activities = filtered_activities.values('date','time', 'user__username',
+                'action', 'description')
+                
+                df = pd.DataFrame(filtered_activities, columns=fields)
+                    
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = f'{request.user.company.name}.csv'
@@ -1591,10 +1708,10 @@ def activity(request):
 
             with open(filename, 'rb') as csv_name:
                 response = HttpResponse(csv_name.read())
-                response['Content-Disposition'] = f'attachment;filename={filename} - Transactions - {today}.csv'
+                response['Content-Disposition'] = f'attachment;filename={filename} - Activities - {today}.csv'
                 return response     
 
-        if request.POST.get('export_to_pdf') == 'pdf':
+        else:
             start_date = request.POST.get('pdf_start_date')
             end_date = request.POST.get('pdf_end_date')
             if start_date:
@@ -1604,40 +1721,27 @@ def activity(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                all_transactions = Transaction.objects.filter(buyer=buyer).filter(date__range=[start_date, end_date])
-                
-            for transaction in all_transactions:
-                subsidiary = Subsidiaries.objects.filter(id=transaction.supplier.subsidiary_id).first()
-                delivery_schedules = DeliverySchedule.objects.filter(transaction__id=transaction.id).exists()
-                if delivery_schedules:
-                    transaction.delivery_schedule = True
-                    transaction.delivery_object = DeliverySchedule.objects.filter(transaction__id=transaction.id).first()
-                else:
-                    transaction.delivery_schedule = False
-                    transaction.delivery_object = None
-                if subsidiary is not None:
-                    transaction.depot = subsidiary.name
-                    # transaction.address = subsidiary.location
-                from supplier.models import UserReview
-                transaction.review = UserReview.objects.filter(transaction=transaction).first()
-                # if transaction.is_complete == True:
-                #     complete_trans.append(transaction)
-                # else:
-                #     in_complete_trans.append(transaction)
-            complete_trans = all_transactions.filter(is_complete=True)
-            in_complete_trans = all_transactions.filter(is_complete=False)
-        
+                filtered_activities = Activity.objects.filter(user=request.user, date=today).filter(date__range=[start_date, end_date])
+
+            if filtered_activities:
+                for activity in filtered_activities:
+                    if activity.action == 'Fuel Request':
+                        activity.request_object = FuelRequest.objects.filter(id=activity.reference_id).first()
+                    elif activity.action == 'Accepting Offer':
+                        activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+                    elif activity.action == 'Rejecting Offer':
+                        activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+
             context = {
-                'transactions': complete_trans.order_by('-date', '-time'),
-                'incomplete_transactions': in_complete_trans.order_by('-date', '-time'),
-                'subsidiary': Subsidiaries.objects.filter(),
-                'all_transactions': AccountHistory.objects.filter().order_by('-date', '-time'),
-                'date': today,
+                'filtered_activities': filtered_activities,
+                'activities' : activities,
+                'current_activities' : current_activities,
                 'start_date': start_date,
+                'date': today,
                 'end_date': end_date
             }
 
-            html_string = render_to_string('buyer/export/export_transactions.html', context=context)
+            html_string = render_to_string('buyer/export/export_activities.html', context=context)
             html = HTML(string=html_string)
             export_name = f"{request.user.company.name.title()}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
@@ -1646,11 +1750,12 @@ def activity(request):
 
             with open(f'{download_file}.pdf', 'rb') as pdf:
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-                response['Content-Disposition'] = f'attachment;filename={export_name} - Transactions - {today}.pdf'
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Activities - {today}.pdf'
                 return response        
 
 
-    return render(request, 'buyer/activity.html', {'activities': activities, 'current_activities': current_activities})
+    return render(request, 'buyer/activity.html', {'activities': activities, 'current_activities': current_activities,
+    'filtered_activities':filtered_activities})
 
 
 '''Handling Delivery Branches'''
