@@ -157,9 +157,9 @@
                                                         {% if transaction.proof_of_payment %}
                                                             {% if transaction.proof_of_payment_approved == False %}
                                                                 <td>
-                                                                    <div class="btn-group">
-                                                                        <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-proof' transaction.id %}" > <i class="fa fa-download" style="font-size:12px"></i> P.O.P</a>
-                                                                        <a class="btn btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" data-target="#approve{{transaction.id}}" >Approve</a>
+                                                                    <div class="btn-group" style="width:100%">
+                                                                        <a class="btn btn-primary btn-sm" style="color: whitesmoke; width:50%" href="{% url 'supplier:download-proof' transaction.id %}" > <i class="fa fa-download" style="font-size:12px"></i> P.O.P</a>
+                                                                        <a class="btn btn-warning btn-sm" style="color: whitesmoke; width:50%" data-toggle="modal" data-target="#approve{{transaction.id}}" >Approve</a>
                                                                     </div>
                                                                 </td>
                                                             {% else %}
