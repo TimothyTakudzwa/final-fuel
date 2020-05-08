@@ -1070,19 +1070,19 @@ def collections(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
+                filtered_collections = Collections.objects.filter(date__range=[start_date, end_date])
                       
-            fields = ['date','time', 'company__name', 'action', 'description', 'reference_id']
+            fields = ['date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity']
             
-            if filtered_activities:
-                filtered_activities = filtered_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id')
-                df = pd.DataFrame(filtered_activities, columns=fields)
+            if filtered_collections:
+                filtered_collections = filtered_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity')
+                df = pd.DataFrame(filtered_collections, columns=fields)
             else:
-                df_current = pd.DataFrame(current_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
-                df_previous = pd.DataFrame(activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+                df_current = pd.DataFrame(new_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity'), columns=fields)
+                df_previous = pd.DataFrame(collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity'), columns=fields)
                 df = df_current.append(df_previous)
 
-            filename = f'ZERA - {today}.csv'
+            filename = f'Noic Depot Collections - {today}.csv'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
@@ -1100,9 +1100,9 @@ def collections(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
+                filtered_collections = Collections.objects.filter(date__range=[start_date, end_date])
 
-            html_string = render_to_string('zeraPortal/export/activities_export.html', {'filtered_activities': filtered_activities,
+            html_string = render_to_string('noicDepot/export/export_collections.html', {'filtered_activities': filtered_activities,
             'start_date':start_date,'current_activities': current_activities, 'activities':activities, 'end_date':end_date,
             'date':today})
             html = HTML(string=html_string)
