@@ -166,7 +166,7 @@ def decline_company(request, id):
     company_rep = User.objects.filter(company=company).first()
     company.declined = True
     company.save()
-    messages.danger(request, f"Company {company.name} and its rep {company_rep.name} declined.")
+    messages.warning(request, f"Company {company.name} and its rep {company_rep.name} declined.")
     return redirect('buyer:approve_companies')
 """
 
@@ -199,7 +199,7 @@ def token_is_send(request, auth_user):
         messages.success(request, f"{auth_user.first_name}  {auth_user.last_name} has completed first stage of registration successfully.")
         return True
     except Exception:
-        messages.danger(request, f"Could not send registration details, please contact ZFMS")
+        messages.warning(request, f"Could not send registration details, please contact ZFMS")
         return False
         messages.success(request, ('Your profile has been successfully updated.'))
     return render(request, 'buyer/send_email.html')
