@@ -295,15 +295,18 @@ def allocations(request):
             if end_date and start_date:
                 allocations = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
 
-            df = convert_to_dataframe(allocations)
-            filename = 'Noic Allocations Summary.csv'
+            allocations = allocations.values('date','time','sord_no','company','fuel_type','currency','quantity','price')
+            fields = ['date','time','sord_no','company','fuel_type','currency','quantity','price']
+
+            df = pd.DataFrame(allocations, columns=fields)
+            filename = 'Noic Admin'
 
             df = df[['date','time','sord_no','company','fuel_type','currency','quantity','price']]
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
                 response = HttpResponse(csv_name.read())
-                response['Content-Disposition'] = f'attachment;filename={filename}-{date_today}.csv'
+                response['Content-Disposition'] = f'attachment;filename={filename}- Allocations -{date_today}.csv'
                 return response                  
         else:
             start_date = request.POST.get('pdf_start_date')
@@ -316,7 +319,7 @@ def allocations(request):
                 end_date = end_date.date()
             if end_date and start_date:
                 allocations = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
-            html_string = render_to_string('noic/export_audit.html', {'allocations': allocations, 'date': date})
+            html_string = render_to_string('noic/export/export_audit.html', {'allocations': allocations, 'date': date})
             html = HTML(string=html_string)
             export_name = "Noic Allocations Summary"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
