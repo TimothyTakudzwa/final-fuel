@@ -1380,6 +1380,7 @@ def download_release_note(request, id):
 @login_required()
 @user_role
 def activity(request):
+    filtered_activities = None
     activities = Activity.objects.exclude(date=today).filter(user=request.user)
     for activity in activities:
         if activity.action == 'Making Offer':
@@ -1406,6 +1407,106 @@ def activity(request):
             activity.delivery = DeliverySchedule.objects.filter(id=activity.reference_id).first()
             activity.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            filtered = True;
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            
+            filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
+            
+            for activity in filtered_activities:
+                if activity.action == 'Making Offer':
+                    activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+                elif activity.action == 'Updating Fuel Stocks':
+                    activity.fuel_object = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+                elif activity.action == 'Creating Delivery Schedule':
+                    activity.delivery = DeliverySchedule.objects.filter(id=activity.reference_id).first()
+                    activity.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+                elif activity.action == 'Updating Delivery Schedule':
+                    activity.delivery = DeliverySchedule.objects.filter(id=activity.reference_id).first()
+                    activity.subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+
+            depot = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+
+            context = {
+                'filtered_activities': filtered_activities,
+                'start_date': start_date,
+                'end_date': end_date,
+                'depot': depot,
+            }
+
+            return render(request, 'supplier/activity.html', context=context)
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
+                      
+            fields = ['date','time', 'company__name', 'action', 'description', 'reference_id']
+            
+            if filtered_activities:
+                filtered_activities = filtered_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id')
+                df = pd.DataFrame(filtered_activities, columns=fields)
+            else:
+                df_current = pd.DataFrame(current_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+                df_previous = pd.DataFrame(activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+                df = df_current.append(df_previous)
+
+            filename = f'{request.company.name}'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - Activity - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
+
+            context = {
+                'filtered_activities': filtered_activities,
+                'start_date':start_date,
+                'current_activities': current_activities,
+                'activities':activities, 'end_date':end_date,
+                'date':today
+            }
+
+            html_string = render_to_string('supplier/export/export_activities.html', context=context)
+            html = HTML(string=html_string)
+            export_name = f"{request.company.name}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Activities - {today}.pdf'
+                return response
+
     return render(request, 'supplier/activity.html', {'activities': activities, 'depot': depot, 'current_activities': current_activities})
 
 
