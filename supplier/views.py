@@ -1276,13 +1276,13 @@ def delivery_schedules(request):
                 completed_schedules = schedules.filter(confirmation_date__isnull=False)
                 pending_schedules = schedules.filter(confirmation_date__isnull=True)
 
-                context = {
-                    'completed_schedules': completed_schedules,
-                    'pending_schedules':pending_schedules,
-                    'date':today,
-                    'start_date':start_date,
-                    'end_date':end_date
-                }  
+            context = {
+                'completed_schedules': completed_schedules,
+                'pending_schedules':pending_schedules,
+                'date':today,
+                'start_date':start_date,
+                'end_date':end_date
+            }  
                 
             html_string = render_to_string('supplier/export/export_delivery_schedules.html', context=context)
             html = HTML(string=html_string)
