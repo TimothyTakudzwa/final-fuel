@@ -757,21 +757,8 @@ Transactions Operations
 @login_required
 @user_role
 def transaction(request):
-    if request.method == "POST":
-        tran = Transaction.objects.get(id=request.POST.get('transaction_id'))
-        UserReview.objects.create(
-            rater=request.user,
-            rating=int(request.POST.get('rating')),
-            company_type='SUPPLIER',
-            company=tran.supplier.company,
-            transaction=tran,
-            depot=Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
-            comment=request.POST.get('comment')
-        )
-        messages.success(request, 'Transaction successfully reviewed.')
-        return redirect('transaction')
 
-    today = datetime.now().strftime("%m/%d/%y")
+    today = datetime.now().strftime("%m-%d-%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
     trans = Transaction.objects.filter(supplier=request.user).all()
     
@@ -795,6 +782,137 @@ def transaction(request):
         'transporters': transporters,
         'today': today
     }
+    
+
+
+    if request.method == "POST":
+        if request.POST.get('transaction_id'):
+            tran = Transaction.objects.get(id=request.POST.get('transaction_id'))
+            UserReview.objects.create(
+                rater=request.user,
+                rating=int(request.POST.get('rating')),
+                company_type='SUPPLIER',
+                company=tran.supplier.company,
+                transaction=tran,
+                depot=Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
+                comment=request.POST.get('comment')
+            )
+            messages.success(request, 'Transaction successfully reviewed.')
+            return redirect('transaction')
+
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+
+            trans = Transaction.objects.filter(supplier=request.user).filter(date__range=[start_date, end_date])
+    
+            for tran in trans:
+                delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
+                if delivery_sched:
+                    tran.delivery_sched = delivery_sched
+                tran.review = UserReview.objects.filter(transaction=tran).first()
+              
+            transactions = trans.filter(is_complete=True)
+            transactions_pending = trans.filter(is_complete=False) 
+                
+        
+            context = {
+                'transactions': transactions.order_by('-date', '-time'),
+                'transactions_pending': transactions_pending.order_by('-date', '-time'),
+                'transporters': transporters,
+                'today': today,
+                'start_date': start_date,
+                'end_date': end_date
+
+            }
+
+
+            return render(request, 'supplier/transactions.html', context=context)
+
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                trans = Transaction.objects.filter(supplier=request.user).filter(date__range=[start_date, end_date])
+
+            transactions = trans.filter(is_complete=True)
+            transactions_pending = trans.filter(is_complete=False)  
+            
+            transactions = transactions.values('date','time', 'buyer__company__name',
+             'offer__request__fuel_type', 'offer__request__amount', 'is_complete')
+            transactions_pending =  transactions_pending.values('date','time', 'buyer__company__name',
+             'offer__request__fuel_type', 'offer__request__amount', 'is_complete')
+            fields = ['date','time', 'buyer__company__name', 'offer__request__fuel_type', 'offer__request__amount', 'is_complete']
+            
+            df_complete_trans = pd.DataFrame(transactions, columns=fields)
+            df_in_complete_trans = pd.DataFrame(transactions_pending, columns=fields)
+
+            df = df_complete_trans.append(df_in_complete_trans)
+
+            # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
+            filename = f'{request.user.company.name}'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - Transactions - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                trans = Transaction.objects.filter(supplier=request.user).filter(date__range=[start_date, end_date])
+
+            for tran in trans:
+                delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
+                if delivery_sched:
+                    tran.delivery_sched = delivery_sched
+                tran.review = UserReview.objects.filter(transaction=tran).first()
+                  
+            transactions = trans.filter(is_complete=True)
+            transactions_pending = trans.filter(is_complete=False) 
+        
+            context = {
+                'transactions': transactions.order_by('-date', '-time'),
+                'incomplete_transactions': transactions_pending.order_by('-date', '-time'),
+                'date': today,
+                'start_date': start_date,
+                'end_date': end_date
+            }
+
+            html_string = render_to_string('supplier/export/export_transactions.html', context=context)
+            html = HTML(string=html_string)
+            export_name = f"{request.user.company.name.title()}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Transactions - {today}.pdf'
+                return response        
+    
+
     return render(request, 'supplier/transactions.html', context=context)
 
 
