@@ -1432,8 +1432,11 @@
                                     <p class="col-md-6" style="font-weight: bold;">Status: </p>
                                     {% if activity.delivery.confirmation_date %}
                                     <p class="col-md-6"> 
+                                        {% comment %}
                                         <a class="btn btn-purple btn-sm" href="{% url 'supplier:view_confirmation_doc' activity.delivery.id %}">View Confirmation Doc</a>
-                                    </p>       
+                                        {% endcomment %}
+                                    </p>     
+                                      
                                     {%else %}
                                     <p class="col-md-6">Status: Pending </p>    
                                     {% endif %} 
