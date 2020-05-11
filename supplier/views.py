@@ -556,7 +556,7 @@ def my_offers(request):
         
     offers_pending = Offer.objects.filter(supplier=request.user, is_accepted=True).all()
 
-     for offer_temp in offers_pending:
+    for offer_temp in offers_pending:
         if offer_temp.cash == offer_temp.ecocash == offer_temp.swipe == offer_temp.usd == False:
             offer_temp.no_payment = True
         if offer_temp.dipping_stick_available == offer_temp.meter_available == offer_temp.pump_available == False:
