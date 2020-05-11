@@ -603,13 +603,13 @@ def my_offers(request):
                 .filter(date__range=[start_date, end_date])
 
             offers = offers.values('date', 'request__name__company__name, request__fuel_type',
-             'price', 'delivery_method', 'transport_fee', 'request__payment_method')  
+             'price', 'delivery_method', 'transport_fee')  
             
             offers_pending = offers.values('date', 'request__name__company__name, request__fuel_type',
-             'price', 'delivery_method', 'transport_fee', 'request__payment_method')  
+             'price', 'delivery_method', 'transport_fee')  
 
             fields = ['date', 'request__name__company__name, request__fuel_type',
-             'price', 'delivery_method', 'transport_fee', 'request__payment_method']
+             'price', 'delivery_method', 'transport_fee']
 
             df_offers = pd.DataFrame(offers, columns=fields)
             df_offers_pending = pd.DataFrame(offers_pending, columns=fields)
