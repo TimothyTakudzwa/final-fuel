@@ -61,10 +61,10 @@ def orders(request):
             start_date = request.POST.get('start_date')
             end_date = request.POST.get('end_date')
             if start_date:
-                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
                 start_date = start_date.date()
             if end_date:
-                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
 
             new_orders = Order.objects.filter(allocated_fuel=True) \
@@ -108,10 +108,10 @@ def orders(request):
             start_date = request.POST.get('csv_start_date')
             end_date = request.POST.get('csv_end_date')
             if start_date:
-                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = datetime.datetime.strptime(start_date, '%b %d, %Y')
                 start_date = start_date.date()
             if end_date:
-                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = datetime.datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
                 accepted_orders = Order.objects.filter(company=request.user.company).filter(~Q(status='Pending')).filter(date__range=[start_date, end_date])
@@ -150,10 +150,10 @@ def orders(request):
             start_date = request.POST.get('pdf_start_date')
             end_date = request.POST.get('pdf_end_date')
             if start_date:
-                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = datetime.datetime.strptime(start_date, '%b %d, %Y')
                 start_date = start_date.date()
             if end_date:
-                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = datetime.datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
                 accepted_orders = Order.objects.filter(company=request.user.company).filter(~Q(status='Pending')).filter(date__range=[start_date, end_date])
