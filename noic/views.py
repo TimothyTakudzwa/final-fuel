@@ -237,10 +237,10 @@ def activity(request):
                 df = pd.DataFrame(filtered_activities, columns=fields)
             else:
                 df_current = pd.DataFrame(current_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
-                df_previous = pd.DataFrame(activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+                df_previous = pd.DataFrame(previous_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
                 df = df_current.append(df_previous)
 
-            filename = f'Noic Depot'
+            filename = f'Noic Admin'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
@@ -264,13 +264,13 @@ def activity(request):
                 'filtered_activities': filtered_activities,
                 'start_date':start_date,
                 'current_activities': current_activities,
-                'activities':activities, 'end_date':end_date,
+                'activities':previous_activities, 'end_date':end_date,
                 'date':today
             }
 
-            html_string = render_to_string('noicDepot/export/activities_export.html', context=context)
+            html_string = render_to_string('noic/export/export_activities.html', context=context)
             html = HTML(string=html_string)
-            export_name = f"Noic Depot -"
+            export_name = f"Noic Admin -"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
             download_file = f'media/transactions/{export_name}'
