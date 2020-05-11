@@ -1151,14 +1151,14 @@ def collections(request):
 
             html_string = render_to_string('noic/export/export_collections.html', context=context)
             html = HTML(string=html_string)
-            export_name = f"ZERA - {today}"
+            export_name = "Noic Admin"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
             download_file = f'media/transactions/{export_name}'
 
             with open(f'{download_file}.pdf', 'rb') as pdf:
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-                response['Content-Disposition'] = f'attachment;filename={export_name} - Activities - {today}.pdf'
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Collections - {today}.pdf'
                 return response
 
 
