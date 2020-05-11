@@ -155,8 +155,8 @@ def orders(request):
                 .filter(date__range=[start_date, end_date]).order_by('-date', '-time')
                    
             context = {
-                'accepted_orders': accepted_orders,
-                'pending_orders':pending_orders,
+                'new_orders': new_orders,
+                'orders':orders,
                 'date':today,
                 'start_date':start_date,
                  'end_date':end_date
