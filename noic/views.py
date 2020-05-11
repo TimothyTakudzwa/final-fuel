@@ -182,18 +182,107 @@ def orders(request):
 @login_required()
 @user_role
 def activity(request):
-    current_activities = []
-    previous_activities = []
+    filtered_activities = None
     activities = Activity.objects.filter(user=request.user).all()
+    
     for activity in activities:
         if activity.action == 'Updating Prices':
             activity.fuel_update = DepotFuelUpdate.objects.filter(depot__id=activity.reference_id).first()
+        
+    current_activities = activities.filter(date=today)
+    previous_activities = activities.exclude(date=today)     
+
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            filtered = True;
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            
+            filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
+            
+            for activity in filtered_activities:
+                if activity.action == 'Updating Prices':
+                    activity.fuel_update = DepotFuelUpdate.objects.filter(depot__id=activity.reference_id).first()
+       
+            context = {
+                'filtered_activities': filtered_activities,
+                'start_date': start_date,
+                'end_date': end_date,
+            }
+
+            return render(request, 'noic/activity.html', context=context)
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
+                      
+            fields = ['date','time', 'company__name', 'action', 'description', 'reference_id']
+            
+            if filtered_activities:
+                filtered_activities = filtered_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id')
+                df = pd.DataFrame(filtered_activities, columns=fields)
+            else:
+                df_current = pd.DataFrame(current_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+                df_previous = pd.DataFrame(activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+                df = df_current.append(df_previous)
+
+            filename = f'Noic Depot'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response     
+
         else:
-            pass
-        if activity.date == today:
-            current_activities.append(activity)
-        else:
-            previous_activities.append(activity)
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
+
+            context = {
+                'filtered_activities': filtered_activities,
+                'start_date':start_date,
+                'current_activities': current_activities,
+                'activities':activities, 'end_date':end_date,
+                'date':today
+            }
+
+            html_string = render_to_string('noicDepot/export/activities_export.html', context=context)
+            html = HTML(string=html_string)
+            export_name = f"Noic Depot -"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Activities - {today}.pdf'
+                return response
+
+
+
+
     return render(request, 'noic/activity.html', {'current_activities': current_activities, 'previous_activities': previous_activities})
 
 
