@@ -53,10 +53,9 @@
 
     <caption style="color: #007f73;margin-bottom: 20px;text-align: center;"> Product Details</caption>
     <tr> 
-        <th>Date</th>
+        <th>Delivery Date - Time</th>
         <th>Buyer</th>
         <th>Address</th>
-        <th>Delivery Date - Time</th>
         <th>Product</th>
         <th>Quantity</th>
         <th>Contact Person</th>
@@ -71,6 +70,7 @@
 
     <tr>
         <td>{{ delivery.date }} | {{ delivery.delivery_time }}</td>
+            {{ delivery.date }} | {{ delivery.delivery_time }}
         <td>{{ delivery.transaction.buyer.company.name|title }}</td>
         <td>{{ delivery.transaction.buyer.company.address }}</td>
         <td>
@@ -151,10 +151,9 @@
 
     <caption style="color: #007f73;margin-bottom: 20px;text-align: center;"> Product Details</caption>
     <tr> 
-        <th>Date</th>
+        <th>Delivery Date - Time</th>
         <th>Buyer</th>
         <th>Address</th>
-        <th>Delivery Date - Time</th>
         <th>Product</th>
         <th>Quantity</th>
         <th>Contact Person</th>
