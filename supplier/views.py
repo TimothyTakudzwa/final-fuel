@@ -1176,15 +1176,16 @@ def delivery_schedules(request):
     pending_schedules = schedules.filter(confirmation_date__isnull=True)        
         
     if request.method == 'POST':
-        supplier_document = request.FILES.get('supplier_document')
-        delivery_id = request.POST.get('delivery_id')
-        schedule = DeliverySchedule.objects.get(id=delivery_id)
-        schedule.supplier_document = supplier_document
-        schedule.save()
-        messages.success(request, "File Successfully Uploaded.")
-        msg = f"Delivery confirmed for {schedule.transaction.buyer.company}, click to view confirmation document"
-        # Notification.objects.create(user=request.user, action='DELIVERY', message=msg, reference_id=schedule.id)
-        return redirect('supplier:delivery_schedules')
+        if request.FILES.get('supplier_document') and delivery_id = request.POST.get('delivery_id'):
+            supplier_document = request.FILES.get('supplier_document')
+            delivery_id = request.POST.get('delivery_id')
+            schedule = DeliverySchedule.objects.get(id=delivery_id)
+            schedule.supplier_document = supplier_document
+            schedule.save()
+            messages.success(request, "File Successfully Uploaded.")
+            msg = f"Delivery confirmed for {schedule.transaction.buyer.company}, click to view confirmation document"
+            # Notification.objects.create(user=request.user, action='DELIVERY', message=msg, reference_id=schedule.id)
+            return redirect('supplier:delivery_schedules')
 
         if request.POST.get('start_date') and request.POST.get('end_date') :
             start_date = request.POST.get('start_date')
