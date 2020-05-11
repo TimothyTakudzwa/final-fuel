@@ -1060,6 +1060,7 @@ def depot_history(request, did):
 @login_required()
 @user_role
 def collections(request):
+    filtered_collections = None
     collections = Collections.objects.exclude(date=today).order_by('-date', '-time')
     new_collections = Collections.objects.filter(date=today).order_by('-time')
 
