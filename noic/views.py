@@ -1064,6 +1064,100 @@ def collections(request):
         'collections': Collections.objects.exclude(date=today).order_by('-date', '-time'),
         'new_collections': Collections.objects.filter(date=today).order_by('-time')
     }
+
+    if request.method == 'POST':
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            filtered = True;
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            
+            filtered_collections = Collections.objects.filter(date__range=[start_date, end_date]) \
+            .order_by('-date','-time')
+
+            context = {
+                'start_date': start_date,
+                'end_date': end_date,
+                'form': CollectionsForm(),
+                'filtered_collections': filtered_collections
+            }
+
+            return render(request, 'noic/collections.html', context=context)
+
+
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                filtered_collections = Collections.objects.filter(date__range=[start_date, end_date]) \
+                .order_by('-date','-time')
+
+                      
+            fields = ['date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity']
+            
+            if filtered_collections:
+                filtered_collections = filtered_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity')
+                df = pd.DataFrame(filtered_collections, columns=fields)
+            else:
+                df_current = pd.DataFrame(new_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity'), columns=fields)
+                df_previous = pd.DataFrame(collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity'), columns=fields)
+                df = df_current.append(df_previous)
+
+            filename = f'Noic Admin Collections'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                filtered_collections = Collections.objects.filter(date__range=[start_date, end_date]) \
+                .order_by('-date','-time')
+
+            context = {
+                'start_date': start_date,
+                'end_date': end_date,
+                'date': today,
+                'collections': collections,
+                'new_collections': new_collections,
+                'filtered_collections': filtered_collections
+            }    
+
+            html_string = render_to_string('noic/export/export_collections.html', context=context)
+            html = HTML(string=html_string)
+            export_name = f"ZERA - {today}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Activities - {today}.pdf'
+                return response
+
+
     return render(request, 'noic/collections.html', context=context)
 
 

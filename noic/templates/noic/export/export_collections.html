@@ -1,0 +1,210 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Orders {{request.company.name}} Summary</title>
+
+    <style>
+        @page {size: a3 landscape;}
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        .first {
+            width: 50%;
+            float:left;
+            font-size: 12px;
+
+        }
+        .wrapper {
+            width: 100%;
+            margin: auto;
+            padding: 10px;
+            overflow: hidden;
+        }
+        .text-muted{
+            color:#6c757d!important;
+        }
+    </style>
+
+</head>
+<body>
+
+
+<h1 style="text-align: center;">Collections Statement - {{ date }}</h1>
+
+{% if not filtered_collections %}
+    {% if new_collections %}
+    <h3 style="padding-top: 20px;">Current Collections  {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">({{date}})</small>{% endif %}</h3>
+
+    <table style="padding-top: 20px; margin-bottom: 30px;">
+    
+        <tr>
+            <th>Order Date</th>
+            <th>Depot</th>
+            <th>Company</th>
+            <th>Fuel Type</th>
+            <th>Quantity</th>
+            <th>Collection</th>
+        </tr>
+            
+        
+        {% for collection in new_collections %}
+            <tr>
+                <td>{{collection.date}} {{collection.time}}</td>
+                <td>{{collection.order.noic_depot.name}}</td>
+                <td>{{collection.order.company.name}}</td>
+                {% if collection.order.fuel_type|lower|capfirst == 'Petrol' %}
+                    <td class="" style="color: #009688;">
+                        {{collection.order.fuel_type|lower|capfirst}}
+                    </td>
+                {% elif collection.order.fuel_type|lower|capfirst == 'Diesel' %}
+
+                    <td class="" style="color: #ffb61e;">
+                        {{collection.order.fuel_type|lower|capfirst}}
+                    </td>
+                {% else %}
+                    <td class="">
+                        {{collection.order.fuel_type|lower|capfirst}}
+                    </td>
+                {% endif %}
+                <td>{{collection.order.quantity|floatformat:2|intcomma}} Litres</td>
+                <td>
+                    {% if collection.has_collected %}
+                        Collected
+                    {% else %}
+                        Collection Pending
+                    {% endif %}
+                </td>
+            </tr>
+
+           
+
+        {% endfor %}
+
+    </table>
+
+    {% endif %}
+
+    {% if collections %}
+
+    <h3 style="padding-top: 20px;">Previous Collections {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">( {{date}} )</small>{% endif %}</h3>
+
+    <table style="padding-top: 20px">
+        <tr>
+            <th>Order Date</th>
+            <th>Depot</th>
+            <th>Company</th>
+            <th>Fuel Type</th>
+            <th>Quantity</th>
+            <th>Collection</th>
+        </tr>
+            
+            
+
+        {% for collection in collections %}
+            <tr>
+                <td>{{collection.date}} {{collection.time}}</td>
+                <td>{{collection.order.noic_depot.name}}</td>
+                <td>{{collection.order.company.name}}</td>
+                {% if collection.order.fuel_type|lower|capfirst == 'Petrol' %}
+                    <td class="" style="color: #009688;">
+                        {{collection.order.fuel_type|lower|capfirst}}
+                    </td>
+                {% elif collection.order.fuel_type|lower|capfirst == 'Diesel' %}
+
+                    <td class="" style="color: #ffb61e;">
+                        {{collection.order.fuel_type|lower|capfirst}}
+                    </td>
+                {% else %}
+                    <td class="">
+                        {{collection.order.fuel_type|lower|capfirst}}
+                    </td>
+                {% endif %}
+                <td>{{collection.order.quantity|floatformat:2|intcomma}} Litres</td>
+                <td>
+                    {% if collection.has_collected %}
+                        Collected
+                    {% else %}
+                        Collection Pending
+                    {% endif %}
+                </td>
+            </tr>
+
+           
+
+        {% endfor %}
+
+    </table>
+
+    {% endif %}
+{% else %}  
+
+<h3 style="padding-top: 20px;">Filtered Collections : {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">( {{date}} )</small>{% endif %}</h3>
+
+    <table style="padding-top: 20px">
+        <tr>
+            <th>Order Date</th>
+            <th>Depot</th>
+            <th>Company</th>
+            <th>Fuel Type</th>
+            <th>Quantity</th>
+            <th>Collection</th>
+        </tr>
+
+        {% for collection in filtered_collections %}
+            <tr>
+                <td>{{collection.date}} {{collection.time}}</td>
+                <td>{{collection.order.noic_depot.name}}</td>
+                <td>{{collection.order.company.name}}</td>
+                {% if collection.order.fuel_type|lower|capfirst == 'Petrol' %}
+                    <td class="" style="color: #009688;">
+                        {{collection.order.fuel_type|lower|capfirst}}
+                    </td>
+                {% elif collection.order.fuel_type|lower|capfirst == 'Diesel' %}
+
+                    <td class="" style="color: #ffb61e;">
+                        {{collection.order.fuel_type|lower|capfirst}}
+                    </td>
+                {% else %}
+                    <td class="">
+                        {{collection.order.fuel_type|lower|capfirst}}
+                    </td>
+                {% endif %}
+                <td>{{collection.order.quantity|floatformat:2|intcomma}} Litres</td>
+                <td>
+                    {% if collection.has_collected %}
+                        Collected
+                    {% else %}
+                        Collection Pending
+                    {% endif %}
+                </td>
+            </tr>
+
+           
+
+        {% endfor %}
+        
+
+    </table>
+
+{% endif %}
+
+
+
+
+</body>
+</html>
