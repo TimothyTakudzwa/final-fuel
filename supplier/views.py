@@ -1238,7 +1238,7 @@ def delivery_schedules(request):
                 completed_schedules = schedules.filter(confirmation_date__isnull=False)
                 pending_schedules = schedules.filter(confirmation_date__isnull=True)  
         
-            fields = ['date','transaction','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time',
+            fields = ['date','transaction','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time']
 
             df_completed_schedules = pd.DataFrame(completed_schedules, columns=fields)
             df_pending_schedules = pd.DataFrame(pending_schedules, columns=fields)
