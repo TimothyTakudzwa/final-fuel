@@ -10,6 +10,10 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import pandas as pd
+
 from accounts.models import Account, AccountHistory
 from buyer.forms import BuyerUpdateForm
 from buyer.models import DeliveryBranch
