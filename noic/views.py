@@ -121,8 +121,8 @@ def orders(request):
                 orders = Order.objects.filter(allocated_fuel=False) \
                 .filter(date__range=[start_date, end_date]).order_by('-date', '-time')
                
-            new_orders = accepted_orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
-            orders =  pending_orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
+            new_orders = new_orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
+            orders =  orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
             fields = ['date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status']
             
             df_orders = pd.DataFrame(new_orders, columns=fields)
