@@ -130,7 +130,6 @@
                 <th style="color: white;">Currency</th>
                 <th style="color: white;">Equipment</th>
                 <th style="color: white;">Action</th>
-
             </tr>
         </thead>
             
@@ -168,31 +167,6 @@
                     <td>Accepted</td>
                 {%endif%}
             </tr>
-           
-                $('#pump_available').on('change', function () {
-                    $(this).val(this.checked ? "True" : "False");
-                });
-                $('#swipe').on('change', function () {
-                    $(this).val(this.checked ? "True" : "False");
-                });
-                $('#ecocash').on('change', function () {
-                    $(this).val(this.checked ? "True" : "False");
-                });
-                $('#cash').on('change', function () {
-                    $(this).val(this.checked ? "True" : "False");
-                });
-                $('#usd').on('change', function () {
-                    $(this).val(this.checked ? "True" : "False");
-                });
-
-                $('#dipping_stick_available').on('change', function () {
-                    $(this).val(this.checked ? "True" : "False");
-                });
-
-                $('#meter_available').on('change', function () {
-                    $(this).val(this.checked ? "True" : "False");
-                });
-            
             
         {%endfor%}
 
