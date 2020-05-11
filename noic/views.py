@@ -97,7 +97,9 @@ def orders(request):
             context = {
                 'orders': orders,
                 'form1': form1,
-                'new_orders': new_orders
+                'new_orders': new_orders,
+                'start_date': start_date,
+                'end_date': end_date
             }        
 
 
