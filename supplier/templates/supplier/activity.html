@@ -82,6 +82,41 @@
             data-index="0">
         <div class="panel-heading ui-sortable-handle">
 
+            <div class="btn-group" style="width: 100%;margin-left: 25px;">
+                <div class="row" style="margin-bottom: 20px;">
+                    <span>Activity</span>
+                </div>
+                <div class="row">
+                    <button data-toggle="modal" title="Pick A Date Range To Filter Records" data-target="#state_modal" class="btn btn-labeled btn-default btn-sm" style="float: left;background-color:#cfd4ce; color: #333; margin-right: 10px;">
+                        <span class="btn-label"><i class="glyphicon glyphicon-filter"></i></span> Pick A Date | Showing - {% if start_date and end_date %}<b style="color: #009688;">{{start_date}} - {{end_date}}</b>{% else %}<b style="color: #009688;">All</b>{% endif %} </button>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="text" name="pdf_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                            <input type="text" name="pdf_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+                            <button type="submit" class="btn btn-labeled btn-default btn-sm" style="float: left; background-color:#cfd4ce; color: #333;margin-right: 10px;"
+                            {% if not activities and not current_activities %} disabled{% endif %} title="{% if activities or current_activities  %} Export To PDF {%else%} No Data To Export {% endif %}">
+                                <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>PDF
+                            </button>
+                        </form> 
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="text" name="export_to_csv" value="csv" hidden>
+                            <input type="text" name="csv_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                            <input type="text" name="csv_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+    
+                        <script>
+                            var today = new Date();
+                            var filename = 'Supplier Admin Allocations Summary' + ' - ' +today.toLocaleString() + '.csv'
+                        </script>
+                        <button  class="btn btn-labeled btn-default btn-sm" style="background-color: #cfd4ce; color: #333; margin-right: 10px;" 
+                        type="submit" {% if not activities and not current_activities %} disabled{% endif %}
+                        title="{% if activities or current_activities  %} Export To CSV {%else%} No Data To Export {% endif %}">
+                            <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>CSV
+                        </button>
+                        </form>
+                </div>           
+            </div>
+
 
             <div class="dropdown">
                 <ul class="dropdown-menu dropdown-menu-right">
@@ -1411,6 +1446,8 @@
         </div>
     </div>
 </section>
+
+{% endif %}
 
 <script>
     $('body').click(function (event) {
