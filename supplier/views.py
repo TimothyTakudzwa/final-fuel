@@ -1237,7 +1237,12 @@ def delivery_schedules(request):
                         schedule.delivery_address = schedule.transaction.offer.collection_address
 
                 completed_schedules = schedules.filter(confirmation_date__isnull=False)
-                pending_schedules = schedules.filter(confirmation_date__isnull=True)  
+                pending_schedules = schedules.filter(confirmation_date__isnull=True) 
+
+                completed_schedules = completed_schedules.values('date','transaction','driver_name', 'phone_number',
+                'id_number','vehicle_reg', 'delivery_time')
+                pending_schedules = pending_schedules.values('date','transaction','driver_name', 'phone_number',
+                'id_number','vehicle_reg', 'delivery_time')  
         
             fields = ['date','transaction','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time']
 
