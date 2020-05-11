@@ -152,7 +152,7 @@
                                  <i class="mdi mdi-account-alert-outline:"></i></p>
                         </div>    
                          <p class="text-center">
-                            <small id="passwordHelpInline" class="text-muted" style="color: lightslategray;">
+                            <small class="text-muted" style="color: lightslategray;">
                             To Accept This Offer    .
                             </small>
                         </p>
@@ -175,7 +175,7 @@
 
                         <div class="row justify-content-center" id="open_applications__{{offer.id}}" style="width: 66%;margin: auto;text-align: center;display: block;">
                             <div class="col-md-12" style="padding-top: 40px;border: #3455e521 solid 1px;padding-bottom: 40px;margin-bottom: 0px;border-radius: 12px;">
-                                <form role="form" method="post" action="{% url 'upload-application' offer.id %}" enctype="multipart/form-data">
+                                <form role="form" method="post" action="{% url 'upload-application' offer.supplier.company.id %}" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <fieldset>
                                         <div class="col-md-12">                   
@@ -184,7 +184,7 @@
                                             </div>
                 
                                             <div class="form-group col-md-6">
-                                                <input type="file" name="cert_of_income_doc" id="email" class="form-control input-sm" placeholder="Email Address">
+                                                <input type="file" name="cert_of_income_doc" class="form-control input-sm" placeholder="">
                                             </div>
                                         </div>
                                         <div class="col-md-12">                   
@@ -193,7 +193,7 @@
                                             </div>
                 
                                             <div class="form-group col-md-6">
-                                                <input type="file" name="proof_of_res_docs" id="email" class="form-control input-sm" placeholder="Email Address">
+                                                <input type="file" name="proof_of_res_docs" class="form-control input-sm" placeholder="">
                                             </div>
                                         </div>    
                                         <div class="col-md-12">                   
@@ -201,7 +201,7 @@
                                                 <label for=""> Tax Clearance Document</label>
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <input type="file" name="tax_clearance_doc" id="password" class="form-control input-sm" placeholder="Password">
+                                                <input type="file" name="tax_clearance_doc" class="form-control input-sm" placeholder="">
                                             </div>
                                         </div>    
 
@@ -211,7 +211,7 @@
                                                 <label for=""> ID Document</label>
                                             </div>
                                                 <div class="form-group col-md-6">
-                                                <input type="file" name="id_document" id="password2" class="form-control input-sm" placeholder="Password2">
+                                                <input type="file" name="id_document" class="form-control input-sm" placeholder="">
                                             </div>
                                         </div>    
 
@@ -221,7 +221,7 @@
                                                 <label for=""> Application Document</label>
                                             </div>
                                                 <div class="form-group col-md-6">
-                                                <input type="file" name="file" id="password2" class="form-control input-sm" placeholder="Password2">
+                                                <input type="file" name="application_form" class="form-control input-sm" placeholder="">
                                             </div>
                                         </div>    
 
@@ -231,7 +231,7 @@
                                                 <label for=""> CR14 Document</label>
                                             </div>
                                                 <div class="form-group col-md-6">
-                                                <input type="file" name="cr14_document" id="password2" class="form-control input-sm" placeholder="Password2">
+                                                <input type="file" name="cr14_document" class="form-control input-sm" placeholder="">
                                             </div>
                                         </div>    
 
@@ -241,7 +241,7 @@
                                                 <label for=""> CR6 Document</label>
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <input type="file" name="cr6_document" id="password2" class="form-control input-sm" placeholder="Password2">
+                                                <input type="file" name="cr6_document" class="form-control input-sm" placeholder="">
                                             </div>
                                         </div>    
 
