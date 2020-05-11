@@ -1087,7 +1087,7 @@ def collections(request):
             context = {
                 'start_date': start_date,
                 'end_date': end_date,
-                'form': CollectionsForm(),
+                # 'form': CollectionsForm(),
                 'filtered_collections': filtered_collections
             }
 
