@@ -67,9 +67,9 @@ def orders(request):
                 end_date = datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
 
-            new_orders = Order.objects.filter(allocated_fuel=True)
+            new_orders = Order.objects.filter(allocated_fuel=True) \
             .filter(date__range=[start_date, end_date]).order_by('-date', '-time')
-            orders = Order.objects.filter(allocated_fuel=False)
+            orders = Order.objects.filter(allocated_fuel=False) \
             .filter(date__range=[start_date, end_date]).order_by('-date', '-time')
 
             for order in orders:
