@@ -1471,7 +1471,7 @@ def activity(request):
                 df_previous = pd.DataFrame(activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
                 df = df_current.append(df_previous)
 
-            filename = f'{request.company.name}'
+            filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
@@ -1501,7 +1501,7 @@ def activity(request):
 
             html_string = render_to_string('supplier/export/export_activities.html', context=context)
             html = HTML(string=html_string)
-            export_name = f"{request.company.name}"
+            export_name = f"{request.user.company.name}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
             download_file = f'media/transactions/{export_name}'
