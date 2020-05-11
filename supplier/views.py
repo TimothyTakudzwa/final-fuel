@@ -1176,7 +1176,7 @@ def delivery_schedules(request):
     pending_schedules = schedules.filter(confirmation_date__isnull=True)        
         
     if request.method == 'POST':
-        if request.FILES.get('supplier_document') and delivery_id = request.POST.get('delivery_id'):
+        if request.FILES.get('supplier_document') and request.POST.get('delivery_id'):
             supplier_document = request.FILES.get('supplier_document')
             delivery_id = request.POST.get('delivery_id')
             schedule = DeliverySchedule.objects.get(id=delivery_id)
