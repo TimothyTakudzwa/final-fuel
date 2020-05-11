@@ -556,6 +556,12 @@ def my_offers(request):
         
     offers_pending = Offer.objects.filter(supplier=request.user, is_accepted=True).all()
 
+     for offer_temp in offers_pending:
+        if offer_temp.cash == offer_temp.ecocash == offer_temp.swipe == offer_temp.usd == False:
+            offer_temp.no_payment = True
+        if offer_temp.dipping_stick_available == offer_temp.meter_available == offer_temp.pump_available == False:
+            offer_temp.no_equipments = True
+
     if request.method == 'POST':
         if request.POST.get('start_date') and request.POST.get('end_date') :
             start_date = request.POST.get('start_date')
@@ -577,6 +583,12 @@ def my_offers(request):
 
             offers_pending = Offer.objects.filter(supplier=request.user, is_accepted=True) \
             .filter(date__range=[start_date, end_date])
+
+            for offer_temp in offers_pending:
+                if offer_temp.cash == offer_temp.ecocash == offer_temp.swipe == offer_temp.usd == False:
+                    offer_temp.no_payment = True
+                if offer_temp.dipping_stick_available == offer_temp.meter_available == offer_temp.pump_available == False:
+                    offer_temp.no_equipments = True
 
             context = {
                 'offers': offers,
@@ -638,6 +650,18 @@ def my_offers(request):
                 .filter(date__range=[start_date, end_date])
                 offers_pending = Offer.objects.filter(supplier=request.user, is_accepted=True) \
                 .filter(date__range=[start_date, end_date])
+
+                for offer_temp in offers_pending:
+                    if offer_temp.cash == offer_temp.ecocash == offer_temp.swipe == offer_temp.usd == False:
+                        offer_temp.no_payment = True
+                    if offer_temp.dipping_stick_available == offer_temp.meter_available == offer_temp.pump_available == False:
+                        offer_temp.no_equipments = True
+
+                for offer_temp in offers:
+                    if offer_temp.cash == offer_temp.ecocash == offer_temp.swipe == offer_temp.usd == False:
+                        offer_temp.no_payment = True
+                    if offer_temp.dipping_stick_available == offer_temp.meter_available == offer_temp.pump_available == False:
+                        offer_temp.no_equipments = True        
 
             context = {
                 'offers': offers,
