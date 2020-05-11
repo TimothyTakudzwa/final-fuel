@@ -553,9 +553,112 @@ def my_offers(request):
             offer_temp.no_payment = True
         if offer_temp.dipping_stick_available == offer_temp.meter_available == offer_temp.pump_available == False:
             offer_temp.no_equipments = True
-        # if not offer_temp.collection_address.strip():
-        #     offer_temp.collection_address = f'N/A'
+        
     offers_pending = Offer.objects.filter(supplier=request.user, is_accepted=True).all()
+
+    if request.method == 'POST':
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            offers = Offer.objects.filter(supplier=request.user, is_accepted=False) \
+            .filter(date__range=[start_date, end_date])
+            
+            for offer_temp in offers:
+                if offer_temp.cash == offer_temp.ecocash == offer_temp.swipe == offer_temp.usd == False:
+                    offer_temp.no_payment = True
+                if offer_temp.dipping_stick_available == offer_temp.meter_available == offer_temp.pump_available == False:
+                    offer_temp.no_equipments = True
+
+            offers_pending = Offer.objects.filter(supplier=request.user, is_accepted=True) \
+            .filter(date__range=[start_date, end_date])
+
+            context = {
+                'offers': offers,
+                'offers_pending': offers_pending,
+                'start_date':start_date,
+                'end_date':end_date 
+            }       
+                
+            return render(request, 'supplier/my_offers.html', context=context)
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                offers = Offer.objects.filter(supplier=request.user, is_accepted=False) \
+                .filter(date__range=[start_date, end_date])
+                offers_pending = Offer.objects.filter(supplier=request.user, is_accepted=True) \
+                .filter(date__range=[start_date, end_date])
+
+            offers = offers.values('date', 'offer__request__name__company__name, offer__request__fuel_type',
+             'price', 'delivery_method', 'transport_fee', 'offer__request__payment_method')  
+            
+            offers_pending = offers.values('date', 'offer__request__name__company__name, offer__request__fuel_type',
+             'price', 'delivery_method', 'transport_fee', 'offer__request__payment_method')  
+
+            fields = ['date', 'offer__request__name__company__name, offer__request__fuel_type',
+             'price', 'delivery_method', 'transport_fee', 'offer__request__payment_method']
+
+            df_offers = pd.DataFrame(offers, columns=fields)
+            df_offers_pending = pd.DataFrame(offers_pending, columns=fields)
+
+            df = df_offers.append(df_offers_pending)
+            
+            filename = f'{request.user.company.name}'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - Offers - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                offers = Offer.objects.filter(supplier=request.user, is_accepted=False) \
+                .filter(date__range=[start_date, end_date])
+                offers_pending = Offer.objects.filter(supplier=request.user, is_accepted=True) \
+                .filter(date__range=[start_date, end_date])
+
+            context = {
+                'offers': offers,
+                'offers_pending':offers_pending,
+                'date':today,
+                'start_date':start_date,
+                'end_date':end_date
+            }  
+                
+            html_string = render_to_string('supplier/export/export_offers.html', context=context)
+            html = HTML(string=html_string)
+            export_name = f"{request.user.company.name.title()}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} -Orders - {today}.pdf'
+                return response        
+    
 
     return render(request, 'supplier/my_offers.html', {'offers': offers, 'offers_pending': offers_pending})
 
