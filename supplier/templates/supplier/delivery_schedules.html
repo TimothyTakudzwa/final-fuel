@@ -17,12 +17,88 @@
     </div>
   </section>
 
-    <div class="container">
+
+
+  <div class="modal fade modal-success in" id="state_modal" role="dialog">
+    <div class="modal-dialog" style="margin: 0;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" style="color:whitesmoke"> Filter By State</span>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row report_dates" style="margin-bottom: 25px; margin-top: 25px">
+                        <div class="form-group col-md-6">
+                            <label for="exampleInputEmail1">Starting Date</label>
+                            <input name="start_date" type="date" class="form-control"
+                                id="starting_date" aria-describedby="emailHelp"
+                                placeholder="Enter email" required>
+                            <small id="emailHelp" class="form-text text-muted">Please Pick A Starting
+                                Date.</small>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="exampleInputEmail1">Ending Date</label>
+                            <input name="end_date" type="date" class="form-control" id="ending_date"
+                                aria-describedby="emailHelp" placeholder="Enter email" required>
+                            <small id="emailHelp" class="form-text text-muted"
+                                style="color: lightslategray;">Please Pick A Ending Date.</small>
+                        </div>
+                    </div> 
+                       
+
+                    <div class="modal-footer">  
+                        <button type="submit" class="btn btn-primary ">Submit</button>
+                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                    </div> 
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+  </div>
+
+    <div class="content">
         <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
             data-index="0">
             <div class="panel-heading ui-sortable-handle">
-                <div class="btn-group"> 
-                    <h4>Delivery Schedules</h4>
+                <div class="btn-group" style="width: 100%;margin-left: 25px;"> 
+                    <div class="row" style="margin-bottom: 20px;">
+                        <h4>Delivery Schedules</h4>
+                    </div>
+                    <div class="row">
+                        <button data-toggle="modal" title="Pick A Date Range To Filter Records" data-target="#state_modal" class="btn btn-labeled btn-default btn-sm" style="float: left;background-color:#cfd4ce; color: #333; margin-right: 10px;">
+                            <span class="btn-label"><i class="glyphicon glyphicon-filter"></i></span> Pick A Date | Showing - {% if start_date and end_date %}<b style="color: #009688;">{{start_date}} - {{end_date}}</b>{% else %}<b style="color: #009688;">All</b>{% endif %} </button>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="text" name="pdf_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                                <input type="text" name="pdf_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+                                <button type="submit" class="btn btn-labeled btn-default btn-sm" style="float: left; background-color:#cfd4ce; color: #333;margin-right: 10px;"
+                                 {% if not completed_schedules and not pending_schedules %} disabled{% endif %} title="{% if pending_schedules or completed_schedules %} Export To PDF {%else%} No Data To Export {% endif %}">
+                                    <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>PDF
+                                </button>
+                            </form> 
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="text" name="export_to_csv" value="csv" hidden>
+                                <input type="text" name="csv_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                                <input type="text" name="csv_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+        
+                            <script>
+                                var today = new Date();
+                                var filename = 'Supplier Admin Allocations Summary' + ' - ' +today.toLocaleString() + '.csv'
+                            </script>
+                            <button  class="btn btn-labeled btn-default btn-sm" style="background-color: #cfd4ce; color: #333; margin-right: 10px;" type="submit" {% if not completed_schedules and not completed_schedules %} disabled{% endif %}
+                            title="{% if pending_schedules or completed_schedules %} Export To CSV {%else%} No Data To Export {% endif %}">
+                                <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>CSV
+                            </button>
+                            </form>
+                    </div>       
+
                 </div>
                 
                 <div class="dropdown">
@@ -526,6 +602,13 @@
     </div>
 
 
+<script>
+    $('body').click(function (event) {
+        if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
+            $("#state_modal").modal('hide');
+        }    
+            
+    });
+</script>
 
-  
 {%endblock%}
