@@ -773,17 +773,21 @@ def transaction(request):
 
     today = datetime.now().strftime("%m/%d/%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
-    transactions = []
-    transactions_pending = []
-    for tran in Transaction.objects.filter(supplier=request.user).all():
+    trans = Transaction.objects.filter(supplier=request.user).all()
+    
+    for tran in trans:
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
         if delivery_sched:
             tran.delivery_sched = delivery_sched
         tran.review = UserReview.objects.filter(transaction=tran).first()
-        if tran.is_complete == True:
-            transactions.append(tran)
-        if tran.is_complete == False:
-            transactions_pending.append(tran)
+        # if tran.is_complete == True:
+        #     transactions.append(tran)
+        # if tran.is_complete == False:
+        #     transactions_pending.append(tran)
+        
+    transactions = trans.filter(is_complete=True)
+    transactions_pending = trans.filter(is_complete=False) 
+
 
     context = {
         'transactions': transactions,
