@@ -84,7 +84,6 @@
         <td>{{ delivery.transaction.buyer.first_name|title}} {{delivery.transaction.buyer.last_name|title}}</td>
         <td>{{ delivery.transaction.buyer.phone_number }} </td>       
         <td>{{delivery.depot.name}}</td>
-        <td>{{ delivery.delivery_quantity|floatformat:2|intcomma}} </td>          
         <td>                            
         {% if delivery.confirmation_date %}
             {% if not delivery.supplier_document %}
@@ -180,7 +179,6 @@
             N/A
             {% endif %}</td> -->          
         <td>{{delivery.depot.name}}</td>
-        <td>{{ delivery.delivery_quantity|floatformat:2|intcomma}} </td>          
         <td>                            
         {% if delivery.confirmation_date %}
             {% if not delivery.supplier_document %}
