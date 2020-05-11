@@ -1164,6 +1164,17 @@ def create_delivery_schedule(request):
 @login_required
 def delivery_schedules(request):
     user_permission(request)
+    schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user).all()
+    
+    for schedule in schedules:
+        if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+            schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+        else:
+            schedule.delivery_address = schedule.transaction.offer.collection_address
+
+    completed_schedules = schedules.filter(confirmation_date__isnull=False)
+    pending_schedules = schedules.filter(confirmation_date__isnull=True)        
+        
     if request.method == 'POST':
         supplier_document = request.FILES.get('supplier_document')
         delivery_id = request.POST.get('delivery_id')
@@ -1175,18 +1186,117 @@ def delivery_schedules(request):
         # Notification.objects.create(user=request.user, action='DELIVERY', message=msg, reference_id=schedule.id)
         return redirect('supplier:delivery_schedules')
 
-    schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user).all()
-    completed_schedules = []
-    pending_schedules =[]
-    for schedule in schedules:
-        if schedule.transaction.offer.delivery_method.lower() == 'delivery':
-            schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).filter(date__range=[start_date, end_date])
+            
+            for schedule in schedules:
+                schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+                    schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+                else:
+                    schedule.delivery_address = schedule.transaction.offer.collection_address
+
+            completed_schedules = schedules.filter(confirmation_date__isnull=False)
+            pending_schedules = schedules.filter(confirmation_date__isnull=True)  
+
+            context = {
+                'pending_schedules': pending_schedules,
+                'completed_schedules': completed_schedules,
+                'start_date':start_date,
+                'end_date':end_date 
+            }       
+                
+            return render(request, 'supplier/delivery_schedules.html', context=context)
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).filter(date__range=[start_date, end_date])
+
+                for schedule in schedules:
+                    schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                    if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+                        schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+                    else:
+                        schedule.delivery_address = schedule.transaction.offer.collection_address
+
+                completed_schedules = schedules.filter(confirmation_date__isnull=False)
+                pending_schedules = schedules.filter(confirmation_date__isnull=True)  
+        
+            fields = ['date','transaction','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time',
+
+            df_completed_schedules = pd.DataFrame(completed_schedules, columns=fields)
+            df_pending_schedules = pd.DataFrame(pending_schedules, columns=fields)
+
+            df = df_completed_schedules.append(df_pending_schedules)
+            
+            filename = f'{request.user.company.name}'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response     
+
         else:
-            schedule.delivery_address = schedule.transaction.offer.collection_address
-        if schedule.confirmation_date:
-            completed_schedules.append(schedule)
-        else:
-            pending_schedules.append(schedule)
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).filter(date__range=[start_date, end_date])
+
+                for schedule in schedules:
+                    schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+                    if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+                        schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+                    else:
+                        schedule.delivery_address = schedule.transaction.offer.collection_address
+
+                completed_schedules = schedules.filter(confirmation_date__isnull=False)
+                pending_schedules = schedules.filter(confirmation_date__isnull=True)
+
+                context = {
+                    'completed_schedules': completed_schedules,
+                    'pending_schedules':pending_schedules,
+                    'date':today,
+                    'start_date':start_date,
+                    'end_date':end_date
+                }  
+                
+            html_string = render_to_string('supplier/export/export_delivery_schedules.html', context=context)
+            html = HTML(string=html_string)
+            export_name = f"{request.user.company.name.title()}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} -Orders - {today}.pdf'
+                return response        
+        
+
+
     return render(request, 'supplier/delivery_schedules.html', {'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules})
 
 

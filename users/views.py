@@ -2731,23 +2731,17 @@ def download_proof(request, id):
 @login_required()
 def delivery_schedules(request):
     user_permission(request)
-    # schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).all()
-    # completed_schedules = []
-    # pending_schedules =[]
-    # for schedule in schedules:
-    #     schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
-    #     if schedule.transaction.offer.delivery_method.lower() == 'delivery':
-    #         schedule.delivery_address = schedule.transaction.offer.request.delivery_address
-    #     else:
-    #         schedule.delivery_address = schedule.transaction.offer.collection_address
-    #     if schedule.confirmation_date:
-    #         completed_schedules.append(schedule)
-    #     else:
-    #         pending_schedules.append(schedule) 
-    completed_schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user
-    .company).filter(confirmation_date__isnull=False)
-    pending_schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user
-    .company).filter(confirmation_date__isnull=True)
+    schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).all()
+
+    for schedule in schedules:
+        schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+        if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+            schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+        else:
+            schedule.delivery_address = schedule.transaction.offer.collection_address
+        
+    completed_schedules = schedules.filter(confirmation_date__isnull=False)
+    pending_schedules = schedules.filter(confirmation_date__isnull=True)
 
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :
