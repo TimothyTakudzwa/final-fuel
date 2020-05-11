@@ -245,7 +245,7 @@ def activity(request):
 
             with open(filename, 'rb') as csv_name:
                 response = HttpResponse(csv_name.read())
-                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                response['Content-Disposition'] = f'attachment;filename={filename} - Activities - {today}.csv'
                 return response     
 
         else:
