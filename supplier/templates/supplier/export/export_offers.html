@@ -65,7 +65,6 @@
                 <th style="color: white;">Transport Fee</th>
                 <th style="color: white;">Currency</th>
                 <th style="color: white;">Equipment</th>
-                <th style="color: white;">Action</th>
             </tr>
         </thead>
             
@@ -97,12 +96,7 @@
                 {% endif %}
                 <td>{{offer.request.payment_method}}</td>
                 <td>{% if offer.pump_available %}Pump &nbsp; {%endif%} {% if offer.dipping_stick_available %}Stick &nbsp; {%endif%} {% if offer.meter_available %}Meter&nbsp;{% endif %}{% if offer.no_equipments %}No Equipment{%endif%}</td>
-                {%if offer.declined %}
-                    <td>Declined</td>
-                {% else %}
-                    <td>Accepted</td>
-                {%endif%}
-            </tr>
+                
             
         {%endfor%}
 
@@ -112,7 +106,7 @@
 
     {% if offers_pending %}
 
-    <h3 style="padding-top: 20px;">Offers Pending {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">( {{date}} )</small>{% endif %}</h3>
+    <h3 style="padding-top: 20px;">Offers Accepted {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">( {{date}} )</small>{% endif %}</h3>
 
     <table style="padding-top: 20px; margin-bottom: 30px;">
     
@@ -129,7 +123,6 @@
                 <th style="color: white;">Transport Fee</th>
                 <th style="color: white;">Currency</th>
                 <th style="color: white;">Equipment</th>
-                <th style="color: white;">Action</th>
             </tr>
         </thead>
             
@@ -161,11 +154,7 @@
                 {% endif %}
                 <td>{{offer.request.payment_method}}</td>
                 <td>{% if offer.pump_available %}Pump &nbsp; {%endif%} {% if offer.dipping_stick_available %}Stick &nbsp; {%endif%} {% if offer.meter_available %}Meter&nbsp;{% endif %}{% if offer.no_equipments %}No Equipment{%endif%}</td>
-                {%if offer.declined %}
-                    <td>Declined</td>
-                {% else %}
-                    <td>Accepted</td>
-                {%endif%}
+                
             </tr>
             
         {%endfor%}
