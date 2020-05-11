@@ -1060,9 +1060,12 @@ def depot_history(request, did):
 @login_required()
 @user_role
 def collections(request):
+    collections = Collections.objects.exclude(date=today).order_by('-date', '-time')
+    new_collections = Collections.objects.filter(date=today).order_by('-time')
+
     context = {
-        'collections': Collections.objects.exclude(date=today).order_by('-date', '-time'),
-        'new_collections': Collections.objects.filter(date=today).order_by('-time')
+        'collections': collections ,
+        'new_collections': new_collections
     }
 
     if request.method == 'POST':
