@@ -55,7 +55,7 @@
         <tr style="background-color: gray;color: white;">
             <th>Date</th>
             <th>Time</th>
-            <th>Depot</th>
+            <th>Buyer</th>
             <th>PickUp Address</th>
             <th>Fuel</th>
             <!-- <th>Expected & Paid</th> -->
@@ -69,7 +69,7 @@
             <tr>
                 <td>{{transaction.date}}</td>
                 <td>{{transaction.time}}</td>
-                <td class="name truncate">{{transaction.depot}}</td>
+                <td class="name truncate">{{transaction.buyer.company.name}}</td>
                 {% if transaction.offer.collection_address != None %}
                     <td class="name truncate">{{transaction.offer.collection_address}}</td>
                 {% else %}
@@ -136,7 +136,7 @@
         <tr style="background-color: gray;color: white;">
             <th>Date</th>
             <th>Time</th>
-            <th>Depot</th>
+            <th>Buyer</th>
             <th>PickUp Address</th>
             <th>Fuel</th>
             <!-- <th>Expected & Paid</th> -->
@@ -150,7 +150,7 @@
             <tr>
                 <td>{{transaction.date}}</td>
                 <td>{{transaction.time}}</td>
-                <td class="name truncate">{{transaction.depot}}</td>
+                <td class="name truncate">{{transaction.buyer.company.name}}</td>
                 {% if transaction.offer.collection_address != None %}
                     <td class="name truncate">{{transaction.offer.collection_address}}</td>
                 {% else %}
