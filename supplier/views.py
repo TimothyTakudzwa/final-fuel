@@ -54,7 +54,7 @@ def verification(request, token, user_id):
 
             if request.method == 'POST':
                 user = User.objects.get(id=user_id)
-                form = BuyerUpdateForm(request.POST, request.FILES, instance=user)
+                form = BuyerUpdateForm(request.POST, instance=user)
                 if form.is_valid():
                     form.save()
                     company_exists = Company.objects.filter(name=request.POST.get('company')).exists()
