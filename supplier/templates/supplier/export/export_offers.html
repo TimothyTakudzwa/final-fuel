@@ -1,0 +1,171 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Orders {{request.company.name}} Summary</title>
+
+    <style>
+        @page {size: a3 landscape;}
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        .first {
+            width: 50%;
+            float:left;
+            font-size: 12px;
+
+        }
+        .wrapper {
+            width: 100%;
+            margin: auto;
+            padding: 10px;
+            overflow: hidden;
+        }
+        .text-muted{
+            color:#6c757d!important;
+        }
+    </style>
+
+</head>
+<body>
+
+
+<h1 style="text-align: center;">Offers Statement - {{ date }}</h1>
+
+
+    {% if offers %}
+    <h3 style="padding-top: 20px;">Offers Accepted  {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">({{date}})</small>{% endif %}</h3>
+
+    <table style="padding-top: 20px; margin-bottom: 30px;">
+    
+        <thead style="background-color: lightslategray; color:white;">
+            <tr>
+                <th style="color: white;"></th>
+                <th style="color: white;">Date</th>
+                <th style="color: white;">Time</th>
+                <th style="color: white;">Buyer</th>
+                <th style="color: white;">Fuel</th>
+                <th style="color: white;">Offered</th>
+                <th style="color: white;">Price</th>
+                <th style="color: white;">Delivery Method</th>
+                <th style="color: white;">Transport Fee</th>
+                <th style="color: white;">Currency</th>
+                <th style="color: white;">Equipment</th>
+            </tr>
+        </thead>
+            
+        
+        {% for offer in offers %}
+            <tr>
+                <td></td>
+                <td>{{ offer.date }}</td>
+                <td>{{ offer.time }}</td>
+                <td>{{ offer.request.name.first_name|lower|capfirst }} {{ offer.request.name.last_name|lower|capfirst }}</td>
+
+                {% if offer.request.fuel_type == 'Petrol' %}
+                    <td style="color: #009688;" >{{ offer.request.fuel_type|lower|capfirst }}</td>
+                {% elif offer.request.fuel_type|lower|capfirst == 'Diesel' %}
+                    <td style="color: #ffb61e;" >{{ offer.request.fuel_type|lower|capfirst }}</td>
+                {% else %}
+                    <td>{{ offer.request.fuel_type|lower|capfirst }}</td>
+                {% endif %}
+
+
+
+                <td>{{ offer.quantity|floatformat:2|intcomma }}</td>
+                <td>{{ offer.price|intcomma }}</td>
+                <td>{{ offer.delivery_method|lower|capfirst}}</td>
+                {% if offer.transport_fee != None %}
+                    <td>{{ offer.transport_fee|intcomma }}</td>
+                {% else %}
+                    <td>N/A</td>
+                {% endif %}
+                <td>{{offer.request.payment_method}}</td>
+                <td>{% if offer.pump_available %}Pump &nbsp; {%endif%} {% if offer.dipping_stick_available %}Stick &nbsp; {%endif%} {% if offer.meter_available %}Meter&nbsp;{% endif %}{% if offer.no_equipments %}No Equipment{%endif%}</td>
+                
+            
+        {%endfor%}
+
+    </table>
+
+    {% endif %}
+
+    {% if offers_pending %}
+
+    <h3 style="padding-top: 20px;">Offers Accepted {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">( {{date}} )</small>{% endif %}</h3>
+
+    <table style="padding-top: 20px; margin-bottom: 30px;">
+    
+        <thead style="background-color: lightslategray; color:white;">
+            <tr>
+                <th style="color: white;"></th>
+                <th style="color: white;">Date</th>
+                <th style="color: white;">Time</th>
+                <th style="color: white;">Buyer</th>
+                <th style="color: white;">Fuel</th>
+                <th style="color: white;">Offered</th>
+                <th style="color: white;">Price</th>
+                <th style="color: white;">Delivery Method</th>
+                <th style="color: white;">Transport Fee</th>
+                <th style="color: white;">Currency</th>
+                <th style="color: white;">Equipment</th>
+            </tr>
+        </thead>
+            
+        
+        {% for offer in offers_pending %}
+            <tr>
+                <td></td>
+                <td>{{ offer.date }}</td>
+                <td>{{ offer.time }}</td>
+                <td>{{ offer.request.name.first_name|lower|capfirst }} {{ offer.request.name.last_name|lower|capfirst }}</td>
+
+                {% if offer.request.fuel_type == 'Petrol' %}
+                    <td style="color: #009688;" >{{ offer.request.fuel_type|lower|capfirst }}</td>
+                {% elif offer.request.fuel_type|lower|capfirst == 'Diesel' %}
+                    <td style="color: #ffb61e;" >{{ offer.request.fuel_type|lower|capfirst }}</td>
+                {% else %}
+                    <td>{{ offer.request.fuel_type|lower|capfirst }}</td>
+                {% endif %}
+
+
+
+                <td>{{ offer.quantity|floatformat:2|intcomma }}</td>
+                <td>{{ offer.price|intcomma }}</td>
+                <td>{{ offer.delivery_method|lower|capfirst}}</td>
+                {% if offer.transport_fee != None %}
+                    <td>{{ offer.transport_fee|intcomma }}</td>
+                {% else %}
+                    <td>N/A</td>
+                {% endif %}
+                <td>{{offer.request.payment_method}}</td>
+                <td>{% if offer.pump_available %}Pump &nbsp; {%endif%} {% if offer.dipping_stick_available %}Stick &nbsp; {%endif%} {% if offer.meter_available %}Meter&nbsp;{% endif %}{% if offer.no_equipments %}No Equipment{%endif%}</td>
+                
+            </tr>
+            
+        {%endfor%}
+
+    </table>
+
+    {% endif %}
+
+
+
+
+
+</body>
+</html>

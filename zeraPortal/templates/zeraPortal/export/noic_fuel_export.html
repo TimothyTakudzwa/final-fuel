@@ -1,0 +1,94 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Orders {{request.company.name}} Summary</title>
+
+    <style>
+        @page {size: a3 landscape;}
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        .first {
+            width: 50%;
+            float:left;
+            font-size: 12px;
+
+        }
+        .wrapper {
+            width: 100%;
+            margin: auto;
+            padding: 10px;
+            overflow: hidden;
+        }
+        .text-muted{
+            color:#6c757d!important;
+        }
+    </style>
+
+</head>
+<body>
+
+
+<h1 style="text-align: center;">NOIC Available Fuel Summary - {{ date }}</h1>
+
+
+<h3 style="padding-top: 20px;">Fuel Updates: {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">( {{date}} )</small>{% endif %}</h3>
+
+    <table style="padding-top: 20px"> 
+        <tr>
+            <th>Date</th>
+            <th>Depot</th>
+            <th style="color: #ffb61e;">USD Diesel</th>
+            <th>Price</th>
+            <th style="color: #ffb61e;">RTGS Diesel</th>
+            <th>Price</th>
+            <th style="color: #009688;">USD Petrol </th>
+            <th>Price</th>
+            <th style="color: #009688;">RTGS Petrol </th>
+            <th>Price</th>
+        </tr>
+
+        {% for fuel in depots %}
+        <tr>
+            <td>{{fuel.date}}</td>
+            <td>{{fuel.depot.name}}</td>
+            <td>{{fuel.usd_diesel|floatformat:2|intcomma}} {% if fuel.usd_diesel < 1000 %} <i
+                    class="fa fa-exclamation-triangle text-danger"></i>{% endif %}</td>
+            <td>{{fuel.usd_diesel_price}}</td>
+            <td>{{fuel.rtgs_diesel|floatformat:2|intcomma}} {% if fuel.rtgs_diesel < 1000 %} <i
+                class="fa fa-exclamation-triangle text-danger"></i>{% endif %}</td>
+            <td>{{fuel.rtgs_diesel_price}}</td>
+            <td>{{fuel.usd_petrol|floatformat:2|intcomma}} {% if fuel.usd_petrol < 1000 %} <i
+                class="fa fa-exclamation-triangle text-danger"></i>{% endif %}</td>
+            <td>{{fuel.usd_petrol_price}}</td>
+            <td>{{fuel.rtgs_petrol|floatformat:2|intcomma}} {% if fuel.rtgs_petrol < 1000 %} <i
+                class="fa fa-exclamation-triangle text-danger"></i>{% endif %}</td>
+            <td>{{fuel.rtgs_petrol_price}}</td>
+            
+        </tr>
+        {% endfor %}
+        
+
+    </table>
+
+
+
+
+
+</body>
+</html>

@@ -8,6 +8,10 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import pandas as pd
+
 from fuelUpdates.models import SordCompanyAuditTrail
 from national.models import SordNationalAuditTrail, DepotFuelUpdate, NoicDepot
 from noicDepot.util import sord_generator
@@ -58,12 +62,95 @@ def initial_password_change(request):
 def dashboard(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders = SordNationalAuditTrail.objects.filter(assigned_depot=depot).all()
+
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+
+            depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+            orders = SordNationalAuditTrail.objects.filter(assigned_depot=depot).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
+
+            context = {
+                'orders': orders,
+                'start_date': start_date,
+                'end_date': end_date
+            }
+
+            return render(request, 'noicDepot/dashboard.html', context=context)
+        
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                orders = SordNationalAuditTrail.objects.filter(assigned_depot=depot).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
+                
+            orders = orders.values('date','sord_no', 'company__name', 'fuel_type', 'currency', 'quantity', 'price')
+            fields = ['date','sord_no', 'company__name', 'fuel_type', 'currency', 'quantity', 'price']
+            
+            df = pd.DataFrame(orders, columns=fields)
+           
+            filename = f'Noic Depot '
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - Allocations - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                orders = SordNationalAuditTrail.objects.filter(assigned_depot=depot).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
+                
+            context = {
+                'orders': orders,
+                'start_date': start_date,
+                'end_date': end_date,
+                'date': today
+
+            }    
+
+            html_string = render_to_string('noicDepot/export/export_allocations.html',
+            context=context)
+            html = HTML(string=html_string)
+            export_name = f"Noic Depot "
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Allocations - {today}.pdf'
+                return response        
+
     return render(request, 'noicDepot/dashboard.html', {'orders': orders})
 
 
 @login_required()
 @user_role
 def activity(request):
+    filtered_activities = None
     activities = Activity.objects.exclude(date=today).filter(user=request.user).all()
     for activity in activities:
         if activity.action == 'Fuel Allocation':
@@ -79,6 +166,100 @@ def activity(request):
         else:
             pass
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            filtered = True;
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            
+            filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
+            
+            for activity in filtered_activities:
+                if activity.action == 'Fuel Allocation':
+                    activity.fuel_order = Order.objects.filter(id=activity.reference_id).first()
+                    activity.fuel_allocation = SordNationalAuditTrail.objects.filter(order=activity.fuel_order).first()
+
+            depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+
+            
+            context = {
+                'filtered_activities': filtered_activities,
+                'start_date': start_date,
+                'end_date': end_date,
+                'depot': depot,
+            }
+
+            return render(request, 'noicDepot/activity.html', context=context)
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
+                      
+            fields = ['date','time', 'company__name', 'action', 'description', 'reference_id']
+            
+            if filtered_activities:
+                filtered_activities = filtered_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id')
+                df = pd.DataFrame(filtered_activities, columns=fields)
+            else:
+                df_current = pd.DataFrame(current_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+                df_previous = pd.DataFrame(activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+                df = df_current.append(df_previous)
+
+            filename = f'Noic Depot'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
+
+            context = {
+                'filtered_activities': filtered_activities,
+                'start_date':start_date,
+                'current_activities': current_activities,
+                'activities':activities, 'end_date':end_date,
+                'date':today
+            }
+
+            html_string = render_to_string('noicDepot/export/activities_export.html', context=context)
+            html = HTML(string=html_string)
+            export_name = f"Noic Depot -"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Activities - {today}.pdf'
+                return response
+
     return render(request, 'noicDepot/activity.html',
                   {'activities': activities, 'depot': depot, 'current_activities': current_activities})
 
@@ -94,6 +275,108 @@ def accepted_orders(request):
     new_orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=False).order_by('-date', '-time')
     for order in orders:
         order.allocation = SordNationalAuditTrail.objects.filter(order=order).first()
+
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+
+            depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+            orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
+            num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).count()    
+            orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=True).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
+            new_orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=False).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
+            
+            for order in orders:
+                order.allocation = SordNationalAuditTrail.objects.filter(order=order).first()
+
+            context = {'orders': orders,
+                        'num_of_new_orders': num_of_new_orders,
+                        'orders_notifications': orders_notifications,
+                        'allocate': 'hide',
+                        'release': 'hide',
+                        'new_orders': new_orders,
+                        'start_date': start_date,
+                        'end_date': end_date
+
+            }
+
+            return render(request, 'noicDepot/accepted_orders.html', context=context)
+        
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=True).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
+                new_orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=False).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
+            
+            orders = orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
+            new_orders =  new_orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
+            fields = ['date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status']
+            
+            df_orders = pd.DataFrame(orders, columns=fields)
+            df_new_orders = pd.DataFrame(new_orders, columns=fields)
+
+            df = df_orders.append(df_new_orders)
+
+            filename = f'Noic Depot '
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - Orders - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=True).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
+                new_orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=False).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
+
+            context = {
+                'orders': orders,
+                'new_orders': new_orders,
+                'start_date': start_date,
+                'end_date': end_date,
+                'date': today
+
+            }    
+
+            html_string = render_to_string('noicDepot/export/export_accept_orders.html',
+            context=context)
+            html = HTML(string=html_string)
+            export_name = f"Noic Depot "
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Orders - {today}.pdf'
+                return response        
+
+
+
     return render(request, 'noicDepot/accepted_orders.html', {'orders': orders,'num_of_new_orders': num_of_new_orders, 'orders_notifications': orders_notifications, 'allocate': 'hide', 'release': 'hide','new_orders': new_orders})
 
 
@@ -721,34 +1004,130 @@ def statistics(request):
 @login_required()
 @user_role
 def collections(request):
+    filtered_collections = None
+
+    new_collections = Collections.objects.filter(date=today).order_by('-date', '-time')
+    collections = Collections.objects.exclude(date=today).order_by('-date', '-time')
+
     context = {
-        'collections': Collections.objects.exclude(date=today).order_by('-date', '-time'),
-        'new_collections': Collections.objects.filter(date=today).order_by('-date', '-time'),
-        'form': CollectionsForm()
+        'collections': collections,
+        'new_collections': new_collections,
+        'form': CollectionsForm(),
+        'filtered_activities': filtered_collections
     }
     if request.method == 'POST':
         collection = Collections.objects.filter(id=request.POST.get('collection_id')).first()
-        collection.transporter = request.POST.get('transporter')
-        collection.truck_reg = request.POST.get('truck_reg')
-        collection.trailer_reg = request.POST.get('trailer_reg')
-        collection.driver = request.POST.get('driver')
-        collection.driver_id = request.POST.get('driver_id')
-        collection.date_collected = date.today()
-        collection.time_collected = datetime.today().time()
-        collection.has_collected = True
-        collection.order.status = 'Collected'
-        collection.save()
-        company = collection.order.company
-        user = User.objects.filter(company=company, user_type='S_ADMIN').first()
-        reference = 'collection'
-        reference_id = collection.id
-        depot = collection.order.noic_depot.name
-        action = f"You collected {collection.order.quantity}L of {collection.order.fuel_type} from {depot} depot"
-        Audit_Trail.objects.create(company=company, service_station=depot, user=user,
-                                   action=action, reference=reference, reference_id=reference_id)
+        
+        if collection:
+            collection.transporter = request.POST.get('transporter')
+            collection.truck_reg = request.POST.get('truck_reg')
+            collection.trailer_reg = request.POST.get('trailer_reg')
+            collection.driver = request.POST.get('driver')
+            collection.driver_id = request.POST.get('driver_id')
+            collection.date_collected = date.today()
+            collection.time_collected = datetime.today().time()
+            collection.has_collected = True
+            collection.order.status = 'Collected'
+            collection.save()
+            company = collection.order.company
+            user = User.objects.filter(company=company, user_type='S_ADMIN').first()
+            reference = 'collection'
+            reference_id = collection.id
+            depot = collection.order.noic_depot.name
+            action = f"You collected {collection.order.quantity}L of {collection.order.fuel_type} from {depot} depot"
+            Audit_Trail.objects.create(company=company, service_station=depot, user=user,
+                                    action=action, reference=reference, reference_id=reference_id)
 
-        messages.success(request, 'Collection saved successfully.')
-        return redirect('noicDepot:collections')
+            messages.success(request, 'Collection saved successfully.')
+            return redirect('noicDepot:collections')
+    
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            filtered = True;
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            
+            filtered_collections = Collections.objects.filter(date__range=[start_date, end_date])
+
+            context = {
+                'start_date': start_date,
+                'end_date': end_date,
+                'form': CollectionsForm(),
+                'filtered_collections': filtered_collections
+            }
+
+            return render(request, 'noicDepot/collections.html', context=context)
+
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                filtered_collections = Collections.objects.filter(date__range=[start_date, end_date])
+                      
+            fields = ['date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity']
+            
+            if filtered_collections:
+                filtered_collections = filtered_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity')
+                df = pd.DataFrame(filtered_collections, columns=fields)
+            else:
+                df_current = pd.DataFrame(new_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity'), columns=fields)
+                df_previous = pd.DataFrame(collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity'), columns=fields)
+                df = df_current.append(df_previous)
+
+            filename = f'Noic Depot Collections'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                filtered_collections = Collections.objects.filter(date__range=[start_date, end_date])
+
+            context = {
+                'start_date': start_date,
+                'end_date': end_date,
+                'date': today,
+                'collections': collections,
+                'new_collections': new_collections,
+                'filtered_collections': filtered_collections
+            }    
+
+            html_string = render_to_string('noicDepot/export/export_collections.html', context=context)
+            html = HTML(string=html_string)
+            export_name = f"ZERA - {today}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Activities - {today}.pdf'
+                return response
+
+    
 
     return render(request, 'noicDepot/collections.html', context=context)
 

@@ -85,8 +85,83 @@ def dashboard(request):
 @login_required()
 @user_role
 def activity(request):
+    filtered_activities = None
     activities = Activity.objects.exclude(date=today).filter(user=request.user)
     current_activities = Activity.objects.filter(date=today).filter(user=request.user)
+
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            filtered = True;
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            
+            filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
+            return render(request, 'zeraPortal/activity.html', {'filtered_activities':filtered_activities,'today':today, 'start_date': start_date
+            , 'end_date':end_date})
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
+                      
+            fields = ['date','time', 'company__name', 'action', 'description', 'reference_id']
+            
+            if filtered_activities:
+                filtered_activities = filtered_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id')
+                df = pd.DataFrame(filtered_activities, columns=fields)
+            else:
+                df_current = pd.DataFrame(current_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+                df_previous = pd.DataFrame(activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+                df = df_current.append(df_previous)
+
+            filename = f'ZERA - {today}.csv'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
+
+            html_string = render_to_string('zeraPortal/export/activities_export.html', {'filtered_activities': filtered_activities,
+            'start_date':start_date,'current_activities': current_activities, 'activities':activities, 'end_date':end_date,
+            'date':today})
+            html = HTML(string=html_string)
+            export_name = f"ZERA - {today}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Activities - {today}.pdf'
+                return response
+
+
     return render(request, 'zeraPortal/activity.html', {'activities': activities, 'current_activities': current_activities})
 
 
@@ -160,7 +235,77 @@ def noic_fuel(request):
         noic_rtgs_diesel += depot.rtgs_diesel
         noic_usd_petrol += depot.usd_petrol
         noic_rtgs_petrol += depot.rtgs_petrol
-    depots.order_by('-date')    
+    depots.order_by('-date')
+
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            depots = DepotFuelUpdate.objects.filter(date__range=[start_date, end_date])
+            return render(request, 'zeraPortal/noic_fuel.html',
+                  {'depots': depots, 'noic_usd_diesel': noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel,
+                   'noic_usd_petrol': noic_usd_petrol, 'noic_rtgs_petrol': noic_rtgs_petrol,
+                   'start_date':start_date, 'end_date':end_date})
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                depots = DepotFuelUpdate.objects.filter(date__range=[start_date, end_date])
+                
+            depots = depots.values('date','depot__name','usd_petrol','usd_petrol_price','usd_diesel','usd_diesel_price',
+            'rtgs_petrol','rtgs_petrol_price', 'rtgs_diesel', 'rtgs_diesel_price')
+            fields = ['date','depot__name','usd_petrol','usd_petrol_price','usd_diesel','usd_diesel_price',
+            'rtgs_petrol','rtgs_petrol_price', 'rtgs_diesel', 'rtgs_diesel_price']
+            
+            df = pd.DataFrame(depots, columns=fields)
+
+            filename = f'ZERA NOIC FUEL SUMMARY - {today}.csv'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                depots = DepotFuelUpdate.objects.filter(date__range=[start_date, end_date])
+                   
+            html_string = render_to_string('zeraPortal/export/noic_fuel_export.html', {'depots': depots,'date':today, 'start_date':start_date, 'end_date':end_date})
+            html = HTML(string=html_string)
+            export_name = "ZERA PORTAL"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Noic Fuel Update - {today}.pdf'
+                return response        
+    
+
+
+    
 
     return render(request, 'zeraPortal/noic_fuel.html',
                   {'depots': depots, 'noic_usd_diesel': noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel,
@@ -301,7 +446,95 @@ def company_fuel(request):
 
         # fuel.diesel_capacity = '{:,}'.format(fuel.diesel_capacity)
         # fuel.petrol_capacity = '{:,}'.format(fuel.petrol_capacity)
-    # capacities = capacities.order_by('-date')  
+    # capacities = capacities.order_by('-date')
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+
+            capacities = CompanyFuelUpdate.objects.filter(date__range=[start_date, end_date])
+
+            for fuel in capacities:
+                subs_total_diesel_capacity = 0
+                subs_total_petrol_capacity = 0
+                subsidiaries_fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary__company=fuel.company).all()
+                for sub_fuel in subsidiaries_fuel:
+                    subs_total_diesel_capacity += sub_fuel.diesel_quantity
+                    subs_total_petrol_capacity += sub_fuel.petrol_quantity
+
+                fuel.diesel_capacity = fuel.unallocated_diesel + subs_total_diesel_capacity
+                fuel.petrol_capacity = fuel.unallocated_petrol + subs_total_petrol_capacity
+
+            return render(request, 'zeraPortal/company_fuel.html',
+                {'capacities': capacities,'start_date':start_date, 'end_date':end_date})
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                capacities = CompanyFuelUpdate.objects.filter(date__range=[start_date, end_date])
+                
+            capacities = capacities.values('date','company__name','allocated_petrol','allocated_diesel','unallocated_petrol','unallocated_diesel',
+            'usd_diesel_price','usd_petrol_price', 'diesel_price', 'petrol_price')
+            fields = ['date','company__name','allocated_petrol','allocated_diesel','unallocated_petrol','unallocated_diesel',
+            'usd_diesel_price','usd_petrol_price', 'diesel_price', 'petrol_price']
+            
+            df = pd.DataFrame(capacities, columns=fields)
+
+            filename = f'ZERA COMPANY FUEL SUMMARY - {today}.csv'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                capacities = CompanyFuelUpdate.objects.filter(date__range=[start_date, end_date])
+
+                for fuel in capacities:
+                    subs_total_diesel_capacity = 0
+                    subs_total_petrol_capacity = 0
+                    subsidiaries_fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary__company=fuel.company).all()
+                    for sub_fuel in subsidiaries_fuel:
+                        subs_total_diesel_capacity += sub_fuel.diesel_quantity
+                        subs_total_petrol_capacity += sub_fuel.petrol_quantity
+
+                    fuel.diesel_capacity = fuel.unallocated_diesel + subs_total_diesel_capacity
+                    fuel.petrol_capacity = fuel.unallocated_petrol + subs_total_petrol_capacity
+                   
+            html_string = render_to_string('zeraPortal/export/company_fuel_export.html', {'capacities': capacities,'date':today, 'start_date':start_date, 'end_date':end_date})
+            html = HTML(string=html_string)
+            export_name = "ZERA PORTAL"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Noic Fuel Update - {today}.pdf'
+                return response        
+      
       
 
     return render(request, 'zeraPortal/company_fuel.html', {'capacities': capacities})
@@ -420,23 +653,130 @@ def download_release_note(request, id):
 @login_required()
 def transactions(request, id):
     user_permission(request)
-    today = datetime.now().strftime("%m/%d/%y")
+    today = datetime.now().strftime("%m-%d-%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
-    transactions = []
+    transactions = Transaction.objects.filter(supplier__company__id=id).all()
     company = ""
-    for tran in Transaction.objects.filter(supplier__company__id=id).all():
+    for tran in transactions:
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
         company = Company.objects.filter(id=tran.supplier.company.id).first()
         tran.depot = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
         if delivery_sched:
             tran.delivery_sched = delivery_sched
-        transactions.append(tran)
+        
     context = {
         'transactions': transactions,
         'transporters': transporters,
         'today': today,
         'company': company
     }
+
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            filtered = True;
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            
+            transactions = Transaction.objects.filter(supplier__company__id=id).filter(date__range=[start_date, end_date])
+
+            for tran in transactions:
+                delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
+                company = Company.objects.filter(id=tran.supplier.company.id).first()
+                tran.depot = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
+                if delivery_sched:
+                    tran.delivery_sched = delivery_sched
+
+            context = {
+            'transactions': transactions,
+            'transporters': transporters,
+            'today': today,
+            'start_date':start_date,
+            'end_date':end_date,
+            'company': company
+            }
+
+            return render(request, 'zeraPortal/transactions.html', context=context )
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                transactions = Transaction.objects.filter(supplier__company__id=id).filter(date__range=[start_date, end_date])
+
+                      
+            fields = ['date','buyer__company__name', 'offer__request__fuel_type', 'expected', 'paid', 'is_complete']
+            
+            if transactions:
+                transactions = transactions.values('date','buyer__company__name', 'offer__request__fuel_type', 'expected', 'paid', 'is_complete')
+                df = pd.DataFrame(transactions, columns=fields)
+            # else:
+            #     df_current = pd.DataFrame(current_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+            #     df_previous = pd.DataFrame(activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+            #     df = df_current.append(df_previous)
+
+            filename = f'ZERA - Transactions -{today}.csv'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                transactions = Transaction.objects.filter(supplier__company__id=id).filter(date__range=[start_date, end_date])
+
+            if transactions:
+                for tran in transactions:
+                    delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
+                    company = Company.objects.filter(id=tran.supplier.company.id).first()
+                    tran.depot = Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first()
+                    if delivery_sched:
+                        tran.delivery_sched = delivery_sched
+            
+            context = {
+                'transactions': transactions,
+                'start_date':start_date,
+                'end_date':end_date,
+                'date':today
+            }
+              
+
+
+            html_string = render_to_string('zeraPortal/export/transactions_export.html', context=context )
+            html = HTML(string=html_string)
+            export_name = f"ZERA - Transactions - {today}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name}.pdf'
+                return response
+
+
+
     return render(request, 'zeraPortal/transactions.html', context=context)
 
 
@@ -804,7 +1144,7 @@ def report_generator(request):
             verified_companies = None
         if request.POST.get('report_type') == 'Allocations':
             print("__________________________I am in allocations____________________________")
-            allocations = FuelAllocation.objects.all()
+            allocations = SordNationalAuditTrail.objects.all()
             print(f'________________________________{allocations}__________________________')
             requests = None
             revs = None

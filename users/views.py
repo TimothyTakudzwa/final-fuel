@@ -287,8 +287,7 @@ def allocated_fuel(request, sid):
 
             while proceed:
                 sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company, fuel_type="Petrol",
-                                                                       payment_type=fuel_updated.payment_type,
-                                                                       end_quantity__gte=0).first()
+                                                                       payment_type=fuel_updated.payment_type).filter(~Q(end_quantity=0)).first()
                 if sord_allocation.end_quantity >= amount_cf:
                     sord_allocation.quantity_allocated += amount_cf
                     sord_allocation.end_quantity -= amount_cf
@@ -351,8 +350,7 @@ def allocated_fuel(request, sid):
 
             while proceed:
                 sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company, fuel_type="Diesel",
-                                                                       payment_type=fuel_updated.payment_type,
-                                                                       end_quantity__gte=0).first()
+                                                                       payment_type=fuel_updated.payment_type).filter(~Q(end_quantity=0)).first()
                 if sord_allocation.end_quantity >= amount_cf:
                     sord_allocation.quantity_allocated += amount_cf
                     sord_allocation.end_quantity -= amount_cf
@@ -497,8 +495,7 @@ def allocation_update(request, id):
                 while proceed:
                     sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company,
                                                                            fuel_type="Petrol",
-                                                                           payment_type=fuel_update.payment_type,
-                                                                           end_quantity__gte=0).first()
+                                                                           payment_type=fuel_update.payment_type).filter(~Q(end_quantity=0)).first()
                     if sord_allocation.end_quantity >= amount_cf:
                         sord_allocation.quantity_allocated += amount_cf
                         sord_allocation.end_quantity -= amount_cf
@@ -565,8 +562,7 @@ def allocation_update(request, id):
                 while proceed:
                     sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company,
                                                                            fuel_type="Diesel",
-                                                                           payment_type=fuel_update.payment_type,
-                                                                           end_quantity__gte=0).first()
+                                                                           payment_type=fuel_update.payment_type).filter(~Q(end_quantity=0)).first()
                     if sord_allocation.end_quantity >= amount_cf:
                         sord_allocation.quantity_allocated += amount_cf
                         sord_allocation.end_quantity -= amount_cf
@@ -691,8 +687,7 @@ def allocation_update_main(request, id):
 
                 while proceed:
                     sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company,
-                                                                           fuel_type="Petrol", payment_type="RTGS",
-                                                                           end_quantity__gte=0).first()
+                                                                           fuel_type="Petrol", payment_type="RTGS").filter(~Q(end_quantity=0)).first()
                     if sord_allocation.end_quantity >= amount_cf:
                         sord_allocation.quantity_allocated += amount_cf
                         sord_allocation.end_quantity -= amount_cf
@@ -756,8 +751,7 @@ def allocation_update_main(request, id):
 
                 while proceed:
                     sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company,
-                                                                           fuel_type="Diesel", payment_type="RTGS",
-                                                                           end_quantity__gte=0).first()
+                                                                           fuel_type="Diesel", payment_type="RTGS").filter(~Q(end_quantity=0)).first()
                     if sord_allocation.end_quantity >= amount_cf:
                         sord_allocation.quantity_allocated += amount_cf
                         sord_allocation.end_quantity -= amount_cf
@@ -1318,7 +1312,7 @@ def report_generator(request):
             stock = None
             revs = None
         if request.POST.get('report_type') == 'Allocations':
-            allocations = FuelAllocation.objects.all()
+            allocations = SordCompanyAuditTrail.objects.filter(company=request.user.company, date__range=[start_date, end_date])
             requests = None
             revs = None
             stock = None
@@ -2737,23 +2731,17 @@ def download_proof(request, id):
 @login_required()
 def delivery_schedules(request):
     user_permission(request)
-    # schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).all()
-    # completed_schedules = []
-    # pending_schedules =[]
-    # for schedule in schedules:
-    #     schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
-    #     if schedule.transaction.offer.delivery_method.lower() == 'delivery':
-    #         schedule.delivery_address = schedule.transaction.offer.request.delivery_address
-    #     else:
-    #         schedule.delivery_address = schedule.transaction.offer.collection_address
-    #     if schedule.confirmation_date:
-    #         completed_schedules.append(schedule)
-    #     else:
-    #         pending_schedules.append(schedule) 
-    completed_schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user
-    .company).filter(confirmation_date__isnull=False)
-    pending_schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user
-    .company).filter(confirmation_date__isnull=True)
+    schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).all()
+
+    for schedule in schedules:
+        schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
+        if schedule.transaction.offer.delivery_method.lower() == 'delivery':
+            schedule.delivery_address = schedule.transaction.offer.request.delivery_address
+        else:
+            schedule.delivery_address = schedule.transaction.offer.collection_address
+        
+    completed_schedules = schedules.filter(confirmation_date__isnull=False)
+    pending_schedules = schedules.filter(confirmation_date__isnull=True)
 
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :

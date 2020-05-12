@@ -28,11 +28,93 @@
             </ol>
         </div>
     </section>
+
+    <!-- Date Filter Modal -->
+    <div class="modal fade modal-success in" id="state_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title" style="color:whitesmoke"> Filter By State</span>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+    
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="row report_dates" style="margin-bottom: 25px; margin-top: 25px">
+                            <div class="form-group col-md-6">
+                                <label for="exampleInputEmail1">Starting Date</label>
+                                <input name="start_date" type="date" class="form-control"
+                                    id="starting_date" aria-describedby="emailHelp"
+                                    placeholder="Enter email" required>
+                                <small id="emailHelp" class="form-text text-muted">Please Pick A Starting
+                                    Date.</small>
+                            </div>
+    
+                            <div class="form-group col-md-6">
+                                <label for="exampleInputEmail1">Ending Date</label>
+                                <input name="end_date" type="date" class="form-control" id="ending_date"
+                                    aria-describedby="emailHelp" placeholder="Enter email" required>
+                                <small id="emailHelp" class="form-text text-muted"
+                                    style="color: lightslategray;">Please Pick A Ending Date.</small>
+                            </div>
+                        </div> 
+                            
+    
+                        <div class="modal-footer">  
+                            <button type="submit" class="btn btn-primary ">Submit</button>
+                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                        </div> 
+    
+                    </form>
+    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  End Of Date Filter Modal -->
+
     <!-- Main content -->
+    {% if not filtered_activities %}
     <div class="content">
         <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
              data-index="0">
             <div class="panel-heading ui-sortable-handle">
+
+                <div class="btn-group" style="margin-left: 25px;width: 100%;">
+                    <div class="row" style="margin-bottom: 20px;">
+                        <h4> Activity</h4>
+                    </div>
+                
+                <div class="row">
+                    <button data-toggle="modal" title="Pick A Date Range To Filter Records" data-target="#state_modal" class="btn btn-labeled btn-default btn-sm" style="float: left;background-color:#cfd4ce; color: #333; margin-right: 10px;">
+                        <span class="btn-label"><i class="glyphicon glyphicon-filter"></i></span> Pick A Date | Showing - {% if start_date and end_date %}<b style="color: #009688;">{{start_date}} - {{end_date}}</b>{% else %}<b style="color: #009688;">All</b>{% endif %} </button>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="text" name="pdf_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                            <input type="text" name="pdf_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+                            <button type="submit" class="btn btn-labeled btn-default btn-sm" style="float: left; background-color:#cfd4ce; color: #333;margin-right: 10px;"
+                             {% if not activities and not current_activities %} disabled{% endif %} title="{% if activities or current_activities %} Export To PDF {%else%} No Data To Export {% endif %}">
+                                <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>PDF
+                            </button>
+                        </form> 
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="text" name="export_to_csv" value="csv" hidden>
+                            <input type="text" name="csv_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                            <input type="text" name="csv_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+    
+                        <script>
+                            var today = new Date();
+                            var filename = 'Supplier Admin Allocations Summary' + ' - ' +today.toLocaleString() + '.csv'
+                        </script>
+                        <button  class="btn btn-labeled btn-default btn-sm" style="background-color: #cfd4ce; color: #333; margin-right: 10px;" type="submit" {% if not activities and not current_activities %} disabled{% endif %}
+                        title="{% if activities or current_activities %} Export To CSV {%else%} No Data To Export {% endif %}">
+                            <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>CSV
+                        </button>
+                        </form>
+                </div> 
+                </div>
 
 
                 <div class="dropdown">
@@ -570,6 +652,32 @@
                                                     
                                                 </div>
                                             </div>
+
+                                            <script>
+                                                $('body').click(function (event) {
+                                                    
+                                                    if(!$(event.target).closest("#view_company{{activity.id}}").length && !$(event.target).is("#view_company{{activity.id}}")) {
+                                                        $("#view_company{{activity.id}}").modal('hide');
+                                                    } if(!$(event.target).closest("#view_comp_update{{activity.id}}").length && !$(event.target).is("#view_comp_update{{activity.id}}")) {
+                                                        $("#view_comp_update{{activity.id}}").modal('hide');
+                                                    } if(!$(event.target).closest("#view_supplieradmin{{activity.id}}").length && !$(event.target).is("#view_supplieradmin{{activity.id}}")) {
+                                                        $("#view_supplieradmin{{activity.id}}").modal('hide');
+                                                    } if(!$(event.target).closest("#view_blocked_comp{{activity.id}}").length && !$(event.target).is("#view_blocked_comp{{activity.id}}")) {
+                                                        $("#view_blocked_comp{{activity.id}}").modal('hide');
+                                                    }if(!$(event.target).closest("#view_unblocked_comp{{activity.id}}").length && !$(event.target).is("#view_unblocked_comp{{activity.id}}")) {
+                                                        $("#view_unblocked_comp{{activity.id}}").modal('hide');
+                                                    }if(!$(event.target).closest("#view_cancelled_sub{{activity.id}}").length && !$(event.target).is("#view_cancelled_sub{{activity.id}}")) {
+                                                        $("#view_cancelled_sub{{activity.id}}").modal('hide');
+                                                    }if(!$(event.target).closest("#view_unblockedlicence{{activity.id}}").length && !$(event.target).is("#view_unblockedlicence{{activity.id}}")) {
+                                                        $("#view_unblockedlicence{{activity.id}}").modal('hide');
+                                                    }if(!$(event.target).closest("#view_approve_sub{{activity.id}}").length && !$(event.target).is("#view_approve_sub{{activity.id}}")) {
+                                                        $("#view_approve_sub{{activity.id}}").modal('hide');
+                                                    }if(!$(event.target).closest("#view_updated_licence{{activity.id}}").length && !$(event.target).is('#view_updated_licence{{activity.id}}')) {
+                                                        $("#view_updated_licence{{activity.id}}").modal('hide');
+                                                    }
+                                                             
+                                                });
+                                            </script>
                                             
                                         {%endfor%}
                                         </tbody>
@@ -578,7 +686,7 @@
                             </div>
                             <div class="tab-pane fade" id="tab2">
                                 <div class="panel-body">
-                                    <table id="depots" class="table table-striped table-bordered" style="width:100%">
+                                    <table id="payments" class="table table-striped table-bordered" style="width:100%">
                                         <thead style="background-color: lightslategray; color:white;">
                                         <tr>
                                             <th style="color: white;">Date</th>
@@ -1090,6 +1198,32 @@
                                                     
                                                 </div>
                                             </div>
+                                            <script>
+                                                $('body').click(function (event) {
+                                                    
+                                                    if(!$(event.target).closest("#view_company{{activity.id}}").length && !$(event.target).is("#view_company{{activity.id}}")) {
+                                                        $("#view_company{{activity.id}}").modal('hide');
+                                                    } if(!$(event.target).closest("#view_comp_update{{activity.id}}").length && !$(event.target).is("#view_comp_update{{activity.id}}")) {
+                                                        $("#view_comp_update{{activity.id}}").modal('hide');
+                                                    } if(!$(event.target).closest("#view_supplieradmin{{activity.id}}").length && !$(event.target).is("#view_supplieradmin{{activity.id}}")) {
+                                                        $("#view_supplieradmin{{activity.id}}").modal('hide');
+                                                    } if(!$(event.target).closest("#view_blocked_comp{{activity.id}}").length && !$(event.target).is("#view_blocked_comp{{activity.id}}")) {
+                                                        $("#view_blocked_comp{{activity.id}}").modal('hide');
+                                                    }if(!$(event.target).closest("#view_unblocked_comp{{activity.id}}").length && !$(event.target).is("#view_unblocked_comp{{activity.id}}")) {
+                                                        $("#view_unblocked_comp{{activity.id}}").modal('hide');
+                                                    }if(!$(event.target).closest("#view_cancelled_sub{{activity.id}}").length && !$(event.target).is("#view_cancelled_sub{{activity.id}}")) {
+                                                        $("#view_cancelled_sub{{activity.id}}").modal('hide');
+                                                    }if(!$(event.target).closest("#view_unblockedlicence{{activity.id}}").length && !$(event.target).is("#view_unblockedlicence{{activity.id}}")) {
+                                                        $("#view_unblockedlicence{{activity.id}}").modal('hide');
+                                                    }if(!$(event.target).closest("#view_approve_sub{{activity.id}}").length && !$(event.target).is("#view_approve_sub{{activity.id}}")) {
+                                                        $("#view_approve_sub{{activity.id}}").modal('hide');
+                                                    }if(!$(event.target).closest("#view_updated_licence{{activity.id}}").length && !$(event.target).is('#view_updated_licence{{activity.id}}')) {
+                                                        $("#view_updated_licence{{activity.id}}").modal('hide');
+                                                    }
+                                                             
+                                                });
+                                            </script>
+                                            
                                             
                                         {%endfor%}
                                         </tbody>
@@ -1103,4 +1237,617 @@
             </div>
         </div>
     </div>
+    {% else %}
+    <section class="content">
+        <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+            <div class="panel-heading ui-sortable-handle">
+                <div class="btn-group" style="margin-left: 25px;width: 100%;">
+                    <div class="row" style="margin-bottom: 20px;">
+                        <h4> Filtered Activities </h4>
+                    </div>
+                
+                <div class="row">
+                    <button data-toggle="modal" title="Pick A Date Range To Filter Records" data-target="#state_modal" class="btn btn-labeled btn-default btn-sm" style="float: left;background-color:#cfd4ce; color: #333; margin-right: 10px;">
+                        <span class="btn-label"><i class="glyphicon glyphicon-filter"></i></span> Pick A Date | Showing - {% if start_date and end_date %}<b style="color: #009688;">{{start_date}} - {{end_date}}</b>{% else %}<b style="color: #009688;">All</b>{% endif %} </button>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="text" name="pdf_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                            <input type="text" name="pdf_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+                            <button type="submit" class="btn btn-labeled btn-default btn-sm" style="float: left; background-color:#cfd4ce; color: #333;margin-right: 10px;"
+                             {% if not filtered_activities %} disabled{% endif %} title="{% if filtered_activities %} Export To PDF {%else%} No Data To Export {% endif %}">
+                                <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>PDF
+                            </button>
+                        </form> 
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="text" name="export_to_csv" value="csv" hidden>
+                            <input type="text" name="csv_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                            <input type="text" name="csv_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+    
+                        <script>
+                            var today = new Date();
+                            var filename = 'Supplier Admin Allocations Summary' + ' - ' +today.toLocaleString() + '.csv'
+                        </script>
+                        <button  class="btn btn-labeled btn-default btn-sm" style="background-color: #cfd4ce; color: #333; margin-right: 10px;" type="submit" {% if not filtered_activities %} disabled{% endif %}
+                        title="{% if filtered_activities %} Export To CSV {%else%} No Data To Export {% endif %}">
+                            <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>CSV
+                        </button>
+                        </form>
+                </div> 
+                </div>
+    
+                <div class="dropdown">
+                    <ul class="dropdown-menu dropdown-menu-right">
+    
+    
+                    </ul>
+                    <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+    
+                <div class="table-responsive">
+                    <table id="payments" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Organisation</th>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for activity in filtered_activities %}
+                            <tr>
+                                <td>{{ activity.date }}</td>
+                                <td>ZERA</td>
+                                <td>{{activity.user.first_name}} {{activity.user.last_name}}</td>
+                                <td>{{activity.action}}</td>
+                                <td>{{activity.description}}</td>
+                                {% if activity.action == 'Company Registration' %}
+                                <td>
+                                    <div class="btn-group">
+                                        <button  data-toggle="modal"  data-target="#view_company{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                        </button>
+                                    </div>
+                                </td>
+                                {% elif activity.action == 'Updating Company' %}
+                                <td>
+                                    <div class="btn-group">
+                                        <button  data-toggle="modal"  data-target="#view_comp_update{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                        </button>
+                                    </div>
+                                </td>
+                                {% elif activity.action == 'Creating Supplier Admin' %}
+                                <td>
+                                    <div class="btn-group">
+                                        <button  data-toggle="modal"  data-target="#view_supplieradmin{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                        </button>
+                                    </div>
+                                </td>
+                                {% elif activity.action == 'Blocking Company' %}
+                                <td>
+                                    <div class="btn-group">
+                                        <button  data-toggle="modal"  data-target="#view_blocked_comp{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                        </button>
+                                    </div>
+                                </td>
+                                {% elif activity.action == 'Unblocking Company' %}
+                                <td>
+                                    <div class="btn-group">
+                                        <button  data-toggle="modal"  data-target="#view_unblocked_comp{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                        </button>
+                                    </div>
+                                </td>
+                                {% elif activity.action == 'Updating Licence' %}
+                                <td>
+                                    <div class="btn-group">
+                                        <button  data-toggle="modal"  data-target="#view_updated_licence{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                        </button>
+                                    </div>
+                                </td>
+                                {% elif activity.action == 'Cancelling Licence' %}
+                                <td>
+                                    <div class="btn-group">
+                                        <button  data-toggle="modal"  data-target="#view_cancelled_sub{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                        </button>
+                                    </div>
+                                </td>
+                                {% elif activity.action == 'Unblocking Licence' %}
+                                <td>
+                                    <div class="btn-group">
+                                        <button  data-toggle="modal"  data-target="#view_unblockedlicence{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                        </button>
+                                    </div>
+                                </td>
+                                {% elif activity.action == 'Approving Subsidiary' %}
+                                <td>
+                                    <div class="btn-group">
+                                        <button  data-toggle="modal"  data-target="#view_approve_sub{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                            <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
+                                        </button>
+                                    </div>
+                                </td>
+                                
+                                
+                                {% endif %}
+                            </tr>
+                            <div class="modal fade modal-success in" id="view_company{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                            aria-hidden="true" style="overflow-y: initial !important;" >
+                            <div class="modal-dialog modal-notice">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <span class="modal-title">New Company Info</span>
+                                </div>
+                                    <div class="modal-body" style="padding: 30px;overflow-y: auto;">
+                                        <div class="row" style="padding: 10px;">
+                                            <p class="col-md-6" style="font-weight: bold;">Name: </p>
+                                            <p class="col-md-6">{{ activity.company.name }}</p>
+                                        </div>
+                                        <div class="row" style="padding: 10px;">
+                                            <p class="col-md-6" style="font-weight: bold;">City: </p>
+                                            <p class="col-md-6">{{ activity.company.city }}</p>
+                                        </div>
+                                        <div class="row" style="padding: 10px;">
+                                            <p class="col-md-6" style="font-weight: bold;">Address </p>
+                                            <p class="col-md-6">{{activity.company.address }}</p>
+                                        </div>
+                                        <div class="row" style="padding: 10px;">
+                                            <p class="col-md-6" style="font-weight: bold;">Licence Number: </p>
+                                            <p class="col-md-6">{{activity.company.license_number}}</p>
+                                        </div>
+                                        <div class="row" style="padding: 10px;">
+                                            <p class="col-md-6" style="font-weight: bold;">Vat Number: </p>
+                                            <p class="col-md-6">{{activity.company.vat_number}}</p>
+                                        </div>
+                                        <div class="row" style="padding: 10px;">
+                                            <p class="col-md-6" style="font-weight: bold;">Contact Person : </p>
+                                            <p class="col-md-6">{{activity.company.contact_person}}</p>
+                                        </div>
+                                        <div class="row" style="padding: 10px;">
+                                            <p class="col-md-6" style="font-weight: bold;">Phone Number: </p>
+                                            <p class="col-md-6">{{activity.company.phone_number}}</p>
+                                        </div>
+                                       
+                                      
+                                        
+                                        <div class="modal-footer">  
+                                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                        </div>    
+        
+                                    </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+
+                            <div class="modal fade modal-success in" id="view_comp_update{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                            aria-hidden="true" style="overflow-y: initial !important;" >
+                            <div class="modal-dialog modal-notice">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <span class="modal-title">Updated Company Info</span>
+                                </div>
+                                <div class="modal-body" style="padding: 30px;overflow-y: auto;">
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Name: </p>
+                                        <p class="col-md-6">{{ activity.company.name }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">City: </p>
+                                        <p class="col-md-6">{{ activity.company.city }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Address </p>
+                                        <p class="col-md-6">{{activity.company.address }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Licence Number: </p>
+                                        <p class="col-md-6">{{activity.company.license_number}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Vat Number: </p>
+                                        <p class="col-md-6">{{activity.company.vat_number}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Contact Person : </p>
+                                        <p class="col-md-6">{{activity.company.contact_person}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Phone Number: </p>
+                                        <p class="col-md-6">{{activity.company.phone_number}}</p>
+                                    </div>
+                                   
+                                  
+                                    
+                                    <div class="modal-footer">  
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div>    
+    
+                                </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+
+                            <div class="modal fade modal-success in" id="view_supplieradmin{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                            aria-hidden="true" style="overflow-y: initial !important;" >
+                            <div class="modal-dialog modal-notice">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <span class="modal-title">Supplier Admin Info</span>
+                                </div>
+                                <div class="modal-body" style="padding: 30px;overflow-y: auto;">
+                                       
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">First Name: </p>
+                                        <p class="col-md-6">{{ activity.created_user.first_name}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Last Name: </p>
+                                        <p class="col-md-6">{{ activity.created_user.last_name }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Email </p>
+                                        <p class="col-md-6">{{activity.created_user.email }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Phone: </p>
+                                        <p class="col-md-6">{{activity.created_user.phone_number}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Company: </p>
+                                        <p class="col-md-6">{{ activity.company.name }}</p>
+                                    </div>
+                                   
+                                  
+                                    
+                                    <div class="modal-footer">  
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div>    
+    
+                                </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                            <div class="modal fade modal-success in" id="view_blocked_comp{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                            aria-hidden="true" style="overflow-y: initial !important;" >
+                            <div class="modal-dialog modal-notice">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <span class="modal-title">Blocked Company Info</span>
+                                </div>
+                                <div class="modal-body" style="padding: 30px;overflow-y: auto;">
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Name: </p>
+                                        <p class="col-md-6">{{ activity.company.name }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">City: </p>
+                                        <p class="col-md-6">{{ activity.company.city }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Address </p>
+                                        <p class="col-md-6">{{activity.company.address }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Licence Number: </p>
+                                        <p class="col-md-6">{{activity.company.license_number}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Vat Number: </p>
+                                        <p class="col-md-6">{{activity.company.vat_number}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Contact Person : </p>
+                                        <p class="col-md-6">{{activity.company.contact_person}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Phone Number: </p>
+                                        <p class="col-md-6">{{activity.company.phone_number}}</p>
+                                    </div>
+                                   
+                                  
+                                    
+                                    <div class="modal-footer">  
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div>    
+    
+                                </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                            <div class="modal fade modal-success in" id="view_unblocked_comp{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                            aria-hidden="true" style="overflow-y: initial !important;" >
+                            <div class="modal-dialog modal-notice">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <span class="modal-title">Unblocked Company Info</span>
+                                </div>
+                                <div class="modal-body" style="padding: 30px;overflow-y: auto;">
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Name: </p>
+                                        <p class="col-md-6">{{ activity.company.name }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">City: </p>
+                                        <p class="col-md-6">{{ activity.company.city }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Address </p>
+                                        <p class="col-md-6">{{activity.company.address }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Licence Number: </p>
+                                        <p class="col-md-6">{{activity.company.license_number}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Vat Number: </p>
+                                        <p class="col-md-6">{{activity.company.vat_number}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Contact Person : </p>
+                                        <p class="col-md-6">{{activity.company.contact_person}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Phone Number: </p>
+                                        <p class="col-md-6">{{activity.company.phone_number}}</p>
+                                    </div>
+                                   
+                                  
+                                    
+                                    <div class="modal-footer">  
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div>    
+    
+                                </div>
+                                    
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+
+                            <div class="modal fade modal-success in" id="view_cancelled_sub{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                            aria-hidden="true" style="overflow-y: initial !important;" >
+                            <div class="modal-dialog modal-notice">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <span class="modal-title">Blocked Subsidiary</span>
+                                </div>
+                                <div class="modal-body" style="padding: 30px;overflow-y: auto;">
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Name: </p>
+                                        <p class="col-md-6">{{ activity.subsidiary.name }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">City: </p>
+                                        <p class="col-md-6">{{ activity.subsidiary.city }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Address </p>
+                                        <p class="col-md-6">{{activity.subsidiary.location }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Licence Number: </p>
+                                        <p class="col-md-6">{{activity.subsidiary.license_num}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Vat Number: </p>
+                                        <p class="col-md-6">{{activity.subsidiary.vat}}</p>
+                                    </div>
+                                   
+                                    
+                                    <div class="modal-footer">  
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div>    
+    
+                                </div>
+                                    
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+
+                            <div class="modal fade modal-success in" id="view_unblockedlicence{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                            aria-hidden="true" style="overflow-y: initial !important;" >
+                            <div class="modal-dialog modal-notice">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <span class="modal-title">Unblocked Subsidiary Info</span>
+                                </div>
+                                <div class="modal-body" style="padding: 30px;overflow-y: auto;">
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Name: </p>
+                                        <p class="col-md-6">{{ activity.subsidiary.name }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">City: </p>
+                                        <p class="col-md-6">{{ activity.subsidiary.city }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Address </p>
+                                        <p class="col-md-6">{{activity.subsidiary.location }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Licence Number: </p>
+                                        <p class="col-md-6">{{activity.subsidiary.license_num}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Vat Number: </p>
+                                        <p class="col-md-6">{{activity.subsidiary.vat}}</p>
+                                    </div>
+                                   
+                                    
+                                    <div class="modal-footer">  
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div>    
+    
+                                </div>
+                                    
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+
+                            <div class="modal fade modal-success in" id="view_approve_sub{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                            aria-hidden="true" style="overflow-y: initial !important;" >
+                            <div class="modal-dialog modal-notice">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <span class="modal-title">Approved Subsidiary Info</span>
+                                </div>
+                                <div class="modal-body" style="padding: 30px;overflow-y: auto;">
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Name: </p>
+                                        <p class="col-md-6">{{ activity.subsidiary.name }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">City: </p>
+                                        <p class="col-md-6">{{ activity.subsidiary.city }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Address </p>
+                                        <p class="col-md-6">{{activity.subsidiary.location }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Licence Number: </p>
+                                        <p class="col-md-6">{{activity.subsidiary.license_num}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Vat Number: </p>
+                                        <p class="col-md-6">{{activity.subsidiary.vat}}</p>
+                                    </div>
+                                   
+                                    
+                                    <div class="modal-footer">  
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div>    
+    
+                                </div>
+                                    
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+
+                            <div class="modal fade modal-success in" id="view_updated_licence{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                            aria-hidden="true" style="overflow-y: initial !important;" >
+                            <div class="modal-dialog modal-notice">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <span class="modal-title">Updated Licence Subsidiary</span>
+                                </div>
+                                <div class="modal-body" style="padding: 30px;overflow-y: auto;">
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Name: </p>
+                                        <p class="col-md-6">{{ activity.subsidiary.name }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">City: </p>
+                                        <p class="col-md-6">{{ activity.subsidiary.city }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Address </p>
+                                        <p class="col-md-6">{{activity.subsidiary.location }}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">New Licence Number: </p>
+                                        <p class="col-md-6">{{activity.subsidiary.license_num}}</p>
+                                    </div>
+                                    <div class="row" style="padding: 10px;">
+                                        <p class="col-md-6" style="font-weight: bold;">Vat Number: </p>
+                                        <p class="col-md-6">{{activity.subsidiary.vat}}</p>
+                                    </div>
+                                   
+                                    
+                                    <div class="modal-footer">  
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div>    
+    
+                                </div>
+                                    
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                            <script>
+                                $('body').click(function (event) {
+                                    
+                                    if(!$(event.target).closest("#view_company{{activity.id}}").length && !$(event.target).is("#view_company{{activity.id}}")) {
+                                        $("#view_company{{activity.id}}").modal('hide');
+                                    } if(!$(event.target).closest("#view_comp_update{{activity.id}}").length && !$(event.target).is("#view_comp_update{{activity.id}}")) {
+                                        $("#view_comp_update{{activity.id}}").modal('hide');
+                                    } if(!$(event.target).closest("#view_supplieradmin{{activity.id}}").length && !$(event.target).is("#view_supplieradmin{{activity.id}}")) {
+                                        $("#view_supplieradmin{{activity.id}}").modal('hide');
+                                    } if(!$(event.target).closest("#view_blocked_comp{{activity.id}}").length && !$(event.target).is("#view_blocked_comp{{activity.id}}")) {
+                                        $("#view_blocked_comp{{activity.id}}").modal('hide');
+                                    }if(!$(event.target).closest("#view_unblocked_comp{{activity.id}}").length && !$(event.target).is("#view_unblocked_comp{{activity.id}}")) {
+                                        $("#view_unblocked_comp{{activity.id}}").modal('hide');
+                                    }if(!$(event.target).closest("#view_cancelled_sub{{activity.id}}").length && !$(event.target).is("#view_cancelled_sub{{activity.id}}")) {
+                                        $("#view_cancelled_sub{{activity.id}}").modal('hide');
+                                    }if(!$(event.target).closest("#view_unblockedlicence{{activity.id}}").length && !$(event.target).is("#view_unblockedlicence{{activity.id}}")) {
+                                        $("#view_unblockedlicence{{activity.id}}").modal('hide');
+                                    }if(!$(event.target).closest("#view_approve_sub{{activity.id}}").length && !$(event.target).is("#view_approve_sub{{activity.id}}")) {
+                                        $("#view_approve_sub{{activity.id}}").modal('hide');
+                                    }if(!$(event.target).closest("#view_updated_licence{{activity.id}}").length && !$(event.target).is('#view_updated_licence{{activity.id}}')) {
+                                        $("#view_updated_licence{{activity.id}}").modal('hide');
+                                    }
+                                             
+                                });
+                            </script>
+                            
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+         
+    
+    
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+
+    <script>
+        $('body').click(function (event) {
+            if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
+                $("#state_modal").modal('hide');
+            }
+
+                     
+        });
+    </script>
+
 {%endblock%}

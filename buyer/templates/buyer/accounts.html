@@ -630,7 +630,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form  action = "{% url 'make_direct_request' %}" method="POST">
+                                    <form  action = "{% url 'make_direct_request' account.supplier_company.id %}" method="POST">
                                         {% csrf_token %}
                                         <div class="row form-group">
                                             <div class="col-sm-6">

@@ -28,283 +28,552 @@
             </ol>
         </div>
     </section>
+
     <!-- Main content -->
-    <div class="content">
-        <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
-             data-index="0">
-            <div class="panel-heading ui-sortable-handle">
+    <!-- Date Filter Modal -->
+<div class="modal fade modal-success in" id="state_modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" style="color:whitesmoke"> Filter By State</span>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row report_dates" style="margin-bottom: 25px; margin-top: 25px">
+                        <div class="form-group col-md-6">
+                            <label for="exampleInputEmail1">Starting Date</label>
+                            <input name="start_date" type="date" class="form-control"
+                                id="starting_date" aria-describedby="emailHelp"
+                                placeholder="Enter email" required>
+                            <small id="emailHelp" class="form-text text-muted">Please Pick A Starting
+                                Date.</small>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="exampleInputEmail1">Ending Date</label>
+                            <input name="end_date" type="date" class="form-control" id="ending_date"
+                                aria-describedby="emailHelp" placeholder="Enter email" required>
+                            <small id="emailHelp" class="form-text text-muted"
+                                style="color: lightslategray;">Please Pick A Ending Date.</small>
+                        </div>
+                    </div> 
+                        
+
+                    <div class="modal-footer">  
+                        <button type="submit" class="btn btn-primary ">Submit</button>
+                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                    </div> 
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--  End Of Date Filter Modal -->
+    
+{% if not filtered_collections %}
+
+<div class="content">
+    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
+            data-index="0">
+        <div class="panel-heading ui-sortable-handle">
+
+            <div class="btn-group" style="margin-left: 25px;width: 100%;">
+                <div class="row" style="margin-bottom: 20px;">
+                    <h4> Collections</h4>
+                </div>
+            
+                <div class="row">
+                    <button data-toggle="modal" title="Pick A Date Range To Filter Records" data-target="#state_modal" class="btn btn-labeled btn-default btn-sm" style="float: left;background-color:#cfd4ce; color: #333; margin-right: 10px;">
+                        <span class="btn-label"><i class="glyphicon glyphicon-filter"></i></span> Pick A Date | Showing - {% if start_date and end_date %}<b style="color: #009688;">{{start_date}} - {{end_date}}</b>{% else %}<b style="color: #009688;">All</b>{% endif %} </button>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="text" name="pdf_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                            <input type="text" name="pdf_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+                            <button type="submit" class="btn btn-labeled btn-default btn-sm" style="float: left; background-color:#cfd4ce; color: #333;margin-right: 10px;"
+                            {% if not collections and not new_collections %} disabled{% endif %} title="{% if collections or new_collections %} Export To PDF {%else%} No Data To Export {% endif %}">
+                                <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>PDF
+                            </button>
+                        </form> 
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="text" name="export_to_csv" value="csv" hidden>
+                            <input type="text" name="csv_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                            <input type="text" name="csv_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+
+                        <script>
+                            var today = new Date();
+                            var filename = 'Supplier Admin Allocations Summary' + ' - ' +today.toLocaleString() + '.csv'
+                        </script>
+                        <button  class="btn btn-labeled btn-default btn-sm" style="background-color: #cfd4ce; color: #333; margin-right: 10px;" type="submit" {% if not collections and not new_collections %} disabled{% endif %}
+                        title="{% if collections or new_collections %} Export To CSV {%else%} No Data To Export {% endif %}">
+                            <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>CSV
+                        </button>
+                        </form>
+                </div> 
+            </div>
 
 
-                <div class="dropdown">
-                    <ul class="dropdown-menu dropdown-menu-right">
+            <div class="dropdown">
+                <ul class="dropdown-menu dropdown-menu-right">
 
 
-                    </ul>
-                    <div class="dropdown-toggle" data-toggle="dropdown"><span
-                            class="panel-control-icon glyphicon glyphicon-cog"></span>
-                    </div>
+                </ul>
+                <div class="dropdown-toggle" data-toggle="dropdown"><span
+                        class="panel-control-icon glyphicon glyphicon-cog"></span>
                 </div>
             </div>
-            <div class="panel-body">
+        </div>
+        <div class="panel-body">
 
-                <div class="table-responsive">
-                    <div class="col-xs-12 col-sm-12">
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs">
-                            <li class="active" ><a href="#tab1" data-toggle="tab" aria-expanded="true" style="border: rgb(211, 208, 208) 1px solid;">Current</a></li>
-                            <li class=""><a href="#tab2" data-toggle="tab" aria-expanded="false" style="border: rgb(211, 208, 208) 1px solid;">Previous</a></li>
-                        </ul>
-                        <!-- Tab panels -->
-                        <div class="tab-content">
-                            <div class="tab-pane fade active in" id="tab1">
-                                <div class="panel-body">
-                                    <div class="table-responsive">
-                                        <table id="orders" class="table table-striped table-bordered" style="width:100%">
-                                            <thead style="background-color: lightslategray; color:white;">
+            <div class="table-responsive">
+                <div class="col-xs-12 col-sm-12">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs">
+                        <li class="active" ><a href="#tab1" data-toggle="tab" aria-expanded="true" style="border: rgb(211, 208, 208) 1px solid;">Current</a></li>
+                        <li class=""><a href="#tab2" data-toggle="tab" aria-expanded="false" style="border: rgb(211, 208, 208) 1px solid;">Previous</a></li>
+                    </ul>
+                    <!-- Tab panels -->
+                    <div class="tab-content">
+                        <div class="tab-pane fade active in" id="tab1">
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table id="orders" class="table table-striped table-bordered" style="width:100%">
+                                        <thead style="background-color: lightslategray; color:white;">
+                                        <tr>
+                                            <th style="color: white;">Date</th>
+                                            <th style="color: white;">Time</th>
+                                            <th style="color: white;">Company</th>
+                                            <th style="color: white;">NOIC Depot</th>
+                                            <th style="color: white;">Fuel Type</th>
+                                            <th style="color: white;">Quantity</th>
+                                            <th style="color: white;">Price</th>
+                                            <th style="color: white;">Currency</th>
+                                            <th style="color: white;">Status</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for collection in new_collections %}
                                             <tr>
-                                                <th style="color: white;">Date</th>
-                                                <th style="color: white;">Time</th>
-                                                <th style="color: white;">Company</th>
-                                                <th style="color: white;">NOIC Depot</th>
-                                                <th style="color: white;">Fuel Type</th>
-                                                <th style="color: white;">Quantity</th>
-                                                <th style="color: white;">Price</th>
-                                                <th style="color: white;">Currency</th>
-                                                <th style="color: white;">Status</th>
+                                                <td>{{ collection.date }}</td>
+                                                <td>{{ collection.time }}</td>
+                                                <td>{{ collection.order.company.name }}</td>
+                                                <td>{{ collection.order.noic_depot.name }}</td>
+                                                <td>{{ collection.order.fuel_type }}</td>
+                                                <td>{{ collection.order.quantity|floatformat:2|intcomma }}L</td>
+                                                <td>${{ collection.order.price|floatformat:2|intcomma }}L</td>
+                                                <td>{{ collection.order.currency }}</td>
+                                                <td>
+                                                    <!--view collection details-->
+                                                    {% if collection.has_collected %}
+                                                        <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal"
+                                                                data-target="#payment{{ collection.id }}">
+                                                            <span class="btn-label"><i class="fa fa-eye"></i></span> Details
+                                                        </button>
+                                                        <!--pending collection-->
+                                                    {% else %}
+                                                        <p class="bg-warning">PENDING</p>
+                                                    {% endif %}
+                                                </td>
                                             </tr>
-                                            </thead>
-                                            <tbody>
-                                            {% for collection in new_collections %}
-                                                <tr>
-                                                    <td>{{ collection.date }}</td>
-                                                    <td>{{ collection.time }}</td>
-                                                    <td>{{ collection.order.company.name }}</td>
-                                                    <td>{{ collection.order.noic_depot.name }}</td>
-                                                    <td>{{ collection.order.fuel_type }}</td>
-                                                    <td>{{ collection.order.quantity|floatformat:2|intcomma }}L</td>
-                                                    <td>${{ collection.order.price|floatformat:2|intcomma }}L</td>
-                                                    <td>{{ collection.order.currency }}</td>
-                                                    <td>
-                                                        <!--view collection details-->
-                                                        {% if collection.has_collected %}
-                                                            <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal"
-                                                                    data-target="#payment{{ collection.id }}">
-                                                                <span class="btn-label"><i class="fa fa-eye"></i></span> Details
+                                            <!--collection details-->
+                                            <div class="modal fade modal-success in" id="payment{{ collection.id }}" tabindex="-1"
+                                                    role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header" style="background-color: #009688; color: white">
+                                                            <span class="modal-title" id="exampleModalLabel">Collection Details</span>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
                                                             </button>
-                                                            <!--pending collection-->
-                                                        {% else %}
-                                                            <p class="bg-warning">PENDING</p>
-                                                        {% endif %}
-                                                    </td>
-                                                </tr>
-                                                <!--collection details-->
-                                                <div class="modal fade modal-success in" id="payment{{ collection.id }}" tabindex="-1"
-                                                     role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header" style="background-color: #009688; color: white">
-                                                                <span class="modal-title" id="exampleModalLabel">Collection Details</span>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <!--date collected-->
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Date Collected </b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ collection.date_collected }}
+                                                                </div>
                                                             </div>
-                                                            <div class="modal-body">
-                                                                <!--date collected-->
-                                                                <div class="form-group row">
-                                                                    <div class="col-md-6">
-                                                                        <b> &nbsp;&nbsp;&nbsp;&nbsp;Date Collected </b>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        {{ collection.date_collected }}
-                                                                    </div>
+                                                            <!--time collected-->
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Time Collected </b>
                                                                 </div>
-                                                                <!--time collected-->
-                                                                <div class="form-group row">
-                                                                    <div class="col-md-6">
-                                                                        <b> &nbsp;&nbsp;&nbsp;&nbsp;Time Collected </b>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        {{ collection.time_collected }}
-                                                                    </div>
+                                                                <div class="col-md-6">
+                                                                    {{ collection.time_collected }}
                                                                 </div>
-                                                                <!--transporter-->
-                                                                <div class="form-group row">
-                                                                    <div class="col-md-6">
-                                                                        <b> &nbsp;&nbsp;&nbsp;&nbsp;Transporter</b>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        {{ collection.transporter }}
-                                                                    </div>
+                                                            </div>
+                                                            <!--transporter-->
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Transporter</b>
                                                                 </div>
-                                                                <!--truck reg-->
-                                                                <div class="form-group row">
-                                                                    <div class="col-md-6">
-                                                                        <b> &nbsp;&nbsp;&nbsp;&nbsp;Truck Registration Number</b>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        {{ collection.truck_reg }}
-                                                                    </div>
+                                                                <div class="col-md-6">
+                                                                    {{ collection.transporter }}
                                                                 </div>
-                                                                <!--driver-->
-                                                                <div class="form-group row">
-                                                                    <div class="col-md-6">
-                                                                        <b> &nbsp;&nbsp;&nbsp;&nbsp;Driver</b>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        {{ collection.driver }}
-                                                                    </div>
+                                                            </div>
+                                                            <!--truck reg-->
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Truck Registration Number</b>
                                                                 </div>
-                                                                <!--driver id-->
-                                                                <div class="form-group row">
-                                                                    <div class="col-md-6">
-                                                                        <b> &nbsp;&nbsp;&nbsp;&nbsp;Driver ID</b>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        {{ collection.driver_id }}
-                                                                    </div>
+                                                                <div class="col-md-6">
+                                                                    {{ collection.truck_reg }}
                                                                 </div>
-                                                                <!--bottom close button-->
-                                                                <div class="modal-footer">
-                                                                    <button class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                            <!--driver-->
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Driver</b>
                                                                 </div>
+                                                                <div class="col-md-6">
+                                                                    {{ collection.driver }}
+                                                                </div>
+                                                            </div>
+                                                            <!--driver id-->
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Driver ID</b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ collection.driver_id }}
+                                                                </div>
+                                                            </div>
+                                                            <!--bottom close button-->
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-default" data-dismiss="modal">Close</button>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
 
-                                            {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="tab2">
-                                <div class="panel-body">
-                                    <div class="table-responsive">
-                                        <table id="current_activity" class="table table-striped table-bordered" style="width:100%">
-                                            <thead style="background-color: lightslategray; color:white;">
+                        </div>
+                        <div class="tab-pane fade" id="tab2">
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table id="current_activity" class="table table-striped table-bordered" style="width:100%">
+                                        <thead style="background-color: lightslategray; color:white;">
+                                        <tr>
+                                            <th style="color: white;">Date</th>
+                                            <th style="color: white;">Time</th>
+                                            <th style="color: white;">Company</th>
+                                            <th style="color: white;">NOIC Depot</th>
+                                            <th style="color: white;">Fuel Type</th>
+                                            <th style="color: white;">Quantity</th>
+                                            <th style="color: white;">Price</th>
+                                            <th style="color: white;">Currency</th>
+                                            <th style="color: white;">Status</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for collection in collections %}
                                             <tr>
-                                                <th style="color: white;">Date</th>
-                                                <th style="color: white;">Time</th>
-                                                <th style="color: white;">Company</th>
-                                                <th style="color: white;">NOIC Depot</th>
-                                                <th style="color: white;">Fuel Type</th>
-                                                <th style="color: white;">Quantity</th>
-                                                <th style="color: white;">Price</th>
-                                                <th style="color: white;">Currency</th>
-                                                <th style="color: white;">Status</th>
+                                                <td>{{ collection.date }}</td>
+                                                <td>{{ collection.time }}</td>
+                                                <td>{{ collection.order.company.name }}</td>
+                                                <td>{{ collection.order.noic_depot.name }}</td>
+                                                <td>{{ collection.order.fuel_type }}</td>
+                                                <td>{{ collection.order.quantity|floatformat:2|intcomma }}L</td>
+                                                <td>${{ collection.order.price|floatformat:2|intcomma }}L</td>
+                                                <td>{{ collection.order.currency }}</td>
+                                                <td>
+                                                    <!--view collection details-->
+                                                    {% if collection.has_collected %}
+                                                        <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal"
+                                                                data-target="#payment{{ collection.id }}">
+                                                            <span class="btn-label"><i class="fa fa-eye"></i></span> Details
+                                                        </button>
+                                                        <!--pending collection-->
+                                                    {% else %}
+                                                        <p class="bg-warning">PENDING</p>
+                                                    {% endif %}
+                                                </td>
                                             </tr>
-                                            </thead>
-                                            <tbody>
-                                            {% for collection in collections %}
-                                                <tr>
-                                                    <td>{{ collection.date }}</td>
-                                                    <td>{{ collection.time }}</td>
-                                                    <td>{{ collection.order.company.name }}</td>
-                                                    <td>{{ collection.order.noic_depot.name }}</td>
-                                                    <td>{{ collection.order.fuel_type }}</td>
-                                                    <td>{{ collection.order.quantity|floatformat:2|intcomma }}L</td>
-                                                    <td>${{ collection.order.price|floatformat:2|intcomma }}L</td>
-                                                    <td>{{ collection.order.currency }}</td>
-                                                    <td>
-                                                        <!--view collection details-->
-                                                        {% if collection.has_collected %}
-                                                            <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal"
-                                                                    data-target="#payment{{ collection.id }}">
-                                                                <span class="btn-label"><i class="fa fa-eye"></i></span> Details
+                                            <!--collection details-->
+                                            <div class="modal fade modal-success in" id="payment{{ collection.id }}" tabindex="-1"
+                                                    role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header" style="background-color: #009688; color: white">
+                                                            <span class="modal-title" id="exampleModalLabel">Collection Details</span>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
                                                             </button>
-                                                            <!--pending collection-->
-                                                        {% else %}
-                                                            <p class="bg-warning">PENDING</p>
-                                                        {% endif %}
-                                                    </td>
-                                                </tr>
-                                                <!--collection details-->
-                                                <div class="modal fade modal-success in" id="payment{{ collection.id }}" tabindex="-1"
-                                                     role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header" style="background-color: #009688; color: white">
-                                                                <span class="modal-title" id="exampleModalLabel">Collection Details</span>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <!--date collected-->
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Date Collected </b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ collection.date_collected }}
+                                                                </div>
                                                             </div>
-                                                            <div class="modal-body">
-                                                                <!--date collected-->
-                                                                <div class="form-group row">
-                                                                    <div class="col-md-6">
-                                                                        <b> &nbsp;&nbsp;&nbsp;&nbsp;Date Collected </b>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        {{ collection.date_collected }}
-                                                                    </div>
+                                                            <!--time collected-->
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Time Collected </b>
                                                                 </div>
-                                                                <!--time collected-->
-                                                                <div class="form-group row">
-                                                                    <div class="col-md-6">
-                                                                        <b> &nbsp;&nbsp;&nbsp;&nbsp;Time Collected </b>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        {{ collection.time_collected }}
-                                                                    </div>
+                                                                <div class="col-md-6">
+                                                                    {{ collection.time_collected }}
                                                                 </div>
-                                                                <!--transporter-->
-                                                                <div class="form-group row">
-                                                                    <div class="col-md-6">
-                                                                        <b> &nbsp;&nbsp;&nbsp;&nbsp;Transporter</b>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        {{ collection.transporter }}
-                                                                    </div>
+                                                            </div>
+                                                            <!--transporter-->
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Transporter</b>
                                                                 </div>
-                                                                <!--truck reg-->
-                                                                <div class="form-group row">
-                                                                    <div class="col-md-6">
-                                                                        <b> &nbsp;&nbsp;&nbsp;&nbsp;Truck Registration Number</b>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        {{ collection.truck_reg }}
-                                                                    </div>
+                                                                <div class="col-md-6">
+                                                                    {{ collection.transporter }}
                                                                 </div>
-                                                                <!--driver-->
-                                                                <div class="form-group row">
-                                                                    <div class="col-md-6">
-                                                                        <b> &nbsp;&nbsp;&nbsp;&nbsp;Driver</b>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        {{ collection.driver }}
-                                                                    </div>
+                                                            </div>
+                                                            <!--truck reg-->
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Truck Registration Number</b>
                                                                 </div>
-                                                                <!--driver id-->
-                                                                <div class="form-group row">
-                                                                    <div class="col-md-6">
-                                                                        <b> &nbsp;&nbsp;&nbsp;&nbsp;Driver ID</b>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        {{ collection.driver_id }}
-                                                                    </div>
+                                                                <div class="col-md-6">
+                                                                    {{ collection.truck_reg }}
                                                                 </div>
-                                                                <!--bottom close button-->
-                                                                <div class="modal-footer">
-                                                                    <button class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                            <!--driver-->
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Driver</b>
                                                                 </div>
+                                                                <div class="col-md-6">
+                                                                    {{ collection.driver }}
+                                                                </div>
+                                                            </div>
+                                                            <!--driver id-->
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Driver ID</b>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{ collection.driver_id }}
+                                                                </div>
+                                                            </div>
+                                                            <!--bottom close button-->
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-default" data-dismiss="modal">Close</button>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
 
-                                            {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
+
         </div>
     </div>
+</div>
+{% else %}
+
+<section class="content">
+    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+        <div class="panel-heading ui-sortable-handle">
+            <div class="btn-group" style="margin-left: 25px;width: 100%;">
+                <div class="row" style="margin-bottom: 20px;">
+                    <h4> Filtered Collections </h4>
+                </div>
+            
+            <div class="row">
+                <button data-toggle="modal" title="Pick A Date Range To Filter Records" data-target="#state_modal" class="btn btn-labeled btn-default btn-sm" style="float: left;background-color:#cfd4ce; color: #333; margin-right: 10px;">
+                    <span class="btn-label"><i class="glyphicon glyphicon-filter"></i></span> Pick A Date | Showing - {% if start_date and end_date %}<b style="color: #009688;">{{start_date}} - {{end_date}}</b>{% else %}<b style="color: #009688;">All</b>{% endif %} </button>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="text" name="pdf_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                        <input type="text" name="pdf_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+                        <button type="submit" class="btn btn-labeled btn-default btn-sm" style="float: left; background-color:#cfd4ce; color: #333;margin-right: 10px;"
+                            {% if not filtered_collections %} disabled{% endif %} title="{% if filtered_collections %} Export To PDF {%else%} No Data To Export {% endif %}">
+                            <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>PDF
+                        </button>
+                    </form> 
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="text" name="export_to_csv" value="csv" hidden>
+                        <input type="text" name="csv_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                        <input type="text" name="csv_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+
+                    <script>
+                        var today = new Date();
+                        var filename = 'Supplier Admin Allocations Summary' + ' - ' +today.toLocaleString() + '.csv'
+                    </script>
+                    <button  class="btn btn-labeled btn-default btn-sm" style="background-color: #cfd4ce; color: #333; margin-right: 10px;" type="submit" {% if not filtered_collections %} disabled{% endif %}
+                    title="{% if filtered_collections %} Export To CSV {%else%} No Data To Export {% endif %}">
+                        <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>CSV
+                    </button>
+                    </form>
+            </div> 
+            </div>
+
+            <div class="dropdown">
+                <ul class="dropdown-menu dropdown-menu-right">
+
+
+                </ul>
+                <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+
+            <div class="table-responsive">
+                <table id="payments" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th style="color: white;">Date</th>
+                            <th style="color: white;">Time</th>
+                            <th style="color: white;">Company</th>
+                            <th style="color: white;">NOIC Depot</th>
+                            <th style="color: white;">Fuel Type</th>
+                            <th style="color: white;">Quantity</th>
+                            <th style="color: white;">Price</th>
+                            <th style="color: white;">Currency</th>
+                            <th style="color: white;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for collection in filtered_collections %}
+                            <tr>
+                                <td>{{ collection.date }}</td>
+                                <td>{{ collection.time }}</td>
+                                <td>{{ collection.order.company.name }}</td>
+                                <td>{{ collection.order.noic_depot.name }}</td>
+                                <td>{{ collection.order.fuel_type }}</td>
+                                <td>{{ collection.order.quantity|floatformat:2|intcomma }}L</td>
+                                <td>${{ collection.order.price|floatformat:2|intcomma }}L</td>
+                                <td>{{ collection.order.currency }}</td>
+                                <td>
+                                    <!--view collection details-->
+                                    {% if collection.has_collected %}
+                                        <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal"
+                                                data-target="#payment{{ collection.id }}">
+                                            <span class="btn-label"><i class="fa fa-eye"></i></span> Details
+                                        </button>
+                                        <!--pending collection-->
+                                    {% else %}
+                                        <p class="bg-warning">PENDING</p>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <!--collection details-->
+                            <div class="modal fade modal-success in" id="payment{{ collection.id }}" tabindex="-1"
+                                    role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color: #009688; color: white">
+                                            <span class="modal-title" id="exampleModalLabel">Collection Details</span>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!--date collected-->
+                                            <div class="form-group row">
+                                                <div class="col-md-6">
+                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Date Collected </b>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ collection.date_collected }}
+                                                </div>
+                                            </div>
+                                            <!--time collected-->
+                                            <div class="form-group row">
+                                                <div class="col-md-6">
+                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Time Collected </b>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ collection.time_collected }}
+                                                </div>
+                                            </div>
+                                            <!--transporter-->
+                                            <div class="form-group row">
+                                                <div class="col-md-6">
+                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Transporter</b>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ collection.transporter }}
+                                                </div>
+                                            </div>
+                                            <!--truck reg-->
+                                            <div class="form-group row">
+                                                <div class="col-md-6">
+                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Truck Registration Number</b>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ collection.truck_reg }}
+                                                </div>
+                                            </div>
+                                            <!--driver-->
+                                            <div class="form-group row">
+                                                <div class="col-md-6">
+                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Driver</b>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ collection.driver }}
+                                                </div>
+                                            </div>
+                                            <!--driver id-->
+                                            <div class="form-group row">
+                                                <div class="col-md-6">
+                                                    <b> &nbsp;&nbsp;&nbsp;&nbsp;Driver ID</b>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ collection.driver_id }}
+                                                </div>
+                                            </div>
+                                            <!--bottom close button-->
+                                            <div class="modal-footer">
+                                                <button class="btn btn-default" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        
+
+
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<script>
+    $('body').click(function (event) {
+        if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
+            $("#state_modal").modal('hide');
+        }
+
+                 
+    });
+</script>
 {% endblock %}

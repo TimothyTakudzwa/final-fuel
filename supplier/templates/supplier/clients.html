@@ -39,7 +39,6 @@
         <table id="clients" class="table table-striped table-bordered" style="width:100%">
             <thead style="background-color: lightslategray; color:white;">
                 <tr>
-                  <th style="color: white;"></th>
                     <th style="color: white;">Name</th>
                     <th style="color: white;">Address</th>
                     <th style="color: white;">Account Number</th>
@@ -56,7 +55,6 @@
                 {% if clients %}
                     {% for client in clients %}
                     <tr>
-                    <td></td>
                     <td>{{ client.buyer_company.name|title}}</td>
                     <td>{{ client.buyer_company.address|title}}</td>
                         <td>{{ client.account_number }}</td>

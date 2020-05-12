@@ -16,10 +16,10 @@
         {% endfor %}
     {% endif %}
     <!-- Content Header (Page header) -->
-    <div class="modal" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId">
+    <div class="modal modal-success in" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header" style="background-color: rgb(55, 71, 103);color: white;">
+                <div class="modal-header">
                     <span class="modal-title">Best Offer</span>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -66,10 +66,12 @@
                             </tr>
                             </tbody>
                         </table>
-                        <div class=" row col-sm-12">
-                            <a href="reject/{{offer.id}}" class="btn btn-danger col-sm-6 ">Reject and wait for offers</a>
-                            <a href="accept/{{offer.id}}" class="btn btn-primary col-sm-6 ">Accept Offer</a>
-                        </div>
+                        
+                    </div>
+
+                    <div class="modal-footer">
+                        <a href="reject/{{offer.id}}" class="btn btn-danger">Reject and wait for offers</a>
+                        <a href="accept/{{offer.id}}" class="btn btn-primary">Accept Offer</a>
                     </div>
 
                 </div>
@@ -92,8 +94,8 @@
             <i class="fa fa-tachometer"></i>
         </div> -->
         <div class="header-title" style="margin-left: 0px;">
-            <h1> {{user.company.name|title}}'s Dashboard</h1>
-            <small> Fuel Buyer Dashboard</small>
+            <h1> {{user.company.name|title}}</h1>
+            <small>Zimbabwe Fuel Management System</small>
             <ol class="breadcrumb hidden-xs">
                 <li><a href="#"><i class="pe-7s-home"></i> Home</a></li>
                 <li class="active">Dashboard</li>

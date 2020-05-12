@@ -187,6 +187,10 @@
              
                 <!-- sidebar menu -->
                 <ul class="sidebar-menu">
+                    <li class="nav-item {% if request.path == '/fuel-request/' %} active {% endif %}  ">
+                        <a href="{%url 'fuel-request'%}"><i class="fa fa-binoculars"></i><span>Requests</span>
+                        </a>
+                    </li>
                     <li class="nav-item {% if request.path == '/available_stock/' %} active {% endif %} ">
                         <a href="{%url 'available_stock'%}"><i class="fa fa-bank"></i><span>Current Stocks</span>
                         </a>
@@ -194,11 +198,7 @@
                     <li class="nav-item {% if request.path == '/allocated_quantity/' %} active {% endif %} ">
                         <a href="{% url 'allocated_quantity' %}"><i class="fa fa-th-list"></i><span>Fuel Allocations</span>
                         </a>
-                    </li>                   
-                    <li class="nav-item {% if request.path == '/fuel-request/' %} active {% endif %}  ">
-                          <a href="{%url 'fuel-request'%}"><i class="fa fa-binoculars"></i><span>Requests</span>
-                          </a>
-                      </li>
+                    </li>
                       <li class="nav-item {% if request.path == '/my_offers/' %} active {% endif %} ">
                           <a href="{%url 'my_offers'%}"><i class="fa fa-book"></i><span>Offers</span>
                           </a>

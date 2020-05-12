@@ -73,7 +73,7 @@ Buyer Update Form 2
 class BuyerUpdateForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['image', 'password1', 'password2']
+        fields = ['password1', 'password2']
 
 
 """
