@@ -1,0 +1,217 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Orders {{request.company.name}} Summary</title>
+
+    <style>
+        @page {size: a3 landscape;}
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        .first {
+            width: 50%;
+            float:left;
+            font-size: 12px;
+
+        }
+        .wrapper {
+            width: 100%;
+            margin: auto;
+            padding: 10px;
+            overflow: hidden;
+        }
+        .text-muted{
+            color:#6c757d!important;
+        }
+    </style>
+
+</head>
+<body>
+
+
+<h1 style="text-align: center;">Transactions Statement - {{ date }}</h1>
+
+
+    {% if transactions %}
+    <h3 style="padding-top: 20px;">Complete Transactions  {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">({{date}})</small>{% endif %}</h3>
+
+    <table style="padding-top: 20px; margin-bottom: 30px;">
+    
+        <tr style="background-color: gray;color: white;">
+            <th>Date</th>
+            <th>Time</th>
+            <th>Buyer</th>
+            <th>PickUp Address</th>
+            <th>Fuel</th>
+            <!-- <th>Expected & Paid</th> -->
+            <th>Status</th>
+            
+            <th>Rating</th>
+        </tr>
+            
+        
+        {% for transaction in transactions %}
+            <tr>
+                <td>{{transaction.date}}</td>
+                <td>{{transaction.time}}</td>
+                <td class="name truncate">{{transaction.buyer.company.name}}</td>
+                {% if transaction.offer.collection_address != None %}
+                    <td class="name truncate">{{transaction.offer.collection_address}}</td>
+                {% else %}
+                    <td>N/A</td>
+                {% endif %}
+                <td class="name truncate">{{transaction.offer.request.fuel_type}} {{transaction.offer.quantity}}L @ {{transaction.offer.price}}</td>
+
+                {% if transaction.is_complete == True %}
+                    <td  style="color: #009688;">
+                        True
+                    </td>
+                {% else %}
+                    <td style="color: crimson;">
+                        False
+                    </td>
+                {% endif %}
+
+                <td>
+                    {% if transaction.is_complete and not transaction.review %}
+                        No Review
+                    {% elif not transaction.is_complete %}
+                        Incomplete
+                    {% else %}
+                        {% if transaction.review.rating == 0%}
+                            <p style="text-align: center;">-</p>
+                        {% elif transaction.review.rating == 1%}
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                        {% elif transaction.review.rating == 2%}
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                        {% elif transaction.review.rating == 3%}
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                        {% elif transaction.review.rating == 4%}
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                        {% elif transaction.review.rating == 5%}
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+
+                        {% endif%}
+                    {% endif %}
+                </td>
+
+            </tr>
+        {% endfor %}
+
+
+    </table>
+
+    {% endif %}
+
+    {% if incomplete_transactions %}
+
+    <h3 style="padding-top: 20px;">Incomplete Transactions {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">( {{date}} )</small>{% endif %}</h3>
+
+    <table style="padding-top: 20px">
+        <tr style="background-color: gray;color: white;">
+            <th>Date</th>
+            <th>Time</th>
+            <th>Buyer</th>
+            <th>PickUp Address</th>
+            <th>Fuel</th>
+            <!-- <th>Expected & Paid</th> -->
+            <th>Status</th>
+            
+            <th>Rating</th>
+        </tr>
+            
+
+        {% for transaction in incomplete_transactions %}
+            <tr>
+                <td>{{transaction.date}}</td>
+                <td>{{transaction.time}}</td>
+                <td class="name truncate">{{transaction.buyer.company.name}}</td>
+                {% if transaction.offer.collection_address != None %}
+                    <td class="name truncate">{{transaction.offer.collection_address}}</td>
+                {% else %}
+                    <td>N/A</td>
+                {% endif %}
+                <td class="name truncate">{{transaction.offer.request.fuel_type}} {{transaction.offer.quantity}}L @ {{transaction.offer.price}}</td>
+
+                {% if transaction.is_complete == True %}
+                    <td  style="color: #009688;">
+                        True
+                    </td>
+                {% else %}
+                    <td style="color: crimson;">
+                        False
+                    </td>
+                {% endif %}
+
+                <td>
+                    {% if transaction.is_complete and not transaction.review %}
+                        No Review
+                    {% elif not transaction.is_complete %}
+                        Incomplete
+                    {% else %}
+                        {% if transaction.review.rating == 0%}
+                            <p style="text-align: center;">-</p>
+                        {% elif transaction.review.rating == 1%}
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                        {% elif transaction.review.rating == 2%}
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                        {% elif transaction.review.rating == 3%}
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                        {% elif transaction.review.rating == 4%}
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                        {% elif transaction.review.rating == 5%}
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+                            <i class="fa fa-star" style="color: goldenrod;" aria-hidden="true"></i>
+
+                        {% endif%}
+                    {% endif %}
+                </td>
+
+            </tr>
+        {% endfor %}
+
+
+    </table>
+
+    {% endif %}
+
+
+
+
+
+</body>
+</html>

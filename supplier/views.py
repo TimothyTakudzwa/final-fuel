@@ -553,9 +553,136 @@ def my_offers(request):
             offer_temp.no_payment = True
         if offer_temp.dipping_stick_available == offer_temp.meter_available == offer_temp.pump_available == False:
             offer_temp.no_equipments = True
-        # if not offer_temp.collection_address.strip():
-        #     offer_temp.collection_address = f'N/A'
+        
     offers_pending = Offer.objects.filter(supplier=request.user, is_accepted=True).all()
+
+    for offer_temp in offers_pending:
+        if offer_temp.cash == offer_temp.ecocash == offer_temp.swipe == offer_temp.usd == False:
+            offer_temp.no_payment = True
+        if offer_temp.dipping_stick_available == offer_temp.meter_available == offer_temp.pump_available == False:
+            offer_temp.no_equipments = True
+
+    if request.method == 'POST':
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+            offers = Offer.objects.filter(supplier=request.user, is_accepted=False) \
+            .filter(date__range=[start_date, end_date])
+            
+            for offer_temp in offers:
+                if offer_temp.cash == offer_temp.ecocash == offer_temp.swipe == offer_temp.usd == False:
+                    offer_temp.no_payment = True
+                if offer_temp.dipping_stick_available == offer_temp.meter_available == offer_temp.pump_available == False:
+                    offer_temp.no_equipments = True
+
+            offers_pending = Offer.objects.filter(supplier=request.user, is_accepted=True) \
+            .filter(date__range=[start_date, end_date])
+
+            for offer_temp in offers_pending:
+                if offer_temp.cash == offer_temp.ecocash == offer_temp.swipe == offer_temp.usd == False:
+                    offer_temp.no_payment = True
+                if offer_temp.dipping_stick_available == offer_temp.meter_available == offer_temp.pump_available == False:
+                    offer_temp.no_equipments = True
+
+            context = {
+                'offers': offers,
+                'offers_pending': offers_pending,
+                'start_date':start_date,
+                'end_date':end_date 
+            }       
+                
+            return render(request, 'supplier/my_offers.html', context=context)
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                offers = Offer.objects.filter(supplier=request.user, is_accepted=False) \
+                .filter(date__range=[start_date, end_date])
+                offers_pending = Offer.objects.filter(supplier=request.user, is_accepted=True) \
+                .filter(date__range=[start_date, end_date])
+
+            offers = offers.values('date', 'request__name__company__name', 'request__fuel_type',
+             'price', 'delivery_method', 'transport_fee', 'request__payment_method')  
+            
+            offers_pending = offers.values('date', 'request__name__company__name', 'request__fuel_type',
+             'price', 'delivery_method', 'transport_fee', 'request__payment_method')  
+
+            fields = ['date', 'request__name__company__name', 'request__fuel_type',
+             'price', 'delivery_method', 'transport_fee', 'request__payment_method']
+
+            df_offers = pd.DataFrame(offers, columns=fields)
+            df_offers_pending = pd.DataFrame(offers_pending, columns=fields)
+
+            df = df_offers.append(df_offers_pending)
+            
+            filename = f'{request.user.company.name}'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - Offers - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                offers = Offer.objects.filter(supplier=request.user, is_accepted=False) \
+                .filter(date__range=[start_date, end_date])
+                offers_pending = Offer.objects.filter(supplier=request.user, is_accepted=True) \
+                .filter(date__range=[start_date, end_date])
+
+                for offer_temp in offers_pending:
+                    if offer_temp.cash == offer_temp.ecocash == offer_temp.swipe == offer_temp.usd == False:
+                        offer_temp.no_payment = True
+                    if offer_temp.dipping_stick_available == offer_temp.meter_available == offer_temp.pump_available == False:
+                        offer_temp.no_equipments = True
+
+                for offer_temp in offers:
+                    if offer_temp.cash == offer_temp.ecocash == offer_temp.swipe == offer_temp.usd == False:
+                        offer_temp.no_payment = True
+                    if offer_temp.dipping_stick_available == offer_temp.meter_available == offer_temp.pump_available == False:
+                        offer_temp.no_equipments = True        
+
+            context = {
+                'offers': offers,
+                'offers_pending':offers_pending,
+                'date':today,
+                'start_date':start_date,
+                'end_date':end_date
+            }  
+                
+            html_string = render_to_string('supplier/export/export_offers.html', context=context)
+            html = HTML(string=html_string)
+            export_name = f"{request.user.company.name.title()}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} -Orders - {today}.pdf'
+                return response        
+    
 
     return render(request, 'supplier/my_offers.html', {'offers': offers, 'offers_pending': offers_pending})
 
@@ -757,33 +884,24 @@ Transactions Operations
 @login_required
 @user_role
 def transaction(request):
-    if request.method == "POST":
-        tran = Transaction.objects.get(id=request.POST.get('transaction_id'))
-        UserReview.objects.create(
-            rater=request.user,
-            rating=int(request.POST.get('rating')),
-            company_type='SUPPLIER',
-            company=tran.supplier.company,
-            transaction=tran,
-            depot=Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
-            comment=request.POST.get('comment')
-        )
-        messages.success(request, 'Transaction successfully reviewed.')
-        return redirect('transaction')
 
-    today = datetime.now().strftime("%m/%d/%y")
+    today = datetime.now().strftime("%m-%d-%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
-    transactions = []
-    transactions_pending = []
-    for tran in Transaction.objects.filter(supplier=request.user).all():
+    trans = Transaction.objects.filter(supplier=request.user).all()
+    
+    for tran in trans:
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
         if delivery_sched:
             tran.delivery_sched = delivery_sched
         tran.review = UserReview.objects.filter(transaction=tran).first()
-        if tran.is_complete == True:
-            transactions.append(tran)
-        if tran.is_complete == False:
-            transactions_pending.append(tran)
+        # if tran.is_complete == True:
+        #     transactions.append(tran)
+        # if tran.is_complete == False:
+        #     transactions_pending.append(tran)
+        
+    transactions = trans.filter(is_complete=True)
+    transactions_pending = trans.filter(is_complete=False) 
+
 
     context = {
         'transactions': transactions,
@@ -791,6 +909,137 @@ def transaction(request):
         'transporters': transporters,
         'today': today
     }
+    
+
+
+    if request.method == "POST":
+        if request.POST.get('transaction_id'):
+            tran = Transaction.objects.get(id=request.POST.get('transaction_id'))
+            UserReview.objects.create(
+                rater=request.user,
+                rating=int(request.POST.get('rating')),
+                company_type='SUPPLIER',
+                company=tran.supplier.company,
+                transaction=tran,
+                depot=Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
+                comment=request.POST.get('comment')
+            )
+            messages.success(request, 'Transaction successfully reviewed.')
+            return redirect('transaction')
+
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+
+            trans = Transaction.objects.filter(supplier=request.user).filter(date__range=[start_date, end_date])
+    
+            for tran in trans:
+                delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
+                if delivery_sched:
+                    tran.delivery_sched = delivery_sched
+                tran.review = UserReview.objects.filter(transaction=tran).first()
+              
+            transactions = trans.filter(is_complete=True)
+            transactions_pending = trans.filter(is_complete=False) 
+                
+        
+            context = {
+                'transactions': transactions.order_by('-date', '-time'),
+                'transactions_pending': transactions_pending.order_by('-date', '-time'),
+                'transporters': transporters,
+                'today': today,
+                'start_date': start_date,
+                'end_date': end_date
+
+            }
+
+
+            return render(request, 'supplier/transactions.html', context=context)
+
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                trans = Transaction.objects.filter(supplier=request.user).filter(date__range=[start_date, end_date])
+
+            transactions = trans.filter(is_complete=True)
+            transactions_pending = trans.filter(is_complete=False)  
+            
+            transactions = transactions.values('date','time', 'buyer__company__name',
+             'offer__request__fuel_type', 'offer__request__amount', 'is_complete')
+            transactions_pending =  transactions_pending.values('date','time', 'buyer__company__name',
+             'offer__request__fuel_type', 'offer__request__amount', 'is_complete')
+            fields = ['date','time', 'buyer__company__name', 'offer__request__fuel_type', 'offer__request__amount', 'is_complete']
+            
+            df_complete_trans = pd.DataFrame(transactions, columns=fields)
+            df_in_complete_trans = pd.DataFrame(transactions_pending, columns=fields)
+
+            df = df_complete_trans.append(df_in_complete_trans)
+
+            # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
+            filename = f'{request.user.company.name}'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - Transactions - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                trans = Transaction.objects.filter(supplier=request.user).filter(date__range=[start_date, end_date])
+
+            for tran in trans:
+                delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
+                if delivery_sched:
+                    tran.delivery_sched = delivery_sched
+                tran.review = UserReview.objects.filter(transaction=tran).first()
+                  
+            transactions = trans.filter(is_complete=True)
+            transactions_pending = trans.filter(is_complete=False) 
+        
+            context = {
+                'transactions': transactions.order_by('-date', '-time'),
+                'incomplete_transactions': transactions_pending.order_by('-date', '-time'),
+                'date': today,
+                'start_date': start_date,
+                'end_date': end_date
+            }
+
+            html_string = render_to_string('supplier/export/export_transactions.html', context=context)
+            html = HTML(string=html_string)
+            export_name = f"{request.user.company.name.title()}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Transactions - {today}.pdf'
+                return response        
+    
+
     return render(request, 'supplier/transactions.html', context=context)
 
 
@@ -1236,8 +1485,13 @@ def delivery_schedules(request):
                     else:
                         schedule.delivery_address = schedule.transaction.offer.collection_address
 
-                completed_schedules = schedules.filter(confirmation_date__isnull=False)
-                pending_schedules = schedules.filter(confirmation_date__isnull=True)  
+            completed_schedules = schedules.filter(confirmation_date__isnull=False)
+            pending_schedules = schedules.filter(confirmation_date__isnull=True) 
+
+            completed_schedules = completed_schedules.values('date','transaction','driver_name', 'phone_number',
+            'id_number','vehicle_reg', 'delivery_time')
+            pending_schedules = pending_schedules.values('date','transaction','driver_name', 'phone_number',
+            'id_number','vehicle_reg', 'delivery_time')  
         
             fields = ['date','transaction','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time']
 
