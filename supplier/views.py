@@ -919,7 +919,7 @@ def allocated_quantity(request):
                 response['Content-Disposition'] = f'attachment;filename={filename} - Allocations - {today}.csv'
                 return response     
 
-        if request.POST.get('export_to_pdf') == 'pdf':
+        else:
             start_date = request.POST.get('pdf_start_date')
             end_date = request.POST.get('pdf_end_date')
             if start_date:
@@ -938,7 +938,7 @@ def allocated_quantity(request):
                 'end_date': end_date
             }
 
-            html_string = render_to_string('buyer/export/export_allocations.html', context=context)
+            html_string = render_to_string('supplier/export/export_allocations.html', context=context)
             html = HTML(string=html_string)
             export_name = f"{request.user.company.name.title()}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
@@ -949,39 +949,6 @@ def allocated_quantity(request):
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
                 response['Content-Disposition'] = f'attachment;filename={export_name} - Allocations - {today}.pdf'
                 return response        
-
-
-        if request.POST.get('buyer_id') is not None:
-            buyer_transactions = AccountHistory.objects.filter(
-                transaction__buyer__company__id=int(request.POST.get('buyer_id')),
-                transaction__supplier__company__id=int(request.POST.get('supplier_id')),
-            )
-
-            html_string = render_to_string('supplier/export.html', {'transactions': buyer_transactions})
-            html = HTML(string=html_string)
-            export_name = f"{request.POST.get('buyer_name')}{date.today().strftime('%H%M%S')}"
-            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
-
-            download_file = f'media/transactions/{export_name}'
-
-            with open(f'{download_file}.pdf', 'rb') as pdf:
-                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-                response['Content-Disposition'] = 'attachment;filename=export.pdf'
-                return response
-        else:
-            tran = Transaction.objects.get(id=request.POST.get('transaction_id'))
-            from supplier.models import UserReview
-            UserReview.objects.create(
-                rater=request.user,
-                rating=int(request.POST.get('rating')),
-                company_type='SUPPLIER',
-                company=tran.supplier.company,
-                transaction=tran,
-                depot=Subsidiaries.objects.filter(id=tran.supplier.subsidiary_id).first(),
-                comment=request.POST.get('comment')
-            )
-            messages.success(request, 'Transaction successfully reviewed.')
-            return redirect('buyer-transactions')
 
 
     return render(request, 'supplier/allocated_quantity.html', {'allocations': allocations})
