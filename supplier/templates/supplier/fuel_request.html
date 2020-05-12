@@ -189,11 +189,13 @@
                                                 <td>{{ req.my_offer }}</td>
                                                 {% if req.my_offer != 'No Offer' %}
                                                 {% if req.delivery_method == 'DELIVERY' %}
-                                                <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal"
-                                                        data-target="#edit_offer_{{req.id}}">Edit Offer</button></td>
+                                                <td><button type="button" class="btn btn-success btn-labeled btn-sm" data-toggle="modal"
+                                                        data-target="#edit_offer_{{req.id}}">
+                                                        <span class="btn-label"> <i class="fa fa-edit"></i></span> Edit Offer </button></td>
                                                 {% else %}
-                                                <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal"
-                                                  data-target="#edit_offer_collection_{{req.id}}">Edit Offer</button></td>
+                                                <td><button type="button" class="btn btn-labeled btn-success btn-sm" data-toggle="modal"
+                                                  data-target="#edit_offer_collection_{{req.id}}">
+                                                  <span class="btn-label"><i class="fa fa-edit"></i> </span> Edit Offer</button></td>
                                                   {% endif %}
                                                 {% else %}
                                                 {% if req.delivery_method == 'DELIVERY' %}
