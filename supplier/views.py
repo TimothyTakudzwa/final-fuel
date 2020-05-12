@@ -462,8 +462,8 @@ def fuel_request(request):
                 buyer_request.no_equipment = True
     
     if request.method == "POST":
+        print('-----------------------------------------------In Post-----------------------------------------------')
         if request.POST.get('start_date') and request.POST.get('end_date') :
-            filtered = True;
             start_date = request.POST.get('start_date')
             end_date = request.POST.get('end_date')
             if start_date:
