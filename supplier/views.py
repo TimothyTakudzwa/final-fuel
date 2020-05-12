@@ -472,102 +472,10 @@ def fuel_request(request):
             if end_date:
                 end_date = datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
+
+            complete_requests = FuelRequest.objects.filter(is_complete=True).filter(date__range=[start_date, end_date])
+            requests = FuelRequest.objects.filter(is_complete=False).filter(date__range=[start_date, end_date])
             
-            if sub.praz_reg_num != None:
-                all_requests = FuelRequest.objects.filter(is_deleted=False, is_complete=False).filter(date__range=[start_date, end_date])
-                for fuel_request in all_requests:
-                    if not fuel_request.is_direct_deal and not fuel_request.private_mode:
-                        requests.append(fuel_request)
-                    elif fuel_request.is_direct_deal and not fuel_request.private_mode:
-                        if fuel_request.last_deal == request.user.subsidiary_id:
-                            requests.append(fuel_request)
-                        else:
-                            pass
-                    elif not fuel_request.is_direct_deal and fuel_request.private_mode:
-                        account_exists = Account.objects.filter(supplier_company=request.user.company,
-                                                                buyer_company=fuel_request.name.company).exists()
-                        if account_exists:
-                            requests.append(fuel_request)
-                        else:
-                            pass
-                    elif fuel_request.is_direct_deal and fuel_request.private_mode:
-                        if fuel_request.supplier_company == request.user.company:
-                            requests.append(fuel_request)
-                        else:
-                            pass
-                    else:
-                        pass
-                requests.sort(key=attrgetter('date', 'time'), reverse=True)
-            else:
-                all_requests = FuelRequest.objects.filter(~Q(name__company__is_govnt_org=True)).filter(is_deleted=False,
-                                                                                                wait=True,
-                                                                                                is_complete=False).filter(date__range=[start_date, end_date])
-                for fuel_request in all_requests:
-                    if not fuel_request.is_direct_deal and not fuel_request.private_mode:
-                        requests.append(fuel_request)
-                    elif fuel_request.is_direct_deal and not fuel_request.private_mode:
-                        if fuel_request.last_deal == request.user.subsidiary_id:
-                            requests.append(fuel_request)
-                        else:
-                            pass
-                    elif not fuel_request.is_direct_deal and fuel_request.private_mode:
-                        account_exists = Account.objects.filter(supplier_company=request.user.company,
-                                                                buyer_company=fuel_request.name.company).exists()
-                        if account_exists:
-                            requests.append(fuel_request)
-                        else:
-                            pass
-                    elif fuel_request.is_direct_deal and fuel_request.private_mode:
-                        if fuel_request.supplier_company == request.user.company:
-                            requests.append(fuel_request)
-                        else:
-                            pass
-                    else:
-                        pass
-                requests.sort(key=attrgetter('date', 'time'), reverse=True)
-
-    
-            for buyer_request in requests:
-                if buyer_request.payment_method == 'USD':
-                    fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(
-                        payment_type='USD').first()
-                elif buyer_request.payment_method == 'RTGS':
-                    fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(
-                        payment_type='RTGS').first()
-                elif buyer_request.payment_method == 'USD & RTGS':
-                    fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(
-                        payment_type='USD & RTGS').first()
-                else:
-                    fuel = None
-                if buyer_request.dipping_stick_required == buyer_request.meter_required == buyer_request.pump_required == False:
-                    buyer_request.no_equipment = True
-                if buyer_request.cash == buyer_request.ecocash == buyer_request.swipe == buyer_request.usd == False:
-                    buyer_request.no_payment = True
-                # if not buyer_request.delivery_address.strip():
-                #     buyer_request.delivery_address = f'N/A'
-                if Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).exists():
-                    offer = Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).first()
-                    buyer_request.my_offer = f'{offer.quantity}ltrs @ ${offer.price}'
-                    buyer_request.offer_price = offer.price
-                    buyer_request.offer_quantity = offer.quantity
-                    buyer_request.offer_id = offer.id
-                    buyer_request.transport_fee = offer.transport_fee
-                else:
-                    buyer_request.my_offer = 'No Offer'
-                    buyer_request.offer_id = 0
-                if fuel:
-                    if buyer_request.fuel_type.lower() == 'petrol':
-
-                        buyer_request.price = fuel.petrol_price
-                    else:
-                        buyer_request.price = fuel.diesel_price
-                else:
-                    buyer_request.price = 0.00
-                complete_requests = FuelRequest.objects.filter(is_complete=True).all()
-                for buyer_request in complete_requests:
-                    if buyer_request.dipping_stick_required == buyer_request.meter_required == buyer_request.pump_required == False:
-                        buyer_request.no_equipment = True
-
             context = {
                 'notifications': notifications,
                 'num_of_notifications': num_of_notifications,
