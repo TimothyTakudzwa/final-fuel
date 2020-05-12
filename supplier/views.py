@@ -572,7 +572,9 @@ def fuel_request(request):
                 'notifications': notifications,
                 'num_of_notifications': num_of_notifications,
                 'requests': requests,
-                'complete_requests': complete_requests
+                'complete_requests': complete_requests,
+                'start_date': start_date,
+                'end_date': end_date
             }
 
             return render(request, 'supplier/fuel_request.html', context=context)
