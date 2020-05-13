@@ -10,7 +10,7 @@
     <title>ZFMS</title>
 
     <!-- Favicon and touch icons -->
-    <link rel="shortcut icon" href="https://timothytakudzwa.github.io/static/new/assets/dist/img/ico/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png" type="image/x-icon">
    <!-- Start Global Mandatory Style
    =====================================================================-->
    <!-- jquery-ui css -->
@@ -103,7 +103,7 @@
                     <div class="user-panel">
                         <div class="info">
                             <h4>Welcome</h4>
-                            <p>{{user.username}}</p> 
+                            <p>{{ request.user.first_name }} {{ request.user.last_name}}</p> 
                         </div>
                     </div>
                    
