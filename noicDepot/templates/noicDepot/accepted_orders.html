@@ -88,7 +88,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: #009688; color: white">
-                        <span class="modal-title" id="exampleModalLabel">Upload Release Note</span>
+                        <span class="modal-title" id="exampleModalLabel">Release Date</span>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -103,7 +103,11 @@
                                 <input type="date" name="release_date" class="form-control" required/>
                             </div>
                             <br>
-                            <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+                            <div class="modal-footer" style="margin-top: 70px;">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+
+                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                            </div>
 
                         </form>
                     </div>
@@ -381,9 +385,15 @@
                                                 {% else %}
                                                     <td>
                                                         <div class="btn-group">
+                                                            {% if order.proof_of_payment %}
                                                             <a href="{% url 'noicDepot:download_proof' order.id %}" type="button" class="btn btn-labeled btn-success btn-sm">
                                                                 <span class="btn-label"><i class="fa fa-download"></i></span>P.O.P.
                                                             </a>
+                                                            {% else %}
+                                                            <a type="button" class="btn btn-labeled btn-success btn-sm" disabled>
+                                                                <span class="btn-label"><i class="fa fa-download"></i></span>P.O.P.
+                                                            </a>
+                                                            {% endif %}
                                                             <a href="{% url 'noicDepot:payment_approval' order.id %}" type="button" class="btn btn-labeled btn-warning btn-sm">
                                                                 <span class="btn-label"><i class="glyphicon glyphicon-thumbs-up"></i></span>Approve
                                                             </a>
@@ -681,9 +691,15 @@
                                                 {% else %}
                                                     <td>
                                                         <div class="btn-group">
+                                                            {% if order.proof_of_payment %}
                                                             <a href="{% url 'noicDepot:download_proof' order.id %}" type="button" class="btn btn-labeled btn-success btn-sm">
                                                                 <span class="btn-label"><i class="fa fa-download"></i></span>P.O.P.
                                                             </a>
+                                                            {% else %}
+                                                            <a type="button" class="btn btn-labeled btn-success btn-sm" disabled>
+                                                                <span class="btn-label"><i class="fa fa-download"></i></span>P.O.P.
+                                                            </a>
+                                                            {% endif %}
                                                             <a href="{% url 'noicDepot:payment_approval' order.id %}" type="button" class="btn btn-labeled btn-warning btn-sm">
                                                                 <span class="btn-label"><i class="glyphicon glyphicon-thumbs-up"></i></span>Approve
                                                             </a>
