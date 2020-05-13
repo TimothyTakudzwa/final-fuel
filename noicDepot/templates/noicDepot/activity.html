@@ -396,498 +396,71 @@
                             <td>{{activity.user.first_name}} {{activity.user.last_name}}</td>
                             <td>{{activity.action}}</td>
                             <td>{{activity.description}}</td>
-                            {% if activity.action == 'Company Registration' %}
+                            {% if activity.action == 'Fuel Allocation' %}
                             <td>
-                                <div class="btn-group">
-                                    <button  data-toggle="modal"  data-target="#view_company{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                <div class="text-center">
+                                    <button  data-toggle="modal"  data-target="#view_alloc{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
                                         <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
                                     </button>
                                 </div>
                             </td>
-                            {% elif activity.action == 'Updating Company' %}
+                            {% elif activity.action == 'Approving Payment' %}
                             <td>
-                                <div class="btn-group">
-                                    <button  data-toggle="modal"  data-target="#view_comp_update{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                <div class="btn-group"> 
+                                    <a href="{% url 'noicDepot:download_proof' activity.reference_id %}" type="button" class="btn btn-labeled btn-success btn-sm">
                                         <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                                    </button>
+                                    </a>                                                             
+                                        
                                 </div>
                             </td>
-                            {% elif activity.action == 'Creating Supplier Admin' %}
+                            {% elif activity.action == 'Uploading Release Note' %}
                             <td>
-                                <div class="btn-group">
-                                    <button  data-toggle="modal"  data-target="#view_supplieradmin{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                                <div class="btn-group"> 
+                                    <a href="{% url 'noicDepot:view_release_note' activity.reference_id %}" type="button" class="btn btn-labeled btn-success btn-sm">
                                         <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                                    </button>
+                                    </a>                                                             
+                                        
                                 </div>
                             </td>
-                            {% elif activity.action == 'Blocking Company' %}
-                            <td>
-                                <div class="btn-group">
-                                    <button  data-toggle="modal"  data-target="#view_blocked_comp{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                                    </button>
-                                </div>
-                            </td>
-                            {% elif activity.action == 'Unblocking Company' %}
-                            <td>
-                                <div class="btn-group">
-                                    <button  data-toggle="modal"  data-target="#view_unblocked_comp{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                                    </button>
-                                </div>
-                            </td>
-                            {% elif activity.action == 'Updating Licence' %}
-                            <td>
-                                <div class="btn-group">
-                                    <button  data-toggle="modal"  data-target="#view_updated_licence{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                                    </button>
-                                </div>
-                            </td>
-                            {% elif activity.action == 'Cancelling Licence' %}
-                            <td>
-                                <div class="btn-group">
-                                    <button  data-toggle="modal"  data-target="#view_cancelled_sub{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                                    </button>
-                                </div>
-                            </td>
-                            {% elif activity.action == 'Unblocking Licence' %}
-                            <td>
-                                <div class="btn-group">
-                                    <button  data-toggle="modal"  data-target="#view_unblockedlicence{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                                    </button>
-                                </div>
-                            </td>
-                            {% elif activity.action == 'Approving Subsidiary' %}
-                            <td>
-                                <div class="btn-group">
-                                    <button  data-toggle="modal"  data-target="#view_approve_sub{{activity.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
-                                        <span class="btn-label"><i class="fa fa-eye"></i></span>Click to View
-                                    </button>
-                                </div>
-                            </td>
-                            
-                            
                             {% endif %}
+                            
                         </tr>
-                        <div class="modal fade modal-success in" id="view_company{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                        aria-hidden="true" style="overflow-y: initial !important;" >
-                        <div class="modal-dialog modal-notice">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                <span class="modal-title">New Company Info</span>
+                        <div class="modal fade modal-success in" id="view_alloc{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                aria-hidden="true" style="overflow-y: initial !important;" >
+                <div class="modal-dialog modal-notice">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <span class="modal-title">Allocation Info</span>
+                    </div>
+                        <div class="modal-body" style="padding: 30px;overflow-y: auto;">
+                            <div class="row" style="padding: 10px;">
+                                <p class="col-md-6" style="font-weight: bold;">Buyer: </p>
+                                <p class="col-md-6">{{ activity.fuel_order.company.name }}</p>
                             </div>
-                                <div class="modal-body" style="padding: 30px;overflow-y: auto;">
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Name: </p>
-                                        <p class="col-md-6">{{ activity.company.name }}</p>
-                                    </div>
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">City: </p>
-                                        <p class="col-md-6">{{ activity.company.city }}</p>
-                                    </div>
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Address </p>
-                                        <p class="col-md-6">{{activity.company.address }}</p>
-                                    </div>
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Licence Number: </p>
-                                        <p class="col-md-6">{{activity.company.license_number}}</p>
-                                    </div>
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Vat Number: </p>
-                                        <p class="col-md-6">{{activity.company.vat_number}}</p>
-                                    </div>
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Contact Person : </p>
-                                        <p class="col-md-6">{{activity.company.contact_person}}</p>
-                                    </div>
-                                    <div class="row" style="padding: 10px;">
-                                        <p class="col-md-6" style="font-weight: bold;">Phone Number: </p>
-                                        <p class="col-md-6">{{activity.company.phone_number}}</p>
-                                    </div>
-                                   
-                                  
-                                    
-                                    <div class="modal-footer">  
-                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                                    </div>    
-    
-                                </div>
-                                </div>
-                                
+                            <div class="row" style="padding: 10px;">
+                                <p class="col-md-6" style="font-weight: bold;">Fuel Type: </p>
+                                <p class="col-md-6">{{activity.fuel_order.currency}} {{  activity.fuel_order.fuel_type }}</p>
                             </div>
+                            <div class="row" style="padding: 10px;">
+                                <p class="col-md-6" style="font-weight: bold;">Quantity: </p>
+                                <p class="col-md-6">{{activity.fuel_order.quantity|floatformat:2|intcomma}}</p>
+                            </div>
+                            <div class="row" style="padding: 10px;">
+                                <p class="col-md-6" style="font-weight: bold;">Price: </p>
+                                <p class="col-md-6">{{activity.fuel_order.price}}</p>
+                            </div>
+                        
+                        
+                            
+                            <div class="modal-footer">  
+                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                            </div>    
+
                         </div>
-
-
-                        <div class="modal fade modal-success in" id="view_comp_update{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                        aria-hidden="true" style="overflow-y: initial !important;" >
-                        <div class="modal-dialog modal-notice">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                <span class="modal-title">Updated Company Info</span>
-                            </div>
-                            <div class="modal-body" style="padding: 30px;overflow-y: auto;">
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Name: </p>
-                                    <p class="col-md-6">{{ activity.company.name }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">City: </p>
-                                    <p class="col-md-6">{{ activity.company.city }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Address </p>
-                                    <p class="col-md-6">{{activity.company.address }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Licence Number: </p>
-                                    <p class="col-md-6">{{activity.company.license_number}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Vat Number: </p>
-                                    <p class="col-md-6">{{activity.company.vat_number}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Contact Person : </p>
-                                    <p class="col-md-6">{{activity.company.contact_person}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Phone Number: </p>
-                                    <p class="col-md-6">{{activity.company.phone_number}}</p>
-                                </div>
-                               
-                              
-                                
-                                <div class="modal-footer">  
-                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                                </div>    
-
-                            </div>
-                                </div>
-                                
-                            </div>
                         </div>
-
-
-                        <div class="modal fade modal-success in" id="view_supplieradmin{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                        aria-hidden="true" style="overflow-y: initial !important;" >
-                        <div class="modal-dialog modal-notice">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                <span class="modal-title">Supplier Admin Info</span>
-                            </div>
-                            <div class="modal-body" style="padding: 30px;overflow-y: auto;">
-                                   
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">First Name: </p>
-                                    <p class="col-md-6">{{ activity.created_user.first_name}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Last Name: </p>
-                                    <p class="col-md-6">{{ activity.created_user.last_name }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Email </p>
-                                    <p class="col-md-6">{{activity.created_user.email }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Phone: </p>
-                                    <p class="col-md-6">{{activity.created_user.phone_number}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Company: </p>
-                                    <p class="col-md-6">{{ activity.company.name }}</p>
-                                </div>
-                               
-                              
-                                
-                                <div class="modal-footer">  
-                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                                </div>    
-
-                            </div>
-                                </div>
-                                
-                            </div>
-                        </div>
-
-                        <div class="modal fade modal-success in" id="view_blocked_comp{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                        aria-hidden="true" style="overflow-y: initial !important;" >
-                        <div class="modal-dialog modal-notice">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                <span class="modal-title">Blocked Company Info</span>
-                            </div>
-                            <div class="modal-body" style="padding: 30px;overflow-y: auto;">
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Name: </p>
-                                    <p class="col-md-6">{{ activity.company.name }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">City: </p>
-                                    <p class="col-md-6">{{ activity.company.city }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Address </p>
-                                    <p class="col-md-6">{{activity.company.address }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Licence Number: </p>
-                                    <p class="col-md-6">{{activity.company.license_number}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Vat Number: </p>
-                                    <p class="col-md-6">{{activity.company.vat_number}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Contact Person : </p>
-                                    <p class="col-md-6">{{activity.company.contact_person}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Phone Number: </p>
-                                    <p class="col-md-6">{{activity.company.phone_number}}</p>
-                                </div>
-                               
-                              
-                                
-                                <div class="modal-footer">  
-                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                                </div>    
-
-                            </div>
-                                </div>
-                                
-                            </div>
-                        </div>
-
-                        <div class="modal fade modal-success in" id="view_unblocked_comp{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                        aria-hidden="true" style="overflow-y: initial !important;" >
-                        <div class="modal-dialog modal-notice">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                <span class="modal-title">Unblocked Company Info</span>
-                            </div>
-                            <div class="modal-body" style="padding: 30px;overflow-y: auto;">
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Name: </p>
-                                    <p class="col-md-6">{{ activity.company.name }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">City: </p>
-                                    <p class="col-md-6">{{ activity.company.city }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Address </p>
-                                    <p class="col-md-6">{{activity.company.address }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Licence Number: </p>
-                                    <p class="col-md-6">{{activity.company.license_number}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Vat Number: </p>
-                                    <p class="col-md-6">{{activity.company.vat_number}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Contact Person : </p>
-                                    <p class="col-md-6">{{activity.company.contact_person}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Phone Number: </p>
-                                    <p class="col-md-6">{{activity.company.phone_number}}</p>
-                                </div>
-                               
-                              
-                                
-                                <div class="modal-footer">  
-                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                                </div>    
-
-                            </div>
-                                
-                                </div>
-                                
-                            </div>
-                        </div>
-
-
-                        <div class="modal fade modal-success in" id="view_cancelled_sub{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                        aria-hidden="true" style="overflow-y: initial !important;" >
-                        <div class="modal-dialog modal-notice">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                <span class="modal-title">Blocked Subsidiary</span>
-                            </div>
-                            <div class="modal-body" style="padding: 30px;overflow-y: auto;">
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Name: </p>
-                                    <p class="col-md-6">{{ activity.subsidiary.name }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">City: </p>
-                                    <p class="col-md-6">{{ activity.subsidiary.city }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Address </p>
-                                    <p class="col-md-6">{{activity.subsidiary.location }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Licence Number: </p>
-                                    <p class="col-md-6">{{activity.subsidiary.license_num}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Vat Number: </p>
-                                    <p class="col-md-6">{{activity.subsidiary.vat}}</p>
-                                </div>
-                               
-                                
-                                <div class="modal-footer">  
-                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                                </div>    
-
-                            </div>
-                                
-                                </div>
-                                
-                            </div>
-                        </div>
-
-
-                        <div class="modal fade modal-success in" id="view_unblockedlicence{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                        aria-hidden="true" style="overflow-y: initial !important;" >
-                        <div class="modal-dialog modal-notice">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                <span class="modal-title">Unblocked Subsidiary Info</span>
-                            </div>
-                            <div class="modal-body" style="padding: 30px;overflow-y: auto;">
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Name: </p>
-                                    <p class="col-md-6">{{ activity.subsidiary.name }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">City: </p>
-                                    <p class="col-md-6">{{ activity.subsidiary.city }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Address </p>
-                                    <p class="col-md-6">{{activity.subsidiary.location }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Licence Number: </p>
-                                    <p class="col-md-6">{{activity.subsidiary.license_num}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Vat Number: </p>
-                                    <p class="col-md-6">{{activity.subsidiary.vat}}</p>
-                                </div>
-                               
-                                
-                                <div class="modal-footer">  
-                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                                </div>    
-
-                            </div>
-                                
-                                </div>
-                                
-                            </div>
-                        </div>
-
-
-                        <div class="modal fade modal-success in" id="view_approve_sub{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                        aria-hidden="true" style="overflow-y: initial !important;" >
-                        <div class="modal-dialog modal-notice">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                <span class="modal-title">Approved Subsidiary Info</span>
-                            </div>
-                            <div class="modal-body" style="padding: 30px;overflow-y: auto;">
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Name: </p>
-                                    <p class="col-md-6">{{ activity.subsidiary.name }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">City: </p>
-                                    <p class="col-md-6">{{ activity.subsidiary.city }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Address </p>
-                                    <p class="col-md-6">{{activity.subsidiary.location }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Licence Number: </p>
-                                    <p class="col-md-6">{{activity.subsidiary.license_num}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Vat Number: </p>
-                                    <p class="col-md-6">{{activity.subsidiary.vat}}</p>
-                                </div>
-                               
-                                
-                                <div class="modal-footer">  
-                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                                </div>    
-
-                            </div>
-                                
-                                </div>
-                                
-                            </div>
-                        </div>
-
-
-                        <div class="modal fade modal-success in" id="view_updated_licence{{activity.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                        aria-hidden="true" style="overflow-y: initial !important;" >
-                        <div class="modal-dialog modal-notice">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                <span class="modal-title">Updated Licence Subsidiary</span>
-                            </div>
-                            <div class="modal-body" style="padding: 30px;overflow-y: auto;">
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Name: </p>
-                                    <p class="col-md-6">{{ activity.subsidiary.name }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">City: </p>
-                                    <p class="col-md-6">{{ activity.subsidiary.city }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Address </p>
-                                    <p class="col-md-6">{{activity.subsidiary.location }}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">New Licence Number: </p>
-                                    <p class="col-md-6">{{activity.subsidiary.license_num}}</p>
-                                </div>
-                                <div class="row" style="padding: 10px;">
-                                    <p class="col-md-6" style="font-weight: bold;">Vat Number: </p>
-                                    <p class="col-md-6">{{activity.subsidiary.vat}}</p>
-                                </div>
-                               
-                                
-                                <div class="modal-footer">  
-                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                                </div>    
-
-                            </div>
-                                
-                                </div>
-                                
-                            </div>
+                        
+                    </div>
                         </div>
 
                         <script>
