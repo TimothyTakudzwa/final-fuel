@@ -166,7 +166,7 @@ def decline_company(request, id):
     company_rep = User.objects.filter(company=company).first()
     company.declined = True
     company.save()
-    messages.warning(request, f"Company {company.name} and its rep {company_rep.name} declined.")
+    messages.warning(request, f"Company {company.name} and its rep {company_rep.username} declined.")
     return redirect('buyer:approve_companies')
 """
 
