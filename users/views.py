@@ -90,9 +90,11 @@ def sord_allocations(request):
             if end_date and start_date:
                 sord_allocations = SordCompanyAuditTrail.objects.filter(company=request.user.company, date__range=[start_date, end_date])
 
-            df = convert_to_dataframe(sord_allocations)
-            filename = 'Supplier Admin Summary.csv'
-            df = df[['date', 'sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_allocated', 'end_quantity']]
+            fields = ['date', 'sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_allocated', 'end_quantity']
+            sord_allocations = sord_allocations.values('date', 'sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_allocated', 'end_quantity')            
+            df = pd.DataFrame(sord_allocations, columns=fields)
+            filename = 'Supplier Admin'
+
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
