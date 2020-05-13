@@ -2639,21 +2639,10 @@ def orders(request):
             
             df_accepted_orders = pd.DataFrame(accepted_orders, columns=fields)
             df_pending_orders = pd.DataFrame(pending_orders, columns=fields)
-
-            # df_accepted_orders.noic_depot  = df_accepted_orders.noic_depot.astype(str)  
-            
-            # for i, row in df_accepted_orders.iterrows():
-            #     df_accepted_orders.at[i,'noic_depot'] = NoicDepot.objects.filter(id=int(df_accepted_orders.at[i,'noic_depot'])).first().name
-
-            # df_pending_orders = convert_to_dataframe(pending_orders)
-            # df_pending_orders.noic_depot  = df_pending_orders.noic_depot.astype(str)  
-
-            # for i, row in df_pending_orders.iterrows():
-            #     df_pending_orders.at[i,'noic_depot'] = NoicDepot.objects.filter(id=int(df_pending_orders.at[i,'noic_depot'])).first().name
             
             df = df_accepted_orders.append(df_pending_orders)
 
-            # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
+            
             filename = f'{request.user.company.name} - {date}.csv'
             df.to_csv(filename, index=None, header=True)
 
