@@ -2074,8 +2074,8 @@ def sord_station_sales(request):
             if end_date and start_date:
                 sord_sales = SordSubsidiaryAuditTrail.objects.filter(subsidiary__company=request.user.company, date__range=[start_date, end_date])
 
-            fields = ['date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity', 'received_by__company__name']
-            df = pd.DataFrame(sord_sales.values('date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity', 'received_by__company__name'),
+            fields = ['date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity']
+            df = pd.DataFrame(sord_sales.values('date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity'),
             columns=fields)
             filename = 'Supplier Admin'
             df.to_csv(filename, index=None, header=True)
