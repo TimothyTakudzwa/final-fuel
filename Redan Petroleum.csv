@@ -1,0 +1,2 @@
+date,time,action,diesel_quantity,diesel_price,petrol_quantity,petrol_price,fuel_payment_type
+2020-05-12,15:10:35.906647,Allocate,80000000.0,0.09,300000.0,0.80,CASH

@@ -1,0 +1,104 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Orders {{request.company.name}} Summary</title>
+
+    <style>
+        @page {size: a3 landscape;}
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        .first {
+            width: 50%;
+            float:left;
+            font-size: 12px;
+
+        }
+        .wrapper {
+            width: 100%;
+            margin: auto;
+            padding: 10px;
+            overflow: hidden;
+        }
+        .text-muted{
+            color:#6c757d!important;
+        }
+    </style>
+
+</head>
+<body>
+
+
+<h1 style="text-align: center;">Allocations Statement - {{ date }}</h1>
+
+
+
+    <h3 style="padding-top: 20px;">Filtered Allocations  {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">({{date}})</small>{% endif %}</h3>
+
+    <table style="padding-top: 20px; margin-bottom: 30px;">
+    
+        <thead style="color:white; background:lightslategray">
+            <th style="color:white;">Date</th>
+            <th style="color:white;">Time</th>
+            <th style="color:white;">Action</th>
+            <th style="color: #e9b544;">Diesel</th>
+            <th style="color:white;">Price</th>
+            <th style="color: #48aaa0;">Petrol</th>
+            <th style="color:white;">Price</th>                        
+            <th style="color:white;">Currency</th>
+        </thead>    
+            
+        
+        {% for allocation in allocations %}
+        <tr>
+            <td>{{allocation.date}}</td>
+            <td>{{allocation.time}}</td>
+            <td>{{allocation.action}}</td>
+            {% if allocation.diesel_quantity != 0 %}
+            <td>{{allocation.diesel_quantity|floatformat:2|intcomma}}</td>
+            <td>{{allocation.diesel_price}}</td>
+            {% else %}
+            <td>N/A</td>
+            <td>N/A</td>
+            {% endif %}
+            {% if allocation.petrol_quantity != 0 %}
+            <td>{{allocation.petrol_quantity|floatformat:2|intcomma}}</td>
+            <td>{{allocation.petrol_price}}</td>
+            {% else %}
+            <td>N/A</td>
+            <td>N/A</td>
+            {%endif%}
+            <td>{{allocation.fuel_payment_type}}</td>
+        </tr>
+
+        {% endfor %}
+
+
+
+    </table>
+
+
+
+
+
+
+
+
+
+</body>
+</html>
