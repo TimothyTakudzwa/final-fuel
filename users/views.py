@@ -1402,6 +1402,23 @@ def audit_trail(request):
                 end_date = end_date.date()
             
             filtered_trails = Audit_Trail.objects.filter(company=request.user.company).filter(date__date__range=[start_date, end_date])
+
+            for activity in filtered_trails:
+                if activity.reference == 'offers':
+                    activity.offer_object = Offer.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'sfuel allocation':
+                    activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'fuel allocation':
+                    activity.fuel_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'sprices updates':
+                    activity.prices_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'prices updates':
+                    activity.prices_update = SuballocationFuelUpdate.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'pfuel quantity updates':
+                    activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+                elif activity.reference == 'dfuel quantity updates':
+                    activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
+
             return render(request, 'users/audit_trail.html', {'filtered_trails':filtered_trails,'filtered':filtered ,'today':today, 'start_date': start_date
             , 'end_date':end_date})
 
