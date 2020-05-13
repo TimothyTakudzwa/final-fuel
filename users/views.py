@@ -199,7 +199,7 @@ def allocated_fuel(request, sid):
     user_permission(request)
     prices = FuelPrices.objects.first()
     sub = Subsidiaries.objects.filter(id=sid).first()
-    allocates = SuballocationFuelUpdate.objects.filter(subsidiary=sub).exclude(payment_type='USD & RTGS').all()
+    allocates = SuballocationFuelUpdate.objects.filter(subsidiary=sub).all()
     company_quantity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
     depot = SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first()
 
