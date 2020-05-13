@@ -243,7 +243,7 @@ class SordSubsidiaryAuditTrail(models.Model):
     quantity_sold =  models.FloatField(default=0.00)
     end_quantity =  models.FloatField(default=0.00)
     received_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.DO_NOTHING)
-    subsidiary = models.ForeignKey(Subsidiaries, is_deleted=models, related_name='subsidiary_sord')
+    subsidiary = models.ForeignKey(Subsidiaries, is_deleted=models.CASCADE, related_name='subsidiary_sord')
     last_updated = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
