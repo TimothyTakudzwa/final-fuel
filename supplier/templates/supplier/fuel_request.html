@@ -26,7 +26,12 @@
         </ol>
     </div>
 </section>
+
+
+
 <!-- Main content -->
+
+
 <section class="content">
 
     <div class="content" style="min-height: 50px;">
@@ -36,8 +41,12 @@
              data-index="0" id="past_schedules">
             <div class="panel-heading ui-sortable-handle">
 
-                <div class="btn-group" role="group" aria-label="Button group">
-                    <span>Requests</span>
+                <div class="btn-group" style="width: 100%;margin-left: 25px;"> 
+                    <div class="row" style="margin-bottom: 20px;">
+                        <span>Requests</span>
+                    </div>
+                          
+
                 </div>
 
                 <div class="dropdown">
@@ -111,11 +120,13 @@
                                                 <td>{{ req.my_offer }}</td>
                                                 {% if req.my_offer != 'No Offer' %}
                                                 {% if req.delivery_method == 'DELIVERY' %}
-                                                <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal"
-                                                        data-target="#edit_offer_{{req.id}}">Edit Offer</button></td>
+                                                <td><button type="button" class="btn btn-success btn-labeled btn-sm" data-toggle="modal"
+                                                        data-target="#edit_offer_{{req.id}}">
+                                                        <span class="btn-label"> <i class="fa fa-edit"></i></span> Edit Offer </button></td>
                                                 {% else %}
-                                                <td><button type="button" class="btn btn-purple btn-sm" data-toggle="modal"
-                                                  data-target="#edit_offer_collection_{{req.id}}">Edit Offer</button></td>
+                                                <td><button type="button" class="btn btn-labeled btn-success btn-sm" data-toggle="modal"
+                                                  data-target="#edit_offer_collection_{{req.id}}">
+                                                  <span class="btn-label"><i class="fa fa-edit"></i> </span> Edit Offer</button></td>
                                                   {% endif %}
                                                 {% else %}
                                                 {% if req.delivery_method == 'DELIVERY' %}
@@ -323,7 +334,7 @@
                             <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                <h2 class="modal-title">Edit Offer</h2>
+                                <span style="color: white;">Edit Offer</span>
                             </div>
                             <div class="modal-body">
                              <form method="POST" action="{% url 'supplier:edit_offer' req.offer_id %}">
@@ -380,8 +391,12 @@
                                         </div>
                                     </div>
                                     </div>
+                                    <div class="modal-footer" style="margin-top: 60px;">  
+                                        <button type="submit" class="btn btn-primary ">Save Changes</button>
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div> 
                             </div>
-                                <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-info btn-sm">Update Offer</button></p>
+                                <!-- <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-info btn-sm">Update Offer</button></p> -->
                             </form>
                             </div>
                             </div>
@@ -605,7 +620,7 @@
                                                 <div class="modal-content">
                                                 <div class="modal-header">
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                    <h2 class="modal-title">Edit Offer</h2>
+                                                    <span style="color: white;">Edit Offer</span>
                                                 </div>
                                                 <div class="modal-body">
                                                 <form method="POST" action="#">
@@ -631,8 +646,12 @@
                                                     <input type="number" min="0.1" step="0.01" name="transport" class="form-control" value="{{req.transport_fee|floatformat:2|intcomma}}" required/>
                                                 </div>
                                                     </div>
+                                                    <div class="modal-footer" style="margin-top: 60px;">  
+                                                        <button type="submit" class="btn btn-primary ">Make Offer</button>
+                                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                    </div> 
                                                 </div>
-                                                    <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-info btn-sm">Update Offer</button></p>
+                                                    <!-- <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-info btn-sm">Update Offer</button></p> -->
                                                 </form>
                                                 </div>
                                                 </div>
@@ -704,8 +723,12 @@
                                                             </div>
                                                         </div>
                                                         </div>
+                                                        <div class="modal-footer" style="margin-top: 60px;">  
+                                                            <button type="submit" class="btn btn-primary ">Save Changes</button>
+                                                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                        </div> 
                                             </div>
-                                                <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-info btn-sm">Update Offer</button></p>
+                                                <!-- <p style="text-align: center;"><button type="submit" name="MakeOffer" class="btn btn-info btn-sm">Update Offer</button></p> -->
                                             </form>
                                             </div>
                                             </div>
@@ -747,7 +770,14 @@
     </div>
 </section>
 
+<script>
+    $('body').click(function (event) {
+        if(!$(event.target).closest('#state_modal').length && !$(event.target).is('#state_modal')) {
+            $("#state_modal").modal('hide');
+        }    
+            
+    });
+</script>
 
 
-
-    {%endblock%}
+{%endblock%}

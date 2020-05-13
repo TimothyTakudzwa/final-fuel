@@ -460,6 +460,9 @@ def fuel_request(request):
         for buyer_request in complete_requests:
             if buyer_request.dipping_stick_required == buyer_request.meter_required == buyer_request.pump_required == False:
                 buyer_request.no_equipment = True
+    
+    
+    
     return render(request, 'supplier/fuel_request.html', {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'requests': requests, 'complete_requests': complete_requests})
 
 
@@ -865,6 +868,89 @@ allocated quantities
 @user_role
 def allocated_quantity(request):
     allocations = FuelAllocation.objects.filter(allocated_subsidiary_id=request.user.subsidiary_id).all()
+
+    if request.method == "POST":
+        if request.POST.get('start_date') and request.POST.get('end_date') :
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                end_date = end_date.date()
+
+            allocations = FuelAllocation.objects.filter(allocated_subsidiary_id=request.user.subsidiary_id).filter(date__range=[start_date, end_date])
+                
+            context = {
+                'allocations': allocations,
+                'start_date': start_date,
+                'end_date': end_date
+
+            }
+
+            return render(request, 'supplier/allocated_quantity.html', context=context)
+
+        if request.POST.get('export_to_csv')=='csv':
+            start_date = request.POST.get('csv_start_date')
+            end_date = request.POST.get('csv_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                allocations = FuelAllocation.objects.filter(allocated_subsidiary_id=request.user.subsidiary_id).filter(date__range=[start_date, end_date])
+            
+            allocations = allocations.values('date','time','action','diesel_quantity','diesel_price',
+            'petrol_quantity','petrol_price','fuel_payment_type')
+            
+            fields = ['date','time','action','diesel_quantity','diesel_price',
+            'petrol_quantity','petrol_price','fuel_payment_type']
+            
+            df = pd.DataFrame(allocations, columns=fields)
+
+            filename = f'{request.user.company.name}.csv'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - Allocations - {today}.csv'
+                return response     
+
+        else:
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                allocations = FuelAllocation.objects.filter(allocated_subsidiary_id=request.user.subsidiary_id).filter(date__range=[start_date, end_date])
+        
+            context = {
+                'allocations': allocations,
+                'date': today,
+                'start_date': start_date,
+                'end_date': end_date
+            }
+
+            html_string = render_to_string('supplier/export/export_allocations.html', context=context)
+            html = HTML(string=html_string)
+            export_name = f"{request.user.company.name.title()}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Allocations - {today}.pdf'
+                return response        
+
+
     return render(request, 'supplier/allocated_quantity.html', {'allocations': allocations})
 
 
