@@ -201,7 +201,7 @@ class UserReview(models.Model):
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, related_name='company_rating')
     transaction = models.ForeignKey(Transaction, on_delete=models.DO_NOTHING, related_name='transaction')
     rater = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rater')
-    depot = models.ForeignKey(Subsidiaries, on_delete=models.DO_NOTHING, related_name='subsidiary_rating')
+    depot = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE, related_name='subsidiary_rating')
     comment = models.CharField(max_length=500, default='')
 
     def __str__(self):
