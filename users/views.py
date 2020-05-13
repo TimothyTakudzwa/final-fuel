@@ -2615,6 +2615,14 @@ def orders(request):
                 end_date = end_date.date()
             accepted_orders = Order.objects.filter(company=request.user.company).filter(~Q(status='Pending')).filter(date__range=[start_date, end_date])
             pending_orders = Order.objects.filter(company=request.user.company).filter(status='Pending').filter(date__range=[start_date, end_date])  
+            
+            for order in accepted_orders:
+                sord = SordNationalAuditTrail.objects.filter(order=order).first()
+                if sord is not None:
+                    order.allocation = sord
+                else:
+                    order.allocation = None
+            
             return render(request, 'users/orders.html',
                   {'depots': depots, 'form1': form1, 'diesel_rtgs_price': diesel_rtgs_price,
                    'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price,
