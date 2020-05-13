@@ -1294,8 +1294,9 @@ def accounts(request):
     order_nums, latest_orders = total_requests(request.user.company)
     total_costs = transactions_total_cost(request.user)
     offers_count_all, offers_count_today = total_offers(request.user)
+    branches = DeliveryBranch.objects.filter(company=request.user.company).all()
     return render(request, 'buyer/accounts.html',
-                  {'form': form, 'accounts': accounts_available, 'fuel_orders': fuel_orders, 'order_nums': order_nums,
+                  {'branches': branches, 'form': form, 'accounts': accounts_available, 'fuel_orders': fuel_orders, 'order_nums': order_nums,
                    'latest_orders': latest_orders, 'total_costs': total_costs, 'offers_count_all': offers_count_all,
                    'offers_count_today': offers_count_today})
 
@@ -1308,8 +1309,8 @@ Direct Request
 
 
 @login_required()
-@user_role
 def make_direct_request(request, id):
+    user_permission(request)
     """
     Function To Make Direct Requests With A Particular Supplier
     """
@@ -1328,8 +1329,9 @@ def make_direct_request(request, id):
                 private_mode=True,
             )
             if fuel_request_object.delivery_method.lower() == "delivery":
-                fuel_request_object.delivery_address = request.POST.get('s_number') + " " + request.POST.get(
-                    's_name') + " " + request.POST.get('s_town')
+                branch_id = int(request.POST.get('d_branch'))
+                branch = DeliveryBranch.objects.filter(id=branch_id).first()
+                fuel_request_object.delivery_address = branch.street_number + " " + branch.street_name + " " + branch.city
             else:
                 fuel_request_object.transporter = request.POST.get('transporter')
                 fuel_request_object.truck_reg = request.POST.get('truck_reg')
@@ -1364,8 +1366,9 @@ def edit_account_details(request, id):
     user_permission(request)
     account = Account.objects.filter(id=id).first()
     if request.method == "POST":
-        account.account_number = request.POST.get('account_number')
-        account.save()
+        address = request.POST.get('address')
+        account.buyer_company.address = address
+        account.buyer_company.save()
         messages.success(request, f"Successfully made changes to account details.")
     return redirect('buyer:accounts')
 
@@ -1398,8 +1401,9 @@ def make_private_request(request):
             wait=True,
         )
         if fuel_request_object.delivery_method.lower() == "delivery":
-            fuel_request_object.delivery_address = request.POST.get('s_number') + " " + request.POST.get(
-                's_name') + " " + request.POST.get('s_town')
+            branch_id = int(request.POST.get('d_branch'))
+            branch = DeliveryBranch.objects.filter(id=branch_id).first()
+            fuel_request_object.delivery_address = branch.street_number + " " + branch.street_name + " " + branch.city
         else:
             fuel_request_object.transporter = request.POST.get('transporter')
             fuel_request_object.truck_reg = request.POST.get('truck_reg')

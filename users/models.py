@@ -8,7 +8,7 @@ from national.models import NoicDepot
 
 class AuditTrail(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    service_station = models.ForeignKey(Subsidiaries, on_delete=models.DO_NOTHING, null=True)
+    service_station = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE, null=True)
     date = models.DateTimeField(auto_now_add=True)
     action = models.CharField(max_length=700, blank=True)
     reference = models.CharField(max_length=300, blank=True)
@@ -34,7 +34,7 @@ class SordActionsAuditTrail(models.Model):
 class Audit_Trail(models.Model):
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    service_station = models.ForeignKey(Subsidiaries, on_delete=models.DO_NOTHING, null=True)
+    service_station = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE, null=True)
     date = models.DateTimeField(auto_now_add=True)
     action = models.CharField(max_length=700, blank=True)
     reference = models.CharField(max_length=300, blank=True)
@@ -53,7 +53,7 @@ class Activity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='creator')
     created_user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, blank=True, null=True)
-    subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.DO_NOTHING, blank=True, null=True)
+    subsidiary = models.ForeignKey(Subsidiaries, on_delete=models.CASCADE, blank=True, null=True)
     depot = models.ForeignKey(NoicDepot, on_delete=models.DO_NOTHING, blank=True, null=True)
     action = models.CharField(max_length=700, blank=True, null=True)
     fuel_type = models.CharField(max_length=700, blank=True, null=True)

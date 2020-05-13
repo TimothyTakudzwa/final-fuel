@@ -10,7 +10,7 @@
     <title>ZFMS</title>
 
     <!-- Favicon and touch icons -->
-    <link rel="shortcut icon" href="https://timothytakudzwa.github.io/static/new/assets/dist/img/ico/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="https://timothytakudzwa.github.io/static/wp-content/uploads/2019/10/favicon.png" type="image/x-icon">
    <!-- Start Global Mandatory Style
    =====================================================================-->
    <!-- jquery-ui css -->
@@ -79,53 +79,15 @@
                             <li class="dropdown notifications-menu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <i class="pe-7s-bell"></i>
-                                    <span class="label label-warning">8</span>
+                                    <span class="label label-warning">0</span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li class="header"><i class="fa fa-bell"></i> 8 Notifications</li>
+                                    <li class="header"><i class="fa fa-bell"></i>0</li>
                                     <li>
-                                        <ul class="menu">
-                                            <li>
-                                            <a href="#" class="border-gray"><i class="fa fa-inbox"></i> Inbox  <span class=" label-success label label-default pull-right">9</span></a>
-                                            </li>
-                                            <li>
-                                            <a href="#" class="border-gray"><i class="fa fa-cart-plus"></i> New Order <span class=" label-success label label-default pull-right">3</span> </a>
-                                            </li>
-                                            <li>
-                                            <a href="#" class="border-gray"><i class="fa fa-money"></i> Payment Failed  <span class="label-success label label-default pull-right">6</span> </a>
-                                            </li>
-                                            <li>
-                                            <a href="#" class="border-gray"><i class="fa fa-cart-plus"></i> Order Confirmation <span class="label-success label label-default pull-right">7</span> </a>
-                                            </li>
-                                            <li>
-                                            <a href="#" class="border-gray"><i class="fa fa-cart-plus"></i> Update system status <span class=" label-success label label-default pull-right">11</span> </a>
-                                            </li>
-                                            <li>
-                                            <a href="#" class="border-gray"><i class="fa fa-cart-plus"></i> client update <span class="label-success label label-default pull-right">12</span> </a>
-                                            </li>
-                                            <li>
-                                            <a href="#" class="border-gray"><i class="fa fa-cart-plus"></i> shipment cancel 
-                                            <span class="label-success label label-default pull-right">2</span> </a>
-                                            </li>
-                                        </ul>
                                     </li>
                                    <li class="footer">
                                    <a href="#"> See all Notifications <i class=" fa fa-arrow-right"></i></a>
                                     </li>
-                                </ul>
-                            </li>
-                           
-                            <li class="dropdown dropdown-user admin-user">
-                                
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"> 
-                                <div class="user-image">
-                                <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar5.png" class="img-circle" height="40" width="40" alt="User Image">
-                                </div>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="nav-link" href="{% url 'serviceStation:myaccount' %}"><i class="fa fa-users"></i> User Profile</a></li>
-                                    <li><a class="nav-link" href="{% url 'logout' %}?next=/login/"><i class="fa fa-sign-out"></i> Logout</a></li>
-                                   
                                 </ul>
                             </li>
                         </ul>
@@ -139,12 +101,9 @@
                 <div class="sidebar">
                     <!-- Sidebar user panel -->
                     <div class="user-panel">
-                        <div class="image pull-left">
-                            <img src="https://timothytakudzwa.github.io/static/new/assets/dist/img/avatar5.png" class="img-circle" alt="User Image">
-                        </div>
                         <div class="info">
                             <h4>Welcome</h4>
-                            <p>{{user.username}}</p> 
+                            <p>{{ request.user.first_name }} {{ request.user.last_name}}</p> 
                         </div>
                     </div>
                    
