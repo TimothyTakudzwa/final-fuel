@@ -2807,38 +2807,27 @@ def delivery_schedules(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                # schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).filter(date__range=[start_date, end_date])
-                # completed_schedules = []
-                # pending_schedules =[]
-                # for schedule in schedules:
-                #     schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
-                #     if schedule.transaction.offer.delivery_method.lower() == 'delivery':
-                #         schedule.delivery_address = schedule.transaction.offer.request.delivery_address
-                #     else:
-                #         schedule.delivery_address = schedule.transaction.offer.collection_address
-                #     if schedule.confirmation_date:
-                #         completed_schedules.append(schedule)
-                #     else:
-                #         pending_schedules.append(schedule)
+                
                 completed_schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user
                 .company).filter(date__range=[start_date, end_date]).filter(confirmation_date__isnull=False)
                 pending_schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user
                 .company).filter(date__range=[start_date, end_date]).filter(confirmation_date__isnull=True)
 
 
-            # fields = ['date','transaction','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time',
-            # 'confirmation_date',  'transport_company','delivery_quantity','amount_for_fuel']
+            completed_schedules = completed_schedules.values('date','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time',
+            'confirmation_date',  'transport_company','delivery_quantity','amount_for_fuel')
+            pending_schedules = pending_schedules.values('date','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time',
+            'confirmation_date',  'transport_company','delivery_quantity','amount_for_fuel')
 
-            df_completed_schedules = convert_to_dataframe(completed_schedules)
-            df_pending_schedules = convert_to_dataframe(pending_schedules)
+            fields = ['date','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time',
+            'confirmation_date',  'transport_company','delivery_quantity','amount_for_fuel']
 
-            # df_completed_schedules = pd.DataFrame(completed_schedules, fields)
-            # df_pending_schedules = pd.DataFrame(pending_schedules, fields)
+            df_completed_schedules = pd.DataFrame(completed_schedules, columns=fields)
+            df_pending_schedules = pd.DataFrame(pending_schedules, columns=fields)
 
             df = df_completed_schedules.append(df_pending_schedules)
-            df = df[['date','transaction','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time',
-            'confirmation_date',  'transport_company','delivery_quantity','amount_for_fuel']]
-            filename = f'{request.user.company.name} - Delivery Schedules - {today}.csv'
+            
+            filename = f'{request.user.company.name} - Delivery Schedules'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
