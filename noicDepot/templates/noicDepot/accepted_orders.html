@@ -20,9 +20,9 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-
-                    {% load crispy_forms_tags %}
-                    <form action="{% url 'noicDepot:allocate_fuel' order.id %}" method="POST">
+                    <div class="modal-body">
+                        {% load crispy_forms_tags %}
+                        <form action="{% url 'noicDepot:allocate_fuel' order.id %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" value="{{ order.fuel_type }}" name="fuel_type"/>
                         <input type="hidden" value="{{ order.quantity }}" name="quantity"/>
@@ -57,12 +57,14 @@
 
                         </div>
 
-                        <div class="form-group row"
-                             style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                            <button type="button" class="btn btn-secondary col-sm-6" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
-                    </form>
+
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
