@@ -2152,6 +2152,7 @@ def client_application(request):
         company = Company.objects.filter(id=request.user.company.id).first()
         company.application_form = request.FILES.get('application_form')
         company.save()
+        messages.success(request, 'Document successfully Uploaded.')
         return redirect('users:clients')
 
 
