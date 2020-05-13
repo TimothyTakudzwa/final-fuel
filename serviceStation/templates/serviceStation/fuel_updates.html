@@ -1,5 +1,6 @@
 {% extends "serviceStation/new_base.html" %}
 {% block body %}
+{% load humanize %}
 
 <section class="content-header">
   <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
@@ -9,13 +10,10 @@
                  <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
              </span>
          </div>
-     </form>   
- <div class="header-icon">
-     <i class="fa fa-binoculars"></i>
- </div>
- <div class="header-title">
+     </form>
+ <div class="header-title" style="margin-left: 0px;">
      <h1> Service Station Portal</h1>
-     <small>{{user.company.name}}</small>
+     <small>Zimbabwe Fuel Management System</small>
      
  </div>
 </section>
@@ -47,8 +45,6 @@
       </div>
   </div>
   <div class="panel-body">
-
-    {% if updates %}
 
       
       <table id="example" class="table table-striped " style="width:100%">
@@ -92,10 +88,6 @@
                 </tr>
 
       </table>
-
-      {% else %}
-      <p>Nothing To Show</p>
-      {% endif %}
       <!--update fuel-->
       <div class="modal fade" id="add_fuel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
