@@ -553,6 +553,8 @@
                                                         <a  href="{% url 'users:download_proof' order.id %}" class="btn btn-primary btn-sm btn-labeled m-b-5" type="button">
                                                             <span class="btn-label"><i class="fa fa-download"></i></span> Proof of Payment
                                                         </a>
+                                                        {% else %}
+                                                        Document Unavailable
                                                         {% endif %}
                                                     </div>
                                                 </td>
