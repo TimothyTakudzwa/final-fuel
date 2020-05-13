@@ -1309,8 +1309,8 @@ Direct Request
 
 
 @login_required()
-@user_role
 def make_direct_request(request, id):
+    user_permission(request)
     """
     Function To Make Direct Requests With A Particular Supplier
     """
@@ -1366,8 +1366,9 @@ def edit_account_details(request, id):
     user_permission(request)
     account = Account.objects.filter(id=id).first()
     if request.method == "POST":
-        account.account_number = request.POST.get('account_number')
-        account.save()
+        address = request.POST.get('address')
+        account.buyer_company.address = address
+        account.buyer_company.save()
         messages.success(request, f"Successfully made changes to account details.")
     return redirect('buyer:accounts')
 
