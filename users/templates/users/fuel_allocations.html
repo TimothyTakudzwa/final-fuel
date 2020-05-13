@@ -13,10 +13,8 @@
             </span>
         </div>
     </form>
-    <div class="header-icon">
-        <i class="fa fa-clipboard"></i>
-    </div>
-    <div class="header-title">
+    
+    <div class="header-title" style="margin-left: 0;">
 
         <h1>Fuel Allocations</h1>
         <small>Fuel Management System</small>
@@ -43,7 +41,7 @@
                 <button class="btn btn-labeled btn-inverse md-trigger m-b-5 m-r-2" data-toggle="modal"  data-target="#add_usd_fuel"><span class="btn-label"><i class="glyphicon glyphicon-plus"></i></span>Allocate USD Fuel</button>
                 {%else%}  {%endif%}
                 {%if 'USD & RTGS' not in type_list %}
-                <button class="btn btn-labeled btn-danger md-trigger m-b-5 m-r-2" data-toggle="modal" data-target="#add_fuel"><span class="btn-label"><i class="glyphicon glyphicon-plus"></i></span>Allocate Both Fuel</button>
+                <!-- <button class="btn btn-labeled btn-danger md-trigger m-b-5 m-r-2" data-toggle="modal" data-target="#add_fuel"><span class="btn-label"><i class="glyphicon glyphicon-plus"></i></span>Allocate Both Fuel</button> -->
                 {%else%}  <h4>Fuel Availability - <small><i>Click on corresponding Fuel Payment Type To allocate more
                     fuel</i></small></h4>
                 {%endif%}
@@ -791,12 +789,10 @@
                         </div>
                     </div>
                                                 </div>
-            <div class="form-group row"
-                style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                <button type="button" class="btn btn-secondary col-sm-6"
-                    data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
-            </div>
+                        <div class="modal-footer">  
+                            <button type="submit" class="btn btn-primary ">Submit</button>
+                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                        </div> 
             </form>
         </div>
     </div>

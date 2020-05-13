@@ -19,7 +19,7 @@
                  <span aria-hidden="true">&times;</span>
              </button>
          </div>
-         <div>
+         <div class="modal-body">
              {% load crispy_forms_tags %}
              <form action="{% url 'users:allocation_update_main' fuel_update.id %}" method="POST">
                  {% csrf_token %}
@@ -63,13 +63,14 @@
                          </div>
                      </div>
                  </div>
+                 <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+        
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 </div>
 
          </div>
-         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary col-sm-6">Save changes</button>
-
-             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-         </div>
+         
          </form>
      </div>
  </div>

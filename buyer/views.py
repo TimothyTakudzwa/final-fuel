@@ -575,8 +575,9 @@ def dashboard(request):
                 fuel_request_object.payment_method = request.POST.get('fuel_payment_method')
                 fuel_request_object.delivery_method = form.cleaned_data['delivery_method']
                 if fuel_request_object.delivery_method.lower() == "delivery":
-                    fuel_request_object.delivery_address = request.POST.get('s_number') + " " + request.POST.get(
-                        's_name') + " " + request.POST.get('s_town')
+                    branch_id = int(request.POST.get('d_branch'))
+                    branch = DeliveryBranch.objects.filter(id=branch_id).first()
+                    fuel_request_object.delivery_address = branch.street_number + " " + branch.street_name + " " + branch.city
                 else:
                     fuel_request_object.transporter = request.POST.get('transporter')
                     fuel_request_object.truck_reg = request.POST.get('truck_reg')
@@ -612,8 +613,9 @@ def dashboard(request):
                 fuel_request_object.payment_method = request.POST.get('fuel_payment_method')
                 fuel_request_object.delivery_method = form.cleaned_data['delivery_method']
                 if fuel_request_object.delivery_method.lower() == "delivery":
-                    fuel_request_object.delivery_address = request.POST.get('s_number') + " " + request.POST.get(
-                        's_name') + " " + request.POST.get('s_town')
+                    branch_id = int(request.POST.get('d_branch'))
+                    branch = DeliveryBranch.objects.filter(id=branch_id).first()
+                    fuel_request_object.delivery_address = branch.street_number + " " + branch.street_name + " " + branch.city
                 else:
                     fuel_request_object.transporter = request.POST.get('transporter')
                     fuel_request_object.truck_reg = request.POST.get('truck_reg')
@@ -650,8 +652,9 @@ def dashboard(request):
                 fuel_request_object.fuel_type = fuel_type
                 fuel_request_object.delivery_method = delivery_method
                 if fuel_request_object.delivery_method.lower() == "delivery":
-                    fuel_request_object.delivery_address = request.POST.get('s_number') + " " + request.POST.get(
-                        's_name') + " " + request.POST.get('s_town')
+                    branch_id = int(request.POST.get('d_branch'))
+                    branch = DeliveryBranch.objects.filter(id=branch_id).first()
+                    fuel_request_object.delivery_address = branch.street_number + " " + branch.street_name + " " + branch.city
                 else:
                     fuel_request_object.transporter = request.POST.get('transporter')
                     fuel_request_object.truck_reg = request.POST.get('truck_reg')
@@ -670,7 +673,7 @@ def dashboard(request):
                 else:
                     offer = Offer.objects.filter(id=offer_id).first()
                     sub = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
-                    messages.info(request, "Match found.")
+                    # messages.info(request, "Match found.")
 
                     action = "Fuel Request"
                     description = f"You have made fuel request of {fuel_request_object.amount} {fuel_request_object.fuel_type}"

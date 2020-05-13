@@ -90,14 +90,16 @@ def sord_allocations(request):
             if end_date and start_date:
                 sord_allocations = SordCompanyAuditTrail.objects.filter(company=request.user.company, date__range=[start_date, end_date])
 
-            df = convert_to_dataframe(sord_allocations)
-            filename = 'Supplier Admin Summary.csv'
-            df = df[['date', 'sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_allocated', 'end_quantity']]
+            fields = ['date', 'sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_allocated', 'end_quantity']
+            sord_allocations = sord_allocations.values('date', 'sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_allocated', 'end_quantity')            
+            df = pd.DataFrame(sord_allocations, columns=fields)
+            filename = 'Supplier Admin'
+
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
                 response = HttpResponse(csv_name.read())
-                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                response['Content-Disposition'] = f'attachment;filename={filename} - Sord AuditTrails- {today}.csv'
                 return response     
 
         else:
@@ -496,60 +498,65 @@ def allocation_update(request, id):
                     sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company,
                                                                            fuel_type="Petrol",
                                                                            payment_type=fuel_update.payment_type).filter(~Q(end_quantity=0)).first()
-                    if sord_allocation.end_quantity >= amount_cf:
-                        sord_allocation.quantity_allocated += amount_cf
-                        sord_allocation.end_quantity -= amount_cf
-                        sord_allocation.action_no += 1
-                        sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
-                        sord_allocation.save()
-                        proceed = False
-                        action_audit = SordActionsAuditTrail.objects.create(sord_num=sord_allocation.sord_no,
-                                                                            action_num=sord_allocation.action_no,
-                                                                            allocated_quantity=amount_cf,
-                                                                            allocated_by=request.user.username,
-                                                                            action_type="Allocation",
-                                                                            price=fuel_update.petrol_price,
-                                                                            supplied_from=request.user.company.name,
-                                                                            allocated_to=sub.name, fuel_type="Petrol",
-                                                                            payment_type=fuel_update.payment_type)
-                        receiver = User.objects.filter(subsidiary_id=sub.id).first()
-                        depot_audit = SordSubsidiaryAuditTrail.objects.create(subsidiary=sub,
-                                                                              sord_no=sord_allocation.sord_no,
-                                                                              action_no=sord_allocation.action_no,
-                                                                              action="Receiving Fuel",
-                                                                              fuel_type="Petrol",
-                                                                              payment_type=fuel_update.payment_type,
-                                                                              initial_quantity=amount_cf,
-                                                                              end_quantity=amount_cf,
-                                                                              received_by=receiver)
-                        depot_audit.save()
+                    if sord_allocation:
+                        if sord_allocation.end_quantity >= amount_cf:
+                            sord_allocation.quantity_allocated += amount_cf
+                            sord_allocation.end_quantity -= amount_cf
+                            sord_allocation.action_no += 1
+                            sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
+                            sord_allocation.save()
+                            proceed = False
+                            action_audit = SordActionsAuditTrail.objects.create(sord_num=sord_allocation.sord_no,
+                                                                                action_num=sord_allocation.action_no,
+                                                                                allocated_quantity=amount_cf,
+                                                                                allocated_by=request.user.username,
+                                                                                action_type="Allocation",
+                                                                                price=fuel_update.petrol_price,
+                                                                                supplied_from=request.user.company.name,
+                                                                                allocated_to=sub.name, fuel_type="Petrol",
+                                                                                payment_type=fuel_update.payment_type)
+                            receiver = User.objects.filter(subsidiary_id=sub.id).first()
+                            depot_audit = SordSubsidiaryAuditTrail.objects.create(subsidiary=sub,
+                                                                                sord_no=sord_allocation.sord_no,
+                                                                                action_no=sord_allocation.action_no,
+                                                                                action="Receiving Fuel",
+                                                                                fuel_type="Petrol",
+                                                                                payment_type=fuel_update.payment_type,
+                                                                                initial_quantity=amount_cf,
+                                                                                end_quantity=amount_cf,
+                                                                                received_by=receiver)
+                            depot_audit.save()
+                        else:
+                            amount_cf -= sord_allocation.end_quantity
+                            sord_allocation.end_quantity = 0
+                            sord_allocation.quantity_allocated += sord_allocation.end_quantity
+                            sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
+                            sord_allocation.action_no += 1
+                            sord_allocation.save()
+                            action_audit = SordActionsAuditTrail.objects.create(sord_num=sord_allocation.sord_no,
+                                                                                action_num=sord_allocation.action_no,
+                                                                                allocated_quantity=sord_allocation.end_quantity,
+                                                                                allocated_by=request.user.username,
+                                                                                action_type="Allocation",
+                                                                                price=fuel_update.petrol_price,
+                                                                                supplied_from=request.user.company.name,
+                                                                                allocated_to=sub.name, fuel_type="Petrol",
+                                                                                payment_type=fuel_update.payment_type)
+                            receiver = User.objects.filter(subsidiary_id=sub.id).first()
+                            depot_audit = SordSubsidiaryAuditTrail.objects.create(subsidiary=sub,
+                                                                                sord_no=sord_allocation.sord_no,
+                                                                                action_no=sord_allocation.action_no,
+                                                                                action="Receiving Fuel",
+                                                                                fuel_type="Petrol",
+                                                                                payment_type=fuel_update.payment_type,
+                                                                                initial_quantity=sord_allocation.end_quantity,
+                                                                                end_quantity=sord_allocation.end_quantity,
+                                                                                received_by=receiver)
+                            depot_audit.save()
                     else:
-                        amount_cf -= sord_allocation.end_quantity
-                        sord_allocation.end_quantity = 0
-                        sord_allocation.quantity_allocated += sord_allocation.end_quantity
-                        sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
-                        sord_allocation.action_no += 1
-                        sord_allocation.save()
-                        action_audit = SordActionsAuditTrail.objects.create(sord_num=sord_allocation.sord_no,
-                                                                            action_num=sord_allocation.action_no,
-                                                                            allocated_quantity=sord_allocation.end_quantity,
-                                                                            allocated_by=request.user.username,
-                                                                            action_type="Allocation",
-                                                                            price=fuel_update.petrol_price,
-                                                                            supplied_from=request.user.company.name,
-                                                                            allocated_to=sub.name, fuel_type="Petrol",
-                                                                            payment_type=fuel_update.payment_type)
-                        receiver = User.objects.filter(subsidiary_id=sub.id).first()
-                        depot_audit = SordSubsidiaryAuditTrail.objects.create(subsidiary=sub,
-                                                                              sord_no=sord_allocation.sord_no,
-                                                                              action_no=sord_allocation.action_no,
-                                                                              action="Receiving Fuel",
-                                                                              fuel_type="Petrol",
-                                                                              payment_type=fuel_update.payment_type,
-                                                                              initial_quantity=sord_allocation.end_quantity,
-                                                                              end_quantity=sord_allocation.end_quantity,
-                                                                              received_by=receiver)
-                        depot_audit.save()
+                        messages.warning(request, 'Sord not found.')
+                        return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
+
             else:
                 FuelAllocation.objects.create(company=request.user.company, fuel_payment_type=fuel_update.payment_type,
                                               action=action, diesel_price=fuel_update.diesel_price,
@@ -688,58 +695,64 @@ def allocation_update_main(request, id):
                 while proceed:
                     sord_allocation = SordCompanyAuditTrail.objects.filter(company=request.user.company,
                                                                            fuel_type="Petrol", payment_type="RTGS").filter(~Q(end_quantity=0)).first()
-                    if sord_allocation.end_quantity >= amount_cf:
-                        sord_allocation.quantity_allocated += amount_cf
-                        sord_allocation.end_quantity -= amount_cf
-                        sord_allocation.action_no += 1
-                        sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
-                        sord_allocation.save()
-                        proceed = False
-                        action_audit = SordActionsAuditTrail.objects.create(sord_num=sord_allocation.sord_no,
-                                                                            action_num=sord_allocation.action_no,
-                                                                            allocated_quantity=amount_cf,
-                                                                            allocated_by=request.user.username,
-                                                                            action_type="Allocation",
-                                                                            price=fuel_update.petrol_price,
-                                                                            supplied_from=request.user.company.name,
-                                                                            allocated_to=sub.name, fuel_type="Petrol",
-                                                                            payment_type="RTGS")
-                        receiver = User.objects.filter(subsidiary_id=sub.id).first()
-                        depot_audit = SordSubsidiaryAuditTrail.objects.create(subsidiary=sub,
-                                                                              sord_no=sord_allocation.sord_no,
-                                                                              action_no=sord_allocation.action_no,
-                                                                              action="Receiving Fuel",
-                                                                              fuel_type="Petrol", payment_type="RTGS",
-                                                                              initial_quantity=amount_cf,
-                                                                              end_quantity=amount_cf,
-                                                                              received_by=receiver)
-                        depot_audit.save()
+                    if sord_allocation:    
+                        if sord_allocation.end_quantity >= amount_cf:
+                            sord_allocation.quantity_allocated += amount_cf
+                            sord_allocation.end_quantity -= amount_cf
+                            sord_allocation.action_no += 1
+                            sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
+                            sord_allocation.save()
+                            proceed = False
+                            action_audit = SordActionsAuditTrail.objects.create(sord_num=sord_allocation.sord_no,
+                                                                                action_num=sord_allocation.action_no,
+                                                                                allocated_quantity=amount_cf,
+                                                                                allocated_by=request.user.username,
+                                                                                action_type="Allocation",
+                                                                                price=fuel_update.petrol_price,
+                                                                                supplied_from=request.user.company.name,
+                                                                                allocated_to=sub.name, fuel_type="Petrol",
+                                                                                payment_type="RTGS")
+                            receiver = User.objects.filter(subsidiary_id=sub.id).first()
+                            depot_audit = SordSubsidiaryAuditTrail.objects.create(subsidiary=sub,
+                                                                                sord_no=sord_allocation.sord_no,
+                                                                                action_no=sord_allocation.action_no,
+                                                                                action="Receiving Fuel",
+                                                                                fuel_type="Petrol", payment_type="RTGS",
+                                                                                initial_quantity=amount_cf,
+                                                                                end_quantity=amount_cf,
+                                                                                received_by=receiver)
+                            depot_audit.save()
+                        else:
+                            amount_cf -= sord_allocation.end_quantity
+                            sord_allocation.end_quantity = 0
+                            sord_allocation.quantity_allocated += sord_allocation.end_quantity
+                            sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
+                            sord_allocation.action_no += 1
+                            sord_allocation.save()
+                            action_audit = SordActionsAuditTrail.objects.create(sord_num=sord_allocation.sord_no,
+                                                                                action_num=sord_allocation.action_no,
+                                                                                allocated_quantity=sord_allocation.end_quantity,
+                                                                                allocated_by=request.user.username,
+                                                                                action_type="Allocation",
+                                                                                price=fuel_update.petrol_price,
+                                                                                supplied_from=request.user.company.name,
+                                                                                allocated_to=sub.name, fuel_type="Petrol",
+                                                                                payment_type="RTGS")
+                            receiver = User.objects.filter(subsidiary_id=sub.id).first()
+                            depot_audit = SordSubsidiaryAuditTrail.objects.create(subsidiary=sub,
+                                                                                sord_no=sord_allocation.sord_no,
+                                                                                action_no=sord_allocation.action_no,
+                                                                                action="Receiving Fuel",
+                                                                                fuel_type="Petrol", payment_type="RTGS",
+                                                                                initial_quantity=sord_allocation.end_quantity,
+                                                                                end_quantity=sord_allocation.end_quantity,
+                                                                                received_by=receiver)
+                            depot_audit.save()
+
                     else:
-                        amount_cf -= sord_allocation.end_quantity
-                        sord_allocation.end_quantity = 0
-                        sord_allocation.quantity_allocated += sord_allocation.end_quantity
-                        sord_allocation.action = f'Allocation of {request.POST["fuel_type"]}'
-                        sord_allocation.action_no += 1
-                        sord_allocation.save()
-                        action_audit = SordActionsAuditTrail.objects.create(sord_num=sord_allocation.sord_no,
-                                                                            action_num=sord_allocation.action_no,
-                                                                            allocated_quantity=sord_allocation.end_quantity,
-                                                                            allocated_by=request.user.username,
-                                                                            action_type="Allocation",
-                                                                            price=fuel_update.petrol_price,
-                                                                            supplied_from=request.user.company.name,
-                                                                            allocated_to=sub.name, fuel_type="Petrol",
-                                                                            payment_type="RTGS")
-                        receiver = User.objects.filter(subsidiary_id=sub.id).first()
-                        depot_audit = SordSubsidiaryAuditTrail.objects.create(subsidiary=sub,
-                                                                              sord_no=sord_allocation.sord_no,
-                                                                              action_no=sord_allocation.action_no,
-                                                                              action="Receiving Fuel",
-                                                                              fuel_type="Petrol", payment_type="RTGS",
-                                                                              initial_quantity=sord_allocation.end_quantity,
-                                                                              end_quantity=sord_allocation.end_quantity,
-                                                                              received_by=receiver)
-                        depot_audit.save()
+                        messages.warning(request, 'Sord not found.')
+                        return redirect('users:allocate')
+                          
             else:
                 FuelAllocation.objects.create(company=request.user.company, fuel_payment_type="RTGS", action=action,
                                               diesel_price=fuel_update.diesel_price,
@@ -2061,15 +2074,15 @@ def sord_station_sales(request):
             if end_date and start_date:
                 sord_sales = SordSubsidiaryAuditTrail.objects.filter(subsidiary__company=request.user.company, date__range=[start_date, end_date])
 
-            fields = ['date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity', 'received_by']
-            df = pd.DataFrame(sord_sales.values('date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity', 'received_by'),
+            fields = ['date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity']
+            df = pd.DataFrame(sord_sales.values('date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity'),
             columns=fields)
-            filename = 'Supplier Admin Sord Sales Summary.csv'
+            filename = 'Supplier Admin'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
                 response = HttpResponse(csv_name.read())
-                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                response['Content-Disposition'] = f'attachment;filename={filename} - Sord Sales- {today}.csv'
                 return response     
 
         else:
@@ -2604,6 +2617,14 @@ def orders(request):
                 end_date = end_date.date()
             accepted_orders = Order.objects.filter(company=request.user.company).filter(~Q(status='Pending')).filter(date__range=[start_date, end_date])
             pending_orders = Order.objects.filter(company=request.user.company).filter(status='Pending').filter(date__range=[start_date, end_date])  
+            
+            for order in accepted_orders:
+                sord = SordNationalAuditTrail.objects.filter(order=order).first()
+                if sord is not None:
+                    order.allocation = sord
+                else:
+                    order.allocation = None
+            
             return render(request, 'users/orders.html',
                   {'depots': depots, 'form1': form1, 'diesel_rtgs_price': diesel_rtgs_price,
                    'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price,
@@ -2628,21 +2649,10 @@ def orders(request):
             
             df_accepted_orders = pd.DataFrame(accepted_orders, columns=fields)
             df_pending_orders = pd.DataFrame(pending_orders, columns=fields)
-
-            # df_accepted_orders.noic_depot  = df_accepted_orders.noic_depot.astype(str)  
-            
-            # for i, row in df_accepted_orders.iterrows():
-            #     df_accepted_orders.at[i,'noic_depot'] = NoicDepot.objects.filter(id=int(df_accepted_orders.at[i,'noic_depot'])).first().name
-
-            # df_pending_orders = convert_to_dataframe(pending_orders)
-            # df_pending_orders.noic_depot  = df_pending_orders.noic_depot.astype(str)  
-
-            # for i, row in df_pending_orders.iterrows():
-            #     df_pending_orders.at[i,'noic_depot'] = NoicDepot.objects.filter(id=int(df_pending_orders.at[i,'noic_depot'])).first().name
             
             df = df_accepted_orders.append(df_pending_orders)
 
-            # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
+            
             filename = f'{request.user.company.name} - {date}.csv'
             df.to_csv(filename, index=None, header=True)
 
