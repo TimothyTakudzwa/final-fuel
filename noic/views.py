@@ -869,7 +869,7 @@ def staff(request):
         phone_number = request.POST.get('phone_number')
         subsidiary_id = request.POST.get('depot')
 
-        # full_name = first_name + " " + last_name
+        full_name = first_name + " " + last_name
         i = 0
         username = initial_username = first_name[0] + last_name
         while User.objects.filter(username=username.lower()).exists():
