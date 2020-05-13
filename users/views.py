@@ -1434,22 +1434,22 @@ def audit_trail(request):
                     elif activity.reference == 'dfuel quantity updates':
                         activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
 
-            fields = ['date','user', 'service_station__name', 'action', 'reference',]
+            fields = ['date','user__company__name', 'service_station__name', 'action', 'reference',]
             
             if filtered_trails:
-                filtered_trails = filtered_trails.values('date','user', 'service_station__name', 'action', 'reference')
+                filtered_trails = filtered_trails.values('date','user__company__name', 'service_station__name', 'action', 'reference')
                 df = pd.DataFrame(filtered_trails, columns=fields)
             else:
-                df_current = pd.DataFrame(current_trails.values('date','user', 'service_station__name', 'action', 'reference'), columns=fields)
-                df_previous = pd.DataFrame(trails.values('date','user', 'service_station__name', 'action', 'reference'), columns=fields)
+                df_current = pd.DataFrame(current_trails.values('date','user__company__name', 'service_station__name', 'action', 'reference'), columns=fields)
+                df_previous = pd.DataFrame(trails.values('date','user__company__name', 'service_station__name', 'action', 'reference'), columns=fields)
                 df = df_current.append(df_previous)
 
-            filename = f'{request.user.company.name} - {today}.csv'
+            filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
                 response = HttpResponse(csv_name.read())
-                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                response['Content-Disposition'] = f'attachment;filename={filename} - AuditTrail- {today}.csv'
                 return response     
 
         else:
