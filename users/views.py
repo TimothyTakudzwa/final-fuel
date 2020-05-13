@@ -8,7 +8,6 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
-from django.http import HttpResponseRedirect
 from django.db.models import Count
 from django.db.models import Q
 from django.http import HttpResponse
@@ -750,7 +749,8 @@ def allocation_update_main(request, id):
 
                     else:
                         messages.warning(request, 'Sord not found.')
-                        return HttpResponseRedirect(request.path_info)     
+                        return redirect('users:allocate')
+                          
             else:
                 FuelAllocation.objects.create(company=request.user.company, fuel_payment_type="RTGS", action=action,
                                               diesel_price=fuel_update.diesel_price,
