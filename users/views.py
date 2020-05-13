@@ -99,7 +99,7 @@ def sord_allocations(request):
 
             with open(filename, 'rb') as csv_name:
                 response = HttpResponse(csv_name.read())
-                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                response['Content-Disposition'] = f'attachment;filename={filename} - Sord AuditTrails- {today}.csv'
                 return response     
 
         else:
@@ -2074,15 +2074,15 @@ def sord_station_sales(request):
             if end_date and start_date:
                 sord_sales = SordSubsidiaryAuditTrail.objects.filter(subsidiary__company=request.user.company, date__range=[start_date, end_date])
 
-            fields = ['date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity', 'received_by']
-            df = pd.DataFrame(sord_sales.values('date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity', 'received_by'),
+            fields = ['date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity', 'received_by__company__name']
+            df = pd.DataFrame(sord_sales.values('date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity', 'received_by__company__name'),
             columns=fields)
-            filename = 'Supplier Admin Sord Sales Summary.csv'
+            filename = 'Supplier Admin'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
                 response = HttpResponse(csv_name.read())
-                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                response['Content-Disposition'] = f'attachment;filename={filename} - Sord Sales- {today}.csv'
                 return response     
 
         else:
