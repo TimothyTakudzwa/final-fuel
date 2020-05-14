@@ -21,26 +21,26 @@
                         <div class="form-group col-md-6">
                             <label for="exampleInputEmail1">First Name</label>
                             <input name="first_name" type="text" class="form-control" id="ending_date"
-                                aria-describedby="emailHelp" placeholder="" required>
+                                aria-describedby="emailHelp" value="{{request.session.first_name}}" placeholder="" required>
                             <small id="emailHelp" class="form-text text-muted"
                                 style="color: lightslategray;">Enter First Name</small>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="exampleInputEmail1">Last Name</label>
                             <input name="last_name" type="text" class="form-control" id="ending_date"
-                                aria-describedby="emailHelp" placeholder="" required>
+                                aria-describedby="emailHelp" value="{{request.session.last_name}}" placeholder="" required>
                             <small id="emailHelp" class="form-text text-muted"
                                 style="color: lightslategray;">Email Last Name</small>
                         </div><div class="form-group col-md-6">
                             <label for="exampleInputEmail1">Email</label>
                             <input name="email" type="text" class="form-control" id="ending_date"
-                                aria-describedby="emailHelp" placeholder="" required>
+                                aria-describedby="emailHelp" value="{{request.session.email}}" placeholder="" required>
                             <small id="emailHelp" class="form-text text-muted"
                                 style="color: lightslategray;">Enter Email</small>
                         </div><div class="form-group col-md-6">
                             <label for="exampleInputEmail1">Phone Number</label>
                             <input name="phone_number" type="text" class="form-control" id="ending_date"
-                                aria-describedby="emailHelp" placeholder="+263772123456" required>
+                                aria-describedby="emailHelp" value="{{request.session.phone_number}}" placeholder="+263772123456" required>
                             <small id="emailHelp" class="form-text text-muted"
                                 style="color: lightslategray;">Phone Number</small>
                         </div>
@@ -67,6 +67,8 @@
     });
 
 </script>
+
+
 
 {% endif %}
 
