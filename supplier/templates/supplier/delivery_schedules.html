@@ -141,7 +141,7 @@
                                             {% for delivery in pending_schedules %}
                                             <tr>
                                                 <td>{{ delivery.transaction.buyer.company.name|title }}</td>
-                                                <td>{{delivery.delivery_address}}</td>
+                                                <td>{{delivery.transaction.offer.request.delivery_address}}</td>
                                                 
                                                 {% if delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Diesel' %}
                                                     <td style="color: #ffb61e;">{{ delivery.transaction.offer.request.fuel_type}}</td>
@@ -462,7 +462,7 @@
                                             {% for delivery in completed_schedules %}
                                             <tr>
                                                 <td>{{ delivery.transaction.buyer.company.name|title }}</td>
-                                                <td>{{delivery.delivery_address}}</td>
+                                                <td>{{delivery.transaction.offer.request.delivery_address}}</td>
                                                 
                                                 {% if delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Diesel' %}
                                                     <td style="color: #ffb61e;">{{ delivery.transaction.offer.request.fuel_type}}</td>

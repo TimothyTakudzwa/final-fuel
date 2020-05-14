@@ -1373,8 +1373,10 @@ def make_direct_request(request, id):
             messages.success(request, f"Successfully made an order to {supplier.company.name}.")
             message = f'{request.user.company.name.title()} made a request of ' \
                       f'{fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()}'
-            Notification.objects.create(user=supplier, message=message, reference_id=fuel_request_object.id,
+            Notification.objects.create(company=request.user.company, handler_id=16, user=request.user, message=message, reference_id=fuel_request_object.id,
                                         action="new_request")
+            
+            
         else:
             messages.error(request, f"Supplier not found.")
 
@@ -1442,9 +1444,7 @@ def make_private_request(request):
             'dipping_stick_required') == "on" else False
         fuel_request_object.meter_required = True if request.POST.get('meter_required') == "on" else False
         fuel_request_object.save()
-        message = f'{request.user.company.name.title()} made a private request of' \
-                  f' {fuel_request_object.amount}L {fuel_request_object.fuel_type.lower()} '
-        # Notification.objects.create(user=supplier,message=message, reference_id=fuel_request.id, action="new_request")
+        
         messages.success(request, f"Successfully made a private order to our suppliers.")
 
     return redirect('buyer:accounts')

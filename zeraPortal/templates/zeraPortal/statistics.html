@@ -1927,17 +1927,12 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-
-                                                {% if final_desperate_cities %}
                                                     <tr>
                                                         {% for city, deficit in final_desperate_cities %}
                                                             <td>{{ city }}</td>
                                                             <td>{{ deficit }}</td>
                                                         {% endfor %}
-                                                        {% else %}
-                                                        <p>No Data To Show</p>
                                                     </tr>
-                                                {% endif %}
 
                                                 </tbody>
                                             </table>
