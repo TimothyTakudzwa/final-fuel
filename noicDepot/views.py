@@ -545,7 +545,9 @@ def allocate_fuel(request, id):
                                                                         company=order.company,
                                                                         fuel_type=request.POST['fuel_type'],
                                                                         currency=request.POST['currency'], quantity=(
-                                    float(request.POST['quantity']) - float(balance)))
+                                    float(request.POST['quantity']) - float(balance)),
+                                                                        allocated_by=request.user,
+                                                                        allocated_to=order.company)
                     sord_object.sord_no = sord_generator('p', sord_object.id)
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no,
@@ -580,7 +582,9 @@ def allocate_fuel(request, id):
                                                                         company=order.company,
                                                                         fuel_type=request.POST['fuel_type'],
                                                                         currency=request.POST['currency'],
-                                                                        quantity=float(request.POST['quantity']))
+                                                                        quantity=float(request.POST['quantity']),
+                                                                        allocated_by=request.user,
+                                                                        allocated_to=order.company)
                     sord_object.sord_no = sord_object.id
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no,
@@ -616,7 +620,9 @@ def allocate_fuel(request, id):
                                                                         company=order.company,
                                                                         fuel_type=request.POST['fuel_type'],
                                                                         currency=request.POST['currency'], quantity=(
-                                    float(request.POST['quantity']) - float(balance)))
+                                    float(request.POST['quantity']) - float(balance)),
+                                                                        allocated_by=request.user,
+                                                                        allocated_to=order.company)
                     sord_object.sord_no = sord_generator('p', sord_object.id)
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no,
@@ -651,7 +657,9 @@ def allocate_fuel(request, id):
                                                                         company=order.company,
                                                                         fuel_type=request.POST['fuel_type'],
                                                                         currency=request.POST['currency'],
-                                                                        quantity=float(request.POST['quantity']))
+                                                                        quantity=float(request.POST['quantity']),
+                                                                        allocated_by=request.user,
+                                                                        allocated_to=order.company)
                     sord_object.sord_no = sord_generator('p', sord_object.id)
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no,
@@ -690,7 +698,9 @@ def allocate_fuel(request, id):
                                                                         fuel_type=request.POST['fuel_type'],
                                                                         currency=request.POST['currency'],
                                                                         quantity=float(
-                                                                            request.POST['quantity']) - float(balance))
+                                                                            request.POST['quantity']) - float(balance),
+                                                                        allocated_by=request.user,
+                                                                        allocated_to=order.company)
                     sord_object.sord_no = sord_generator('d', sord_object.id)
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no,
@@ -725,7 +735,9 @@ def allocate_fuel(request, id):
                                                                         company=order.company,
                                                                         fuel_type=request.POST['fuel_type'],
                                                                         currency=request.POST['currency'],
-                                                                        quantity=float(request.POST['quantity']))
+                                                                        quantity=float(request.POST['quantity']),
+                                                                        allocated_by=request.user,
+                                                                        allocated_to=order.company)
                     sord_object.sord_no = sord_generator('d', sord_object.id)
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no,
@@ -763,7 +775,9 @@ def allocate_fuel(request, id):
                                                                         fuel_type=request.POST['fuel_type'],
                                                                         currency=request.POST['currency'],
                                                                         quantity=float(
-                                                                            request.POST['quantity']) - float(balance))
+                                                                            request.POST['quantity']) - float(balance),
+                                                                        allocated_by=request.user,
+                                                                        allocated_to=order.company)
                     fuel_type = request.POST['fuel_type']
                     sord_object.sord_no = sord_generator(fuel_type[0], sord_object.id)
                     sord_object.save()
@@ -799,7 +813,9 @@ def allocate_fuel(request, id):
                                                                         company=order.company,
                                                                         fuel_type=request.POST['fuel_type'],
                                                                         currency=request.POST['currency'],
-                                                                        quantity=float(request.POST['quantity']))
+                                                                        quantity=float(request.POST['quantity']),
+                                                                        allocated_by=request.user,
+                                                                        allocated_to=order.company)
                     fuel_type = request.POST['fuel_type']
                     sord_object.sord_no = sord_generator(fuel_type[0], sord_object.id)
                     sord_object.save()
