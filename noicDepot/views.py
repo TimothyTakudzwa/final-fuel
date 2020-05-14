@@ -1035,7 +1035,7 @@ def collections(request):
             reference_id = collection.id
             depot = collection.order.noic_depot.name
             action = f"You collected {collection.order.quantity}L of {collection.order.fuel_type} from {depot} depot"
-            Audit_Trail.objects.create(company=company, service_station=depot, user=user,
+            Audit_Trail.objects.create(company=company, user=user,
                                     action=action, reference=reference, reference_id=reference_id)
 
             messages.success(request, 'Collection saved successfully.')
