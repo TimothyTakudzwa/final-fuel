@@ -709,6 +709,8 @@ Offers
 @login_required
 def offers(request, id):
     user_permission(request)
+    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     selected_request = FuelRequest.objects.filter(id=id).first()
     offers = Offer.objects.filter(request=selected_request).filter(declined=False).all()
     for offer in offers:
@@ -721,7 +723,7 @@ def offers(request, id):
         if account:
             offer.account = account
     offers.order_by('-date', '-time')
-    return render(request, 'buyer/offer.html', {'offers': offers})
+    return render(request, 'buyer/offer.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'offers': offers})
 
 
 """
