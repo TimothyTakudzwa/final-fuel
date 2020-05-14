@@ -20,7 +20,7 @@
   </div> -->
   <div class="header-title" style="margin-left: 0px;">
     <h1>Current Stock</h1>
-    <small>Current available fuel</small>
+    <small>Zimbabawe Fuel Management System</small>
     <ol class="breadcrumb hidden-xs">
         <li><a href="{%url 'fuel-request'%}"><i class="pe-7s-home"></i> Home</a></li>
         <li class="active">Stock</li>
@@ -63,7 +63,7 @@
 
                 <td><b style='color:#009688'>{{update.payment_type}} </b></td>
                 <td>{{update.petrol_quantity|floatformat:2|intcomma}} Litres {% if update.petrol_quantity < 5000 %} 
-                    <i class="fa fa-exclamation-triangle" style="color: crimson;"> Petrol quantity too low</i>{% endif %}</td>
+                    <i class="fa fa-exclamation-triangle" style="color: crimson;"> </i>{% endif %}</td>
 
                 <td> {% if update.payment_type == 'USD & RTGS' %} <b style='color:#009688'>RTGS</b>
                     {{update.petrol_price|stringformat:".2f"}} | <b style='color:#009688'>USD</b>
@@ -73,7 +73,7 @@
 
 
                 <td>{{update.diesel_quantity|floatformat:2|intcomma}} Litres {% if update.diesel_quantity < 5000 %} 
-                    <i class="fa fa-exclamation-triangle" style="color: crimson;"> Diesel quantity too low</i>{% endif %}</td>
+                    <i class="fa fa-exclamation-triangle" style="color: crimson;"> </i>{% endif %}</td>
                 <td> {% if update.payment_type == 'USD & RTGS' %} <b style='color:#009688'>RTGS</b>
                     {{update.diesel_price|stringformat:".2f"}} | <b style='color:#009688'>USD</b>
                     {{update.diesel_usd_price|stringformat:".2f"}}{%else%} <b
@@ -85,34 +85,34 @@
                         {% if update.payment_type == 'USD' and not update.payment_type == 'RTGS' %}
                             {% if update.petrol_quantity < 5000 %}
                             <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_usd_fuel{{update.id}}">
-                           <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Update USD Fuel</button>
+                           <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Update Fuel</button>
                            <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'supplier:hq_notifier' 1 %}">
                             <span class="btn-label"><i class="fa fa-bell"></i></span>Notify HQ</a>
                            {% else %}
                            <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_usd_fuel{{update.id}}">
-                            <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Update USD Fuel</button>
+                            <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Update Fuel</button>
                             {% endif %}
                 
                         {% elif update.payment_type == 'RTGS' and not update.payment_type == 'USD'%}
                             {% if update.petrol_quantity < 5000 %}
                             <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_rtgs_fuel{{update.id}}">
-                           <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Update RTGS Fuel</button>
+                           <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Update Fuel</button>
                            
                             <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'supplier:hq_notifier' 2 %}">
                                 <span class="btn-label"><i class="fa fa-bell"></i></span>Notify HQ</a>
                             {% else %}
                             <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_rtgs_fuel{{update.id}}">
-                                <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Update RTGS Fuel</button>
+                                <span class="btn-label"> <i class="fa fa-refresh" aria-hidden="true"></i></span> Update Fuel</button>
                             {% endif %}
                         {% elif update.payment_type == 'USD & RTGS' %}
                             {% if update.petrol_quantity < 5000 %}
                             <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_fuel{{update.id}}">
-                           <span class="btn-label"><i class="fa fa-refresh" aria-hidden="true"></i> </span> Update Both Fuel</button>
+                           <span class="btn-label"><i class="fa fa-refresh" aria-hidden="true"></i> </span> Update Fuel</button>
                            <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'supplier:hq_notifier' 3 %}">
                             <span class="btn-label"><i class="fa fa-bell"></i></span>Notify HQ</a>
                             {% else %}
                             <button class="btn btn-labeled btn-primary btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#add_fuel{{update.id}}">
-                                <span class="btn-label"><i class="fa fa-refresh" aria-hidden="true"></i> </span> Update Both Fuel</button>
+                                <span class="btn-label"><i class="fa fa-refresh" aria-hidden="true"></i> </span> Update Fuel</button>
                             {% endif %}
                         {%endif%}
                     </div>
@@ -134,7 +134,7 @@
             {% csrf_token %}
             <div class="row" style="margin-bottom: 30px;">   
                 <input type="hidden" value="RTGS" name="fuel_payment_type" />
-                <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                <div class="form-group row col-sm-12" style="margin-top: 2%;">
                     <div class="col-sm-6">
 
                         <label><b style='color:#009688'>Fuel Type</b></label>
@@ -197,7 +197,7 @@
                         {% csrf_token %}
                 <div class="row" style="margin-bottom: 30px;">        
                         <input type="hidden" value="USD" name="fuel_payment_type" />
-                        <div class="form-group row col-sm-12" style="margin-top: 5%;">
+                        <div class="form-group row col-sm-12" style="margin-top: 2%;">
                             <div class="col-sm-6">
 
                                 <label><b style='color:#009688'>Fuel Type</b></label>
@@ -320,7 +320,7 @@ aria-hidden="true">
         {% csrf_token %}
         <input type="hidden" value="USD" name="fuel_payment_type" />
         <div class="row" style="margin-bottom: 30px;">   
-            <div class="form-group row col-sm-12" style="margin-top: 5%;">
+            <div class="form-group row col-sm-12" style="margin-top: 2%;">
                 <div class="col-sm-6">
 
                     <label><b style='color:#009688'>Fuel Type</b></label>
@@ -357,8 +357,8 @@ aria-hidden="true">
                 <div class="col-sm-12" name="payment" id="payment{{forloop.counter}}">
                     <label><b style='color:#009688'>Payment Method (USD)</b></label>
                     <div class="col-sm-12 row">
-                        <div class="col-sm-6"><input type="checkbox" class=" col-sm-6" name="cash" value="1">&nbsp; Cash</div>
-                        <div class="col-sm-6"><input type="checkbox" class="col-sm-6" value="1" name="swipe">&nbsp; FCA</div>
+                        <div class="col-sm-4"><input type="checkbox" name="cash" value="1">&nbsp; Cash</div>
+                        <div class="col-sm-4"><input type="checkbox" value="1" name="swipe">&nbsp; FCA</div>
                     </div>
 
 

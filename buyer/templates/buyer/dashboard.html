@@ -424,16 +424,19 @@
                                                 <div class="form-group" name='choices' id='choices{{forloop.counter}}'>
                                                     <div class="row form-group">
                                                         <div class="col-sm-6" >
-                                                        <label class="form-group">Delivery Address</label>
+                                                        <label >Delivery Address/Branch</label>
                                                         <select class="form-control" id="branch{{forloop.counter}}" name="d_branch">
                                                             {% for branch in branches %}
-                                                            <option value="">---Select a delivery branch---</option>
                                                             <option id="option{{forloop.counter}}" value="{{branch.id}}">{{branch.name|capfirst}}</option>
                                                             {% endfor %}
                                                           </select>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            {{ form.storage_tanks|as_crispy_field }}
+                                                            <label >Storage Tanks</label>
+                                                            <select name="storage_tanks" class="select form-control">
+                                                                <option value="Petrol">Above Ground</option>                                                  
+                                                                <option value="Diesel">Below Ground</option>                                                  
+                                                            </select>
                                                         </div>
                                                     </div>
                                                   
@@ -554,16 +557,19 @@
                                                    
                                                     <div class="row col-sm-12">
                                                         <div class="col-sm-6" >
-                                                        <label class="form-group">Delivery Address</label>
+                                                        <label>Delivery Address/Branch</label>
                                                         <select class="form-control" id="branch1{{forloop.counter}}" name="d_branch">
                                                             {% for branch in branches %}
-                                                            <option value="">---Select a delivery branch---</option>
                                                             <option id="option1{{forloop.counter}}" value="{{branch.id}}">{{branch.name|capfirst}}</option>
                                                             {% endfor %}
                                                           </select>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            {{ form.storage_tanks|as_crispy_field }}
+                                                            <label >Storage Tanks</label>
+                                                            <select name="storage_tanks" class="select form-control">
+                                                                <option value="Petrol">Above Ground</option>                                                  
+                                                                <option value="Diesel">Below Ground</option>                                                  
+                                                            </select>
                                                         </div>
                                                     </div>
                                                    
@@ -605,8 +611,10 @@
                                         <div class="modal-footer">
                                             <button type="submit" name="MakeDeal" class="btn btn-primary ">Submit
                                                 Request</button>
+                                                <button class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                            </div>
                                             </form>
-                                        </div>
+                                        
 
                                     </div>
                                 </div>

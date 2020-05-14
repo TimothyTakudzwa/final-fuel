@@ -1,0 +1,2 @@
+date,time,supplier__company__name,offer__request__fuel_type,offer__request__amount,is_complete
+2020-05-01,00:59:57.894568,ZUVA Petrolleum pvt,Petrol,200.0,False

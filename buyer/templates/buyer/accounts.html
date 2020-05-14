@@ -57,9 +57,6 @@
                     $('#delivery_method1{{forloop.counter}}').change(function () {
                         if ($('#delivery_method1{{forloop.counter}} option:selected').text() == "Direct Delivery") {
                             $('#choices1{{forloop.counter}}').show();
-                            $('#s_name1{{forloop.counter}}').attr('required', '');
-                            $('#s_number1{{forloop.counter}}').attr('required', '');
-                            $('#s_town1{{forloop.counter}}').attr('required', '');
                             $('#truck_reg1{{forloop.counter}}').hide();
                             $('#transporter1{{forloop.counter}}').hide();
                             $('#driver1{{forloop.counter}}').hide();
@@ -67,9 +64,6 @@
                         }
                         else {
                             $('#choices1{{forloop.counter}}').hide();
-                            $('#s_town1{{forloop.counter}}').removeAttr('required', '');
-                            $('#s_number1{{forloop.counter}}').removeAttr('required', '');
-                            $('#s_name1{{forloop.counter}}').removeAttr('required', '');
                             $('#truck_reg1{{forloop.counter}}').show();
                             $('#transporter1{{forloop.counter}}').show();
                             $('#driver1{{forloop.counter}}').show();
@@ -79,9 +73,6 @@
                     $('#delivery_method{{forloop.counter}}').change(function () {
                         if ($('#delivery_method{{forloop.counter}} option:selected').text() == "Delivery") {
                             $('#choices{{forloop.counter}}').show();
-                            $('#s_name{{forloop.counter}}').attr('required', '');
-                            $('#s_number{{forloop.counter}}').attr('required', '');
-                            $('#s_town{{forloop.counter}}').attr('required', '');
                             $('#truck_reg{{forloop.counter}}').hide();
                             $('#transporter{{forloop.counter}}').hide();
                             $('#driver{{forloop.counter}}').hide();
@@ -89,9 +80,6 @@
                         }
                         else {
                             $('#choices{{forloop.counter}}').hide();
-                            $('#s_town{{forloop.counter}}').removeAttr('required', '');
-                            $('#s_number{{forloop.counter}}').removeAttr('required', '');
-                            $('#s_name{{forloop.counter}}').removeAttr('required', '');
                             $('#truck_reg{{forloop.counter}}').show();
                             $('#transporter{{forloop.counter}}').show();
                             $('#driver{{forloop.counter}}').show();
@@ -173,7 +161,7 @@
                                                                 <div class="col-sm-6" id="transporter{{forloop.counter}}">
                                                                     <label class="form-group">Transporter</label>
                                                                     <input type="text" class="form-control" name="transporter" 
-                                                                    aria-describedby="helpId" required>
+                                                                    aria-describedby="helpId" >
                                                                 </div>
             
                                                                 <div class="col-sm-6" id="truck_reg{{forloop.counter}}">
@@ -196,30 +184,28 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group" name='choices' id='choices{{forloop.counter}}'>
-                                                                <label>Delivery Address</label>
+                                                               
+                                                               
                                                                 <div class="row form-group">
-                                                                    <div class="togglebutton form-group col-sm-4">
-                                                                        <label for="">Street Number</label>
-                                                                        <input type="text" class="form-control" name="s_number" id="s_number{{forloop.counter}}"
-                                                                               aria-describedby="helpId" placeholder="">
-            
+                                                                    <div class="col-sm-6" >
+                                                                    <label >Delivery Address/Branch</label>
+                                                                    <select class="form-control" id="branch{{forloop.counter}}" name="d_branch">
+                                                                        {% for branch in branches %}
+                                                                        <option value="{{branch.id}}">{{branch.name|capfirst}}</option>
+                                                                        {% endfor %}
+                                                                      </select>
                                                                     </div>
-                                                                    <div class="togglebutton form-group col-sm-4">
-                                                                        <label for="">Street Name</label>
-                                                                        <input type="text" class="form-control" name="s_name" id="s_name{{forloop.counter}}"
-                                                                               aria-describedby="helpId" placeholder="">
-            
+                                                                    
+                                                                    <div class="col-sm-6">
+                                                                        <label >Storage Tanks</label>
+                                                                        <select name="storage_tanks" class="select form-control">
+                                                                            <option value="Petrol">Above Ground</option>                                                  
+                                                                            <option value="Diesel">Below Ground</option>                                                  
+                                                                        </select>
                                                                     </div>
-                                                                    <div class="togglebutton form-group col-sm-4">
-                                                                        <label for="">Location/Town</label>
-                                                                        <input type="text" class="form-control" name="s_town" id="s_town{{forloop.counter}}"
-                                                                               aria-describedby="helpId" placeholder="">
-            
-                                                                    </div>
-            
                                                                 </div>
             
-                                                                {{ form.storage_tanks|as_crispy_field }}
+                                                               
                                                                 <br>
                                                                 <label>Required Equipments</label>
                                                                 <div class="row">
@@ -550,11 +536,8 @@
                     
 
                     $('#delivery_method1{{forloop.counter}}').change(function () {
-                        if ($('#delivery_method1{{forloop.counter}} option:selected').text() == "Direct Delivery") {
+                        if ($('#delivery_method1{{forloop.counter}} option:selected').text() == "Delivery") {
                             $('#choices1{{forloop.counter}}').show();
-                            $('#s_name1{{forloop.counter}}').attr('required', '');
-                            $('#s_number1{{forloop.counter}}').attr('required', '');
-                            $('#s_town1{{forloop.counter}}').attr('required', '');
                             $('#truck_reg1{{forloop.counter}}').hide();
                             $('#transporter1{{forloop.counter}}').hide();
                             $('#driver1{{forloop.counter}}').hide();
@@ -562,9 +545,6 @@
                         }
                         else {
                             $('#choices1{{forloop.counter}}').hide();
-                            $('#s_town1{{forloop.counter}}').removeAttr('required', '');
-                            $('#s_number1{{forloop.counter}}').removeAttr('required', '');
-                            $('#s_name1{{forloop.counter}}').removeAttr('required', '');
                             $('#truck_reg1{{forloop.counter}}').show();
                             $('#transporter1{{forloop.counter}}').show();
                             $('#driver1{{forloop.counter}}').show();
@@ -574,9 +554,6 @@
                     $('#delivery_method{{forloop.counter}}').change(function () {
                         if ($('#delivery_method{{forloop.counter}} option:selected').text() == "Delivery") {
                             $('#choices{{forloop.counter}}').show();
-                            $('#s_name{{forloop.counter}}').attr('required', '');
-                            $('#s_number{{forloop.counter}}').attr('required', '');
-                            $('#s_town{{forloop.counter}}').attr('required', '');
                             $('#truck_reg{{forloop.counter}}').hide();
                             $('#transporter{{forloop.counter}}').hide();
                             $('#driver{{forloop.counter}}').hide();
@@ -584,9 +561,6 @@
                         }
                         else {
                             $('#choices{{forloop.counter}}').hide();
-                            $('#s_town{{forloop.counter}}').removeAttr('required', '');
-                            $('#s_number{{forloop.counter}}').removeAttr('required', '');
-                            $('#s_name{{forloop.counter}}').removeAttr('required', '');
                             $('#truck_reg{{forloop.counter}}').show();
                             $('#transporter{{forloop.counter}}').show();
                             $('#driver{{forloop.counter}}').show();
@@ -668,7 +642,7 @@
                                             <div class="col-sm-6" id="transporter1{{forloop.counter}}">
                                                 <label class="form-group">Transporter</label>
                                                 <input type="text" class="form-control" name="transporter" 
-                                                aria-describedby="helpId" required>
+                                                aria-describedby="helpId">
                                             </div>
 
                                             <div class="col-sm-6" id="truck_reg1{{forloop.counter}}">
@@ -691,30 +665,23 @@
                                             </div>
                                         </div>
                                         <div class="form-group" name='choices' id='choices1{{forloop.counter}}'>
-                                            <label>Delivery Address</label>
                                             <div class="row form-group">
-                                                <div class="togglebutton form-group col-sm-4">
-                                                    <label for="">Street Number</label>
-                                                    <input type="text" class="form-control" name="s_number" id="s_number1{{forloop.counter}}"
-                                                           aria-describedby="helpId" placeholder="">
-
+                                                <div class="col-sm-6" >
+                                                <label>Delivery Address/Branch</label>
+                                                <select class="form-control" id="branch1{{forloop.counter}}" name="d_branch">
+                                                    {% for branch in branches %}
+                                                    <option id="option1{{forloop.counter}}" value="{{branch.id}}">{{branch.name|capfirst}}</option>
+                                                    {% endfor %}
+                                                  </select>
                                                 </div>
-                                                <div class="togglebutton form-group col-sm-4">
-                                                    <label for="">Street Name</label>
-                                                    <input type="text" class="form-control" name="s_name" id="s_name1{{forloop.counter}}"
-                                                           aria-describedby="helpId" placeholder="">
-
+                                                <div class="col-sm-6">
+                                                    <label >Storage Tanks</label>
+                                                    <select name="storage_tanks" class="select form-control">
+                                                        <option value="Petrol">Above Ground</option>                                                  
+                                                        <option value="Diesel">Below Ground</option>                                                  
+                                                    </select>
                                                 </div>
-                                                <div class="togglebutton form-group col-sm-4">
-                                                    <label for="">Location/Town</label>
-                                                    <input type="text" class="form-control" name="s_town" id="s_town1{{forloop.counter}}"
-                                                           aria-describedby="helpId" placeholder="">
-
-                                                </div>
-
                                             </div>
-
-                                            {{ form.storage_tanks|as_crispy_field }}
                                             <br>
                                             <label>Required Equipments</label>
                                             <div class="row">

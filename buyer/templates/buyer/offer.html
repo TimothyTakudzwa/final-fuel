@@ -14,13 +14,11 @@
          </span>
         </div>
     </form>
-    <div class="header-icon">
-        <i class="fa fa-clipboard"></i>
-    </div>
-    <div class="header-title">
+   
+    <div class="header-title" style="margin-left: 0px;">
 
         <h1>Fuel Offers</h1>
-        <small>ZFMS</small>
+        <small>Zimbabwe Fuel Management System</small>
         <ol class="breadcrumb hidden-xs">
             <li><a href="#"><i class="pe-7s-home"></i> Home</a></li>
             <li class="active">Offers</li>
@@ -73,7 +71,11 @@
                         <td>{{offer.time}}</td>                      
                         <td>{{offer.supplier.company}}</td>
                         <td>{{offer.depot_name}}</td>
+                        {% if offer.request.delivery_method != "DELIVERY" %}
                         <td>{{offer.collection_address}}</td>
+                        {% else %}
+                        <td>N/A</td>
+                        {% endif %}
                         <td>{{offer.request.amount|floatformat:2|intcomma}} Litres</td>
                         <td>{{offer.quantity|floatformat:2|intcomma}} Litres</td>
                         {% if offer.request.payment_method == 'RTGS'%}

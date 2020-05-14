@@ -215,7 +215,7 @@ def create_company(request, id):
                                                                  is_govnt_org=is_govnt_org)
                 DeliveryBranch.objects.create(name='main branch', street_number=street_number, street_name=street_name,
                                                 city=city, company=user.company, description='Main Branch')
-                messages.success(request, 'Company registerd successfully.')
+                messages.success(request, 'Company registered successfully.')
                 return redirect('home')
 
             else:
@@ -481,9 +481,11 @@ Fuel Stock operations
 @login_required
 @user_role
 def available_stock(request):
+    notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).count()
     updates = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).all()
 
-    return render(request, 'supplier/available_fuel.html', {'updates': updates})
+    return render(request, 'supplier/available_fuel.html', {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'updates': updates})
 
 
 @login_required()
@@ -550,6 +552,8 @@ Offers Operations
 @login_required()
 @user_role
 def my_offers(request):
+    notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).count()
     offers = Offer.objects.filter(supplier=request.user, is_accepted=False).all()
     for offer_temp in offers:
         if offer_temp.cash == offer_temp.ecocash == offer_temp.swipe == offer_temp.usd == False:
@@ -687,7 +691,7 @@ def my_offers(request):
                 return response        
     
 
-    return render(request, 'supplier/my_offers.html', {'offers': offers, 'offers_pending': offers_pending})
+    return render(request, 'supplier/my_offers.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'offers': offers, 'offers_pending': offers_pending})
 
 
 @login_required()
@@ -868,6 +872,8 @@ allocated quantities
 @user_role
 def allocated_quantity(request):
     allocations = FuelAllocation.objects.filter(allocated_subsidiary_id=request.user.subsidiary_id).all()
+    notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).count()
 
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :
@@ -951,7 +957,7 @@ def allocated_quantity(request):
                 return response        
 
 
-    return render(request, 'supplier/allocated_quantity.html', {'allocations': allocations})
+    return render(request, 'supplier/allocated_quantity.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'allocations': allocations})
 
 
 @login_required()
@@ -974,6 +980,8 @@ def transaction(request):
     today = datetime.now().strftime("%m-%d-%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
     trans = Transaction.objects.filter(supplier=request.user).all()
+    notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).count()
     
     for tran in trans:
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
@@ -993,7 +1001,9 @@ def transaction(request):
         'transactions': transactions,
         'transactions_pending': transactions_pending,
         'transporters': transporters,
-        'today': today
+        'today': today,
+        'num_of_notifications': num_of_notifications,
+        'notifications': notifications
     }
     
 
@@ -1500,6 +1510,8 @@ def create_delivery_schedule(request):
 def delivery_schedules(request):
     user_permission(request)
     schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user).all()
+    notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).count()
     
     for schedule in schedules:
         if schedule.transaction.offer.delivery_method.lower() == 'delivery':
@@ -1638,7 +1650,7 @@ def delivery_schedules(request):
         
 
 
-    return render(request, 'supplier/delivery_schedules.html', {'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules})
+    return render(request, 'supplier/delivery_schedules.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules})
 
 
 @login_required()
@@ -1730,9 +1742,11 @@ def edit_release_note(request, id):
 @login_required()
 def payment_release_notes(request, id):
     user_permission(request)
+    notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).count()
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
-    return render(request, 'supplier/payment_and_rnote.html', {'payment_history': payment_history})
+    return render(request, 'supplier/payment_and_rnote.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'payment_history': payment_history})
 
 
 @login_required()
@@ -1794,9 +1808,11 @@ payment history
 @login_required()
 def payment_history(request, id):
     user_permission(request)
+    notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).count()
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
-    return render(request, 'supplier/payment_history.html', {'payment_history': payment_history})
+    return render(request, 'supplier/payment_history.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'payment_history': payment_history})
 
 
 @login_required()
@@ -1836,6 +1852,8 @@ def download_release_note(request, id):
 @user_role
 def activity(request):
     filtered_activities = None
+    notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).count()
     activities = Activity.objects.exclude(date=today).filter(user=request.user)
     for activity in activities:
         if activity.action == 'Making Offer':
@@ -1962,7 +1980,7 @@ def activity(request):
                 response['Content-Disposition'] = f'attachment;filename={export_name} - Activities - {today}.pdf'
                 return response
 
-    return render(request, 'supplier/activity.html', {'activities': activities, 'depot': depot, 'current_activities': current_activities})
+    return render(request, 'supplier/activity.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'activities': activities, 'depot': depot, 'current_activities': current_activities})
 
 
 @login_required()

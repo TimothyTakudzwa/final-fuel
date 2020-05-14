@@ -20,9 +20,9 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-
-                    {% load crispy_forms_tags %}
-                    <form action="{% url 'noicDepot:allocate_fuel' order.id %}" method="POST">
+                    <div class="modal-body">
+                        {% load crispy_forms_tags %}
+                        <form action="{% url 'noicDepot:allocate_fuel' order.id %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" value="{{ order.fuel_type }}" name="fuel_type"/>
                         <input type="hidden" value="{{ order.quantity }}" name="quantity"/>
@@ -57,12 +57,14 @@
 
                         </div>
 
-                        <div class="form-group row"
-                             style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                            <button type="button" class="btn btn-secondary col-sm-6" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary col-sm-6">Submit</button>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
-                    </form>
+
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -86,7 +88,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: #009688; color: white">
-                        <span class="modal-title" id="exampleModalLabel">Upload Release Note</span>
+                        <span class="modal-title" id="exampleModalLabel">Release Date</span>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -101,7 +103,11 @@
                                 <input type="date" name="release_date" class="form-control" required/>
                             </div>
                             <br>
-                            <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+                            <div class="modal-footer" style="margin-top: 70px;">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+
+                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                            </div>
 
                         </form>
                     </div>
@@ -379,9 +385,15 @@
                                                 {% else %}
                                                     <td>
                                                         <div class="btn-group">
+                                                            {% if order.proof_of_payment %}
                                                             <a href="{% url 'noicDepot:download_proof' order.id %}" type="button" class="btn btn-labeled btn-success btn-sm">
                                                                 <span class="btn-label"><i class="fa fa-download"></i></span>P.O.P.
                                                             </a>
+                                                            {% else %}
+                                                            <a type="button" class="btn btn-labeled btn-success btn-sm" disabled>
+                                                                <span class="btn-label"><i class="fa fa-download"></i></span>P.O.P.
+                                                            </a>
+                                                            {% endif %}
                                                             <a href="{% url 'noicDepot:payment_approval' order.id %}" type="button" class="btn btn-labeled btn-warning btn-sm">
                                                                 <span class="btn-label"><i class="glyphicon glyphicon-thumbs-up"></i></span>Approve
                                                             </a>
@@ -679,9 +691,15 @@
                                                 {% else %}
                                                     <td>
                                                         <div class="btn-group">
+                                                            {% if order.proof_of_payment %}
                                                             <a href="{% url 'noicDepot:download_proof' order.id %}" type="button" class="btn btn-labeled btn-success btn-sm">
                                                                 <span class="btn-label"><i class="fa fa-download"></i></span>P.O.P.
                                                             </a>
+                                                            {% else %}
+                                                            <a type="button" class="btn btn-labeled btn-success btn-sm" disabled>
+                                                                <span class="btn-label"><i class="fa fa-download"></i></span>P.O.P.
+                                                            </a>
+                                                            {% endif %}
                                                             <a href="{% url 'noicDepot:payment_approval' order.id %}" type="button" class="btn btn-labeled btn-warning btn-sm">
                                                                 <span class="btn-label"><i class="glyphicon glyphicon-thumbs-up"></i></span>Approve
                                                             </a>
@@ -724,15 +742,17 @@
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                <span class="modal-title" id="exampleModalLongTitle">Allocate Fuel- <i
+                                                            
+                                                        <span class="modal-title" id="exampleModalLongTitle">Allocate Fuel- <i
                                                         style="color:azure"><small>Please Note the fuel you are entering is for
                                                             the
                                                             payment you approved</small></i></span>
+                                                          
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
-
+                                                    <div class="modal-body">    
                                                         {% load crispy_forms_tags %}
                                                         <form action="{% url 'noicDepot:allocate_fuel' order.id %}" method="POST">
                                                             {% csrf_token %}
@@ -776,6 +796,10 @@
                                                                 <button class="btn btn-default" data-dismiss="modal" >Close</button>
                                                             </div>
                                                         </form>
+
+                                                    </div>    
+
+
                                                     </div>
                                                 </div>
                                             </div>
