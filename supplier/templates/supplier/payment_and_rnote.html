@@ -20,7 +20,7 @@
     </div>
     -->
 
-    <div class="header-title">
+    <div class="header-title" style="margin-left: 0px;">
 
         <h1> Payment History </h1>
         <small>Zimbabawe Fuel Management System</small>
@@ -49,9 +49,9 @@
         </div>
         <div class="panel-body">
 
-            {% if payment_history %}
+           
             <div class="table-responsive">
-                <table id="fuel_updates" class="table table-striped table-bordered" style="width:100%">
+                <table id="transaction_incomplete_table" class="table table-striped table-bordered" style="width:100%">
                     <thead>
                         <tr>
                             <th>
@@ -347,9 +347,7 @@
                     </tbody>
                 </table>
             </div>
-            {% else %}
-            <p>No History Available</p>
-            {% endif %}
+           
 
 
         </div>
