@@ -146,8 +146,12 @@ def initial_password_change(request):
 @login_required()
 @user_role
 def change_password(request):
+    notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).count()
     context = {
         'title': 'ZFMS | Change Password',
+        'num_of_notifications': num_of_notifications,
+        'notifications': notifications,
         'password_change': PasswordChange(user=request.user)
     }
     if request.method == 'POST':
@@ -246,8 +250,10 @@ Supplier Profile
 @login_required()
 @user_role
 def account(request):
+    notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).count()
     subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-    return render(request, 'supplier/user_profile.html', {'subsidiary': subsidiary})
+    return render(request, 'supplier/user_profile.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'subsidiary': subsidiary})
 
 
 '''
@@ -280,8 +286,10 @@ handling client applications
 @login_required
 @user_role
 def clients(request):
+    notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).count()
     clients = Account.objects.filter(supplier_company=request.user.company)
-    return render(request, 'supplier/clients.html', {'clients': clients})
+    return render(request, 'supplier/clients.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'clients': clients})
 
 
 @login_required
@@ -1309,6 +1317,8 @@ def download_proof(request, id):
 def client_transaction_history(request, id):
     user_permission(request)
     client = Account.objects.filter(id=id).first()
+    notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).count()
 
     contribution = get_customer_contributions(request.user.id, client.buyer_company)
     cash_contribution = get_customer_contributions(request.user.id, client.buyer_company)[1]
@@ -1326,7 +1336,9 @@ def client_transaction_history(request, id):
                                                              'cash_contribution': cash_contribution,
                                                              'total_cash': total_cash,
                                                              'all_requests': all_requests,
-                                                             'todays_requests': todays_requests})
+                                                             'todays_requests': todays_requests,
+                                                             'num_of_notifications': num_of_notifications,
+                                                             'notifications': notifications})
 
 
 @login_required()

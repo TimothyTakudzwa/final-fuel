@@ -5,7 +5,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <div class="header-title" style="margin-left: 0px;">
-      <h1>Customers</h1>
+      <h1>Clients</h1>
     <small>Zimbabwe Fuel Management System</small>
       <ol class="breadcrumb hidden-xs">
           <li><a href="{%url 'fuel-request'%}"><i class="pe-7s-home"></i> Home</a></li>
@@ -58,6 +58,9 @@
                   Quantity (Litres)
                   </th>
                   <th>
+                    Currency
+                    </th>
+                  <th>
                   Revenue
                   </th>
                   <th>
@@ -72,6 +75,7 @@
                           <td>{{tran.time}}</td>
                           <td>{{tran.buyer.company}}</td>
                           <td>{{tran.offer.request.amount}} Litres</td>
+                          <td>{{tran.offer.request.payment_method}}</td>
                           <td>$ {{tran.revenue|stringformat:".2f"}}</td>
                          <td>
                              {% if tran.is_complete %}
