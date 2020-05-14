@@ -5,6 +5,7 @@ from io import BytesIO
 
 import pandas as pd
 from django.contrib import messages
+from django.urls import reverse
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
@@ -996,6 +997,8 @@ def suppliers_list(request):
         sup = User.objects.filter(email=email).first()
         if sup is not None:
             messages.warning(request, f"The email {sup.email} already used in the system, please use a different email.")
+            if request.POST.get('source') == "from_sub":
+                return redirect(reverse('users:stations', kwargs={'add_user': 'show'}))
             return redirect('users:suppliers_list')
 
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),

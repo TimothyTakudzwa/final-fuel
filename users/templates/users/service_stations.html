@@ -17,6 +17,8 @@
                 <form action="{% url 'users:suppliers_list' %}" method="POST">
                     {% csrf_token %}
                     <input type="hidden" value="{{subsidiary.id}}" name="service_station" />
+                    <input type="hidden" value="from_sub" name="source" />
+
                     <div class="row">
                         <div class="form-group col-md-6 mb-0">
                             {{ form1.first_name|as_crispy_field }}
@@ -613,7 +615,7 @@
                
                     <div class="form-group col-md-6" name="license" id="license">
                         <label><b>Licence Number</b></label>
-                        <input type="text" name="licence" class="form-control" value=" " required />
+                        <input type="text" name="licence" class="form-control" value=" "  />
                     </div>
                </div>
             
@@ -621,29 +623,29 @@
                       
                     <div class="form-group col-md-6" name="application_form" id="application_form">
                         <label>Application Form</label>
-                        <input type="file" accept=".pdf, .doc,.docx" name="application_form" class="form-control-file" id="exampleFormControlFile1" required>
+                        <input type="file" accept=".pdf, .doc,.docx" name="application_form" class="form-control-file" id="exampleFormControlFile1" >
                     </div>
            
                
                 <div class="form-group col-md-6" name="fire_brigade" id="fire_brigade">
                     <label>Fire Brigade</label>
-                    <input type="file" accept=".pdf, .doc,.docx" name="fire_brigade" class="form-control-file" id="exampleFormControlFile1" required>
+                    <input type="file" accept=".pdf, .doc,.docx" name="fire_brigade" class="form-control-file" id="exampleFormControlFile1" >
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-6" name="ema" id="ema">
                     <label>EMA Approval Doc</label>
-                    <input type="file" accept=".pdf, .doc,.docx" name="ema" class="form-control-file" id="exampleFormControlFile1" required>
+                    <input type="file" accept=".pdf, .doc,.docx" name="ema" class="form-control-file" id="exampleFormControlFile1" >
                 </div>
                 <div class="form-group col-md-6" name="council" id="council">
                     <label>Council Approval Doc</label>
-                    <input type="file" accept=".pdf, .doc,.docx" name="council" class="form-control-file" id="exampleFormControlFile1" required>
+                    <input type="file" accept=".pdf, .doc,.docx" name="council" class="form-control-file" id="exampleFormControlFile1" >
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-6" name="payment" id="payment">
                     <label>Proof of Payment</label>
-                    <input type="file" accept=".pdf, .doc,.docx" name="payment" class="form-control-file" id="exampleFormControlFile1" required>
+                    <input type="file" accept=".pdf, .doc,.docx" name="payment" class="form-control-file" id="exampleFormControlFile1" >
                 </div>
             </div>                                                       
             <div class="modal-footer">  
