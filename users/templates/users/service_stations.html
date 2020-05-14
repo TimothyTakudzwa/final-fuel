@@ -17,6 +17,7 @@
                 <form action="{% url 'users:suppliers_list' %}" method="POST">
                     {% csrf_token %}
                     <input type="hidden" value="{{subsidiary.id}}" name="service_station" />
+                    <input type="hidden" value="from_sub" name="source" />
                     <div class="row">
                         <div class="form-group col-md-6 mb-0">
                             {{ form1.first_name|as_crispy_field }}
@@ -469,7 +470,6 @@
                    <div class="form-group col-md-6">
                            <label>Name</label>
                            <input type="text" name="name" class="form-control" value=" " />
-                            <input type="hidden" value="from_sub" name="source" />
 
                        </div>
 

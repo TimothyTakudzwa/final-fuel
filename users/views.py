@@ -1022,9 +1022,9 @@ def suppliers_list(request):
 
         sup = User.objects.filter(email=email).first()
         if sup is not None:
-            messages.warning(request, f"The email {sup.email} already used in the system, please use a different email.")
             if request.POST.get('source') == "from_sub":
                 redirect('users:stations')
+            messages.warning(request, f"The email {sup.email} already used in the system, please use a different email.")
             return redirect('users:suppliers_list')
 
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
