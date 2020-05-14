@@ -870,7 +870,7 @@ def stations(request):
               'The Grange', 'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft',
               'Hatcliffe', 'Mabelreign', 'Marlborough', 'Meyrick Park', 'Mount Pleasant', 'Pomona', 'Tynwald',
               'Vainona', 'Arcadia', 'Braeside', 'CBD', 'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale',
-              'Sunningdale', 'Epworth', 'Highfield' 'Kambuzuma', 'Southerton', 'Warren Park', 'Southerton', 'Mabvuku',
+              'Sunningdale', 'Epworth', 'Highfield', 'Kambuzuma', 'Southerton', 'Warren Park', 'Southerton', 'Mabvuku',
               'Tafara', 'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park', 'Marimba Park', 'Mufakose']
     Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane',
                 'North End', 'Northvale', 'North Lynne', 'Northlea', 'North Trenance', 'Ntaba Moyo', 'Ascot',
