@@ -24,5 +24,6 @@ urlpatterns = [
     path('notication_reader/', views.notication_reader, name='notication_reader'),
     path('collections/', views.collections, name='collections'),
     path('notication_handler/<int:id>', views.notication_handler, name='notication_handler'),
-    path('update-profile', views.edit_user_details, name='update-profile')
+    path('update-profile/', views.edit_user_details, name='update-profile'),
+    path('remove-profile/', views.delete_user, name='remove-profile')
 ]

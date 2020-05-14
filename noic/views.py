@@ -1289,7 +1289,7 @@ def notication_reader(request):
 @user_role
 def edit_user_details(request):
     if request.method == 'POST':
-        current_user = User.objects.filter(id=request.POST.get('edit_user_id')).first()
+        current_user = User.objects.filter(id=int(request.POST.get('edit_user_id'))).first()
         # check if email was edited
         if current_user.email != request.POST.get('email'):
             if User.objects.filter(email=request.POST.get('email')).exists():
@@ -1303,3 +1303,12 @@ def edit_user_details(request):
         current_user.save()
         messages.success(request, 'Profile successfully saved')
         return redirect('noic:staff')
+
+
+@login_required()
+@user_role
+def delete_user(request):
+    if request.method == 'POST':
+        User.objects.filter(id=int(request.POST.get('delete_user_id'))).delete()
+        messages.success(request, 'User successfully deleted')
+        return redirect('noic:remove-profile')
