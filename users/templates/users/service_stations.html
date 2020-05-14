@@ -2,7 +2,7 @@
 {% block body %}
 
 
-{% if add_user == 'show' %}
+{% if add_user == 'show' or request.session.add_user == 'show' %}
 
 <div class="modal fade modal-success in" id="new_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document" style="margin: 0;">
