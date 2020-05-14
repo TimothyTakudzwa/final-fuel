@@ -1024,12 +1024,7 @@ def suppliers_list(request):
         if sup is not None:
             messages.warning(request, f"The email {sup.email} already used in the system, please use a different email.")
             if request.POST.get('source') == "from_sub":
-                stations = Subsidiaries.objects.filter(company=request.user.company).all()    
-                form1 = SupplierContactForm()
-                form = DepotContactForm()
-                return render(request, 'users/service_stations.html',
-                  {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
-                   'Mutare': Mutare, 'Gweru': Gweru, 'add_user': 'show', 'allocate': 'hide'})
+                redirect('users:stations')
             return redirect('users:suppliers_list')
 
         user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
