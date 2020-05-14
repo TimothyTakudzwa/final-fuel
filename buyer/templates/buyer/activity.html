@@ -232,6 +232,25 @@
                                                             <p class="col-md-6" style="font-weight: bold;">Delivery Method: </p>
                                                             <p class="col-md-6">{{activity.request_object.delivery_method}}</p>
                                                         </div>
+                                                        {% if activity.request_object.delivery_method != "DELIVERY" %}
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Transporter: </p>
+                                                            <p class="col-md-6">{{ activity.request_object.transporter }}</p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Vehicle Reg </p>
+                                                            <p class="col-md-6">{{activity.request_object.truck_reg }}</p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Driver: </p>
+                                                            <p class="col-md-6">{{ activity.request_object.driver }}</p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Driver ID </p>
+                                                            <p class="col-md-6">{{activity.request_object.driver_id }}</p>
+                                                        </div>
+                                                        
+                                                        {% endif %}
                                                        
                                                         
                                                         <div class="modal-footer">  
@@ -270,7 +289,29 @@
                                                         <p class="col-md-6" style="font-weight: bold;">Delivery Method: </p>
                                                         <p class="col-md-6">{{activity.offer_object.request.delivery_method}}</p>
                                                     </div>
-                                                   
+                                                    {% if activity.offer_object.request.delivery_method != "DELIVERY" %}
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Transporter: </p>
+                                                        <p class="col-md-6">{{ activity.offer_object.request.transporter }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Vehicle Reg </p>
+                                                        <p class="col-md-6">{{activity.offer_object.request.truck_reg }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Driver: </p>
+                                                        <p class="col-md-6">{{ activity.offer_object.request.driver }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Driver ID </p>
+                                                        <p class="col-md-6">{{activity.offer_object.request.driver_id }}</p>
+                                                    </div>
+                                                   {% else %}
+                                                   <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Collection Address </p>
+                                                    <p class="col-md-6">{{activity.offer_object.collection_address }}</p>
+                                                   </div>
+                                                   {% endif %}
                                                     
                                                     <div class="modal-footer">  
                                                         <button class="btn btn-default" data-dismiss="modal" >Close</button>
@@ -308,8 +349,29 @@
                                                         <p class="col-md-6" style="font-weight: bold;">Delivery Method: </p>
                                                         <p class="col-md-6">{{activity.roffer_object.request.delivery_method}}</p>
                                                     </div>
-                                                   
-                                                    
+                                                    {% if activity.roffer_object.request.delivery_method != "DELIVERY" %}
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Transporter: </p>
+                                                        <p class="col-md-6">{{ activity.roffer_object.request.transporter }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Vehicle Reg </p>
+                                                        <p class="col-md-6">{{activity.roffer_object.request.truck_reg }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Driver: </p>
+                                                        <p class="col-md-6">{{ activity.roffer_object.request.driver }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Driver ID </p>
+                                                        <p class="col-md-6">{{activity.roffer_object.request.driver_id }}</p>
+                                                    </div>
+                                                   {% else %}
+                                                   <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Collection Address </p>
+                                                    <p class="col-md-6">{{activity.roffer_object.collection_address }}</p>
+                                                   </div>
+                                                   {% endif %}
                                                     <div class="modal-footer">  
                                                         <button class="btn btn-default" data-dismiss="modal" >Close</button>
                                                     </div>    
@@ -417,6 +479,25 @@
                                                             <p class="col-md-6" style="font-weight: bold;">Delivery Method: </p>
                                                             <p class="col-md-6">{{activity.request_object.delivery_method}}</p>
                                                         </div>
+                                                        {% if activity.request_object.delivery_method != "DELIVERY" %}
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Transporter: </p>
+                                                            <p class="col-md-6">{{ activity.request_object.transporter }}</p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Vehicle Reg </p>
+                                                            <p class="col-md-6">{{activity.request_object.truck_reg }}</p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Driver: </p>
+                                                            <p class="col-md-6">{{ activity.request_object.driver }}</p>
+                                                        </div>
+                                                        <div class="row" style="padding: 10px;">
+                                                            <p class="col-md-6" style="font-weight: bold;">Driver ID </p>
+                                                            <p class="col-md-6">{{activity.request_object.driver_id }}</p>
+                                                        </div>
+                                                        
+                                                        {% endif %}
                                                        
                                                         
                                                         <div class="modal-footer">  
@@ -455,6 +536,29 @@
                                                         <p class="col-md-6" style="font-weight: bold;">Delivery Method: </p>
                                                         <p class="col-md-6">{{activity.offer_object.request.delivery_method}}</p>
                                                     </div>
+                                                    {% if activity.offer_object.request.delivery_method != "DELIVERY" %}
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Transporter: </p>
+                                                        <p class="col-md-6">{{ activity.offer_object.request.transporter }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Vehicle Reg </p>
+                                                        <p class="col-md-6">{{activity.offer_object.request.truck_reg }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Driver: </p>
+                                                        <p class="col-md-6">{{ activity.offer_object.request.driver }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Driver ID </p>
+                                                        <p class="col-md-6">{{activity.offer_object.request.driver_id }}</p>
+                                                    </div>
+                                                   {% else %}
+                                                   <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Collection Address </p>
+                                                    <p class="col-md-6">{{activity.offer_object.collection_address }}</p>
+                                                   </div>
+                                                   {% endif %}
                                                    
                                                     
                                                     <div class="modal-footer">  
@@ -493,6 +597,29 @@
                                                         <p class="col-md-6" style="font-weight: bold;">Delivery Method: </p>
                                                         <p class="col-md-6">{{activity.roffer_object.request.delivery_method}}</p>
                                                     </div>
+                                                    {% if activity.roffer_object.request.delivery_method != "DELIVERY" %}
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Transporter: </p>
+                                                        <p class="col-md-6">{{ activity.roffer_object.request.transporter }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Vehicle Reg </p>
+                                                        <p class="col-md-6">{{activity.roffer_object.request.truck_reg }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Driver: </p>
+                                                        <p class="col-md-6">{{ activity.roffer_object.request.driver }}</p>
+                                                    </div>
+                                                    <div class="row" style="padding: 10px;">
+                                                        <p class="col-md-6" style="font-weight: bold;">Driver ID </p>
+                                                        <p class="col-md-6">{{activity.roffer_object.request.driver_id }}</p>
+                                                    </div>
+                                                   {% else %}
+                                                   <div class="row" style="padding: 10px;">
+                                                    <p class="col-md-6" style="font-weight: bold;">Collection Address </p>
+                                                    <p class="col-md-6">{{activity.roffer_object.collection_address }}</p>
+                                                   </div>
+                                                   {% endif %}
                                                    
                                                     
                                                     <div class="modal-footer">  

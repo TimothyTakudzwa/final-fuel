@@ -151,10 +151,10 @@
                                         <th>Fuel</th>
                                         <th>Expected & Paid</th>
                                         <th>Statement</th>
-                                        <th>Status</th>
                                         <th>Bank Details</th>
                                         <th>Payments</th>
                                         <th>P.O.P</th>
+                                        <th>More Info</th>
 
                                     </tr>
                                     </thead>
@@ -330,17 +330,6 @@
                                                 </div>
 
                                             </td>
-
-                                            {% if transaction.is_complete == True %}
-                                                <td>
-                                                    <i class="fa fa-check-circle-o" style="color: #009688; font-size: 25px;" aria-hidden="true"></i>
-                                                </td>
-                                            {% else %}
-                                                <td>
-                                                    <i class="fa fa-times-circle-o" style="color: crimson; font-size: 25px;" aria-hidden="true"></i>
-                                                </td>
-                                            {% endif %}
-
                                             <td>
 
                                                 <!--call modal-->
@@ -411,6 +400,116 @@
                                                 <td><a class="btn btn-labeled btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#proof_{{transaction.id}}">
                                                     <span class="btn-label"><i class="fa fa-upload"></i></span> Payment </a></td>
                                             {% endif %}
+
+                                            <td>
+                                
+                                                <!--call modal-->
+                                                <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#trans{{transaction.id}}">
+                                                    <span class="btn-label"><i class="fa fa-eye"></i></span>  Transaction 
+                                                </button>
+                                                <!--view details-->
+                                                <div class="modal fade modal-success in" id="trans{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header" style="background-color: #009688; color: white">
+                                                                <span class="modal-title" id="exampleModalLabel">Details For The Transaction</span>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                {% csrf_token %}
+                                                                <div class="row">
+                                                                    <div class="form-group col-md-6">
+                                                                        <label><b> Buyer:</b></label>
+                                                                        &nbsp;{{transaction.buyer.company}}
+                                                                    </div>
+                                                                    <div class="form-group col-md-6">
+                                                                        <label><b>Supplier:</b></label>
+                                                                        &nbsp;{{transaction.supplier.company}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="form-group col-md-6">
+                                                                        <label><b> Fuel Type:</b></label>
+                                                                        &nbsp;{{transaction.offer.request.fuel_type}}
+                                                                    </div>
+                                                                    <div class="form-group col-md-6">
+                                                                        <label><b>Quantity Requested:</b></label>
+                                                                        &nbsp;{{transaction.offer.request.amount|floatformat:2|intcomma}}L
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="form-group col-md-6">
+                                                                        <label><b> Quantity Offered:</b></label>
+                                                                        &nbsp;{{transaction.offer.quantity|floatformat:2|intcomma}}L
+                                                                    </div>
+                                                                    <div class="form-group col-md-6">
+                                                                        <label><b>Price:</b></label>
+                                                                        &nbsp;${{transaction.offer.price}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="form-group col-md-6">
+                                                                        <label><b> Expected:</b></label>
+                                                                        &nbsp;${{transaction.expected|floatformat:2|intcomma}}
+                                                                    </div>
+                                                                    <div class="form-group col-md-6">
+                                                                        <label><b>Paid:</b></label>
+                                                                        &nbsp;${{transaction.paid|floatformat:2|intcomma}}
+                                                                    </div>
+                                                                </div>
+
+                                                               {% if transaction.offer.request.delivery_method != "DELIVERY" %}
+                                                                <div class="row">
+                                                                    <div class="form-group col-md-6">
+                                                                        <label><b>Transporter:</b></label>
+                                                                        &nbsp;{{transaction.offer.request.transporter}}
+                                                                    </div>
+                                                                    <div class="form-group col-md-6">
+                                                                        <label><b> Truck Reg:</b></label>
+                                                                        &nbsp;{{transaction.offer.request.truck_reg}}
+                                                                    </div>
+                                                                   
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="form-group col-md-6">
+                                                                        <label><b>Driver:</b></label>
+                                                                        &nbsp;{{transaction.offer.request.driver}}
+                                                                    </div>
+                                                                    <div class="form-group col-md-6">
+                                                                        <label><b> Driver ID:</b></label>
+                                                                        &nbsp;{{transaction.offer.request.driver_id}}
+                                                                    </div>
+                                                                   
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="form-group col-md-6">
+                                                                        <label><b>Collection Address:</b></label>
+                                                                        &nbsp;{{transaction.offer.collection_address}}
+                                                                    </div>
+                                                                   
+                                                                   
+                                                                </div>
+                                                                {% else %}
+                                                                <div class="row">
+                                                                    <div class="form-group col-md-6">
+                                                                        <label><b>Delivery Address:</b></label>
+                                                                        &nbsp;{{transaction.offer.request.delivery_address}}
+                                                                    </div>
+                                                                   
+                                                                   
+                                                                </div>
+                                                                {% endif %}
+                                                                <div class="modal-footer">  
+                                                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            
+                                        </td>
 
 
                                             <div class="modal fade modal-success in" id="review_{{transaction.id}}" role="dialog">
@@ -576,13 +675,12 @@
                                             <th>Date</th>
                                             <th>Time</th>
                                             <th>Fuel</th>
-                                            <!-- <th>Expected & Paid</th> -->
                                             <th>Statement</th>
-                                            <th>Status</th>
                                             <th>Bank Details</th>
                                             <th>Payments & Schedules</th>
                                             <th>P.O.P</th>
                                             <th>Rating</th>
+                                            <th>More Info</th>
 
                                         </tr>
                                         </thead>
@@ -711,15 +809,7 @@
 
                                                 </td>
 
-                                                {% if transaction.is_complete == True %}
-                                                    <td>
-                                                        <i class="fa fa-check-circle-o" style="color: #009688; font-size: 25px;" aria-hidden="true"></i>
-                                                    </td>
-                                                {% else %}
-                                                    <td>
-                                                        <i class="fa fa-times-circle-o" style="color: crimson; font-size: 25px;" aria-hidden="true"></i>
-                                                    </td>
-                                                {% endif %}
+                                               
 
                                                 <td>
 
@@ -828,6 +918,115 @@
                                                         {% endif%}
                                                     {% endif %}
                                                 </td>
+                                                <td>
+                                
+                                                    <!--call modal-->
+                                                    <button class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#trans{{transaction.id}}">
+                                                        <span class="btn-label"><i class="fa fa-eye"></i></span>  Transaction 
+                                                    </button>
+                                                    <!--view details-->
+                                                    <div class="modal fade modal-success in" id="trans{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header" style="background-color: #009688; color: white">
+                                                                    <span class="modal-title" id="exampleModalLabel">Details For The Transaction</span>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    {% csrf_token %}
+                                                                    <div class="row">
+                                                                        <div class="form-group col-md-6">
+                                                                            <label><b> Buyer:</b></label>
+                                                                            &nbsp;{{transaction.buyer.company}}
+                                                                        </div>
+                                                                        <div class="form-group col-md-6">
+                                                                            <label><b>Supplier:</b></label>
+                                                                            &nbsp;{{transaction.supplier.company}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="form-group col-md-6">
+                                                                            <label><b> Fuel Type:</b></label>
+                                                                            &nbsp;{{transaction.offer.request.fuel_type}}
+                                                                        </div>
+                                                                        <div class="form-group col-md-6">
+                                                                            <label><b>Quantity Requested:</b></label>
+                                                                            &nbsp;{{transaction.offer.request.amount|floatformat:2|intcomma}}L
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="form-group col-md-6">
+                                                                            <label><b> Quantity Offered:</b></label>
+                                                                            &nbsp;{{transaction.offer.quantity|floatformat:2|intcomma}}L
+                                                                        </div>
+                                                                        <div class="form-group col-md-6">
+                                                                            <label><b>Price:</b></label>
+                                                                            &nbsp;${{transaction.offer.price}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="form-group col-md-6">
+                                                                            <label><b> Expected:</b></label>
+                                                                            &nbsp;${{transaction.expected|floatformat:2|intcomma}}
+                                                                        </div>
+                                                                        <div class="form-group col-md-6">
+                                                                            <label><b>Paid:</b></label>
+                                                                            &nbsp;${{transaction.paid|floatformat:2|intcomma}}
+                                                                        </div>
+                                                                    </div>
+    
+                                                                   {% if transaction.offer.request.delivery_method != "DELIVERY" %}
+                                                                    <div class="row">
+                                                                        <div class="form-group col-md-6">
+                                                                            <label><b>Transporter:</b></label>
+                                                                            &nbsp;{{transaction.offer.request.transporter}}
+                                                                        </div>
+                                                                        <div class="form-group col-md-6">
+                                                                            <label><b> Truck Reg:</b></label>
+                                                                            &nbsp;{{transaction.offer.request.truck_reg}}
+                                                                        </div>
+                                                                       
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="form-group col-md-6">
+                                                                            <label><b>Driver:</b></label>
+                                                                            &nbsp;{{transaction.offer.request.driver}}
+                                                                        </div>
+                                                                        <div class="form-group col-md-6">
+                                                                            <label><b> Driver ID:</b></label>
+                                                                            &nbsp;{{transaction.offer.request.driver_id}}
+                                                                        </div>
+                                                                       
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="form-group col-md-6">
+                                                                            <label><b>Collection Address:</b></label>
+                                                                            &nbsp;{{transaction.offer.collection_address}}
+                                                                        </div>
+                                                                       
+                                                                       
+                                                                    </div>
+                                                                    {% else %}
+                                                                    <div class="row">
+                                                                        <div class="form-group col-md-6">
+                                                                            <label><b>Delivery Address:</b></label>
+                                                                            &nbsp;{{transaction.offer.request.delivery_address}}
+                                                                        </div>
+                                                                       
+                                                                       
+                                                                    </div>
+                                                                    {% endif %}
+                                                                    <div class="modal-footer">  
+                                                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                
+                                            </td>
 
                                                 <div class="modal fade modal-success in" id="review_{{transaction.id}}" role="dialog">
                                                     <div class="modal-dialog">

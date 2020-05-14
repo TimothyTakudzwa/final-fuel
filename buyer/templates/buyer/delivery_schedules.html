@@ -141,9 +141,9 @@
                                     {% for delivery in pending_schedules %}
                                         <tr>
                                             <td>{{ delivery.date }}</td>
-                                            <td>{{ delivery.subsidiary }}</td>
+                                            <td>{{ delivery.subsidiary.name }}</td>
 
-                                            <td>{{ delivery.delivery_address }}</td>
+                                            <td>{{ delivery.transaction.offer.request.delivery_address }}</td>
 
                                             {% if delivery.transaction.offer.request.fuel_type == 'Diesel' %}
                                                 <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type }}</td>
@@ -232,7 +232,7 @@
                                                         </div>
                                                         <div class="row" style="padding: 10px;">
                                                             <p class="col-md-6" style="font-weight: bold;">Delivery Address: </p>
-                                                            <p class="col-md-6">{{delivery.delivery_address}}</p>
+                                                            <p class="col-md-6">{{delivery.transaction.offer.request.delivery_address}}</p>
                                                         </div>
                                                         <div class="row" style="padding: 10px;">
                                                             <p class="col-md-6" style="font-weight: bold;">Supplier Name: </p>
@@ -363,9 +363,9 @@
                                     {% for delivery in completed_schedules %}
                                         <tr>
                                             <td>{{ delivery.date }}</td>
-                                            <td>{{ delivery.subsidiary }}</td>
+                                            <td>{{ delivery.subsidiary.name }}</td>
 
-                                            <td>{{ delivery.delivery_address }}</td>
+                                            <td>{{ delivery.transaction.offer.request.delivery_address }}</td>
 
                                             {% if delivery.transaction.offer.request.fuel_type == 'Diesel' %}
                                                 <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type }}</td>
@@ -448,7 +448,7 @@
                                                         </div>
                                                         <div class="row" style="padding: 10px;">
                                                             <p class="col-md-6" style="font-weight: bold;">Delivery Address: </p>
-                                                            <p class="col-md-6">{{delivery.delivery_address}}</p>
+                                                            <p class="col-md-6">{{delivery.transaction.offer.request.delivery_address}}</p>
                                                         </div>
                                                         <div class="row" style="padding: 10px;">
                                                             <p class="col-md-6" style="font-weight: bold;">Supplier Name: </p>

@@ -166,7 +166,7 @@ def decline_company(request, id):
     company_rep = User.objects.filter(company=company).first()
     company.declined = True
     company.save()
-    messages.warning(request, f"Company {company.name} and its rep {company_rep.name} declined.")
+    messages.warning(request, f"Company {company.name} and its rep {company_rep.username} declined.")
     return redirect('buyer:approve_companies')
 """
 
@@ -277,8 +277,12 @@ Change password
 @login_required()
 @user_role
 def change_password(request):
+    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     context = {
         'title': 'ZFMS | Change Password',
+        'num_of_notifications': num_of_notifications,
+        'notifications': notifications,
         'password_change': PasswordChange(user=request.user)
     }
     if request.method == 'POST':
@@ -288,18 +292,18 @@ def change_password(request):
 
         if authenticate(request, username=request.user.username, password=old):
             if new1 != new2:
-                messages.danger(request, "Passwords don't match.")
+                messages.error(request, "Passwords don't match.")
                 return redirect('bchange-password')
             elif new1 == old:
-                messages.danger(request, "New password can not be similar to the old one.")
+                messages.error(request, "New password can not be similar to the old one.")
                 return redirect('bchange-password')
             elif len(new1) < 8:
-                messages.danger(request, "Password is too short.")
+                messages.error(request, "Password is too short.")
                 return redirect('bchange-password')
             elif new1.isnumeric():
-                messages.danger(request, "Password can not be entirely numeric.")
+                messages.error(request, "Password can not be entirely numeric.")
             elif not new1.isalnum():
-                messages.danger(request, "Password should be alphanumeric.")
+                messages.error(request, "Password should be alphanumeric.")
                 return redirect('bchange-password')
             else:
                 current_user = request.user
@@ -310,7 +314,7 @@ def change_password(request):
                 messages.success(request, 'Password has been successfully changed.')
                 return redirect('buyer-profile')
         else:
-            messages.danger(request, 'Wrong old password, please try again.')
+            messages.error(request, 'Wrong old password, please try again.')
             return redirect('bchange-password')
     return render(request, 'buyer/change_password.html', context=context)
 
@@ -326,6 +330,8 @@ for loading user profile, editing profile and changing password
 @user_role
 def profile(request):
     compan = Company.objects.filter(id=request.user.company.id).first()
+    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     if request.method == 'POST':
         old = request.POST.get('old_password')
         new1 = request.POST.get('new_password1')
@@ -333,7 +339,7 @@ def profile(request):
 
         if authenticate(request, username=request.user.username, password=old):
             if new1 != new2:
-                messages.danger(request, "Passwords don't match.")
+                messages.error(request, "Passwords don't match.")
                 return redirect('buyer-profile')
             else:
                 current_user = request.user
@@ -344,13 +350,15 @@ def profile(request):
                 messages.success(request, 'Password successfully changed.')
                 return redirect('buyer-profile')
         else:
-            messages.danger(request, 'Wrong old password, please try again.')
+            messages.error(request, 'Wrong old password, please try again.')
             return redirect('buyer-profile')
 
     context = {
         'form': PasswordChangeForm(user=request.user),
         'user_logged': request.user,
         'compan': compan,
+        'num_of_notifications': num_of_notifications,
+        'notifications': notifications
     }
     return render(request, 'buyer/profile.html', context)
 
@@ -368,6 +376,8 @@ The requests shown are those that are not complete and             that have bee
 def fuel_request(request):
     user_logged = request.user
     fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).all()
+    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     for fuel_request_item in fuel_requests:
         if fuel_request_item.is_direct_deal:
             depot = Subsidiaries.objects.filter(id=fuel_request_item.last_deal).first()
@@ -389,7 +399,9 @@ def fuel_request(request):
 
     context = {
         'fuel_requests': fuel_requests,
-        'complete_requests': complete_requests
+        'complete_requests': complete_requests,
+        'num_of_notifications': num_of_notifications,
+        'notifications': notifications
     }
 
     if request.method == "POST":
@@ -697,6 +709,8 @@ Offers
 @login_required
 def offers(request, id):
     user_permission(request)
+    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     selected_request = FuelRequest.objects.filter(id=id).first()
     offers = Offer.objects.filter(request=selected_request).filter(declined=False).all()
     for offer in offers:
@@ -709,7 +723,7 @@ def offers(request, id):
         if account:
             offer.account = account
     offers.order_by('-date', '-time')
-    return render(request, 'buyer/offer.html', {'offers': offers})
+    return render(request, 'buyer/offer.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'offers': offers})
 
 
 """
@@ -805,7 +819,8 @@ Transaction Handlers
 def transactions(request):
 
     buyer = request.user
-
+    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     all_transactions = Transaction.objects.filter(buyer=buyer).all()
     for transaction in all_transactions:
         subsidiary = Subsidiaries.objects.filter(id=transaction.supplier.subsidiary_id).first()
@@ -835,6 +850,8 @@ def transactions(request):
         'transactions': complete_trans.order_by('-date', '-time'),
         'incomplete_transactions': in_complete_trans.order_by('-date', '-time'),
         'subsidiary': Subsidiaries.objects.filter(),
+        'notifications': notifications,
+        'num_of_notifications': num_of_notifications,
         'all_transactions': AccountHistory.objects.filter().order_by('-date', '-time')
     }
 
@@ -1095,6 +1112,8 @@ def delivery_schedules(request):
     completed_schedules = []
     pending_schedules =[]
     schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user).all()
+    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
 
     for schedule in schedules:
         schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
@@ -1120,12 +1139,18 @@ def delivery_schedules(request):
                     schedule.delivery_address = depot.location
         
     completed_schedules = schedules.filter(confirmation_date__isnull=False)
+    for schedule in completed_schedules:
+        schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
     pending_schedules = schedules.filter(confirmation_date__isnull=True)
+    for schedule in pending_schedules:
+        schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
 
 
     context = {
         'pending_schedules': pending_schedules,
-        'completed_schedules': completed_schedules
+        'completed_schedules': completed_schedules,
+        'num_of_notifications': num_of_notifications,
+        'notifications': notifications
        }
 
     if request.method == 'POST':
@@ -1295,8 +1320,10 @@ def accounts(request):
     total_costs = transactions_total_cost(request.user)
     offers_count_all, offers_count_today = total_offers(request.user)
     branches = DeliveryBranch.objects.filter(company=request.user.company).all()
+    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     return render(request, 'buyer/accounts.html',
-                  {'branches': branches, 'form': form, 'accounts': accounts_available, 'fuel_orders': fuel_orders, 'order_nums': order_nums,
+                  {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'branches': branches, 'form': form, 'accounts': accounts_available, 'fuel_orders': fuel_orders, 'order_nums': order_nums,
                    'latest_orders': latest_orders, 'total_costs': total_costs, 'offers_count_all': offers_count_all,
                    'offers_count_today': offers_count_today})
 
@@ -1349,7 +1376,7 @@ def make_direct_request(request, id):
             Notification.objects.create(user=supplier, message=message, reference_id=fuel_request_object.id,
                                         action="new_request")
         else:
-            messages.danger(request, f"Supplier not found.")
+            messages.error(request, f"Supplier not found.")
 
     return redirect('buyer:accounts')
 
@@ -1437,7 +1464,7 @@ def proof_of_payment(request, id):
         transaction = Transaction.objects.filter(id=id).first()
         if transaction is not None:
             if transaction.pending_proof_of_payment == True:
-                messages.danger(request, 'Please wait for the supplier to approve the existing proof of payment.')
+                messages.error(request, 'Please wait for the supplier to approve the existing proof of payment.')
                 return redirect('buyer-transactions')
             else:
                 account = Account.objects.filter(buyer_company=request.user.company).first()
@@ -1488,7 +1515,7 @@ def download_release_note(request, id):
         response = HttpResponse(document.release_note, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.danger(request, 'Document not found.')
+        messages.error(request, 'Document not found.')
         return redirect(f'/buyer:payment_release_notes/{document.transaction.id}')
     return response
 
@@ -1502,7 +1529,7 @@ def download_d_note(request, id):
         response = HttpResponse(document.delivery_note, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.danger(request, 'Document not found.')
+        messages.error(request, 'Document not found.')
         return redirect('buyer:activity')
     return response
 
@@ -1516,7 +1543,7 @@ def download_pop(request, id):
         response = HttpResponse(document.proof_of_payment, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.danger(request, 'Document not found.')
+        messages.error(request, 'Document not found.')
         response = redirect('buyer-transactions')
     return response    
 
@@ -1532,18 +1559,22 @@ payment history
 def payment_history(request, id):
     user_permission(request)
     form1 = DeliveryScheduleForm()
+    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
-    return render(request, 'buyer/payment_history.html', {'payment_history': payment_history, 'form1': form1})
+    return render(request, 'buyer/payment_history.html', {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'payment_history': payment_history, 'form1': form1})
 
 
 @login_required()
 def payment_release_notes(request, id):
     user_permission(request)
     form1 = DeliveryScheduleForm()
+    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
-    return render(request, 'buyer/payment_and_rnote.html', {'payment_history': payment_history, 'form1': form1})
+    return render(request, 'buyer/payment_and_rnote.html', {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'payment_history': payment_history, 'form1': form1})
 
 
 """
@@ -1556,6 +1587,8 @@ Account Application
 @login_required
 def account_application(request):
     user_permission(request)
+    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     companies = Company.objects.filter(company_type='SUPPLIER').all()
     for company in companies:
         company.admin = User.objects.filter(company=company, user_type='S_ADMIN').first()
@@ -1570,7 +1603,9 @@ def account_application(request):
         else:
             company.account_exist = False
     context = {
-        'companies': companies
+        'companies': companies,
+        'num_of_notifications': num_of_notifications,
+        'notifications': notifications
     }
     return render(request, 'buyer/supplier_application.html', context=context)
 
@@ -1628,6 +1663,8 @@ def company_profile(request):
 @login_required()
 @user_role
 def activity(request):
+    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     current_activities = Activity.objects.filter(user=request.user, date=today).all()
     filtered_activities = None
     for activity in current_activities:
@@ -1761,7 +1798,7 @@ def activity(request):
                 return response        
 
 
-    return render(request, 'buyer/activity.html', {'activities': activities, 'current_activities': current_activities,
+    return render(request, 'buyer/activity.html', {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'activities': activities, 'current_activities': current_activities,
     'filtered_activities':filtered_activities})
 
 
@@ -1770,8 +1807,10 @@ def activity(request):
 
 @login_required
 def delivery_branches(request):
+    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     branches = DeliveryBranch.objects.filter(company=request.user.company).all()
-    return render(request, 'buyer/delivery_branches.html', {'branches' : branches})
+    return render(request, 'buyer/delivery_branches.html', {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'branches' : branches})
 
 
 @login_required()
@@ -1784,7 +1823,7 @@ def create_branch(request):
         description = request.POST['description']
         check_name = DeliveryBranch.objects.filter(name=name, company=request.user.company).exists()
         if check_name:
-            messages.danger(request, 'You already have a branch with a similar name.')
+            messages.error(request, 'You already have a branch with a similar name.')
             return redirect('buyer:delivery-branches')
         else:
             DeliveryBranch.objects.create(name=name, street_name=street_name, street_number=street_number, city=city,
@@ -1815,7 +1854,7 @@ def download_proof(request, id):
         response = HttpResponse(document.proof_of_payment, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     else:
-        messages.danger(request, 'Document not found.')
+        messages.error(request, 'Document not found.')
         return redirect('buyer:activity')
     return response
 
