@@ -185,7 +185,7 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <form action="" method="POST">
+                                                <form action="{% url 'noic:update-profile' %}" method="POST">
                                                     {% csrf_token %}
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
@@ -208,9 +208,12 @@
                                                         <input type="telephone" name="phone_number" class="form-control"  value="{{ staff.phone_number}}" required/>
                                                     </div>
                                                     </div>
-                                                        
+
+                                                        <!--identity-->
+                                                         <input type="hidden" name="edit_user_id" value="{{ staff.id }}"/>
+
                                                         <div class="modal-footer" >
-                                                            <button type="submit" class="btn btn-primary">Add User Profile</button>
+                                                            <button type="submit" class="btn btn-primary">Update Profile</button>
 
                                                             <button type="button" class="btn btn-secondary"
                                                                 data-dismiss="modal">Close</button>

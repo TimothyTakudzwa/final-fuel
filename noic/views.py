@@ -1283,3 +1283,23 @@ def notication_reader(request):
         notification.is_read = True
         notification.save()
     return redirect('noic:dashboard')
+
+
+@login_required()
+@user_role
+def edit_user_details(request):
+    if request.method == 'POST':
+        current_user = User.objects.filter(id=request.POST.get('edit_user_id')).first()
+        # check if email was edited
+        if current_user.email != request.POST.get('email'):
+            if User.objects.filter(email=request.POST.get('email')).exists():
+                messages.warning(request, 'Email exists already, use another email')
+                return redirect('noic:staff')
+        current_user.email = request.POST.get('email')
+        current_user.first_name = request.POST.get('first_name')
+        current_user.last_name = request.POST.get('last_name')
+        # verify phone number
+        current_user.phone_number = request.POST.get('phone_number')
+        current_user.save()
+        messages.success(request, 'Profile successfully saved')
+        return redirect('noic:staff')
