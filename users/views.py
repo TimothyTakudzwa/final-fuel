@@ -1006,7 +1006,7 @@ def suppliers_list(request):
     form.fields['depot'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in depots]
 
     if request.method == 'POST':
-        form1 = SupplierContactForm(request.POST)
+        # form1 = SupplierContactForm(request.POST)
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
@@ -1022,15 +1022,17 @@ def suppliers_list(request):
 
         sup = User.objects.filter(email=email).first()
         if sup is not None:
+            messages.warning(request, f"The email {sup.email} already used in the system, please use a different email.") 
             if request.POST.get('source') == "from_sub":
-                redirect('users:stations')
-            messages.warning(request, f"The email {sup.email} already used in the system, please use a different email.")
+                request.session['show'] = True
+                request.session['sub_id'] = subsidiary_id
+                return redirect('users:stations')
             return redirect('users:suppliers_list')
 
-        user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
+        user = User.objects.create(company_position='manager', subsidiary_id=int(subsidiary_id), username=username.lower(),
                                    first_name=first_name, last_name=last_name,
                                    company=request.user.company, email=email,
-                                   phone_number=phone_number, password_reset=True)
+                                   phone_number=(phone_number), password_reset=True)
         subsidiary = Subsidiaries.objects.filter(id=subsidiary_id).first()
         if subsidiary.is_depot == False:
             user.user_type = 'SS_SUPPLIER'
@@ -1043,6 +1045,9 @@ def suppliers_list(request):
                     user.save()
                 else:
                     messages.warning(request, f"Oops , something went wrong, please try again")
+            if request.POST.get('source') == "from_sub":
+                request.session['show'] = False
+                return redirect('users:stations')
             return render(request, 'users/suppliers_list.html',
                           {'suppliers': suppliers, 'form1': form1, 'allocate': 'show', 'fuel_update': fuel_update,
                            'form': form})
@@ -1056,6 +1061,9 @@ def suppliers_list(request):
                     user.save()
                 else:
                     messages.warning(request, f"Oops , something went wrong, please try again")
+                if request.POST.get('source') == "from_sub":
+                    request.session['show'] = False
+
             return redirect(f'/users/allocated_fuel/{subsidiary.id}')
 
     return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1, 'form': form,

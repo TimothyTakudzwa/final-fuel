@@ -1,8 +1,7 @@
 {% extends "users/base.html" %}
 {% block body %}
 
-
-{% if add_user == 'show' %}
+{% if request.session.show or add_user == 'show' %}
 
 <div class="modal fade modal-success in" id="new_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document" style="margin: 0;">
@@ -13,33 +12,43 @@
             </div>
             <div class="modal-body">
 
-                {% load crispy_forms_tags %}
                 <form action="{% url 'users:suppliers_list' %}" method="POST">
                     {% csrf_token %}
-                    <input type="hidden" value="{{subsidiary.id}}" name="service_station" />
+                    <input type="hidden" value="{% if not request.session.show %} {{subsidiary.id}} {% else %} {{request.session.sub_id}} {% endif %}" name="service_station" />
                     <input type="hidden" value="from_sub" name="source" />
-                    <div class="row">
-                        <div class="form-group col-md-6 mb-0">
-                            {{ form1.first_name|as_crispy_field }}
+                    
+                    
+                        <div class="form-group col-md-6">
+                            <label for="exampleInputEmail1">First Name</label>
+                            <input name="first_name" type="text" class="form-control" id="ending_date"
+                                aria-describedby="emailHelp" placeholder="" required>
+                            <small id="emailHelp" class="form-text text-muted"
+                                style="color: lightslategray;">Enter First Name</small>
                         </div>
-                        <div class="form-group col-md-6 mb-0">
-                            {{ form1.last_name|as_crispy_field }}
+                        <div class="form-group col-md-6">
+                            <label for="exampleInputEmail1">Last Name</label>
+                            <input name="last_name" type="text" class="form-control" id="ending_date"
+                                aria-describedby="emailHelp" placeholder="" required>
+                            <small id="emailHelp" class="form-text text-muted"
+                                style="color: lightslategray;">Email Last Name</small>
+                        </div><div class="form-group col-md-6">
+                            <label for="exampleInputEmail1">Email</label>
+                            <input name="email" type="text" class="form-control" id="ending_date"
+                                aria-describedby="emailHelp" placeholder="" required>
+                            <small id="emailHelp" class="form-text text-muted"
+                                style="color: lightslategray;">Enter Email</small>
+                        </div><div class="form-group col-md-6">
+                            <label for="exampleInputEmail1">Phone Number</label>
+                            <input name="phone_number" type="text" class="form-control" id="ending_date"
+                                aria-describedby="emailHelp" placeholder="+263772123456" required>
+                            <small id="emailHelp" class="form-text text-muted"
+                                style="color: lightslategray;">Phone Number</small>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-6 mb-0">                                            
-                            {{ form1.phone_number|as_crispy_field }}
-                        </div>
-                        <div class="form-group col-md-6 mb-0">
-                            {{ form1.email|as_crispy_field }}
-                        </div>
-                    </div>
-                   
-                            
-                            <div class="modal-footer">  
-                                <button type="submit" class="btn btn-primary">Add User Profile</button>
-                                <button class="btn btn-default" data-dismiss="modal" >Close</button>
-                            </div>     
+                        
+                        <div class="modal-footer" style="border: none;">  
+                            <button type="submit" class="btn btn-primary">Add User Profile</button>
+                            <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                        </div>     
                     
 
                 </form>
@@ -58,11 +67,11 @@
     });
 
 </script>
-{%else%}
-<script>
-    console.log("This is it 333")
-</script>
-{%endif%}
+
+{% endif %}
+
+<p class="text-center">{{ request.session.fcuj }}</p> 
+
 
 
 <section class="content-header">
