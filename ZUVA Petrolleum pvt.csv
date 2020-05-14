@@ -1,0 +1,7 @@
+date,time,action,diesel_quantity,diesel_price,petrol_quantity,petrol_price,fuel_payment_type
+2020-03-08,03:51:39.332946,Allocation of Petrol,0.0,0.00,5000.0,23.00,USD & RTGS
+2020-03-08,03:51:39.332946,Allocation of Diesel,6000.0,24.00,0.0,0.00,USD & RTGS
+2020-03-08,03:51:39.332946,Allocation of Petrol,0.0,0.00,5000.0,1.23,USD
+2020-03-08,03:51:39.332946,Allocation of Diesel,6000.0,1.23,0.0,0.00,USD
+2020-03-08,03:51:39.332946,Allocation of Petrol,0.0,0.00,5000.0,24.00,RTGS
+2020-03-08,03:51:39.332946,Allocation of Diesel,7000.0,24.00,0.0,0.00,RTGS
