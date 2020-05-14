@@ -1311,4 +1311,4 @@ def delete_user(request):
     if request.method == 'POST':
         User.objects.filter(id=int(request.POST.get('delete_user_id'))).delete()
         messages.success(request, 'User successfully deleted')
-        return redirect('noic:remove-profile')
+        return redirect('noic:staff')
