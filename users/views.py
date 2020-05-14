@@ -1028,7 +1028,7 @@ def suppliers_list(request):
                 request.session['sub_id'] = subsidiary_id
                 request.session['first_name'] = first_name
                 request.session['last_name'] = last_name
-                request.session['email'] = "Already in use."
+                request.session['email'] = "Try different email."
                 request.session['phone_number'] = phone_number
                 return redirect('users:stations')
             return redirect('users:suppliers_list')
@@ -1042,7 +1042,7 @@ def suppliers_list(request):
                 request.session['first_name'] = first_name
                 request.session['last_name'] = last_name
                 request.session['email'] = email
-                request.session['phone_number'] = "Already in use."
+                request.session['phone_number'] = "Try different number."
                 return redirect('users:stations')
             return redirect('users:suppliers_list')    
 
