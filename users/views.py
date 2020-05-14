@@ -1029,6 +1029,15 @@ def suppliers_list(request):
                 return redirect('users:stations')
             return redirect('users:suppliers_list')
 
+        user_with_no = User.objects.filter(phone_number=phone_number).first()
+        if user_with_no is not None:
+            messages.warning(request, f"The phone number {user_with_no.phone_number} already exists in the system, please use a different phone number.") 
+            if request.POST.get('source') == "from_sub":
+                request.session['show'] = True
+                request.session['sub_id'] = subsidiary_id
+                return redirect('users:stations')
+            return redirect('users:suppliers_list')    
+
         user = User.objects.create(company_position='manager', subsidiary_id=int(subsidiary_id), username=username.lower(),
                                    first_name=first_name, last_name=last_name,
                                    company=request.user.company, email=email,
