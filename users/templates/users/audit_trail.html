@@ -141,7 +141,6 @@
                                         <thead>
                                         <tr>
                                             <th>Date</th>
-                                            <th>Time</th>
                                             <th>User</th>
                                             <th>Company</th>
                                             <th>Service Station & Depots</th>
@@ -154,7 +153,6 @@
                                         {% for activity in current_trails %}
                                             <tr>
                                                 <td>{{activity.date}}</td>
-                                                <td>{{activity.time}}</td>
                                                 <td>{{activity.user}}</td>
                                                 <td>{{activity.company.name|title}}</td>
                                                 <td>{{activity.service_station.name}}</td>
@@ -563,7 +561,6 @@
                                         <thead>
                                         <tr>
                                             <th>Date</th>
-                                            <th>Time</th>
                                             <th>User</th>
                                             <th>Company</th>
                                             <th>Service Station & Depots</th>
@@ -576,7 +573,6 @@
                                         {% for activity in trails %}
                                             <tr>
                                                 <td>{{activity.date}}</td>
-                                                <td>{{activity.time}}</td>
                                                 <td>{{activity.user}}</td>
                                                 <td>{{activity.company.name|title}}</td>
                                                 <td>{{activity.service_station.name}}</td>
@@ -1050,7 +1046,6 @@
                         <thead>
                             <tr>
                                 <th>Date</th>
-                                <th>Time</th>
                                 <th>User</th>
                                 <th>Company</th>
                                 <th>Service Station & Depots</th>
@@ -1063,7 +1058,6 @@
                             {% for activity in filtered_trails %}
                                 <tr>
                                     <td>{{activity.date}}</td>
-                                    <td>{{activity.time}}</td>
                                     <td>{{activity.user}}</td>
                                     <td>{{activity.company.name|title}}</td>
                                     <td>{{activity.service_station.name}}</td>

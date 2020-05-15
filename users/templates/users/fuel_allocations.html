@@ -174,10 +174,7 @@
                                                         </div>
                                                 </div>
                                             {% endif %} 
-
-
-                                            {% if allocate.payment_type|upper == 'RTGS'%}
-
+                                            {% if allocate.payment_type|upper == 'RTGS' %}
                                             <div class="row">
 
                                                 <div class="col-md-6">
@@ -187,9 +184,7 @@
                                                 <div class="col-md-6">
                                                     {{update_form.ecocash|as_crispy_field}}
                                                 </div>
-
                                             </div>
-
                                             {% endif %} 
 
 
