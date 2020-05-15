@@ -17,7 +17,7 @@
     <div class="header-title" style="margin-left: 0;">
 
         <h1>Fuel Allocations</h1>
-        <small>Fuel Management System</small>
+        <small>Zimbabwe Fuel Management System</small>
         <ol class="breadcrumb hidden-xs">
             <li><a href="#"><i class="pe-7s-home"></i> Home</a></li>
             <li class="active">Allocations</li>
@@ -164,22 +164,29 @@
                                                     class="form-control" />
                                             </div>
 
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    {{update_form.cash|as_crispy_field}}
+                                            {% if allocate.payment_type == 'USD'%}         
+                                                <div class="row">
+                                                        <div class="col-md-6">
+                                                            {{update_form.cash|as_crispy_field}}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{update_form.usd|as_crispy_field}}
+                                                        </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    {{update_form.usd|as_crispy_field}}
-                                                </div>
-                                            </div>
+                                            {% endif %} 
+                                            {% if allocate.payment_type|upper == 'RTGS' %}
                                             <div class="row">
+
                                                 <div class="col-md-6">
                                                     {{update_form.swipe|as_crispy_field}}
                                                 </div>
+
                                                 <div class="col-md-6">
                                                     {{update_form.ecocash|as_crispy_field}}
                                                 </div>
                                             </div>
+                                            {% endif %} 
+
 
                                     </div>
                                     <div class="modal-footer">

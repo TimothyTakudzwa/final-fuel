@@ -107,7 +107,7 @@ class QuantityLevel1Form(forms.Form):
     petrol_quantity = forms.CharField(label='Petrol Quantity')
     #diesel_quantity = forms.CharField(label='Diesel Quantity')
     cash = forms.CharField(label='Accepts Cash',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
-    usd = forms.CharField(label='Accepts USD ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
+    usd = forms.CharField(label='Accepts FCA ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
     swipe = forms.CharField(label='Accepts Swipe ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
     ecocash = forms.CharField(label='Accepts Ecocash ',  widget=forms.Select(choices=((True,'Yes'),(False,"No"))))
     

@@ -1235,13 +1235,20 @@ def client_history(request, cid):
     trans = []
     state = 'All'
 
+    trns = Transaction.objects.filter(buyer=buyer)
+    trans = []
+    for tran in trns:
+        tran.revenue = Decimal(tran.offer.request.amount) * tran.offer.price
+        tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
+        trans.append(tran)
+
     if request.method == "POST":
 
         if request.POST.get('report_type') == 'Completed':
             trns = Transaction.objects.filter(buyer=buyer, is_complete=True)
             trans = []
             for tran in trns:
-                tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.revenue = Decimal(tran.offer.request.amount) * tran.offer.price
                 tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Complete'
@@ -1266,12 +1273,6 @@ def client_history(request, cid):
 
         return render(request, 'users/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
 
-    trns = Transaction.objects.filter(buyer=buyer)
-    trans = []
-    for tran in trns:
-        tran.revenue = tran.offer.request.amount * tran.offer.price
-        tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
-        trans.append(tran)
 
     return render(request, 'users/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
 
@@ -2868,7 +2869,11 @@ def delivery_schedules(request):
             schedule.delivery_address = schedule.transaction.offer.collection_address
         
     completed_schedules = schedules.filter(confirmation_date__isnull=False)
+    for schedule in completed_schedules:
+        schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
     pending_schedules = schedules.filter(confirmation_date__isnull=True)
+    for schedule in pending_schedules:
+        schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
 
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :
