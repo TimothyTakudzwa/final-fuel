@@ -5,6 +5,7 @@ from io import BytesIO
 
 import pandas as pd
 from django.contrib import messages
+from django.urls import reverse
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
@@ -38,6 +39,32 @@ user = get_user_model()
 today = date.today()
 
 from fuelfinder import settings
+
+zimbabwean_towns = ['Select City ---', 'Beitbridge', 'Bindura', 'Bulawayo', 'Chinhoyi', 'Chirundu', 'Gweru',
+                    'Harare',
+                    'Hwange', 'Juliusdale', 'Kadoma', 'Kariba', 'Karoi', 'Kwekwe', 'Marondera', 'Masvingo',
+                    'Mutare',
+                    'Mutoko', 'Nyanga', 'Victoria Falls']
+Harare = ['Avenues', 'Budiriro', 'Dzivaresekwa', 'Kuwadzana', 'Warren Park', 'Glen Norah', 'Glen View', 'Avondale',
+            'Belgravia', 'Belvedere', 'Eastlea', 'Gun Hill', 'Milton Park', 'Borrowdale', 'Chisipiti', 'Glen Lorne',
+            'Greendale', 'Greystone Park', 'Helensvale', 'Highlands', 'Mandara', 'Manresa', 'Msasa', 'Newlands',
+            'The Grange', 'Ashdown Park', 'Avonlea', 'Bluff Hill', 'Borrowdale', 'Emerald Hill', 'Greencroft',
+            'Hatcliffe', 'Mabelreign', 'Marlborough', 'Meyrick Park', 'Mount Pleasant', 'Pomona', 'Tynwald',
+            'Vainona', 'Arcadia', 'Braeside', 'CBD', 'Cranbourne', 'Graniteside', 'Hillside', 'Queensdale',
+            'Sunningdale', 'Epworth', 'Highfield', 'Kambuzuma', 'Southerton', 'Warren Park', 'Southerton', 'Mabvuku',
+            'Tafara', 'Mbare', 'Prospect', 'Ardbennie', 'Houghton Park', 'Marimba Park', 'Mufakose']
+Bulawayo = ['New Luveve', 'Newsmansford', 'Newton', 'Newton West', 'Nguboyenja', 'Njube', 'Nketa', 'Nkulumane',
+            'North End', 'Northvale', 'North Lynne', 'Northlea', 'North Trenance', 'Ntaba Moyo', 'Ascot',
+            'Barbour Fields', 'Barham Green', 'Beacon Hill', 'Belmont Industrial area', 'Bellevue', 'Belmont',
+            'Bradfield']
+Mutare = ['Murambi', 'Hillside', 'Fairbridge Park', 'Morningside', 'Tigers Kloof', 'Yeovil', 'Westlea', 'Florida',
+            'Chikanga', 'Garikai', 'Sakubva', 'Dangamvura', 'Weirmouth', 'Fern Valley', 'Palmerstone', 'Avenues',
+            'Utopia', 'Darlington', 'Greeside', 'Greenside Extension', 'Toronto', 'Bordervale', 'Natview Park',
+            'Mai Maria', 'Gimboki', 'Musha Mukadzi']
+Gweru = ['Gweru East', 'Woodlands Park', 'Kopje', 'Mtausi Park', 'Nashville', 'Senga', 'Hertifordshire', 'Athlone',
+            'Daylesford', 'Mkoba', 'Riverside', 'Southview', 'Nehosho', 'Clydesdale Park', 'Lundi Park', 'Montrose',
+            'Ascot', 'Ridgemont', 'Windsor Park', 'Ivene', 'Haben Park', 'Bata', 'ThornHill Air Field' 'Green Dale',
+            'Bristle', 'Southdowns']
 
 
 class Render:
@@ -979,7 +1006,7 @@ def suppliers_list(request):
     form.fields['depot'].choices = [((subsidiary.id, subsidiary.name)) for subsidiary in depots]
 
     if request.method == 'POST':
-        form1 = SupplierContactForm(request.POST)
+        # form1 = SupplierContactForm(request.POST)
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
@@ -995,13 +1022,34 @@ def suppliers_list(request):
 
         sup = User.objects.filter(email=email).first()
         if sup is not None:
-            messages.warning(request, f"The email {sup.email} already used in the system, please use a different email.")
+            messages.warning(request, f"The email {sup.email} already used in the system, please use a different email.") 
+            if request.POST.get('source') == "from_sub":
+                request.session['show'] = True
+                request.session['sub_id'] = subsidiary_id
+                request.session['first_name'] = first_name
+                request.session['last_name'] = last_name
+                request.session['email'] = "Try different email."
+                request.session['phone_number'] = phone_number
+                return redirect('users:stations')
             return redirect('users:suppliers_list')
 
-        user = User.objects.create(company_position='manager', subsidiary_id=subsidiary_id, username=username.lower(),
+        user_with_no = User.objects.filter(phone_number=phone_number).first()
+        if user_with_no is not None:
+            messages.warning(request, f"The phone number {user_with_no.phone_number} already exists in the system, please use a different phone number.") 
+            if request.POST.get('source') == "from_sub":
+                request.session['show'] = True
+                request.session['sub_id'] = subsidiary_id
+                request.session['first_name'] = first_name
+                request.session['last_name'] = last_name
+                request.session['email'] = email
+                request.session['phone_number'] = "Try different number."
+                return redirect('users:stations')
+            return redirect('users:suppliers_list')    
+
+        user = User.objects.create(company_position='manager', subsidiary_id=int(subsidiary_id), username=username.lower(),
                                    first_name=first_name, last_name=last_name,
                                    company=request.user.company, email=email,
-                                   phone_number=phone_number, password_reset=True)
+                                   phone_number=(phone_number), password_reset=True)
         subsidiary = Subsidiaries.objects.filter(id=subsidiary_id).first()
         if subsidiary.is_depot == False:
             user.user_type = 'SS_SUPPLIER'
@@ -1014,6 +1062,9 @@ def suppliers_list(request):
                     user.save()
                 else:
                     messages.warning(request, f"Oops , something went wrong, please try again")
+            if request.POST.get('source') == "from_sub":
+                request.session['show'] = False
+                return redirect('users:stations')
             return render(request, 'users/suppliers_list.html',
                           {'suppliers': suppliers, 'form1': form1, 'allocate': 'show', 'fuel_update': fuel_update,
                            'form': form})
@@ -1027,6 +1078,9 @@ def suppliers_list(request):
                     user.save()
                 else:
                     messages.warning(request, f"Oops , something went wrong, please try again")
+                if request.POST.get('source') == "from_sub":
+                    request.session['show'] = False
+
             return redirect(f'/users/allocated_fuel/{subsidiary.id}')
 
     return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1, 'form': form,

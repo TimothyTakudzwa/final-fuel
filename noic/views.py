@@ -700,7 +700,9 @@ def allocate_fuel(request, id):
                     sord_object = SordNationalAuditTrail.objects.create(company=order.company,
                                                                         fuel_type=request.POST['fuel_type'],
                                                                         currency=request.POST['currency'],
-                                                                        quantity=float(request.POST['quantity']))
+                                                                        quantity=float(request.POST['quantity']),
+                                                                        allocated_by=request.user,
+                                                                        allocated_to=order.company)
                     sord_object.sord_no = sord_object.id
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no,
@@ -731,7 +733,9 @@ def allocate_fuel(request, id):
                     sord_object = SordNationalAuditTrail.objects.create(company=order.company,
                                                                         fuel_type=request.POST['fuel_type'],
                                                                         currency=request.POST['currency'],
-                                                                        quantity=float(request.POST['quantity']))
+                                                                        quantity=float(request.POST['quantity']),
+                                                                        allocated_by=request.user,
+                                                                        allocated_to=order.company)
                     sord_object.sord_no = sord_object.id
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no,
@@ -763,7 +767,9 @@ def allocate_fuel(request, id):
                     sord_object = SordNationalAuditTrail.objects.create(company=order.company,
                                                                         fuel_type=request.POST['fuel_type'],
                                                                         currency=request.POST['currency'],
-                                                                        quantity=float(request.POST['quantity']))
+                                                                        quantity=float(request.POST['quantity']),
+                                                                        allocated_by=request.user,
+                                                                        allocated_to=order.company)
                     sord_object.sord_no = sord_object.id
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no,
@@ -794,7 +800,9 @@ def allocate_fuel(request, id):
                     sord_object = SordNationalAuditTrail.objects.create(company=order.company,
                                                                         fuel_type=request.POST['fuel_type'],
                                                                         currency=request.POST['currency'],
-                                                                        quantity=float(request.POST['quantity']))
+                                                                        quantity=float(request.POST['quantity']),
+                                                                        allocated_by=request.user,
+                                                                        allocated_to=order.company)
                     sord_object.sord_no = sord_object.id
                     sord_object.save()
                     SordCompanyAuditTrail.objects.create(company=order.company, sord_no=sord_object.sord_no,
@@ -943,7 +951,7 @@ def report_generator(request):
             end_date = datetime.strptime(end_date, '%Y-%m-%d')
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
-            stock = CompanyFuelUpdate.objects.filter(company=request.user.company).all()
+            stock = DepotFuelUpdate.objects.all()
 
             requests = None
             allocations = None
@@ -1283,3 +1291,32 @@ def notication_reader(request):
         notification.is_read = True
         notification.save()
     return redirect('noic:dashboard')
+
+
+@login_required()
+@user_role
+def edit_user_details(request):
+    if request.method == 'POST':
+        current_user = User.objects.filter(id=int(request.POST.get('edit_user_id'))).first()
+        # check if email was edited
+        if current_user.email != request.POST.get('email'):
+            if User.objects.filter(email=request.POST.get('email')).exists():
+                messages.warning(request, 'Email exists already, use another email')
+                return redirect('noic:staff')
+        current_user.email = request.POST.get('email')
+        current_user.first_name = request.POST.get('first_name')
+        current_user.last_name = request.POST.get('last_name')
+        # verify phone number
+        current_user.phone_number = request.POST.get('phone_number')
+        current_user.save()
+        messages.success(request, 'Profile successfully saved')
+        return redirect('noic:staff')
+
+
+@login_required()
+@user_role
+def delete_user(request):
+    if request.method == 'POST':
+        User.objects.filter(id=int(request.POST.get('delete_user_id'))).delete()
+        messages.success(request, 'User successfully deleted')
+        return redirect('noic:staff')
