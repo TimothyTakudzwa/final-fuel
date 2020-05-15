@@ -1248,7 +1248,7 @@ def client_history(request, cid):
             trns = Transaction.objects.filter(buyer=buyer, is_complete=True)
             trans = []
             for tran in trns:
-                tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.revenue = Decimal(tran.offer.request.amount) * tran.offer.price
                 tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Complete'
