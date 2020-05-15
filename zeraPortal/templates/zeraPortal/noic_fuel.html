@@ -128,7 +128,6 @@
         <table id="noic_fuel" class="table table-striped table-bordered" style="width:100%">
             <thead style="background-color: lightslategray; color:white;">
                 <tr>
-                    <th style="color: white;">Date</th>
                     <th style="color: white;">Depot</th>
                     <th style="color: #f3c258;">USD Diesel</th>
                     <th style="color: white;">Price</th>
@@ -144,7 +143,6 @@
             <tbody>
                 {% for fuel in depots %}
             <tr>
-                <td>{{fuel.date}}</td>
                 <td>{{fuel.depot.name}}</td>
                 <td>{{fuel.usd_diesel|floatformat:2|intcomma}} {% if fuel.usd_diesel < 1000 %} <i
                         class="fa fa-exclamation-triangle text-danger"></i>{% endif %}</td>

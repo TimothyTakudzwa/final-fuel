@@ -45,7 +45,6 @@
                 <table id="payments" class="table table-striped table-bordered" style="width:100%">
                     <thead>
                         <tr>
-                            <th></th>
                             <th>
                                 Date
                             </th>
@@ -74,7 +73,6 @@
                     <tbody>
                         {% for payment in payment_history%}
                         <tr>
-                            <td></td>
                             <td>{{payment.date}} - {{payment.time}}</td>
               
                             <td>{{payment.sord_number}}</td>
@@ -206,7 +204,7 @@
                             <td>
                                 <div class="btn-group">
                                 <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">View Schedule</a>
-                                <a class="btn btn-warning btn-sm" href="{% url 'zeraPortal:view_confirmation_doc' payment.delivery_schedule.id %}" > <i class="fa fa-download" style="font-size:16px"></i> Delivery Note </a>
+                                <a class="btn btn-warning btn-sm" href="{% url 'supplier:view_confirmation_doc' payment.delivery_schedule.id %}" > <i class="fa fa-download" style="font-size:16px"></i> Delivery Note </a>
 
                                 </div>
                             </td>
@@ -303,7 +301,7 @@
                                                 <label><b>Delivery Quantity:</b></label>
                                                 &nbsp;{{payment.delivery_schedule.delivery_quantity|floatformat:2|intcomma}}
                                             </div>
-                                            {% if payment.delivery_schedule.confirmation_document %}
+                                            {% if payment.delivery_schedule.confirmation_date %}
                                             <div class="form-group col-md-6">
                                                 <label><b>Status:</b></label>
                                                 &nbsp;<i style="color: rgb(54, 167, 219);">Buyer Received Fuel </i>
@@ -329,10 +327,10 @@
                                             
                                             {%endif%}  -->
 
-                                            {% if payment.delivery_schedule.confirmation_document %}
+                                            {% if payment.delivery_schedule.confirmation_date %}
                                             <div class="form-group col-md-6">
                                                 <label><b>Delivery Note:</b></label>
-                                                &nbsp;<a class="btn btn-info btn-sm" href="{% url 'zeraPortal:view_confirmation_doc' payment.delivery_schedule.id %}" >Download Document </a>
+                                                &nbsp;<a class="btn btn-info btn-sm" href="{% url 'supplier:view_confirmation_doc' payment.delivery_schedule.id %}" >Download Document </a>
                                             </div>
                                             {% else %}
                                             <div class="form-group col-md-6">

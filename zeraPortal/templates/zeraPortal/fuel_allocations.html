@@ -184,11 +184,7 @@
                             </th>
 
                             <th>
-                                Last Allocation
-                            </th>
-
-                            <th>
-                                
+                                Action
                             </th>
                         </tr>
                     </thead>
@@ -218,11 +214,6 @@
                             <td>{{sord.initial_quantity|floatformat:2|intcomma}}</td>
                             <td>{{sord.quantity_allocated|floatformat:2|intcomma}}</td>
                             <td>{{sord.end_quantity|floatformat:2|intcomma}}</td>
-                            {% if sord.allocated_to != None %}
-                            <td>{{sord.allocated_to}}</td>
-                            {% else %}
-                            <td>--</td>
-                            {% endif %}
                             <td>
                                 <div class="btn-group">
 
