@@ -226,32 +226,32 @@
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
             <script>
                 $(document).ready(function () {
-                $('#fuel_type').show();
-                $('#currency').show();
-                $('#diesel_rtgs_price').hide();
-                $('#diesel_usd_price').hide();
-                $('#petrol_rtgs_price').show();
-                $('#petrol_usd_price').hide();
+                $('#fuel_type{{ forloop.counter }}').show();
+                $('#currency{{ forloop.counter }}').show();
+                $('#diesel_rtgs_price{{ forloop.counter }}').hide();
+                $('#diesel_usd_price{{ forloop.counter }}').hide();
+                $('#petrol_rtgs_price{{ forloop.counter }}').show();
+                $('#petrol_usd_price{{ forloop.counter }}').hide();
                
                 
                 
                 $('#fuel_type, #currency').change(function () {
                 if ($('#fuel_type option:selected').text() == "Diesel") {
                     if ($('#currency option:selected').text() == "USD") {
-                        $('#currency').show();
-                        $('#diesel_rtgs_price').hide();
-                        $('#diesel_usd_price').show();
-                        $('#petrol_rtgs_price').hide();
-                        $('#petrol_usd_price').hide();
+                        $('#currency{{ forloop.counter }}').show();
+                        $('#diesel_rtgs_price{{ forloop.counter }}').hide();
+                        $('#diesel_usd_price{{ forloop.counter }}').show();
+                        $('#petrol_rtgs_price{{ forloop.counter }}').hide();
+                        $('#petrol_usd_price{{ forloop.counter }}').hide();
                     
                      }
 
                     else {
-                        $('#currency').show();
-                        $('#diesel_rtgs_price').show();
-                        $('#diesel_usd_price').hide();
-                        $('#petrol_rtgs_price').hide();
-                        $('#petrol_usd_price').hide();
+                        $('#currency{{ forloop.counter }}').show();
+                        $('#diesel_rtgs_price{{ forloop.counter }}').show();
+                        $('#diesel_usd_price{{ forloop.counter }}').hide();
+                        $('#petrol_rtgs_price{{ forloop.counter }}').hide();
+                        $('#petrol_usd_price{{ forloop.counter }}').hide();
                     }
 
                 }
@@ -259,19 +259,19 @@
                 else {
                     if ($('#currency option:selected').text() == "USD") {
                         $('#currency').show();
-                        $('#diesel_rtgs_price').hide();
-                        $('#diesel_usd_price').hide();
-                        $('#petrol_rtgs_price').hide();
-                        $('#petrol_usd_price').show();
+                        $('#diesel_rtgs_price{{ forloop.counter }}').hide();
+                        $('#diesel_usd_price{{ forloop.counter }}').hide();
+                        $('#petrol_rtgs_price{{ forloop.counter }}').hide();
+                        $('#petrol_usd_price{{ forloop.counter }}').show();
                     
                      }
 
                     else {
-                        $('#currency').show();
-                        $('#diesel_rtgs_price').hide();
-                        $('#diesel_usd_price').hide();
-                        $('#petrol_rtgs_price').show();
-                        $('#petrol_usd_price').hide();
+                        $('#currency{{ forloop.counter }}').show();
+                        $('#diesel_rtgs_price{{ forloop.counter }}').hide();
+                        $('#diesel_usd_price{{ forloop.counter }}').hide();
+                        $('#petrol_rtgs_price{{ forloop.counter }}').show();
+                        $('#petrol_usd_price{{ forloop.counter }}').hide();
                     }
 
                 }
@@ -299,7 +299,7 @@
                             {% csrf_token %}
                             <input type="hidden"  id="quantity" name="quantity" />
                             <div class="form-group row col-sm-12" style="margin-top: 5%;">
-                                <div class="col-sm-6" id="fuel_type">
+                                <div class="col-sm-6" id="fuel_type{{ forloop.counter }}">
 
                                     <label><b style='color:#009688'>Fuel Type</b></label>
                                     <select class="form-control" name="fuel_type">
@@ -313,12 +313,12 @@
                                 <div class="col-sm-6" id=quantity>
                                     <label><b style='color:#009688'>Quantity</b></label>
                                     <input type="text" name="quantity" class="form-control"
-                                     id="quantity"/>
+                                     id="quantity{{ forloop.counter }}"/>
                                 </div>
                                
                             </div>
                             <div class=" form-group row col-sm-12">
-                                <div class="col-sm-6" id="currency">
+                                <div class="col-sm-6" id="currency{{ forloop.counter }}">
 
                                     <label><b style='color:#009688'>Currency</b></label>
                                     <select class="form-control" name="currency">
@@ -332,22 +332,22 @@
                                 <div class="col-sm-6" id="diesel_rtgs_price">
                                     <label><b style='color:#009688'>Price</b></label>
                                     <input type="text" min="0.1" step="0.01" name="diesel_rtgs_price" class="form-control"
-                                        value="{{diesel_rtgs_price}}" id="diesel_rtgs_price_input"  />
+                                        value="{{diesel_rtgs_price}}" id="diesel_rtgs_price_input{{ forloop.counter }}"  />
                                 </div>
                                 <div class="col-sm-6" id="diesel_usd_price">
                                     <label><b style='color:#009688'>Price</b></label>
                                     <input type="text" min="0.1" step="0.01" name="diesel_usd_price" class="form-control"
-                                        value="{{diesel_usd_price}}" id="diesel_usd_price_input"  />
+                                        value="{{diesel_usd_price}}" id="diesel_usd_price_input{{ forloop.counter }}"  />
                                 </div>
                                 <div class="col-sm-6" id="petrol_rtgs_price">
                                     <label><b style='color:#009688'>Price</b></label>
                                     <input type="text" min="0.1" step="0.01" name="petrol_rtgs_price" class="form-control"
-                                        value="{{petrol_rtgs_price}}" id="petrol_rtgs_price_input"  />
+                                        value="{{petrol_rtgs_price}}" id="petrol_rtgs_price_input{{ forloop.counter }}"  />
                                 </div>
                                 <div class="col-sm-6" id="petrol_usd_price">
                                     <label><b style='color:#009688'>Price</b></label>
                                     <input type="text" min="0.1" step="0.01" name="petrol_usd_price" class="form-control"
-                                        value="{{petrol_usd_price}}" id="petrol_usd_price_input"  />
+                                        value="{{petrol_usd_price}}" id="petrol_usd_price_input{{ forloop.counter }}"  />
                                 </div>
 
                             </div> 
