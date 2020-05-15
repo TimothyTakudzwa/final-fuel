@@ -1381,7 +1381,7 @@ def report_generator(request):
             total = unallocated_petrol + unallocated_diesel + subs_petrol + subs_diesel    
 
             stock = {'unallocated_petrol':unallocated_petrol, 'unallocated_diesel': unallocated_diesel,
-              'subs_petrol': subs_petrol, 'subs_diesel': subs_diesel}
+              'subs_petrol': subs_petrol, 'subs_diesel': subs_diesel,'total': total }
 
 
             
