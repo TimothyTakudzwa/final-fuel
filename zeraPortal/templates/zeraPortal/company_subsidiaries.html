@@ -90,8 +90,13 @@
                             <td>
                                 <div class="btn-group">
                                     {% if subsidiary.license_num != None %}
-                                    <button class="btn btn-purple btn-sm" data-toggle="modal"
-                                        data-target="#edit_{{subsidiary.id}}">Update Licence</button>
+                                        {% if subsidiary.application_form %}
+                                        <button class="btn btn-purple btn-sm" data-toggle="modal"
+                                            data-target="#edit_{{subsidiary.id}}">Update Licence</button>
+                                        {% else %}
+                                        <button class="btn btn-purple btn-sm" data-toggle="modal"
+                                            data-target="#edit_existing_{{subsidiary.id}}">Update Licence</button>
+                                        {% endif %}
                                         {% if subsidiary.is_active == True %}
                                     <button class="btn btn-danger btn-sm" data-toggle="modal"
                                         data-target="#block_{{subsidiary.id}}">Cancel Licence</button>
@@ -188,7 +193,44 @@
                         </div>
                     </div>
                         </div>
-
+                        
+                        <!--License edit for subsidiary without application forms-->
+                        <div class="modal fade modal-success in" id="edit_existing_{{subsidiary.id}}" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document" >
+                            <div class="modal-content">
+                                
+                                <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                <span class="modal-title">Update {{subsidiary.name}}'s Licence </span>
+                            </div>
+                                <div class="modal-body">
+                                    <form action="{% url 'zeraPortal:change_licence' subsidiary.id %}"
+                                        method="POST">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <label>Old Licence</label>
+                                            <input type="text" name="license_num" class="form-control" value="{{subsidiary.license_num}}" disabled/>
+                                        </div>
+                                        
+                                        <div class="form-group col-md-6">
+                                            <label>New Licence</label>
+                                            <input type="text" name="license_num" class="form-control" required/>
+                                        </div>
+                                    </div>    
+                                    
+                                <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
+                                    <button type="button" class="btn btn-secondary col-sm-6"
+                                        data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary col-sm-6">Update</button>
+                                </div>
+                                        </form>
+                                    </form>
+                            </div>
+                        </div>
+                    </div>
+                        </div>
 
                     <!-- Block License Modal -->
                     <div class="modal fade modal-success in" id="block_{{subsidiary.id}}" tabindex="-1" role="dialog"
