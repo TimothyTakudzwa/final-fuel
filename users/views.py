@@ -1380,8 +1380,7 @@ def report_generator(request):
 
             total = unallocated_petrol + unallocated_diesel + subs_petrol + subs_diesel    
 
-            StockStruct = namedtuple("StockStruct", "unallocated_petrol unallocated_diesel  subs_petrol subs_diesel total")
-            stock = StockStruct('unallocated_petrol', 'unallocated_diesel',  'subs_petrol', 'subs_diesel', 'total')
+            stock = {'unallocated_petrol':0; 'unallocated_diesel': 0;  'subs_petrol': 0; 'subs_diesel': 0}
 
 
             
