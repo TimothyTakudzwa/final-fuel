@@ -947,7 +947,7 @@ def report_generator(request):
             end_date = datetime.strptime(end_date, '%Y-%m-%d')
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
-            stock = CompanyFuelUpdate.objects.filter(company=request.user.company).all()
+            stock = DepotFuelUpdate.objects.all()
 
             requests = None
             allocations = None
