@@ -359,6 +359,8 @@ def edit_fuel(request):
 @login_required()
 @user_role
 def allocations(request):
+    requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
+    num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
     allocations = SordNationalAuditTrail.objects.all()
     date_today = datetime.date.today().strftime("%d/%m/%y")
 
@@ -424,7 +426,7 @@ def allocations(request):
                 response['Content-Disposition'] = f'attachment;filename={export_name} - {date_today}.pdf'
                 return response
 
-    return render(request, 'noic/allocations.html', {'allocations': allocations})
+    return render(request, 'noic/allocations.html', {'requests_notifications': requests_notifications, 'num_of_requests': num_of_requests, 'allocations': allocations})
 
 
 @login_required()
@@ -432,6 +434,8 @@ def allocations(request):
 def depots(request):
     global depot
     depots = NoicDepot.objects.all()
+    requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
+    num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
     form1 = DepotContactForm()
     zimbabwean_towns = ['Select City ---', 'Beitbridge', 'Bindura', 'Bulawayo', 'Chinhoyi', 'Chirundu', 'Gweru',
                         'Harare', 'Hwange', 'Juliusdale', 'Kadoma', 'Kariba', 'Karoi', 'Kwekwe', 'Marondera',
@@ -492,12 +496,12 @@ def depots(request):
         depots = NoicDepot.objects.all()
 
         return render(request, 'noic/depots.html',
-                      {'depots': depots, 'form1': form1, 'add_user': 'show', 'Harare': Harare, 'Bulawayo': Bulawayo,
+                      {'requests_notifications': requests_notifications, 'num_of_requests': num_of_requests, 'depots': depots, 'form1': form1, 'add_user': 'show', 'Harare': Harare, 'Bulawayo': Bulawayo,
                        'zimbabwean_towns': zimbabwean_towns,
                        'Mutare': Mutare, 'Gweru': Gweru, 'form': DepotContactForm(), 'depot': depot_id})
 
     return render(request, 'noic/depots.html',
-                  {'depots': depots, 'add_user': 'hide', 'Harare': Harare, 'Bulawayo': Bulawayo,
+                  {'requests_notifications': requests_notifications, 'num_of_requests': num_of_requests, 'depots': depots, 'add_user': 'hide', 'Harare': Harare, 'Bulawayo': Bulawayo,
                    'zimbabwean_towns': zimbabwean_towns,
                    'Mutare': Mutare, 'Gweru': Gweru, 'form1': form1, 'form': DepotContactForm()})
 
@@ -824,6 +828,8 @@ def allocate_fuel(request, id):
 @login_required()
 @user_role
 def statistics(request):
+    requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
+    num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
     monthly_rev = get_monthly_orders()
     weekly_rev = get_weekly_orders(True)
     last_week_rev = get_weekly_orders(False)
@@ -852,13 +858,15 @@ def statistics(request):
     clients = sorted(new_clients, key=lambda x: x.total_revenue, reverse=True)
 
     return render(request, 'noic/statistics.html',
-                  {'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev, 'last_week_rev': last_week_rev,
+                  {'requests_notifications': requests_notifications, 'num_of_requests': num_of_requests, 'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev, 'last_week_rev': last_week_rev,
                    'clients': clients})
 
 
 @login_required()
 @user_role
 def staff(request):
+    requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
+    num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
     staffs = User.objects.filter(user_type='NOIC_STAFF').all()
     for staff in staffs:
         staff.depot = NoicDepot.objects.filter(id=staff.subsidiary_id).first()
@@ -909,7 +917,7 @@ def staff(request):
                 messages.warning(request, f"Oops , something went wrong, please try again.")
         return redirect('noic:staff')
 
-    return render(request, 'noic/staff.html', {'depots': depots, 'form1': form1, 'staffs': staffs})
+    return render(request, 'noic/staff.html', {'requests_notifications': requests_notifications, 'num_of_requests': num_of_requests, 'depots': depots, 'form1': form1, 'staffs': staffs})
 
 
 @login_required()
@@ -936,6 +944,8 @@ def message_is_send(request, user, password):
 def report_generator(request):
     '''View to dynamically render form tables based on different criteria'''
     allocations = requests = orders = stock = None
+    requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
+    num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
     # orders = Transaction.objects.filter(supplier__company=request.user.company).all()
     start_date = start = "December 1 2019"
     end_date = end = "January 1 2019"
@@ -951,8 +961,9 @@ def report_generator(request):
             end_date = datetime.strptime(end_date, '%Y-%m-%d')
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
+            print('I am in stock')
             stock = DepotFuelUpdate.objects.all()
-
+            print(stock)
             requests = None
             allocations = None
             orders = None
@@ -1015,14 +1026,16 @@ def report_generator(request):
             unverified_companies = None
         start = start_date
         end = end_date
-    return render(request, 'noic/reports.html')
+    return render(request, 'noic/reports.html', {'requests_notifications': requests_notifications, 'num_of_requests': num_of_requests})
 
 
 @login_required()
 @user_role
 def profile(request):
     user = request.user
-    return render(request, 'noic/profile.html', {'user': user})
+    requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
+    num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
+    return render(request, 'noic/profile.html', {'requests_notifications': requests_notifications, 'num_of_requests': num_of_requests, 'user': user})
 
 
 @login_required()
@@ -1030,6 +1043,8 @@ def profile(request):
 def report_generator(request):
     '''View to dynamically render form tables based on different criteria'''
     orders = pending_orders = complete_orders = stock = allocations_per_supplier = None
+    requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
+    num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
 
     # orders = Transaction.objects.filter(supplier__company=request.user.company).all()
     start_date = start = "December 1 2019"
@@ -1046,10 +1061,8 @@ def report_generator(request):
             end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
-            stock = type('test', (object,), {})()
-            # stock.date = datetime.today()
-            stock.usd, stock.zwl = get_current_usd_stock(), get_current_zwl_stock()
-
+            stock = DepotFuelUpdate.objects.all()
+            print(stock)
             allocations_per_supplier = None
             pending_orders = None
             orders = None
@@ -1057,7 +1070,7 @@ def report_generator(request):
 
         if request.POST.get('report_type') == 'Pending Orders':
             pending_orders = Order.objects.filter(date__range=[start_date, end_date],
-                                                  payment_approved=False)
+                                                  status="Pending")
             stock = None
             allocations_per_supplier = None
             orders = None
@@ -1074,7 +1087,7 @@ def report_generator(request):
             complete_orders = None
 
         if request.POST.get('report_type') == 'Completed Orders':
-            complete_orders = Order.objects.filter(date__range=[start_date, end_date], payment_approved=True)
+            complete_orders = Order.objects.filter(date__range=[start_date, end_date], status="Allocated")
             print(f'__________________{complete_orders}__________________________________')
             print(f'__________________I am in complete_orders__________________________________')
 
@@ -1114,7 +1127,7 @@ def report_generator(request):
 
     show = False
     return render(request, 'noic/reports.html',
-                  {'orders': orders, 'pending_orders': pending_orders, 'complete_orders': complete_orders,
+                  {'requests_notifications': requests_notifications, 'num_of_requests': num_of_requests, 'orders': orders, 'pending_orders': pending_orders, 'complete_orders': complete_orders,
                    'start': start, 'end': end, 'stock': stock})
 
 

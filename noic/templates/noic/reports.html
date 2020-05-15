@@ -429,9 +429,10 @@
                                                 <option value="" selected disabled hidden>Choose here</option>
                                                 <option selected>All Orders</option>
                                                 <option selected>Pending Orders</option>
+                                                <option selected>Stock</option>
                                                 <option selected>Allocations Per Supplier</option>
                                                 <option>Completed Orders</option>
-                                                <option>Stock</option>
+                                               
                                             </select>
                                         </div>
                                         <div class="row report_dates" style="margin-bottom: 25px; margin-top: 25px">
@@ -845,13 +846,15 @@
                                             </tr>
                                             </thead>
                                             <tbody>
+                                            {% for stok in stock %}
                                             <tr>
-                                                <td>{{stock.depot.name}}</td>
-                                                <td>{{stock.usd_diesel}}l</td>
-                                                <td>{{stock.usd_petrol}}l</td>
-                                                <td>{{stock.rtgs_diesel}}l</td>
-                                                <td>{{stock.rtgs_petrol}}l</td>
+                                                <td>{{stok.depot.name}}</td>
+                                                <td>{{stok.usd_diesel|floatformat:2|intcomma}}l</td>
+                                                <td>{{stok.usd_petrol|floatformat:2|intcomma}}l</td>
+                                                <td>{{stok.rtgs_diesel|floatformat:2|intcomma}}l</td>
+                                                <td>{{stok.rtgs_petrol|floatformat:2|intcomma}}l</td>
                                             </tr>
+                                            {% endfor %}
                                             </tbody>
                                         </table>
                                     </div>
