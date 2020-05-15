@@ -36,6 +36,8 @@ user = get_user_model()
 @login_required()
 @user_role
 def orders(request):
+    requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
+    num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
     new_orders = Order.objects.filter(allocated_fuel=True).order_by('-date', '-time')
     orders = Order.objects.filter(allocated_fuel=False).order_by('-date', '-time')
     for order in orders:
@@ -176,12 +178,14 @@ def orders(request):
 
         
 
-    return render(request, 'noic/orders.html', {'orders': orders, 'form1': form1, 'new_orders': new_orders})
+    return render(request, 'noic/orders.html', {'requests_notifications': requests_notifications, 'orders': orders, 'form1': form1, 'new_orders': new_orders})
 
 
 @login_required()
 @user_role
 def activity(request):
+    requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
+    num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
     filtered_activities = None
     activities = Activity.objects.filter(user=request.user).all()
     
@@ -283,7 +287,7 @@ def activity(request):
 
 
 
-    return render(request, 'noic/activity.html', {'current_activities': current_activities, 'previous_activities': previous_activities})
+    return render(request, 'noic/activity.html', {'requests_notifications': requests_notifications, 'num_of_requests': num_of_requests, 'num_of_requests': num_of_requests, 'current_activities': current_activities, 'previous_activities': previous_activities})
 
 
 @login_required()
@@ -1153,12 +1157,16 @@ def depot_history(request, did):
 @user_role
 def collections(request):
     filtered_collections = None
+    requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
+    num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
     collections = Collections.objects.exclude(date=today).order_by('-date', '-time')
     new_collections = Collections.objects.filter(date=today).order_by('-time')
 
     context = {
         'collections': collections ,
-        'new_collections': new_collections
+        'new_collections': new_collections,
+        'requests_notifications': requests_notifications,
+        'num_of_requests': num_of_requests
     }
 
     if request.method == 'POST':
