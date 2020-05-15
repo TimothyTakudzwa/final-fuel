@@ -1921,14 +1921,14 @@
                                                    class="table table-bordered table-striped table-hover">
                                                 <thead>
                                                 <tr>
+                                                    {% for city in final_desperate_cities %}
                                                     <th>City</th>
                                                     <th>Deficit</th>
 
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        {% for city in final_desperate_cities %}
+                                                    <tr>                                                        
                                                             <td>{{ city.0 }}</td>
                                                             <td>{{ city.1 }}</td>
                                                         {% endfor %}
