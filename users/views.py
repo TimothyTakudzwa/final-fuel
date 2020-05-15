@@ -2,6 +2,7 @@
 import secrets
 from datetime import datetime, date
 from io import BytesIO
+from collections import namedtuple
 
 import pandas as pd
 from django.contrib import messages
@@ -10,6 +11,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.db.models import Count
+from django.db.models import Sum
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -1355,7 +1357,34 @@ def report_generator(request):
             end_date = datetime.strptime(end_date, '%Y-%m-%d')
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Stock':
-            stock = CompanyFuelUpdate.objects.filter(company=request.user.company).all()
+            fuel_update = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
+            
+            if fuel_update:
+                unallocated_petrol = fuel_update.unallocated_petrol
+                unallocated_diesel = fuel_update.unallocated_diesel
+            else:
+                unallocated_petrol = 0.00
+                unallocated_diesel = 0.00
+
+            subsidiary_fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary__company=request.user.company)
+            
+            if subsidiary_fuel:
+                subs_petrol = subsidiary_fuel.aggregate(Sum('petrol_quantity'))
+                subs_petrol = subs_petrol['petrol_quantity__sum']
+                subs_diesel = subsidiary_fuel.aggregate(Sum('diesel_quantity'))
+                subs_diesel = subs_diesel['diesel_quantity__sum']
+
+            else:
+                subs_petrol = 0.00
+                subs_diesel = 0.00
+
+            total = unallocated_petrol + unallocated_diesel + subs_petrol + subs_diesel    
+
+            stock = {'unallocated_petrol':unallocated_petrol, 'unallocated_diesel': unallocated_diesel,
+              'subs_petrol': subs_petrol, 'subs_diesel': subs_diesel,'total': total }
+
+
+            
 
             requests = None
             allocations = None
