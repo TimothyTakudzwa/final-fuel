@@ -206,7 +206,7 @@
                         
                         
                         
-                            <button type="button" class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#add_fuel{{fuel.id}}" style="margin-right: 10px;">
+                            <button type="button" class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#add_fuel{{forloop.counter}}" style="margin-right: 10px;">
                                 <span class="btn-label"><i class="glyphicon glyphicon-plus"></i></span>Add Fuel
                             </button>    
                             
@@ -281,7 +281,7 @@
                 </script>
 
     
-            <div class="modal fade modal-success in" id="add_fuel{{fuel.id}}" tabindex="-1" role="dialog"
+            <div class="modal fade modal-success in" id="add_fuel{{forloop.counter}}" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class=" modal-dialog" role="document">
                 <div class="modal-content">
