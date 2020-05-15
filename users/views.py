@@ -1289,7 +1289,6 @@ def subsidiary_transaction_history(request, sid):
         tran.revenue = Decimal(tran.offer.request.amount) * tran.offer.price
         tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
         trans.append(tran)
-    state = 'All'
 
     if request.method == "POST":
 
