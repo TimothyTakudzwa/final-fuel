@@ -1235,6 +1235,13 @@ def client_history(request, cid):
     trans = []
     state = 'All'
 
+    trns = Transaction.objects.filter(buyer=buyer)
+    trans = []
+    for tran in trns:
+        tran.revenue = Decimal(tran.offer.request.amount) * tran.offer.price
+        tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
+        trans.append(tran)
+
     if request.method == "POST":
 
         if request.POST.get('report_type') == 'Completed':
@@ -1266,12 +1273,6 @@ def client_history(request, cid):
 
         return render(request, 'users/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
 
-    trns = Transaction.objects.filter(buyer=buyer)
-    trans = []
-    for tran in trns:
-        tran.revenue = tran.offer.request.amount * tran.offer.price
-        tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
-        trans.append(tran)
 
     return render(request, 'users/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
 
