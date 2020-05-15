@@ -230,7 +230,7 @@
                                     </div>
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Status: </p>
-                                        {% if delivery.confirmation_document %}
+                                        {% if delivery.confirmation_date %}
                                         <p class="col-md-6"> 
                                             <a class="btn btn-purple btn-sm" href="{% url 'supplier:view_confirmation_doc' delivery.id %}">View Confirmation Doc</a>
                                         </p>       
@@ -546,7 +546,7 @@
                                     </div>
                                     <div class="row" style="padding: 10px;">
                                         <p class="col-md-6" style="font-weight: bold;">Status: </p>
-                                        {% if delivery.confirmation_document %}
+                                        {% if delivery.confirmation_date %}
                                         <p class="col-md-6"> 
                                             <a class="btn btn-purple btn-sm" href="{% url 'supplier:view_confirmation_doc' delivery.id %}">View Confirmation Doc</a>
                                         </p>       
