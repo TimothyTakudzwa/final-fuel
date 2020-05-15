@@ -314,7 +314,7 @@
                             </div> -->
                             <div class="header-title" style="margin-left: 0px;">
                                 <h1> Report Generator</h1>
-                                <small> ZFMS</small>
+                                <small> Zimbabwe Fuel Management System </small>
                                 <ol class="breadcrumb hidden-xs">
                                     <li><a href="index.html"><i class="pe-7s-home"></i> Home</a></li>
                                     <li class="active">Report Generator</li>
@@ -608,43 +608,39 @@
                                         <table id="stock" class="table table-striped table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr>
-                                                        <th style="background-color: #778899;">Last Update</th>
-                                                        <th style="background-color: #778899;">Station Type</th>
-                                                        <th style="background-color: #778899;">Station Name</th>
-                                                        <th style="background-color: #778899;">Petrol (Litres)</th>
-                                                        <th style="background-color: #778899;">Petrol Price</th>
-                                                        <th style="background-color: #778899;">Diesel (Litres)</th>
-                                                        <th style="background-color: #778899;">Diesel Price</th>
+                                                        
+                                                        <th style="background-color: #778899;">Unallocated Diesel (Litres)</th>
+                                                        <th style="background-color: #778899;">Unallocated Petrol (Litres)</th>
+                                                        <th style="background-color: #778899;">Allocated Diesel (Litres)</th>
+                                                        <th style="background-color: #778899;">Allocated Petrol (Litres)</th>
+                                                        <th style="background-color: #778899;">Total (Litres)</th>
+
                                                         
                                                       
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {%for my_stock in stock %}
-                                                    <tr>
-                                                        
-                                                            <td>{{my_stock.last_updated}}</td>
-                                                            <td>{{my_stock.sub_type}}</td>
-                                                            <td>{{my_stock.subsidiary_name}}</td>
-                                                            <td>{{my_stock.petrol_quantity|floatformat:2|intcomma}} l</td>
-                                                            <td>{{my_stock.petrol_price}}</td>
-                                                            <td>{{my_stock.diesel_quantity|floatformat:2|intcomma}} l</td>
-                                                            <td>$ {{my_stock.diesel_price}}</td>
-                                                            
+                                                    
+                                                    <tr>      
+                                                        <td>{{stock.unallocated_petrol|floatformat:2|intcomma}}</td>
+                                                        <td>{{stock.unallocated_diesel|floatformat:2|intcomma}}</td>        
+                                                        <td>{{stock.subs_petrol|floatformat:2|intcomma}}</td>        
+                                                        <td>{{stock.subs_diesel|floatformat:2|intcomma}}</td>   
+                                                        <td>{{stock.total|floatformat:2|intcomma}}</td>        
+
+
                                                     </tr>
-                                                    {%endfor%}
+                                                    
                                                   
                             
                                                 </tbody>
                                                 <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em; ">
                                                     <tr>
-                                                            <th>Last Update</th>
-                                                            <th>Station Type</th>
-                                                            <th>Station Name</th>
-                                                            <th>Diesel Quantity</th>
-                                                            <th>Petrol Price</th>
-                                                            <th>Diesel Quantity</th>
-                                                            <th>Diesel Price</th>
+                                                        <th>Unallocated Diesel (Litres)</th>
+                                                        <th>Unallocated Petrol (Litres)</th>
+                                                        <th>Allocated Diesel (Litres)</th>
+                                                        <th>Allocated Petrol (Litres)</th>
+                                                        <th>Total (Litres)</th>
                                                          
                                                     </tr>
                                                 </tfoot>
