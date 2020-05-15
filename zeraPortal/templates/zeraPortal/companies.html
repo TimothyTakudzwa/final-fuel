@@ -16,7 +16,7 @@
                 <div class="modal-body">
                     <form action="{% url 'zeraPortal:add-supplier-admin' new_company.id %}" method="POST">
                         {% csrf_token %}
-                        <div class="row col-sm-12">
+                        <div class="form-group row col-sm-12">
                             <div class="col-sm-6">
                             <label>First Name: </label>
                             <input type="text" name="first_name" class="form-control" required/>
@@ -27,7 +27,7 @@
                             <input type="text" name="last_name" class="form-control" required/>
                         </div>
                         </div>
-                        <div class="row col-sm-12">
+                        <div class="form-group row col-sm-12">
                             <div class="col-sm-6">
                             <label>Email Address: </label>
                             <input type="email" name="email" class="form-control" required/>
