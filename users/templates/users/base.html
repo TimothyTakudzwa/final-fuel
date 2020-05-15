@@ -259,6 +259,17 @@
 
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
+              {% if request.session.show  %}
+                <script>
+                  $("document").ready(function(){
+                  setTimeout(function(){
+                      $("div.alert").remove();
+                  }, 9000 ); // 9 secs
+
+                  });
+              </script>
+              
+              {% else %}
                 <script>
                     $("document").ready(function(){
                     setTimeout(function(){
@@ -267,6 +278,7 @@
 
                     });
                 </script>
+              {% endif%}  
 
                 <!--MainContent-->
 
