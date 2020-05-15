@@ -310,10 +310,10 @@
 
                                     </select>
                                 </div>
-                                <div class="col-sm-6" id=quantity>
+                                <div class="col-sm-6" id=quantity{{ forloop.counter }}>
                                     <label><b style='color:#009688'>Quantity</b></label>
                                     <input type="text" name="quantity" class="form-control"
-                                     id="quantity{{ forloop.counter }}"/>
+                                     id="quantity"/>
                                 </div>
                                
                             </div>
@@ -329,25 +329,25 @@
 
                                     </select>
                                 </div>
-                                <div class="col-sm-6" id="diesel_rtgs_price">
+                                <div class="col-sm-6" id="diesel_rtgs_price{{ forloop.counter }}">
                                     <label><b style='color:#009688'>Price</b></label>
                                     <input type="text" min="0.1" step="0.01" name="diesel_rtgs_price" class="form-control"
-                                        value="{{diesel_rtgs_price}}" id="diesel_rtgs_price_input{{ forloop.counter }}"  />
+                                        value="{{diesel_rtgs_price}}" id="diesel_rtgs_price_input"  />
                                 </div>
-                                <div class="col-sm-6" id="diesel_usd_price">
+                                <div class="col-sm-6" id="diesel_usd_price{{ forloop.counter }}">
                                     <label><b style='color:#009688'>Price</b></label>
                                     <input type="text" min="0.1" step="0.01" name="diesel_usd_price" class="form-control"
-                                        value="{{diesel_usd_price}}" id="diesel_usd_price_input{{ forloop.counter }}"  />
+                                        value="{{diesel_usd_price}}" id="diesel_usd_price_input"  />
                                 </div>
-                                <div class="col-sm-6" id="petrol_rtgs_price">
+                                <div class="col-sm-6" id="petrol_rtgs_price{{ forloop.counter }}">
                                     <label><b style='color:#009688'>Price</b></label>
                                     <input type="text" min="0.1" step="0.01" name="petrol_rtgs_price" class="form-control"
-                                        value="{{petrol_rtgs_price}}" id="petrol_rtgs_price_input{{ forloop.counter }}"  />
+                                        value="{{petrol_rtgs_price}}" id="petrol_rtgs_price_input"  />
                                 </div>
-                                <div class="col-sm-6" id="petrol_usd_price">
+                                <div class="col-sm-6" id="petrol_usd_price{{ forloop.counter }}">
                                     <label><b style='color:#009688'>Price</b></label>
                                     <input type="text" min="0.1" step="0.01" name="petrol_usd_price" class="form-control"
-                                        value="{{petrol_usd_price}}" id="petrol_usd_price_input{{ forloop.counter }}"  />
+                                        value="{{petrol_usd_price}}" id="petrol_usd_price_input"  />
                                 </div>
 
                             </div> 
