@@ -1920,7 +1920,7 @@
                                             <table id="dataTableExample2"
                                                    class="table table-bordered table-striped table-hover">
                                                 <thead>
-                                                <tr>
+                                                <tr>                                                    
                                                     <th>City</th>
                                                     <th>Deficit</th>
 
@@ -1928,9 +1928,9 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        {% for city, deficit in final_desperate_cities %}
-                                                            <td>{{ city }}</td>
-                                                            <td>{{ deficit }}</td>
+                                                        {% for city in final_desperate_cities %}                                               
+                                                            <td>{{ city.0 }}</td>
+                                                            <td>{{ city.1 }}</td>
                                                         {% endfor %}
                                                     </tr>
 
