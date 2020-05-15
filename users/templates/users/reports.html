@@ -684,7 +684,7 @@
                                             </th>
                                             
                                             <th style="color:white;">
-                                            Name
+                                            Buyer Name
                                             </th>
                                             <th style="color:white;">
                                             Amount (Litres)
@@ -693,7 +693,7 @@
                                             Fuel Type
                                             </th>
                                             <th style="color:white;">
-                                            Payment Method
+                                            Currency
                                             </th>
                                             
                                                 
@@ -706,7 +706,7 @@
                                                     <td>$ {{req.amount|floatformat:2|intcomma}}</td>
                                                     <td>{{req.fuel_type|title}}</td>
                                                     <td>
-                                                        {%if req.cash%}Cash{%endif%} {% if req.zwl %}RTGS {%endif%} {%if req.usd%}USD{%endif%} {%if req.ecocash%}ECOCASH {%endif%} {%if req.swipe%} SWIPE {% endif%} {%if not req.cash and not req.ecocash and not req.swipe and not req.usd%}No Payment Method {%endif%}
+                                                        {{req.payment_method}}
                                                     </td>
                                                 
                                                     
