@@ -1292,7 +1292,7 @@ def subsidiary_transaction_history(request, sid):
 
     if request.method == "POST":
 
-        if request.POST.get('report_type') == 'Complete':
+        if request.POST.get('report_type') == 'Completed':
             trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id, is_complete=True)
             trans = []
             for tran in trns:
