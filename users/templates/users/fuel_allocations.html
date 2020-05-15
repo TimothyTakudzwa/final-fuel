@@ -164,22 +164,34 @@
                                                     class="form-control" />
                                             </div>
 
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    {{update_form.cash|as_crispy_field}}
+                                            {% if allocate.payment_type == 'USD'%}         
+                                                <div class="row">
+                                                        <div class="col-md-6">
+                                                            {{update_form.cash|as_crispy_field}}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {{update_form.usd|as_crispy_field}}
+                                                        </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    {{update_form.usd|as_crispy_field}}
-                                                </div>
-                                            </div>
+                                            {% endif %} 
+
+
+                                            {% if allocate.payment_type|upper == 'RTGS '%}
+
                                             <div class="row">
+
                                                 <div class="col-md-6">
                                                     {{update_form.swipe|as_crispy_field}}
                                                 </div>
+
                                                 <div class="col-md-6">
                                                     {{update_form.ecocash|as_crispy_field}}
                                                 </div>
+
                                             </div>
+
+                                            {% endif %} 
+
 
                                     </div>
                                     <div class="modal-footer">
