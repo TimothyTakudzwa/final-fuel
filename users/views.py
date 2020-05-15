@@ -2868,7 +2868,11 @@ def delivery_schedules(request):
             schedule.delivery_address = schedule.transaction.offer.collection_address
         
     completed_schedules = schedules.filter(confirmation_date__isnull=False)
+    for schedule in completed_schedules:
+        schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
     pending_schedules = schedules.filter(confirmation_date__isnull=True)
+    for schedule in pending_schedules:
+        schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
 
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :
