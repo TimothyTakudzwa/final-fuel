@@ -1372,7 +1372,7 @@ def report_generator(request):
                 subs_petrol = subsidiary_fuel.aggregate(Sum('petrol_quantity'))
                 subs_petrol = subs_petrol['petrol_quantity__sum']
                 subs_diesel = subsidiary_fuel.aggregate(Sum('diesel_quantity'))
-                subs_diesel = subs_petrol['diesel_quantity__sum']
+                subs_diesel = subs_diesel['diesel_quantity__sum']
 
             else:
                 subs_petrol = 0.00
