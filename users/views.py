@@ -1235,13 +1235,20 @@ def client_history(request, cid):
     trans = []
     state = 'All'
 
+    trns = Transaction.objects.filter(buyer=buyer)
+    trans = []
+    for tran in trns:
+        tran.revenue = Decimal(tran.offer.request.amount) * tran.offer.price
+        tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
+        trans.append(tran)
+
     if request.method == "POST":
 
         if request.POST.get('report_type') == 'Completed':
             trns = Transaction.objects.filter(buyer=buyer, is_complete=True)
             trans = []
             for tran in trns:
-                tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.revenue = Decimal(tran.offer.request.amount) * tran.offer.price
                 tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Complete'
@@ -1266,12 +1273,6 @@ def client_history(request, cid):
 
         return render(request, 'users/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
 
-    trns = Transaction.objects.filter(buyer=buyer)
-    trans = []
-    for tran in trns:
-        tran.revenue = tran.offer.request.amount * tran.offer.price
-        tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
-        trans.append(tran)
 
     return render(request, 'users/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
 
@@ -1283,13 +1284,19 @@ def subsidiary_transaction_history(request, sid):
     trans = []
     state = 'All'
 
+    trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
+    for tran in trns:
+        tran.revenue = Decimal(tran.offer.request.amount) * tran.offer.price
+        tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
+        trans.append(tran)
+
     if request.method == "POST":
 
-        if request.POST.get('report_type') == 'Complete':
+        if request.POST.get('report_type') == 'Completed':
             trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id, is_complete=True)
             trans = []
             for tran in trns:
-                tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.revenue = Decimal(tran.offer.request.amount) * tran.offer.price
                 tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Complete'
@@ -1298,7 +1305,7 @@ def subsidiary_transaction_history(request, sid):
             trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id, is_complete=False)
             trans = []
             for tran in trns:
-                tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.revenue = Decimal(tran.offer.request.amount) * tran.offer.price
                 tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'Incomplete'
@@ -1307,18 +1314,13 @@ def subsidiary_transaction_history(request, sid):
             trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
             trans = []
             for tran in trns:
-                tran.revenue = tran.offer.request.amount * tran.offer.price
+                tran.revenue = Decimal(tran.offer.request.amount) * tran.offer.price
                 tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'All'
         return render(request, 'users/subs_history.html', {'trans': trans, 'subsidiary': subsidiary, 'state': state})
 
-    trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id)
-    for tran in trns:
-        tran.revenue = tran.offer.request.amount * tran.offer.price
-        tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
-        trans.append(tran)
-
+    
     return render(request, 'users/subs_history.html', {'trans': trans, 'subsidiary': subsidiary})
 
 

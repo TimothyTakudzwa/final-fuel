@@ -390,7 +390,7 @@
                                             <tr>
                                                 
                                                 <td>{{ delivery.transaction.buyer.company.name|title }}</td>
-                                                <td>{{delivery.delivery_address}}</td>
+                                                <td>{{delivery.transaction.offer.request.delivery_address}}</td>
                                                 <td>{{delivery.depot.name}}</td>
                                                 
                                                 {% if delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Diesel' %}
