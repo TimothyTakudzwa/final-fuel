@@ -157,10 +157,8 @@
                                 <td>{{ transaction.buyer.company.name }}</td>
                                 {% if transaction.offer.request.fuel_type|lower|capfirst == 'Petrol' %}
                                 <td style="color: #009688;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |floatformat:2|intcomma}}L @ {{ transaction.offer.price }}</td>
-                                {% elif transaction.offer.request.|lower|capfirst == 'Diesel' %}
-                                <td style="color: #ffb61e;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |floatformat:2|intcomma}}L @ {{ transaction.offer.price }}</td>
                                 {% else %}
-                                <td>{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |floatformat:2|intcomma}}L @ {{ transaction.offer.price }}</td>
+                                <td style="color: #ffb61e;">{{ transaction.offer.request.fuel_type|lower|capfirst }} {{ transaction.offer.quantity |floatformat:2|intcomma}}L @ {{ transaction.offer.price }}</td>
                                 {% endif %}
                                
                                 <td>{{ transaction.expected|intcomma}}</td>
