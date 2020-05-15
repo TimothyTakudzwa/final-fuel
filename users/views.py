@@ -1366,7 +1366,7 @@ def report_generator(request):
                 unallocated_petrol = 0.00
                 unallocated_diesel = 0.00
 
-            subsidiary_fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary__company=request.company)
+            subsidiary_fuel = SubsidiaryFuelUpdate.objects.filter(subsidiary__company=request.user.company)
             
             if subsidiary_fuel:
                 subs_petrol = subsidiary_fuel.aggregate(Sum('petrol_quantity'))
