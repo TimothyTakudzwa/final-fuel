@@ -358,6 +358,7 @@ def add_supplier_admin(request, id):
     email = request.POST.get('email')
     phone_number = request.POST.get('phone_number')
     check_email = User.objects.filter(email=email).exists()
+    check_phone_number = User.objects.filter(phone_number=phone_number).exists()
     is_valid = validate_email(email, verify=True)
     if check_email:
         messages.warning(request, f"Email already used in the system, please use a different email.")
@@ -365,6 +366,9 @@ def add_supplier_admin(request, id):
     # elif not is_valid:
     #     messages.warning(request, 'The email is not valid, Please provide a valid email and try again')
     #     return redirect('zeraPortal:dashboard')
+    elif check_phone_number:
+        messages.warning(request, f"Phone number already used in the system, please use a different phone number.")
+        return redirect('zeraPortal:dashboard')
     else:
         i = 0
         username = initial_username = first_name[0] + last_name
