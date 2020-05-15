@@ -235,9 +235,9 @@
                
                 
                 
-                $('#fuel_type, #currency').change(function () {
-                if ($('#fuel_type option:selected').text() == "Diesel") {
-                    if ($('#currency option:selected').text() == "USD") {
+                $('#fuel_type{{ forloop.counter }}, #currency{{ forloop.counter }}').change(function () {
+                if ($('#fuel_type{{ forloop.counter }} option:selected').text() == "Diesel") {
+                    if ($('#currency{{ forloop.counter }} option:selected').text() == "USD") {
                         $('#currency{{ forloop.counter }}').show();
                         $('#diesel_rtgs_price{{ forloop.counter }}').hide();
                         $('#diesel_usd_price{{ forloop.counter }}').show();
@@ -257,8 +257,8 @@
                 }
 
                 else {
-                    if ($('#currency option:selected').text() == "USD") {
-                        $('#currency').show();
+                    if ($('#currency{{ forloop.counter }} option:selected').text() == "USD") {
+                        $('#currency{{ forloop.counter }}').show();
                         $('#diesel_rtgs_price{{ forloop.counter }}').hide();
                         $('#diesel_usd_price{{ forloop.counter }}').hide();
                         $('#petrol_rtgs_price{{ forloop.counter }}').hide();
