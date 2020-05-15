@@ -1360,8 +1360,8 @@ def report_generator(request):
             fuel_update = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
             
             if fuel_update:
-                unallocated_petrol = fuel.unallocated_petrol
-                unallocated_diesel = fuel.unallocated_diesel
+                unallocated_petrol = fuel_update.unallocated_petrol
+                unallocated_diesel = fuel_update.unallocated_diesel
             else:
                 unallocated_petrol = 0.00
                 unallocated_diesel = 0.00
