@@ -2223,7 +2223,6 @@
                                         </thead>
                                         <tbody>
                                         {% for sub in sorted_subs %}
-                                            {% if sub.tran_value > 0 %}
                                                 <tr>
                                                     <td>
                                                         {% if forloop.counter == 1 %}
@@ -2260,7 +2259,6 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                {% endif %}
 
                                         {% endfor %}
                                         </tbody>
