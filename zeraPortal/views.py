@@ -1235,13 +1235,13 @@ def statistics(request):
         number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
     buyers = [client.buyer for client in trans]
 
-    branches = Subsidiaries.objects.filter(is_depot=False)
+    branches = Subsidiaries.objects.filter(is_depot=True)
 
     subs = []
 
     for sub in branches:
         tran_amount = 0
-        sub_trans = Transaction.objects.filter(supplier__subsidiary_id=sub.id, is_complete=True)
+        sub_trans = Transaction.objects.filter(supplier__subsidiary_id=sub.id, is_complete=True).all()
         for sub_tran in sub_trans:
             tran_amount += (float(sub_tran.offer.quantity) * float(sub_tran.offer.price))
         sub.tran_count = sub_trans.count()
