@@ -93,7 +93,9 @@ function for viewing allocations from NOIC, showing sord numbers, quantities, pa
 def sord_allocations(request):
     sord_allocations = SordCompanyAuditTrail.objects.filter(company=request.user.company).all()
     today = date.today().strftime("%d/%m/%y")
-    
+    notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
+
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :
             start_date = request.POST.get('start_date')
@@ -156,7 +158,7 @@ def sord_allocations(request):
             
 
     
-    return render(request, 'users/sord_allocations.html', {'sord_allocations': sord_allocations})
+    return render(request, 'users/sord_allocations.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'sord_allocations': sord_allocations})
 
 
 """
@@ -233,6 +235,8 @@ def allocated_fuel(request, sid):
     allocates = SuballocationFuelUpdate.objects.filter(subsidiary=sub).all()
     company_quantity = CompanyFuelUpdate.objects.filter(company=request.user.company).first()
     depot = SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first()
+    notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
 
     if request.method == 'POST':
         if request.POST['fuel_type'] == 'Petrol':
@@ -455,7 +459,7 @@ def allocated_fuel(request, sid):
                 allocates = allocates
         else:
             allocates = allocates
-    return render(request, 'users/fuel_allocations.html', {'allocates': allocates, 'type_list': type_list})
+    return render(request, 'users/fuel_allocations.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'allocates': allocates, 'type_list': type_list})
 
 
 @login_required()
@@ -888,6 +892,8 @@ function for creating subsidiaries (Depots & Stations) & their fuel update objec
 @user_role
 def stations(request):
     stations = Subsidiaries.objects.filter(company=request.user.company).all()
+    notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
     zimbabwean_towns = ['Select City ---', 'Beitbridge', 'Bindura', 'Bulawayo', 'Chinhoyi', 'Chirundu', 'Gweru',
                         'Harare',
                         'Hwange', 'Juliusdale', 'Kadoma', 'Kariba', 'Karoi', 'Kwekwe', 'Marondera', 'Masvingo',
@@ -958,7 +964,7 @@ def stations(request):
             message = 'Registering new subsdiary'
             Notification.objects.create(handler_id=5, message=message, reference_id=subsidiary.id, responsible_subsidiary=subsidiary, action="NEW_SUBSIDIARY")
             return render(request, 'users/service_stations.html',
-                          {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo,
+                          {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo,
                            'zimbabwean_towns': zimbabwean_towns,
                            'Mutare': Mutare, 'Gweru': Gweru, 'subsidiary': subsidiary, 'form': form, 'form1': form1,
                            'add_user': 'show'})
@@ -971,19 +977,22 @@ def stations(request):
             message = 'Registering new subsdiary'
             Notification.objects.create(handler_id=5, message=message, reference_id=subsidiary.id, responsible_subsidiary=subsidiary, action="NEW_SUBSIDIARY")
             return render(request, 'users/service_stations.html',
-                          {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo,
+                          {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo,
                            'zimbabwean_towns': zimbabwean_towns,
                            'Mutare': Mutare, 'Gweru': Gweru, 'subsidiary': subsidiary, 'form': form, 'form1': form1,
                            'add_user': 'show'})
 
     return render(request, 'users/service_stations.html',
-                  {'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
+                  {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'stations': stations, 'Harare': Harare, 'Bulawayo': Bulawayo, 'zimbabwean_towns': zimbabwean_towns,
                    'Mutare': Mutare, 'Gweru': Gweru, 'add_user': 'hide', 'allocate': 'hide'})
 
 
 @login_required()
 @user_role
 def suppliers_list(request):
+    notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
+
     suppliers = User.objects.filter(company=request.user.company).filter(~Q(user_type='S_ADMIN')).all()
     stations = Subsidiaries.objects.filter(is_depot=False).filter(company=request.user.company).all()
     depots = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company).all()
@@ -1068,7 +1077,7 @@ def suppliers_list(request):
                 request.session['show'] = False
                 return redirect('users:stations')
             return render(request, 'users/suppliers_list.html',
-                          {'suppliers': suppliers, 'form1': form1, 'allocate': 'show', 'fuel_update': fuel_update,
+                          {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'suppliers': suppliers, 'form1': form1, 'allocate': 'show', 'fuel_update': fuel_update,
                            'form': form})
         else:
             user.user_type = 'SUPPLIER'
@@ -1085,7 +1094,7 @@ def suppliers_list(request):
 
             return redirect(f'/users/allocated_fuel/{subsidiary.id}')
 
-    return render(request, 'users/suppliers_list.html', {'suppliers': suppliers, 'form1': form1, 'form': form,
+    return render(request, 'users/suppliers_list.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'suppliers': suppliers, 'form1': form1, 'form': form,
                                                         'applicants': applicants, 'stations': stations, 'depots': depots})
 
 
@@ -1129,6 +1138,8 @@ def statistics(request):
     weekly_rev = get_weekly_sales(request.user.company, True)
     last_week_rev = get_weekly_sales(request.user.company, False)
     last_year_rev = get_monthly_sales(request.user.company, (datetime.now().year - 1))
+    notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
     # offers = Offer.objects.filter(supplier__company=request.user.company).count()
     # bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
     # normal_requests = FuelRequest.objects.filter(delivery_method="DELIVERY").count()  # Change these 2 items
@@ -1207,7 +1218,7 @@ def statistics(request):
     #     trans = 0    
     trans_complete = get_transactions_complete_percentage(request.user)
     average_rating = get_average_rating(request.user.company)
-    return render(request, 'users/statistics.html', {'trans': trans, 'clients': clients,
+    return render(request, 'users/statistics.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trans': trans, 'clients': clients,
                                                      'sorted_subs': sorted_subs,
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
                                                      'last_week_rev': last_week_rev})
@@ -1232,6 +1243,8 @@ def supplier_user_edit(request, cid):
 def client_history(request, cid):
     user_permission(request)
     buyer = User.objects.filter(id=cid).first()
+    notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
     trans = []
     state = 'All'
 
@@ -1271,16 +1284,18 @@ def client_history(request, cid):
                 trans.append(tran)
             state = 'All'
 
-        return render(request, 'users/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
+        return render(request, 'users/client_history.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trans': trans, 'buyer': buyer, 'state': state})
 
 
-    return render(request, 'users/client_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
+    return render(request, 'users/client_history.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trans': trans, 'buyer': buyer, 'state': state})
 
 
 @login_required
 def subsidiary_transaction_history(request, sid):
     user_permission(request)
     subsidiary = Subsidiaries.objects.filter(id=sid).first()
+    notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
     trans = []
     state = 'All'
 
@@ -1289,11 +1304,10 @@ def subsidiary_transaction_history(request, sid):
         tran.revenue = Decimal(tran.offer.request.amount) * tran.offer.price
         tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
         trans.append(tran)
-    state = 'All'
 
     if request.method == "POST":
 
-        if request.POST.get('report_type') == 'Complete':
+        if request.POST.get('report_type') == 'Completed':
             trns = Transaction.objects.filter(supplier__subsidiary_id=subsidiary.id, is_complete=True)
             trans = []
             for tran in trns:
@@ -1319,7 +1333,7 @@ def subsidiary_transaction_history(request, sid):
                 tran.account_history = AccountHistory.objects.filter(transaction=tran).all()
                 trans.append(tran)
             state = 'All'
-        return render(request, 'users/subs_history.html', {'trans': trans, 'subsidiary': subsidiary, 'state': state})
+        return render(request, 'users/subs_history.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trans': trans, 'subsidiary': subsidiary, 'state': state})
 
     
     return render(request, 'users/subs_history.html', {'trans': trans, 'subsidiary': subsidiary})
@@ -1329,6 +1343,8 @@ def subsidiary_transaction_history(request, sid):
 @user_role
 def myaccount(request):
     staff = user.objects.get(id=request.user.id)
+    notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
     if request.method == 'POST':
         staff.email = request.POST['email']
         staff.phone_number = request.POST['phone_number']
@@ -1336,7 +1352,7 @@ def myaccount(request):
         staff.save()
         messages.success(request, 'Your changes have been saved.')
 
-    return render(request, 'users/profile.html')
+    return render(request, 'users/profile.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications})
 
 
 @login_required()
@@ -1346,6 +1362,8 @@ def report_generator(request):
     form = ReportForm()
     allocations = requests = trans = stock = None
     # trans = Transaction.objects.filter(supplier__company=request.user.company).all()
+    notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
     start_date = start = "December 1 2019"
     end_date = end = "January 1 2019"
 
@@ -1436,12 +1454,12 @@ def report_generator(request):
 
         # revs = 0
         return render(request, 'users/reports.html',
-                      {'trans': trans, 'requests': requests, 'allocations': allocations, 'form': form,
+                      {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trans': trans, 'requests': requests, 'allocations': allocations, 'form': form,
                        'start': start, 'end': end, 'revs': revs, 'stock': stock})
 
     show = False
     return render(request, 'users/reports.html',
-                  {'trans': trans, 'requests': requests, 'allocations': allocations, 'form': form,
+                  {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trans': trans, 'requests': requests, 'allocations': allocations, 'form': form,
                    'start': start_date, 'end': end_date, 'show': show, 'stock': stock})
 
 
@@ -1457,6 +1475,8 @@ def depots(request):
 def audit_trail(request):
     filtered = False
     filtered_trails = None
+    notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
     trails = Audit_Trail.objects.exclude(date__gt=today).filter(company=request.user.company)
     for activity in trails:
         if activity.reference == 'offers':
@@ -1521,7 +1541,7 @@ def audit_trail(request):
                 elif activity.reference == 'dfuel quantity updates':
                     activity.fuel_update = SubsidiaryFuelUpdate.objects.filter(id=activity.reference_id).first()
 
-            return render(request, 'users/audit_trail.html', {'filtered_trails':filtered_trails,'filtered':filtered ,'today':today, 'start_date': start_date
+            return render(request, 'users/audit_trail.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'filtered_trails':filtered_trails,'filtered':filtered ,'today':today, 'start_date': start_date
             , 'end_date':end_date})
 
         if request.POST.get('export_to_csv')=='csv':
@@ -1616,7 +1636,7 @@ def audit_trail(request):
     
 
 
-    return render(request, 'users/audit_trail.html', {'trails': trails,'filtered': filtered, 'current_trails': current_trails, 'today':today})
+    return render(request, 'users/audit_trail.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trails': trails,'filtered': filtered, 'current_trails': current_trails, 'today':today})
 
 
 @login_required()
@@ -2156,18 +2176,23 @@ def edit_allocation(request, id):
 def sordactions(request, sid):
     user_permission(request)
     sord_actions = SordActionsAuditTrail.objects.filter(sord_num=sid).all()
+    notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
 
     if sord_actions:
         sord_number = sord_actions[0].sord_num
     else:
         sord_number = "-"
-    return render(request, 'users/sord_actions.html', {'sord_number': sord_number, 'sord_actions': sord_actions})
+    return render(request, 'users/sord_actions.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'sord_number': sord_number, 'sord_actions': sord_actions})
 
 
 @login_required()
 @user_role
 def sord_station_sales(request):
     sord_sales = SordSubsidiaryAuditTrail.objects.filter(subsidiary__company=request.user.company)
+    notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
+
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :
             start_date = request.POST.get('start_date')
@@ -2227,7 +2252,7 @@ def sord_station_sales(request):
                 response['Content-Disposition'] = f'attachment;filename={export_name} - {today}.pdf'
                 return response
 
-    return render(request, 'users/sord_station_sales.html', {'sord_sales': sord_sales})
+    return render(request, 'users/sord_station_sales.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'sord_sales': sord_sales})
 
 
 @login_required()
@@ -2240,9 +2265,13 @@ def delivery_schedule(request, id):
 @login_required
 @user_role
 def clients(request):
+    notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
     context = {
         'clients': Account.objects.filter(is_verified=False, supplier_company=request.user.company).all(),
         'form': UsersUploadForm(),
+        'num_of_notifications': num_of_notifications,
+        'notifications': notifications,
         'accounts': Account.objects.filter(supplier_company=request.user.company),
         'transactions': AccountHistory.objects.filter()
     }
@@ -2702,6 +2731,9 @@ def place_order(request):
 @login_required()
 @user_role
 def orders(request):
+    notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
+
     fuel_object = DepotFuelUpdate.objects.first()
     diesel_rtgs_price = 0
     diesel_usd_price = 0
@@ -2806,7 +2838,7 @@ def orders(request):
                 return response        
 
     return render(request, 'users/orders.html',
-                  {'depots': depots, 'form1': form1, 'diesel_rtgs_price': diesel_rtgs_price,
+                  {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'depots': depots, 'form1': form1, 'diesel_rtgs_price': diesel_rtgs_price,
                    'diesel_usd_price': diesel_usd_price, 'petrol_rtgs_price': petrol_rtgs_price,
                    'petrol_usd_price': petrol_usd_price, 'accepted_orders': accepted_orders, 'pending_orders': pending_orders})
 
@@ -2862,6 +2894,8 @@ def download_proof(request, id):
 def delivery_schedules(request):
     user_permission(request)
     schedules = DeliverySchedule.objects.filter(transaction__supplier__company=request.user.company).all()
+    notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
 
     for schedule in schedules:
         schedule.depot = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
@@ -2901,7 +2935,7 @@ def delivery_schedules(request):
                 else:
                     pending_schedules.append(schedule)
 
-            return render(request, 'users/delivery_schedules.html', {'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules,
+            return render(request, 'users/delivery_schedules.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules,
             'start_date':start_date, 'end_date':end_date })
 
         if request.POST.get('export_to_csv')=='csv':
@@ -2978,7 +3012,7 @@ def delivery_schedules(request):
                 return response        
         
 
-    return render(request, 'users/delivery_schedules.html', {'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules})
+    return render(request, 'users/delivery_schedules.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'pending_schedules': pending_schedules, 'completed_schedules': completed_schedules})
 
 
 '''

@@ -13,10 +13,10 @@
               </span>
           </div>
       </form>   
-  <div class="header-icon">
+  <!-- <div class="header-icon">
       <i class="fa fa-book"></i>
-  </div>
-  <div class="header-title">
+  </div> -->
+  <div class="header-title" style="margin-left: 0;">
 
       <h1> {{subsidiary.name|title}}'s Transaction History</h1>
       <small>Zimbabwe Fuel Management System</small>
@@ -47,11 +47,11 @@
     </div>
 </div>
 
-<div class="modal fade" id="state_modal" role="dialog">
-    <div class="modal-dialog">
+<div class="modal fade modal-success in" id="state_modal" role="dialog">
+    <div class="modal-dialog" style="margin: 0;">
         <div class="modal-content">
-            <div class="modal-header" style="background:#402d57e0">
-                <h4 class="modal-title" style="color:whitesmoke"> Filter By State</h4>
+            <div class="modal-header">
+                <span class="modal-title" style="color:whitesmoke"> Filter By State</span>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body" style="background:#eeee">
@@ -60,7 +60,7 @@
                     {% csrf_token %}
                     <div class="form-group">
                         <select name="report_type" class="browser-default custom-select" id="report_options">
-                            <option selected>Completed</option>
+                            <option value="Completed" selected>Completed</option>
                             <option value="Incomplete">Incomplete</option>
                             <option value="All">All</option>
                         </select>
