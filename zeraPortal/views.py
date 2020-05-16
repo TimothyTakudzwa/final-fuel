@@ -1,7 +1,7 @@
 from datetime import date, datetime
 
 from django.contrib import messages
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
@@ -88,6 +88,8 @@ def activity(request):
     filtered_activities = None
     activities = Activity.objects.exclude(date=today).filter(user=request.user)
     current_activities = Activity.objects.filter(date=today).filter(user=request.user)
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
 
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :
@@ -162,12 +164,14 @@ def activity(request):
                 return response
 
 
-    return render(request, 'zeraPortal/activity.html', {'activities': activities, 'current_activities': current_activities})
+    return render(request, 'zeraPortal/activity.html', {'num_of_notifications': num_of_notifications, 'num_of_notifications': num_of_notifications, 'activities': activities, 'current_activities': current_activities})
 
 
 @login_required()
 def fuel_prices(request):
     prices = FuelPrices.objects.first()
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
 
     if request.method == 'POST':
         if request.POST.get('fuel_type') == 'usd_diesel':
@@ -218,13 +222,15 @@ def fuel_prices(request):
             messages.success(request, 'price updated successfully')
             return redirect('zeraPortal:fuel_prices')
 
-    return render(request, 'zeraPortal/prices.html', {'prices': prices})
+    return render(request, 'zeraPortal/prices.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'prices': prices})
 
 
 @login_required()
 @user_role
 def noic_fuel(request):
     # capacities = NationalFuelUpdate.objects.all()
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
     depots = DepotFuelUpdate.objects.all()
     noic_usd_diesel = 0
     noic_rtgs_diesel = 0
@@ -308,16 +314,18 @@ def noic_fuel(request):
     
 
     return render(request, 'zeraPortal/noic_fuel.html',
-                  {'depots': depots, 'noic_usd_diesel': noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel,
+                  {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'depots': depots, 'noic_usd_diesel': noic_usd_diesel, 'noic_rtgs_diesel': noic_rtgs_diesel,
                    'noic_usd_petrol': noic_usd_petrol, 'noic_rtgs_petrol': noic_rtgs_petrol})
 
 
 @login_required()
 def noic_allocations(request, id):
     user_permission(request)
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
     depot = NoicDepot.objects.filter(id=id).first()
     allocations = SordNationalAuditTrail.objects.filter(assigned_depot=depot).all()
-    return render(request, 'zeraPortal/noic_allocations.html', {'allocations': allocations, 'depot': depot})
+    return render(request, 'zeraPortal/noic_allocations.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'allocations': allocations, 'depot': depot})
 
 
 @login_required()
@@ -436,6 +444,8 @@ def unblock_company(request, id):
 def company_fuel(request):
     user_permission(request)
     capacities = CompanyFuelUpdate.objects.all().order_by('-date')
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
     
     for fuel in capacities:
         subs_total_diesel_capacity = 0
@@ -541,7 +551,7 @@ def company_fuel(request):
       
       
 
-    return render(request, 'zeraPortal/company_fuel.html', {'capacities': capacities})
+    return render(request, 'zeraPortal/company_fuel.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'capacities': capacities})
 
 
 @login_required()
@@ -550,6 +560,8 @@ def allocations(request, id):
     sord_allocations = SordCompanyAuditTrail.objects.filter(company__id=id).all()
     date_today = date.today().strftime("%d/%m/%y")
     company = Company.objects.filter(id=id).first()
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
 
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date'):
@@ -611,7 +623,7 @@ def allocations(request, id):
                 return response
 
     
-    return render(request, 'zeraPortal/fuel_allocations.html', {'sord_allocations': sord_allocations})
+    return render(request, 'zeraPortal/fuel_allocations.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'sord_allocations': sord_allocations})
 
 
 def export_to_csv(request):
@@ -632,12 +644,15 @@ def export_to_csv(request):
 def sordactions(request, id):
     user_permission(request)
     sord_actions = SordActionsAuditTrail.objects.filter(sord_num=id).all()
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
+
 
     if sord_actions:
         sord_number = sord_actions[0].sord_num
     else:
         sord_number = "-"
-    return render(request, 'zeraPortal/sord_actions.html', {'sord_number': sord_number, 'sord_actions': sord_actions})
+    return render(request, 'zeraPortal/sord_actions.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'sord_number': sord_number, 'sord_actions': sord_actions})
 
 
 @login_required()
@@ -656,6 +671,8 @@ def download_release_note(request, id):
 
 @login_required()
 def transactions(request, id):
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
     user_permission(request)
     today = datetime.now().strftime("%m-%d-%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
@@ -672,7 +689,10 @@ def transactions(request, id):
         'transactions': transactions,
         'transporters': transporters,
         'today': today,
-        'company': company
+        'company': company,
+        'num_of_notifications': num_of_notifications,
+        'notifications': notifications
+
     }
 
     if request.method == "POST":
@@ -787,9 +807,11 @@ def transactions(request, id):
 @login_required()
 def payment_and_schedules(request, id):
     user_permission(request)
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
-    return render(request, 'zeraPortal/payment_and_schedules.html', {'payment_history': payment_history})
+    return render(request, 'zeraPortal/payment_and_schedules.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'payment_history': payment_history})
 
 
 @login_required()
@@ -1058,6 +1080,9 @@ def add_licence(request, id):
 def report_generator(request):
     '''View to dynamically render form tables based on different criteria'''
     allocations = requests = trans = stock = None
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
+
     # trans = Transaction.objects.filter(supplier__company=request.user.company).all()
     start_date = start = "December 1 2019"
     end_date = end = "January 1 2019"
@@ -1160,7 +1185,7 @@ def report_generator(request):
 
         # revs = 0
         return render(request, 'zeraPortal/reports.html',
-                      {'trans': trans, 'requests': requests, 'allocations': allocations,
+                      {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trans': trans, 'requests': requests, 'allocations': allocations,
                        'verified_companies': verified_companies,
                        'unverified_companies': unverified_companies, 'start': start, 'end': end, 'revs': revs,
                        'stock': stock})
@@ -1168,13 +1193,16 @@ def report_generator(request):
     show = False
     print(trans)
     return render(request, 'zeraPortal/reports.html',
-                  {'trans': trans, 'requests': requests, 'allocations': allocations,
+                  {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trans': trans, 'requests': requests, 'allocations': allocations,
                    'start': start_date, 'end': end_date, 'show': show, 'stock': stock})
 
 
 @login_required()
 @user_role
 def statistics(request):
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
+
     yesterday = date.today() - timedelta(days=1)
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
     weekly_rev = get_weekly_sales(True)
@@ -1262,7 +1290,7 @@ def statistics(request):
     # inactive_stations = Subsidiaries.objects.filter(is_active=False, is_depot=False).count()
     # approval_percentage = get_approved_company_complete_percentage()
 
-    return render(request, 'zeraPortal/statistics.html', {'trans': trans, 'clients': clients,
+    return render(request, 'zeraPortal/statistics.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trans': trans, 'clients': clients,
                                                           'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
                                                           'last_week_rev': last_week_rev,
                                                           'city_sales_volume': city_sales_volume,
@@ -1274,6 +1302,8 @@ def statistics(request):
 def clients_history(request, cid):
     user_permission(request)
     buyer = User.objects.filter(id=cid).first()
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
     trans = []
     state = 'All'
 
@@ -1304,7 +1334,7 @@ def clients_history(request, cid):
                 tran.revenue = (float(tran.offer.request.amount) * float(tran.offer.price))
                 trans.append(tran)
             state = 'All'
-        return render(request, 'zeraPortal/clients_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
+        return render(request, 'zeraPortal/clients_history.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trans': trans, 'buyer': buyer, 'state': state})
 
     trns = Transaction.objects.filter(buyer=buyer)
     trans = []
@@ -1312,7 +1342,7 @@ def clients_history(request, cid):
         tran.revenue = (float(tran.offer.request.amount) * float(tran.offer.price))
         trans.append(tran)
 
-    return render(request, 'zeraPortal/clients_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
+    return render(request, 'zeraPortal/clients_history.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trans': trans, 'buyer': buyer, 'state': state})
 
 
 @login_required()
@@ -1362,8 +1392,10 @@ def subsidiary_transaction_history(request, sid):
 @login_required()
 @user_role
 def profile(request):
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
     user = request.user
-    return render(request, 'zeraPortal/profile.html', {'user': user})
+    return render(request, 'zeraPortal/profile.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'user': user})
 
 
 @login_required()
@@ -1371,6 +1403,8 @@ def profile(request):
 def suspicious_behavior(request):
     schedules = DeliverySchedule.objects.filter(date__lt=datetime.today() + timedelta(days=1),
                                                 supplier_document='')
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
     late_schedules = []
     suspicious_schedules = []
 
@@ -1387,14 +1421,18 @@ def suspicious_behavior(request):
         late_schedules.append(schedule)
 
     return render(request, 'zeraPortal/suspicious_behavior.html',
-                  {'late_schedules': late_schedules, 'suspicious_schedules': suspicious_schedules})
+                  {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'late_schedules': late_schedules, 'suspicious_schedules': suspicious_schedules})
 
 
 @login_required()
 @user_role
 def desperate_regions(request):
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
     context = {
         'regions': desperate(),
+        'num_of_notifications': num_of_notifications,
+        'notifications': notifications,
         'mapping': dict(zip(towns, coordinates_towns))
     }
     return render(request, 'zeraPortal/desperate_regions.html', context=context)
@@ -1403,6 +1441,8 @@ def desperate_regions(request):
 @login_required()
 @user_role
 def comments(request):
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
     subsidiaries = []
 
     for sub in Subsidiaries.objects.filter(is_depot=False):
@@ -1411,7 +1451,7 @@ def comments(request):
         if sub.comments:
             subsidiaries.append(sub)
 
-    return render(request, 'zeraPortal/comments.html', {'subsidiaries': subsidiaries})
+    return render(request, 'zeraPortal/comments.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'subsidiaries': subsidiaries})
 
 
 @login_required()
@@ -1419,7 +1459,9 @@ def sub_comments(request, id):
     user_permission(request)
     sub = Subsidiaries.objects.filter(id=id).first()
     comments = Comment.objects.filter(station=sub)
-    return render(request, 'zeraPortal/sub_comments.html', {'comments': comments, 'sub': sub})
+    notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
+    num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
+    return render(request, 'zeraPortal/sub_comments.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'comments': comments, 'sub': sub})
 
 
 '''

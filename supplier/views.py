@@ -1798,7 +1798,7 @@ def supplier_release_note(request, id):
         payment_history = AccountHistory.objects.filter(transaction=transaction, value=0.00).first()
         payment_history.value += transaction.paid_reserve
         payment_history.balance -= transaction.paid_reserve
-        payment_history.release_note = request.FILES.get('release_note')
+        payment_history.release_date = request.POST['release_date']
         payment_history.release_activated = True
         payment_history.save()
 
