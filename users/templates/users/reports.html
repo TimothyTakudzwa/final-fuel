@@ -759,13 +759,16 @@
                                                 Date
                                                 </th>
                                                 <th style="color:white;">
-                                                SORD
+                                                Petrol Quantity (Litres)
                                                 </th>
                                                 <th style="color:white;">
-                                                Quantity (Litres)
+                                                    Petrol Price
                                                 </th>
                                                 <th style="color:white;">
-                                                Fuel Type
+                                                Diesel Quantity (Litres)
+                                                </th>
+                                                <th style="color:white;">
+                                                    Diesel Price
                                                 </th>
                                                 <th style="color:white;">
                                                 Currency
@@ -774,7 +777,7 @@
                                                 Subsidiary
                                                 </th>
                                                 <th style="color:white;">
-                                                Allocator
+                                                Action
                                                 </th>
                                                 
                                                     
@@ -782,13 +785,14 @@
                                                 {% for allocation in allocations %}
                                                 <tr>
                                                         <td>{{allocation.date}}</td>
-                                                        <td>{{allocation.sord_no}}</td>
-                                                        <td>{{allocation.quantity_allocated|floatformat:2|intcomma}} </td>
-                                                        <td>{{allocation.fuel_type}}</td>
-                                                        <td>{{allocation.payment_type}}</td>
-                                                        <td>{{allocation.allocated_to.name}}</td>
-                                                        <td>{{request.user.first_name|title}}
-                                                            {{request.user.last_name|title}}
+                                                        <td>{{allocation.petrol_quantity|floatformat:2|intcomma}} </td>
+                                                        <td>{{allocation.petrol_price}}</td>
+                                                        <td>{{allocation.diesel_quantity|floatformat:2|intcomma}} </td>
+                                                        <td>{{allocation.diesel_price}}</td>
+                                                        <td>{{allocation.fuel_payment_type}}</td>
+                                                        <td>{{allocation.subsidiary.name}}</td>
+                                                        <td>
+                                                            {{allocation.action}}
                                                         </td>
 
                                                     
