@@ -1334,7 +1334,7 @@ def clients_history(request, cid):
                 tran.revenue = (float(tran.offer.request.amount) * float(tran.offer.price))
                 trans.append(tran)
             state = 'All'
-        return render(request, 'zeraPortal/clients_history.html', {'trans': trans, 'buyer': buyer, 'state': state})
+        return render(request, 'zeraPortal/clients_history.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trans': trans, 'buyer': buyer, 'state': state})
 
     trns = Transaction.objects.filter(buyer=buyer)
     trans = []
