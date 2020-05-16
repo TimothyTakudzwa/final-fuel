@@ -27,156 +27,159 @@
     </div>
 </section>
 
-<div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
-    <div class="panel-heading ui-sortable-handle">
-        <div class="btn-group">
-            <h4>Fuel Stocks</h4>
-        </div>
-        <div class="dropdown">
-            <ul class="dropdown-menu dropdown-menu-right">
+<section class="content">
+    <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
+        <div class="panel-heading ui-sortable-handle">
+            <div class="btn-group">
+                <h4>Fuel Stocks</h4>
+            </div>
+            <div class="dropdown">
+                <ul class="dropdown-menu dropdown-menu-right">
 
 
-            </ul>
-            <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+                </ul>
+                <div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="panel-body">
-      
-      <div class="table-responsive">
+        <div class="panel-body">
         
-        <table id="fuel_request" class="table table-striped table-bordered" style="width:100%">
-
-            <thead style="background-color: lightslategray; color:white;">
-                <tr>
-                    <th style="color: white;">Fuel Type</th>
-                    <th style="color: white;">Current Stocks</th>
-                    <th style="color: white;">Pending Orders Quantity</th>
-                    <th style="color: white;">Action</th>
-                </tr>
-            </thead>
-
+        <div class="table-responsive">
             
-            <tbody>
-             {% for fuel in depot_stock %}
-            <tr>
-                <td height="35" style="color: #ffb61e;"> USD Diesel Quantity</td>
-                <td height="35"> {{fuel.usd_diesel|floatformat:2|intcomma}}L {% if fuel.usd_diesel < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
-                    {% if noic_usd_diesel != 0 %}
-                    <td height="35"> {{noic_usd_diesel|floatformat:2|intcomma}}</td>
-                    {% else %}
-                    <td height="35"> No Pending USD Diesel Orders</td>
-                    {% endif %}
-                    {% if fuel.usd_diesel < noic_usd_diesel %}
-                    <td height="35" width="10%"> 
-                        <div class="btn-group">
-                            <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 1 %}">
-                                <span class="btn-label"><i class="fa fa-bell"></i></span>Notify HQ for more diesel</a>
-                        </div>
-                    </td>
-                    {% else %}
-                    <td></td>
-                    {% endif %}
-             </tr>
-              <tr>
-                <td height="35">USD Diesel Price</td>
+            <table id="fuel_request" class="table table-striped table-bordered" style="width:100%">
+
+                <thead style="background-color: lightslategray; color:white;">
+                    <tr>
+                        <th style="color: white;">Fuel Type</th>
+                        <th style="color: white;">Current Stocks</th>
+                        <th style="color: white;">Pending Orders Quantity</th>
+                        <th style="color: white;">Action</th>
+                    </tr>
+                </thead>
+
                 
+                <tbody>
+                {% for fuel in depot_stock %}
+                <tr>
+                    <td height="35" style="color: #ffb61e;"> USD Diesel Quantity</td>
+                    <td height="35"> {{fuel.usd_diesel|floatformat:2|intcomma}}L {% if fuel.usd_diesel < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
+                        {% if noic_usd_diesel != 0 %}
+                        <td height="35"> {{noic_usd_diesel|floatformat:2|intcomma}}</td>
+                        {% else %}
+                        <td height="35"> No Pending USD Diesel Orders</td>
+                        {% endif %}
+                        {% if fuel.usd_diesel < noic_usd_diesel %}
+                        <td height="35" width="10%"> 
+                            <div class="btn-group">
+                                <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 1 %}">
+                                    <span class="btn-label"><i class="fa fa-bell"></i></span>Notify HQ for more diesel</a>
+                            </div>
+                        </td>
+                        {% else %}
+                        <td></td>
+                        {% endif %}
+                </tr>
+                <tr>
+                    <td height="35">USD Diesel Price</td>
+                    
+                    <td height="35">
+                        ${{fuel.usd_diesel_price}}
+                    </td>
+                    <td height="35"> N/A</td>
+                    <td height="35" width="10%"> N/A</td>
+                </tr>
+            <tr>
+                <td height="35" style="color: #ffb61e;">RTGS Diesel Quantity</td>
                 <td height="35">
-                    ${{fuel.usd_diesel_price}}
+                    {{fuel.rtgs_diesel|floatformat:2|intcomma}}L {% if fuel.rtgs_diesel < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}
                 </td>
-                <td height="35"> N/A</td>
-                  <td height="35" width="10%"> N/A</td>
-              </tr>
-        <tr>
-            <td height="35" style="color: #ffb61e;">RTGS Diesel Quantity</td>
-            <td height="35">
-                {{fuel.rtgs_diesel|floatformat:2|intcomma}}L {% if fuel.rtgs_diesel < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}
-            </td>
-            {% if noic_rtgs_diesel != 0 %}
-            <td height="35"> {{noic_rtgs_diesel|floatformat:2|intcomma}}</td>
-            {% else %}
-            <td height="35"> No Pending RTGS Diesel Orders</td>
-            {% endif %}
-            {% if fuel.rtgs_diesel < noic_rtgs_diesel %}
-            <td height="35" width="10%"> 
-                <div class="btn-group">
-                    <a class="btn btn-labeled btn-waring btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 2 %}">
-                        <span class="btn-label"><i class="fa fa-bell"></i></span>Notify HQ for more diesel</a>
-                </div>
-            </td>
-            {% else %}
-            <td></td>
-            {% endif %}
-            
-          </tr>
-          <tr>
-              <td height="35">RTGS Diesel Price</td>
-              <td height="35">${{fuel.rtgs_diesel_price}}</td>
-              <td height="35"> N/A</td>
-                  <td height="35" width="10%"> N/A</td>
+                {% if noic_rtgs_diesel != 0 %}
+                <td height="35"> {{noic_rtgs_diesel|floatformat:2|intcomma}}</td>
+                {% else %}
+                <td height="35"> No Pending RTGS Diesel Orders</td>
+                {% endif %}
+                {% if fuel.rtgs_diesel < noic_rtgs_diesel %}
+                <td height="35" width="10%"> 
+                    <div class="btn-group">
+                        <a class="btn btn-labeled btn-waring btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 2 %}">
+                            <span class="btn-label"><i class="fa fa-bell"></i></span>Notify HQ for more diesel</a>
+                    </div>
+                </td>
+                {% else %}
+                <td></td>
+                {% endif %}
+                
             </tr>
-           
-              <tr>
-                  <td height="35" style="color: #009688;">USD Petrol Quantity</td>
-                  <td height="35">{{fuel.usd_petrol|floatformat:2|intcomma}}L {% if fuel.usd_petrol < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
-                  {% if noic_usd_petrol != 0 %}
-                  <td height="35"> {{noic_usd_petrol|floatformat:2|intcomma}}</td>
-                  {% else %}
-                    <td height="35"> No Pending USD Petrol Orders</td>
+            <tr>
+                <td height="35">RTGS Diesel Price</td>
+                <td height="35">${{fuel.rtgs_diesel_price}}</td>
+                <td height="35"> N/A</td>
+                    <td height="35" width="10%"> N/A</td>
+                </tr>
+            
+                <tr>
+                    <td height="35" style="color: #009688;">USD Petrol Quantity</td>
+                    <td height="35">{{fuel.usd_petrol|floatformat:2|intcomma}}L {% if fuel.usd_petrol < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
+                    {% if noic_usd_petrol != 0 %}
+                    <td height="35"> {{noic_usd_petrol|floatformat:2|intcomma}}</td>
+                    {% else %}
+                        <td height="35"> No Pending USD Petrol Orders</td>
+                        {% endif %}
+                        {% if fuel.usd_petrol < noic_usd_petrol %}
+                        <td height="35" width="10%"> 
+                            <div class="btn-group">
+                                <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 3 %}">
+                                    <span class="btn-label"><i class="fa fa-bell"></i></span>Notify HQ for more petrol</a>
+                            </div>
+                        </td>
+                        {% else %}
+                        <td></td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                    <td height="35">USD Petrol Price</td>
+                    <td>${{fuel.usd_petrol_price}}</td>
+                    <td height="35"> N/A</td>
+                    <td height="35" width="10%"> N/A</td>
+                    </tr>
+                    <tr>
+                    <td height="35" style="color: #009688;">RTGS Petrol Quantity</td>
+                    <td height="35">{{fuel.rtgs_petrol|floatformat:2|intcomma}}L {% if fuel.rtgs_petrol < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
+                    {% if noic_rtgs_petrol != 0 %}
+                    <td height="35"> {{noic_rtgs_petrol|floatformat:2|intcomma}}</td>
+                    {% else %}
+                    <td height="35"> No Pending RTGS Petrol Orders</td>
                     {% endif %}
-                    {% if fuel.usd_petrol < noic_usd_petrol %}
+                    {% if fuel.rtgs_petrol < noic_rtgs_petrol %}
                     <td height="35" width="10%"> 
                         <div class="btn-group">
-                            <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 3 %}">
+                            <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 4 %}">
                                 <span class="btn-label"><i class="fa fa-bell"></i></span>Notify HQ for more petrol</a>
                         </div>
                     </td>
                     {% else %}
                     <td></td>
                     {% endif %}
-                </tr>
-                <tr>
-                  <td height="35">USD Petrol Price</td>
-                  <td>${{fuel.usd_petrol_price}}</td>
-                  <td height="35"> N/A</td>
-                  <td height="35" width="10%"> N/A</td>
-                </tr>
-                <tr>
-                  <td height="35" style="color: #009688;">RTGS Petrol Quantity</td>
-                  <td height="35">{{fuel.rtgs_petrol|floatformat:2|intcomma}}L {% if fuel.rtgs_petrol < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 5px; font-size: 15px; color: crimson"></i>{% endif %}</td>
-                  {% if noic_rtgs_petrol != 0 %}
-                  <td height="35"> {{noic_rtgs_petrol|floatformat:2|intcomma}}</td>
-                  {% else %}
-                <td height="35"> No Pending RTGS Petrol Orders</td>
-                {% endif %}
-                {% if fuel.rtgs_petrol < noic_rtgs_petrol %}
-                <td height="35" width="10%"> 
-                    <div class="btn-group">
-                        <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;"href="{% url 'noicDepot:hg_notifier' 4 %}">
-                            <span class="btn-label"><i class="fa fa-bell"></i></span>Notify HQ for more petrol</a>
-                    </div>
-                </td>
-                {% else %}
-                 <td></td>
-                {% endif %}
-                </tr>
-                <tr>
-                    <td height="35">RTGS Petrol Price</td>
-                    <td height="35">${{fuel.rtgs_petrol_price}}</td>
-                    <td height="35"> N/A</td>
-                    <td height="35" width="10%"> N/A</td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-               
+                    </tr>
+                    <tr>
+                        <td height="35">RTGS Petrol Price</td>
+                        <td height="35">${{fuel.rtgs_petrol_price}}</td>
+                        <td height="35"> N/A</td>
+                        <td height="35" width="10%"> N/A</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                
 
-            </table>
-           
+                </table>
+            
 
-           
-</div>
+            
+    </div>
 
 
-</div>
-</div>
+    </div>
+    </div>
+</section>
+
     {%endblock%}
