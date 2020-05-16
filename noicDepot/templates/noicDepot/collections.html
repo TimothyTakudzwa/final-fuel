@@ -141,6 +141,7 @@
                                         <th>Depot</th>
                                         <th>Company</th>
                                         <th>Fuel Type</th>
+                                        <th>Currency</th>
                                         <th>Quantity</th>
                                         <th>Collection</th>
                                     </tr>
@@ -165,6 +166,8 @@
                                                     {{collection.order.fuel_type|lower|capfirst}}
                                                 </td>
                                             {% endif %}
+                                            <td>{{collection.order.currency}}</td>
+
                                             <td>{{collection.order.quantity|floatformat:2|intcomma}} Litres</td>
                                             <td>
                                                 {% if collection.has_collected %}
@@ -327,6 +330,7 @@
                                         <th>Depot</th>
                                         <th>Company</th>
                                         <th>Fuel Type</th>
+                                        <th>Currency</th>
                                         <th>Quantity</th>
                                         <th>Collection</th>
                                     </tr>
@@ -351,6 +355,8 @@
                                                     {{collection.order.fuel_type|lower|capfirst}}
                                                 </td>
                                             {% endif %}
+                                            <td>{{collection.order.currency}}</td>
+
                                             <td>{{collection.order.quantity|floatformat:2|intcomma}} Litres</td>
                                             <td>
                                                 {% if collection.has_collected %}
@@ -570,6 +576,7 @@
                             <th>Depot</th>
                             <th>Company</th>
                             <th>Fuel Type</th>
+                            <th>Currency</th>
                             <th>Quantity</th>
                             <th>Collection</th>
                         </tr>
@@ -594,6 +601,7 @@
                                         {{collection.order.fuel_type|lower|capfirst}}
                                     </td>
                                 {% endif %}
+                                <td>{{collection.order.currency}}</td>
                                 <td>{{collection.order.quantity|floatformat:2|intcomma}} Litres</td>
                                 <td>
                                     {% if collection.has_collected %}
