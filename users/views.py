@@ -1171,7 +1171,7 @@ def statistics(request):
         sub_trans = Transaction.objects.filter(supplier__company=request.user.company, supplier__subsidiary_id=sub.id,
                                                is_complete=True)
         for sub_tran in sub_trans:
-            tran_amount += (float(sub_tran.offer.request.amount) * float(sub_tran.offer.price))
+            tran_amount += (float(sub_tran.offer.quantity) * float(sub_tran.offer.price))
         sub.tran_count = sub_trans.count()
         sub.tran_value = tran_amount
         subs.append(sub)
@@ -1189,7 +1189,7 @@ def statistics(request):
         purchases = []
         number_of_trans = 0
         for tran in new_buyer_transactions:
-            total_value += (float(tran.offer.request.amount) * float(tran.offer.price))
+            total_value += (float(tran.offer.quantity) * float(tran.offer.price))
             purchases.append(tran)
             number_of_trans += 1
         buyer.total_revenue = total_value
@@ -1445,7 +1445,11 @@ def report_generator(request):
             stock = None
             revs = None
         if request.POST.get('report_type') == 'Allocations':
-            allocations = SordCompanyAuditTrail.objects.filter(company=request.user.company, date__range=[start_date, end_date])
+            allocations = FuelAllocation.objects.filter(company=request.user.company, date__range=[start_date, end_date])
+                
+            for allocation in allocations:    
+                allocation.subsidiary = Subsidiaries.objects.filter(id=allocation.allocated_subsidiary_id).first()
+
             requests = None
             revs = None
             stock = None

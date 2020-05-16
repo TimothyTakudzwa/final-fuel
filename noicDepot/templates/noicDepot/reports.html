@@ -906,6 +906,9 @@
                                                     <th style="color:white;">
                                                     Sord Number
                                                     </th>
+                                                    <th style="color: white;">
+                                                        Company
+                                                    </th>
                                                     <th style="color:white;">
                                                     Fuel Type
                                                     </th>
@@ -925,6 +928,7 @@
                                                 <tr>
                                                     <td>{{allocation.date}}</td>
                                                     <td>{{allocation.sord_no}}</td>
+                                                    <td>{{allocation.allocated_to}}</td>
                                                     <td>{{allocation.fuel_type}}</td>
                                                     <td>{{allocation.currency}}</td>
                                                     <td>{{ allocation.quantity|floatformat|intcomma}}</td>

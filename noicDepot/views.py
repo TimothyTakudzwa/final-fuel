@@ -60,8 +60,12 @@ def initial_password_change(request):
 @login_required()
 @user_role
 def dashboard(request):
+    
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+    orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
+    num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).count()
     orders = SordNationalAuditTrail.objects.filter(assigned_depot=depot).all()
+    
 
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date') :
@@ -81,7 +85,9 @@ def dashboard(request):
             context = {
                 'orders': orders,
                 'start_date': start_date,
-                'end_date': end_date
+                'end_date': end_date,
+                'orders_notifications': orders_notifications,
+                'num_of_new_orders': num_of_new_orders
             }
 
             return render(request, 'noicDepot/dashboard.html', context=context)
@@ -144,12 +150,16 @@ def dashboard(request):
                 response['Content-Disposition'] = f'attachment;filename={export_name} - Allocations - {today}.pdf'
                 return response        
 
-    return render(request, 'noicDepot/dashboard.html', {'orders': orders})
+    return render(request, 'noicDepot/dashboard.html', {'orders_notifications': orders_notifications, 'num_of_new_orders': num_of_new_orders, 'orders': orders})
 
 
 @login_required()
 @user_role
 def activity(request):
+    depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+    orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
+    num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).count()
+
     filtered_activities = None
     activities = Activity.objects.exclude(date=today).filter(user=request.user).all()
     for activity in activities:
@@ -194,6 +204,8 @@ def activity(request):
                 'start_date': start_date,
                 'end_date': end_date,
                 'depot': depot,
+                'orders_notifications': orders_notifications,
+                'num_of_new_orders': num_of_new_orders
             }
 
             return render(request, 'noicDepot/activity.html', context=context)
@@ -245,7 +257,9 @@ def activity(request):
                 'start_date':start_date,
                 'current_activities': current_activities,
                 'activities':activities, 'end_date':end_date,
-                'date':today
+                'date':today,
+                'orders_notifications': orders_notifications,
+                'num_of_new_orders': num_of_new_orders
             }
 
             html_string = render_to_string('noicDepot/export/activities_export.html', context=context)
@@ -261,7 +275,7 @@ def activity(request):
                 return response
 
     return render(request, 'noicDepot/activity.html',
-                  {'activities': activities, 'depot': depot, 'current_activities': current_activities})
+                  {'orders_notifications': orders_notifications, 'num_of_new_orders': num_of_new_orders, 'activities': activities, 'depot': depot, 'current_activities': current_activities})
 
 
 @login_required()
@@ -384,10 +398,8 @@ def accepted_orders(request):
 @user_role
 def orders(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
-    orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(action="ORDER").filter(
-        is_read=False).all()
-    num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(action="ORDER").filter(
-        is_read=False).count()
+    orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
+    num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).count()
     orders = Order.objects.exclude(date=today).filter(noic_depot=depot).filter(allocated_fuel=False).all()
     new_orders = Order.objects.filter(date=today).filter(noic_depot=depot).filter(allocated_fuel=False).all()
     # print(orders)
@@ -405,6 +417,8 @@ def orders(request):
 @user_role
 def stock(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+    orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
+    num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).count()
     depot_stock = DepotFuelUpdate.objects.filter(depot=depot).all()
 
     orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=False).all()
@@ -427,7 +441,7 @@ def stock(request):
                 noic_rtgs_diesel += order.quantity
 
     return render(request, 'noicDepot/stock.html',
-                  {'depot_stock': depot_stock, 'depot': depot, 'noic_usd_diesel': noic_usd_diesel,
+                  {'orders_notifications': orders_notifications, 'num_of_new_orders': num_of_new_orders, 'depot_stock': depot_stock, 'depot': depot, 'noic_usd_diesel': noic_usd_diesel,
                    'noic_rtgs_diesel': noic_rtgs_diesel, 'noic_usd_petrol': noic_usd_petrol,
                    'noic_rtgs_petrol': noic_rtgs_petrol})
 
@@ -874,7 +888,10 @@ def download_d_note(request, id):
 @user_role
 def profile(request):
     user = request.user
-    return render(request, 'noicDepot/profile.html', {'user': user})
+    depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+    orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
+    num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).count()
+    return render(request, 'noicDepot/profile.html', {'orders_notifications': orders_notifications, 'num_of_new_orders': num_of_new_orders, 'user': user})
 
 
 @login_required()
@@ -882,6 +899,9 @@ def profile(request):
 def report_generator(request):
     '''View to dynamically render form tables based on different criteria'''
     allocations = requests = trans = stock = None
+    depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+    orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
+    num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).count()
     # trans = Transaction.objects.filter(supplier__company=request.user.company).all()
     start_date = start = "December 1 2019"
     end_date = end = "January 1 2019"
@@ -983,14 +1003,14 @@ def report_generator(request):
 
         # revs = 0
         return render(request, 'noicDepot/reports.html',
-                      {'trans': trans, 'requests': requests, 'allocations': allocations, 'orders': orders,
+                      {'orders_notifications': orders_notifications, 'num_of_new_orders': num_of_new_orders, 'trans': trans, 'requests': requests, 'allocations': allocations, 'orders': orders,
                        'complete_orders': complete_orders, 'pending_orders': pending_orders, 'start': start, 'end': end,
                        'stock': stock})
 
     show = False
     print(trans)
     return render(request, 'noicDepot/reports.html',
-                  {'trans': trans, 'requests': requests, 'allocations': allocations,
+                  {'orders_notifications': orders_notifications, 'num_of_new_orders': num_of_new_orders, 'trans': trans, 'requests': requests, 'allocations': allocations,
                    'start': start_date, 'end': end_date, 'show': show, 'stock': stock})
 
 
@@ -998,6 +1018,8 @@ def report_generator(request):
 @user_role
 def statistics(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+    orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
+    num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).count()
     weekly_rev = get_weekly_sales(True, depot)
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year, depot)
     last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1), depot)
@@ -1012,7 +1034,7 @@ def statistics(request):
         revenue += order.amount_paid
 
     return render(request, 'noicDepot/statistics.html',
-                  {'weekly_rev': weekly_rev, 'last_week_rev': last_week_rev, 'monthly_rev': monthly_rev,
+                  {'orders_notifications': orders_notifications, 'num_of_new_orders': num_of_new_orders, 'weekly_rev': weekly_rev, 'last_week_rev': last_week_rev, 'monthly_rev': monthly_rev,
                    'depot': depot, 'order_completions': order_completions, 'allocations': allocations, 'stock': stock,
                    'revenue': revenue})
 
@@ -1024,12 +1046,17 @@ def collections(request):
 
     new_collections = Collections.objects.filter(date=today).order_by('-date', '-time')
     collections = Collections.objects.exclude(date=today).order_by('-date', '-time')
+    depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
+    orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
+    num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).count()
 
     context = {
         'collections': collections,
         'new_collections': new_collections,
         'form': CollectionsForm(),
-        'filtered_activities': filtered_collections
+        'filtered_activities': filtered_collections,
+        'orders_notifications': orders_notifications,
+        'num_of_new_orders': num_of_new_orders
     }
     if request.method == 'POST':
         collection = Collections.objects.filter(id=request.POST.get('collection_id')).first()
@@ -1092,14 +1119,14 @@ def collections(request):
             if end_date and start_date:
                 filtered_collections = Collections.objects.filter(date__range=[start_date, end_date])
                       
-            fields = ['date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity']
+            fields = ['date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type','order__currency', 'order__quantity']
             
             if filtered_collections:
-                filtered_collections = filtered_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity')
+                filtered_collections = filtered_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__currency', 'order__quantity')
                 df = pd.DataFrame(filtered_collections, columns=fields)
             else:
-                df_current = pd.DataFrame(new_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity'), columns=fields)
-                df_previous = pd.DataFrame(collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity'), columns=fields)
+                df_current = pd.DataFrame(new_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__currency', 'order__quantity'), columns=fields)
+                df_previous = pd.DataFrame(collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__currency', 'order__quantity'), columns=fields)
                 df = df_current.append(df_previous)
 
             filename = f'Noic Depot Collections'
