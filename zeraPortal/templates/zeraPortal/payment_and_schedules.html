@@ -201,13 +201,19 @@
                             </td>
                             <td>{{payment.balance|floatformat:2|intcomma}}</td>
                             {% if payment.delivery_schedule != None %}
-                            <td>
-                                <div class="btn-group">
-                                <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">View Schedule</a>
-                                <a class="btn btn-warning btn-sm" href="{% url 'zeraPortal:view_delivery_note' payment.delivery_schedule.id %}" > <i class="fa fa-download" style="font-size:16px"></i> Delivery Note </a>
+                                {% if payment.delivery_schedule.confirmation_date %}
+                                <td>
+                                    <div class="btn-group">
+                                    <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">View Schedule</a>
+                                    <a class="btn btn-warning btn-sm" href="{% url 'zeraPortal:view_delivery_note' payment.id %}" > <i class="fa fa-download" style="font-size:16px"></i> Delivery Note </a>
 
-                                </div>
-                            </td>
+                                    </div>
+                                </td>
+                                {% else %}
+                                <td>
+                                    <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">View Schedule</a>
+                                </td>
+                                {% endif %}
                             {% elif payment.release_date != None %}
                             <td>
                                 <div class="btn-group">
@@ -330,7 +336,7 @@
                                             {% if payment.delivery_schedule.confirmation_date %}
                                             <div class="form-group col-md-6">
                                                 <label><b>Delivery Note:</b></label>
-                                                &nbsp;<a class="btn btn-info btn-sm" href="{% url 'zeraPortal:view_delivery_note' payment.delivery_schedule.id %}" >Download Document </a>
+                                                &nbsp;<a class="btn btn-info btn-sm" href="{% url 'zeraPortal:view_delivery_note' payment.id %}" >Download Document </a>
                                             </div>
                                             {% else %}
                                             <div class="form-group col-md-6">

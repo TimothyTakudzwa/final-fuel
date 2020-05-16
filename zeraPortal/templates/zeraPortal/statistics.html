@@ -2116,8 +2116,6 @@
                             </div>
                         </div>
                         <div class="panel-body">
-
-                            {% if clients %}
                                 <div class="table-responsive">
                                     <table id="clients_table" class="table table-striped table-bordered"
                                            style="width:100%">
@@ -2141,7 +2139,7 @@
                                                 No Of Transactions
                                             </th>
                                             <th>
-
+                                                Action
                                             </th>
                                         </tr>
                                         </thead>
@@ -2178,9 +2176,6 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            {% else %}
-                                <p>No Data Available</p>
-                            {% endif %}
 
 
                         </div>
@@ -2203,8 +2198,6 @@
                             </div>
                         </div>
                         <div class="panel-body">
-
-                            {% if sorted_subs %}
                                 <div class="table-responsive">
                                     <table id="subsidiaries_transactions" class="table table-striped table-bordered"
                                            style="width:100%">
@@ -2224,13 +2217,12 @@
                                             <th>
                                                 No Of Transactions
                                             </th>
-                                            <th></th>
+                                            <th>Action</th>
 
                                         </tr>
                                         </thead>
                                         <tbody>
                                         {% for sub in sorted_subs %}
-                                            {% if sub.tran_value > 0 %}
                                                 <tr>
                                                     <td>
                                                         {% if forloop.counter == 1 %}
@@ -2267,19 +2259,11 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-                                            {% else %}
-                                                <p style="padding-bottom: 10px; color: #4c59a7;">
-                                                    Non Cash Transaction
-                                                </p>
-                                            {% endif %}
 
                                         {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>
-                            {% else %}
-                                <p>No Sales Data Available</p>
-                            {% endif %}
 
 
                         </div>
