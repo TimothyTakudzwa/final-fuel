@@ -58,7 +58,7 @@
         </div>
         <div class="panel-body">
 
-            {% if allocates %}
+            
             <div class="table-responsive">
                 <table id="fuel_allocations" class="table table-striped table-bordered" style="width:100%">
                     <thead>
@@ -72,6 +72,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                    {% if allocates %}
                         {% for allocate in allocates %}
                         <tr>
 
@@ -624,21 +625,17 @@
                         </script>
 
                         {% endfor %}
+                    {% else %}
+                    No Data Available    
+                    {% endif %}
+
                         
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    {% else %}
- 
-
-
-    <div class="text-center" style="margin-top: 50px">
-        <h4>No Fuel Allocations & Updates</h4>
-    </div>
-    {% endif %}
-
+    
     <div class="modal fade modal-success in" id="add_usd_fuel" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class=" modal-dialog-centered" role="document" style="margin: 0;">
