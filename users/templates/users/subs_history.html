@@ -79,7 +79,7 @@
 <div class="col-md-12">
         <div class="container-fluid">
 
-            <table id="example" class="table table-striped table-bordered" style="width:100%">
+            <table id="fuel_allocations" class="table table-striped table-bordered" style="width:100%">
                 <thead style="color:white; background:lightslategray">
                     <th style="color:white;">
                     Date
@@ -99,6 +99,9 @@
                     <th>
                     Status
                     </th>
+                    <th>
+                    Action
+                    </th>
                 </thead>    
                        
                          
@@ -111,11 +114,11 @@
                             <td>{{tran.offer.request.amount}}</td>
                             <td>$ {{tran.revenue|stringformat:".2f"}}</td>
                            <td>
-                               {% if tran.is_complete %}
-                               <i class="material-icons" style="color: #2ecc71;">check_circle</i>
-                               {% else %}
-                               <i class="material-icons" style="color: #e74c3c;">report</i>
-                               {% endif %}
+                                {% if tran.is_complete %}
+                                <i class="fa fa-check-circle-o" style="color: #2ecc71;"></i>
+                                {% else %}
+                                <i class="fa fa-times-circle-o" style="color: #e74c3c;" aria-hidden="true"></i>
+                                {% endif %}
                             </td>
                             <td>
                                 <button class="btn-sm btn-success" data-toggle="modal" data-target="#acc_history_{{tran.id}}"
@@ -156,6 +159,9 @@
                                     {% else %}
                                     No Data Available For This Transaction
                                     {% endif %}
+                                    <div class="modal-footer">  
+                                        <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                    </div>
                                     
                             </div>
                         </div>
