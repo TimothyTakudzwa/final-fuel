@@ -161,7 +161,7 @@
                         <hr>
 
                         <div class="">
-                        <div id="logo_image_{{ offer.id}}">    
+                        <div id="logo_image_{{forloop.counter}}">    
                             <button onclick="toggle_applications()">
                                 <img class="img-responsive"  src="https://corelpro.com/wp-content/uploads/2019/09/Corporate-Logo-Design-1.jpg" alt="..." 
                                 style="filter: contrast(0.5)">
@@ -175,7 +175,7 @@
                           </div>
                         </div>  
 
-                        <div class="row justify-content-center" id="open_applications__{{offer.id}}" style="width: 66%;margin: auto;text-align: center;display: block;">
+                        <div class="row justify-content-center" id="open_applications__{{forloop.counter}}" style="width: 66%;margin: auto;text-align: center;display: block;">
                             <div class="col-md-12" style="padding-top: 40px;border: #3455e521 solid 1px;padding-bottom: 40px;margin-bottom: 0px;border-radius: 12px;">
                                 <form role="form" method="post" action="{% url 'upload-application' offer.supplier.company.id %}" enctype="multipart/form-data">
                                     {% csrf_token %}
@@ -282,14 +282,14 @@
     </div>
 </div>
 <script>
-    $("#open_applications__{{offer.id}}").hide()
+    $("#open_applications__{{forloop.counter}}").hide()
     function toggle_applications(){
-        $("#open_applications__{{offer.id}}").fadeIn()
-        $("#open_applications__{{offer.id}}").fadeIn("slow");
-        $("#open_applications__{{offer.id}}").fadeIn(18000)
+        $("#open_applications__{{forloop.counter}}").fadeIn()
+        $("#open_applications__{{forloop.counter}}").fadeIn("slow");
+        $("#open_applications__{{forloop.counter}}").fadeIn(18000)
 
 
-        $("#logo_image_{{ offer.id}}").hide()
+        $("#logo_image_{{forloop.counter}}").hide()
         console.log("Chamhanya");
     }
 </script> 
