@@ -1531,3 +1531,14 @@ def notication_reader(request):
         notification.is_read = True
         notification.save()
     return redirect('zeraPortal:dashboard')
+
+
+@login_required()
+def delivery_note(request, id):
+    user_permission(request)
+    payment = AccountHistory.objects.filter(id=id).first()
+    payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
+    context = {
+        'payment': payment
+    }
+    return render(request, 'zeraPortal/delivery_note.html', context=context)
