@@ -65,6 +65,16 @@
                     </thead>
                     <tbody>
                         <tr>
+                            {% if payment.delivery_schedule != None %}
+                            <td class="">{{payment.confirmation_date}}</td>
+                            <td class="">{{payment.transaction.offer.request.delivery_address}}</td>            
+                            <td class="">{{payment.transaction.offer.request.fuel_type}}|S-ORD {{payment.sord_number}} </td>
+                            <td class="">{{payment.quantity|intcomma}} Litres</td>
+                            <td class="">{{payment.delivery_schedule.transport_comapny}}</td>
+                            <td class="">{{payment.delivery_schedule.driver_name}}</td>
+                            <td class="">{{payment.delivery_schedule.id_number}}</td>
+                            <td class="">{{payment.delivery_schedule.vehicle_reg}}</td>
+                            {% else %}
                             <td class="">{{payment.release_date}}</td>
                             <td class="">{{payment.transaction.offer.collection_address}}</td>            
                             <td class="">{{payment.transaction.offer.request.fuel_type}}|S-ORD {{payment.sord_number}} </td>
@@ -73,6 +83,7 @@
                             <td class="">{{payment.transaction.offer.request.driver}}</td>
                             <td class="">{{payment.transaction.offer.request.driver_id}}</td>
                             <td class="">{{payment.transaction.offer.request.truck_reg}}</td>
+                            {% endif %}
                         </tr>
                         
                     </tbody>
