@@ -779,8 +779,8 @@
                                                         <td>{{allocation.fuel_type}}</td>
                                                         <td>{{allocation.payment_type}}</td>
                                                         <td>{{allocation.allocated_to.name}}</td>
-                                                        <td>{{allocation.allocated_by.first_name|title}}
-                                                            {{allocation.allocated_by.last_name|title}}
+                                                        <td>{{request.user.first_name|title}}
+                                                            {{request.user.last_name|title}}
                                                         </td>
 
                                                     
