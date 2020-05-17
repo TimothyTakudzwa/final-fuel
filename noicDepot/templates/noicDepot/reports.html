@@ -746,13 +746,7 @@
                                                     <td>{{order.quantity|floatformat:2|intcomma}}</td>
                                                     <td>{{order.currency}}</td>
                                                     
-                                                    <td>
-                                                        {% if order.payment_approved %}
-                                                        Approved
-                                                        {% else %}
-                                                        Pending Approval
-                                                        {% endif %} 
-                                                    </td>
+                                                    <td>{{order.status}}</td>
         
                                                 </tr>
         
@@ -926,7 +920,7 @@
                                                 <tr>
                                                     <td>{{allocation.date}}</td>
                                                     <td>{{allocation.sord_no}}</td>
-                                                    <td>{{allocation.allocated_to}}</td>
+                                                    <td>{{allocation.order.company.name}}</td>
                                                     <td>{{allocation.fuel_type}}</td>
                                                     <td>{{allocation.currency}}</td>
                                                     <td>{{ allocation.quantity|floatformat|intcomma}}</td>
