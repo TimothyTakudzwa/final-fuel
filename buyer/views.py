@@ -1493,7 +1493,7 @@ def delivery_note(request, id):
     if request.method == 'POST':
         payment = AccountHistory.objects.filter(id=id).first()
         if payment is not None:
-            payment.delivery_note = request.FILES.get('d_note')
+            payment.delivery_date = request.POST['delivery_date']
             payment.save()
 
             action = "Uploading Delivery Note"
@@ -1523,15 +1523,13 @@ def download_release_note(request, id):
 @login_required()
 def download_d_note(request, id):
     user_permission(request)
-    document = AccountHistory.objects.filter(id=id).first()
-    if document:
-        filename = document.delivery_note.name.split('/')[-1]
-        response = HttpResponse(document.delivery_note, content_type='text/plain')
-        response['Content-Disposition'] = 'attachment; filename=%s' % filename
-    else:
-        messages.error(request, 'Document not found.')
-        return redirect('buyer:activity')
-    return response
+    payment = AccountHistory.objects.filter(id=id).first()
+    payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
+    payment.depot = Subsidiaries.objects.filter(id=payment.transaction.supplier.subsidiary_id).first()
+    context = {
+        'payment': payment
+    }
+    return render(request, 'buyer/delivery_note.html', context=context)
 
 @login_required()
 def download_pop(request, id):
@@ -1880,3 +1878,14 @@ def notication_reader(request):
         notification.is_read = True
         notification.save()
     return redirect('buyer:dashboard')
+
+@login_required()
+def view_confirmation_doc(request, id):
+    user_permission(request)
+    payment = AccountHistory.objects.filter(delivery_schedule__id=id).first()
+    payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
+    payment.depot = Subsidiaries.objects.filter(id=payment.transaction.supplier.subsidiary_id).first()
+    context = {
+        'payment': payment
+    }
+    return render(request, 'buyer/delivery_note.html', context=context)
