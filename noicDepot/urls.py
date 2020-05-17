@@ -21,6 +21,7 @@ urlpatterns = [
     path('collections/', views.collections, name='collections'),
     path('notication_reader/', views.notication_reader, name='notication_reader'),
     path('hg_notifier/<int:id>', views.hg_notifier, name='hg_notifier'),
-    path('notication_handler/<int:id>', views.notication_handler, name='notication_handler')
+    path('notication_handler/<int:id>', views.notication_handler, name='notication_handler'),
+    path('delivery_note/<int:id>', views.delivery_note, name='delivery_note')
     
 ]

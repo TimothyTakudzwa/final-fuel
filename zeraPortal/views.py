@@ -1542,3 +1542,14 @@ def delivery_note(request, id):
         'payment': payment
     }
     return render(request, 'zeraPortal/delivery_note.html', context=context)
+
+@login_required()
+def supplier_delivery_note(request, id):
+    user_permission(request)
+    allocation = SordNationalAuditTrail.objects.filter(id=id).first()
+    allocation.admin = User.objects.filter(company=allocation.company).filter(user_type='S_ADMIN').first()
+    allocation.rep = User.objects.filter(subsidiary_id=allocation.assigned_depot.id).filter(user_type='NOIC_STAFF').first()
+    context = {
+        'allocation': allocation
+    }
+    return render(request, 'zeraPortal/supplier_delivery_note.html', context=context)

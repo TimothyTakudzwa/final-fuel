@@ -99,13 +99,13 @@
                             <td>{{sord.quantity|floatformat:2|intcomma}}</td>
                             <td>{{sord.price}}</td>
                             {% if sord.release_date %}
-                                {% if sord.d_note %}
+                                {% if sord.delivery_date %}
                                 <td>
                                     
                                 <div class="btn-group">
                                     <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:noic_release_note' sord.id %}" > 
                                         <span class=btn-label> <i class="fa fa-download"></i></span> Release Note</a>
-                                    <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:noic_delivery_note' sord.id %}" >  
+                                    <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:supplier_delivery_note' sord.id %}" >  
                                         <span class=btn-label> <i class="fa fa-download"></i></span>Delivery Note</a>
                                 </div>
                                     

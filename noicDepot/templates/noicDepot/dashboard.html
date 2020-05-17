@@ -201,10 +201,10 @@
                             </td>
                             {% endif %} 
                             
-                            {% if sord.d_note %}
+                            {% if sord.delivery_date %}
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-labeled btn-success btn-sm" style="color: white;" href="{% url 'noicDepot:download_d_note' sord.id %}"><span class="btn-label"><i class="fa fa-download"></i></span>Download D-Note</a>
+                                    <a class="btn btn-labeled btn-success btn-sm" style="color: white;" href="{% url 'noicDepot:delivery_note' sord.id %}"><span class="btn-label"><i class="fa fa-download"></i></span>Download D-Note</a>
                                     
                                 </div>
                                 

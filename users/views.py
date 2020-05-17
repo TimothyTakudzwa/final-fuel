@@ -2865,7 +2865,7 @@ def delivery_note(request, id):
     allocation = SordNationalAuditTrail.objects.filter(id=id).first()
     if request.method == 'POST':
         if allocation is not None:
-            allocation.d_note = request.FILES.get('d_note')
+            allocation.delivery_date = request.POST['delivery_date']
             allocation.order.status = 'Complete'
             allocation.save()
             messages.success(request, 'Delivery note successfully uploaded.')

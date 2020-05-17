@@ -45,6 +45,7 @@ urlpatterns = [
     path('noic_release_note/<int:id>', views.noic_release_note, name='noic_release_note'),
     path('noic_delivery_note/<int:id>', views.noic_delivery_note, name='noic_delivery_note'),
     path('notication_handler/<int:id>', views.notication_handler, name='notication_handler'),
+    path('supplier_delivery_note/<int:id>', views.supplier_delivery_note, name='supplier_delivery_note'),
     path('activity/', views.activity, name='activity'),
     path('fuel_prices/', views.fuel_prices, name='fuel_prices'),
     path('export_to_csv/',views.export_to_csv, name='export_to_csv'),
