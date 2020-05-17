@@ -1217,3 +1217,15 @@ def notication_reader(request):
         notification.is_read = True
         notification.save()
     return redirect('noicDepot:accepted_orders')
+
+
+@login_required()
+def delivery_note(request, id):
+    user_permission(request)
+    allocation = SordNationalAuditTrail.objects.filter(id=id).first()
+    allocation.admin = User.objects.filter(company=allocation.company).filter(user_type='S_ADMIN').first()
+    allocation.rep = request.user
+    context = {
+        'allocation': allocation
+    }
+    return render(request, 'noicDepot/delivery_note.html', context=context)
