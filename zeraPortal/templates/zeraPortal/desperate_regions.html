@@ -2,6 +2,8 @@
 {% load humanize %}
 {% block body %}
 
+
+
     <section class="content-header">
         <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
             <div class="input-group">
@@ -98,7 +100,7 @@
         </div>
     </section>
 
-    <section class="content">
+    <!-- <section class="content">
         <div class="col-xs-12 col-sm-12 lobipanel-parent-sortable ui-sortable" data-lobipanel-child-inner-id="veKF9LUXFI">
             <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="veKF9LUXFI" data-index="0">
                 <div class="panel-heading ui-sortable-handle">
@@ -127,6 +129,68 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
+    <section class="content">
+        <div class="row">
+            
+            <div class="col-xs-12 col-sm-12 lobipanel-parent-sortable ui-sortable"
+                data-lobipanel-child-inner-id="veKF9LUXFI">
+                <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable"
+                    data-inner-id="veKF9LUXFI" data-index="0">
+                    <div class="panel-heading ui-sortable-handle">
+                        <div class="panel-title" style="max-width: calc(100% - 180px);">
+                            <h4>Desperate Regions</h4>
+                        </div>
+                        <div class="dropdown">
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a data-func="editTitle" data-tooltip="Edit title"
+                                    data-toggle="tooltip" data-title="Edit title"
+                                    data-placement="bottom" data-original-title="" title=""><i
+                                        class="panel-control-icon ti-pencil"></i><span
+                                        class="control-title">Edit title</span></a></li>
+                                <li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip"
+                                    data-title="Unpin" data-placement="bottom" data-original-title=""
+                                    title=""><i class="panel-control-icon ti-move"></i><span
+                                        class="control-title">Unpin</span></a></li>
+                                <li><a data-func="reload" data-tooltip="Reload" data-toggle="tooltip"
+                                    data-title="Reload" data-placement="bottom"
+                                    data-original-title="" title=""><i
+                                        class="panel-control-icon ti-reload"></i><span
+                                        class="control-title">Reload</span></a></li>
+                                <li><a data-func="minimize" data-tooltip="Minimize"
+                                    data-toggle="tooltip" data-title="Minimize"
+                                    data-placement="bottom" data-original-title="" title=""><i
+                                        class="panel-control-icon ti-minus"></i><span
+                                        class="control-title">Minimize</span></a></li>
+                                <li><a data-func="expand" data-tooltip="Fullscreen"
+                                    data-toggle="tooltip" data-title="Fullscreen"
+                                    data-placement="bottom" data-original-title="" title=""><i
+                                        class="panel-control-icon ti-fullscreen"></i><span
+                                        class="control-title">Fullscreen</span></a></li>
+                                <li><a data-func="close" data-tooltip="Close" data-toggle="tooltip"
+                                    data-title="Close" data-placement="bottom" data-original-title=""
+                                    title=""><i class="panel-control-icon ti-close"></i><span
+                                        class="control-title">Close</span></a></li>
+                            </ul>
+                            <div class="dropdown-toggle" data-toggle="dropdown"><span
+                                    class="panel-control-icon glyphicon glyphicon-cog"></span></div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        
+                        <div class="embed-container">
+                                   
+                            <iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=21.687011718750004%2C-22.105998799750566%2C33.94775390625001%2C-15.855673509998681&amp;layer=mapnik" style="border: 1px solid black"></iframe>
+                            <br/>
+                            <small><a href="https://www.openstreetmap.org/#map=7/-19.010/27.817">View Larger Map</a></small>
+                                    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>    
+
+    
 {% endblock %}
