@@ -858,7 +858,7 @@
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header" style="background-color: #009688; color: white">
-                                                                    <span class="modal-title" id="exampleModalLabel">Add Release Date</span>
+                                                                    <span class="modal-title" id="exampleModalLabel">Add Delivery Date</span>
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">&times;</span>
                                                                     </button>
@@ -868,7 +868,7 @@
                                                                     <form method="POST" action="{% url 'users:delivery_note' order.allocation.id %}" enctype="multipart/form-data">
                                                                         {% csrf_token %}
                                                                         <div class="form-group col-md-6">
-                                                                            <label>Release Date</label>
+                                                                            <label>Delivery Date</label>
                                                                             <input type="date" name="delivery_date" class="form-control"  required/>
                                                                         </div>
                                                                         <br>
