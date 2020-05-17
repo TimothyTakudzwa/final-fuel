@@ -109,7 +109,7 @@
                 + (currentdate.getMonth()+1)  + "-" 
                 + currentdate.getFullYear() 
                
-        var name = "invoice " + datetime
+        var name = "d-note " + datetime
         let doc = new jsPDF('p','pt','a4');
         doc.addHTML(document.body,function() {
             doc.save(name);
