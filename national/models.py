@@ -94,6 +94,7 @@ class SordNationalAuditTrail(models.Model):
     assigned_depot = models.ForeignKey(NoicDepot, on_delete=models.DO_NOTHING,
                                        related_name='company_allocation_national', blank=True, null=True)
     release_date = models.DateField(auto_now_add=False, null=True, blank=True)
+    delivery_date = models.DateField(auto_now_add=False, null=True, blank=True)
     release_note = models.BooleanField(default=False)
     d_note = models.FileField(blank=True, null=True, upload_to='proof_of_payment')
 
