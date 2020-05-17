@@ -44,6 +44,7 @@ urlpatterns = [
     path('supplier_release_note/<int:id>', views.supplier_release_note, name='supplier_release_note'),
     path('hq_notifier/<int:id>', views.hq_notifier, name='hq_notifier'),
     path('notication_handler/<int:id>', views.notication_handler, name='notication_handler'),
+    path('buyer_delivery_note/<int:id>', views.buyer_delivery_note, name='buyer_delivery_note'),
     path('activity/', views.activity, name='activity'),
     path('notication_reader/', views.notication_reader, name='notication_reader')
 

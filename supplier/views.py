@@ -1691,6 +1691,7 @@ def view_confirmation_doc(request, id):
     user_permission(request)
     payment = AccountHistory.objects.filter(delivery_schedule__id=id).first()
     payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
+    payment.depot = Subsidiaries.objects.filter(id=payment.transaction.supplier.subsidiary_id).first()
     context = {
         'payment': payment
     }
@@ -2033,3 +2034,15 @@ def notication_reader(request):
         notification.is_read = True
         notification.save()
     return redirect('fuel-request')
+
+
+@login_required()
+def buyer_delivery_note(request, id):
+    user_permission(request)
+    payment = AccountHistory.objects.filter(id=id).first()
+    payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
+    payment.depot = Subsidiaries.objects.filter(id=payment.transaction.supplier.subsidiary_id).first()
+    context = {
+        'payment': payment
+    }
+    return render(request, 'supplier/delivery_note.html', context=context)

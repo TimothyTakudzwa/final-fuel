@@ -43,6 +43,7 @@ urlpatterns = [
     path('activate_company/<int:id>', views.activate_company, name='activate_company'),
     path('decline_company/<int:id>', views.decline_company, name='decline_company'),
     path('notication_handler/<int:id>', views.notication_handler, name='notication_handler'),
+    path('view_confirmation_doc/<int:id>', views.view_confirmation_doc, name='view_confirmation_doc'),
     path('company_profile/', views.company_profile, name='company_profile'),
     path('activity/', views.activity, name='activity'),
     path('approve_companies/', views.approve_companies, name='approve_companies'),

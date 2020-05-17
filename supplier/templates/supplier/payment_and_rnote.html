@@ -242,7 +242,7 @@
                             <td>Approved</td>
                             <td>{{payment.value|floatformat:2|intcomma}}</td>
                             <td>{{payment.balance|floatformat:2|intcomma}}</td>
-                            {% if payment.release_activated %}
+                            {% if  payment.release_date != None %}
                             <td>
                                 <div class="btn-group">
                                     <a class="btn btn-primary btn-sm" style="color: white;" href="{% url 'supplier:view-release-note' payment.id %}"><i class="fa fa-eye" style="font-size:16px"></i></a>
@@ -255,9 +255,9 @@
                             <a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#upload_{{payment.id}}">
                                 <i class="fa fa-upload" style="font-size:20px"></i> Upload</a></td>                           
                             {% endif %}
-                            {% if payment.delivery_note %}
+                            {% if payment.delivery_date != None %}
                             <td>
-                                <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-delivery-note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i>Delivery Note</a>  
+                                <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:buyer_delivery_note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i>Delivery Note</a>  
                             </td>
                             {% else %}
                             <td style="color: rgb(65, 9, 9);">Pending</td>
