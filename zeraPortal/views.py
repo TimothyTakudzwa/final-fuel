@@ -1433,10 +1433,11 @@ def desperate_regions(request):
     notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
     num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
     town_coordinates = list(desperate().values())
-    cords = [list(cord) for cord in town_coordinates]
+    cords = [list(cord) for cord in coordinates_towns]
     context = {
         'regions': desperate(),
         'coordinates': cords,
+        'town_coordinates': town_coordinates,
         'num_of_notifications': num_of_notifications,
         'notifications': notifications,
         'mapping': dict(zip(towns, coordinates_towns))
