@@ -1432,7 +1432,9 @@ def suspicious_behavior(request):
 def desperate_regions(request):
     notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
     num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
+    # Get the coordinates for desperate regions.
     cords = [get_town_coordinates[city] for city in desperate().keys()]
+    # Changing the tuples to lists so that they can work as arrays to plot markers for the map.
     cords = [list(cord) for cord in cords]
     
     context = {
