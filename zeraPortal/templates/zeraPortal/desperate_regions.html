@@ -221,21 +221,57 @@
             view: new ol.View({
                 center: ol.proj.fromLonLat([29.1549, -19.0154]),
                 maxZoom: 18,
-                zoom: 12
+                zoom: 7
             })
         });
 
+        test_array = [[30.1936, -17.3653],[29.1549, -19.0154]]
 
-        var layer = new ol.layer.Vector({
-            source: new ol.source.Vector({
-                features: [
-                    new ol.Feature({
-                        geometry: new ol.geom.Point(ol.proj.fromLonLat([29.1549, -19.0154]))
-                    })
-                ]
-            })
+        var coordinates= {{coordinates}};
+
+        coordinates.forEach(function (arrayItem) {
+            var layer = new ol.layer.Vector({
+                source: new ol.source.Vector({
+                    features: [
+                        new ol.Feature({
+                            geometry: new ol.geom.Point(ol.proj.fromLonLat(arrayItem))
+                        })
+                    ]
+                })
+            });
+            map.addLayer(layer);
         });
-        map.addLayer(layer);    
+        
+
+        // var layer = new ol.layer.Vector({
+        //     source: new ol.source.Vector({
+        //         features: [
+        //             new ol.Feature({
+        //                 geometry: new ol.geom.Point(ol.proj.fromLonLat([29.1549, -19.0154]))
+        //             })
+        //         ]
+        //     })
+        // });
+
+        // var layer3 = new ol.layer.Vector({
+        //     source: new ol.source.Vector({
+        //         features: [
+        //             new ol.Feature({
+        //                 geometry: new ol.geom.Point(ol.proj.fromLonLat([30.1936, -17.3653]))
+        //             })
+        //         ]
+        //     })
+        // });
+
+        // test_array = [[30.1936, -17.3653],[29.1549, -19.0154]]
+
+        
+        
+        // var coordinates = {{coordinates}};
+
+        // map.addLayer(layer3);
+        // map.addLayer(layer);    
+
 </script>
 <script>
      var container = document.getElementById('popup');
