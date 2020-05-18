@@ -1432,11 +1432,9 @@ def suspicious_behavior(request):
 def desperate_regions(request):
     notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
     num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
-    
-    cords = [list(cord) for cord in coordinates_towns]
-    context = {
+    town_coordinates = list(desperate().values())
+    cords = [list(cord) for cord in town_coordinates
         'regions': desperate(),
-        # 'coordinates': list(desperate().values()),
         'coordinates': cords,
         'num_of_notifications': num_of_notifications,
         'notifications': notifications,
