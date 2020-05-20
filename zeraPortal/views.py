@@ -1594,6 +1594,17 @@ def ministry_statements(request):
             sord_acc_history = AccountHistory.objects.filter(sord_number__isnull=False).filter(date__range=[start_date, end_date])
 
         if request.POST.get('export_pdf') == 'true':
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+            
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+
             if state:
                 sord_acc_history = AccountHistory.objects.filter(sord_number__isnull=False).filter(date__range=[start_date, end_date])
                 sord_audits = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
