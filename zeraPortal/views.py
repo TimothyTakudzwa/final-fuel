@@ -1604,8 +1604,6 @@ def ministry_statements(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-
-            if state:
                 sord_acc_history = AccountHistory.objects.filter(sord_number__isnull=False).filter(date__range=[start_date, end_date])
                 sord_audits = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
 
