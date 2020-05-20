@@ -46,7 +46,6 @@
 
 <h1 style="text-align: center;">Statement For Ministry of Energy and Power Development - {{ date }}</h1>
 
-{{sord_audits}} <<<<<
 
 {% if sord_audits %}
 <h3 style="padding-top: 20px;">Noic To Suppliers  {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">({{date}})</small>{% endif %}</h3>
@@ -83,9 +82,6 @@
             Sord Action
         </th>
 
-        <th>
-            Action
-        </th>
     </tr>
         
     
@@ -112,31 +108,7 @@
         <td>{{sord.quantity|floatformat:2|intcomma}}</td>
         <td>{{sord.price}}</td>
         <td>{{sord.action}}</td>
-        {% if sord.release_date %}
-            {% if sord.delivery_date %}
-            <td>
-                
-            <div class="btn-group">
-                <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:noic_release_note' sord.id %}" > 
-                    <span class=btn-label> <i class="fa fa-download"></i></span> Release Note</a>
-                <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:supplier_delivery_note' sord.id %}" >  
-                    <span class=btn-label> <i class="fa fa-download"></i></span>Delivery Note</a>
-            </div>
-                
-            </td>
-            {% else %}
-            <td>
-                
-                <div class="btn-group">
-                    <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:noic_release_note' sord.id %}" > 
-                        <span class=btn-label> <i class="fa fa-download"></i></span> Release Note</a>
-                </div>
-                    
-                </td>
-            {% endif %}
-        {% else %}
-        <td style="color: brown;">Documents Pending</td>
-        {% endif %}
+        
     </tr>
     {% endfor %}
 
@@ -170,9 +142,6 @@
         <th>
             Balance ($)
          </th>
-        <th>
-            Action
-         </th>
     </tr>
         
 
@@ -192,9 +161,6 @@
                         <div class="modal-content">
                             <div class="modal-header" style="background-color: #009688; color: white">
                                 <span class="modal-title" id="exampleModalLabel">Details for the Transaction</span>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
                             </div>
                             <div class="modal-body">
                                 {% csrf_token %}
@@ -311,38 +277,7 @@
             <a class="btn btn-warning btn-sm" href="{% url 'zeraPortal:download_proof' payment.id %}" > <i class="fa fa-download" style="font-size:16px"></i> Payment Proof </a>
         </td>
         <td>{{payment.balance|floatformat:2|intcomma}}</td>
-        {% if payment.delivery_schedule != None %}
-            {% if payment.delivery_schedule.confirmation_date %}
-            <td>
-                <div class="btn-group">
-                <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">View Schedule</a>
-                <a class="btn btn-warning btn-sm" href="{% url 'zeraPortal:delivery-note' payment.id %}" > <i class="fa fa-download" style="font-size:16px"></i> Delivery Note </a>
 
-                </div>
-            </td>
-            {% else %}
-            <td>
-                <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">View Schedule</a>
-            </td>
-            {% endif %}
-        {% elif payment.release_date != None %}
-            {% if payment.delivery_date != None %}
-            <td>
-                <div class="btn-group">
-                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:view_release_note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
-                    <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:delivery-note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Delivery Note</a>
-                </div>
-            </td>
-            {% else %}
-            <td>
-                <div class="btn-group">
-                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:view_release_note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
-                </div>
-            </td>
-            {% endif %}
-        {% else %}
-        <td style="color: chocolate;">Documents Pending</td>
-        {% endif %}
     </tr>
             <!--view modal-->
         
