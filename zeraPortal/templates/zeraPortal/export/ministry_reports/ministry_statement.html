@@ -1,0 +1,362 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Orders {{request.company.name}} Summary</title>
+
+    <style>
+        @page {size: a3 landscape;}
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        .first {
+            width: 50%;
+            float:left;
+            font-size: 12px;
+
+        }
+        .wrapper {
+            width: 100%;
+            margin: auto;
+            padding: 10px;
+            overflow: hidden;
+        }
+        .text-muted{
+            color:#6c757d!important;
+        }
+    </style>
+
+</head>
+<body>
+
+
+<h1 style="text-align: center;">Statement For Ministry of Energy and Power Development - {{ date }}</h1>
+
+
+{% if sord_audits %}
+<h3 style="padding-top: 20px;">Noic To Suppliers  {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">({{date}})</small>{% endif %}</h3>
+
+<table style="padding-top: 20px; margin-bottom: 30px;">
+
+    <tr>
+        <th>
+           Date 
+        </th>
+
+        <th>
+            Sord Number
+        </th>
+        <th>
+           Depot
+        </th>
+        <th>
+            Fuel Type
+        </th>
+        <th>
+            Currency 
+        </th>
+       
+        <th>
+            Quantity (L)
+        </th>
+
+        <th>
+            Price ($)
+        </th>
+
+        <th>
+            Sord Action
+        </th>
+
+        <th>
+            Action
+        </th>
+    </tr>
+        
+    
+    {% for sord in sord_audits %}
+    <tr>
+        <td>{{sord.date}}</td>
+        <td>{{sord.sord_no}}</td>
+        <td>{{sord.company}}</td>
+        {% if sord.fuel_type|lower|capfirst == 'Petrol' %}
+            <td class="" style="color: #009688;">
+                {{sord.fuel_type|lower|capfirst}}
+            </td>
+        {% elif sord.fuel_type|lower|capfirst == 'Diesel' %}
+        
+            <td class="" style="color: #ffb61e;">
+                {{sord.fuel_type|lower|capfirst}}
+            </td>
+        {% else %}
+            <td class="">
+                {{sord.fuel_type|lower|capfirst}}
+            </td>
+        {% endif %}    
+        <td>{{sord.currency}}</td>
+        <td>{{sord.quantity|floatformat:2|intcomma}}</td>
+        <td>{{sord.price}}</td>
+        <td>{{sord.action}}</td>
+        {% if sord.release_date %}
+            {% if sord.delivery_date %}
+            <td>
+                
+            <div class="btn-group">
+                <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:noic_release_note' sord.id %}" > 
+                    <span class=btn-label> <i class="fa fa-download"></i></span> Release Note</a>
+                <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:supplier_delivery_note' sord.id %}" >  
+                    <span class=btn-label> <i class="fa fa-download"></i></span>Delivery Note</a>
+            </div>
+                
+            </td>
+            {% else %}
+            <td>
+                
+                <div class="btn-group">
+                    <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:noic_release_note' sord.id %}" > 
+                        <span class=btn-label> <i class="fa fa-download"></i></span> Release Note</a>
+                </div>
+                    
+                </td>
+            {% endif %}
+        {% else %}
+        <td style="color: brown;">Documents Pending</td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+
+</table>
+
+{% endif %}
+
+{% if sord_acc_history %}
+
+<h3 style="padding-top: 20px;">Supplier To Corporate {% if start_date and end_date%} ( <small style="color: #007f73;">{{start_date}}</small> - <small style="color: #007f73;">{{end_date}} )</small>{% else %}<small style="color: #007f73;">( {{date}} )</small>{% endif %}</h3>
+
+<table style="padding-top: 20px">
+    <tr>
+        <th>
+            Date
+        </th>
+    
+        <th>
+            Sord Number
+        </th>
+        <th>
+            Transaction Summary
+         </th>
+         
+        <th>
+           Amount Paid ($)
+        </th>
+        <th>
+           Proof of Payment
+        </th>
+        <th>
+            Balance ($)
+         </th>
+        <th>
+            Action
+         </th>
+    </tr>
+        
+
+    {% for payment in sord_acc_history%}
+    <tr>
+        <td>{{payment.date}} - {{payment.time}}</td>
+
+        <td>{{payment.sord_number}}</td>
+        <td>
+                <!--call modal-->
+                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#trans{{payment.id}}">
+                    Transaction Details
+                </button>
+                <!--view details-->
+                <div class="modal fade modal-success in" id="trans{{payment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #009688; color: white">
+                                <span class="modal-title" id="exampleModalLabel">Details for the Transaction</span>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label><b> Buyer:</b></label>
+                                        &nbsp;{{payment.transaction.buyer.company}}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label><b>Supplier:</b></label>
+                                        &nbsp;{{payment.transaction.supplier.company}}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label><b> Fuel Type:</b></label>
+                                        {% if payment.transaction.offer.request.fuel_type == 'Petrol'%}
+                                        <b style="color: #009688; padding-left: 5px;">{{payment.transaction.offer.request.fuel_type}}</b>
+                                        {% elif payment.transaction.offer.request.fuel_type == 'DIESEL'%}
+                                        <b style="color: #ffb61e; padding-left: 5px;">{{payment.transaction.offer.request.fuel_type}}</b>
+                                        {% else %}
+                                        <b>{{payment.transaction.offer.request.fuel_type}}</b>
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label><b>Quantity Requested:</b></label>
+                                        &nbsp;{{payment.transaction.offer.request.amount|floatformat:2|intcomma}}L
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label><b> Quantity Offered:</b></label>
+                                        &nbsp;{{payment.transaction.offer.quantity|floatformat:2|intcomma}}L
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label><b>Price:</b></label>
+                                        &nbsp;${{payment.transaction.offer.price}}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label><b> Expected:</b></label>
+                                        &nbsp;${{payment.transaction.expected|intcomma}}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label><b>Paid:</b></label>
+                                        &nbsp;${{payment.transaction.paid|intcomma}}
+                                    </div>
+                                </div>
+                                {% if payment.transaction.offer.delivery_method == 'DELIVERY' %}
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label><b>Delivery Quantity:</b></label>
+                                        {% comment %}
+
+                                        &nbsp;{{payment.transaction.paid| div:payment.transaction.offer.price|floatformat}}L
+                                        {% endcomment %}
+
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label><b> Delivery Address:</b></label>
+                                        &nbsp;{{payment.transaction.buyer.company.address}}
+                                    </div>
+                                    
+                                </div>
+                                
+                                {% else %}
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label><b>Delivery Quantity:</b></label>
+                                        {% comment %}
+                                        &nbsp;{{payment.transaction.paid| div:payment.transaction.offer.price|floatformat}}L
+                                        {% endcomment %}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label><b> Delivery Address:</b></label>
+                                        &nbsp;{{payment.transaction.buyer.company.address}}
+                                    </div>
+                                    
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label><b>Transporter:</b></label>
+                                        &nbsp;{{payment.transaction.offer.request.transporter}}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label><b> Truck Reg:</b></label>
+                                        &nbsp;{{payment.transaction.offer.request.truck_reg}}
+                                    </div>
+                                    
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label><b>Driver:</b></label>
+                                        &nbsp;{{payment.transaction.offer.request.driver}}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label><b> Driver ID:</b></label>
+                                        &nbsp;{{payment.transaction.offer.request.driver_id}}
+                                    </div>
+                                    
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </td>
+        
+        <td>{{payment.value|floatformat:2|intcomma}}</td>
+        <td>
+            <a class="btn btn-warning btn-sm" href="{% url 'zeraPortal:download_proof' payment.id %}" > <i class="fa fa-download" style="font-size:16px"></i> Payment Proof </a>
+        </td>
+        <td>{{payment.balance|floatformat:2|intcomma}}</td>
+        {% if payment.delivery_schedule != None %}
+            {% if payment.delivery_schedule.confirmation_date %}
+            <td>
+                <div class="btn-group">
+                <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">View Schedule</a>
+                <a class="btn btn-warning btn-sm" href="{% url 'zeraPortal:delivery-note' payment.id %}" > <i class="fa fa-download" style="font-size:16px"></i> Delivery Note </a>
+
+                </div>
+            </td>
+            {% else %}
+            <td>
+                <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">View Schedule</a>
+            </td>
+            {% endif %}
+        {% elif payment.release_date != None %}
+            {% if payment.delivery_date != None %}
+            <td>
+                <div class="btn-group">
+                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:view_release_note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
+                    <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:delivery-note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Delivery Note</a>
+                </div>
+            </td>
+            {% else %}
+            <td>
+                <div class="btn-group">
+                    <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:view_release_note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
+                </div>
+            </td>
+            {% endif %}
+        {% else %}
+        <td style="color: chocolate;">Documents Pending</td>
+        {% endif %}
+    </tr>
+            <!--view modal-->
+        
+        <!--End View Modal-->
+    {% endfor %}
+
+</table>
+
+{% endif %}
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1559,3 +1559,64 @@ def supplier_delivery_note(request, id):
         'allocation': allocation
     }
     return render(request, 'zeraPortal/supplier_delivery_note.html', context=context)
+
+
+@login_required()
+def ministry_statements(request):
+    user_permission(request)
+
+    sord_audits = None
+    sord_acc_history = None
+
+    state = None
+    context = {
+        'sord_audits': sord_audits,
+        'sord_acc_history': sord_acc_history,
+        'state': state
+    }
+
+    if request.method == "POST":
+        state = True
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        if start_date:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            start_date = start_date.date()
+        report_type = request.POST.get('report_type')
+        if end_date:
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')
+            end_date = end_date.date()
+        if request.POST.get('report_type') == 'Noic_To_Suppliers':
+            sord_audits = SordNationalAuditTrail.objects.all()
+            sord_acc_history = None
+        if request.POST.get('report_type') == 'Supplier_To_Corporate':
+            sord_audits = None
+            sord_acc_history = AccountHistory.objects.filter(sord_number__isnull=False).filter(date__range=[start_date, end_date])
+
+        if request.POST.get('export_pdf') == 'true':
+            html_string = render_to_string('zeraPortal/export/ministry_reports/ministry_statement.html', {'sord_audits': sord_audits,
+            'start_date':start_date,'sord_acc_history': sord_acc_history,'end_date':end_date,
+            'date':today})
+            html = HTML(string=html_string)
+            export_name = f"ZERA - {today}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Activities - {today}.pdf'
+                return response
+
+
+        context = {
+            'sord_audits': sord_audits,
+            'sord_acc_history': sord_acc_history,
+            'start_date': start_date,
+            'end_date': end_date,
+            'state': state
+        }
+        return render(request, 'zeraPortal/ministry_statements.html', context=context)
+
+    
+    return render(request, 'zeraPortal/ministry_statements.html', context=context)
