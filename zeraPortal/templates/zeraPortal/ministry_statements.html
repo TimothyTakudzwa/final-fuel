@@ -464,7 +464,7 @@
                                     <div class="btn-group">
                                     <a class="btn btn-primary btn-labeled btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">
                                         <span class="btn-label"> <i class="fa fa-eye" aria-hidden="true"></i></span> View Schedule</a>
-                                    <a class="btn btn-warning btn-sm" href="{% url 'zeraPortal:delivery-note' payment.id %}" > <i class="fa fa-download" style="font-size:16px"></i>
+                                    <a class="btn btn-labeled btn-warning btn-sm" href="{% url 'zeraPortal:delivery-note' payment.id %}" > <span class="btn-label"><i class="fa fa-download" style="font-size:16px"></i> </span> 
                                          Delivery Note </a>
 
                                     </div>
@@ -479,14 +479,17 @@
                                 {% if payment.delivery_date != None %}
                                 <td>
                                     <div class="btn-group">
-                                        <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:view_release_note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
-                                        <a class="btn btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:delivery-note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Delivery Note</a>
+                                        <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:view_release_note' payment.id %}" >  
+                                            <span class="btn-label"><i class="fa fa-download" style="font-size:16px"></i> </span>  Release Note</a>
+                                        <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:delivery-note' payment.id %}" > <span class="btn-label"><i class="fa fa-download" style="font-size:16px"></i> </span> 
+                                            Delivery Note</a>
                                     </div>
                                 </td>
                                 {% else %}
                                 <td>
                                     <div class="btn-group">
-                                        <a class="btn btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:view_release_note' payment.id %}" > <i class="fa fa-download" style="font-size:20px"></i> Release Note</a>
+                                        <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:view_release_note' payment.id %}" > 
+                                            <span class="btn-label"><i class="fa fa-download" style="font-size:16px"></i> </span>  Release Note</a>
                                     </div>
                                 </td>
                                 {% endif %}
