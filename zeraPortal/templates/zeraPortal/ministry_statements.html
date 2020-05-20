@@ -74,17 +74,18 @@
 </div>
 
 
-<section class="content">
-    <div class="panel panel-success lobidisable lobipanel lobipanel-sortable" data-inner-id="P0Em7iy5LQ" data-index="0" style="width: 45%; float: left;">
+<section class="content" style="margin-top: 50px;">
+    <div class="panel panel-success lobidisable lobipanel lobipanel-sortable" data-inner-id="P0Em7iy5LQ" data-index="0" 
+    style="width: 45%;float: left;border: none;border-radius: 10px;">
       <div class="panel-heading ui-sortable-handle">
           <div class="panel-title" style="max-width: calc(100% - 90px);">
-              <h4>Filter Panel ~ {{ state }} </h4>
+              <h4>Date Filter Panel</h4>
           </div>
       <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
       <div class="panel-body" style="display: block;text-align: center; display: block;">
           <button type="button" class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#report_modal"
-                      role="button" style="color: white;font-size: medium; margin-top: 20px ;">
-              <span class="btn-label"><i class="fa fa-filter"></i></span>Filtered State - {{ state }}
+                      role="button" style="color: white;font-size: small; margin-top: 20px ;">
+              <span class="btn-label"><i class="fa fa-filter"></i></span>Pick A Date Range
           </button> 
           <div class="panel-footer" style="margin-top: 40px; color: lightslategray;">
               {% if state %}
@@ -96,42 +97,51 @@
       </div>
     </div>
     
-    <div class="panel panel-inverse lobidisable lobipanel lobipanel-sortable pull-right" data-inner-id="P0Em7iy5LQ" data-index="0" style="width: 50%;">
+    <div class="panel panel-inverse lobidisable lobipanel lobipanel-sortable pull-right" data-inner-id="P0Em7iy5LQ" data-index="0" 
+    style="width: 50%;border: none;border-radius: 10px;">
         <div class="panel-heading ui-sortable-handle" style="background-color: lightslategray; color: white;">
             <div class="panel-title" style="max-width: calc(100% - 90px);">
-                <h4>Export ~ {{ state }} </h4>
+                <h4>Export Panel</h4>
             </div>
         <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
         <div class="panel-body" style="margin-top: 27px;">
-            <div class="pull-center" style="display: block;text-align: center; display: block;">
-                <form method="POST">
-                    {% csrf_token %}
-                    <input type="text" name="export_pdf" value="true" hidden>
-                    <input type="text" name="pdf_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
-                    <input type="text" name="pdf_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="export_pdf" value="true" hidden>
+                <input type="text" name="pdf_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                <input type="text" name="pdf_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
 
-                    {% if sord_audits %}
-                    <input type="text" name="is_sord_audit" value="true" hidden>
-                    {% endif %}
-
-                    <button type="submit" class="btn btn-black btn-labeled btn-transparent btn-sm" style="float: left;"
+                {% if sord_audits %}
+                <input type="text" name="is_sord_audit" value="true" hidden>
+                {% endif %}
+            <div class="btn-group" style="margin-left: auto;margin-right: auto;width: 30%;display: block;">
+                    <button type="submit" class="btn btn-black btn-labeled btn-transparent btn-sm"
                                 role="button" style="color: darkslategray;"
                                 {% if not sord_audits and not sord_acc_history %}disabled{% endif %} 
                                 title="{% if not sord_audits and not sord_acc_history %}Nothing To Export
                                 {% else %} Export PDF{% endif %}">
                         <span class="btn-label"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></span>PDF
                     </button>
-                </form>    
-
-
-                <button type="button" class="btn btn-black btn-labeled btn-transparent btn-sm" data-toggle="modal" data-target="#state_modal"
+                </form> 
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="export_csv" value="true" hidden>
+                    <input type="text" name="pdf_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
+                    <input type="text" name="pdf_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
+                    {% if sord_audits %}
+                    <input type="text" name="is_sord_audit" value="true" hidden>
+                    {% endif %}
+           
+                <button type="submit" class="btn btn-black btn-labeled btn-transparent btn-sm" data-toggle="modal" data-target="#state_modal"
                             role="button" style="color: darkslategray;" {% if not sord_audits and not sord_acc_history %}disabled{% endif %} 
                             title="{% if not sord_audits and not sord_acc_history %}Nothing To Export
                             {% else %} Export CSV{% endif %}">
                     <span class="btn-label"><i class="fa fa-file-excel-o" aria-hidden="true"></i></span>CSV
-                </button>    
+                </button>  
+            </form> 
+
             </div>
-            <div class="panel-footer" style="margin-top: 40px;text-align: center; color: lightslategray;">
+            <div class="panel-footer" style="margin-top: 35px;text-align: center; color: lightslategray;">
                 {% if state %}
                 Export Data Here
                 {% else %}

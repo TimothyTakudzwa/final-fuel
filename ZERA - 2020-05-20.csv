@@ -1,0 +1,5 @@
+date,sord_no,fuel_type,currency,quantity,price,allocated_to__name,allocated_by__company__name
+2020-03-27,14,Petrol,USD,8999999.0,0.00,,
+2020-03-27,15,Petrol,USD,9.0,0.00,,
+2020-03-27,16,Petrol,RTGS,8.0,0.00,,
+2020-03-27,17,Petrol,USD,4.0,0.00,,

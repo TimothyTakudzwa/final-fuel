@@ -1596,7 +1596,7 @@ def ministry_statements(request):
         if request.POST.get('export_pdf') == 'true':
             start_date = request.POST.get('pdf_start_date')
             end_date = request.POST.get('pdf_end_date')
-            
+
             if start_date:
                 start_date = datetime.strptime(start_date, '%b %d, %Y')
                 start_date = start_date.date()
@@ -1604,9 +1604,13 @@ def ministry_statements(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                sord_acc_history = AccountHistory.objects.filter(sord_number__isnull=False).filter(date__range=[start_date, end_date])
-                sord_audits = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
-
+                if request.POST.get('is_sord_audit') == 'true':
+                    sord_audits = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
+                    sord_acc_history = None
+                else:
+                    sord_acc_history = AccountHistory.objects.filter(sord_number__isnull=False).filter(date__range=[start_date, end_date])
+                    sord_audits = None
+                
             html_string = render_to_string('zeraPortal/export/ministry_reports/ministry_statement.html', {'sord_audits': sord_audits,
             'start_date':start_date,'sord_acc_history': sord_acc_history,'end_date':end_date,
             'date':today})
@@ -1621,6 +1625,42 @@ def ministry_statements(request):
                 response['Content-Disposition'] = f'attachment;filename={export_name} - Activities - {today}.pdf'
                 return response
 
+        if request.POST.get('export_csv') == 'true':
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                if request.POST.get('is_sord_audit') == 'true':
+                    sord_audits = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
+                    sord_audits = sord_audits.values('date','sord_no','fuel_type','currency','quantity','price', 'allocated_to__name',
+                    'allocated_by__company__name')       
+                else:
+                    sord_acc_history = AccountHistory.objects.filter(sord_number__isnull=False).filter(date__range=[start_date, end_date])
+                    sord_acc_history = sord_acc_history.values('date','sord_number','transaction__offer__request__fuel_type',
+                    'transaction__offer__request__payment_method','transaction__offer__quantity', 'transaction__offer__price') 
+                
+            if request.POST.get('is_sord_audit') == 'true':
+                fields = ['date','sord_no','fuel_type','currency','quantity','price', 'allocated_to__name',
+                'allocated_by__company__name']
+                df = pd.DataFrame(sord_audits, columns=fields)
+            else:
+                fields = ['date','sord_number','transaction__offer__request__fuel_type',
+                'transaction__offer__request__payment_method','transaction__offer__quantity', 'transaction__offer__price']
+                df = pd.DataFrame(sord_acc_history, columns=fields)
+
+            filename = f'ZERA - {today}.csv'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response       
 
         context = {
             'sord_audits': sord_audits,
