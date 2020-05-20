@@ -1587,13 +1587,17 @@ def ministry_statements(request):
             end_date = datetime.strptime(end_date, '%Y-%m-%d')
             end_date = end_date.date()
         if request.POST.get('report_type') == 'Noic_To_Suppliers':
-            sord_audits = SordNationalAuditTrail.objects.all()
+            sord_audits = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
             sord_acc_history = None
         if request.POST.get('report_type') == 'Supplier_To_Corporate':
             sord_audits = None
             sord_acc_history = AccountHistory.objects.filter(sord_number__isnull=False).filter(date__range=[start_date, end_date])
 
         if request.POST.get('export_pdf') == 'true':
+            if state:
+                sord_acc_history = AccountHistory.objects.filter(sord_number__isnull=False).filter(date__range=[start_date, end_date])
+                sord_audits = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
+
             html_string = render_to_string('zeraPortal/export/ministry_reports/ministry_statement.html', {'sord_audits': sord_audits,
             'start_date':start_date,'sord_acc_history': sord_acc_history,'end_date':end_date,
             'date':today})
