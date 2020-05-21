@@ -2226,6 +2226,7 @@ def sord_station_sales(request):
             fields = ['date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity']
             df = pd.DataFrame(sord_sales.values('date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity'),
             columns=fields)
+            df.columns = ['Date','Subsidiary','Sord No', 'Action No.', 'Action', 'Fuel Type', 'Payment Type', 'Initial Quantity', 'Quantity Sold', 'End Quantity']
             filename = 'Supplier Admin'
             df.to_csv(filename, index=None, header=True)
 
