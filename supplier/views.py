@@ -642,6 +642,8 @@ def my_offers(request):
             df_offers_pending = pd.DataFrame(offers_pending, columns=fields)
 
             df = df_offers.append(df_offers_pending)
+            df.columns = ['Date', 'Company', 'Fuel Type',
+             'Price', 'Delivery Method', 'Transport Fee', 'Currency']
             
             filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
