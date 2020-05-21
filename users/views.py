@@ -124,6 +124,7 @@ def sord_allocations(request):
             fields = ['date', 'sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_allocated', 'end_quantity']
             sord_allocations = sord_allocations.values('date', 'sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_allocated', 'end_quantity')            
             df = pd.DataFrame(sord_allocations, columns=fields)
+            df.columns = ['Date', 'Sord No', 'Action No.', 'Action', 'Fuel Type', 'Currency', 'Initial Quantity', 'Allocated Quantity', 'End Quantity']
             filename = 'Supplier Admin'
 
             df.to_csv(filename, index=None, header=True)
