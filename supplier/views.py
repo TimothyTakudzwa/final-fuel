@@ -1619,7 +1619,7 @@ def delivery_schedules(request):
             df_pending_schedules = pd.DataFrame(pending_schedules, columns=fields)
 
             df = df_completed_schedules.append(df_pending_schedules)
-            df.columns = ['Date','Buyer','Driver Name', 'Phone No.','Id No.','Vehicle Reg.', 'Delivery Time']
+            df.columns = ['Date','Buyer','Driver Name', 'Phone No.','Id No.','Vehicle Reg.', 'Delivery Time'] 
             
             filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
