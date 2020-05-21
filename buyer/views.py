@@ -1241,6 +1241,8 @@ def delivery_schedules(request):
             df_pending_schedules = pd.DataFrame(pending_schedules, columns=fields)
 
             df = df_completed_schedules.append(df_pending_schedules)
+            df.columns = ['Date','Supplier', 'Delivery Address', 'Fuel Type',
+             'Deliver Qty.', 'Transporter Company', 'Driver Name', 'Id Number', 'Vehicle Reg' ]
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = f'{request.user.company.name}'
