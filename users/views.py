@@ -1588,7 +1588,7 @@ def audit_trail(request):
                 df_previous = pd.DataFrame(trails.values('date','user__company__name', 'service_station__name', 'action', 'reference'), columns=fields)
                 df = df_current.append(df_previous)
 
-            df.columns = ['Date','Company', 'Service Station', 'Action', 'Reference',]
+            df.columns = ['Date','Company', 'Service Station', 'Action', 'Reference']
             filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
 
@@ -2975,6 +2975,8 @@ def delivery_schedules(request):
             df_pending_schedules = pd.DataFrame(pending_schedules, columns=fields)
 
             df = df_completed_schedules.append(df_pending_schedules)
+            df.columns = ['Date','Driver Name', 'Phone No.','Id Number','Vehicle Reg.', 'Delivery Time',
+            'Confirmation Date',  'Transport Co.','Delivery Qty.','Amount For Fuel']
             
             filename = f'{request.user.company.name} - Delivery Schedules'
             df.to_csv(filename, index=None, header=True)
