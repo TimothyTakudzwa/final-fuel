@@ -587,8 +587,7 @@ def my_offers(request):
             if end_date:
                 end_date = datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
-            offers = Offer.objects.filter(supplier=request.user, is_accepted=False) \
-            .filter(date__range=[start_date, end_date])
+            offers = Offer.objects.filter(supplier=request.user, is_accepted=False).filter(date__range=[start_date, end_date])
             
             for offer_temp in offers:
                 if offer_temp.cash == offer_temp.ecocash == offer_temp.swipe == offer_temp.usd == False:
