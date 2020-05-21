@@ -929,6 +929,7 @@ def transactions(request):
             df_in_complete_trans = pd.DataFrame(in_complete_trans, columns=fields)
 
             df = df_complete_trans.append(df_in_complete_trans)
+            df.columns = ['Date','Time', 'Supplier', 'Fuel Type', 'Quantity', 'Status']
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = f'{request.user.company.name}.csv'
