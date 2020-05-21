@@ -630,20 +630,20 @@ def my_offers(request):
                 .filter(date__range=[start_date, end_date])
 
             offers = offers.values('date', 'request__name__company__name', 'request__fuel_type',
-             'price', 'delivery_method', 'transport_fee', 'request__payment_method')  
+             'price', 'delivery_method', 'transport_fee', 'request__payment_method', 'is_accepted')  
             
             offers_pending = offers.values('date', 'request__name__company__name', 'request__fuel_type',
-             'price', 'delivery_method', 'transport_fee', 'request__payment_method')  
+             'price', 'delivery_method', 'transport_fee', 'request__payment_method', 'is_accepted')  
 
             fields = ['date', 'request__name__company__name', 'request__fuel_type',
-             'price', 'delivery_method', 'transport_fee', 'request__payment_method']
+             'price', 'delivery_method', 'transport_fee', 'request__payment_method', 'is_accepted']
 
             df_offers = pd.DataFrame(offers, columns=fields)
             df_offers_pending = pd.DataFrame(offers_pending, columns=fields)
 
             df = df_offers.append(df_offers_pending)
             df.columns = ['Date', 'Company', 'Fuel Type',
-             'Price', 'Delivery Method', 'Transport Fee', 'Currency']
+             'Price', 'Delivery Method', 'Transport Fee', 'Currency', 'Accepted']
             
             filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
