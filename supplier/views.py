@@ -1608,17 +1608,18 @@ def delivery_schedules(request):
             completed_schedules = schedules.filter(confirmation_date__isnull=False)
             pending_schedules = schedules.filter(confirmation_date__isnull=True) 
 
-            completed_schedules = completed_schedules.values('date','transaction','driver_name', 'phone_number',
+            completed_schedules = completed_schedules.values('date','transaction__buyer__company__name','driver_name', 'phone_number',
             'id_number','vehicle_reg', 'delivery_time')
-            pending_schedules = pending_schedules.values('date','transaction','driver_name', 'phone_number',
+            pending_schedules = pending_schedules.values('date','transaction__buyer__company__name','driver_name', 'phone_number',
             'id_number','vehicle_reg', 'delivery_time')  
         
-            fields = ['date','transaction','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time']
+            fields = ['date','transaction__buyer__company__name','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time']
 
             df_completed_schedules = pd.DataFrame(completed_schedules, columns=fields)
             df_pending_schedules = pd.DataFrame(pending_schedules, columns=fields)
 
             df = df_completed_schedules.append(df_pending_schedules)
+            df.columns = ['Date','Buyer','Driver Name', 'Phone No.','Id No.','Vehicle Reg.', 'Delivery Time']
             
             filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
