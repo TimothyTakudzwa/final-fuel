@@ -131,6 +131,7 @@ def orders(request):
             df_new_orders = pd.DataFrame(orders, columns=fields)
 
             df = df_orders.append(df_new_orders)
+            df.columns = ['Date','Depot', 'Fuel', 'Quantity', 'Currency', 'Status']
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = 'NOIC ADMIN'
