@@ -395,9 +395,10 @@ def allocations(request):
             fields = ['date','time','sord_no','company','fuel_type','currency','quantity','price']
 
             df = pd.DataFrame(allocations, columns=fields)
+            df.columns = ['Date','Time','Sord No.','Company','Fuel Type','Currency','Quantity','Price']
             filename = 'Noic Admin'
 
-            df = df[['date','time','sord_no','company','fuel_type','currency','quantity','price']]
+            # df = df[['date','time','sord_no','company','fuel_type','currency','quantity','price']]
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
