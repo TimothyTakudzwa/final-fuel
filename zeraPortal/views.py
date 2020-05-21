@@ -507,6 +507,8 @@ def company_fuel(request):
             'usd_diesel_price','usd_petrol_price', 'diesel_price', 'petrol_price']
             
             df = pd.DataFrame(capacities, columns=fields)
+            df.columns = ['Date','Company','Allocated Petrol','Allocated Diesel','Unallocated Petrol','Unallocated Diesel',
+            'USD Diesel Price','USD Petrol Price', 'Diesel Price', 'Petrol Price']
 
             filename = f'ZERA COMPANY FUEL SUMMARY - {today}.csv'
             df.to_csv(filename, index=None, header=True)
