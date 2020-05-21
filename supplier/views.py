@@ -623,7 +623,8 @@ def my_offers(request):
                 end_date = datetime.strptime(end_date, '%b %d, %Y')
                 end_date = end_date.date()
             if end_date and start_date:
-                offers = Offer.objects.filter(supplier=request.user, is_accepted=False).filter(date__range=[start_date, end_date])
+                offers = Offer.objects.filter(supplier=request.user, is_accepted=False) \
+                .filter(date__range=[start_date, end_date])
                 offers_pending = Offer.objects.filter(supplier=request.user, is_accepted=True) \
                 .filter(date__range=[start_date, end_date])
 
