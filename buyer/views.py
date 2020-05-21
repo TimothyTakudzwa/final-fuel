@@ -447,6 +447,7 @@ def fuel_request(request):
             df_complete_requests = pd.DataFrame(complete_requests, columns=fields)
 
             df = df_fuel_requests.append(df_complete_requests)
+            df.columns = ['Date','Delivery Method','Payment Method','Fuel Type', 'Amount']
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = f'{request.user.company.name}.csv'
