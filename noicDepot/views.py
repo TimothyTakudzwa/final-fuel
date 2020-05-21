@@ -1131,6 +1131,7 @@ def collections(request):
                 df_previous = pd.DataFrame(collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__currency', 'order__quantity'), columns=fields)
                 df = df_current.append(df_previous)
 
+            df.columns = ['Date','tTime', 'Depot', 'Company', 'Fuel Type','Currency', 'Quantity']
             filename = f'Noic Depot Collections'
             df.to_csv(filename, index=None, header=True)
 
