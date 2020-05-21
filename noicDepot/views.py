@@ -234,6 +234,7 @@ def activity(request):
                 df = df_current.append(df_previous)
 
             filename = f'Noic Depot'
+            df.columns = ['Date','Time', 'Company', 'Action', 'Description', 'Reference Id']
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
