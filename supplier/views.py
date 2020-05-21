@@ -628,10 +628,11 @@ def my_offers(request):
                 offers_pending = Offer.objects.filter(supplier=request.user, is_accepted=True) \
                 .filter(date__range=[start_date, end_date])
 
+            
             offers = offers.values('date', 'request__name__company__name', 'request__fuel_type',
              'price', 'delivery_method', 'transport_fee', 'request__payment_method', 'is_accepted')  
             
-            offers_pending = offers.values('date', 'request__name__company__name', 'request__fuel_type',
+            offers_pending = offers_pending.values('date', 'request__name__company__name', 'request__fuel_type',
              'price', 'delivery_method', 'transport_fee', 'request__payment_method', 'is_accepted')  
 
             fields = ['date', 'request__name__company__name', 'request__fuel_type',
@@ -639,6 +640,7 @@ def my_offers(request):
 
             df_offers = pd.DataFrame(offers, columns=fields)
             df_offers_pending = pd.DataFrame(offers_pending, columns=fields)
+            
 
             if not df_offers.empty:
                 df = df_offers.append(df_offers_pending)
