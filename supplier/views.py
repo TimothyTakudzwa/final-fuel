@@ -639,7 +639,11 @@ def my_offers(request):
             df_offers = pd.DataFrame(offers, columns=fields)
             df_offers_pending = pd.DataFrame(offers_pending, columns=fields)
 
-            df = df_offers.append(df_offers_pending)
+            if df_offers:
+                df = df_offers.append(df_offers_pending)
+            else:
+                df = df_offers_pending
+
             df.columns = ['Date', 'Company', 'Fuel Type',
              'Price', 'Delivery Method', 'Transport Fee', 'Currency', 'Accepted']
             
