@@ -1655,7 +1655,7 @@ def ministry_statements(request):
                 fields = ['date','sord_number','transaction__offer__request__fuel_type',
                 'transaction__offer__request__payment_method','transaction__offer__quantity', 'transaction__offer__price']
                 df = pd.DataFrame(sord_acc_history, columns=fields)
-                df.columns = ['Sate','Sord No','Fuel Type','Currency',
+                df.columns = ['Date','Sord No','Fuel Type','Currency',
                 'Quantity', 'Price']
 
             filename = f'ZERA - {today}.csv'
