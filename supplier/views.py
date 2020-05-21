@@ -1964,6 +1964,7 @@ def activity(request):
                 df = df_current.append(df_previous)
 
             filename = f'{request.user.company.name}'
+            df.columns = ['Date','Time', 'Company', 'Action', 'Description', 'Reference Id']
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
