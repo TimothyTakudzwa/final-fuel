@@ -276,6 +276,8 @@ def noic_fuel(request):
             'rtgs_petrol','rtgs_petrol_price', 'rtgs_diesel', 'rtgs_diesel_price']
             
             df = pd.DataFrame(depots, columns=fields)
+            df.columns = ['Date','Depot','USD Petrol','USD Petrol Price','USD Diesel','USD Diesel Price',
+            'RTGS Petrol','RTGS Petrol Price', 'RTGS Diesel', 'RTGS Diesel Price']
 
             filename = f'ZERA NOIC FUEL SUMMARY - {today}.csv'
             df.to_csv(filename, index=None, header=True)
