@@ -1588,6 +1588,7 @@ def audit_trail(request):
                 df_previous = pd.DataFrame(trails.values('date','user__company__name', 'service_station__name', 'action', 'reference'), columns=fields)
                 df = df_current.append(df_previous)
 
+            df.columns = ['Date','Company', 'Service Station', 'Action', 'Reference',]
             filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
 
