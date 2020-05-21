@@ -1101,6 +1101,7 @@ def transaction(request):
             df_in_complete_trans = pd.DataFrame(transactions_pending, columns=fields)
 
             df = df_complete_trans.append(df_in_complete_trans)
+            df.columns = ['Date','Time', 'Buyer', 'Fuel Type', 'Qty', 'Complete']
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = f'{request.user.company.name}'
