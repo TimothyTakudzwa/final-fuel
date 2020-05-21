@@ -345,6 +345,7 @@ def accepted_orders(request):
             df_new_orders = pd.DataFrame(new_orders, columns=fields)
 
             df = df_orders.append(df_new_orders)
+            df.columns = ['Date','Depot', 'Fuel Type', 'Quantity', 'Currency', 'Status']
 
             filename = f'Noic Depot '
             df.to_csv(filename, index=None, header=True)
