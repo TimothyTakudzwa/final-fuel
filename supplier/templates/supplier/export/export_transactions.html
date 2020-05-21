@@ -91,7 +91,7 @@
                     {% if transaction.is_complete and not transaction.review %}
                         No Review
                     {% elif not transaction.is_complete %}
-                        Incomplete
+                        Can't Be reviewed as transaction is incomplete.
                     {% else %}
                         {% if transaction.review.rating == 0%}
                             <p style="text-align: center;">-</p>
@@ -139,7 +139,7 @@
             <th>Buyer</th>
             <th>PickUp Address</th>
             <th>Fuel</th>
-            <!-- <th>Expected & Paid</th> -->
+            <!-- <th>Expected & Paid</th> -->z
             <th>Status</th>
             
             <th>Rating</th>
@@ -172,7 +172,7 @@
                     {% if transaction.is_complete and not transaction.review %}
                         No Review
                     {% elif not transaction.is_complete %}
-                        Incomplete
+                        Can't Be reviewed as transaction is incomplete.
                     {% else %}
                         {% if transaction.review.rating == 0%}
                             <p style="text-align: center;">-</p>
