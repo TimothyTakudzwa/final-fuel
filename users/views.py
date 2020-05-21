@@ -2807,9 +2807,10 @@ def orders(request):
             df_pending_orders = pd.DataFrame(pending_orders, columns=fields)
             
             df = df_accepted_orders.append(df_pending_orders)
+            df.columns = ['Date','Depot', 'Fuel Type', 'Quantity', 'Currency', 'Status']
 
             
-            filename = f'{request.user.company.name} - {date}.csv'
+            filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
