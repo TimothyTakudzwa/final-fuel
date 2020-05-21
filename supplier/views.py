@@ -639,7 +639,7 @@ def my_offers(request):
             df_offers = pd.DataFrame(offers, columns=fields)
             df_offers_pending = pd.DataFrame(offers_pending, columns=fields)
 
-            if df_offers:
+            if not df_offers.empty:
                 df = df_offers.append(df_offers_pending)
             else:
                 df = df_offers_pending
