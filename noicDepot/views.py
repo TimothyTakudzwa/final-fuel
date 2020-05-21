@@ -108,6 +108,7 @@ def dashboard(request):
             fields = ['date','sord_no', 'company__name', 'fuel_type', 'currency', 'quantity', 'price']
             
             df = pd.DataFrame(orders, columns=fields)
+            df.columns = ['Date','Sord No', 'Company', 'Fuel Type', 'Currency', 'Quantity', 'Price']
            
             filename = f'Noic Depot '
             df.to_csv(filename, index=None, header=True)
