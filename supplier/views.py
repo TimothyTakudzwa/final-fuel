@@ -924,8 +924,10 @@ def allocated_quantity(request):
             'petrol_quantity','petrol_price','fuel_payment_type']
             
             df = pd.DataFrame(allocations, columns=fields)
+            df.columns = fields = ['Date','Time','Action','Diesel Qty.','Diesel Price',
+            'Petrol Qty','Petrol Price','Currency']
 
-            filename = f'{request.user.company.name}.csv'
+            filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
