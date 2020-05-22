@@ -24,7 +24,7 @@ from national.models import DepotFuelUpdate, NoicDepot, SordNationalAuditTrail
 from supplier.models import SubsidiaryFuelUpdate, FuelAllocation, DeliverySchedule
 from users.models import SordActionsAuditTrail, Activity
 from users.views import message_is_sent
-from .constants import coordinates_towns, towns
+from .constants import coordinates_towns, towns, get_town_coordinates
 from .forms import PasswordChange
 from .lib import *
 from .decorators import user_role, user_permission
@@ -130,6 +130,7 @@ def activity(request):
                 df = df_current.append(df_previous)
 
             filename = f'ZERA - {today}.csv'
+            df.columns = ['Date','Time', 'Company', 'Action', 'Description', 'Reference ID']
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
@@ -276,6 +277,8 @@ def noic_fuel(request):
             'rtgs_petrol','rtgs_petrol_price', 'rtgs_diesel', 'rtgs_diesel_price']
             
             df = pd.DataFrame(depots, columns=fields)
+            df.columns = ['Date','Depot','USD Petrol','USD Petrol Price','USD Diesel','USD Diesel Price',
+            'RTGS Petrol','RTGS Petrol Price', 'RTGS Diesel', 'RTGS Diesel Price']
 
             filename = f'ZERA NOIC FUEL SUMMARY - {today}.csv'
             df.to_csv(filename, index=None, header=True)
@@ -505,6 +508,8 @@ def company_fuel(request):
             'usd_diesel_price','usd_petrol_price', 'diesel_price', 'petrol_price']
             
             df = pd.DataFrame(capacities, columns=fields)
+            df.columns = ['Date','Company','Allocated Petrol','Allocated Diesel','Unallocated Petrol','Unallocated Diesel',
+            'USD Diesel Price','USD Petrol Price', 'Diesel Price', 'Petrol Price']
 
             filename = f'ZERA COMPANY FUEL SUMMARY - {today}.csv'
             df.to_csv(filename, index=None, header=True)
@@ -1432,8 +1437,14 @@ def suspicious_behavior(request):
 def desperate_regions(request):
     notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).all()
     num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
+    # Get the coordinates for desperate regions.
+    cords = [get_town_coordinates[city] for city in desperate().keys()]
+    # Changing the tuples to lists so that they can work as arrays to plot markers for the map.
+    cords = [list(cord) for cord in cords]
+    
     context = {
         'regions': desperate(),
+        'coordinates': cords,
         'num_of_notifications': num_of_notifications,
         'notifications': notifications,
         'mapping': dict(zip(towns, coordinates_towns))
@@ -1553,3 +1564,121 @@ def supplier_delivery_note(request, id):
         'allocation': allocation
     }
     return render(request, 'zeraPortal/supplier_delivery_note.html', context=context)
+
+
+@login_required()
+def ministry_statements(request):
+    user_permission(request)
+
+    sord_audits = None
+    sord_acc_history = None
+
+    state = None
+    context = {
+        'sord_audits': sord_audits,
+        'sord_acc_history': sord_acc_history,
+        'state': state
+    }
+
+    if request.method == "POST":
+        state = True
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        if start_date:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            start_date = start_date.date()
+        report_type = request.POST.get('report_type')
+        if end_date:
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')
+            end_date = end_date.date()
+        if request.POST.get('report_type') == 'Noic_To_Suppliers':
+            sord_audits = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
+            sord_acc_history = None
+        if request.POST.get('report_type') == 'Supplier_To_Corporate':
+            sord_audits = None
+            sord_acc_history = AccountHistory.objects.filter(sord_number__isnull=False).filter(date__range=[start_date, end_date])
+
+        if request.POST.get('export_pdf') == 'true':
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                if request.POST.get('is_sord_audit') == 'true':
+                    sord_audits = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
+                    sord_acc_history = None
+                else:
+                    sord_acc_history = AccountHistory.objects.filter(sord_number__isnull=False).filter(date__range=[start_date, end_date])
+                    sord_audits = None
+                
+            html_string = render_to_string('zeraPortal/export/ministry_reports/ministry_statement.html', {'sord_audits': sord_audits,
+            'start_date':start_date,'sord_acc_history': sord_acc_history,'end_date':end_date,
+            'date':today})
+            html = HTML(string=html_string)
+            export_name = f"ZERA - {today}"
+            html.write_pdf(target=f'media/transactions/{export_name}.pdf')
+
+            download_file = f'media/transactions/{export_name}'
+
+            with open(f'{download_file}.pdf', 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Activities - {today}.pdf'
+                return response
+
+        if request.POST.get('export_csv') == 'true':
+            start_date = request.POST.get('pdf_start_date')
+            end_date = request.POST.get('pdf_end_date')
+
+            if start_date:
+                start_date = datetime.strptime(start_date, '%b %d, %Y')
+                start_date = start_date.date()
+            if end_date:
+                end_date = datetime.strptime(end_date, '%b %d, %Y')
+                end_date = end_date.date()
+            if end_date and start_date:
+                if request.POST.get('is_sord_audit') == 'true':
+                    sord_audits = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
+                    sord_audits = sord_audits.values('date','sord_no','fuel_type','currency','quantity','price', 'allocated_to__name',
+                    'allocated_by__company__name')       
+                else:
+                    sord_acc_history = AccountHistory.objects.filter(sord_number__isnull=False).filter(date__range=[start_date, end_date])
+                    sord_acc_history = sord_acc_history.values('date','sord_number','transaction__offer__request__fuel_type',
+                    'transaction__offer__request__payment_method','transaction__offer__quantity', 'transaction__offer__price') 
+                
+            if request.POST.get('is_sord_audit') == 'true':
+                fields = ['date','sord_no','fuel_type','currency','quantity','price', 'allocated_to__name',
+                'allocated_by__company__name']
+                df = pd.DataFrame(sord_audits, columns=fields)
+                df.columns = ['Date','Sord No','Fuel Type','Currency','Quantity','Price', 'Allocated To',
+                'Allocated By']
+            else:
+                fields = ['date','sord_number','transaction__offer__request__fuel_type',
+                'transaction__offer__request__payment_method','transaction__offer__quantity', 'transaction__offer__price']
+                df = pd.DataFrame(sord_acc_history, columns=fields)
+                df.columns = ['Date','Sord No','Fuel Type','Currency',
+                'Quantity', 'Price']
+
+            filename = f'ZERA - {today}.csv'
+            df.to_csv(filename, index=None, header=True)
+
+            with open(filename, 'rb') as csv_name:
+                response = HttpResponse(csv_name.read())
+                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                return response       
+
+        context = {
+            'sord_audits': sord_audits,
+            'sord_acc_history': sord_acc_history,
+            'start_date': start_date,
+            'end_date': end_date,
+            'state': state
+        }
+        return render(request, 'zeraPortal/ministry_statements.html', context=context)
+
+    
+    return render(request, 'zeraPortal/ministry_statements.html', context=context)

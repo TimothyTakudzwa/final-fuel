@@ -124,6 +124,7 @@ def sord_allocations(request):
             fields = ['date', 'sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_allocated', 'end_quantity']
             sord_allocations = sord_allocations.values('date', 'sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_allocated', 'end_quantity')            
             df = pd.DataFrame(sord_allocations, columns=fields)
+            df.columns = ['Date', 'Sord No', 'Action No.', 'Action', 'Fuel Type', 'Currency', 'Initial Quantity', 'Allocated Quantity', 'End Quantity']
             filename = 'Supplier Admin'
 
             df.to_csv(filename, index=None, header=True)
@@ -1587,6 +1588,7 @@ def audit_trail(request):
                 df_previous = pd.DataFrame(trails.values('date','user__company__name', 'service_station__name', 'action', 'reference'), columns=fields)
                 df = df_current.append(df_previous)
 
+            df.columns = ['Date','Company', 'Service Station', 'Action', 'Reference']
             filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
 
@@ -2225,6 +2227,7 @@ def sord_station_sales(request):
             fields = ['date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity']
             df = pd.DataFrame(sord_sales.values('date','subsidiary__name','sord_no', 'action_no', 'action', 'fuel_type', 'payment_type', 'initial_quantity', 'quantity_sold', 'end_quantity'),
             columns=fields)
+            df.columns = ['Date','Subsidiary','Sord No', 'Action No.', 'Action', 'Fuel Type', 'Payment Type', 'Initial Quantity', 'Quantity Sold', 'End Quantity']
             filename = 'Supplier Admin'
             df.to_csv(filename, index=None, header=True)
 
@@ -2807,9 +2810,10 @@ def orders(request):
             df_pending_orders = pd.DataFrame(pending_orders, columns=fields)
             
             df = df_accepted_orders.append(df_pending_orders)
+            df.columns = ['Date','Depot', 'Fuel Type', 'Quantity', 'Currency', 'Status']
 
             
-            filename = f'{request.user.company.name} - {date}.csv'
+            filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
@@ -2971,6 +2975,8 @@ def delivery_schedules(request):
             df_pending_schedules = pd.DataFrame(pending_schedules, columns=fields)
 
             df = df_completed_schedules.append(df_pending_schedules)
+            df.columns = ['Date','Driver Name', 'Phone No.','Id Number','Vehicle Reg.', 'Delivery Time',
+            'Confirmation Date',  'Transport Co.','Delivery Qty.','Amount For Fuel']
             
             filename = f'{request.user.company.name} - Delivery Schedules'
             df.to_csv(filename, index=None, header=True)

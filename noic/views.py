@@ -131,6 +131,7 @@ def orders(request):
             df_new_orders = pd.DataFrame(orders, columns=fields)
 
             df = df_orders.append(df_new_orders)
+            df.columns = ['Date','Depot', 'Fuel', 'Quantity', 'Currency', 'Status']
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = 'NOIC ADMIN'
@@ -245,6 +246,7 @@ def activity(request):
                 df = df_current.append(df_previous)
 
             filename = f'Noic Admin'
+            df.columns = ['Date','Time', 'Company', 'Action', 'Description', 'Reference Id']
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
@@ -394,9 +396,10 @@ def allocations(request):
             fields = ['date','time','sord_no','company','fuel_type','currency','quantity','price']
 
             df = pd.DataFrame(allocations, columns=fields)
+            df.columns = ['Date','Time','Sord No.','Company','Fuel Type','Currency','Quantity','Price']
             filename = 'Noic Admin'
 
-            df = df[['date','time','sord_no','company','fuel_type','currency','quantity','price']]
+            # df = df[['date','time','sord_no','company','fuel_type','currency','quantity','price']]
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
@@ -1240,6 +1243,7 @@ def collections(request):
                 df_previous = pd.DataFrame(collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity'), columns=fields)
                 df = df_current.append(df_previous)
 
+            df.columns = ['Date','Time', 'Depot', 'Company', 'Fuel Type', 'Quantity']
             filename = f'Noic Admin Collections'
             df.to_csv(filename, index=None, header=True)
 

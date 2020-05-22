@@ -230,8 +230,10 @@
                         <li class="nav-item {% if request.path == '/zeraPortal/dashboard/' %} active {% endif %}">
                             <a href="{% url 'zeraPortal:dashboard' %}"><i class="fa fa-book"></i><span>Dashboard</span>
                             </a>
+                        </li><li class="nav-item {% if request.path == '/zeraPortal/fuel_prices/' %} active {% endif %}">
+                            <a href="{% url 'zeraPortal:fuel_prices' %}"><i class="fa fa-book"></i><span>Fuel Prices</span>
+                            </a>
                         </li>
-    
                         <li class="nav-item {% if request.path == '/zeraPortal/noic_fuel/' %} active {% endif %}">
                             <a href="{% url 'zeraPortal:noic_fuel' %}"><i class="fa fa-sliders"></i><span>NOIC Capacity & Allocations </span>
                             </a>
@@ -255,6 +257,11 @@
                             <a href="{% url 'zeraPortal:report_generator' %}"><i class="fa fa-pie-chart"></i><span>Reports</span>
                             </a>
                         </li>
+                        <li class="nav-item {% if request.path == '/zeraPortal/ministry_statements/' %} active {% endif %} ">
+                            <a href="{% url 'zeraPortal:ministry_statements' %}"><i class="fa fa-balance-scale" aria-hidden="true"></i><span>
+                                Ministry Statements</span>
+                            </a>
+                        </li>
                         <li class="nav-item {% if request.path == '/zeraPortal/suspicious_behavior/' %} active {% endif %} ">
                             <a href="{% url 'zeraPortal:suspicious_behavior' %}"><i class="fa fa-support"></i><span>Suspicious Activity</span>
                             </a>
@@ -263,10 +270,12 @@
                             <a href="{% url 'zeraPortal:comments' %}"><i class="fa fa-comment" aria-hidden="true"></i><span>Comments</span>
                             </a>
                         </li>
+                        <!--
                         <li class="nav-item {% if request.path == '/zeraPortal/desperate-regions/' %} active {% endif %} ">
                             <a href="{% url 'zeraPortal:desperate-regions' %}"><i class="fa fa-sticky-note"></i><span>Desperate Regions</span>
                             </a>
                         </li>
+                        -->
                         <li class="nav-item {% if request.path == '/zeraPortal/profile/' %} active {% endif %}">
                             <a href="{% url 'zeraPortal:profile' %} "><i class="fa fa-user"></i><span>User Profile</span>
                             </a>

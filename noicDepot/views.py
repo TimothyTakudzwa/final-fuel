@@ -108,6 +108,7 @@ def dashboard(request):
             fields = ['date','sord_no', 'company__name', 'fuel_type', 'currency', 'quantity', 'price']
             
             df = pd.DataFrame(orders, columns=fields)
+            df.columns = ['Date','Sord No', 'Company', 'Fuel Type', 'Currency', 'Quantity', 'Price']
            
             filename = f'Noic Depot '
             df.to_csv(filename, index=None, header=True)
@@ -233,6 +234,7 @@ def activity(request):
                 df = df_current.append(df_previous)
 
             filename = f'Noic Depot'
+            df.columns = ['Date','Time', 'Company', 'Action', 'Description', 'Reference Id']
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
@@ -345,6 +347,7 @@ def accepted_orders(request):
             df_new_orders = pd.DataFrame(new_orders, columns=fields)
 
             df = df_orders.append(df_new_orders)
+            df.columns = ['Date','Depot', 'Fuel Type', 'Quantity', 'Currency', 'Status']
 
             filename = f'Noic Depot '
             df.to_csv(filename, index=None, header=True)
@@ -1129,6 +1132,7 @@ def collections(request):
                 df_previous = pd.DataFrame(collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__currency', 'order__quantity'), columns=fields)
                 df = df_current.append(df_previous)
 
+            df.columns = ['Date','tTime', 'Depot', 'Company', 'Fuel Type','Currency', 'Quantity']
             filename = f'Noic Depot Collections'
             df.to_csv(filename, index=None, header=True)
 

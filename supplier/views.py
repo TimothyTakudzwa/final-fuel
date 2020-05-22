@@ -587,8 +587,7 @@ def my_offers(request):
             if end_date:
                 end_date = datetime.strptime(end_date, '%Y-%m-%d')
                 end_date = end_date.date()
-            offers = Offer.objects.filter(supplier=request.user, is_accepted=False) \
-            .filter(date__range=[start_date, end_date])
+            offers = Offer.objects.filter(supplier=request.user, is_accepted=False).filter(date__range=[start_date, end_date])
             
             for offer_temp in offers:
                 if offer_temp.cash == offer_temp.ecocash == offer_temp.swipe == offer_temp.usd == False:
@@ -629,19 +628,27 @@ def my_offers(request):
                 offers_pending = Offer.objects.filter(supplier=request.user, is_accepted=True) \
                 .filter(date__range=[start_date, end_date])
 
-            offers = offers.values('date', 'request__name__company__name', 'request__fuel_type',
-             'price', 'delivery_method', 'transport_fee', 'request__payment_method')  
             
-            offers_pending = offers.values('date', 'request__name__company__name', 'request__fuel_type',
-             'price', 'delivery_method', 'transport_fee', 'request__payment_method')  
+            offers = offers.values('date', 'request__name__company__name', 'request__fuel_type',
+             'price', 'delivery_method', 'transport_fee', 'request__payment_method', 'is_accepted')  
+            
+            offers_pending = offers_pending.values('date', 'request__name__company__name', 'request__fuel_type',
+             'price', 'delivery_method', 'transport_fee', 'request__payment_method', 'is_accepted')  
 
             fields = ['date', 'request__name__company__name', 'request__fuel_type',
-             'price', 'delivery_method', 'transport_fee', 'request__payment_method']
+             'price', 'delivery_method', 'transport_fee', 'request__payment_method', 'is_accepted']
 
             df_offers = pd.DataFrame(offers, columns=fields)
             df_offers_pending = pd.DataFrame(offers_pending, columns=fields)
+            
 
-            df = df_offers.append(df_offers_pending)
+            if not df_offers.empty:
+                df = df_offers.append(df_offers_pending)
+            else:
+                df = df_offers_pending
+
+            df.columns = ['Date', 'Company', 'Fuel Type',
+             'Price', 'Delivery Method', 'Transport Fee', 'Currency', 'Accepted']
             
             filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
@@ -924,8 +931,10 @@ def allocated_quantity(request):
             'petrol_quantity','petrol_price','fuel_payment_type']
             
             df = pd.DataFrame(allocations, columns=fields)
+            df.columns = fields = ['Date','Time','Action','Diesel Qty.','Diesel Price',
+            'Petrol Qty','Petrol Price','Currency']
 
-            filename = f'{request.user.company.name}.csv'
+            filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
@@ -1092,6 +1101,7 @@ def transaction(request):
             df_in_complete_trans = pd.DataFrame(transactions_pending, columns=fields)
 
             df = df_complete_trans.append(df_in_complete_trans)
+            df.columns = ['Date','Time', 'Buyer', 'Fuel Type', 'Qty', 'Complete']
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = f'{request.user.company.name}'
@@ -1598,17 +1608,18 @@ def delivery_schedules(request):
             completed_schedules = schedules.filter(confirmation_date__isnull=False)
             pending_schedules = schedules.filter(confirmation_date__isnull=True) 
 
-            completed_schedules = completed_schedules.values('date','transaction','driver_name', 'phone_number',
+            completed_schedules = completed_schedules.values('date','transaction__buyer__company__name','driver_name', 'phone_number',
             'id_number','vehicle_reg', 'delivery_time')
-            pending_schedules = pending_schedules.values('date','transaction','driver_name', 'phone_number',
+            pending_schedules = pending_schedules.values('date','transaction__buyer__company__name','driver_name', 'phone_number',
             'id_number','vehicle_reg', 'delivery_time')  
         
-            fields = ['date','transaction','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time']
+            fields = ['date','transaction__buyer__company__name','driver_name', 'phone_number','id_number','vehicle_reg', 'delivery_time']
 
             df_completed_schedules = pd.DataFrame(completed_schedules, columns=fields)
             df_pending_schedules = pd.DataFrame(pending_schedules, columns=fields)
 
             df = df_completed_schedules.append(df_pending_schedules)
+            df.columns = ['Date','Buyer','Driver Name', 'Phone No.','Id No.','Vehicle Reg.', 'Delivery Time'] 
             
             filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
@@ -1954,6 +1965,7 @@ def activity(request):
                 df = df_current.append(df_previous)
 
             filename = f'{request.user.company.name}'
+            df.columns = ['Date','Time', 'Company', 'Action', 'Description', 'Reference Id']
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:

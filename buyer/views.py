@@ -447,6 +447,7 @@ def fuel_request(request):
             df_complete_requests = pd.DataFrame(complete_requests, columns=fields)
 
             df = df_fuel_requests.append(df_complete_requests)
+            df.columns = ['Date','Delivery Method','Payment Method','Fuel Type', 'Amount']
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = f'{request.user.company.name}.csv'
@@ -928,6 +929,7 @@ def transactions(request):
             df_in_complete_trans = pd.DataFrame(in_complete_trans, columns=fields)
 
             df = df_complete_trans.append(df_in_complete_trans)
+            df.columns = ['Date','Time', 'Supplier', 'Fuel Type', 'Quantity', 'Complete']
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = f'{request.user.company.name}.csv'
@@ -1239,6 +1241,8 @@ def delivery_schedules(request):
             df_pending_schedules = pd.DataFrame(pending_schedules, columns=fields)
 
             df = df_completed_schedules.append(df_pending_schedules)
+            df.columns = ['Date','Supplier', 'Delivery Address', 'Fuel Type',
+             'Deliver Qty.', 'Transporter Company', 'Driver Name', 'Id Number', 'Vehicle Reg' ]
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = f'{request.user.company.name}'
@@ -1725,12 +1729,12 @@ def activity(request):
             if end_date and start_date:
                 filtered_activities = Activity.objects.filter(user=request.user, date=today).filter(date__range=[start_date, end_date])
                 
-            fields = ['date','time', 'user__username', 'action', 'description']
+            fields = ['date','time', 'user__first_name','user__last_name', 'action', 'description']
 
             if not filtered_activities:
-                current_activities = current_activities.values('date','time', 'user__username',
+                current_activities = current_activities.values('date','time', 'user__first_name','user__last_name',
                 'action', 'description')
-                activities =  activities.values('date','time', 'user__username',
+                activities =  activities.values('date','time', 'user__first_name','user__last_name',
                 'action', 'description')
                 
                 df_current_activities = pd.DataFrame(current_activities, columns=fields)
@@ -1738,14 +1742,14 @@ def activity(request):
 
                 df = df_current_activities.append(df_activities)
             else:
-                filtered_activities = filtered_activities.values('date','time', 'user__username',
+                filtered_activities = filtered_activities.values('date','time', 'user__first_name','user__last_name',
                 'action', 'description')
                 
                 df = pd.DataFrame(filtered_activities, columns=fields)
                     
 
-            # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
-            filename = f'{request.user.company.name}.csv'
+            df.columns = ['Date','Time', 'First Name', 'Last Name', 'Action', 'Description']
+            filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
