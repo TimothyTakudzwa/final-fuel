@@ -198,18 +198,15 @@ def allocate(request):
     company_total_diesel_capacity = subs_total_diesel_capacity + company_capacity.unallocated_diesel
     company_total_petrol_capacity = subs_total_petrol_capacity + company_capacity.unallocated_petrol
 
-    # company_total_diesel_capacity = '{:,}'.format(company_total_diesel_capacity)
-    # company_total_petrol_capacity = '{:,}'.format(company_total_petrol_capacity)
-
+    
     subs = Subsidiaries.objects.filter(company=request.user.company, is_active=True).all()
     for sub in subs:
-        allocates.append(SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first())
+        if sub.is_depot == True:
+            allocates.append(SuballocationFuelUpdate.objects.filter(subsidiary=sub).first())
+        else:
+            allocates.append(SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first())
     allocations = FuelAllocation.objects.filter(company=request.user.company).all()
-    # if company_capacity is not None:
-    #     company_capacity.unallocated_diesel = '{:,}'.format(company_capacity.unallocated_diesel)
-    #     company_capacity.unallocated_petrol = '{:,}'.format(company_capacity.unallocated_petrol)
-    # else:
-    #     company_capacity = company_capacity
+    
     if allocations is not None:
         for alloc in allocations:
             subsidiary = Subsidiaries.objects.filter(id=alloc.allocated_subsidiary_id).first()
