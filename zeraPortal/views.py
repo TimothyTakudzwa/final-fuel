@@ -1417,7 +1417,7 @@ def suspicious_behavior(request):
     suspicious_schedules = []
 
     for ds in DeliverySchedule.objects.all():
-        if ds.supplier_document and ds.confirmation_date:
+        if ds.confirmation_date:
             account = AccountHistory.objects.filter(transaction=ds.transaction)
             if not account:
                 suspicious_schedules.append(ds)
@@ -1682,3 +1682,22 @@ def ministry_statements(request):
 
     
     return render(request, 'zeraPortal/ministry_statements.html', context=context)
+
+
+def site_applications(request):
+    subsidiaries = Subsidiaries.objects.filter(application_sent=True).all()
+    return render(request, 'zeraPortal/site_applications.html', {'subsidiaries': subsidiaries})
+
+
+def approve_site_applications(request, id):
+    subsidiary = Subsidiaries.objects.filter(id=id).first()
+    subsidiary.application_sent = False
+    subsidiary.is_usd_active = True
+    subsidiary.save()
+    return redirect('zeraPortal:site_applications')
+
+def block_sites_applications(request, id):
+    subsidiary = Subsidiaries.objects.filter(id=id).first()
+    subsidiary.application_sent = False
+    subsidiary.save()
+    return redirect('zeraPortal:site_applications')

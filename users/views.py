@@ -198,18 +198,15 @@ def allocate(request):
     company_total_diesel_capacity = subs_total_diesel_capacity + company_capacity.unallocated_diesel
     company_total_petrol_capacity = subs_total_petrol_capacity + company_capacity.unallocated_petrol
 
-    # company_total_diesel_capacity = '{:,}'.format(company_total_diesel_capacity)
-    # company_total_petrol_capacity = '{:,}'.format(company_total_petrol_capacity)
-
+    
     subs = Subsidiaries.objects.filter(company=request.user.company, is_active=True).all()
     for sub in subs:
-        allocates.append(SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first())
+        if sub.is_depot == True:
+            allocates.append(SuballocationFuelUpdate.objects.filter(subsidiary=sub).first())
+        else:
+            allocates.append(SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first())
     allocations = FuelAllocation.objects.filter(company=request.user.company).all()
-    # if company_capacity is not None:
-    #     company_capacity.unallocated_diesel = '{:,}'.format(company_capacity.unallocated_diesel)
-    #     company_capacity.unallocated_petrol = '{:,}'.format(company_capacity.unallocated_petrol)
-    # else:
-    #     company_capacity = company_capacity
+    
     if allocations is not None:
         for alloc in allocations:
             subsidiary = Subsidiaries.objects.filter(id=alloc.allocated_subsidiary_id).first()
@@ -255,7 +252,11 @@ def allocated_fuel(request, sid):
                     messages.warning(request, f'You can not set price above ZERA max petrol price of ${prices.usd_petrol_price}')
                     return redirect(f'/users/allocated_fuel/{sid}')
                 else:
-                    pass
+                    if sub.is_usd_active == False:
+                        messages.warning(request, 'You can not allocate USD fuel to a depot that has not been approved by ZERA')
+                        return redirect(f'/users/allocated_fuel/{sid}')
+                    else:
+                        pass
             fuel_updated = SuballocationFuelUpdate.objects.create(subsidiary=sub,
                                                                   payment_type=request.POST['fuel_payment_type'],
                                                                   cash=request.POST['cash'],
@@ -290,7 +291,11 @@ def allocated_fuel(request, sid):
                     messages.warning(request, f'You can not set price above ZERA max diesel price of ${prices.usd_diesel_price}.')
                     return redirect(f'/users/allocated_fuel/{sid}')
                 else:
-                    pass
+                    if sub.is_usd_active == False:
+                        messages.warning(request, 'You can not allocate USD fuel to a depot that has not been approved by ZERA')
+                        return redirect(f'/users/allocated_fuel/{sid}')
+                    else:
+                        pass
             fuel_updated = SuballocationFuelUpdate.objects.create(subsidiary=sub,
                                                                   payment_type=request.POST['fuel_payment_type'],
                                                                   cash=request.POST['cash'],
@@ -489,8 +494,14 @@ def allocation_update(request, id):
                     if Decimal(request.POST['price']) > prices.usd_petrol_price:
                         messages.warning(request, f'You can not set price above ZERA max usd petrol price of ${prices.usd_petrol_price}.')
                         return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
+
                     else:
-                        fuel_update.petrol_price = Decimal(request.POST['price'])
+                        if sub.is_usd_active == False:
+                            messages.warning(request, 'You can not allocate USD fuel to a depot that has not been approved by ZERA')
+                            return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
+                        
+                        else:
+                            fuel_update.petrol_price = Decimal(request.POST['price'])
                 if fuel_update.payment_type == 'USD & RTGS':
                     fuel_update.petrol_usd_price = Decimal(request.POST['usd_price'])
                 company_quantity.unallocated_petrol = company_quantity.unallocated_petrol - int(request.POST['quantity'])
@@ -513,7 +524,13 @@ def allocation_update(request, id):
                         messages.warning(request, f'You can not set price above ZERA max usd diesel price of ${prices.usd_diesel_price}.')
                         return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
                     else:
-                        fuel_update.diesel_price = Decimal(request.POST['price'])
+                        if sub.is_usd_active == False:
+                            messages.warning(request, 'You can not allocate USD fuel to a depot that has not been approved by ZERA')
+                            return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
+                        
+                        else:
+                            fuel_update.diesel_price = Decimal(request.POST['price'])
+                        
                 if fuel_update.payment_type == 'USD & RTGS':
                     fuel_update.diesel_usd_price = float(request.POST['usd_price'])
                 company_quantity.unallocated_diesel = company_quantity.unallocated_diesel - int(request.POST['quantity'])
@@ -3048,3 +3065,9 @@ def notication_reader(request):
         notification.is_read = True
         notification.save()
     return redirect('users:allocate')
+
+def sites_applications(request, id):
+    subsidiary = Subsidiaries.objects.filter(id=id).first()
+    subsidiary.application_sent = True
+    subsidiary.save()
+    return redirect('users:stations')
