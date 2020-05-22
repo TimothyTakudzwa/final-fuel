@@ -1412,7 +1412,7 @@ def suspicious_behavior(request):
     suspicious_schedules = []
 
     for ds in DeliverySchedule.objects.all():
-        if ds.supplier_document and ds.confirmation_date:
+        if ds.confirmation_date:
             account = AccountHistory.objects.filter(transaction=ds.transaction)
             if not account:
                 suspicious_schedules.append(ds)
