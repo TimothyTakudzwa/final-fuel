@@ -56,6 +56,11 @@ class Order(models.Model):
         ordering = ['-date', '-time']
 
 
+    def get_collection(self):
+        from noicDepot.models  import Collections
+        return Collections.objects.filter(order=self).first()   
+
+
 class NationalFuelUpdate(models.Model):
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True, null=True)

@@ -38,7 +38,7 @@
                     {% csrf_token %}
                     <div class="form-group">
                         <select name="report_type" class="form-control form-control-sm " id="report_options">
-                            <option value="" selected disabled hidden>Choose here</option>
+                            <option value="" selected disabled hidden>Select Report Type</option>
                             <option value="Noic_To_Suppliers">Noic To Suppliers</option>
                             <option value="Supplier_To_Corporate">Supplier To Corporate</option>
                         </select>
@@ -183,14 +183,15 @@
                                Date 
                             </th>
 
-                            <th>
-                                Sord Number
-                            </th>
+                            
                             <th>
                                Depot
                             </th>
                             <th>
-                                Fuel Type
+                                Supplier
+                            </th>
+                            <th>
+                                Fuel  - Sord No
                             </th>
                             <th>
                                 Currency 
@@ -205,7 +206,7 @@
                             </th>
 
                             <th>
-                                Sord Action
+                                Collection Status
                             </th>
 
                             <th>
@@ -217,16 +218,18 @@
                         {% for sord in sord_audits%}
                         <tr>
                             <td>{{sord.date}}</td>
-                            <td>{{sord.sord_no}}</td>
+                            <td>{{ sord.assigned_depot }}</td>
                             <td>{{sord.company}}</td>
                             {% if sord.fuel_type|lower|capfirst == 'Petrol' %}
                                 <td class="" style="color: #009688;">
                                     {{sord.fuel_type|lower|capfirst}}
+                                    - <small>{{sord.sord_no}}</small>
                                 </td>
                             {% elif sord.fuel_type|lower|capfirst == 'Diesel' %}
                             
                                 <td class="" style="color: #ffb61e;">
                                     {{sord.fuel_type|lower|capfirst}}
+                                    - <small>{{sord.sord_no}}</small>
                                 </td>
                             {% else %}
                                 <td class="">
@@ -236,7 +239,25 @@
                             <td>{{sord.currency}}</td>
                             <td>{{sord.quantity|floatformat:2|intcomma}}</td>
                             <td>{{sord.price}}</td>
-                            <td>{{sord.action}}</td>
+                                
+                            {% if sord.order.get_collection %}
+                            <td>
+
+                                <button class="btn btn-success btn-sm btn-labeled" data-toggle="modal" data-target="#Collections{{sord.id}}">
+                                    <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span>
+                                    View Collection
+
+                                </button>
+                            </td>
+
+                                
+                            {% else %}    
+                            <td style="font-size: 12px;">
+
+                            No Collection Scheduled
+                            </td>
+                            {% endif %}
+        
                             {% if sord.release_date %}
                                 {% if sord.delivery_date %}
                                 <td>
@@ -263,6 +284,79 @@
                             <td style="color: brown;">Documents Pending</td>
                             {% endif %}
                         </tr>
+                        <div class="modal fade modal-success in" id="Collections{{sord.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color: #009688; color: white">
+                                        <span class="modal-title" id="exampleModalLabel">Collection Details</span>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <label><b> Date Collected:</b></label>
+                                                &nbsp;{{sord.order.get_collection.date_collected}}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label><b>Time Collected:</b></label>
+                                                &nbsp;{{sord.order.get_collection.time_collected}}
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <label><b> Transporter:</b></label>
+                                                &nbsp;{{sord.order.get_collection.transporter}}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label><b>Truck Reg:</b></label>
+                                                &nbsp;{{sord.order.get_collection.truck_reg}}
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <label><b> Trailer Reg:</b></label>
+                                                &nbsp;{{sord.order.get_collection.trailer_reg}}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label><b>Driver :</b></label>
+                                                &nbsp;{{sord.order.get_collection.driver}}
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <label><b> Driver Id:</b></label>
+                                                &nbsp;{{sord.order.get_collection.driver_id}}
+                                            </div>
+                                            
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">
+                                                Close
+                                            </button>
+
+                                        </div>
+
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+
                         {% endfor %}
                     </tbody>
                 </table>
@@ -301,11 +395,19 @@
                             </th>
                         
                             <th>
-                                Sord Number
+                                Supplier
                             </th>
                             <th>
-                                Transaction Summary
-                             </th>
+                                Buyer
+                            </th>
+
+                            <th>
+                                Fuel - Sord No.
+                            </th>
+
+                            <th>
+                                Currency
+                            </th>
                              
                             <th>
                                Amount Paid ($)
@@ -326,130 +428,23 @@
                         <tr>
                             <td>{{payment.date}} - {{payment.time}}</td>
               
-                            <td>{{payment.sord_number}}</td>
                             <td>
-                                    <!--call modal-->
-                                    <button class="btn btn-labeled btn-primary btn-sm" data-toggle="modal" data-target="#trans{{payment.id}}">
-                                        <span class="btn-label"> <i class="fa fa-eye" aria-hidden="true"></i></span>Transaction Details
-                                    </button>
-                                    <!--view details-->
-                                    <div class="modal fade modal-success in" id="trans{{payment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header" style="background-color: #009688; color: white">
-                                                    <span class="modal-title" id="exampleModalLabel">Details for the Transaction</span>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    {% csrf_token %}
-                                                    <div class="row">
-                                                        <div class="form-group col-md-6">
-                                                            <label><b> Buyer:</b></label>
-                                                            &nbsp;{{payment.transaction.buyer.company}}
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label><b>Supplier:</b></label>
-                                                            &nbsp;{{payment.transaction.supplier.company}}
-                                                        </div>
-                                                    </div>
+                                {{ payment.transaction.supplier.company.name|title}}
 
-                                                    <div class="row">
-                                                        <div class="form-group col-md-6">
-                                                            <label><b> Fuel Type:</b></label>
-                                                            {% if payment.transaction.offer.request.fuel_type == 'Petrol'%}
-                                                            <b style="color: #009688; padding-left: 5px;">{{payment.transaction.offer.request.fuel_type}}</b>
-                                                            {% elif payment.transaction.offer.request.fuel_type == 'DIESEL'%}
-                                                            <b style="color: #ffb61e; padding-left: 5px;">{{payment.transaction.offer.request.fuel_type}}</b>
-                                                            {% else %}
-                                                            <b>{{payment.transaction.offer.request.fuel_type}}</b>
-                                                            {% endif %}
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label><b>Quantity Requested:</b></label>
-                                                            &nbsp;{{payment.transaction.offer.request.amount|floatformat:2|intcomma}}L
-                                                        </div>
-                                                    </div>
+                            </td>
 
-                                                    <div class="row">
-                                                        <div class="form-group col-md-6">
-                                                            <label><b> Quantity Offered:</b></label>
-                                                            &nbsp;{{payment.transaction.offer.quantity|floatformat:2|intcomma}}L
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label><b>Price:</b></label>
-                                                            &nbsp;${{payment.transaction.offer.price}}
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="form-group col-md-6">
-                                                            <label><b> Expected:</b></label>
-                                                            &nbsp;${{payment.transaction.expected|intcomma}}
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label><b>Paid:</b></label>
-                                                            &nbsp;${{payment.transaction.paid|intcomma}}
-                                                        </div>
-                                                    </div>
-                                                    {% if payment.transaction.offer.delivery_method == 'DELIVERY' %}
-                                                    <div class="row">
-                                                        <div class="form-group col-md-6">
-                                                            <label><b>Delivery Quantity:</b></label>
-                                                            {% comment %}
+                            <td>
+                                {{ payment.transaction.buyer.company.name|title}}
 
-                                                            &nbsp;{{payment.transaction.paid| div:payment.transaction.offer.price|floatformat}}L
-                                                            {% endcomment %}
+                            </td>
 
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label><b> Delivery Address:</b></label>
-                                                            &nbsp;{{payment.transaction.buyer.company.address}}
-                                                        </div>
-                                                       
-                                                    </div>
-                                                    
-                                                    {% else %}
-                                                    <div class="row">
-                                                        <div class="form-group col-md-6">
-                                                            <label><b>Delivery Quantity:</b></label>
-                                                            {% comment %}
-                                                            &nbsp;{{payment.transaction.paid| div:payment.transaction.offer.price|floatformat}}L
-                                                            {% endcomment %}
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label><b> Delivery Address:</b></label>
-                                                            &nbsp;{{payment.transaction.buyer.company.address}}
-                                                        </div>
-                                                       
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="form-group col-md-6">
-                                                            <label><b>Transporter:</b></label>
-                                                            &nbsp;{{payment.transaction.offer.request.transporter}}
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label><b> Truck Reg:</b></label>
-                                                            &nbsp;{{payment.transaction.offer.request.truck_reg}}
-                                                        </div>
-                                                       
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="form-group col-md-6">
-                                                            <label><b>Driver:</b></label>
-                                                            &nbsp;{{payment.transaction.offer.request.driver}}
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label><b> Driver ID:</b></label>
-                                                            &nbsp;{{payment.transaction.offer.request.driver_id}}
-                                                        </div>
-                                                       
-                                                    </div>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <td>
+                                {{ payment.transaction.offer.request.fuel_type}}
+                               - <small>{{payment.sord_number}}</small>
+                            </td>
+
+                            <td>
+                                {{ payment.transaction.offer.request.payment_method}}
                             </td>
                            
                             <td>{{payment.value|floatformat:2|intcomma}}</td>
@@ -458,181 +453,26 @@
                                   <span class="btn-label"><i class="fa fa-download" style="font-size:16px"></i> </span>  Payment Proof </a>
                             </td>
                             <td>{{payment.balance|floatformat:2|intcomma}}</td>
-                            {% if payment.delivery_schedule != None %}
-                                {% if payment.delivery_schedule.confirmation_date %}
-                                <td>
-                                    <div class="btn-group">
-                                    <a class="btn btn-primary btn-labeled btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">
-                                        <span class="btn-label"> <i class="fa fa-eye" aria-hidden="true"></i></span> View Schedule</a>
-                                    <a class="btn btn-labeled btn-warning btn-sm" href="{% url 'zeraPortal:delivery-note' payment.id %}" > <span class="btn-label"><i class="fa fa-download" style="font-size:16px"></i> </span> 
-                                         Delivery Note </a>
-
-                                    </div>
-                                </td>
-                                {% else %}
-                                <td>
-                                    <a class="btn btn-primary btn-labeled btn-sm" data-toggle="modal" data-target="#schedule{{payment.id}}">
-                                        <span class="btn-label"> <i class="fa fa-eye" aria-hidden="true"></i></span> View Schedule</a>
-                                </td>
-                                {% endif %}
-                            {% elif payment.release_date != None %}
-                                {% if payment.delivery_date != None %}
-                                <td>
-                                    <div class="btn-group">
-                                        <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:view_release_note' payment.id %}" >  
-                                            <span class="btn-label"><i class="fa fa-download" style="font-size:16px"></i> </span>  Release Note</a>
-                                        <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:delivery-note' payment.id %}" > <span class="btn-label"><i class="fa fa-download" style="font-size:16px"></i> </span> 
-                                            Delivery Note</a>
-                                    </div>
-                                </td>
-                                {% else %}
-                                <td>
-                                    <div class="btn-group">
-                                        <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:view_release_note' payment.id %}" > 
-                                            <span class="btn-label"><i class="fa fa-download" style="font-size:16px"></i> </span>  Release Note</a>
-                                    </div>
-                                </td>
-                                {% endif %}
-                            {% else %}
-                            <td style="color: chocolate;">Documents Pending</td>
-                            {% endif %}
-                        </tr>
-                              <!--view modal-->
-                              <div class="modal fade modal-sucess in" id="schedule{{payment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header" style="background-color: #009688; color: white">
-                                            <span class="modal-title" id="exampleModalLabel">Delivery Schedule</span>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            {% csrf_token %}
-                                            <div class="row">
-                                                <div class="form-group col-md-6">
-                                                    <label><b> Delivery Date:</b></label>
-                                                    &nbsp;{{payment.delivery_schedule.date }}
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label><b>Delivery Time:</b></label>
-                                                    &nbsp;{{payment.delivery_schedule.delivery_time }}
-                                                </div>
-                                            </div>
-
-
-                                            <div class="row">
-    
-                                                <div class="form-group col-md-6">
-                                                    <label><b>Transporter:</b></label>
-                                                    &nbsp;{{payment.delivery_schedule.transport_company }}
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label><b>Delivery Address:</b></label>
-                                                    &nbsp;{{payment.transaction.buyer.company.address }}
-                                                </div>
-                                            </div>
-                                            <div class="row">
-    
-                                                <div class="form-group col-md-6">
-                                                    <label><b>Driver Name:</b></label>
-                                                    &nbsp;{{payment.delivery_schedule.driver_name }}
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label><b>Phone Number:</b></label>
-                                                    &nbsp;{{payment.delivery_schedule.phone_number }}
-                                                </div>
-                                            </div>
-                                            <div class="row">
-    
-                                                <div class="form-group col-md-6">
-                                                    <label><b>Id Number:</b></label>
-                                                    &nbsp;{{payment.delivery_schedule.id_number }}
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label><b>Vehicle Reg:</b></label>
-                                                    &nbsp;{{payment.delivery_schedule.vehicle_reg }}
-                                                </div>
-                                            </div>
-
-
-                                            <div class="row">
-    
-                                                <div class="form-group col-md-6">
-                                                    <label><b>Amount Paid:</b></label>
-                                                    &nbsp;{{payment.value|floatformat:2|intcomma }}
-                                                </div>
-                                                {% if payment.delivery_schedule != None %}
-                                                <div class="form-group col-md-6">
-                                                    <label><b>Transport Charge:</b></label>
-                                                    {% comment %}
-
-                                                    &nbsp;{{payment.value| sub:payment.delivery_schedule.amount_for_fuel}}
-                                                    {% endcomment %}
-
-                                                </div>
-                                                {% else %}
-                                                <div class="form-group col-md-6">
-                                                    <label><b>Transport Charge:</b></label>
-                                                    &nbsp;{{payment.value}}
-                                                </div>
-                                                {% endif %}
-                                            </div>
-                                            <div class="row">
-                                            <div class="form-group col-md-6">
-                                                <label><b>Delivery Quantity:</b></label>
-                                                &nbsp;{{payment.delivery_schedule.delivery_quantity|floatformat:2|intcomma}}
-                                            </div>
-                                            {% if payment.delivery_schedule.confirmation_date %}
-                                            <div class="form-group col-md-6">
-                                                <label><b>Status:</b></label>
-                                                &nbsp;<i style="color: rgb(54, 167, 219);">Buyer Received Fuel </i>
-                                            </div>
-                                            {% else %}
-                                            <div class="form-group col-md-6">
-                                                <label><b>Status:</b></label>
-                                                &nbsp;<i style="color: rgb(54, 167, 219);"><i style="color: brown;">waiting for buyer confirmation</i> </i>
-                                            </div>
-            
-                                            {% endif %}
-                                           </div>
-                                           <div class="row">
-                                            <!-- {% if payment.delivery_schedule.supplier_document %}
-                                            <div class="form-group col-md-6">
-                                                <label><b>Supplier Release Note:</b></label>
-                                                &nbsp;<a class="btn btn-info btn-sm" href="{% url 'zeraPortal:view_supplier_doc' payment.delivery_schedule.id %}" >Download Document </a>
-                                            </div>
-                                            {% else %}
-                                            <div class="form-group col-md-6">
-                                                <label><b></b></label>
-                                            </div>
-                                            
-                                            {%endif%}  -->
-
-                                            {% if payment.delivery_schedule.confirmation_date %}
-                                            <div class="form-group col-md-6">
-                                                <label><b>Delivery Note:</b></label>
-                                                &nbsp;<a class="btn btn-info btn-sm" href="{% url 'zeraPortal:delivery-note' payment.id %}" >Download Document </a>
-                                            </div>
-                                            {% else %}
-                                            <div class="form-group col-md-6">
-                                                <label><b></b></label>
-                                            </div>
-                                            
-                                            {%endif%} 
-                                        </div>
-                                      
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">
-                                                    Close
-                                                </button>
-    
-                                            </div>
-                                        </div>
-    
-                                    </div>
+                            
+                            {% if payment.delivery_date != None %}
+                            <td>
+                                <div class="btn-group">
+                                    <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:view_release_note' payment.id %}" >  
+                                        <span class="btn-label"><i class="fa fa-download" style="font-size:16px"></i> </span>  Release Note</a>
+                                    <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:delivery-note' payment.id %}" > <span class="btn-label"><i class="fa fa-download" style="font-size:16px"></i> </span> 
+                                        Delivery Note</a>
                                 </div>
-                            </div>
+                            </td>
+                            {% else %}
+                            <td>
+                                <div class="btn-group">
+                                    <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'zeraPortal:view_release_note' payment.id %}" > 
+                                        <span class="btn-label"><i class="fa fa-download" style="font-size:16px"></i> </span>  Release Note</a>
+                                </div>
+                            </td>
+                            {% endif %}
+                            
+                        </tr>
                             <!--End View Modal-->
                         {% endfor %}
                     </tbody>
