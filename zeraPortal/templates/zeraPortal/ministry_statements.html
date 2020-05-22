@@ -438,10 +438,19 @@
 
                             </td>
 
-                            <td>
+                            {% if payment.transaction.offer.request.fuel_type|lower|capfirst == 'Petrol'%}
+                            <td style="color: #009688;">
                                 {{ payment.transaction.offer.request.fuel_type}}
                                - <small>{{payment.sord_number}}</small>
                             </td>
+                            {% elif payment.transaction.offer.request.fuel_type|lower|capfirst == 'Diesel'%}
+                            <td style="color: #ffb61e">
+                                {{ payment.transaction.offer.request.fuel_type}}
+                               - <small>{{payment.sord_number}}</small>
+                            </td>
+                           {% endif %}
+
+
 
                             <td>
                                 {{ payment.transaction.offer.request.payment_method}}
