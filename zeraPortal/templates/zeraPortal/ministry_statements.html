@@ -345,9 +345,9 @@
                             <th>
                                Amount Paid ($)
                             </th>
-                            <th>
+                            <!-- <th>
                                Proof of Payment
-                            </th>
+                            </th> -->
                             <th>
                                 Balance ($)
                              </th>
@@ -390,10 +390,10 @@
                             </td>
                            
                             <td>{{payment.value|floatformat:2|intcomma}}</td>
-                            <td>
+                            <!-- <td>
                                 <a class="btn btn-warning btn-labeled btn-sm" href="{% url 'zeraPortal:download_proof' payment.id %}" > 
                                   <span class="btn-label"><i class="fa fa-download" style="font-size:16px"></i> </span>  Payment Proof </a>
-                            </td>
+                            </td> -->
                             <td>{{payment.balance|floatformat:2|intcomma}}</td>
                             
                             {% if payment.delivery_date != None %}
