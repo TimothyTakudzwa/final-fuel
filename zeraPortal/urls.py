@@ -47,9 +47,12 @@ urlpatterns = [
     path('noic_delivery_note/<int:id>', views.noic_delivery_note, name='noic_delivery_note'),
     path('notication_handler/<int:id>', views.notication_handler, name='notication_handler'),
     path('supplier_delivery_note/<int:id>', views.supplier_delivery_note, name='supplier_delivery_note'),
+    path('approve_site_applications/<int:id>', views.approve_site_applications, name='approve_site_applications'),
+    path('block_sites_applications/<int:id>', views.block_sites_applications, name='block_sites_applications'),
     path('activity/', views.activity, name='activity'),
     path('fuel_prices/', views.fuel_prices, name='fuel_prices'),
     path('export_to_csv/',views.export_to_csv, name='export_to_csv'),
-    path('notication_reader/',views.notication_reader, name='notication_reader')
+    path('notication_reader/',views.notication_reader, name='notication_reader'),
+    path('site_applications/',views.site_applications, name='site_applications')
     
 ]

@@ -63,10 +63,12 @@ urlpatterns = [
     path('orders/', views.orders, name='orders'),
     path('notication_reader/', views.notication_reader, name='notication_reader'),
     path('delivery_schedules/', views.delivery_schedules, name='delivery_schedules'),
+    path('sites_applications/<int:id>', views.sites_applications, name='sites_applications'),
     path('view_release_note/<int:id>', views.view_release_note, name='view_release_note'),
     path('delivery_note/<int:id>', views.delivery_note, name='delivery_note'),
     path('download_proof/<int:id>', views.download_proof, name='download_proof'),
     path('notication_handler/<int:id>', views.notication_handler, name='notication_handler'),
+    
     
 
 ]
