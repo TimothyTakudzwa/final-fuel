@@ -242,7 +242,7 @@
                                 
                             {% if sord.order.get_collection %}
                             <td style="font-size: 12px;"> 
-                                Collected : {{sord.order.get_collection.date_collected}}
+                                Collected {% if sord.order.get_collection.date_collected %} : {{sord.order.get_collection.date_collected}}{% endif %}
                                 
                             </td>
 
