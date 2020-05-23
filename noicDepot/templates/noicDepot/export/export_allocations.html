@@ -120,7 +120,8 @@
             <td>{{sord.price}}</td>
             {% if sord.release_note %}
             <td>
-                Release Note Available
+                <a  style="color: white;background-color: #009688;padding: 4px;" href="https://fuelfinderzim.com/noicDepot/download_release_note/{{sord.id}}"><span class="btn-label"><i class="fa fa-download"></i></span>Download</a>
+
                 
             </td> 
             {% else %}
@@ -132,9 +133,9 @@
             {% endif %} 
             
             {% if sord.d_note %}
-            <td style="color: #007f73;"> 
-                D-note Available
-                
+            <td> 
+                <a style="color: white;background-color: #009688;padding: 4px;" href="https://fuelfinderzim.com/noicDepot/delivery_note/{{sord.id}}"><span class="btn-label"><i class="fa fa-download"></i></span>Download D-Note</a>
+      
             </td> 
             {% else %}
             <td style="color: crimson;">
