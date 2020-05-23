@@ -91,15 +91,15 @@
         
 
        
-        <td>   
-            <!-- <a class="btn btn-primary btn-sm" style="color: whitesmoke;"  > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a> -->
-            {% if order.proof_of_payment %} 
+        {% if order.proof_of_payment %} 
+        <td style="color: steelblue;">
             Available
-            {% else %}    
-                Pending
-            {% endif %}
-            
-        </td>
+        </td>    
+        {% else %} 
+        <td style="color: crimson;">   
+            Pending
+        </td>    
+        {% endif %}
        
         <td {% if order.status == 'Accepted' %} style="color: #07a513;" {% else %} style="color: crimson;" {% endif %}>
         {{order.status}}</td>
