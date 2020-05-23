@@ -93,9 +93,14 @@
        
         <td>   
             <!-- <a class="btn btn-primary btn-sm" style="color: whitesmoke;"  > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a> -->
-            <a  href="{% url 'users:download_proof' order.id %}">
-                Proof of Payment
-            </a>
+            
+            {% if order.proof_of_payment %} 
+                <a  href="https://fuelfinderzim.com/users/download_proof/{{order.id}}" style="padding: 5px; background-color: #007f73;color: white;">
+                    Proof of Payment
+                </a>
+            {% else %}    
+                Pending
+            {% endif %}
             
         </td>
        
@@ -199,9 +204,13 @@
         <td>
             
             <!-- <a class="btn btn-primary btn-sm" style="color: whitesmoke;"  > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a> -->
-            <a  href="{% url 'users:download_proof' order.id %}" >
-                 Proof of Payment
-            </a>
+            {% if order.proof_of_payment %}    
+                <a  href="https://fuelfinderzim.com/users/download_proof/{{order.id}}" style="padding: 5px; background-color: #007f73;color: white;">
+                    Proof of Payment
+                </a>
+            {% else %}  
+                Pending  
+            {% endif%}    
             
         </td>
        
