@@ -61,7 +61,6 @@
         <th>Contact Person</th>
         <th>Contact Phone</th>
         <!-- <th>Tank Details</th>                                 -->
-        <th>Depot</th>
         <th>Status</th>
     </tr>
 
@@ -93,7 +92,6 @@
             {% else %}
             N/A
             {% endif %}</td> -->          
-        <td>{{delivery.depot.name}}</td>
         <td>                            
         {% if delivery.confirmation_date %}
             {% if not delivery.supplier_document %}
@@ -154,7 +152,6 @@
         <th>Contact Person</th>
         <th>Contact Phone</th>
         <!-- <th>Tank Details</th>                                 -->
-        <th>Depot</th>
         <th>Status</th>
     </tr>
 
@@ -177,7 +174,6 @@
         <td>{{ delivery.transaction.buyer.first_name|title}} {{delivery.transaction.buyer.last_name|title}}</td>
         <td>{{ delivery.transaction.buyer.phone_number }} </td>
                 
-        <td>{{delivery.depot.name}}</td>
         <td>                            
         {% if delivery.confirmation_date %}
             {% if not delivery.supplier_document %}
