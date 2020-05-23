@@ -106,14 +106,14 @@
         <td>{{sord.quantity|floatformat:2|intcomma}}</td>
         <td>{{sord.price}}</td>
         {% if sord.order.get_collection %}
-        <td style="font-size: 12px;"> 
+        <td style="font-size: 15px;"> 
             Collected {% if sord.order.get_collection.date_collected %} : {{sord.order.get_collection.date_collected}}{% endif %}
             
         </td>
 
             
         {% else %}    
-        <td style="font-size: 12px;">
+        <td style="font-size: 15px;">
 
         Pending
         </td>
@@ -124,9 +124,9 @@
             <td>
                 
             <div class="btn-group">
-                <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="https://fuelfinderzim.com/zeraPortal/noic_release_note/{{sord.id}}" > 
+                <a class="btn btn-labeled btn-primary btn-sm" style="color: #374767;" href="https://fuelfinderzim.com/zeraPortal/noic_release_note/{{sord.id}}" > 
                     <span class=btn-label> <i class="fa fa-download"></i></span> Release Note</a>
-                <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;" href="https://fuelfinderzim.com/zeraPortal/supplier_delivery_note/{{sord.id}}" >  
+                <a class="btn btn-labeled btn-warning btn-sm" style="color: #374767;" href="https://fuelfinderzim.com/zeraPortal/supplier_delivery_note/{{sord.id}}" >  
                     <span class=btn-label> <i class="fa fa-download"></i></span>Delivery Note</a>
             </div>
                 
@@ -135,7 +135,7 @@
             <td>
                 
                 <div class="btn-group">
-                    <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="https://fuelfinderzim.com/zeraPortal/noic_release_note/{{sord.id}}" > 
+                    <a class="btn btn-labeled btn-primary btn-sm" style="color: #374767;" href="https://fuelfinderzim.com/zeraPortal/noic_release_note/{{sord.id}}" > 
                         <span class=btn-label> <i class="fa fa-download"></i></span> Release Note</a>
                 </div>
                     
