@@ -94,9 +94,7 @@
         <td>   
             <!-- <a class="btn btn-primary btn-sm" style="color: whitesmoke;"  > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a> -->
             {% if order.proof_of_payment %} 
-                <a  href="https://fuelfinderzim.com/users/download_proof/{{order.id}}" style="padding: 5px; background-color: #007f73;color: white;">
-                    Proof of Payment
-                </a>
+            Available
             {% else %}    
                 Pending
             {% endif %}
@@ -108,15 +106,13 @@
         
         {% if order.allocation != None %}
                 {% if order.allocation.release_note %}
-                <td>
+                <td style="color: steelblue;">
                               
-                    <a  href="{% url 'users:view_release_note' order.allocation.id %}">
-                        Download Release Note
-                    </a>
+                    Available
                          
                 </td> 
                 {% else %}
-                <td>
+                <td style="color: crimson;">
                     
                     Release Note Pending
                    
@@ -204,9 +200,7 @@
             
             <!-- <a class="btn btn-primary btn-sm" style="color: whitesmoke;"  > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a> -->
             {% if order.proof_of_payment %} 
-                <a  href="https://fuelfinderzim.com/users/download_proof/{{order.id}}" style="padding: 5px; background-color: #007f73;color: white;">
-                    Proof of Payment
-                </a>
+                Available
             {% else %}    
                 Pending
             {% endif %}
@@ -217,23 +211,19 @@
         {{order.status}}</td>
         
         {% if order.allocation != None %}
-                {% if order.allocation.release_note %}
-                <td>
-                    
-                       
-                        <a  href="{% url 'users:view_release_note' order.allocation.id %}" >
-                             Download Release Note
-                        </a>
-                    
-                    
-                </td> 
-                {% else %}
-                <td>
-                    
-                  Pending
-                   
-                </td>
-                {% endif %}
+            {% if order.allocation.release_note %}
+            <td style="color: steelblue;">
+                            
+                Available
+                        
+            </td> 
+            {% else %}
+            <td style="color: crimson;">
+                
+                Release Note Pending
+                
+            </td>
+            {% endif %}
 
         {% else %}
         <td>
