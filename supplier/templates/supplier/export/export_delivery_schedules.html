@@ -147,7 +147,6 @@
         <th>Contact Person</th>
         <th>Contact Phone</th>
         <!-- <th>Tank Details</th>                                 -->
-        <th>Depot</th>
         <th>Status</th>
     </tr>
 
@@ -182,7 +181,6 @@
             {% else %}
             N/A
             {% endif %}</td> -->          
-        <td>{{delivery.depot.name}}</td>
         <td>                            
         {% if delivery.confirmation_date %}
             {% if not delivery.supplier_document %}
