@@ -70,7 +70,7 @@
     <tr>
         <td>{{ delivery.id }}</td>
         <td>{{ delivery.date }} | {{ delivery.delivery_time }}</td>
-        <td>{{ delivery.transaction.buyer.company.name|title }}</td>
+        <td>{{ delivery.transaction.supplier.company.name|title }}</td>
         <td>{{ delivery.transaction.buyer.company.address }}</td>
         {% if delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Diesel' %}
         <td style="color: #ffb61e;">{{ delivery.transaction.offer.request.fuel_type}}</>
