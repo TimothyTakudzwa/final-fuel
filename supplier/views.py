@@ -374,6 +374,7 @@ def fuel_request(request):
     num_of_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).count()
     sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     requests = []
+    acceptable_requests = []
     complete_requests = []
     if sub.praz_reg_num != None:
         all_requests = FuelRequest.objects.filter(is_deleted=False, is_complete=False).all()
@@ -469,9 +470,18 @@ def fuel_request(request):
             if buyer_request.dipping_stick_required == buyer_request.meter_required == buyer_request.pump_required == False:
                 buyer_request.no_equipment = True
     
+    for reqq in requests:
+        if reqq is not None:
+            if sub.is_usd_active == True:
+                acceptable_requests.append(reqq)
+            else:
+                if reqq.payment_method != 'USD':
+                    acceptable_requests.append(reqq)
+                else:
+                    pass
+
     
-    
-    return render(request, 'supplier/fuel_request.html', {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'requests': requests, 'complete_requests': complete_requests})
+    return render(request, 'supplier/fuel_request.html', {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'acceptable_requests': acceptable_requests, 'requests': requests, 'complete_requests': complete_requests})
 
 
 @login_required()

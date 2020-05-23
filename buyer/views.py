@@ -686,7 +686,7 @@ def dashboard(request):
                 else:
                     offer = Offer.objects.filter(id=offer_id).first()
                     sub = Subsidiaries.objects.filter(id=offer.supplier.subsidiary_id).first()
-                    # messages.info(request, "Match found.")
+                    messages.info(request, "Match found.")
 
                     action = "Fuel Request"
                     description = f"You have made fuel request of {fuel_request_object.amount} {fuel_request_object.fuel_type}"
