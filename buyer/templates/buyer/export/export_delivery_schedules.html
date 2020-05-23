@@ -163,7 +163,7 @@
     {% for delivery in pending_schedules %}
 
     <tr>
-        <td>{{ deliver.id }}</td>
+        <td>{{ delivery.id }}</td>
         <td>{{ delivery.date }} | {{ delivery.delivery_time }}</td>
         <td>{{ delivery.transaction.buyer.company.name|title }}</td>
         <td>{{ delivery.transaction.buyer.company.address }}</td>
@@ -211,7 +211,7 @@
         {% for delivery in pending_schedules %}
 
         <tr>
-            <td>{{ deliver.id }}</td>
+            <td>{{ delivery.id }}</td>
            <td>{{ delivery.transport_company }}</td>
             <td>{{ delivery.driver_name }} </td>
             <td>{{ delivery.id_number }} </td>
