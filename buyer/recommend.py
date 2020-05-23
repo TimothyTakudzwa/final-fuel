@@ -83,6 +83,6 @@ def recommend(fuel_request):
                                                        price_object.diesel_price)
 
         offer.save()
-        response_message = "Here here"
+        response_message = "No Best Supplier Found"
 
         return offer.id, response_message
