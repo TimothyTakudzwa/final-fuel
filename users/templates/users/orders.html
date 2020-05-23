@@ -90,7 +90,7 @@
                             <input type="text" name="pdf_start_date" value="{{start_date|date:"M d, Y"}}" hidden>
                             <input type="text" name="pdf_end_date" value="{{end_date|date:"M d, Y"}}" hidden>
                             <button type="submit" class="btn btn-labeled btn-default btn-sm" style="float: left; background-color:#cfd4ce; color: #333;margin-right: 10px;"
-                                    {% if not accepted_orders and not pending_orders %} disabled{% endif %} title="{% if accepted_orders and not pending_orders %} Export To PDF {%else%} No Data To Export {% endif %}">
+                                    {% if not accepted_orders and not pending_orders %} disabled{% endif %} title="{% if not accepted_orders and not pending_orders %} Export To PDF {%else%} No Data To Export {% endif %}">
                                 <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>PDF
                             </button>
                         </form>
@@ -105,7 +105,7 @@
                                 var filename = 'Supplier Admin Allocations Summary' + ' - ' +today.toLocaleString() + '.csv'
                             </script>
                             <button  class="btn btn-labeled btn-default btn-sm" style="background-color: #cfd4ce; color: #333; margin-right: 10px;" type="submit" {% if not accepted_orders and not pending_orders %} disabled{% endif %}
-                                     title="{% if accepted_orders and not pending_orders %} Export To CSV {%else%} No Data To Export {% endif %}">
+                                     title="{% if not accepted_orders and not pending_orders %} Export To CSV {%else%} No Data To Export {% endif %}">
                                 <span class="btn-label"><i class="glyphicon glyphicon-export"></i></span>CSV
                             </button>
                         </form>
