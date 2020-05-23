@@ -53,6 +53,7 @@
 
     <caption style="color: #007f73;margin-bottom: 20px;text-align: center;"> Product Details</caption>
     <tr> 
+        <th>Delivery Id</th>
         <th>Delivery Date | Time</th>
         <th>Buyer</th>
         <th>Address</th>
@@ -67,6 +68,7 @@
     {% for delivery in completed_schedules %}
 
     <tr>
+        <td>{{ delivery.id }}</td>
         <td>{{ delivery.date }} | {{ delivery.delivery_time }}</td>
         <td>{{ delivery.transaction.buyer.company.name|title }}</td>
         <td>{{ delivery.transaction.buyer.company.address }}</td>
@@ -113,6 +115,7 @@
         <caption style="color: #007f73; margin-bottom: 20px; text-align: center;"> Transporter Details</caption>
 
         <tr>
+            <th>Delivery Id</th>
             <th>Transporter</th>
             <th>Driver Name</th>
             <th>Id Number</th>
@@ -122,6 +125,7 @@
         {% for delivery in completed_schedules %}
 
         <tr>
+            <td>{{ delivery.id }}</td>
             <td>{{ delivery.transport_company }}</td>
             <td>{{ delivery.driver_name }} </td>
             <td>{{ delivery.id_number }} </td>
@@ -144,6 +148,7 @@
 
     <caption style="color: #007f73;margin-bottom: 20px;text-align: center;"> Product Details</caption>
     <tr> 
+        <th>Delivery Id</th>
         <th>Delivery Date | Time</th>
         <th>Buyer</th>
         <th>Address</th>
@@ -158,6 +163,7 @@
     {% for delivery in pending_schedules %}
 
     <tr>
+        <td>{{ deliver.id }}</td>
         <td>{{ delivery.date }} | {{ delivery.delivery_time }}</td>
         <td>{{ delivery.transaction.buyer.company.name|title }}</td>
         <td>{{ delivery.transaction.buyer.company.address }}</td>
@@ -195,6 +201,7 @@
         <caption style="color: #007f73; margin-bottom: 20px; text-align: center;"> Transporter Details</caption>
 
         <tr>
+            <th>Delivery Id</th>
             <th>Transporter</th>
             <th>Driver Name</th>
             <th>Id Number</th>
@@ -204,7 +211,8 @@
         {% for delivery in pending_schedules %}
 
         <tr>
-            <td>{{ delivery.transport_company }}</td>
+            <td>{{ deliver.id }}</td>
+           <td>{{ delivery.transport_company }}</td>
             <td>{{ delivery.driver_name }} </td>
             <td>{{ delivery.id_number }} </td>
             <td>{{ delivery.vehicle_reg }} </td>
