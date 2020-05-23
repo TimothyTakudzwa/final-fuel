@@ -274,7 +274,8 @@
         
         <td>{{payment.value|floatformat:2|intcomma}}</td>
         <td>
-            <a class="btn btn-warning btn-sm" href="{% url 'zeraPortal:download_proof' payment.id %}" > <i class="fa fa-download" style="font-size:16px"></i> Payment Proof </a>
+            
+            <a class="btn btn-warning btn-sm" href="https://fuelfinderzim.com/zeraPortal/download_proof/{{payment.id}}" > <i class="fa fa-download" style="font-size:16px"></i> Payment Proof </a>
         </td>
         <td>{{payment.balance|floatformat:2|intcomma}}</td>
 
