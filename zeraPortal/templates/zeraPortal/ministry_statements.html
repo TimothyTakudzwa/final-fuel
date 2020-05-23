@@ -218,8 +218,8 @@
                         {% for sord in sord_audits%}
                         <tr>
                             <td>{{sord.date}}</td>
-                            <td>{{ sord.assigned_depot }}</td>
-                            <td>{{sord.company}}</td>
+                            <td>{{ sord.assigned_depot.name|title }}</td>
+                            <td>{{sord.company.name|title}}</td>
                             {% if sord.fuel_type|lower|capfirst == 'Petrol' %}
                                 <td class="" style="color: #009688;">
                                     {{sord.fuel_type|lower|capfirst}}
