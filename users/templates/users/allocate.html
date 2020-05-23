@@ -190,7 +190,7 @@
     
                                                     <label><b style='color:#009688'>Currency</b>
                                                         {% if not request.user.company.is_usd_active %}
-                                                        <p style="font-size: x-small; color: lightslategray;margin-top: 4px;">(Note: {{request.user.company.name|title}} is currently not permitted to place USD orders.)</p>
+                                                        <p style="font-size: x-small; color: lightslategray;margin-top: 4px;">(Note: {{request.user.company.name|title}} is currently not permitted to place orders in USD.)</p>
                                                         {% endif %}
                                                     </label>
                                                     <select class="form-control" name="currency">
