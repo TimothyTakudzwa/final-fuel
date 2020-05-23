@@ -55,7 +55,7 @@
     <tr> 
         <th>Delivery Id</th>
         <th>Delivery Date | Time</th>
-        <th>Buyer</th>
+        <th>Supplier</th>
         <th>Address</th>
         <th>Product</th>
         <th>Quantity</th>
@@ -150,7 +150,7 @@
     <tr> 
         <th>Delivery Id</th>
         <th>Delivery Date | Time</th>
-        <th>Buyer</th>
+        <th>Supplier</th>
         <th>Address</th>
         <th>Product</>
         <th>Quantity</th>
@@ -165,7 +165,7 @@
     <tr>
         <td>{{ delivery.id }}</td>
         <td>{{ delivery.date }} | {{ delivery.delivery_time }}</td>
-        <td>{{ delivery.transaction.buyer.company.name|title }}</td>
+        <td>{{ delivery.transaction.supplier.company.name|title }}</td>
         <td>{{ delivery.transaction.buyer.company.address }}</td>
        
         {% if delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Diesel' %}
