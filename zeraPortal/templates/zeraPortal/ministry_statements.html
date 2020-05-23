@@ -343,13 +343,13 @@
                             </th>
                              
                             <th>
-                               Amount Paid ($)
+                               Quantity (L)
                             </th>
                             <!-- <th>
                                Proof of Payment
                             </th> -->
                             <th>
-                                Balance ($)
+                                Price ($)
                              </th>
                             <th>
                                 Action
@@ -389,12 +389,12 @@
                                 {{ payment.transaction.offer.request.payment_method}}
                             </td>
                            
-                            <td>{{payment.value|floatformat:2|intcomma}}</td>
+                            <td>{{payment.transaction.offer.quantity|floatformat:2|intcomma}}</td>
                             <!-- <td>
                                 <a class="btn btn-warning btn-labeled btn-sm" href="{% url 'zeraPortal:download_proof' payment.id %}" > 
                                   <span class="btn-label"><i class="fa fa-download" style="font-size:16px"></i> </span>  Payment Proof </a>
                             </td> -->
-                            <td>{{payment.balance|floatformat:2|intcomma}}</td>
+                            <td>{{payment.transaction.offer.price|floatformat:2|intcomma}}</td>
                             
                             {% if payment.delivery_date != None %}
                             <td>
