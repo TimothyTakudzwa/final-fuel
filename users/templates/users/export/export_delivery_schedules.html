@@ -53,52 +53,38 @@
 
     <caption style="color: #007f73;margin-bottom: 20px;text-align: center;"> Product Details</caption>
     <tr> 
-        <th>Date</th>
+        <th>Delivery Id</th>
+        <th>Delivery Date - Time</th>
         <th>Buyer</th>
         <th>Address</th>
-        <th>Delivery Date - Time</th>
         <th>Product</th>
         <th>Quantity</th>
         <th>Contact Person</th>
         <th>Contact Phone</th>
         <!-- <th>Tank Details</th>                                 -->
-        <th>Depot</th>
-        <th>Quantity</th>
         <th>Status</th>
     </tr>
 
     {% for delivery in completed_schedules %}
 
     <tr>
+        <td>{{ delivery.id }}</td>
         <td>{{ delivery.date }} | {{ delivery.delivery_time }}</td>
         <td>{{ delivery.transaction.buyer.company.name|title }}</td>
         <td>{{ delivery.transaction.buyer.company.address }}</td>
-        <td>
-            {% if delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Diesel' %}
-            <td style="color: #ffb61e;">{{ delivery.transaction.offer.request.fuel_type}}</td>
-            {% elif delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Petrol' %}
-                <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type}}</td>
-            {% else %}
-                <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type}}</td>
-            {% endif %}
-        </td>
+        
+        {% if delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Diesel' %}
+        <td style="color: #ffb61e;">{{ delivery.transaction.offer.request.fuel_type}}</td>
+        {% elif delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Petrol' %}
+            <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type}}</td>
+        {% else %}
+            <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type}}</td>
+        {% endif %}
+        
         <td>{{ delivery.delivery_quantity|floatformat:2|intcomma }} (Litres)</td>
         <td>{{ delivery.transaction.buyer.first_name|title}} {{delivery.transaction.buyer.last_name|title}}</td>
         <td>{{ delivery.transaction.buyer.phone_number }} </td>
-        
-        <!-- <td>{% if delivery.transaction.offer.request.pump_required %}
-            Pump
-            {% endif %}
-            {% if delivery.transaction.offer.request.dipping_stick_required %}
-            Dipping Stick
-            {% endif %}
-            {% if delivery.transaction.offer.request.meter_required %}
-            Meter Required
-            {% else %}
-            N/A
-            {% endif %}</td> -->          
-        <td>{{delivery.depot.name}}</td>
-        <td>{{ delivery.delivery_quantity|floatformat:2|intcomma}} </td>          
+     
         <td>                            
         {% if delivery.confirmation_date %}
             {% if not delivery.supplier_document %}
@@ -120,6 +106,7 @@
         <caption style="color: #007f73; margin-bottom: 20px; text-align: center;"> Transporter Details</caption>
 
         <tr>
+            <th>Delivery Id</th>
             <th>Transporter</th>
             <th>Driver Name</th>
             <th>Id Number</th>
@@ -129,6 +116,7 @@
         {% for delivery in completed_schedules %}
 
         <tr>
+            <td> {{ delivery.id }}</td>
             <td>{{ delivery.transport_company }}</td>
             <td>{{ delivery.driver_name }} </td>
             <td>{{ delivery.id_number }} </td>
@@ -151,35 +139,32 @@
 
     <caption style="color: #007f73;margin-bottom: 20px;text-align: center;"> Product Details</caption>
     <tr> 
-        <th>Date</th>
+        <th>Delivery Id</th>
+        <th>Delivery Date - Time</th>
         <th>Buyer</th>
         <th>Address</th>
-        <th>Delivery Date - Time</th>
         <th>Product</th>
         <th>Quantity</th>
         <th>Contact Person</th>
         <th>Contact Phone</th>
         <!-- <th>Tank Details</th>                                 -->
-        <th>Depot</th>
-        <th>Quantity</th>
         <th>Status</th>
     </tr>
 
     {% for delivery in pending_schedules %}
 
     <tr>
+        <td>{{ delivery.id }}</td>
         <td>{{ delivery.date }} | {{ delivery.delivery_time }}</td>
         <td>{{ delivery.transaction.buyer.company.name|title }}</td>
         <td>{{ delivery.transaction.buyer.company.address }}</td>
-        <td>
-            {% if delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Diesel' %}
-            <td style="color: #ffb61e;">{{ delivery.transaction.offer.request.fuel_type}}</td>
-            {% elif delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Petrol' %}
-                <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type}}</td>
-            {% else %}
-                <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type}}</td>
-            {% endif %}
-        </td>
+        {% if delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Diesel' %}
+        <td style="color: #ffb61e;">{{ delivery.transaction.offer.request.fuel_type}}</td>
+        {% elif delivery.transaction.offer.request.fuel_type|lower|capfirst == 'Petrol' %}
+            <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type}}</td>
+        {% else %}
+            <td style="color: #009688;">{{ delivery.transaction.offer.request.fuel_type}}</td>
+        {% endif %}
         <td>{{ delivery.delivery_quantity|floatformat:2|intcomma }} (Litres)</td>
         <td>{{ delivery.transaction.buyer.first_name|title}} {{delivery.transaction.buyer.last_name|title}}</td>
         <td>{{ delivery.transaction.buyer.phone_number }} </td>
@@ -194,9 +179,7 @@
             Meter Required
             {% else %}
             N/A
-            {% endif %}</td> -->          
-        <td>{{delivery.depot.name}}</td>
-        <td>{{ delivery.delivery_quantity|floatformat:2|intcomma}} </td>          
+            {% endif %}</td> -->               
         <td>                            
         {% if delivery.confirmation_date %}
             {% if not delivery.supplier_document %}
@@ -218,6 +201,7 @@
         <caption style="color: #007f73; margin-bottom: 20px; text-align: center;"> Transporter Details</caption>
 
         <tr>
+            <th>Delivery Id</th>
             <th>Transporter</th>
             <th>Driver Name</th>
             <th>Id Number</th>
@@ -227,6 +211,7 @@
         {% for delivery in pending_schedules %}
 
         <tr>
+            <td>{{ delivery.id }} </td>
             <td>{{ delivery.transport_company }}</td>
             <td>{{ delivery.driver_name }} </td>
             <td>{{ delivery.id_number }} </td>

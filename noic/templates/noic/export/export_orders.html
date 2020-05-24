@@ -91,28 +91,28 @@
         
 
        
-        <td>   
-            <!-- <a class="btn btn-primary btn-sm" style="color: whitesmoke;"  > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a> -->
-            <a  href="{% url 'users:download_proof' order.id %}">
-                Proof of Payment
-            </a>
-            
-        </td>
+        {% if order.proof_of_payment %} 
+        <td style="color: steelblue;">
+            Available
+        </td>    
+        {% else %} 
+        <td style="color: crimson;">   
+            Pending
+        </td>    
+        {% endif %}
        
         <td {% if order.status == 'Accepted' %} style="color: #07a513;" {% else %} style="color: crimson;" {% endif %}>
         {{order.status}}</td>
         
         {% if order.allocation != None %}
                 {% if order.allocation.release_note %}
-                <td>
+                <td style="color: steelblue;">
                               
-                    <a  href="{% url 'users:view_release_note' order.allocation.id %}">
-                        Download Release Note
-                    </a>
+                    Available
                          
                 </td> 
                 {% else %}
-                <td>
+                <td style="color: crimson;">
                     
                     Release Note Pending
                    
@@ -195,37 +195,37 @@
 
 
         <td>{{ order.currency}}</td> 
+               
+        <!-- <a class="btn btn-primary btn-sm" style="color: whitesmoke;"  > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a> -->
+        {% if order.proof_of_payment %} 
+        <td style="color: steelblue;">
+            Available
+        </td>    
+        {% else %} 
+        <td style="color: crimson;">   
+            Pending
+        </td>    
+        {% endif %}
+            
         
-        <td>
-            
-            <!-- <a class="btn btn-primary btn-sm" style="color: whitesmoke;"  > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a> -->
-            <a  href="{% url 'users:download_proof' order.id %}" >
-                 Proof of Payment
-            </a>
-            
-        </td>
        
         <td {% if order.status == 'Accepted' %} style="color: #07a513;" {% else %} style="color: crimson;" {% endif %}>
         {{order.status}}</td>
         
         {% if order.allocation != None %}
-                {% if order.allocation.release_note %}
-                <td>
-                    
-                       
-                        <a  href="{% url 'users:view_release_note' order.allocation.id %}" >
-                             Download Release Note
-                        </a>
-                    
-                    
-                </td> 
-                {% else %}
-                <td>
-                    
-                  Pending
-                   
-                </td>
-                {% endif %}
+            {% if order.allocation.release_note %}
+            <td style="color: steelblue;">
+                            
+                Available
+                        
+            </td> 
+            {% else %}
+            <td style="color: crimson;">
+                
+                Release Note Pending
+                
+            </td>
+            {% endif %}
 
         {% else %}
         <td>

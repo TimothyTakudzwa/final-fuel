@@ -56,8 +56,7 @@
         <th>
            Date 
         </th>
-
-        <th>
+       <th>
             Sord Number
         </th>
         <th>
@@ -68,20 +67,19 @@
         </th>
         <th>
             Currency 
-        </th>
-       
+        </th>      
         <th>
             Quantity (L)
         </th>
-
         <th>
             Price ($)
         </th>
-
         <th>
-            Sord Action
+            Collection Status
         </th>
-
+        <th>
+            Documents
+        </th>
     </tr>
         
     
@@ -107,7 +105,45 @@
         <td>{{sord.currency}}</td>
         <td>{{sord.quantity|floatformat:2|intcomma}}</td>
         <td>{{sord.price}}</td>
-        <td>{{sord.action}}</td>
+        {% if sord.order.get_collection %}
+        <td style="font-size: 15px;"> 
+            Collected {% if sord.order.get_collection.date_collected %} : {{sord.order.get_collection.date_collected}}{% endif %}
+            
+        </td>
+
+            
+        {% else %}    
+        <td style="font-size: 15px;">
+
+        Pending
+        </td>
+        {% endif %}
+
+        {% if sord.release_date %}
+            {% if sord.delivery_date %}
+            <td>
+                
+            <div class="btn-group">
+                <a class="btn btn-labeled btn-primary btn-sm" style="color: white; background-color: #009688;padding: 5px;" href="https://fuelfinderzim.com/zeraPortal/noic_release_note/{{sord.id}}" > 
+                    <span class=btn-label> <i class="fa fa-download"></i></span> Release Note</a>
+                <a class="btn btn-labeled btn-warning btn-sm" style="color: white;background-color: #ffb61e;padding: 5px;" href="https://fuelfinderzim.com/zeraPortal/supplier_delivery_note/{{sord.id}}" >  
+                    <span class=btn-label> <i class="fa fa-download"></i></span>Delivery Note</a>
+            </div>
+                
+            </td>
+            {% else %}
+            <td>
+                
+                <div class="btn-group">
+                    <a class="btn btn-labeled btn-primary btn-sm" style="color: white;background-color: #009688;padding: 5px;" href="https://fuelfinderzim.com/zeraPortal/noic_release_note/{{sord.id}}" > 
+                        <span class=btn-label> <i class="fa fa-download"></i></span> Release Note</a>
+                </div>
+                    
+                </td>
+            {% endif %}
+        {% else %}
+        <td style="color: brown;">Documents Pending</td>
+        {% endif %}
         
     </tr>
     {% endfor %}
@@ -274,7 +310,8 @@
         
         <td>{{payment.value|floatformat:2|intcomma}}</td>
         <td>
-            <a class="btn btn-warning btn-sm" href="{% url 'zeraPortal:download_proof' payment.id %}" > <i class="fa fa-download" style="font-size:16px"></i> Payment Proof </a>
+            
+            <a class="btn btn-warning btn-sm" href="https://fuelfinderzim.com/zeraPortal/download_proof/{{payment.id}}" > <i class="fa fa-download" style="font-size:16px"></i> Payment Proof </a>
         </td>
         <td>{{payment.balance|floatformat:2|intcomma}}</td>
 

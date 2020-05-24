@@ -93,7 +93,8 @@
        
         <td>   
             <!-- <a class="btn btn-primary btn-sm" style="color: whitesmoke;"  > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a> -->
-            <a  href="{% url 'users:download_proof' order.id %}">
+            
+            <a  href="https://fuelfinderzim.com/noicDepot/download_proof/{{order.id}}" style="padding: 5px; color: white; background-color: #007f73;">
                 Proof of Payment
             </a>
             
@@ -106,7 +107,7 @@
                 {% if order.allocation.release_note %}
                 <td>
                               
-                    <a  href="{% url 'users:view_release_note' order.allocation.id %}">
+                    <a  href="https://fuelfinderzim.com/noicDepot/view_release_note/{{order.id}}" style="padding: 5px; color: white; background-color: #ffb61e;">
                         Download Release Note
                     </a>
                          
@@ -199,7 +200,7 @@
         <td>
             
             <!-- <a class="btn btn-primary btn-sm" style="color: whitesmoke;"  > <i class="fa fa-download" style="font-size:20px"></i> Payment Proof</a> -->
-            <a  href="{% url 'users:download_proof' order.id %}" >
+            <a  href="https://fuelfinderzim.com/noicDepot/download_proof/{{order.id}}" style="padding: 5px; color: white; background-color: #007f73;" >
                  Proof of Payment
             </a>
             

@@ -188,13 +188,16 @@
                                             <div class=" form-group row col-sm-12">
                                                 <div class="col-sm-6" id="currency">
     
-                                                    <label><b style='color:#009688'>Currency</b></label>
+                                                    <label><b style='color:#009688'>Currency</b>
+                                                        {% if not request.user.company.is_usd_active %}
+                                                        <p style="font-size: x-small; color: lightslategray;margin-top: 4px;">(Note: {{request.user.company.name|title}} is currently not permitted to place orders in USD.)</p>
+                                                        {% endif %}
+                                                    </label>
                                                     <select class="form-control" name="currency">
-    
                                                         <option>RTGS</option>
+                                                        {% if request.user.company.is_usd_active %}
                                                         <option>USD</option>
-    
-    
+                                                        {% endif %}
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-6" id="diesel_rtgs_price">
@@ -506,7 +509,6 @@
     {% endif %}
 
 
-    {% if allocates %}
     <section class="content">
         <div class="mt-2 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
             <div class="panel-heading ui-sortable-handle">
@@ -936,16 +938,8 @@
             </div>
         </div>
     </section>    
-    {% else %}
-    <section class="content">
-        <div class="text-center" style="margin-top: 50px">
-            <h4>No Fuel Allocations & Updates</h4>
-        </div>
-    </section>    
-    {% endif %}
 
 
-    {% if allocations %}
     <section class="content">
         <div class="mt-2 panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
             <div class="panel-heading ui-sortable-handle">
@@ -1104,13 +1098,6 @@
         </div>
     </section>    
 
-    {% else %}
-    <section class="content">
-        <div class="" style="margin-top: 20px">
-            <h4 class="text-center">No Audit Trail</h4>
-        </div>
-    </section>    
-    {% endif %}
 
     
 
