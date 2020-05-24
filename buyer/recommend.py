@@ -46,7 +46,7 @@ def recommend(fuel_request):
             else:
                 total_rating = 0
         max_rate_provider = max(scoreboard.items(), key=operator.itemgetter(1))[0]
-        user = User.objects.filter(subsidiary_id=max_rate_provider).first()
+        user = User.objects.filter(subsidiary_id=max_rate_provider).filter(user_type='SUPPLIER').first()
         price_object = SuballocationFuelUpdate.objects.filter(subsidiary__id=max_rate_provider).filter(
             payment_type=fuel_request.payment_method).first()
         selected_supply = Subsidiaries.objects.get(id=max_rate_provider)
