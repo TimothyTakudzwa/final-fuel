@@ -68,7 +68,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'mathfilters',
-    'debug_toolbar',
+    # 'debug_toolbar',
     'comments.apps.CommentsConfig',
     'error_pages.apps.ErrorPagesConfig',
     'session_security',
