@@ -775,7 +775,7 @@ def accept_offer(request, id):
         description = f"You have accepted offer of {offer.quantity}L {offer.request.fuel_type}"
         Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description,
                                 reference_id=offer.id)
-        messages.warning(request, "Your request has been saved successfully.")
+        messages.success(request, "Accepted offer successfully.")
         return redirect("buyer-transactions")
     else:
         messages.info(request,
@@ -1472,7 +1472,7 @@ def proof_of_payment(request, id):
                 return redirect('buyer-transactions')
             else:
                 account = Account.objects.filter(buyer_company=request.user.company).first()
-                account_history = AccountHistory.objects.create(transaction=transaction, account=account)
+                account_history = AccountHistory.objects.create(transaction=transaction, sord_number=None, account=account)
                 account_history.proof_of_payment = request.FILES.get('proof_of_payment')
                 account_history.balance = transaction.expected - transaction.paid
                 account_history.save()
