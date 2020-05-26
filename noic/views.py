@@ -125,7 +125,7 @@ def orders(request):
                
             new_orders = new_orders.values('date','company__name', 'company__address', 'noic_depot', 'fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat')
             orders =  orders.values('date','company__name', 'company__address', 'noic_depot', 'fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat')
-            fields = ['date','company__name', 'company__address', ,'noic_depot','fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat']
+            fields = ['date','company__name', 'company__address','noic_depot','fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat']
             
             df_orders = pd.DataFrame(new_orders, columns=fields)
             df_new_orders = pd.DataFrame(orders, columns=fields)
