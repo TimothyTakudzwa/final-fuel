@@ -1233,17 +1233,17 @@ def collections(request):
                 .order_by('-date','-time')
 
                       
-            fields = ['date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity']
+            fields = ['date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity', 'order__price', 'order__currency']
             
             if filtered_collections:
-                filtered_collections = filtered_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity')
+                filtered_collections = filtered_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity', 'order__price', 'order__currency')
                 df = pd.DataFrame(filtered_collections, columns=fields)
             else:
-                df_current = pd.DataFrame(new_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity'), columns=fields)
-                df_previous = pd.DataFrame(collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity'), columns=fields)
+                df_current = pd.DataFrame(new_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity', 'order__price', 'order__currency'), columns=fields)
+                df_previous = pd.DataFrame(collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity', , 'order__price', 'order__currency'), columns=fields)
                 df = df_current.append(df_previous)
 
-            df.columns = ['Date','Time', 'Depot', 'Company', 'Fuel Type', 'Quantity']
+            df.columns = ['Date','Time', 'Depot', 'Company', 'Fuel Type', 'Quantity', 'Price', 'Currency']
             filename = f'Noic Admin Collections'
             df.to_csv(filename, index=None, header=True)
 
