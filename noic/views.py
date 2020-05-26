@@ -235,18 +235,18 @@ def activity(request):
             if end_date and start_date:
                 filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
                       
-            fields = ['date','time', 'company__name', 'action', 'description', 'reference_id']
+            fields = ['date','time', 'user___first_name', 'user___last_name', 'user___username',  'action', 'description', 'reference_id']
             
             if filtered_activities:
-                filtered_activities = filtered_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id')
+                filtered_activities = filtered_activities.values('date','time', 'user___first_name', 'user___last_name', 'user___username', 'action', 'description', 'reference_id')
                 df = pd.DataFrame(filtered_activities, columns=fields)
             else:
-                df_current = pd.DataFrame(current_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
-                df_previous = pd.DataFrame(previous_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+                df_current = pd.DataFrame(current_activities.values('date','time', 'user___first_name', 'user___last_name', 'user___username', 'action', 'description', 'reference_id'), columns=fields)
+                df_previous = pd.DataFrame(previous_activities.values('date','time', 'user___first_name', 'user___last_name', 'user___username', 'action', 'description', 'reference_id'), columns=fields)
                 df = df_current.append(df_previous)
 
             filename = f'Noic Admin'
-            df.columns = ['Date','Time', 'Company', 'Action', 'Description', 'Reference Id']
+            df.columns = ['Date','Time', 'First Name','Last Name', 'Username', 'Action', 'Description', 'Reference Id']
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
