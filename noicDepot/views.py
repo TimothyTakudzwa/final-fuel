@@ -339,15 +339,15 @@ def accepted_orders(request):
                 orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=True).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
                 new_orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=False).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
             
-            orders = orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
-            new_orders =  new_orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
-            fields = ['date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status']
+            orders = orders.values('date','company__name','company__address', 'fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat')
+            new_orders =  new_orders.values('date','company__name','company__address', 'fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat')
+            fields = ['date','company__name','company__address', 'fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat']
             
             df_orders = pd.DataFrame(orders, columns=fields)
             df_new_orders = pd.DataFrame(new_orders, columns=fields)
 
             df = df_orders.append(df_new_orders)
-            df.columns = ['Date','Depot', 'Fuel Type', 'Quantity', 'Currency', 'Status']
+            df.columns = ['Date','Company','Address', 'Fuel Type', 'Quantity', 'Currency', 'Status', 'Paid','Duty', 'VAT']
 
             filename = f'Noic Depot '
             df.to_csv(filename, index=None, header=True)
@@ -1132,7 +1132,7 @@ def collections(request):
                 df_previous = pd.DataFrame(collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__currency', 'order__quantity'), columns=fields)
                 df = df_current.append(df_previous)
 
-            df.columns = ['Date','tTime', 'Depot', 'Company', 'Fuel Type','Currency', 'Quantity']
+            df.columns = ['Date','Time', 'Depot', 'Company', 'Fuel Type','Currency', 'Quantity']
             filename = f'Noic Depot Collections'
             df.to_csv(filename, index=None, header=True)
 
@@ -1164,7 +1164,7 @@ def collections(request):
 
             html_string = render_to_string('noicDepot/export/export_collections.html', context=context)
             html = HTML(string=html_string)
-            export_name = f"ZERA - {today}"
+            export_name = f"Noic Depot - {today}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
             download_file = f'media/transactions/{export_name}'
