@@ -628,7 +628,7 @@
 
                                                             <form method="POST" action="{% url 'buyer:proof-of-payment' transaction.id %}" enctype="multipart/form-data">
                                                                 {% csrf_token %}
-                                                                <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="proof_of_payment" class="form-control-file" id="exampleFormControlFile1" required>
+                                                                <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="proof_of_payment" class="form-control-file" multiple required>
                                                                 <br>
                                                                 <div class="modal-footer">
                                                                     <button type="submit" class="btn btn-primary ">Submit</button>
