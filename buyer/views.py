@@ -920,19 +920,20 @@ def transactions(request):
             in_complete_trans = all_transactions.filter(is_complete=False)    
             
             complete_trans = complete_trans.values('date','time', 'supplier__company__name',
-             'offer__request__fuel_type', 'offer__request__amount', 'is_complete')
+             'offer__request__fuel_type', 'offer__request__amount', 'is_complete','expected','paid', 'offer__transport_fee' )
             in_complete_trans =  in_complete_trans.values('date','time', 'supplier__company__name',
-             'offer__request__fuel_type', 'offer__request__amount', 'is_complete')
-            fields = ['date','time', 'supplier__company__name', 'offer__request__fuel_type', 'offer__request__amount', 'is_complete']
+             'offer__request__fuel_type', 'offer__request__amount', 'is_complete','expected','paid', 'offer__transport_fee')
+            fields = ['date','time', 'supplier__company__name', 'offer__request__fuel_type', 'offer__request__amount', 'is_complete'
+            ,'expected','paid', 'offer__transport_fee']
             
             df_complete_trans = pd.DataFrame(complete_trans, columns=fields)
             df_in_complete_trans = pd.DataFrame(in_complete_trans, columns=fields)
 
             df = df_complete_trans.append(df_in_complete_trans)
-            df.columns = ['Date','Time', 'Supplier', 'Fuel Type', 'Quantity', 'Complete']
+            df.columns = ['Date','Time', 'Supplier', 'Fuel Type', 'Quantity', 'Complete', 'Expected', 'Paid', 'Transport Fee']
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
-            filename = f'{request.user.company.name}.csv'
+            filename = f'{request.user.company.name}'
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
