@@ -1467,7 +1467,7 @@ def proof_of_payment(request, id):
     if request.method == 'POST':
         transaction = Transaction.objects.filter(id=id).first()
         if transaction is not None:
-            if transaction.pending_proof_of_payment == True:
+            if transaction.pending_proof_of_payment == False:
                 messages.error(request, 'Please wait for the supplier to approve the existing proof of payment.')
                 return redirect('buyer-transactions')
             else:
