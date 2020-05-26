@@ -392,11 +392,11 @@ def allocations(request):
             if end_date and start_date:
                 allocations = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
 
-            allocations = allocations.values('date','time','sord_no','company','fuel_type','currency','quantity','price')
-            fields = ['date','time','sord_no','company','fuel_type','currency','quantity','price']
+            allocations = allocations.values('date','time','noic_depot__name', 'noic_depot__address','sord_no','company','fuel_type','currency','quantity','price')
+            fields = ['date','time','noic_depot__name', 'noic_depot__address','sord_no','company','fuel_type','currency','quantity','price']
 
             df = pd.DataFrame(allocations, columns=fields)
-            df.columns = ['Date','Time','Sord No.','Company','Fuel Type','Currency','Quantity','Price']
+            df.columns = ['Date','Time','Depot', 'Address','Sord No.','Company','Fuel Type','Currency','Quantity','Price']
             filename = 'Noic Admin'
 
             # df = df[['date','time','sord_no','company','fuel_type','currency','quantity','price']]
