@@ -57,6 +57,7 @@
             <th>User</th>
             <th>Action</th>
             <th>Description</th>
+            <th>Proof Of Payment</th>
         </tr>
 
         {% for activity in current_activities %}
@@ -66,6 +67,21 @@
             <td>{{activity.user.first_name}} {{activity.user.last_name}}</td>
             <td>{{activity.action}}</td>
             <td>{{activity.description}}</td>
+            {% if activity.action == 'Uploading Proof of Payment' %}
+                <td>
+                    <div class="btn-group"> 
+                        <a href="https://fuelfinderzim.com/buyer/download_proof/{{activity.reference_id}}" 
+                        style="color: #dddddd; background-color: #007f73;padding: 4px;">
+                            <span class="btn-label"><i class="fa fa-download"></i></span>Download
+                        </a>                                                             
+                        
+                    </div>
+                </td>
+            {% else %}
+            <td>
+                -
+            </td> 
+            {% endif %}   
             
         </tr>
         
@@ -86,6 +102,7 @@
             <th>User</th>
             <th>Action</th>
             <th>Description</th>
+            <th>Proof Of Payment</th>
         </tr>
 
         {% for activity in activities %}
@@ -95,6 +112,21 @@
             <td>{{activity.user.first_name}} {{activity.user.last_name}}</td>
             <td>{{activity.action}}</td>
             <td>{{activity.description}}</td>
+            {% if activity.action == 'Uploading Proof of Payment' %}
+                <td>
+                    <div class="btn-group"> 
+                        <a href="https://fuelfinderzim.com/buyer/download_proof/{{activity.reference_id}}" 
+                        style="color: #dddddd; background-color: #007f73;padding: 4px;">
+                            <span class="btn-label"><i class="fa fa-download"></i></span>Download
+                        </a>                                                             
+                        
+                    </div>
+                </td>
+            {% else %}
+                <td>
+                    -
+                </td> 
+            {% endif %}   
             
         </tr>
         {% endfor %}
@@ -114,6 +146,7 @@
             <th>User</th>
             <th>Action</th>
             <th>Description</th>
+            <th>Proof Of Payment</th>
         </tr>
 
         {% for activity in filtered_activities %}
@@ -123,6 +156,21 @@
                 <td>{{activity.user.first_name}} {{activity.user.last_name}}</td>
                 <td>{{activity.action}}</td>
                 <td>{{activity.description}}</td>
+                {% if activity.action == 'Uploading Proof of Payment' %}
+                <td>
+                    <div class="btn-group"> 
+                        <a href="https://fuelfinderzim.com/buyer/download_proof/{{activity.reference_id}}" type="button" 
+                        style="color: #dddddd; background-color: #007f73;padding: 4px;">
+                            <span class="btn-label"><i class="fa fa-download"></i></span>Download
+                        </a>                                                             
+                        
+                    </div>
+                </td>
+                {% else %}
+                <td>
+                    -
+                </td> 
+                {% endif %}   
                 
             </tr>
             
