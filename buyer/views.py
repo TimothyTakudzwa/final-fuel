@@ -1472,10 +1472,12 @@ def proof_of_payment(request, id):
                 return redirect('buyer-transactions')
             else:
                 account = Account.objects.filter(buyer_company=request.user.company).first()
-                account_history = AccountHistory.objects.create(transaction=transaction, account=account)
-                account_history.proof_of_payment = request.FILES.get('proof_of_payment')
-                account_history.balance = transaction.expected - transaction.paid
-                account_history.save()
+                files = request.FILES.getlist('proof_of_payment')
+                for pop in files:
+                    account_history = AccountHistory.objects.create(transaction=transaction, account=account)
+                    account_history.proof_of_payment = pop
+                    account_history.balance = transaction.expected - transaction.paid
+                    account_history.save()
                 transaction.proof_of_payment = request.FILES.get('proof_of_payment')
                 transaction.proof_of_payment_approved = False
                 transaction.pending_proof_of_payment = True
