@@ -365,6 +365,7 @@ def allocations(request):
     num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
     allocations = SordNationalAuditTrail.objects.all()
     date_today = datetime.date.today().strftime("%d/%m/%y")
+    date = today
 
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date'):
@@ -392,11 +393,11 @@ def allocations(request):
             if end_date and start_date:
                 allocations = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
 
-            allocations = allocations.values('date','time','sord_no','company','fuel_type','currency','quantity','price')
-            fields = ['date','time','sord_no','company','fuel_type','currency','quantity','price']
+            allocations = allocations.values('date','time','assigned_depot__name', 'assigned_depot__address','sord_no','company','fuel_type','currency','quantity','price')
+            fields = ['date','time','assigned_depot__name', 'assigned_depot__address','sord_no','company','fuel_type','currency','quantity','price']
 
             df = pd.DataFrame(allocations, columns=fields)
-            df.columns = ['Date','Time','Sord No.','Company','Fuel Type','Currency','Quantity','Price']
+            df.columns = ['Date','Time','Depot', 'Address','Sord No.','Company','Fuel Type','Currency','Quantity','Price']
             filename = 'Noic Admin'
 
             # df = df[['date','time','sord_no','company','fuel_type','currency','quantity','price']]
@@ -417,9 +418,17 @@ def allocations(request):
                 end_date = end_date.date()
             if end_date and start_date:
                 allocations = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
-            html_string = render_to_string('noic/export/export_audit.html', {'allocations': allocations, 'date': date})
+
+            context = {
+                'allocations': allocations,
+                'date': date,
+                'start_date': start_date,
+                'end_date': end_date
+            }
+
+            html_string = render_to_string('noic/export/export_audit.html', context=context)
             html = HTML(string=html_string)
-            export_name = "Noic Allocations Summary"
+            export_name = "Noic Allocations "
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
             download_file = f'media/transactions/{export_name}'
