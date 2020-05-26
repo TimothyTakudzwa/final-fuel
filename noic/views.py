@@ -276,7 +276,7 @@ def activity(request):
 
             html_string = render_to_string('noic/export/export_activities.html', context=context)
             html = HTML(string=html_string)
-            export_name = f"Noic Admin -"
+            export_name = f"Noic Admin"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
             download_file = f'media/transactions/{export_name}'
