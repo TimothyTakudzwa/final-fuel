@@ -62,6 +62,7 @@
             <th>Status</th>
             
             <th>Rating</th>
+            <th>Proof Of Payment</th>
         </tr>
             
         
@@ -119,6 +120,17 @@
                         {% endif%}
                     {% endif %}
                 </td>
+
+                {% if transaction.proof_of_payment %}
+                <td> <a href="https://fuelfinderzim.com/buyer/download_pop/{{transaction.id}}" type="button" class="btn btn-labeled btn-success btn-sm">
+                    <span class="btn-label"><i class="fa fa-download"></i></span>Download POP
+                </a></td>
+                {% else %}
+                <td>
+                    Document Unavailable
+                </td>
+                {% endif %}
+
 
             </tr>
         {% endfor %}
