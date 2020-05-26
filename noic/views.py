@@ -123,9 +123,9 @@ def orders(request):
                 orders = Order.objects.filter(allocated_fuel=False) \
                 .filter(date__range=[start_date, end_date]).order_by('-date', '-time')
                
-            new_orders = new_orders.values('date','company__name', 'company__address', 'noic_depot', 'fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat')
-            orders =  orders.values('date','company__name', 'company__address', 'noic_depot', 'fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat')
-            fields = ['date','company__name', 'company__address','noic_depot','fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat']
+            new_orders = new_orders.values('date','company__name', 'company__address', 'noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat')
+            orders =  orders.values('date','company__name', 'company__address', 'noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat')
+            fields = ['date','company__name', 'company__address','noic_depot__name','fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat']
             
             df_orders = pd.DataFrame(new_orders, columns=fields)
             df_new_orders = pd.DataFrame(orders, columns=fields)
@@ -1233,17 +1233,17 @@ def collections(request):
                 .order_by('-date','-time')
 
                       
-            fields = ['date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity']
+            fields = ['date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity', 'order__price', 'order__currency']
             
             if filtered_collections:
-                filtered_collections = filtered_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity')
+                filtered_collections = filtered_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity', 'order__price', 'order__currency')
                 df = pd.DataFrame(filtered_collections, columns=fields)
             else:
-                df_current = pd.DataFrame(new_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity'), columns=fields)
-                df_previous = pd.DataFrame(collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity'), columns=fields)
+                df_current = pd.DataFrame(new_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity', 'order__price', 'order__currency'), columns=fields)
+                df_previous = pd.DataFrame(collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity','order__price', 'order__currency'), columns=fields)
                 df = df_current.append(df_previous)
 
-            df.columns = ['Date','Time', 'Depot', 'Company', 'Fuel Type', 'Quantity']
+            df.columns = ['Date','Time', 'Depot', 'Company', 'Fuel Type', 'Quantity', 'Price', 'Currency']
             filename = f'Noic Admin Collections'
             df.to_csv(filename, index=None, header=True)
 
