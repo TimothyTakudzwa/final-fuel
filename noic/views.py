@@ -123,15 +123,15 @@ def orders(request):
                 orders = Order.objects.filter(allocated_fuel=False) \
                 .filter(date__range=[start_date, end_date]).order_by('-date', '-time')
                
-            new_orders = new_orders.values('date','company__name', 'company__address', 'fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat')
-            orders =  orders.values('date','company__name', 'company__address', 'fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat')
-            fields = ['date','company__name', 'company__address', 'fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat']
+            new_orders = new_orders.values('date','company__name', 'company__address', 'noic_depot', 'fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat')
+            orders =  orders.values('date','company__name', 'company__address', 'noic_depot', 'fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat')
+            fields = ['date','company__name', 'company__address', ,'noic_depot','fuel_type', 'quantity', 'currency', 'status', 'amount_paid', 'duty', 'vat']
             
             df_orders = pd.DataFrame(new_orders, columns=fields)
             df_new_orders = pd.DataFrame(orders, columns=fields)
 
             df = df_orders.append(df_new_orders)
-            df.columns = ['Date','Company', 'Address', 'Fuel', 'Quantity', 'Currency', 'Status', 'Paid', 'Duty', 'VAT']
+            df.columns = ['Date','Company', 'Address', 'Depot', 'Fuel', 'Quantity', 'Currency', 'Status', 'Paid', 'Duty', 'VAT']
 
             # df = df[['date','noic_depot', 'fuel_type', 'quantity', 'currency', 'status']]
             filename = 'NOIC ADMIN'
