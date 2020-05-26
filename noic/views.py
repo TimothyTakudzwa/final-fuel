@@ -1240,7 +1240,7 @@ def collections(request):
                 df = pd.DataFrame(filtered_collections, columns=fields)
             else:
                 df_current = pd.DataFrame(new_collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity', 'order__price', 'order__currency'), columns=fields)
-                df_previous = pd.DataFrame(collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity', , 'order__price', 'order__currency'), columns=fields)
+                df_previous = pd.DataFrame(collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__quantity','order__price', 'order__currency'), columns=fields)
                 df = df_current.append(df_previous)
 
             df.columns = ['Date','Time', 'Depot', 'Company', 'Fuel Type', 'Quantity', 'Price', 'Currency']
