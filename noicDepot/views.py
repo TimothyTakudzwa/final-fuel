@@ -339,15 +339,15 @@ def accepted_orders(request):
                 orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=True).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
                 new_orders = Order.objects.filter(noic_depot=depot).filter(allocated_fuel=False).filter(date__range=[start_date, end_date]).order_by('-date', '-time')
             
-            orders = orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
-            new_orders =  new_orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
-            fields = ['date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status']
+            orders = orders.values('date','company__name','company__address', 'fuel_type', 'quantity', 'currency', 'status')
+            new_orders =  new_orders.values('date','company__name','company__address', 'fuel_type', 'quantity', 'currency', 'status')
+            fields = ['date','company__name','company__address', 'fuel_type', 'quantity', 'currency', 'status']
             
             df_orders = pd.DataFrame(orders, columns=fields)
             df_new_orders = pd.DataFrame(new_orders, columns=fields)
 
             df = df_orders.append(df_new_orders)
-            df.columns = ['Date','Depot', 'Fuel Type', 'Quantity', 'Currency', 'Status']
+            df.columns = ['Date','Company','Company Address', 'Fuel Type', 'Quantity', 'Currency', 'Status']
 
             filename = f'Noic Depot '
             df.to_csv(filename, index=None, header=True)

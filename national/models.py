@@ -111,6 +111,55 @@ class SordNationalAuditTrail(models.Model):
 
 
 class DepotFuelUpdate(models.Model):
+    
+    """
+    A django model class representing Fuel Allocations to Depots
+    from NOIC and the latest fuel prices stipulated by 
+    the National Oil Infrastructure Company (NOIC)
+
+    ...
+
+    Fields
+    ----------
+    date : DateField
+        the date the object was created
+    depot : ForeignKeyField
+        the NOIC Depot receiving the
+        fuel allocation.   
+    rtgs_diesel_price : DecimalField
+        the price of diesel in RTGS.
+    rtgs_petrol_price : DecimalField
+        the price of petrol in RTGS. 
+    usd_diesel_price : DecimalField
+        the price of diesel in USD.
+    usd_petrol_price : DecimalField
+        the price of petrol in USD.
+    usd_petrol : FloatField
+        the quantity of petrol valued in
+        USD
+    usd_diesel : FloatField
+        the quantity of diesel valued in
+        USD
+    rtgs_petrol : FloatField
+        the quantity of fuel valued in
+        RTGS                
+    rtgs_diesel : FloatField
+        the quantity of diesel valued in
+        RTGS
+        
+    Methods
+    -------
+    class Meta):
+        object ordering according to latest. Date descending
+
+
+    Current Usage
+    -------
+    To represent the latest prices for the views located at urls
+    i) users/allocate
+    ii) users/orders   
+    """
+
     date = models.DateField(auto_now_add=True, blank=True, null=True)
     depot = models.ForeignKey(NoicDepot, on_delete=models.CASCADE, blank=True, null=True)
     usd_petrol = models.FloatField(default=0.00)
