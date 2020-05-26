@@ -418,9 +418,17 @@ def allocations(request):
                 end_date = end_date.date()
             if end_date and start_date:
                 allocations = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
-            html_string = render_to_string('noic/export/export_audit.html', {'allocations': allocations, 'date': date})
+
+            context = {
+                'allocations': allocations,
+                'date': date,
+                'start_date': start_date,
+                'end_date': end_date
+            }
+
+            html_string = render_to_string('noic/export/export_audit.html', context=context)
             html = HTML(string=html_string)
-            export_name = "Noic Allocations Summary"
+            export_name = "Noic Allocations "
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
             download_file = f'media/transactions/{export_name}'
