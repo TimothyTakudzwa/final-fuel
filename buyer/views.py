@@ -775,7 +775,7 @@ def accept_offer(request, id):
         description = f"You have accepted offer of {offer.quantity}L {offer.request.fuel_type}"
         Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description,
                                 reference_id=offer.id)
-        messages.success(request, "Accepted offer successfully.")
+        messages.warning(request, "Your request has been saved successfully.")
         return redirect("buyer-transactions")
     else:
         messages.info(request,
@@ -1467,16 +1467,16 @@ def proof_of_payment(request, id):
     if request.method == 'POST':
         transaction = Transaction.objects.filter(id=id).first()
         if transaction is not None:
-            if transaction.pending_proof_of_payment == False:
+            if transaction.pending_proof_of_payment == True:
                 messages.error(request, 'Please wait for the supplier to approve the existing proof of payment.')
                 return redirect('buyer-transactions')
             else:
                 account = Account.objects.filter(buyer_company=request.user.company).first()
-                account_history = AccountHistory.objects.create(transaction=transaction, sord_number=None, account=account)
-                account_history.proof_of_payment = request.FILES.getlist('proof_of_payment')
+                account_history = AccountHistory.objects.create(transaction=transaction, account=account)
+                account_history.proof_of_payment = request.FILES.get('proof_of_payment')
                 account_history.balance = transaction.expected - transaction.paid
                 account_history.save()
-                transaction.proof_of_payment = request.FILES.getlist('proof_of_payment')
+                transaction.proof_of_payment = request.FILES.get('proof_of_payment')
                 transaction.proof_of_payment_approved = False
                 transaction.pending_proof_of_payment = True
                 transaction.save()
