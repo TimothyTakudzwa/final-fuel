@@ -1132,7 +1132,7 @@ def collections(request):
                 df_previous = pd.DataFrame(collections.values('date','time', 'order__noic_depot__name', 'order__company__name', 'order__fuel_type', 'order__currency', 'order__quantity'), columns=fields)
                 df = df_current.append(df_previous)
 
-            df.columns = ['Date','tTime', 'Depot', 'Company', 'Fuel Type','Currency', 'Quantity']
+            df.columns = ['Date','Time', 'Depot', 'Company', 'Fuel Type','Currency', 'Quantity']
             filename = f'Noic Depot Collections'
             df.to_csv(filename, index=None, header=True)
 
@@ -1164,7 +1164,7 @@ def collections(request):
 
             html_string = render_to_string('noicDepot/export/export_collections.html', context=context)
             html = HTML(string=html_string)
-            export_name = f"ZERA - {today}"
+            export_name = f"Noic Depot - {today}"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
             download_file = f'media/transactions/{export_name}'
