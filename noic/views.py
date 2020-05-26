@@ -365,6 +365,7 @@ def allocations(request):
     num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
     allocations = SordNationalAuditTrail.objects.all()
     date_today = datetime.date.today().strftime("%d/%m/%y")
+    date = today
 
     if request.method == "POST":
         if request.POST.get('start_date') and request.POST.get('end_date'):
@@ -392,8 +393,8 @@ def allocations(request):
             if end_date and start_date:
                 allocations = SordNationalAuditTrail.objects.filter(date__range=[start_date, end_date])
 
-            allocations = allocations.values('date','time','noic_depot__name', 'noic_depot__address','sord_no','company','fuel_type','currency','quantity','price')
-            fields = ['date','time','noic_depot__name', 'noic_depot__address','sord_no','company','fuel_type','currency','quantity','price']
+            allocations = allocations.values('date','time','assigned_depot__name', 'assigned_depot__address','sord_no','company','fuel_type','currency','quantity','price')
+            fields = ['date','time','assigned_depot__name', 'assigned_depot__address','sord_no','company','fuel_type','currency','quantity','price']
 
             df = pd.DataFrame(allocations, columns=fields)
             df.columns = ['Date','Time','Depot', 'Address','Sord No.','Company','Fuel Type','Currency','Quantity','Price']
