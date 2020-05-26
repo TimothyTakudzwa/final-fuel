@@ -1285,7 +1285,7 @@ def delivery_schedules(request):
 
             with open(f'{download_file}.pdf', 'rb') as pdf:
                 response = HttpResponse(pdf.read(), content_type="application/vnd.pdf")
-                response['Content-Disposition'] = f'attachment;filename={export_name} -Orders - {today}.pdf'
+                response['Content-Disposition'] = f'attachment;filename={export_name} - Delivery Schedules - {today}.pdf'
                 return response        
 
 

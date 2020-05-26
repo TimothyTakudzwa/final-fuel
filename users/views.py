@@ -2819,15 +2819,15 @@ def orders(request):
                 accepted_orders = Order.objects.filter(company=request.user.company).filter(~Q(status='Pending')).filter(date__range=[start_date, end_date])
                 pending_orders = Order.objects.filter(company=request.user.company).filter(status='Pending').filter(date__range=[start_date, end_date])
             
-            accepted_orders = accepted_orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
-            pending_orders =  pending_orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status')
-            fields = ['date','noic_depot__name', 'fuel_type', 'quantity', 'currency', 'status']
+            accepted_orders = accepted_orders.values('date','noic_depot__name', 'fuel_type', 'quantity', 'price', 'currency', 'status', 'amount_paid', 'duty', 'vat')
+            pending_orders =  pending_orders.values('date','noic_depot__name', 'fuel_type', 'quantity','price', 'currency', 'status', 'amount_paid', 'duty', 'vat')
+            fields = ['date','noic_depot__name', 'fuel_type', 'quantity','price', 'currency', 'status', 'amount_paid', 'duty', 'vat']
             
             df_accepted_orders = pd.DataFrame(accepted_orders, columns=fields)
             df_pending_orders = pd.DataFrame(pending_orders, columns=fields)
             
             df = df_accepted_orders.append(df_pending_orders)
-            df.columns = ['Date','Depot', 'Fuel Type', 'Quantity', 'Currency', 'Status']
+            df.columns = ['Date','Depot', 'Fuel Type', 'Quantity','Price','Currency', 'Status', 'Amount Paid', 'Duty', 'VAT']
 
             
             filename = f'{request.user.company.name}'
