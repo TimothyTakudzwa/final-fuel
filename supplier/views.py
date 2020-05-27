@@ -1185,6 +1185,7 @@ def complete_transaction(request, id):
     fuel_type = transaction.offer.request.fuel_type.lower()
     if fuel_type == 'petrol':
         if request.method == 'POST':
+            payment = AccountHistory.objects.filter(id=int(request.POST['payment']))
             # transaction_quantity = transaction.offer.quantity
             if transaction.offer.delivery_method == "DELIVERY":
                 fuel_charge = float(request.POST['received']) - float(request.POST['transport_charge'])
@@ -1229,6 +1230,7 @@ def complete_transaction(request, id):
                 # Activity.objects.create(company=request.user.company, user=request.user, action=action,
                 #                         description=description, reference_id=transaction.id)
 
+                payment.pop_approved = True
                 messages.success(request,
                                  "Proof of payment approved!, please create a delivery schedule for the buyer or upload a release note.")
                 return redirect('transaction')
@@ -1281,6 +1283,8 @@ def complete_transaction(request, id):
                 # Activity.objects.create(company=request.user.company, user=request.user, action=action,
                 #                         description=description, reference_id=transaction.id)
 
+                payment.pop_approved = True
+
                 messages.success(request,
                                  "Proof of payment approved!, please create a delivery schedule for the buyer.")
                 return redirect('transaction')
@@ -1322,7 +1326,7 @@ def view_invoice(request, id):
 
 
 def download_proof(request, id):
-    document = Transaction.objects.filter(id=id).first()
+    document = AccountHistory.objects.filter(id=id).first()
     if document:
         filename = document.proof_of_payment.name.split('/')[-1]
         response = HttpResponse(document.proof_of_payment, content_type='text/plain')
@@ -1520,7 +1524,7 @@ def create_delivery_schedule(request):
         schedule.delivery_quantity = int(float(transaction.fuel_money_reserve) / float(transaction.offer.price))
         schedule.amount_for_fuel = transaction.fuel_money_reserve
         schedule.save()
-        payment_history = AccountHistory.objects.filter(transaction=transaction, value=0.00).first()
+        payment_history = AccountHistory.objects.filter(id=int(request.POST['payment'])).first()
         payment_history.value += transaction.paid_reserve
         payment_history.balance -= transaction.paid_reserve
         payment_history.delivery_schedule = schedule
