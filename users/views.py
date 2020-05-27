@@ -2835,7 +2835,7 @@ def orders(request):
 
             with open(filename, 'rb') as csv_name:
                 response = HttpResponse(csv_name.read())
-                response['Content-Disposition'] = f'attachment;filename={filename} - {today}.csv'
+                response['Content-Disposition'] = f'attachment;filename={filename} - Orders -{today}.csv'
                 return response     
 
         else:
