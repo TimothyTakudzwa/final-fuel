@@ -62,6 +62,7 @@
             <th>Status</th>
             
             <th>Rating</th>
+            <th>Proof Of Payment</th>
         </tr>
             
         
@@ -119,6 +120,23 @@
                         {% endif%}
                     {% endif %}
                 </td>
+                {% if transaction.expected == transaction.paid %}
+                    {% if transaction.is_complete == True %}    
+                    <td> <a href="https://fuelfinderzim.com/buyer/download_pop/{{transaction.id}}" type="button" 
+                        style="padding: 4px;background-color: #007f73;color: #dddddd;">
+                        <span class="btn-label"><i class="fa fa-download"></i></span>Download POP
+                    </a></td>
+                    {% elif transaction.delivery_object.confirmation_date %}
+                        <td>Received</td>
+                    {% else %}
+                        <td>Pending</td>
+                    {% endif %}
+                    {% else %}
+                    <td>
+                        Document Pending
+                    </td>
+                {% endif %}    
+
 
             </tr>
         {% endfor %}

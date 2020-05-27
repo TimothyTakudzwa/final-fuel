@@ -235,18 +235,18 @@ def activity(request):
             if end_date and start_date:
                 filtered_activities = Activity.objects.filter(user=request.user).filter(date__range=[start_date, end_date])
                       
-            fields = ['date','time', 'company__name', 'action', 'description', 'reference_id']
+            fields = ['date','time', 'user__first_name', 'user__last_name', 'user__username',  'action', 'description', 'reference_id']
             
             if filtered_activities:
-                filtered_activities = filtered_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id')
+                filtered_activities = filtered_activities.values('date','time', 'user__first_name', 'user__last_name', 'user__username', 'action', 'description', 'reference_id')
                 df = pd.DataFrame(filtered_activities, columns=fields)
             else:
-                df_current = pd.DataFrame(current_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
-                df_previous = pd.DataFrame(previous_activities.values('date','time', 'company__name', 'action', 'description', 'reference_id'), columns=fields)
+                df_current = pd.DataFrame(current_activities.values('date','time', 'user__first_name', 'user__last_name', 'user__username', 'action', 'description', 'reference_id'), columns=fields)
+                df_previous = pd.DataFrame(previous_activities.values('date','time', 'user__first_name', 'user__last_name', 'user__username', 'action', 'description', 'reference_id'), columns=fields)
                 df = df_current.append(df_previous)
 
             filename = f'Noic Admin'
-            df.columns = ['Date','Time', 'Company', 'Action', 'Description', 'Reference Id']
+            df.columns = ['Date','Time', 'First Name','Last Name', 'Username', 'Action', 'Description', 'Reference Id']
             df.to_csv(filename, index=None, header=True)
 
             with open(filename, 'rb') as csv_name:
@@ -276,7 +276,7 @@ def activity(request):
 
             html_string = render_to_string('noic/export/export_activities.html', context=context)
             html = HTML(string=html_string)
-            export_name = f"Noic Admin -"
+            export_name = f"Noic Admin"
             html.write_pdf(target=f'media/transactions/{export_name}.pdf')
 
             download_file = f'media/transactions/{export_name}'

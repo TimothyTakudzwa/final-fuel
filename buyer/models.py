@@ -32,6 +32,15 @@ class User(AbstractUser):
     def __str__(self):
         return f'{self.username}'
 
+    def get_subsidiary(self):
+        from supplier.models import Subsidiaries
+        from national.models import NoicDepot
+        # check if user has a subsidiary first if not, return depot
+        sub = Subsidiaries.objects.filter(id=self.subsidiary_id).first()
+        if not sub:
+            sub = NoicDepot.objects.filter(id=self.subsidiary_id).first()
+        return sub     
+
     def save(self, *args, **kwargs):
         super(User, self).save(*args, **kwargs)
 
