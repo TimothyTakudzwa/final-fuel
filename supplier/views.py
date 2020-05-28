@@ -1510,15 +1510,15 @@ def download_proof(request, id):
             filename = document.proof_of_payment.name.split('/')[-1]
             response = HttpResponse(document.proof_of_payment, content_type='text/plain')
             response['Content-Disposition'] = 'attachment; filename=%s' % filename
+            
+            return response
         except:
             # The meaning of this in comparison with the one below is that
-            
             messages.warning(request, 'Document not found internally.')
-
+            return redirect('transaction')
     else:
         messages.warning(request, 'Document not found.')
         return redirect('transaction')
-    return response
 
 
 @login_required
