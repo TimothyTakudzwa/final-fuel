@@ -1476,7 +1476,7 @@ def proof_of_payment(request, id):
                 account_history.balance = transaction.expected - transaction.paid
                 account_history.save()
             transaction.proof_of_payment = request.FILES.get('proof_of_payment')
-            transaction.proof_of_payment_approved = False
+            transaction.proof_of_payment_uploaded = True
             transaction.pending_proof_of_payment = True
             transaction.save()
 

@@ -1189,11 +1189,6 @@ def transaction(request):
     num_of_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).count()
     
     for tran in trans:
-        check_pop = AccountHistory.objects.filter(transaction=tran).exists()
-        if check_pop:
-            tran.proof_of_payment_uploaded = True
-        else:
-            tran.proof_of_payment_uploaded = False
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
         if delivery_sched:
             tran.delivery_sched = delivery_sched
@@ -1246,11 +1241,6 @@ def transaction(request):
             trans = Transaction.objects.filter(supplier=request.user).filter(date__range=[start_date, end_date])
     
             for tran in trans:
-                check_pop = AccountHistory.objects.filter(transaction=tran).exists()
-                if check_pop:
-                    tran.proof_of_payment_uploaded = True
-                else:
-                    tran.proof_of_payment_uploaded = False
                 delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
                 if delivery_sched:
                     tran.delivery_sched = delivery_sched

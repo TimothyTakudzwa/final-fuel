@@ -180,7 +180,7 @@ class Transaction(models.Model):
     proof_of_payment = models.FileField(upload_to='proof_of_payment', null=True, blank=True)
     expected = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     paid = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
-    proof_of_payment_approved = models.BooleanField(default=False)
+    proof_of_payment_uploaded = models.BooleanField(default=False)
     pending_proof_of_payment  = models.BooleanField(default=False) 
     paid_reserve = models.FloatField(default=0.00)
     fuel_money_reserve = models.FloatField(default=0.00)
