@@ -47,6 +47,7 @@ class AccountHistory(models.Model):
     release_date = models.DateField(auto_now_add=False, null=True, blank=True)
     delivery_date = models.DateField(auto_now_add=False, null=True, blank=True)
     release_activated = models.BooleanField(default=False)
+    pop_approved = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-date', '-time']

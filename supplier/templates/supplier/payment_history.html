@@ -207,6 +207,16 @@
                             <td>Approved</td>
                             <td>{{payment.value|floatformat:2|intcomma}}</td>
                             <td>{{payment.balance|floatformat:2|intcomma}}</td>
+                            {% if payment.pop_approved == False %}
+                            <td>
+                                <div class="btn-group">
+                                    <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-proof' payment.id %}" > 
+                                        <span class="btn-label"><i class="fa fa-download" aria-hidden="true"></i></span> P.O.P</a>
+                                    <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" data-target="#approve{{payment.id}}" >
+                                        <span class="btn-label"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i></span>  Approve</a>
+                                </div>
+                            </td>
+                            {% else %}
                             {% if payment.delivery_schedule != None %}
                             <td>
                                 <div class="btn-group">
@@ -215,7 +225,16 @@
                                 </div>
                             </td>
                             {% else %}
-                            <td>Pending</td>
+                            {% if transaction.offer.delivery_method == 'DELIVERY' %}
+                                    <td>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{payment.id}}">Create Schedule</button>
+                                        </div>
+                                    </td>
+                                {% else %}
+                                        <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#release_note{{payment.id}}">Release Note</button></td>
+                                {% endif %}
+                            {% endif %}
                             {% endif %}
                         </tr>
                               <!--view modal-->
@@ -337,6 +356,148 @@
                                 </div>
                             </div>
                             <!--End View Modal-->
+
+                            <!--Create Schedule Modal-->
+                            <div class="modal fade modal-sucess in" id="create_schedule{{payment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color: #009688; color: white">
+                                            <span class="modal-title" id="exampleModalLabel">Create Schedule</span>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="{% url 'supplier:create_delivery_schedule' %}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <label>Delivery Date</label>
+                                                        <input id="date_field" type="date" name="delivery_date" class="form-control"  required/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>Delivery Time</label>
+                                                        <input type="time" name="delivery_time" class="form-control"  required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+
+                                                    <div class="form-group col-md-6">
+                                                        <label>Driver Name</label>
+                                                        <input type="text" name="driver_name" class="form-control"  required/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>Driver's Phone Number</label>
+                                                        <input type="telephone" name="phone_number" class="form-control" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+
+                                                    <div class="form-group col-md-6">
+                                                        <label>Id Number</label>
+                                                        <input type="text" name="id_num" class="form-control"  required/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>Vehicle Reg</label>
+                                                        <input type="text" name="vehicle_reg" class="form-control"  required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <label>Transporter Company</label>
+                                                        <input type="text" class="form-control" name="transport_company" class="transport_company" required/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>Payment Received <i style="color: rgb(38, 214, 226);">as per proof of payment</i></label>
+                                                        <input type="text" class="form-control" name="paid" class="paid" value="${{payment.transaction.paid_reserve}}" disabled/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <label>Transport Fee</label>
+                                                        <input type="text" class="form-control" name="paid" class="paid" value="${{payment.transaction.paid_reserve| sub:payment.transaction.fuel_money_reserve}}" disabled/>
+                                                    </div>
+                                                   
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <input type="hidden" name="transaction" class="form-control" value={{payment.transaction.id}}  required/>
+                                                    <input type="hidden" name="payment" class="form-control" value={{payment.id}}  required/>
+
+
+                                                </div>
+
+                                                <div class="modal-footer">  
+                                                    <button type="submit" class="btn btn-primary ">Submit</button>
+                                                    <button class="btn btn-default" data-dismiss="modal" >Close</button>
+                                                </div> 
+
+
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!--End schedule Modal-->
+
+                            <!--approve modal-->
+                            <div class="modal fade modal-sucess in" id="approve{{payment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color: #009688; color: white">
+                                            <span class="modal-title" id="exampleModalLabel">Approve Payment</span>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="{% url 'complete-transaction' payment.transaction.id %}" method="POST">
+                                                {% csrf_token %}
+
+                                                <div class="row">
+
+                                                    <div class="form-group col-md-6">
+                                                        <label>Expected Payment</label>
+                                                        <input type="text" name="expected" class="form-control" value="${{payment.transaction.expected}}" disabled/>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>Amount Received</label>
+                                                        <input type="text" name="received" class="form-control"  value=" " required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                   {% if transaction.offer.delivery_method == 'DELIVERY' %}
+                                                    <div class="form-group col-md-6">
+                                                        <label>Transport Charge</label>
+                                                        <input type="text" name="transport_charge" class="form-control"  required/>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+
+                                                <div class="row">
+                                                    <input type="hidden" name="payment" class="form-control" value={{payment.id}}  required/>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <div >
+
+                                                        <button type="submit" class="btn btn-primary" style="margin-left: 15px;">Approve</button>
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">
+                                                            Close
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!--End approve modal-->
                             <script>
                                 $('body').click(function (event) {
                                     if(!$(event.target).closest('#view{{payment.id}}').length && !$(event.target).is('#view{{payment.id}}')) {
