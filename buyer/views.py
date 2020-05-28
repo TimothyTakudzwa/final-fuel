@@ -1468,28 +1468,24 @@ def proof_of_payment(request, id):
     if request.method == 'POST':
         transaction = Transaction.objects.filter(id=id).first()
         if transaction is not None:
-            if transaction.pending_proof_of_payment == True:
-                messages.error(request, 'Please wait for the supplier to approve the existing proof of payment.')
-                return redirect('buyer-transactions')
-            else:
-                account = Account.objects.filter(buyer_company=request.user.company).first()
-                files = request.FILES.getlist('proof_of_payment')
-                for pop in files:
-                    account_history = AccountHistory.objects.create(transaction=transaction, account=account)
-                    account_history.proof_of_payment = pop
-                    account_history.balance = transaction.expected - transaction.paid
-                    account_history.save()
-                transaction.proof_of_payment = request.FILES.get('proof_of_payment')
-                transaction.proof_of_payment_approved = False
-                transaction.pending_proof_of_payment = True
-                transaction.save()
+            account = Account.objects.filter(buyer_company=request.user.company).first()
+            files = request.FILES.getlist('proof_of_payment')
+            for pop in files:
+                account_history = AccountHistory.objects.create(transaction=transaction, account=account)
+                account_history.proof_of_payment = pop
+                account_history.balance = transaction.expected - transaction.paid
+                account_history.save()
+            transaction.proof_of_payment = request.FILES.get('proof_of_payment')
+            transaction.proof_of_payment_approved = False
+            transaction.pending_proof_of_payment = True
+            transaction.save()
 
-                action = "Uploading Proof of Payment"
-                description = f"You have uploaded proof of payment for transaction of {transaction.offer.quantity}L {transaction.offer.request.fuel_type}"
-                Activity.objects.create(company=request.user.company, user=request.user, action=action,
-                                        description=description, reference_id=account_history.id)
-                messages.success(request, 'Proof of payment successfully uploaded.')
-                return redirect('buyer-transactions')
+            action = "Uploading Proof of Payment"
+            description = f"You have uploaded proof of payment for transaction of {transaction.offer.quantity}L {transaction.offer.request.fuel_type}"
+            Activity.objects.create(company=request.user.company, user=request.user, action=action,
+                                    description=description, reference_id=account_history.id)
+            messages.success(request, 'Proof of payment successfully uploaded.')
+            return redirect('buyer-transactions')
         else:
             pass
 
