@@ -1188,6 +1188,11 @@ def transaction(request):
     num_of_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).count()
     
     for tran in trans:
+        check_pop = AccountHistory.objects.filter(transaction=tran).exists()
+        if check_pop:
+            tran.proof_of_payment_uploaded = True
+        else:
+            tran.proof_of_payment_uploaded = False
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
         if delivery_sched:
             tran.delivery_sched = delivery_sched
@@ -1701,10 +1706,11 @@ def create_delivery_schedule(request):
         schedule.delivery_quantity = int(float(transaction.fuel_money_reserve) / float(transaction.offer.price))
         schedule.amount_for_fuel = transaction.fuel_money_reserve
         schedule.save()
-        payment_history = AccountHistory.objects.filter(id=int(request.POST['payment'])).first()
-        payment_history.value += transaction.paid_reserve
-        payment_history.balance -= transaction.paid_reserve
-        payment_history.delivery_schedule = schedule
+        payment_history = AccountHistory.objects.filter(transaction=transaction).all()
+        for payment in payment_history:
+            payment.delivery_schedule = schedule
+        # payment_history.value += transaction.paid_reserve
+        # payment_history.balance -= transaction.paid_reserve
         payment_history.save()
 
         action = "Creating Delivery Schedule"
