@@ -1190,10 +1190,10 @@ def transaction(request):
     
     for tran in trans:
         check_pop = AccountHistory.objects.filter(transaction=tran).exists()
-        if check_pop:
-            tran.proof_of_payment_uploaded = True
-        else:
-            tran.proof_of_payment_uploaded = False
+        # if check_pop:
+        tran.proof_of_payment_uploaded = True
+        # else:
+        #     tran.proof_of_payment_uploaded = False
         delivery_sched = DeliverySchedule.objects.filter(transaction=tran).first()
         if delivery_sched:
             tran.delivery_sched = delivery_sched
