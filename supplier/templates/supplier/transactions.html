@@ -216,7 +216,7 @@
                                                                 {% endif %}
                                                         {% endif %}
                                                     {% else %}
-                                                            {% if transaction.proof_of_payment_uploaded == True %}
+                                                            {% if transaction.proof_of_payment_uploaded == False %}
                                                                 <td>
                                                                     <a class="btn btn-labeled btn-success btn-sm"  href="{%url 'supplier:payment_history' transaction.id %}">
                                                                         <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> P.O.P </a>
@@ -756,14 +756,14 @@
                                                                 {% endif %}
                                                         {% endif %}
                                                     {% else %}
-                                                            {% if transaction.proof_of_payment_uploaded == True %}
+                                                            {% if transaction.proof_of_payment_uploaded == False %}
                                                                 <td>
                                                                     <a class="btn btn-labeled btn-success btn-sm" data-toggle="modal" href="{%url 'supplier:payment_history' transaction.id %}">
                                                                         <span class="btn-label"><i class="fa fa-eye"></i></span> P.O.P</a>
                                                                 </td>
-                                                        {% else %}
-                                                            <td>Proof of Payment Pending</td>
-                                                        {% endif %}
+                                                            {% else %}
+                                                                <td>Proof of Payment Pending</td>
+                                                            {% endif %}
                                                     {% endif %}
                                                     
                                                     <td>
