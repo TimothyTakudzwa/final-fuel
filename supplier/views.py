@@ -376,6 +376,7 @@ def fuel_request(request):
     requests = []
     acceptable_requests = []
     complete_requests = []
+    
     if sub.praz_reg_num != None:
         all_requests = FuelRequest.objects.filter(is_deleted=False, is_complete=False).all()
         for fuel_request in all_requests:
@@ -1501,9 +1502,15 @@ def view_invoice(request, id):
 def download_proof(request, id):
     document = Transaction.objects.filter(id=id).first()
     if document:
-        filename = document.proof_of_payment.name.split('/')[-1]
-        response = HttpResponse(document.proof_of_payment, content_type='text/plain')
-        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+        try:
+            filename = document.proof_of_payment.name.split('/')[-1]
+            response = HttpResponse(document.proof_of_payment, content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename=%s' % filename
+        except:
+            # The meaning of this in comparison with the one below is that
+            
+            messages.warning(request, 'Document not found internally.')
+
     else:
         messages.warning(request, 'Document not found.')
         return redirect('transaction')
