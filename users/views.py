@@ -200,6 +200,7 @@ def allocate(request):
 
     
     subs = Subsidiaries.objects.filter(company=request.user.company, is_active=True).all()
+    print(subs)
     for sub in subs:
         if sub.is_depot == True:
             allocates.append(SuballocationFuelUpdate.objects.filter(subsidiary=sub).first())
