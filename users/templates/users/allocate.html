@@ -36,7 +36,7 @@
         {% if company_capacity %}
         <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
             <div class="panel-heading ui-sortable-handle">
-                <div class="btn-group">
+                <div class="btn-group" style="float: left;">
                     <h4>Company Fuel</h4>
                 </div>
                 {% if not request.user.company.is_usd_active == True %}
@@ -48,7 +48,7 @@
                     </div>
                 {% else %} 
                     
-                    <div>
+                    <div style="margin-right: 10px;">
                         <span class="label label-success-outline m-r-15">Approved For USD</span>
                     </div>
                 {% endif %} 
