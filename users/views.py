@@ -202,10 +202,7 @@ def allocate(request):
     subs = Subsidiaries.objects.filter(company=request.user.company, is_active=True).all()
     print(subs)
     for sub in subs:
-        if sub.is_depot == True:
-            allocates.append(SuballocationFuelUpdate.objects.filter(subsidiary=sub).first())
-        else:
-            allocates.append(SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first())
+        allocates.append(SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first())
     allocations = FuelAllocation.objects.filter(company=request.user.company).all()
     
     if allocations is not None:
@@ -1092,12 +1089,12 @@ def suppliers_list(request):
                     user.save()
                 else:
                     messages.warning(request, f"Oops , something went wrong, please try again")
-            if request.POST.get('source') == "from_sub":
-                request.session['show'] = False
-                return redirect('users:stations')
-            return render(request, 'users/suppliers_list.html',
-                          {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'suppliers': suppliers, 'form1': form1, 'allocate': 'show', 'fuel_update': fuel_update,
-                           'form': form})
+                if request.POST.get('source') == "from_sub":
+                    request.session['show'] = False
+            
+            return redirect(f'/users/allocated_fuel/{subsidiary.id}')
+
+            
         else:
             user.user_type = 'SUPPLIER'
             user.save()
