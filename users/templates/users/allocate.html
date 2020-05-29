@@ -40,8 +40,8 @@
                     <h4>Company Fuel</h4>
                 </div>
                 {% if not request.user.company.is_usd_active == True %}
-                    <div class="btn-group">
-                        <a class="btn btn-labeled btn-primary" href="{% url 'users:company_usd_applications' %}">
+                    <div class="btn-group" style="margin-left: 17px">
+                        <a class="btn btn-labeled btn-primary btn-sm" href="{% url 'users:company_usd_applications' %}">
                             <span class="btn-label"><i class="fa fa-envelope" aria-hidden="true"></i> </span>
                             Apply For USD Approval
                         </a>
