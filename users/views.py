@@ -273,7 +273,7 @@ def allocated_fuel(request, sid):
             depot.petrol_quantity = depot.petrol_quantity + int(request.POST['quantity'])
             company_quantity.unallocated_petrol = company_quantity.unallocated_petrol - int(request.POST['quantity'])
             company_quantity.save()
-            messages.success(request, 'Fuel Allocation SUccesful')
+            messages.success(request, 'Fuel allocated successful.')
             return redirect(f'/users/allocated_fuel/{sid}')
         else:
             if int(request.POST['quantity']) > company_quantity.unallocated_diesel:
