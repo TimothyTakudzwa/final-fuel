@@ -1701,3 +1701,10 @@ def block_sites_applications(request, id):
     subsidiary.application_sent = False
     subsidiary.save()
     return redirect('zeraPortal:site_applications')
+
+def approve_company_usd_applications(request, id):
+    company = Company.objects.filter(id=id).first()
+    company.application_sent = False
+    company.is_usd_active = True
+    company.save()
+    return redirect('zeraPortal:dashboard')

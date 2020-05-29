@@ -3077,3 +3077,9 @@ def sites_applications(request, id):
     subsidiary.application_sent = True
     subsidiary.save()
     return redirect('users:stations')
+
+def company_usd_applications(request):
+    company = request.user.company
+    company.application_sent = True
+    company.save()
+    return redirect('users:allocate')

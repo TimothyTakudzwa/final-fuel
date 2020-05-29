@@ -39,6 +39,22 @@
                 <div class="btn-group">
                     <h4>Company Fuel</h4>
                 </div>
+                <div class="btn-group">
+                    <a class="btn btn-outline-primary" href="{% url 'users:company_usd_applications' %}" style="margin-top: 23px;margin-bottom: 0;margin-left: 30px;background-color: #25d366;color: white;border: none;">
+                      <i class="fa fa-email" style="margin-right: 11px;"></i>
+                      {% if request.user.company.is_usd_active == True %}
+                        Approved to sell USD fuel
+                      {% else %}
+                        {% if request.user.company.application_sent == True %}
+                            Application to sell USD fuel sent
+                        {% else %}
+                            Apply to Sell USD fuel
+                        {% endif %}
+                      {% endif %}
+                  </a>
+          
+                </div>
+               
                 <div class="dropdown">
                     <ul class="dropdown-menu dropdown-menu-right">
     

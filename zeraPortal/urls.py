@@ -49,6 +49,7 @@ urlpatterns = [
     path('supplier_delivery_note/<int:id>', views.supplier_delivery_note, name='supplier_delivery_note'),
     path('approve_site_applications/<int:id>', views.approve_site_applications, name='approve_site_applications'),
     path('block_sites_applications/<int:id>', views.block_sites_applications, name='block_sites_applications'),
+    path('approve_company_usd_applications/<int:id>', views.approve_company_usd_applications, name='approve_company_usd_applications'),
     path('activity/', views.activity, name='activity'),
     path('fuel_prices/', views.fuel_prices, name='fuel_prices'),
     path('export_to_csv/',views.export_to_csv, name='export_to_csv'),
