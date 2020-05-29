@@ -87,16 +87,18 @@
                             <td>
                                 <div class="btn-group">
                                    
-                                        <button class="btn btn-purple btn-sm" data-toggle="modal"
-                                            data-target="#approve_{{subsidiary.id}}">Approve</button>
+                                        <button class="btn btn-labeled btn-purple btn-sm" data-toggle="modal"
+                                            data-target="#approve_{{subsidiary.id}}">
+                                        <span class="btn-label"><i class="fa fa-thumbs-up" aria-hidden="true"></i> </span>     Approve</button>
                                         
-                                    <button class="btn btn-danger btn-sm" data-toggle="modal"
-                                        data-target="#block_{{subsidiary.id}}">Block Application</button>
+                                    <button class="btn btn-labeled btn-danger btn-sm" data-toggle="modal"
+                                        data-target="#block_{{subsidiary.id}}">
+                                        <span class="btn-label"><i class="fa fa-thumbs-down" aria-hidden="true"></i></span> Block Application</button>
                                    
                                 </div>
                             </td>
                            
-                        </tr>
+                        </tr> 
  
                     
 
@@ -116,14 +118,13 @@
                                     <p>Are You Sure You Want To Block {{ subsidiary.name }}'s Application?</p>
                                    
                                 
-                            <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                                <button type="button" class="btn btn-secondary col-sm-6"
-                                    data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary col-sm-6">Block</button>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn-default"
+                                            data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Block</button>
+                                    </div>
+                                </form>     
                             </div>
-                                    </form>
-                                </form>
-                        </div>
                     </div>
                 </div>
                 </div> 
@@ -147,13 +148,13 @@
                                    {% csrf_token %}
                                    <p>Are You Sure You Want To Approve {{ subsidiary.name }}'s Application?</p>
                                
-                           <div class="form-group row" style="margin-left: 2%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%;">
-                               <button type="button" class="btn btn-secondary col-sm-6"
-                                   data-dismiss="modal">Close</button>
-                               <button type="submit" class="btn btn-primary col-sm-6">Approve</button>
-                           </div>
-                                   </form>
-                       </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Approve</button>
+                                        <button type="button" class="btn btn-dark"
+                                            data-dismiss="modal">Close</button>
+                                    </div>
+                                </form>
+                            </div>
                    </div>
                </div>
                </div>
@@ -164,7 +165,7 @@
                     </tbody>
                 </table>
             </div>
-
+ 
 
         </div>
     </div>
