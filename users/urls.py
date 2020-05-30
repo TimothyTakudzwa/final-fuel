@@ -61,6 +61,7 @@ urlpatterns = [
     path('place_order/', views.place_order, name='place_order'),
     path('initial-password-change/', views.initial_password_change, name='initial-password-change'),
     path('orders/', views.orders, name='orders'),
+    path('company_usd_applications/', views.company_usd_applications, name='company_usd_applications'),
     path('notication_reader/', views.notication_reader, name='notication_reader'),
     path('delivery_schedules/', views.delivery_schedules, name='delivery_schedules'),
     path('sites_applications/<int:id>', views.sites_applications, name='sites_applications'),

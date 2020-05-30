@@ -36,9 +36,37 @@
         {% if company_capacity %}
         <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
             <div class="panel-heading ui-sortable-handle">
-                <div class="btn-group">
+                <div class="btn-group" style="float: left;">
                     <h4>Company Fuel</h4>
                 </div>
+                
+                {% if not request.user.company.is_usd_active == True and not request.user.company.application_sent == True  %}
+                    <div class="btn-group" style="margin-left: 17px">
+                        <a class="btn btn-labeled btn-primary btn-sm" href="{% url 'users:company_usd_applications' %}">
+                            <span class="btn-label"><i class="fa fa-envelope" aria-hidden="true"></i> </span>
+                            Apply For USD Approval
+                        </a>
+                    </div>
+                {% endif %} 
+
+                {% if request.user.company.application_sent == True %}    
+                <div>
+                    <span class="label label-pill label-default-outline m-r-15" 
+                    style="margin-left: 17px!important;font-size: small;margin-top: 28px;">
+                    USD Approval Pending</span>
+                </div>
+                {% endif %} 
+
+
+                {% if request.user.company.is_usd_active == True %} 
+                    
+                    <div>
+                        <span class="label label-pill label-success-outline m-r-15" 
+                        style="margin-left: 17px!important;font-size: small;margin-top: 28px;">
+                        USD Approved</span>
+                    </div>
+                {% endif %} 
+               
                 <div class="dropdown">
                     <ul class="dropdown-menu dropdown-menu-right">
     
@@ -564,7 +592,6 @@
                                         style="margin-left: 2.5px;color: #ff5722;"></i>{% endif %}</td>
 
                                 <td>
-                                    {% if allocate.subsidiary.is_depot == True %}
                                         <div class="btn-group">
 
 
@@ -572,20 +599,7 @@
                                                href="{%url 'users:allocatedfuel' allocate.subsidiary.id %}">
                                                <span class="btn-label"><i class="fa fa-eye"></i></span>View Fuel
                                                 Allocations</a>
-
                                         </div>
-                                    {% else %}
-                                        <div class="btn-group">
-
-                                            <a class="btn btn-info btn-sm" data-toggle="modal"
-                                               data-target="#add_petrol_fuel{{allocate.id}}">Add Petrol</a>
-                                            <a class="btn btn-warning btn-sm" data-toggle="modal"
-                                               data-target="#add_diesel_fuel{{allocate.id}}">Add Diesel</a>
-                                            <a class="btn btn-default btn-sm"
-                                               style="background-color: steelblue; color: white;border: 1px solid transparent;"
-                                               data-toggle="modal" data-target="#add_fuel{{allocate.id}}">Edit Prices</a>
-                                        </div>
-                                    {% endif %}
                                 </td>
                             </tr>
                             <!--Add Petrol fuel-->

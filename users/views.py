@@ -200,11 +200,9 @@ def allocate(request):
 
     
     subs = Subsidiaries.objects.filter(company=request.user.company, is_active=True).all()
+    print(subs)
     for sub in subs:
-        if sub.is_depot == True:
-            allocates.append(SuballocationFuelUpdate.objects.filter(subsidiary=sub).first())
-        else:
-            allocates.append(SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first())
+        allocates.append(SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first())
     allocations = FuelAllocation.objects.filter(company=request.user.company).all()
     
     if allocations is not None:
@@ -263,6 +261,10 @@ def allocated_fuel(request, sid):
                                                                   swipe=request.POST['swipe'],
                                                                   petrol_quantity=request.POST['quantity'],
                                                                   petrol_price=request.POST['price'])
+            fuel_accumulation = SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first()
+            fuel_accumulation.petrol_quantity += float(request.POST['quantity'])
+            fuel_accumulation.save()
+
             if request.POST['fuel_payment_type'] == 'USD & RTGS':
                 fuel_updated.petrol_usd_price = request.POST['usd_price']
                 fuel_updated.ecocash = request.POST['ecocash']
@@ -273,7 +275,7 @@ def allocated_fuel(request, sid):
             depot.petrol_quantity = depot.petrol_quantity + int(request.POST['quantity'])
             company_quantity.unallocated_petrol = company_quantity.unallocated_petrol - int(request.POST['quantity'])
             company_quantity.save()
-            messages.success(request, 'Fuel Allocation SUccesful')
+            messages.success(request, 'Fuel allocated successful.')
             return redirect(f'/users/allocated_fuel/{sid}')
         else:
             if int(request.POST['quantity']) > company_quantity.unallocated_diesel:
@@ -302,6 +304,10 @@ def allocated_fuel(request, sid):
                                                                   swipe=request.POST['swipe'],
                                                                   diesel_quantity=request.POST['quantity'],
                                                                   diesel_price=request.POST['price'])
+            fuel_accumulation = SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first()
+            fuel_accumulation.diesel_quantity += float(request.POST['quantity'])
+            fuel_accumulation.save()
+
             if request.POST['fuel_payment_type'] == 'USD & RTGS':
                 fuel_updated.diesel_usd_price = request.POST['usd_price']
                 fuel_updated.ecocash = request.POST['ecocash']
@@ -482,8 +488,8 @@ def allocation_update(request, id):
                 if int(request.POST['quantity']) > company_quantity.unallocated_petrol:
                     messages.warning(request, f'You can not allocate fuel above your company petrol quantity of {company_quantity.unallocated_petrol}.')
                     return redirect('users:allocate')
-                fuel_update.petrol_quantity = fuel_update.petrol_quantity + int(request.POST['quantity'])
-                depot.petrol_quantity = depot.petrol_quantity + int(request.POST['quantity'])
+                fuel_update.petrol_quantity = fuel_update.petrol_quantity + float(request.POST['quantity'])
+                depot.petrol_quantity = depot.petrol_quantity + float(request.POST['quantity'])
                 if fuel_update.payment_type == "RTGS":
                     if Decimal(request.POST['price']) > prices.rtgs_petrol_price:
                         messages.warning(request, f'You can not set price above ZERA max petrol price of ${prices.rtgs_petrol_price}.')
@@ -510,8 +516,8 @@ def allocation_update(request, id):
                 if int(request.POST['quantity']) > company_quantity.unallocated_diesel:
                     messages.warning(request, f'You can not allocate fuel above your company diesel quantity of {company_quantity.unallocated_diesel}.')
                     return redirect(f'/users/allocated_fuel/{fuel_update.subsidiary.id}')
-                fuel_update.diesel_quantity = fuel_update.diesel_quantity + int(request.POST['quantity'])
-                depot.diesel_quantity = depot.diesel_quantity + int(request.POST['quantity'])
+                fuel_update.diesel_quantity = fuel_update.diesel_quantity + float(request.POST['quantity'])
+                depot.diesel_quantity = depot.diesel_quantity + float(request.POST['quantity'])
 
                 if fuel_update.payment_type == "RTGS":
                     if Decimal(request.POST['price']) > prices.rtgs_diesel_price:
@@ -1091,12 +1097,12 @@ def suppliers_list(request):
                     user.save()
                 else:
                     messages.warning(request, f"Oops , something went wrong, please try again")
-            if request.POST.get('source') == "from_sub":
-                request.session['show'] = False
-                return redirect('users:stations')
-            return render(request, 'users/suppliers_list.html',
-                          {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'suppliers': suppliers, 'form1': form1, 'allocate': 'show', 'fuel_update': fuel_update,
-                           'form': form})
+                if request.POST.get('source') == "from_sub":
+                    request.session['show'] = False
+            
+            return redirect(f'/users/allocated_fuel/{subsidiary.id}')
+
+            
         else:
             user.user_type = 'SUPPLIER'
             user.save()
@@ -3070,4 +3076,12 @@ def sites_applications(request, id):
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     subsidiary.application_sent = True
     subsidiary.save()
+    messages.success(request, 'Application for a Subsidiary to sell USD fuel sent.')
     return redirect('users:stations')
+
+def company_usd_applications(request):
+    company = request.user.company
+    company.application_sent = True
+    company.save()
+    messages.success(request, 'Application to sell USD fuel sent.')
+    return redirect('users:allocate')
