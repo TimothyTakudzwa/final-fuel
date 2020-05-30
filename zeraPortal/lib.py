@@ -8,6 +8,7 @@ from company.models import CompanyFuelUpdate
 from .constants import zimbabwean_towns, major_cities
 
 import pandas
+from django.db.models import Sum
 
 ### cfehome.utils.py or the root of your project conf
 
@@ -141,7 +142,32 @@ def get_weekly_sales(this_week):
         else:
             weeks_revenue = 0
         weekly_data[day.strftime("%a")] = int(weeks_revenue)
-    return weekly_data               
+    return weekly_data      
+
+def new_get_weekly_sales(this_week):
+    '''
+    Get the company's weekly sales
+    '''
+    if this_week == True:
+        date = datetime.now().date()
+    else:
+        date = datetime.now().date() - timedelta(days=7)    
+    week_days = get_week_days(date)
+
+    start_date = week_days[0]
+    end_date = week_days[-1]
+
+    weekly_transactions = Transaction.objects.filter(date__range=[start_date,end_date])
+
+    weekly_data = {}
+    for day in week_days:
+        for tran in weekly_transactions:
+            weeks_revenue = Transaction.objects.filter(date=day).aggregate(total=Sum('offer__request__amount', field="offer__request__amount*offer__price"))['total']
+            weekly_data[day.strftime("%a")] = int(weeks_revenue)
+
+    return weekly_data         
+
+             
 
 
 def get_aggregate_monthly_sales(year):
