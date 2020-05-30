@@ -161,12 +161,15 @@ def new_get_weekly_sales(this_week):
 
     weekly_data = {}
     for day in week_days:
-        for tran in weekly_transactions:
-            weeks_revenue = Transaction.objects.filter(date=day).aggregate(total=Sum('offer__request__amount', field="offer__request__amount*offer__price"))['total']
-            if weeks_revenue:
-                weekly_data[day.strftime("%a")] = int(weeks_revenue)
-            else:
-                weekly_data[day.strftime("%a")] = 0
+        if weekly_transactions:
+            for tran in weekly_transactions:
+                weeks_revenue = Transaction.objects.filter(date=day).aggregate(total=Sum('offer__request__amount', field="offer__request__amount*offer__price"))['total']
+                if weeks_revenue:
+                    weekly_data[day.strftime("%a")] = int(weeks_revenue)
+                else:
+                    weekly_data[day.strftime("%a")] = 0
+        else:
+            weekly_data = {'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0, 'Fri': 0, 'Sat': 0, 'Sun': 0}
 
     return weekly_data         
 
