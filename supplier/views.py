@@ -2248,6 +2248,7 @@ def notifications_retriever(user):
         num_of_notifications = len(notifications)
     else:
         notifications = []
+        fuel_requests_id = []
         all_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
         fuel_requests = FuelRequest.objects.filter(~Q(payment_method='USD')).all()
         for fuel_request in fuel_requests:
