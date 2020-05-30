@@ -1694,12 +1694,14 @@ def approve_site_applications(request, id):
     subsidiary.application_sent = False
     subsidiary.is_usd_active = True
     subsidiary.save()
+    messages.success(request, 'Application for a Subsidiary to sell USD fuel successfully approved.')
     return redirect('zeraPortal:site_applications')
 
 def block_sites_applications(request, id):
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     subsidiary.application_sent = False
     subsidiary.save()
+    messages.warning(request, 'Application for a Subsidiary to sell USD fuel successfully declined.')
     return redirect('zeraPortal:site_applications')
 
 def approve_company_usd_applications(request, id):
@@ -1707,4 +1709,5 @@ def approve_company_usd_applications(request, id):
     company.application_sent = False
     company.is_usd_active = True
     company.save()
+    messages.success(request, 'Application to sell USD fuel successfully approved.')
     return redirect('zeraPortal:dashboard')

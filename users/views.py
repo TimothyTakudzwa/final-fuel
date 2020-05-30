@@ -3076,10 +3076,12 @@ def sites_applications(request, id):
     subsidiary = Subsidiaries.objects.filter(id=id).first()
     subsidiary.application_sent = True
     subsidiary.save()
+    messages.success(request, 'Application for a Subsidiary to sell USD fuel sent.')
     return redirect('users:stations')
 
 def company_usd_applications(request):
     company = request.user.company
     company.application_sent = True
     company.save()
+    messages.success(request, 'Application to sell USD fuel sent.')
     return redirect('users:allocate')
