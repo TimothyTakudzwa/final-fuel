@@ -138,7 +138,7 @@
                                             <li>
                                                 <a href="{% url 'buyer:notication_handler' notication.handler_id %}" class="border-gray notification_item">
                                                     {% if notication.action == 'new_offer' or notication.action == 'counter_offer' %}
-                                                    <i class="fa fa-binoculars"></i> New Offer - {{notication.responsible_subsidiary.name}}
+                                                    <i class="fa fa-book"></i> New Offer - {{notication.responsible_subsidiary.name}}
                                                     {% elif notication.action == 'DELIVERY' or notication.action == 'schedule' %}
                                                     <i class="fa fa-truck"></i> Delivery Schedule - {{notication.responsible_subsidiary.name}}
                                                     {% endif %}
