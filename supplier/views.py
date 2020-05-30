@@ -33,29 +33,6 @@ User = get_user_model()
 today = date.today()
 
 '''
-Notifications function
-'''
-
-def notifications_reader(user):
-    subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()    
-    if subsidiary.is_usd_active == True:
-        notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
-        num_of_notifications = len(notifications)
-    else:
-        notifications = []
-        all_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
-        fuel_requests = FuelRequest.objects.filter(~Q(payment_method='USD')).all()
-        for fuel_request in fuel_requests:
-            fuel_requests_id.append(fuel_request.id)
-        for notification in all_notifications:
-            if notification.reference_id in fuel_requests_id:
-                notifications.append(notification)
-            else:
-                pass
-        num_of_notifications = len(notifications)
-    return notifications, num_of_notifications
-
-'''
 user registration and login functions
 '''
 
@@ -170,7 +147,7 @@ def initial_password_change(request):
 @user_role
 def change_password(request):
 
-    notifications, num_of_notifications = notifications_reader(request.user)        
+    notifications, num_of_notifications = notifications_retriever(request.user)        
 
     context = {
         'title': 'ZFMS | Change Password',
@@ -274,7 +251,7 @@ Supplier Profile
 @login_required()
 @user_role
 def account(request):
-    notifications, num_of_notifications = notifications_reader(request.user)
+    notifications, num_of_notifications = notifications_retriever(request.user)
     subsidiary = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     return render(request, 'supplier/user_profile.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'subsidiary': subsidiary})
 
@@ -309,7 +286,7 @@ handling client applications
 @login_required
 @user_role
 def clients(request):
-    notifications, num_of_notifications = notifications_reader(request.user)
+    notifications, num_of_notifications = notifications_retriever(request.user)
     clients = Account.objects.filter(supplier_company=request.user.company)
     return render(request, 'supplier/clients.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'clients': clients})
 
@@ -392,7 +369,7 @@ Fuel Requests
 @login_required()
 @user_role
 def fuel_request(request):
-    notifications, num_of_notifications = notifications_reader(request.user)
+    notifications, num_of_notifications = notifications_retriever(request.user)
     sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     requests = []
     acceptable_requests = []
@@ -698,7 +675,7 @@ Fuel Stock operations
 @login_required
 @user_role
 def available_stock(request):
-    notifications, num_of_notifications = notifications_reader(request.user)
+    notifications, num_of_notifications = notifications_retriever(request.user)
     updates = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).all()
 
     return render(request, 'supplier/available_fuel.html', {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'updates': updates})
@@ -768,7 +745,7 @@ Offers Operations
 @login_required()
 @user_role
 def my_offers(request):
-    notifications, num_of_notifications = notifications_reader(request.user)
+    notifications, num_of_notifications = notifications_retriever(request.user)
     offers = Offer.objects.filter(supplier=request.user, is_accepted=False).all()
     for offer_temp in offers:
         if offer_temp.cash == offer_temp.ecocash == offer_temp.swipe == offer_temp.usd == False:
@@ -1093,7 +1070,7 @@ allocated quantities
 @login_required()
 @user_role
 def allocated_quantity(request):
-    notifications, num_of_notifications = notifications_reader(request.user)
+    notifications, num_of_notifications = notifications_retriever(request.user)
     allocations = FuelAllocation.objects.filter(allocated_subsidiary_id=request.user.subsidiary_id).all()
 
     if request.method == "POST":
@@ -1200,7 +1177,7 @@ Transactions Operations
 @user_role
 def transaction(request):
 
-    notifications, num_of_notifications = notifications_reader(request.user)
+    notifications, num_of_notifications = notifications_retriever(request.user)
 
     today = datetime.now().strftime("%m-%d-%y")
     transporters = Company.objects.filter(company_type="TRANSPORTER").all()
@@ -1542,7 +1519,7 @@ def download_proof(request, id):
 @login_required
 def client_transaction_history(request, id):
     user_permission(request)
-    notifications, num_of_notifications = notifications_reader(request.user)
+    notifications, num_of_notifications = notifications_retriever(request.user)
     client = Account.objects.filter(id=id).first()
 
     contribution = get_customer_contributions(request.user.id, client.buyer_company)
@@ -1747,7 +1724,7 @@ def create_delivery_schedule(request):
 @login_required
 def delivery_schedules(request):
     user_permission(request)
-    notifications, num_of_notifications = notifications_reader(request.user)
+    notifications, num_of_notifications = notifications_retriever(request.user)
     schedules = DeliverySchedule.objects.filter(transaction__supplier=request.user).all()
     
     for schedule in schedules:
@@ -1981,7 +1958,7 @@ def edit_release_note(request, id):
 @login_required()
 def payment_release_notes(request, id):
     user_permission(request)
-    notifications, num_of_notifications = notifications_reader(request.user)
+    notifications, num_of_notifications = notifications_retriever(request.user)
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
     return render(request, 'supplier/payment_and_rnote.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'payment_history': payment_history})
@@ -2046,7 +2023,7 @@ payment history
 @login_required()
 def payment_history(request, id):
     user_permission(request)
-    notifications, num_of_notifications = notifications_reader(request.user)
+    notifications, num_of_notifications = notifications_retriever(request.user)
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
     return render(request, 'supplier/payment_history.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'payment_history': payment_history})
@@ -2088,7 +2065,7 @@ def download_release_note(request, id):
 @login_required()
 @user_role
 def activity(request):
-    notifications, num_of_notifications = notifications_reader(request.user)
+    notifications, num_of_notifications = notifications_retriever(request.user)
     filtered_activities = None
     activities = Activity.objects.exclude(date=today).filter(user=request.user)
     for activity in activities:
@@ -2258,6 +2235,30 @@ def notication_reader(request):
         notification.is_read = True
         notification.save()
     return redirect('fuel-request')
+
+
+'''
+Funtion to retrieve notifications
+'''
+
+def notifications_retriever(user):
+    subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()    
+    if subsidiary.is_usd_active == True:
+        notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
+        num_of_notifications = len(notifications)
+    else:
+        notifications = []
+        all_notifications = Notification.objects.filter(action="new_request").filter(is_read=False).all()
+        fuel_requests = FuelRequest.objects.filter(~Q(payment_method='USD')).all()
+        for fuel_request in fuel_requests:
+            fuel_requests_id.append(fuel_request.id)
+        for notification in all_notifications:
+            if notification.reference_id in fuel_requests_id:
+                notifications.append(notification)
+            else:
+                pass
+        num_of_notifications = len(notifications)
+    return notifications, num_of_notifications
 
 
 @login_required()
