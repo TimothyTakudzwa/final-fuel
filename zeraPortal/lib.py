@@ -49,28 +49,28 @@ def get_week_days(date):
     return [date + timedelta(days=i) for i in range(0 - date.weekday(), 7 - date.weekday())]
 
 
-def get_weekly_sales(this_week):
-    '''
-    Get the company's weekly sales
-    '''
-    if this_week == True:
-        date = datetime.now().date()
-    else:
-        date = datetime.now().date() - timedelta(days=7)    
-    week_days = get_week_days(date)
-    weekly_data = {}
-    for day in week_days:
-        weeks_revenue = 0
-        day_trans = Transaction.objects.filter(date=day, is_complete=True)
-        if day_trans:
-            for tran in day_trans:
-                weeks_revenue += tran.expected
-        else:
-            weeks_revenue = 0
-        weekly_data[day.strftime("%a")] = int(weeks_revenue)
-    return weekly_data      
+# def get_weekly_sales(this_week):
+#     '''
+#     Get the company's weekly sales
+#     '''
+#     if this_week == True:
+#         date = datetime.now().date()
+#     else:
+#         date = datetime.now().date() - timedelta(days=7)    
+#     week_days = get_week_days(date)
+#     weekly_data = {}
+#     for day in week_days:
+#         weeks_revenue = 0
+#         day_trans = Transaction.objects.filter(date=day, is_complete=True)
+#         if day_trans:
+#             for tran in day_trans:
+#                 weeks_revenue += tran.expected
+#         else:
+#             weeks_revenue = 0
+#         weekly_data[day.strftime("%a")] = int(weeks_revenue)
+#     return weekly_data      
 
-def new_get_weekly_sales(this_week):
+def get_weekly_sales(this_week):
     '''
     Get the company's weekly sales
     '''
