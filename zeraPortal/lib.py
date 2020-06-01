@@ -16,18 +16,24 @@ def get_top_branches(count):
     Get an ordered list of a companies top subsidiaries
     according to revenue generated
     '''
-    branches = Subsidiaries.objects.all()
+
+    branches = Subsidiaries.objects.filter(is_depot=True)
+    # Retrieve all Subsidiaries
+
     subs = []
 
     for sub in branches:
-        for sub_tran in Transaction.objects.filter(supplier__company=company,supplier__subsidiary_id=sub.id, is_complete=True):
-            tran_amount += sub_tran.expected
+        # Fetch all transactions related to Subsidiaries
+        sub_trans = Transaction.objects.filter(supplier__subsidiary_id=sub.id, is_complete=True)
+        # Get number of transaction objects
         sub.tran_count = sub_trans.count()
-        sub.tran_value = tran_amount
-        subs.append(sub)
+        # Get all the expected incomes from transactions qs 
+        sub.tran_value = sub_trans.aggregate(total=Sum('expected'))['total']
+        subs.append(sub)    
 
-    # sort subsidiaries by transaction value
+    # Sort subsidiaries by transaction value
     sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True) 
+    # Slice subs list according to cutoff value. N items
     sorted_subs = sorted_subs[:count]
     return sorted_subs
 
