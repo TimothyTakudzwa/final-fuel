@@ -1,21 +1,19 @@
 import secrets
 from datetime import date
-from fuelfinder import settings
-
 
 from django.contrib.auth import authenticate, update_session_auth_hash
+from django.contrib.auth import get_user_model
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail.message import BadHeaderError
 from django.http.response import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
-from django.contrib.auth import get_user_model
 
 from buyer.models import User
-from supplier.models import Subsidiaries, SubsidiaryFuelUpdate
-from users.models import Audit_Trail
 from comments.models import CommentsPermission, Comment
-
+from fuelfinder import settings
+from supplier.models import Subsidiaries, SuballocationFuelUpdate
+from users.models import Audit_Trail
 from whatsapp.helper_functions import sord_update
 
 user = get_user_model()
@@ -58,7 +56,7 @@ def login(request):
 
 """
 
-Authentication for service station admin
+Authentication for  all users
 
 """
 
@@ -158,10 +156,10 @@ def update_station(request):
         # fetch user data
         app_user = User.objects.get(username=username)
         # check for fuel station
-        status = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id).first()
+        status = SuballocationFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id).first()
         # station exists
         if status:
-            update = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id).first()
+            update = SuballocationFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id).first()
 
             previous_petrol = update.petrol_quantity
             previous_diesel = update.diesel_quantity
@@ -227,10 +225,10 @@ def view_station_updates(request):
         # get user data
         app_user = User.objects.get(username=username)
         # check if user has update object
-        status = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id).first()
+        status = SuballocationFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id).first()
         # if update object exists
         if status:
-            updates = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id)
+            updates = SuballocationFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id)
             # fetching data
             for update in updates:
                 company = Subsidiaries.objects.get(id=update.subsidiary.id)
@@ -267,7 +265,7 @@ def view_updates_user(request):
         # fetch updates
         # noinspection PyBroadException
         try:
-            updates = SubsidiaryFuelUpdate.objects.filter(subsidiary__is_depot=False).all()
+            updates = SuballocationFuelUpdate.objects.filter(subsidiary__is_depot=False).all()
             for update in updates:
                 image = f'https://{request.get_host()}{update.subsidiary.logo.url}/'
                 if update.diesel_quantity == 0 and update.petrol_quantity == 0:

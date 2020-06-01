@@ -130,7 +130,7 @@ def login_user(request):
                             return redirect("buyer:approve_companies")
                     # wrong password
                     else:
-                        messages.info(request, 'Wrong password.')
+                        messages.info(request, 'Wrong username or password.')
                         return redirect('login')
                 # user hasn't completed registration yet
                 else:
@@ -139,7 +139,7 @@ def login_user(request):
                     return redirect('login')
             # throw account not found error
             else:
-                messages.info(request, 'Please register first.')
+                messages.info(request, 'Wrong username or password.')
                 return redirect('login')
     return render(request, 'buyer/signin.html', context=context)
 
