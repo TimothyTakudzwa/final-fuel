@@ -53,74 +53,152 @@ def initial_password_change(request):
 
 @login_required()
 def fuel_updates(request):
-    updates = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).first()
+    main_update = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).first()
+    rtgs_updates = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='RTGS').first()
+    usd_updates = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='USD').first()
+    
     subsidiary_name = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
     if request.method == 'POST':
-        #fuel_update = FuelUpdate.objects.filter(sub_type=request.POST['sub_type']).first()
-        if int(updates.petrol_quantity) < int(request.POST['petrol_quantity']):
-            messages.warning(request, 'You cannot update petrol to an amount more than the available quantity.')
-            return redirect('serviceStation:home')
-        fuel_reduction = updates.petrol_quantity - float(request.POST['petrol_quantity'])
-        updates.petrol_quantity = request.POST['petrol_quantity'] 
-        updates.queue_length = request.POST['queue_length']
-        updates.status = request.POST['status']
-        updates.cash = request.POST['cash']
-        updates.ecocash = request.POST['ecocash']
-        updates.swipe = request.POST['swipe']
-        updates.usd = request.POST['usd']
-        if int(updates.petrol_quantity) < 1000:
-            updates.status = 'Expecting Fuel'
-            updates.save()
-            messages.warning(request, 'Please request for more fuel from your company')
-            return redirect('serviceStation:home')
+        if request.POST['currency'] == 'RTGS':
+            if rtgs_updates is not None:
+                if int(rtgs_updates.petrol_quantity) < int(request.POST['petrol_quantity']):
+                    messages.warning(request, 'You cannot update petrol to an amount more than the available quantity.')
+                    return redirect('serviceStation:home')
+                fuel_reduction = rtgs_updates.petrol_quantity - float(request.POST['petrol_quantity'])
+                main_update.petrol_quantity -= fuel_reduction
+                rtgs_updates.petrol_quantity = request.POST['petrol_quantity'] 
+                rtgs_updates.queue_length = request.POST['queue_length']
+                rtgs_updates.status = request.POST['status']
+                
+                if int(rtgs_updates.petrol_quantity) < 1000:
+                    rtgs_updates.status = 'Expecting Fuel'
+                    rtgs_updates.save()
+                    main_update.save()
+                    messages.warning(request, 'Please request for more fuel from your company')
+                    return redirect('serviceStation:home')
 
-        updates.save()
-        sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Petrol')
-        messages.success(request, 'Updated petrol quantitY successfully.')
-        service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-        reference = 'pfuel quantity updates'
-        reference_id = updates.id
-        action = f"{request.user.username} has made an update of petrol quantity to {updates.petrol_quantity}L @ {updates.petrol_price}"
-        Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
-        return redirect('serviceStation:home')
+                rtgs_updates.save()
+                main_update.save()
+                sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Petrol', 'RTGS')
+                messages.success(request, 'Updated petrol quantitY successfully.')
+                service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+                reference = 'pfuel quantity updates'
+                reference_id = updates.id
+                action = f"{request.user.username} has made an update of petrol quantity to {rtgs_updates.petrol_quantity}L @ {rtgs_updates.petrol_price}"
+                Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
+                return redirect('serviceStation:home')
+            else:
+                messages.warning(request, 'You have not received any fuel yet, please contact HQ')
+                return redirect('serviceStation:home')
 
-    return render(request, 'serviceStation/fuel_updates.html', {'updates': updates, 'subsidiary': subsidiary_name.name})
+        else:
+            if usd_updates is not None:
+                if int(usd_updates.petrol_quantity) < int(request.POST['petrol_quantity']):
+                    messages.warning(request, 'You cannot update petrol to an amount more than the available quantity.')
+                    return redirect('serviceStation:home')
+                fuel_reduction = usd_updates.petrol_quantity - float(request.POST['petrol_quantity'])
+                main_update.petrol_quantity -= fuel_reduction
+                usd_updates.petrol_quantity = request.POST['petrol_quantity'] 
+                usd_updates.queue_length = request.POST['queue_length']
+                usd_updates.status = request.POST['status']
+                
+                if int(usd_updates.petrol_quantity) < 1000:
+                    usd_updates.status = 'Expecting Fuel'
+                    usd_updates.save()
+                    main_update.save()
+                    messages.warning(request, 'Please request for more fuel from your company')
+                    return redirect('serviceStation:home')
+
+                usd_updates.save()
+                main_update.save()
+                sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Petrol', 'USD')
+                messages.success(request, 'Updated petrol quantitY successfully.')
+                service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+                reference = 'pfuel quantity updates'
+                reference_id = usd_updates.id
+                action = f"{request.user.username} has made an update of petrol quantity to {usd_updates.petrol_quantity}L @ {usd_updates.petrol_price}"
+                Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
+                return redirect('serviceStation:home')
+            else:
+                messages.warning(request, 'You are not approved by ZERA to sell USD fuel, please contact your HQ')
+                return redirect('serviceStation:home')
+
+    return render(request, 'serviceStation/fuel_updates.html', {'rtgs_updates': rtgs_updates, 'usd_updates': usd_updates, 'subsidiary': subsidiary_name.name})
 
 @login_required()
-def update_diesel(request, id):
+def update_diesel(request):
+    main_update = SubsidiaryFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).first()
     if request.method == 'POST':
-        diesel_update = SubsidiaryFuelUpdate.objects.filter(id=id).first()
-        if int(diesel_update.diesel_quantity) < int(request.POST['diesel_quantity']):
-            messages.warning(request, 'You cannot update diesel to an amount more than the available quantity.')
-            return redirect('serviceStation:home')
-        fuel_reduction = diesel_update.diesel_quantity - float(request.POST['diesel_quantity'])
-        diesel_update.diesel_quantity = request.POST['diesel_quantity']
-        diesel_update.queue_length = request.POST['queue_length']
-        diesel_update.status = request.POST['status']
-       
-        if int(diesel_update.diesel_quantity) < 1000:
-            diesel_update.status = 'Expecting Fuel'
-            diesel_update.save()
-            messages.warning(request, 'Please request for more fuel from your company.')
-            return redirect('serviceStation:home')
+        if request.POST['currency'] == 'RTGS':
+            diesel_update = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='RTGS').first()
+            if diesel_update is not None:
+                if int(diesel_update.diesel_quantity) < int(request.POST['diesel_quantity']):
+                    messages.warning(request, 'You cannot update diesel to an amount more than the available quantity.')
+                    return redirect('serviceStation:home')
+                fuel_reduction = diesel_update.diesel_quantity - float(request.POST['diesel_quantity'])
+                main_update.diesel_quantity -= fuel_reduction
+                diesel_update.diesel_quantity = request.POST['diesel_quantity']
+                diesel_update.queue_length = request.POST['queue_length']
+                diesel_update.status = request.POST['status']
+            
+                if int(diesel_update.diesel_quantity) < 1000:
+                    diesel_update.status = 'Expecting Fuel'
+                    diesel_update.save()
+                    main_update.save()
+                    messages.warning(request, 'Please request for more fuel from your company.')
+                    return redirect('serviceStation:home')
 
-        diesel_update.save()
-        sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Diesel')
-        messages.success(request, 'Updated diesel quantitY successfully.')
-        service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
-        reference = 'dfuel quantity updates'
-        reference_id = diesel_update.id
-        action = f"{request.user.username} has made an update of diesel quantity to {diesel_update.diesel_quantity}L @ {diesel_update.diesel_price}"
-        Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
-        return redirect('serviceStation:home')
+                diesel_update.save()
+                main_update.save()
+                sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Diesel', 'RTGS')
+                messages.success(request, 'Updated diesel quantitY successfully.')
+                service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+                reference = 'dfuel quantity updates'
+                reference_id = diesel_update.id
+                action = f"{request.user.username} has made an update of diesel quantity to {diesel_update.diesel_quantity}L @ {diesel_update.diesel_price}"
+                Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
+                return redirect('serviceStation:home')
+            else:
+                messages.warning(request, 'You have not received any fuel yet, please contact HQ')
+                return redirect('serviceStation:home')
 
-    else:
-        messages.success(request, 'Fuel object does not exist.')
-        return redirect('serviceStation:home')
+        else:
+            diesel_update = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(payment_type='USD').first()
+            if diesel_update is not None:
+                if int(diesel_update.diesel_quantity) < int(request.POST['diesel_quantity']):
+                    messages.warning(request, 'You cannot update diesel to an amount more than the available quantity.')
+                    return redirect('serviceStation:home')
+                fuel_reduction = diesel_update.diesel_quantity - float(request.POST['diesel_quantity'])
+                main_update.diesel_quantity -= fuel_reduction
+                diesel_update.diesel_quantity = request.POST['diesel_quantity']
+                diesel_update.queue_length = request.POST['queue_length']
+                diesel_update.status = request.POST['status']
+            
+                if int(diesel_update.diesel_quantity) < 1000:
+                    diesel_update.status = 'Expecting Fuel'
+                    diesel_update.save()
+                    main_update.save()
+                    messages.warning(request, 'Please request for more fuel from your company.')
+                    return redirect('serviceStation:home')
 
-def sord_update(request, user, quantity, action, fuel_type):
-    end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, payment_type="RTGS", end_quantity = 0).all()
-    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, payment_type="RTGS").all()
+                diesel_update.save()
+                main_update.save()
+                sord_update(request, request.user, fuel_reduction, 'Fuel Update', 'Diesel', 'USD')
+                messages.success(request, 'Updated diesel quantitY successfully.')
+                service_station = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+                reference = 'dfuel quantity updates'
+                reference_id = diesel_update.id
+                action = f"{request.user.username} has made an update of diesel quantity to {diesel_update.diesel_quantity}L @ {diesel_update.diesel_price}"
+                Audit_Trail.objects.create(company=request.user.company,service_station=service_station,user=request.user,action=action,reference=reference,reference_id=reference_id)
+                return redirect('serviceStation:home')
+            else:
+                messages.warning(request, 'You are not approved by ZERA to sell USD fuel, please contact your HQ')
+                return redirect('serviceStation:home')
+
+
+def sord_update(request, user, quantity, action, fuel_type, currency):
+    end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, payment_type=currency, end_quantity = 0).all()
+    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = request.user.subsidiary_id, fuel_type=fuel_type, payment_type=currency).all()
     sord_quantity_zero = []
     sord_quantity = []
     for sord in end_quantity_zero:

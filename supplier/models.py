@@ -146,6 +146,9 @@ class Offer(models.Model):
     class Meta:
         ordering = ['-date', '-time']
 
+    def get_price_float(self):
+        return float(self.price)
+
 
 class TokenAuthentication(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='token_name')
