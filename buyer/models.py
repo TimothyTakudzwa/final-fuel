@@ -97,6 +97,18 @@ class FuelRequest(models.Model):
     class Meta:
         ordering = ['-date', '-time']
 
+    def get_amount_float(self):
+        return float(self.amount)    
+
+    def get_offers(self):
+        from supplier.models import Offer
+        return Offer.objects.filter(request=self)
+
+    def get_highest_offer(self):
+        from supplier.models import Offer
+        return Offer.objects.filter(request=self).order_by('-price').first()
+
+
 
 class DeliveryBranch(models.Model):
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, null=True, blank=True)

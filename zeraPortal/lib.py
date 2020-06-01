@@ -8,101 +8,34 @@ from company.models import CompanyFuelUpdate
 from .constants import zimbabwean_towns, major_cities
 
 import pandas
+from django.db.models import Sum
 
-### cfehome.utils.py or the root of your project conf
-
-def get_model_field_names(model, ignore_fields=['content_object']):
-    '''
-    ::param model is a Django model class
-    ::param ignore_fields is a list of field names to ignore by default
-    This method gets all model field names (as strings) and returns a list 
-    of them ignoring the ones we know don't work (like the 'content_object' field)
-    '''
-    model_fields = model._meta.get_fields()
-    model_field_names = list(set([f.name for f in model_fields if f.name not in ignore_fields]))
-    return model_field_names
-
-
-def get_lookup_fields(model, fields=None):
-    '''
-    ::param model is a Django model class
-    ::param fields is a list of field name strings.
-    This method compares the lookups we want vs the lookups
-    that are available. It ignores the unavailable fields we passed.
-    '''
-    model_field_names = get_model_field_names(model)
-    if fields is not None:
-        '''
-        we'll iterate through all the passed field_names
-        and verify they are valid by only including the valid ones
-        '''
-        lookup_fields = []
-        for x in fields:
-            if "__" in x:
-                # the __ is for ForeignKey lookups
-                lookup_fields.append(x)
-            elif x in model_field_names:
-                lookup_fields.append(x)
-    else:
-        '''
-        No field names were passed, use the default model fields
-        '''
-        lookup_fields = model_field_names
-    return lookup_fields
-
-def qs_to_dataset(qs, fields=None):
-    '''
-    ::param qs is any Django queryset
-    ::param fields is a list of field name strings, ignoring non-model field names
-    This method is the final step, simply calling the fields we formed on the queryset
-    and turning it into a list of dictionaries with key/value pairs.
-    '''
-    
-    lookup_fields = get_lookup_fields(qs.model, fields=fields)
-    return list(qs.values(*lookup_fields))
-
-import pandas as pd
-
-def convert_to_dataframe(qs, fields=None, index=None):
-    '''
-    ::param qs is an QuerySet from Django
-    ::fields is a list of field names from the Model of the QuerySet
-    ::index is the preferred index column we want our dataframe to be set to
-    
-    Using the methods from above, we can easily build a dataframe
-    from this data.
-    '''
-    lookup_fields = get_lookup_fields(qs.model, fields=fields)
-    index_col = None
-    if index in lookup_fields:
-        index_col = index
-    elif "id" in lookup_fields:
-        index_col = 'id'
-    values = qs_to_dataset(qs, fields=fields)
-    df = pd.DataFrame.from_records(values, columns=lookup_fields, index=index_col)
-    return df
-            
-
-
+        
 def get_top_branches(count):
     '''
     Get an ordered list of a companies top subsidiaries
     according to revenue generated
     '''
-    branches = Subsidiaries.objects.all()
+
+    branches = Subsidiaries.objects.filter(is_depot=True)
+    # Retrieve all Subsidiaries
+
     subs = []
 
     for sub in branches:
-        tran_amount = 0
-        sub_trans = Transaction.objects.filter(supplier__company=company,supplier__subsidiary_id=sub.id, is_complete=True)
-        for sub_tran in sub_trans:
-            tran_amount += (sub_tran.offer.request.amount * sub_tran.offer.price)
+        # Fetch all transactions related to Subsidiaries
+        sub_trans = Transaction.objects.filter(supplier__subsidiary_id=sub.id, is_complete=True)
+        # Get number of transaction objects
         sub.tran_count = sub_trans.count()
-        sub.tran_value = tran_amount
-        subs.append(sub)
+        # Get all the expected incomes from transactions qs 
+        sub.tran_value = sub_trans.aggregate(total=Sum('expected'))['total']
+        # Filter out null values
+        if sub.tran_value:
+            subs.append(sub)    
 
-    # sort subsidiaries by transaction value
+    # Sort subsidiaries by transaction value
     sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True) 
+    # Slice subs list according to cutoff value. N items
     sorted_subs = sorted_subs[:count]
     return sorted_subs
 
@@ -122,6 +55,27 @@ def get_week_days(date):
     return [date + timedelta(days=i) for i in range(0 - date.weekday(), 7 - date.weekday())]
 
 
+# def get_weekly_sales(this_week):
+#     '''
+#     Get the company's weekly sales
+#     '''
+#     if this_week == True:
+#         date = datetime.now().date()
+#     else:
+#         date = datetime.now().date() - timedelta(days=7)    
+#     week_days = get_week_days(date)
+#     weekly_data = {}
+#     for day in week_days:
+#         weeks_revenue = 0
+#         day_trans = Transaction.objects.filter(date=day, is_complete=True)
+#         if day_trans:
+#             for tran in day_trans:
+#                 weeks_revenue += tran.expected
+#         else:
+#             weeks_revenue = 0
+#         weekly_data[day.strftime("%a")] = int(weeks_revenue)
+#     return weekly_data      
+
 def get_weekly_sales(this_week):
     '''
     Get the company's weekly sales
@@ -131,19 +85,27 @@ def get_weekly_sales(this_week):
     else:
         date = datetime.now().date() - timedelta(days=7)    
     week_days = get_week_days(date)
+
+    start_date = week_days[0]
+    end_date = week_days[-1]
+
+    weekly_transactions = Transaction.objects.filter(date__range=[start_date,end_date], is_complete=True)
+
     weekly_data = {}
     for day in week_days:
-        weeks_revenue = 0
-        day_trans = Transaction.objects.filter(date=day, is_complete=True)
-        if day_trans:
-            for tran in day_trans:
-                weeks_revenue += (float(tran.offer.request.amount) * float(tran.offer.price))
+        if weekly_transactions:
+            for tran in weekly_transactions:
+                weeks_revenue = weekly_transactions.filter(date=day).aggregate(total=Sum('expected'))['total']
+                if weeks_revenue:
+                    weekly_data[day.strftime("%a")] = int(weeks_revenue)
+                else:
+                    weekly_data[day.strftime("%a")] = 0
         else:
-            weeks_revenue = 0
-        weekly_data[day.strftime("%a")] = int(weeks_revenue)
-    return weekly_data               
+            weekly_data = {'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0, 'Fri': 0, 'Sat': 0, 'Sun': 0}
 
+    return weekly_data         
 
+             
 def get_aggregate_monthly_sales(year):
     '''
     Get the companies monthly sales
@@ -157,7 +119,9 @@ def get_aggregate_monthly_sales(year):
         months_trans = Transaction.objects.filter(date__year=year, date__month=counter)
         if months_trans:
             for tran in months_trans :
-                months_revenue += (float(tran.offer.request.amount) * float(tran.offer.price))
+                # months_revenue += (float(tran.offer.request.amount) * float(tran.offer.price))
+                months_revenue += tran.expected
+
         else:
             months_revenue = 0
 
@@ -353,6 +317,81 @@ def get_desperate_cities():
             desperate_cities[city] = desperate_city[1]
             
     return desperate_cities    
+
+
+
+### cfehome.utils.py or the root of your project conf
+
+def get_model_field_names(model, ignore_fields=['content_object']):
+    '''
+    ::param model is a Django model class
+    ::param ignore_fields is a list of field names to ignore by default
+    This method gets all model field names (as strings) and returns a list 
+    of them ignoring the ones we know don't work (like the 'content_object' field)
+    '''
+    model_fields = model._meta.get_fields()
+    model_field_names = list(set([f.name for f in model_fields if f.name not in ignore_fields]))
+    return model_field_names
+
+
+def get_lookup_fields(model, fields=None):
+    '''
+    ::param model is a Django model class
+    ::param fields is a list of field name strings.
+    This method compares the lookups we want vs the lookups
+    that are available. It ignores the unavailable fields we passed.
+    '''
+    model_field_names = get_model_field_names(model)
+    if fields is not None:
+        '''
+        we'll iterate through all the passed field_names
+        and verify they are valid by only including the valid ones
+        '''
+        lookup_fields = []
+        for x in fields:
+            if "__" in x:
+                # the __ is for ForeignKey lookups
+                lookup_fields.append(x)
+            elif x in model_field_names:
+                lookup_fields.append(x)
+    else:
+        '''
+        No field names were passed, use the default model fields
+        '''
+        lookup_fields = model_field_names
+    return lookup_fields
+
+def qs_to_dataset(qs, fields=None):
+    '''
+    ::param qs is any Django queryset
+    ::param fields is a list of field name strings, ignoring non-model field names
+    This method is the final step, simply calling the fields we formed on the queryset
+    and turning it into a list of dictionaries with key/value pairs.
+    '''
+    
+    lookup_fields = get_lookup_fields(qs.model, fields=fields)
+    return list(qs.values(*lookup_fields))
+
+import pandas as pd
+
+def convert_to_dataframe(qs, fields=None, index=None):
+    '''
+    ::param qs is an QuerySet from Django
+    ::fields is a list of field names from the Model of the QuerySet
+    ::index is the preferred index column we want our dataframe to be set to
+    
+    Using the methods from above, we can easily build a dataframe
+    from this data.
+    '''
+    lookup_fields = get_lookup_fields(qs.model, fields=fields)
+    index_col = None
+    if index in lookup_fields:
+        index_col = index
+    elif "id" in lookup_fields:
+        index_col = 'id'
+    values = qs_to_dataset(qs, fields=fields)
+    df = pd.DataFrame.from_records(values, columns=lookup_fields, index=index_col)
+    return df    
                 
 
 

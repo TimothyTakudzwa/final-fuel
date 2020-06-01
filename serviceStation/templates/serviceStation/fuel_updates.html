@@ -1,253 +1,247 @@
 {% extends "serviceStation/new_base.html" %}
 {% block body %}
-    {% load humanize %}
+{% load humanize %}
 
-    <section class="content-header">
-        <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
-            <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Search...">
-                <span class="input-group-btn">
+<section class="content-header">
+  <form action="#" method="get" class="sidebar-form search-box pull-right hidden-md hidden-lg hidden-sm">
+         <div class="input-group">
+         <input type="text" name="q" class="form-control" placeholder="Search...">
+             <span class="input-group-btn">
                  <button type="submit" name="search" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
              </span>
+         </div>
+     </form>
+ <div class="header-title" style="margin-left: 0px;">
+     <h1>Fuel Updates</h1>
+     <small>Zimbabwe Fuel Management System</small>
+     
+ </div>
+</section>
+    
+<div class="col-md-12">
+
+  <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
+  data-index="0">
+  <div class="panel-heading ui-sortable-handle">
+      <div class="btn-group">
+          <a class="btn btn-outline-primary" href="{% url 'serviceStation:activate_whatsapp' %}" style="margin-top: 23px;margin-bottom: 0;margin-left: 30px;background-color: #25d366;color: white;border: none;">
+            <i class="fa fa-whatsapp" style="margin-right: 11px;"></i>
+            {% if request.user.activated_for_whatsapp %}
+                Deactivate Whatsapp
+            {% else %}
+                Activate Whatsapp
+            {% endif %}
+        </a>
+
+      </div>
+      <div class="dropdown">
+          <ul class="dropdown-menu dropdown-menu-right">
+
+
+          </ul>
+          <div class="dropdown-toggle" data-toggle="dropdown"><span
+                  class="panel-control-icon glyphicon glyphicon-cog"></span>
+          </div>
+      </div>
+  </div>
+  <div class="panel-body">
+
+      
+      <table id="example" class="table table-striped " style="width:100%">
+          <tr>
+              <td height="20" style="color: #080808;"> Fuel Station Name</td>
+              <td height="20" style="color: #070707;"> {{subsidiary}}</td>
+            </tr>
+      <tr>
+          <td height="20" style="color: #009688;">RTGS Petrol Quantity</td>
+          <td height="20">
+          {{rtgs_updates.petrol_quantity|floatformat:2|intcomma}} {% if rtgs_updates.petrol_quantity < 1000 %} 
+          <i class="fa fa-exclamation-triangle" style="margin-left: 10px; color:#cc3300;" aria-hidden="true"></i><a href="#" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
+        </td>
+        </tr>
+        <tr>
+            <td height="20">Price</td>
+            <td height="20">{{rtgs_updates.petrol_price}}</td>
+          </tr>
+          <tr>
+            <td height="20" style="color: #009688;">USD Petrol Quantity</td>
+            <td height="20">
+            {{usd_updates.petrol_quantity|floatformat:2|intcomma}} {% if usd_updates.petrol_quantity < 1000 %} 
+            <i class="fa fa-exclamation-triangle" style="margin-left: 10px; color:#cc3300;" aria-hidden="true"></i><a href="#" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
+          </td>
+          </tr>
+          <tr>
+            <td height="20">Price</td>
+            <td height="20">{{usd_updates.petrol_price}}</td>
+          </tr>
+          <tr>
+              <td height="20" style="color: #ffb61e;">RTGS Diesel Quantity</td>
+              
+              <td height="20">
+                 {{rtgs_updates.diesel_quantity|floatformat:2|intcomma}} {% if rtgs_updates.diesel_quantity < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 10px; color:#cc3300;" aria-hidden="true"></i><a href="#" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
+              </td>
+            </tr>
+            <tr>
+                <td height="20">Price</td>
+                <td height="20">{{rtgs_updates.diesel_price}}</td>
+              </tr>
+
+              <tr>
+                <td height="20" style="color: #ffb61e;">USD Diesel Quantity</td>
+                
+                <td height="20">
+                   {{usd_updates.diesel_quantity|floatformat:2|intcomma}} {% if usd_updates.diesel_quantity < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 10px; color:#cc3300;" aria-hidden="true"></i><a href="#" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
+                </td>
+              </tr>
+
+              <tr>
+                <td height="20">Price</td>
+                <td height="20">{{usd_updates.diesel_price}}</td>
+              </tr>
+             
+              <tr>
+                <td height="20">Queue Size</td>
+                <td height="20">{{rtgs_updates.queue_length}}</td>
+              </tr>
+              <tr>
+                  <td height="20">Status</td>
+                  <td height="20">{{rtgs_updates.status}}</td>
+                </tr>
+
+      </table>
+      <!--update fuel-->
+      <div class="modal fade" id="add_fuel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #136e6a;color: white;">
+              <h5 class="modal-title" id="exampleModalLabel">Update Petrol Quantity</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
-        </form>
-        <div class="header-title" style="margin-left: 0px;">
-            <h1>Fuel Updates</h1>
-            <small>Zimbabwe Fuel Management System</small>
+            <div class="modal-body">
 
-        </div>
-    </section>
-
-    <div class="col-md-12">
-
-        <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU"
-             data-index="0">
-            <div class="panel-heading ui-sortable-handle">
-                <div class="btn-group">
-                    <a class="btn btn-outline-primary" href="{% url 'serviceStation:activate_whatsapp' %}" style="margin-top: 23px;margin-bottom: 0;margin-left: 30px;background-color: #25d366;color: white;border: none;">
-                        <i class="fa fa-whatsapp" style="margin-right: 11px;"></i>
-                        {% if request.user.activated_for_whatsapp %}
-                            Deactivate Whatsapp
-                        {% else %}
-                            Activate Whatsapp
-                        {% endif %}
-                    </a>
-
-                </div>
-                <div class="dropdown">
-                    <ul class="dropdown-menu dropdown-menu-right">
-
-
-                    </ul>
-                    <div class="dropdown-toggle" data-toggle="dropdown"><span
-                            class="panel-control-icon glyphicon glyphicon-cog"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="panel-body">
-
-
-                <table id="example" class="table table-striped " style="width:100%">
-                    <tr>
-                        <td height="50"> Fuel Station Name</td>
-                        <td height="50"> {{subsidiary}}</td>
-                    </tr>
-                    <!--zwl petrol quantity-->
-                    <tr>
-                        <td height="50" style="color: #009688;">Petrol Quantity</td>
-                        <td height="50">
-                            {{updates.petrol_quantity|floatformat:2|intcomma}} {% if updates.petrol_quantity < 1000 %}
-                            <i class="fa fa-exclamation-triangle" style="margin-left: 10px; color:#cc3300;" aria-hidden="true"></i><a href="#pablo" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
-                        </td>
-                    </tr>
-                    <!--zwl petrol price-->
-                    <tr>
-                        <td height="50">Petrol Price</td>
-                        <td height="50">{{updates.petrol_price}}</td>
-                    </tr>
-                    <!--zwl diesel quantity-->
-                    <tr>
-                        <td height="50" style="color: #ffb61e;">Diesel Quantity</td>
-
-                        <td height="50">
-                            {{updates.diesel_quantity|floatformat:2|intcomma}} {% if updates.diesel_quantity < 1000 %} <i class="fa fa-exclamation-triangle" style="margin-left: 10px; color:#cc3300;" aria-hidden="true"></i><a href="#pablo" style="margin-left: 10px;">Please Request for More Stock...</a> {% endif %}
-                        </td>
-                    </tr>
-                    <!--zwl diesel price-->
-                    <tr>
-                        <td height="50">Diesel Price</td>
-                        <td height="50">{{updates.diesel_price}}</td>
-                    </tr>
-                    <tr>
-                        <td height="50">Payment Method</td>
-                        <td><b>{%if updates.cash%}Cash {% else%} {%endif%} {%if updates.usd%}USD {% else%} {%endif%} {%if updates.ecocash%}Ecocash {% else%} {%endif%} {%if updates.swipe%}Swipe {% else%} {%endif%}  </b> </td>
-                    </tr>
-                    <tr>
-                        <td height="50">Queue Size</td>
-                        <td height="50">{{updates.queue_length}}</td>
-                    </tr>
-                    <tr>
-                        <td height="50">Status</td>
-                        <td height="50">{{updates.status}}</td>
-                    </tr>
-
-                </table>
-                <!--update fuel-->
-                <div class="modal fade" id="add_fuel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header" style="background-color: #136e6a;color: white;">
-                                <h5 class="modal-title" id="exampleModalLabel">Update Today's Petrol Capacity</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-
-                                {% load crispy_forms_tags %}
-                                <form action="{% url 'serviceStation:home' %}" method="POST">
-                                    {% csrf_token %}
-                                    <div class="form-group">
-                                        <label>Petrol Quantity</label>
-                                        <input type="text" name="petrol_quantity" class="form-control" value="{{updates.petrol_quantity}}" />
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Queue Length</label>
-                                        <select name="queue_length" id="inputState" class="form-control" style="margin-left: 15px;" value="{{updates.queue_length}}">
-                                            <option> short </option>
-                                            <option> medium long </option>
-                                            <option> long </option>
-                                        </select>
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Status</label>
-                                        <select name="status" id="inputState" class="form-control" style="margin-left: 15px;" value="{{updates.status}}">
-                                            <option> Pumping </option>
-                                            <option> Empty </option>
-                                            <option> Expecting Fuel </option>
-                                            <option> Offloading </option>
-                                        </select>
-
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            {{sub_create_form.cash|as_crispy_field}}
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{sub_create_form.usd|as_crispy_field}}
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            {{sub_create_form.swipe|as_crispy_field}}
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{sub_create_form.ecocash|as_crispy_field}}
-                                        </div>
-                                    </div>
-
-
-
-
-                            </div>
-                            <div class="modal-footer">
-                                <div>
-                                    <button class="btn btn-default" data-dismiss="modal">Cancel</button> <button type="submit" class="btn btn-primary ">Update</button>
-                                </div>
-
-
-
-
-                                </form>
-                            </div>
-
+              {% load crispy_forms_tags %}
+              <form action="{% url 'serviceStation:home' %}" method="POST">
+                         {% csrf_token %}
+                         <div class="form-group">
+                          <label class="form-group">Select Currency</label>
+                          <select class="form-control" name="currency">
+                              <option value="RTGS">RTGS</option>
+                              <option value="USD">USD</option>
+                          </select>
+                      </div>
+                         <div class="form-group">
+                            <label>Petrol Quantity <i style="color: blue;"><small>put the remaining litres</small></i></label>
+                            <input type="text" name="petrol_quantity" class="form-control" value=" " />
                         </div>
-                    </div>
-                </div>
 
-                <div class="modal fade" id="add_diesel{{updates.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header" style="background-color: #126f72;color: white;">
-                                <h5 class="modal-title" id="exampleModalLabel">Update Today's diesel Capacity</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-
-                                {% load crispy_forms_tags %}
-                                <form action="{% url 'serviceStation:update_diesel' updates.id %}" method="POST">
-                                    {% csrf_token %}
-                                    <div class="form-group">
-                                        <label>Diesel Quantity</label>
-                                        <input type="text" name="diesel_quantity" class="form-control" value="{{updates.diesel_quantity}}" />
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Queue Length</label>
-                                        <select name="queue_length" id="inputState" class="form-control" style="margin-left: 15px;" value="{{updates.queue_length}}">
-                                            <option> short </option>
-                                            <option> medium long </option>
-                                            <option> long </option>
-                                        </select>
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Status</label>
-                                        <select name="status" id="inputState" class="form-control" style="margin-left: 15px;" value="{{updates.status}}">
-                                            <option> Pumping </option>
-                                            <option> Empty </option>
-                                            <option> Expecting Fuel </option>
-                                            <option> Offloading </option>
-                                        </select>
-
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            {{sub_create_form.cash|as_crispy_field}}
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{sub_create_form.usd|as_crispy_field}}
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            {{sub_create_form.swipe|as_crispy_field}}
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{sub_create_form.ecocash|as_crispy_field}}
-                                        </div>
-                                    </div>
-
-
-
-
-
-                            </div>
-                            <div class="modal-footer">
-                                <div >
-                                    <button class="btn btn-default" data-dismiss="modal">Cancel</button> <button type="submit" class="btn btn-primary ">Update</button>
-                                </div>
-                                </form>
-                            </div>
-
+                        <div class="form-group">
+                            <label class="form-group">Queue Length</label>
+                            <select name="queue_length" id="inputState" class="form-control" value="{{rtgs_updates.queue_length}}">
+                                <option> short </option>
+                              <option> medium long </option>
+                              <option> long </option>
+                            </select>
+                            
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <label class="form-group">Status</label>
+                            <select name="status" id="inputState" class="form-control" value="{{rtgs_updates.status}}">
+                                <option> Pumping </option>
+                              <option> Empty </option>
+                              <option> Expecting Fuel </option>
+                              <option> Offloading </option>
+                            </select>
+                            
+                        </div>
+                      
+                  
                 </div>
-                <div style="background-color:rgb(49, 60, 112);margin-left:auto;margin-right:auto;display:block;padding: 20px;">
-                    <div class="row">
-                        <button class="btn btn-primary col-md-4 pull-left"  style="margin-left: 150px;" data-toggle="modal" data-target="#add_fuel">Update Petrol Quantity</button>
-                        <button class="btn btn-primary col-md-4 pull-right" style="margin-right: 150px;"  data-toggle="modal" data-target="#add_diesel{{updates.id}}">Update Diesel Quantity</button>
-                    </div>
-                </div>
-
+                <div class="modal-footer">
+                  <div>  
+                      <button class="btn btn-default" data-dismiss="modal">Cancel</button> <button type="submit" class="btn btn-primary ">Update</button> 
+                  </div>
+  
+                
+                
+                
+              </form>
             </div>
+            
+          </div>
         </div>
+      </div>
+
+      <div class="modal fade" id="add_diesel{{rtgs_updates.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header" style="background-color: #126f72;color: white;">
+            <h5 class="modal-title" id="exampleModalLabel">Update Diesel Quantity</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            {% load crispy_forms_tags %}
+            <form action="{% url 'serviceStation:update_diesel' %}" method="POST">
+                       {% csrf_token %}
+                       <div class="form-group">
+                        <label class="form-group">Select Currency</label>
+                        <select class="form-control" name="currency">
+                            <option value="RTGS">RTGS</option>
+                            <option value="USD">USD</option>
+                            
+                        </select>
+                    </div>
+                       <div class="form-group">
+                        <label>Diesel Quantity <i style="color: blue;"><small>put the remaining litres</small></i></label>
+                          <input type="text" name="diesel_quantity" class="form-control" value=" " />
+                      </div>
+
+                      <div class="form-group">
+                          <label>Queue Length</label>
+                          <select name="queue_length" id="inputState" class="form-control" value="{{rtgs_updates.queue_length}}">
+                              <option> short </option>
+                            <option> medium long </option>
+                            <option> long </option>
+                          </select>
+                          
+                      </div>
+                      <div class="form-group">
+                          <label>Status</label>
+                          <select name="status" id="inputState" class="form-control" value="{{rtgs_updates.status}}">
+                              <option> Pumping </option>
+                            <option> Empty </option>
+                            <option> Expecting Fuel </option>
+                            <option> Offloading </option>
+                          </select>
+                          
+                      </div>
+                     
+              </div>
+              <div class="modal-footer">
+                      <div > 
+                          <button class="btn btn-default" data-dismiss="modal">Cancel</button> <button type="submit" class="btn btn-primary ">Update</button> 
+                          </div>  
+            </form>
+          </div>
+          
+        </div>
+      </div>
     </div>
+    <div style="background-color:rgb(49, 60, 112);margin-left:auto;margin-right:auto;display:block;padding: 20px;">
+      <div class="row">
+      <button class="btn btn-primary col-md-4 pull-left"  style="margin-left: 150px;" data-toggle="modal" data-target="#add_fuel">Update Petrol Quantities</button> 
+      <button class="btn btn-primary col-md-4 pull-right" style="margin-right: 150px;"  data-toggle="modal" data-target="#add_diesel{{rtgs_updates.id}}">Update Diesel Quantities</button> 
+      </div>
+    </div>
+
+  </div>
+</div>
+  </div>
 
 {% endblock %}
