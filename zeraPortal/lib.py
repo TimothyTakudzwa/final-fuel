@@ -29,7 +29,9 @@ def get_top_branches(count):
         sub.tran_count = sub_trans.count()
         # Get all the expected incomes from transactions qs 
         sub.tran_value = sub_trans.aggregate(total=Sum('expected'))['total']
-        subs.append(sub)    
+        # Filter out null values
+        if sub.tran_value:
+            subs.append(sub)    
 
     # Sort subsidiaries by transaction value
     sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True) 
