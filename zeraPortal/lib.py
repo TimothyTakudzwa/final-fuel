@@ -20,10 +20,8 @@ def get_top_branches(count):
     subs = []
 
     for sub in branches:
-        tran_amount = 0
-        sub_trans = Transaction.objects.filter(supplier__company=company,supplier__subsidiary_id=sub.id, is_complete=True)
-        for sub_tran in sub_trans:
-            tran_amount += (sub_tran.offer.request.amount * sub_tran.offer.price)
+        for sub_tran in Transaction.objects.filter(supplier__company=company,supplier__subsidiary_id=sub.id, is_complete=True):
+            tran_amount += sub_tran.expected
         sub.tran_count = sub_trans.count()
         sub.tran_value = tran_amount
         subs.append(sub)
@@ -100,8 +98,6 @@ def get_weekly_sales(this_week):
     return weekly_data         
 
              
-
-
 def get_aggregate_monthly_sales(year):
     '''
     Get the companies monthly sales
