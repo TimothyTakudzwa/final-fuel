@@ -102,7 +102,7 @@ def new_get_weekly_orders(this_week):
         if day_trans:
             weeks_revenue = day_trans.filter(date=day, payment_approved=True).aggregate(
                 total=Sum('amount_paid')
-            )['amount_paid']
+            )['total']
         else:
             weeks_revenue = 0
         weekly_data[day.strftime("%a")] = int(weeks_revenue)
