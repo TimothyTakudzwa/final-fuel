@@ -98,7 +98,7 @@ def new_get_weekly_orders(this_week):
         weeks_revenue = 0
         day_trans = Order.objects.filter(date=day, payment_approved=True)
         if day_trans:
-            weeks_revenue = day_trans(date=day, payment_approved=True).aggregate(
+            weeks_revenue = day_trans.filter(date=day, payment_approved=True).aggregate(
                 total=Sum('amount_paid')
             )['amount_paid']
         else:
