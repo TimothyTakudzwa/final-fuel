@@ -116,8 +116,12 @@ def get_monthly_orders():
         #     months_qty = 0
 
         counter += 1    
-                     
-        monthly_data[month] = months_qty
+        
+        if months_qty:             
+            monthly_data[month] = months_qty
+        else:
+            monthly_data[month] = 0.00
+
     return monthly_data    
 
 
