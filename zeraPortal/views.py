@@ -1237,7 +1237,12 @@ def statistics(request):
     # petrol = stock['petrol']
     sorted_subs = get_top_branches(10)
 
+
+    trans = Transaction.objects.filter(is_complete=True).annotate(
+        number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
+    
     clients = get_top_clients(10)
+
 
     # for company in companies:
     #     company.total_value = value[counter]

@@ -52,19 +52,16 @@ def get_top_clients(count):
     new_buyers = []
 
     # Loop that will add attach all transaction data to our client objects
-    if buyers:
-        for buyer in buyers:
-            # accumulate all the transactions associated with the buyer
-            new_buyer_transactions = trans.filter(buyer=buyer, is_complete=True).all()    
-            buyer.total_revenue = new_buyer_transactions.aggregate(total=Sum('expected'))['total']
-            buyer.purchases = new_buyer_transactions
-            buyer.number_of_trans = new_buyer_transactions.count()
-            if buyer not in new_buyers and buyer.total_revenue:
-                new_buyers.append(buyer)
+    for buyer in buyers:
+        # accumulate all the transactions associated with the buyer
+        new_buyer_transactions = trans.filter(buyer=buyer, is_complete=True).all()    
+        buyer.total_revenue = new_buyer_transactions.aggregate(total=Sum('expected'))['total']
+        buyer.purchases = new_buyer_transactions
+        buyer.number_of_trans = new_buyer_transactions.count()
+        if buyer not in new_buyers and buyer.total_revenue:
+            new_buyers.append(buyer)
 
-        clients = sorted(new_buyers, key=lambda x: x.total_revenue, reverse=True)
-    else:
-        clients = []    
+    clients = sorted(new_buyers, key=lambda x: x.total_revenue, reverse=True)
     return clients[:count]
 
 
