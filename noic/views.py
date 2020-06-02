@@ -867,7 +867,7 @@ def statistics(request):
         if client not in new_clients:
             new_clients.append(client)
 
-    clients = sorted(new_clients, key=lambda x: x.total_revenue, reverse=True)
+    clients = get_top_clients()
 
     return render(request, 'noic/statistics.html',
                   {'requests_notifications': requests_notifications, 'num_of_requests': num_of_requests, 'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev, 'last_week_rev': last_week_rev,
