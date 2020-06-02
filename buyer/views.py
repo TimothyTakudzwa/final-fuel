@@ -1915,4 +1915,4 @@ View to view proof of payments
 '''
 def view_pop(request, id):
     payment_history = AccountHistory.objects.filter(transaction__id=id).all()
-    return render(request, 'buyer/delivery_note.html', payment_history=payment_history)
+    return render(request, 'buyer/delivery_note.html', {'payment_history' : payment_history})
