@@ -16,20 +16,26 @@ def get_top_branches(count):
     Get an ordered list of a companies top subsidiaries
     according to revenue generated
     '''
-    branches = Subsidiaries.objects.all()
+
+    branches = Subsidiaries.objects.filter(is_depot=True)
+    # Retrieve all Subsidiaries
+
     subs = []
 
     for sub in branches:
-        tran_amount = 0
-        sub_trans = Transaction.objects.filter(supplier__company=company,supplier__subsidiary_id=sub.id, is_complete=True)
-        for sub_tran in sub_trans:
-            tran_amount += (sub_tran.offer.request.amount * sub_tran.offer.price)
+        # Fetch all transactions related to Subsidiaries
+        sub_trans = Transaction.objects.filter(supplier__subsidiary_id=sub.id, is_complete=True)
+        # Get number of transaction objects
         sub.tran_count = sub_trans.count()
-        sub.tran_value = tran_amount
-        subs.append(sub)
+        # Get all the expected incomes from transactions qs 
+        sub.tran_value = sub_trans.aggregate(total=Sum('expected'))['total']
+        # Filter out null values
+        if sub.tran_value:
+            subs.append(sub)    
 
-    # sort subsidiaries by transaction value
+    # Sort subsidiaries by transaction value
     sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True) 
+    # Slice subs list according to cutoff value. N items
     sorted_subs = sorted_subs[:count]
     return sorted_subs
 
@@ -49,28 +55,28 @@ def get_week_days(date):
     return [date + timedelta(days=i) for i in range(0 - date.weekday(), 7 - date.weekday())]
 
 
-def get_weekly_sales(this_week):
-    '''
-    Get the company's weekly sales
-    '''
-    if this_week == True:
-        date = datetime.now().date()
-    else:
-        date = datetime.now().date() - timedelta(days=7)    
-    week_days = get_week_days(date)
-    weekly_data = {}
-    for day in week_days:
-        weeks_revenue = 0
-        day_trans = Transaction.objects.filter(date=day, is_complete=True)
-        if day_trans:
-            for tran in day_trans:
-                weeks_revenue += tran.expected
-        else:
-            weeks_revenue = 0
-        weekly_data[day.strftime("%a")] = int(weeks_revenue)
-    return weekly_data      
+# def get_weekly_sales(this_week):
+#     '''
+#     Get the company's weekly sales
+#     '''
+#     if this_week == True:
+#         date = datetime.now().date()
+#     else:
+#         date = datetime.now().date() - timedelta(days=7)    
+#     week_days = get_week_days(date)
+#     weekly_data = {}
+#     for day in week_days:
+#         weeks_revenue = 0
+#         day_trans = Transaction.objects.filter(date=day, is_complete=True)
+#         if day_trans:
+#             for tran in day_trans:
+#                 weeks_revenue += tran.expected
+#         else:
+#             weeks_revenue = 0
+#         weekly_data[day.strftime("%a")] = int(weeks_revenue)
+#     return weekly_data      
 
-def new_get_weekly_sales(this_week):
+def get_weekly_sales(this_week):
     '''
     Get the company's weekly sales
     '''
@@ -100,8 +106,6 @@ def new_get_weekly_sales(this_week):
     return weekly_data         
 
              
-
-
 def get_aggregate_monthly_sales(year):
     '''
     Get the companies monthly sales

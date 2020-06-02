@@ -207,7 +207,7 @@
                             <td>Approved</td>
                             <td>{{payment.value|floatformat:2|intcomma}}</td>
                             <td>{{payment.balance|floatformat:2|intcomma}}</td>
-                            {% if payment.pop_approved == False %}
+                            {% if payment.pop_approved == False and payment.transaction.paid != payment.transaction.expected %}
                             <td>
                                 <div class="btn-group">
                                     <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-proof' payment.id %}" > 

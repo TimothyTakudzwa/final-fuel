@@ -130,7 +130,7 @@ def login_user(request):
                             return redirect("buyer:approve_companies")
                     # wrong password
                     else:
-                        messages.info(request, 'Wrong password.')
+                        messages.info(request, 'Wrong username or password.')
                         return redirect('login')
                 # user hasn't completed registration yet
                 else:
@@ -139,7 +139,7 @@ def login_user(request):
                     return redirect('login')
             # throw account not found error
             else:
-                messages.info(request, 'Please register first.')
+                messages.info(request, 'Wrong username or password.')
                 return redirect('login')
     return render(request, 'buyer/signin.html', context=context)
 
@@ -277,8 +277,7 @@ Change password
 @login_required()
 @user_role
 def change_password(request):
-    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
-    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
+    notifications, num_of_notifications = notifications_retriever(request.user)
     context = {
         'title': 'ZFMS | Change Password',
         'num_of_notifications': num_of_notifications,
@@ -329,9 +328,8 @@ for loading user profile, editing profile and changing password
 @login_required()
 @user_role
 def profile(request):
+    notifications, num_of_notifications = notifications_retriever(request.user)
     compan = Company.objects.filter(id=request.user.company.id).first()
-    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
-    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     if request.method == 'POST':
         old = request.POST.get('old_password')
         new1 = request.POST.get('new_password1')
@@ -374,10 +372,9 @@ The requests shown are those that are not complete and             that have bee
 @login_required()
 @user_role
 def fuel_request(request):
+    notifications, num_of_notifications = notifications_retriever(request.user)
     user_logged = request.user
     fuel_requests = FuelRequest.objects.filter(name=user_logged, is_complete=False).all()
-    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
-    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     for fuel_request_item in fuel_requests:
         if fuel_request_item.is_direct_deal:
             depot = Subsidiaries.objects.filter(id=fuel_request_item.last_deal).first()
@@ -539,8 +536,7 @@ Landing page
 @login_required
 @user_role
 def dashboard(request):
-    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
-    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
+    notifications, num_of_notifications = notifications_retriever(request.user)
     updates = []
     branches = DeliveryBranch.objects.filter(company=request.user.company).all()
     if request.user.company.is_govnt_org:
@@ -710,8 +706,7 @@ Offers
 @login_required
 def offers(request, id):
     user_permission(request)
-    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
-    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
+    notifications, num_of_notifications = notifications_retriever(request.user)
     selected_request = FuelRequest.objects.filter(id=id).first()
     offers = Offer.objects.filter(request=selected_request).filter(declined=False).all()
     for offer in offers:
@@ -820,8 +815,7 @@ Transaction Handlers
 def transactions(request):
 
     buyer = request.user
-    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
-    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
+    notifications, num_of_notifications = notifications_retriever(request.user)
     all_transactions = Transaction.objects.filter(buyer=buyer).all()
     for transaction in all_transactions:
         subsidiary = Subsidiaries.objects.filter(id=transaction.supplier.subsidiary_id).first()
@@ -1112,12 +1106,10 @@ def view_release_note(request, id):
 @login_required
 @user_role
 def delivery_schedules(request):
+    notifications, num_of_notifications = notifications_retriever(request.user)
     completed_schedules = []
     pending_schedules =[]
     schedules = DeliverySchedule.objects.filter(transaction__buyer=request.user).all()
-    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
-    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
-
     for schedule in schedules:
         schedule.subsidiary = Subsidiaries.objects.filter(id=schedule.transaction.supplier.subsidiary_id).first()
         if schedule.transaction.offer.delivery_method.lower() == 'delivery':
@@ -1318,6 +1310,7 @@ Buyer Accounts
 @login_required()
 @user_role
 def accounts(request):
+    notifications, num_of_notifications = notifications_retriever(request.user)
     form = FuelRequestForm(request.POST)
     accounts_available = Account.objects.filter(buyer_company=request.user.company).all()
     fuel_orders = FuelRequest.objects.filter(private_mode=True).all().order_by('date')
@@ -1325,8 +1318,6 @@ def accounts(request):
     total_costs = transactions_total_cost(request.user)
     offers_count_all, offers_count_today = total_offers(request.user)
     branches = DeliveryBranch.objects.filter(company=request.user.company).all()
-    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
-    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     return render(request, 'buyer/accounts.html',
                   {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'branches': branches, 'form': form, 'accounts': accounts_available, 'fuel_orders': fuel_orders, 'order_nums': order_nums,
                    'latest_orders': latest_orders, 'total_costs': total_costs, 'offers_count_all': offers_count_all,
@@ -1559,9 +1550,8 @@ payment history
 @login_required()
 def payment_history(request, id):
     user_permission(request)
+    notifications, num_of_notifications = notifications_retriever(request.user)
     form1 = DeliveryScheduleForm()
-    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
-    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
     return render(request, 'buyer/payment_history.html', {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'payment_history': payment_history, 'form1': form1})
@@ -1570,9 +1560,8 @@ def payment_history(request, id):
 @login_required()
 def payment_release_notes(request, id):
     user_permission(request)
+    notifications, num_of_notifications = notifications_retriever(request.user)
     form1 = DeliveryScheduleForm()
-    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
-    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
     transaction = Transaction.objects.filter(id=id).first()
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
     return render(request, 'buyer/payment_and_rnote.html', {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'payment_history': payment_history, 'form1': form1})
@@ -1588,8 +1577,7 @@ Account Application
 @login_required
 def account_application(request):
     user_permission(request)
-    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
-    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
+    notifications, num_of_notifications = notifications_retriever(request.user)
     companies = Company.objects.filter(company_type='SUPPLIER').all()
     for company in companies:
         company.admin = User.objects.filter(company=company, user_type='S_ADMIN').first()
@@ -1664,8 +1652,7 @@ def company_profile(request):
 @login_required()
 @user_role
 def activity(request):
-    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
-    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
+    notifications, num_of_notifications = notifications_retriever(request.user)
     current_activities = Activity.objects.filter(user=request.user, date=today).all()
     filtered_activities = None
     for activity in current_activities:
@@ -1808,8 +1795,7 @@ def activity(request):
 
 @login_required
 def delivery_branches(request):
-    notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
-    num_of_notifications = Notification.objects.filter(company=request.user.company).filter(~Q(action="new_request")).filter(is_read=False).count()
+    notifications, num_of_notifications = notifications_retriever(request.user)
     branches = DeliveryBranch.objects.filter(company=request.user.company).all()
     return render(request, 'buyer/delivery_branches.html', {'notifications': notifications, 'num_of_notifications': num_of_notifications, 'branches' : branches})
 
@@ -1892,3 +1878,12 @@ def view_confirmation_doc(request, id):
         'payment': payment
     }
     return render(request, 'buyer/delivery_note.html', context=context)
+
+
+'''
+function to retrieve notifications for the notification panel and bell
+'''
+def notifications_retriever(user):
+    notifications = Notification.objects.filter(company=user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
+    num_of_notifications = len(notifications)
+    return notifications, num_of_notifications
