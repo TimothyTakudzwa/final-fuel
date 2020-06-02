@@ -1887,3 +1887,32 @@ def notifications_retriever(user):
     notifications = Notification.objects.filter(company=user.company).filter(~Q(action="new_request")).filter(is_read=False).all()
     num_of_notifications = len(notifications)
     return notifications, num_of_notifications
+
+
+'''
+View to download proof of payment
+'''
+def download_proof(request, id):
+    document = AccountHistory.objects.filter(id=id).first()
+    if document:
+        try:
+            filename = document.proof_of_payment.name.split('/')[-1]
+            response = HttpResponse(document.proof_of_payment, content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename=%s' % filename
+            
+            return response
+        except:
+            # The meaning of this in comparison with the one below is that
+            messages.warning(request, 'Document not found internally.')
+            return redirect(f'/buyer/payment_history/{id}')
+    else:
+        messages.warning(request, 'Document not found.')
+        return redirect(f'/buyer/payment_history/{id}')
+
+
+'''
+View to view proof of payments
+'''
+def view_pop(request, id):
+    payment_history = AccountHistory.objects.filter(transaction__id=id).all()
+    return render(request, 'buyer/delivery_note.html', payment_history=payment_history)
