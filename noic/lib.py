@@ -105,13 +105,15 @@ def get_monthly_orders():
     monthly_data = {}
     counter = 1
     for month in months:
-        months_qty = 0
-        months_orders = Order.objects.filter(date__year=year, date__month=counter)
-        if months_orders:
-            for order in months_orders :
-                months_qty += order.amount_paid
-        else:
-            months_qty = 0
+        months_qty = Order.objects.filter(date__year=year, date__month=counter).aggregate(
+            total=Sum('amount_paid')
+        )['total']
+        # months_orders = Order.objects.filter(date__year=year, date__month=counter)
+        # if months_orders:
+        #     for order in months_orders :
+        #         months_qty += order.amount_paid
+        # else:
+        #     months_qty = 0
 
         counter += 1    
                      
