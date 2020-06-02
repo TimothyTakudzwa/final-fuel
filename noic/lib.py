@@ -63,28 +63,8 @@ def get_week_days(date):
     '''
     return [date + datetime.timedelta(days=i) for i in range(0 - date.weekday(), 7 - date.weekday())]
 
+            
 def get_weekly_orders(this_week):
-    '''
-    Get the company's weekly sales
-    '''
-    if this_week == True:
-        date = datetime.datetime.now().date()
-    else:
-        date = datetime.datetime.now().date() - datetime.timedelta(days=7)    
-    week_days = get_week_days(date)
-    weekly_data = {}
-    for day in week_days:
-        weeks_revenue = 0
-        day_trans = Order.objects.filter(date=day, payment_approved=True)
-        if day_trans:
-            for tran in day_trans:
-                weeks_revenue += tran.amount_paid
-        else:
-            weeks_revenue = 0
-        weekly_data[day.strftime("%a")] = int(weeks_revenue)
-    return weekly_data               
-
-def new_get_weekly_orders(this_week):
     '''
     Get the company's weekly sales
     '''
