@@ -8,7 +8,7 @@ from company.models import CompanyFuelUpdate
 from .constants import zimbabwean_towns, major_cities
 
 import pandas
-from django.db.models import Sum
+from django.db.models import Sum, Count
 
         
 def get_top_branches(count):
