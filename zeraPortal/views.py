@@ -1235,12 +1235,13 @@ def statistics(request):
     # stock = get_aggregate_stock()
     # diesel = stock['diesel']
     # petrol = stock['petrol']
+    sorted_subs = get_top_branches(10)
+
 
     trans = Transaction.objects.filter(is_complete=True).annotate(
         number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
     buyers = [client.buyer for client in trans]
 
-    sorted_subs = get_top_branches(10)
 
     new_buyers = []
 
