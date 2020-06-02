@@ -1237,29 +1237,7 @@ def statistics(request):
     # petrol = stock['petrol']
     sorted_subs = get_top_branches(10)
 
-
-    trans = Transaction.objects.filter(is_complete=True).annotate(
-        number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
-    buyers = [client.buyer for client in trans]
-
-
-    new_buyers = []
-
-    for buyer in buyers:
-        total_transactions = buyers.count(buyer)
-        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, is_complete=True).all()
-        total_value = 0
-        purchases = []
-        for tran in new_buyer_transactions:
-            total_value += (float(tran.offer.request.amount) * float(tran.offer.price))
-            purchases.append(tran)
-        buyer.total_revenue = total_value
-        buyer.purchases = purchases
-        buyer.number_of_trans = total_transactions
-        if buyer not in new_buyers:
-            new_buyers.append(buyer)
-
-    clients = sorted(new_buyers, key=lambda x: x.total_revenue, reverse=True)
+    clients = get_top_clients(10)
 
     # for company in companies:
     #     company.total_value = value[counter]
