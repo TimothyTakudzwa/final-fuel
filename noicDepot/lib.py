@@ -49,16 +49,16 @@ def get_aggregate_monthly_sales(year, depot):
     months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     monthly_data = {}
     counter = 1
+
     for month in months:
-        months_revenue = 0
-        months_trans = Order.objects.filter(date__year=year, date__month=counter, payment_approved=True, noic_depot=depot)
-        if months_trans:
-            for tran in months_trans :
-                months_revenue += tran.amount_paid
+        months_revenue = Order.objects.filter(date__year=year, date__month=counter, payment_approved=True, noic_depot=depot).aggregate(
+            total = Sum('amount_paid')
+        )['total']
+        if months_revenue:
+            monthly_data[month] = months_revenue
         else:
-            months_revenue = 0
+            monthly_data[month] = 0.0
 
         counter += 1    
-                     
-        monthly_data[month] = months_revenue
+                      
     return monthly_data    
