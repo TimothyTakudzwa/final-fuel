@@ -1,5 +1,7 @@
 import datetime
 
+from django.db.models import Sum
+
 from national.models import NationalFuelUpdate, SordNationalAuditTrail, Order
 
 def get_current_usd_stock():
