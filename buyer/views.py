@@ -770,7 +770,7 @@ def accept_offer(request, id):
         description = f"You have accepted offer of {offer.quantity}L {offer.request.fuel_type}"
         Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description,
                                 reference_id=offer.id)
-        messages.warning(request, "Your request has been saved successfully.")
+        messages.warning(request, "You have accepted offer successfully.")
         return redirect("buyer-transactions")
     else:
         messages.info(request,
