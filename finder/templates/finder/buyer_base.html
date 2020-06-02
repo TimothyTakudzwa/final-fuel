@@ -270,21 +270,11 @@
             {% if messages %}
         
             {% for message in messages %}
-                {%if message.tags == 'warning' %}
-                <script>
-                    $(document).ready(function () {
-                        swal("Success!", "You transaction has been created, please make a payment and upload the proof of payment so that the Supplier will approve and create a delivery schedule for you", "success");
-                    });
-                </script>
-                
+               
                 <div class="alert alert-{{ message.tags }}" style="text-align: center">
                     {{ message }}
                 </div>
-                {%else%}
-                <div class="alert alert-{{ message.tags }}" style="text-align: center">
-                    {{ message }}
-                </div>
-                {%endif%}
+               
             {% endfor %}
         
         {% endif %}

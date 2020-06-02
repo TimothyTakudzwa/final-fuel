@@ -40,9 +40,9 @@ def bot_action(request, user, message):
     elif user.user_type == 'S_ADMIN':
         return "You are not allowed to use this platform"
     elif user.user_type == 'BUYER':
-        return buyer_handler(request, user,message)
+        return "You are not allowed to use this platform"
     elif user.user_type == 'SUPPLIER':
-        return supplier_handler(request, user, message)
+        return "You are not allowed to use this platform"
     elif user.user_type == 'SS_SUPPLIER':
         return service_station_handler(request, user,message)
 
@@ -72,14 +72,11 @@ def registration_handler(request, user, message):
             user.user_type = selected_option
             user.position = 4
             user.save()
-            print(user.user_type)
+            
         except:
             return "Please select a valid option\n\n" + greetings_message
-        print("got here")
-        if selected_option == 'SUPPLIER' or selected_option == 'BUYER':
-            response_message = "Can i have your company email address.\n*NB* using your personal email address gets you lower precedence in the fuel finding process"
-        else:
-            response_message = "Can i please have your email address"
+        
+        response_message = "Can i please have your email address"
     elif user.position == 4:
         user_exists = User.objects.filter(email=message).first()
         if user_exists is not None:
@@ -184,7 +181,7 @@ def individual_handler(request, user,message):
 
 def requesting_for_fuel(user, message):
     if user.position == 1:
-        cities = ['Beitbridge', 'Bindura', 'Bulawayo', 'Chinhoyi', 'Chirundu', 'Gweru', 'Harare', 'Hwange', 'Juliusdale', 'Kadoma', 'Kariba', 'Karoi', 'Kwekwe', 'Marondera', 'Masvingo', 'Mutare', 'Mutoko', 'Nyanga', 'Victoria Falls']
+        cities = ['Harare', 'Bulawayo', 'Beitbridge', 'Bindura', 'Chinhoyi', 'Chirundu', 'Gweru', 'Hwange', 'Juliusdale', 'Kadoma', 'Kariba', 'Karoi', 'Kwekwe', 'Marondera', 'Masvingo', 'Mutare', 'Mutoko', 'Nyanga', 'Victoria Falls']
         response_message = "Which City are you in?\n\n"
         i = 1
         for city in cities:
@@ -222,11 +219,15 @@ def requesting_for_fuel(user, message):
             response_message = 'Please visit one of the service stations below to buy fuel\n\n'
             i = 1
             for station in stations:
-                fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).exists()
-                if fuel_update:
-                    fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).first()
-                    response_message = response_message + f'{i}. *{station.name}*\nPetrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nDiesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n'
-                    i += 1
+                fuel_update = SuballocationFuelUpdate.objects.filter(subsidiary=station).filter(payment_type='RTGS').first()
+                usd_update = SuballocationFuelUpdate.objects.filter(subsidiary=station).filter(payment_type='USD').first()
+                if fuel_update is not None:
+                    if usd_update is not None:
+                        response_message = response_message + f'{i}. *{station.name}*\nRTGS Petrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nRTGS Diesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nUSD Petrol: {usd_update.petrol_quantity} Litres\nPrice: {usd_update.petrol_price}\nUSD Diesel: {usd_update.diesel_quantity} Litres\nPrice: {usd_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n'
+                        i += 1
+                    else:
+                        response_message = response_message + f'{i}. *{station.name}*\nRTGS Petrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nRTGS Diesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n'
+                        i += 1
                 else:
                     pass
     elif user.position == 12:
@@ -244,11 +245,15 @@ def requesting_for_fuel(user, message):
         response_message = 'Please visit one of the service stations below to buy fuel\n\n'
         i = 1
         for station in stations:
-            fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).exists()
-            if fuel_update:
-                fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).first()
-                response_message = response_message + f'{i}. *{station.name}*\nPetrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nDiesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n'
-                i += 1
+            fuel_update = SuballocationFuelUpdate.objects.filter(subsidiary=station).filter(payment_type='RTGS').first()
+            usd_update = SuballocationFuelUpdate.objects.filter(subsidiary=station).filter(payment_type='USD').first()
+            if fuel_update is not None:
+                if usd_update is not None:
+                    response_message = response_message + f'{i}. *{station.name}*\nRTGS Petrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nRTGS Diesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nUSD Petrol: {usd_update.petrol_quantity} Litres\nPrice: {usd_update.petrol_price}\nUSD Diesel: {usd_update.diesel_quantity} Litres\nPrice: {usd_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n'
+                    i += 1
+                else:
+                    response_message = response_message + f'{i}. *{station.name}*\nRTGS Petrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nRTGS Diesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n'
+                    i += 1
             else:
                 pass
     elif user.position == 13:
@@ -262,11 +267,15 @@ def requesting_for_fuel(user, message):
         response_message = 'Please visit one of the service stations below to buy fuel\n\n'
         i = 1
         for station in stations:
-            fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).exists()
-            if fuel_update:
-                fuel_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).first()
-                response_message = response_message + f'{i}. *{station.name}*\nPetrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nDiesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n'
-                i += 1
+            fuel_update = SuballocationFuelUpdate.objects.filter(subsidiary=station).filter(payment_type='RTGS').first()
+            usd_update = SuballocationFuelUpdate.objects.filter(subsidiary=station).filter(payment_type='USD').first()
+            if fuel_update is not None:
+                if usd_update is not None:
+                    response_message = response_message + f'{i}. *{station.name}*\nRTGS Petrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nRTGS Diesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nUSD Petrol: {usd_update.petrol_quantity} Litres\nPrice: {usd_update.petrol_price}\nUSD Diesel: {usd_update.diesel_quantity} Litres\nPrice: {usd_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n'
+                    i += 1
+                else:
+                    response_message = response_message + f'{i}. *{station.name}*\nRTGS Petrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nRTGS Diesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n'
+                    i += 1
             else:
                 pass
     return response_message
@@ -278,11 +287,15 @@ def station_updates(user, message):
         i = 1
         for station in stations:
             response_message = 'The following are the current updates of fuel available in different stations. Please type *menu* to go back to menu and look for fuel\n\n'
-            sub_fuel_updates = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).exists()
-            if sub_fuel_updates:
-                sub_fuel_updates = SubsidiaryFuelUpdate.objects.filter(subsidiary=station).first()
-                response_message = response_message + f'{i}. *{station.name}*\nPetrol: {sub_fuel_updates.petrol_quantity} Litres\nPrice: {sub_fuel_updates.petrol_price}\nDiesel: {sub_fuel_updates.diesel_quantity} Litres\nPrice: {sub_fuel_updates.diesel_price}\nQueue Length: {sub_fuel_updates.queue_length}\nStatus: {sub_fuel_updates.status}\n\n'
-                i += 1
+            fuel_update = SuballocationFuelUpdate.objects.filter(subsidiary=station).filter(payment_type='RTGS').first()
+            usd_update = SuballocationFuelUpdate.objects.filter(subsidiary=station).filter(payment_type='USD').first()
+            if fuel_update is not None:
+                if usd_update is not None:
+                    response_message = response_message + f'{i}. *{station.name}*\nRTGS Petrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nRTGS Diesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nUSD Petrol: {usd_update.petrol_quantity} Litres\nPrice: {usd_update.petrol_price}\nUSD Diesel: {usd_update.diesel_quantity} Litres\nPrice: {usd_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n'
+                    i += 1
+                else:
+                    response_message = response_message + f'{i}. *{station.name}*\nRTGS Petrol: {fuel_update.petrol_quantity} Litres\nPrice: {fuel_update.petrol_price}\nRTGS Diesel: {fuel_update.diesel_quantity} Litres\nPrice: {fuel_update.diesel_price}\nQueue Length: {fuel_update.queue_length}\nStatus: {fuel_update.status}\n\n'
+                    i += 1
             else:
                 pass
     return response_message
@@ -1102,29 +1115,41 @@ def service_station_handler(request,user,message):
 def update_petrol(user, message):
     if user.position == 1:
         subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
-        update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
-        response_message = "The last update of Petrol quantity is" + " " + str(update.petrol_quantity) + "L" + "." + " " + "How many litres of petrol left?"
-        user.position = 40
-        user.save()
+        update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='RTGS').first()
+        usd_update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='USD').first()
+        if update is not None:
+            if usd_update is not None:
+                response_message = "The last update of RTGS Petrol quantity is" + " " + str(update.petrol_quantity) + "L" + "." + " " + "How many litres of RTGS petrol left?"
+                user.position = 200
+                user.save()
+            else:
+                response_message = "The last update of RTGS Petrol quantity is" + " " + str(update.petrol_quantity) + "L" + "." + " " + "How many litres of RTGS petrol left?"
+                user.position = 40
+                user.save()
+        else:
+            response_message = "You have not received any fuel yet, please contact HQ" 
     elif user.position == 40:
         subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
-        update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
+        update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='RTGS').first()
+        main_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
         new_update = int(message)
         if new_update > update.petrol_quantity:
-            response_message = 'You can not update the available fuel to an amount greater than the last update, Please enter the actual amount of Petrol left'
+            response_message = 'You can not update the available fuel to an amount greater than the last update, Please enter the actual amount of RTGS Petrol left'
             user.position = 40
             user.save()
         else:
             fuel_reduction = update.petrol_quantity - float(message)
+            main_update.petrol_quantity -= fuel_reduction
             update.petrol_quantity = message
             user.position = 41
             user.save()
             update.save()
-            sord_update(user, fuel_reduction, 'Fuel Update', 'Petrol')
+            main_update.save()
+            sord_update(user, fuel_reduction, 'Fuel Update', 'Petrol', 'RTGS')
             response_message = 'What is the queue size?\n\n1. Short\n2. Medium Long\n3. Long'
     elif user.position == 41:
         subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
-        update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
+        update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='RTGS').first()
         if message == "1":
             update.queue_length = "Short"
         elif message == "2":
@@ -1139,7 +1164,7 @@ def update_petrol(user, message):
         response_message = "What is the status?\n\n1. Pumping\n2. Expecting More Fuel\n3. Empty\n4. Offloading"
     elif user.position == 42:
         subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
-        update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
+        update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='RTGS').first()
         if message == "1":
             update.status = "Pumping"
             update.save()
@@ -1157,58 +1182,92 @@ def update_petrol(user, message):
         user.position = 43
         user.fuel_request = update.id
         user.save()
-        response_message = 'What do you want to use for payment.\n\n1. ZWL(Cash) Only\n2. Ecocash Only\n3. RTGS(Swipe)/Transfer Only\n4. USD Only\n5. Cash or Ecocash\n6. Cash or Swipe\n7. Ecocash or Swipe\n'
-    elif user.position == 43:
-        update = SubsidiaryFuelUpdate.objects.filter(id=user.fuel_request).first()
-        if message == "1":
-            update.cash = True
-        elif message == "2":
-            update.ecocash = True
-        elif message == "3":
-            update.swipe = True
-        elif message == "4":
-            update.usd = True
-        elif message == "5":
-            update.ecocash = True
-            update.cash = True
-        elif message == "6":
-            update.swipe = True
-            update.cash = True
-        elif message == "7":
-            update.ecocash = True
-            update.swipe = True
-        else:
-            return "Incorrect Choice"
         response_message = "Made an update successfully, Please type *menu* to go back to main menu"
+    
+    elif user.position == 200:
+        subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
+        update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='RTGS').first()
+        usd_update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='USD').first()
+        main_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
+        new_update = int(message)
+        if new_update > update.petrol_quantity:
+            response_message = 'You can not update the available fuel to an amount greater than the last update, Please enter the actual amount of RTGS Petrol left'
+            user.position = 200
+            user.save()
+        else:
+            fuel_reduction = update.petrol_quantity - float(message)
+            main_update.petrol_quantity -= fuel_reduction
+            update.petrol_quantity = message
+            user.position = 201
+            user.save()
+            update.save()
+            main_update.save()
+            sord_update(user, fuel_reduction, 'Fuel Update', 'Petrol', 'RTGS')
+            response_message = "The last update of USD Petrol quantity is" + " " + str(usd_update.petrol_quantity) + "L" + "." + " " + "How many litres of USD petrol left?"
+    
+    elif user.position == 201:
+        subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
+        update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='USD').first()
+        main_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
+        new_update = int(message)
+        if new_update > update.petrol_quantity:
+            response_message = 'You can not update the available fuel to an amount greater than the last update, Please enter the actual amount of USD Petrol left'
+            user.position = 201
+            user.save()
+        else:
+            fuel_reduction = update.petrol_quantity - float(message)
+            main_update.petrol_quantity -= fuel_reduction
+            update.petrol_quantity = message
+            user.position = 41
+            user.save()
+            update.save()
+            main_update.save()
+            sord_update(user, fuel_reduction, 'Fuel Update', 'Petrol', 'USD')
+            response_message = 'What is the queue size?\n\n1. Short\n2. Medium Long\n3. Long'
+    
     return response_message
 
 
 def update_diesel(user, message):
     if user.position == 1:
         subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
-        update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
-        response_message = "The last update of Diesel quantity is" + " " + str(update.diesel_quantity) + "L" + "." + " " + "How many litres of diesel left?"
-        user.position = 50
-        user.save()
+        update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='RTGS').first()
+        usd_update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='USD').first()
+        if update is not None:
+            if usd_update is not None:
+                response_message = "The last update of RTGS Diesel quantity is" + " " + str(update.diesel_quantity) + "L" + "." + " " + "How many litres of RTGS diesel left?"
+                user.position = 300
+                user.save()
+            else:
+                response_message = "The last update of RTGS Diesel quantity is" + " " + str(update.diesel_quantity) + "L" + "." + " " + "How many litres of RTGS diesel left?"
+                user.position = 50
+                user.save()
+        else:
+            response_message = "You have not received any fuel yet, please contact HQ" 
+        
+        
     elif user.position == 50:
         subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
-        update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
+        update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='RTGS').first()
+        main_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
         new_update = int(message)
         if new_update > update.diesel_quantity:
-            response_message = 'You can not update the available diesel quantity to an amount greater than the last update, Please enter the actual amount of Petrol left'
+            response_message = 'You can not update the available RTGS Diesel quantity to an amount greater than the last update, Please enter the actual amount of Diesel left'
             user.position = 50
             user.save()
         else:
             fuel_reduction = update.diesel_quantity - float(message)
+            main_update.diesel_quantity -= fuel_reduction
             update.diesel_quantity = message
             user.position = 51
             user.save()
             update.save()
-            sord_update(user, fuel_reduction, 'Fuel Update', 'Diesel')
+            main_update.save()
+            sord_update(user, fuel_reduction, 'Fuel Update', 'Diesel', 'RTGS')
             response_message = 'What is the queue size?\n\n1. Short\n2. Medium Long\n3. Long'
     elif user.position == 51:
         subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
-        update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
+        update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='RTGS').first()
         response_message = "What is the status?\n\n1. Pumping\n2. Expecting More Fuel\n3. Empty\n4. Offloading"
         if message == "1":
             update.queue_length = "Short"
@@ -1223,7 +1282,7 @@ def update_diesel(user, message):
         user.save()
     elif user.position == 52:
         subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
-        update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
+        update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='RTGS').first()
         if message == "1":
             update.status = "Pumping"
         elif message == "2":
@@ -1238,29 +1297,49 @@ def update_diesel(user, message):
         user.position = 53
         user.fuel_request = update.id
         user.save()
-        response_message = 'What do you want to use for payment.\n\n1. ZWL(Cash) Only\n2. Ecocash Only\n3. RTGS(Swipe)/Transfer Only\n4. USD Only\n5. Cash or Ecocash\n6. Cash or Swipe\n7. Ecocash or Swipe\n'
-    elif user.position == 53:
-        update = SubsidiaryFuelUpdate.objects.filter(id=user.fuel_request).first()
-        if message == "1":
-            update.cash = True
-        elif message == "2":
-            update.ecocash = True
-        elif message == "3":
-            update.swipe = True
-        elif message == "4":
-            update.usd = True
-        elif message == "5":
-            update.ecocash = True
-            update.cash = True
-        elif message == "6":
-            update.swipe = True
-            update.cash = True
-        elif message == "7":
-            update.ecocash = True
-            update.swipe = True
-        else:
-            return "Incorrect Choice"
         response_message = "Made an update successfully, Please type *menu* to go back to main menu"
+    
+    elif user.position == 300:
+        subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
+        update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='RTGS').first()
+        usd_update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='USD').first()
+        main_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
+        new_update = int(message)
+        if new_update > update.diesel_quantity:
+            response_message = 'You can not update the available RTGS Diesel quantity to an amount greater than the last update, Please enter the actual amount of Diesel left'
+            user.position = 50
+            user.save()
+        else:
+            fuel_reduction = update.diesel_quantity - float(message)
+            main_update.diesel_quantity -= fuel_reduction
+            update.diesel_quantity = message
+            user.position = 301
+            user.save()
+            update.save()
+            main_update.save()
+            sord_update(user, fuel_reduction, 'Fuel Update', 'Diesel', 'RTGS')
+            response_message = "The last update of RTGS Diesel quantity is" + " " + str(usd_update.diesel_quantity) + "L" + "." + " " + "How many litres of RTGS diesel left?"
+    
+    elif user.position == 301:
+        subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
+        update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='USD').first()
+        main_update = SubsidiaryFuelUpdate.objects.filter(subsidiary=subsidiary).first()
+        new_update = int(message)
+        if new_update > update.diesel_quantity:
+            response_message = 'You can not update the available USD Diesel quantity to an amount greater than the last update, Please enter the actual amount of Diesel left'
+            user.position = 301
+            user.save()
+        else:
+            fuel_reduction = update.diesel_quantity - float(message)
+            main_update.diesel_quantity -= fuel_reduction
+            update.diesel_quantity = message
+            user.position = 51
+            user.save()
+            update.save()
+            main_update.save()
+            sord_update(user, fuel_reduction, 'Fuel Update', 'Diesel', 'USD')
+            response_message = 'What is the queue size?\n\n1. Short\n2. Medium Long\n3. Long'
+   
     return response_message
 
 
@@ -1280,9 +1359,9 @@ def view_allocations(user, message):
     return response_message
 
 
-def sord_update(user, quantity, action, fuel_type):
-    end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = user.subsidiary_id, fuel_type=fuel_type, payment_type="RTGS", end_quantity = 0).all()
-    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = user.subsidiary_id, fuel_type=fuel_type, payment_type="RTGS").all()
+def sord_update(user, quantity, action, fuel_type, currency):
+    end_quantity_zero =  SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = user.subsidiary_id, fuel_type=fuel_type, payment_type=currency, end_quantity = 0).all()
+    initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id = user.subsidiary_id, fuel_type=fuel_type, payment_type=currency).all()
     sord_quantity_zero = []
     sord_quantity = []
     for sord in end_quantity_zero:

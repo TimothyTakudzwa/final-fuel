@@ -130,7 +130,7 @@ def login_user(request):
                             return redirect("buyer:approve_companies")
                     # wrong password
                     else:
-                        messages.info(request, 'Wrong password.')
+                        messages.info(request, 'Wrong username or password.')
                         return redirect('login')
                 # user hasn't completed registration yet
                 else:
@@ -139,7 +139,7 @@ def login_user(request):
                     return redirect('login')
             # throw account not found error
             else:
-                messages.info(request, 'Please register first.')
+                messages.info(request, 'Wrong username or password.')
                 return redirect('login')
     return render(request, 'buyer/signin.html', context=context)
 
@@ -770,7 +770,7 @@ def accept_offer(request, id):
         description = f"You have accepted offer of {offer.quantity}L {offer.request.fuel_type}"
         Activity.objects.create(company=request.user.company, user=request.user, action=action, description=description,
                                 reference_id=offer.id)
-        messages.warning(request, "Your request has been saved successfully.")
+        messages.success(request, "You have accepted offer successfully.")
         return redirect("buyer-transactions")
     else:
         messages.info(request,

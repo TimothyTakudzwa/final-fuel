@@ -51,8 +51,8 @@ Hello {0}, What would you like to do today\n
 ss_supplier_menu='''
 Hello {0}, What would you like to do today\n
 
-1. Update Petrol Quantity\n
-2. Update Diesel Quantity\n
+1. Update Petrol Quantities\n
+2. Update Diesel Quantities\n
 3. View Today's Received Fuel
 
 '''
@@ -82,14 +82,13 @@ To begin the registration process please select one of the below options
 
 *What would you like to register as*
 1. Individual Buyer *_(200 litres and below)_* 
-2. Corporate Buyer *_(1000 litres and above)_*
-3. Bulk Supplier *_(Any amount)_*
+2. Service Station *_(Any amount)_*
 
 
 Please Type the desired option to continue. 
 '''
 
-user_types=['INDIVIDUAL', 'BUYER', 'SUPPLIER']
+user_types=['INDIVIDUAL', 'SS_SUPPLIER']
 
 successful_integration = '''
 You have succesfully integrated your Whatsapp with you company account.
