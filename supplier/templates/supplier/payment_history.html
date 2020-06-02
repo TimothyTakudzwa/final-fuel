@@ -60,9 +60,6 @@
                             <th>
                                 Transaction
                              </th>
-                             <th>
-                                Proof of Payment
-                             </th>
                             <th>
                                Amount Paid ($)
                             </th>
@@ -204,7 +201,6 @@
                                     
                                 
                             </td>
-                            <td>Approved</td>
                             <td>{{payment.value|floatformat:2|intcomma}}</td>
                             <td>{{payment.balance|floatformat:2|intcomma}}</td>
                             {% if payment.pop_approved == False and payment.transaction.paid != payment.transaction.expected %}

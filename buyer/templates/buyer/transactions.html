@@ -397,8 +397,12 @@
                                                     <td>Pending</td>
                                                 {% endif %}
                                             {% else %}
+                                                <div class="btn-group">
                                                 <td><a class="btn btn-labeled btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#proof_{{transaction.id}}">
                                                     <span class="btn-label"><i class="fa fa-upload"></i></span> Payment </a></td>
+                                                    <td><a class="btn btn-labeled btn-primary btn-sm" style="color: white;" href="{%url 'buyer:view-proof' transaction.id %}">
+                                                        <span class="btn-label"><i class="fa fa-eye"></i></span> P.O.P </a></td>
+                                                </div>
                                             {% endif %}
 
                                             <td>
@@ -628,6 +632,7 @@
 
                                                             <form method="POST" action="{% url 'buyer:proof-of-payment' transaction.id %}" enctype="multipart/form-data">
                                                                 {% csrf_token %}
+                                                                <div class="form-group col-md-12" style="color: red; text-align: center;">You can select multiple files!</div>
                                                                 <input type="file" accept=".pdf, .doc,.docx, .jpeg, .png, .jpg" name="proof_of_payment" class="form-control-file" multiple required>
                                                                 <br>
                                                                 <div class="modal-footer">
