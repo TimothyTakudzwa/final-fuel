@@ -43,7 +43,7 @@ def get_top_branches(count):
 def get_top_clients(count):
     # Sort all transactions in order of the number of times a buyer appears. 
     trans = Transaction.objects.filter(is_complete=True).annotate(
-        number_of_trans=Count('buyer')).order_by('-number_of_trans')[:count]
+        number_of_trans=Count('buyer')).order_by('-number_of_trans')
     
     # Add all the buyers in a list to the variable buyers from the QS above
     buyers = [client.buyer for client in trans]
@@ -62,6 +62,7 @@ def get_top_clients(count):
             new_buyers.append(buyer)
 
     clients = sorted(new_buyers, key=lambda x: x.total_revenue, reverse=True)
+    return clients[:count]
 
 
 def get_top_contributors(user):
