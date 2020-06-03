@@ -626,7 +626,9 @@
                                 <th>
                                   No Of Transactions
                                   </th>
-                                <th></th>  
+                                <th>
+                                    Action
+                                </th>  
                                   
                             </tr>
                         </thead>
@@ -646,7 +648,7 @@
                                 
                                 <td>{{sub.address}}</td>
                                 <td>$ {{sub.total_revenue|floatformat:2|intcomma}}</td>
-                                <td>{{sub.number_of_orders}}</td>
+                                <td>{{sub.total_client_orders}}</td>
                                 
                                 <td style="width: 13%;">
                                     <div>
@@ -655,8 +657,8 @@
                                         <input type="hidden" name="report_type" value="Complete">
                     
 
-                                        <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
-                                          View History
+                                        <button type="submit" class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;">
+                                          <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View History
                                         </button>
                                       </form> 
                                           

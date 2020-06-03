@@ -1222,64 +1222,17 @@ def statistics(request):
     for city, deficit in desperate_cities.items():
         final_desperate_cities.append((city, deficit))
 
-    # number_of_companies = Company.objects.all().count()
-    # number_of_depots = Subsidiaries.objects.filter(is_depot=True).count()
-    # number_of_s_stations = Subsidiaries.objects.filter(is_depot=False).count()
     last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1))
-    # offers = Offer.objects.all().count()
-    # bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
-    # normal_requests = FuelRequest.objects.filter(delivery_method="DELIVERY").count()  # Change these 2 items
-    staff = ''
-    # new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
-    # clients = []
-    # stock = get_aggregate_stock()
-    # diesel = stock['diesel']
-    # petrol = stock['petrol']
 
-    trans = Transaction.objects.filter(is_complete=True).annotate(
-        number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
-    buyers = [client.buyer for client in trans]
+    staff = ''
 
     sorted_subs = get_top_branches(10)
 
-    new_buyers = []
 
-    for buyer in buyers:
-        total_transactions = buyers.count(buyer)
-        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, is_complete=True).all()
-        total_value = 0
-        purchases = []
-        for tran in new_buyer_transactions:
-            total_value += (float(tran.offer.request.amount) * float(tran.offer.price))
-            purchases.append(tran)
-        buyer.total_revenue = total_value
-        buyer.purchases = purchases
-        buyer.number_of_trans = total_transactions
-        if buyer not in new_buyers:
-            new_buyers.append(buyer)
-
-    clients = sorted(new_buyers, key=lambda x: x.total_revenue, reverse=True)
-
-    # for company in companies:
-    #     company.total_value = value[counter]
-    #     company.num_transactions = num_trans[counter]
-    #     counter += 1
-
-    # clients = [company for company in  companies]
-
-    # revenue = round(float(sum(value)))
-    # revenue = get_aggregate_total_revenue()
-    # revenue = '${:,.2f}'.format(revenue)
-    # revenue = str(revenue) + '.00'
-
-    # try:
-    #     trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
-    # except:
-    #     trans = 0    
-    # trans_complete = get_aggregate_transactions_complete_percentage()
-    # inactive_depots = Subsidiaries.objects.filter(is_active=False, is_depot=True).count()
-    # inactive_stations = Subsidiaries.objects.filter(is_active=False, is_depot=False).count()
-    # approval_percentage = get_approved_company_complete_percentage()
+    trans = Transaction.objects.filter(is_complete=True).annotate(
+        number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
+    
+    clients = get_top_clients(10)
 
     return render(request, 'zeraPortal/statistics.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trans': trans, 'clients': clients,
                                                           'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,

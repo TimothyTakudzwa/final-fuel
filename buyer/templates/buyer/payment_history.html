@@ -18,7 +18,7 @@
         <h1>Fuel Payments </h1>
         <small>Zimbabwe Fuel Management System</small>
         <ol class="breadcrumb hidden-xs">
-            <li><a href="{% url 'users:allocate' %}"><i class="pe-7s-home"></i> Home</a></li>
+            <li><a href=""><i class="pe-7s-home"></i> Home</a></li>
             <li class="active">Payment History</li>
         </ol>
 
@@ -52,10 +52,6 @@
                             </th>
                             <th>
                                 Contact Person
-                            </th>
-
-                            <th>
-                                Sord Number
                             </th>
                             <th>
                                 Transaction
@@ -118,7 +114,6 @@
                                 </div>
 
                             </td>
-                            <td>{{payment.sord_number}}</td>
                             <td>
                                 
                                     <!--call modal-->
@@ -193,7 +188,12 @@
                                     </div>
                                 
                             </td>
+                            {% if payment.pop_approved == True %}
                             <td>Approved</td>
+                            {% else %}
+                            <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'buyer:download-proof' payment.id %}" > 
+                                <span class="btn-label"><i class="fa fa-download" aria-hidden="true"></i></span> P.O.P</a>
+                            {% endif %}
                             <td>{{payment.value|floatformat:2|intcomma}}</td>
                             <td>{{payment.balance|floatformat:2|intcomma}}</td>
                             {% if payment.delivery_schedule != None %}

@@ -1,5 +1,7 @@
 import datetime
 
+from django.db.models import Sum, Count
+
 from national.models import NationalFuelUpdate, SordNationalAuditTrail, Order
 
 def get_current_usd_stock():
@@ -61,6 +63,7 @@ def get_week_days(date):
     '''
     return [date + datetime.timedelta(days=i) for i in range(0 - date.weekday(), 7 - date.weekday())]
 
+            
 def get_weekly_orders(this_week):
     '''
     Get the company's weekly sales
@@ -70,18 +73,22 @@ def get_weekly_orders(this_week):
     else:
         date = datetime.datetime.now().date() - datetime.timedelta(days=7)    
     week_days = get_week_days(date)
+
     weekly_data = {}
+
     for day in week_days:
         weeks_revenue = 0
         day_trans = Order.objects.filter(date=day, payment_approved=True)
         if day_trans:
-            for tran in day_trans:
-                weeks_revenue += tran.amount_paid
+            weeks_revenue = day_trans.filter(date=day, payment_approved=True).aggregate(
+                total=Sum('amount_paid')
+            )['total']
         else:
             weeks_revenue = 0
         weekly_data[day.strftime("%a")] = int(weeks_revenue)
-    return weekly_data               
-      
+    return weekly_data 
+
+
 
 def total_orders():
     return Order.objects.all().count()    
@@ -98,18 +105,41 @@ def get_monthly_orders():
     monthly_data = {}
     counter = 1
     for month in months:
-        months_qty = 0
-        months_orders = Order.objects.filter(date__year=year, date__month=counter)
-        if months_orders:
-            for order in months_orders :
-                months_qty += order.amount_paid
-        else:
-            months_qty = 0
+        months_qty = Order.objects.filter(date__year=year, date__month=counter).aggregate(
+            total=Sum('amount_paid')
+        )['total']
+        # months_orders = Order.objects.filter(date__year=year, date__month=counter)
+        # if months_orders:
+        #     for order in months_orders :
+        #         months_qty += order.amount_paid
+        # else:
+        #     months_qty = 0
 
         counter += 1    
-                     
-        monthly_data[month] = months_qty
+        
+        if months_qty:             
+            monthly_data[month] = months_qty
+        else:
+            monthly_data[month] = 0.00
+
     return monthly_data    
+
+
+def get_top_clients():
+    fuel_orders = Order.objects.filter(payment_approved=True).annotate(
+        number_of_orders=Count('noic_depot')).order_by('-number_of_orders')
+    all_clients = [order.noic_depot for order in fuel_orders]
+
+    new_clients = []
+    for client in all_clients:
+        new_client_orders = Order.objects.filter(noic_depot=client, payment_approved=True).all()
+        total_client_orders = []
+        client.total_revenue = new_client_orders.aggregate(total=Sum('amount_paid'))['total']
+        client.total_client_orders = new_client_orders.count()
+        if client not in new_clients and client.total_revenue:
+            new_clients.append(client)
+    clients = sorted(new_clients, key=lambda x: x.total_revenue, reverse=True)
+    return clients        
 
 
 
