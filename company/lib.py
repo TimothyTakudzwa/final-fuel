@@ -27,7 +27,7 @@ def get_top_branches(count,company):
         # Get transaction count.
         sub.tran_count = sub_trans.count()
         # Append to list.
-        subs.append(sub)
+        subs.append(sub) 
 
     # sort subsidiaries by transaction value
     sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True)
