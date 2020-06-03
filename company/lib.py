@@ -76,6 +76,7 @@ def get_week_days(date):
 
 
 def get_weekly_sales(company, this_week):
+    
     '''
     Get the company's weekly sales
     '''
@@ -85,15 +86,19 @@ def get_weekly_sales(company, this_week):
         date = datetime.now().date() - timedelta(days=7)    
     week_days = get_week_days(date)
     weekly_data = {}
+
     for day in week_days:
         weeks_revenue = 0
         day_trans = Transaction.objects.filter(date=day, supplier__company=company, is_complete=True)
+        
         if day_trans:
-            for tran in day_trans:
-                weeks_revenue += (float(tran.offer.quantity) * float(tran.offer.price))
+            weeks_revenue = day_trans.aggregate(
+                total=Sum('expected')
+            )['total']
         else:
-            weeks_revenue = 0
-        weekly_data[day.strftime("%a")] = int(weeks_revenue)
+            weeks_revenue = 0.0
+
+        weekly_data[day.strftime("%a")] = weeks_revenue
     return weekly_data               
 
 
