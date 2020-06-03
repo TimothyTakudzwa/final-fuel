@@ -52,6 +52,7 @@ function for registering new users
 
 """
 def registration_handler(request, user, message):
+    response_message = ''
 
     if user.position == 1:
         response_message = "First before we get started can i please have your *Full Name*"
@@ -140,6 +141,7 @@ functions for handling individual buyer
 
 """
 def individual_handler(request, user,message):
+    response_message = ''
     if message.lower() == 'menu' and user.stage != 'registration':
         user.position = 1
         user.stage = 'menu'
@@ -1071,6 +1073,7 @@ functions for handling service station rep
 
 """
 def service_station_handler(request,user,message):
+    response_message = ''
     if message.lower() == 'menu':
         user.stage = 'menu'
         user.position = 1
