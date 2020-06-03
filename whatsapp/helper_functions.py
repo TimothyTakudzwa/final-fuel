@@ -114,6 +114,7 @@ def registration_handler(request, user, message):
                 return "You have finished the registration process for Fuel Finder. To now start looking for fuel, Please type *menu* or open your email to get your username and initial password if you want to use the mobile app."
             else:
                 user.position = 5
+                user.is_waiting = True
                 user.save()
                 if user.last_name != '':
                     username = initial_username = user.first_name[0] + user.last_name
