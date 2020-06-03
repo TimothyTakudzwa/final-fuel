@@ -35,6 +35,31 @@ def get_top_branches(count,company):
     return sorted_subs[:count]
 
 
+def get_top_clients(count, company):
+    # Get all transaction based on our most frequently occuring buyers
+    trans = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).annotate(
+    number_of_trans=Count('buyer')).order_by('-number_of_trans')
+
+    # extracting the buyers from above filterset
+    buyers = [client.buyer for client in trans]
+
+    new_buyers = []
+
+    for buyer in buyers:
+
+        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, supplier__company=request.user.company,
+                                                            is_complete=True).all()
+
+        buyer.total_revenue = new_buyer_transactions.aggregate( total=Sum('expected'))['total']
+        buyer.number_of_trans = new_buyer_transactions.count()
+        if buyer not in new_buyers and buyer.total_revenue:
+            new_buyers.append(buyer)
+
+    clients = sorted(new_buyers, key=lambda x: x.total_revenue, reverse=True)
+    
+    return clients[:count]
+
+
 def get_top_contributors(user):
     '''
     Get the top 5 subsidiaries of a company
