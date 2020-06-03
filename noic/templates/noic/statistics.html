@@ -524,7 +524,9 @@
             <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="sWzF7tcsBv" data-index="0">
                 <div class="panel-heading ui-sortable-handle">
                     <div class="panel-title" style="max-width: calc(100% - 180px);">
-                        <h4>Weekly Sales (National)</h4>
+                        <h4>Weekly Sales (National)
+                            <i class="fa fa-usd" aria-hidden="true" style="margin-left: 2px;color: #009688;font-size: larger;"></i>
+                        </h4>
                     </div>
                 <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="editTitle" data-tooltip="Edit title" data-toggle="tooltip" data-title="Edit title" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-pencil"></i><span class="control-title">Edit title</span></a></li><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="reload" data-tooltip="Reload" data-toggle="tooltip" data-title="Reload" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-reload"></i><span class="control-title">Reload</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li><li><a data-func="close" data-tooltip="Close" data-toggle="tooltip" data-title="Close" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-close"></i><span class="control-title">Close</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
                 <div class="panel-body"><iframe class="chartjs-hidden-iframe" tabindex="-1" style="display: block; overflow: hidden; border: 0px; margin: 0px; top: 0px; left: 0px; bottom: 0px; right: 0px; height: 100%; width: 100%; position: absolute; pointer-events: none; z-index: -1;"></iframe>
@@ -539,7 +541,9 @@
             <div class="panel panel-bd lobidisable lobipanel lobipanel-sortable" data-inner-id="Xm8QfpR2Ps" data-index="0">
                 <div class="panel-heading ui-sortable-handle">
                     <div class="panel-title" style="max-width: calc(100% - 90px);">
-                        <h4>Monthly Sales (National)</h4>
+                        <h4>Monthly Sales (National)
+                            <i class="fa fa-usd" aria-hidden="true" style="margin-left: 2px;color: #009688;font-size: larger;"></i>
+                        </h4>
                     </div>
                 <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
                 <div class="panel-body"><iframe class="chartjs-hidden-iframe" tabindex="-1" style="display: block; overflow: hidden; border: 0px; margin: 0px; top: 0px; left: 0px; bottom: 0px; right: 0px; height: 100%; width: 100%; position: absolute; pointer-events: none; z-index: -1;"></iframe>
@@ -626,7 +630,9 @@
                                 <th>
                                   No Of Transactions
                                   </th>
-                                <th></th>  
+                                <th>
+                                    Action
+                                </th>  
                                   
                             </tr>
                         </thead>
@@ -646,7 +652,7 @@
                                 
                                 <td>{{sub.address}}</td>
                                 <td>$ {{sub.total_revenue|floatformat:2|intcomma}}</td>
-                                <td>{{sub.number_of_orders}}</td>
+                                <td>{{sub.total_client_orders}}</td>
                                 
                                 <td style="width: 13%;">
                                     <div>
@@ -655,8 +661,8 @@
                                         <input type="hidden" name="report_type" value="Complete">
                     
 
-                                        <button type="submit" class="btn btn-primary btn-sm" style="color: whitesmoke;">
-                                          View History
+                                        <button type="submit" class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;">
+                                          <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View History
                                         </button>
                                       </form> 
                                           

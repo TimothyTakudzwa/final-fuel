@@ -52,6 +52,7 @@ function for registering new users
 
 """
 def registration_handler(request, user, message):
+    response_message = ''
 
     if user.position == 1:
         response_message = "First before we get started can i please have your *Full Name*"
@@ -92,6 +93,7 @@ def registration_handler(request, user, message):
             if user.user_type == 'INDIVIDUAL':
                 user.stage = 'individual_finder'
                 user.password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+                passwd = '12345'
                 user.password_reset = True
                 user.position = 1
                 if user.last_name != '':
@@ -104,7 +106,7 @@ def registration_handler(request, user, message):
                 user.username = username.lower()
                 user.is_active = True
                 user.save()
-                if message_is_sent(request, user):
+                if message_is_sent(request, user, passwd):
                     user.stage = 'menu'
                     user.save()
                 else:
@@ -112,6 +114,7 @@ def registration_handler(request, user, message):
                 return "You have finished the registration process for Fuel Finder. To now start looking for fuel, Please type *menu* or open your email to get your username and initial password if you want to use the mobile app."
             else:
                 user.position = 5
+                user.is_waiting = True
                 user.save()
                 if user.last_name != '':
                     username = initial_username = user.first_name[0] + user.last_name
@@ -139,6 +142,7 @@ functions for handling individual buyer
 
 """
 def individual_handler(request, user,message):
+    response_message = ''
     if message.lower() == 'menu' and user.stage != 'registration':
         user.position = 1
         user.stage = 'menu'
@@ -180,6 +184,7 @@ def individual_handler(request, user,message):
 
 
 def requesting_for_fuel(user, message):
+    response_message = ''
     if user.position == 1:
         cities = ['Harare', 'Bulawayo', 'Beitbridge', 'Bindura', 'Chinhoyi', 'Chirundu', 'Gweru', 'Hwange', 'Juliusdale', 'Kadoma', 'Kariba', 'Karoi', 'Kwekwe', 'Marondera', 'Masvingo', 'Mutare', 'Mutoko', 'Nyanga', 'Victoria Falls']
         response_message = "Which City are you in?\n\n"
@@ -282,6 +287,7 @@ def requesting_for_fuel(user, message):
 
 
 def station_updates(user, message):
+    response_message = ''
     if user.position == 1:
         stations = Subsidiaries.objects.filter(is_depot=False).all()
         i = 1
@@ -1068,6 +1074,7 @@ functions for handling service station rep
 
 """
 def service_station_handler(request,user,message):
+    response_message = ''
     if message.lower() == 'menu':
         user.stage = 'menu'
         user.position = 1
@@ -1113,6 +1120,7 @@ def service_station_handler(request,user,message):
 
 
 def update_petrol(user, message):
+    response_message = ''
     if user.position == 1:
         subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
         update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='RTGS').first()
@@ -1229,6 +1237,7 @@ def update_petrol(user, message):
 
 
 def update_diesel(user, message):
+    response_message = ''
     if user.position == 1:
         subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
         update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='RTGS').first()
@@ -1344,6 +1353,7 @@ def update_diesel(user, message):
 
 
 def view_allocations(user, message):
+    response_message = ''
     if user.position == 1:
         allocations = FuelAllocation.objects.filter(allocated_subsidiary_id=user.subsidiary_id).all()
         response_message = 'The following are quantities of the fuel you received. Please type *menu* to go back to main menu. \n\n'

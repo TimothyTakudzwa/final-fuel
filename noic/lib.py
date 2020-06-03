@@ -1,6 +1,6 @@
 import datetime
 
-from django.db.models import Sum
+from django.db.models import Sum, Count
 
 from national.models import NationalFuelUpdate, SordNationalAuditTrail, Order
 
@@ -105,18 +105,41 @@ def get_monthly_orders():
     monthly_data = {}
     counter = 1
     for month in months:
-        months_qty = 0
-        months_orders = Order.objects.filter(date__year=year, date__month=counter)
-        if months_orders:
-            for order in months_orders :
-                months_qty += order.amount_paid
-        else:
-            months_qty = 0
+        months_qty = Order.objects.filter(date__year=year, date__month=counter).aggregate(
+            total=Sum('amount_paid')
+        )['total']
+        # months_orders = Order.objects.filter(date__year=year, date__month=counter)
+        # if months_orders:
+        #     for order in months_orders :
+        #         months_qty += order.amount_paid
+        # else:
+        #     months_qty = 0
 
         counter += 1    
-                     
-        monthly_data[month] = months_qty
+        
+        if months_qty:             
+            monthly_data[month] = months_qty
+        else:
+            monthly_data[month] = 0.00
+
     return monthly_data    
+
+
+def get_top_clients():
+    fuel_orders = Order.objects.filter(payment_approved=True).annotate(
+        number_of_orders=Count('noic_depot')).order_by('-number_of_orders')
+    all_clients = [order.noic_depot for order in fuel_orders]
+
+    new_clients = []
+    for client in all_clients:
+        new_client_orders = Order.objects.filter(noic_depot=client, payment_approved=True).all()
+        total_client_orders = []
+        client.total_revenue = new_client_orders.aggregate(total=Sum('amount_paid'))['total']
+        client.total_client_orders = new_client_orders.count()
+        if client not in new_clients and client.total_revenue:
+            new_clients.append(client)
+    clients = sorted(new_clients, key=lambda x: x.total_revenue, reverse=True)
+    return clients        
 
 
 

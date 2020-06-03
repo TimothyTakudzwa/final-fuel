@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 
+from django.db.models import Sum, Count
+
 from supplier.models import Subsidiaries, Transaction, UserReview
 # from company.models import Company, FuelUpdate
 from buyer.models import User
@@ -7,26 +9,55 @@ from company.models import CompanyFuelUpdate
 
 
 def get_top_branches(count,company):
-    '''
-    Get an ordered list of a companies top subsidiaries
-    according to revenue generated
-    '''
+    # This fn serves to get a list showing a company's to subsidiaries while ranking them by revenue
+    # as well as adding the attr's tran_value and tran_count representing total transaction revenue and
+    # the num of transactions respectively.
+    # Get all our subsidiaries.
     branches = Subsidiaries.objects.filter(is_depot=True).filter(company=company)
+    # Define var representing the final list to hold all relevant data.
     subs = []
 
+    # Loop through all subsidiaries.
     for sub in branches:
-        tran_amount = 0
-        sub_trans = Transaction.objects.filter(supplier__company=company,supplier__subsidiary_id=sub.id, is_complete=True)
-        for sub_tran in sub_trans:
-            tran_amount += (sub_tran.offer.request.amount * sub_tran.offer.price)
+        # Get all transactions related to a Sub
+        sub_trans = Transaction.objects.filter(supplier__company=company, supplier__subsidiary_id=sub.id,
+                                               is_complete=True)
+        # Get total value of entries in the expected column.                                      
+        sub.tran_value = sub_trans.aggregate(total=Sum('expected'))['total']
+        # Get transaction count.
         sub.tran_count = sub_trans.count()
-        sub.tran_value = tran_amount
-        subs.append(sub)
+        # Append to list.
+        if sub.tran_value:
+            subs.append(sub) 
 
     # sort subsidiaries by transaction value
-    sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True) 
-    sorted_subs = sorted_subs[:count]
-    return sorted_subs
+    sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True)
+    return sorted_subs[:count]
+
+
+def get_top_clients(count, company):
+    # Get all transaction based on our most frequently occuring buyers
+    trans = Transaction.objects.filter(supplier__company=company, is_complete=True).annotate(
+    number_of_trans=Count('buyer')).order_by('-number_of_trans')
+
+    # extracting the buyers from above filterset
+    buyers = [client.buyer for client in trans]
+
+    new_buyers = []
+
+    for buyer in buyers:
+
+        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, supplier__company=company,
+                                                            is_complete=True).all()
+
+        buyer.total_revenue = new_buyer_transactions.aggregate( total=Sum('expected'))['total']
+        buyer.number_of_trans = new_buyer_transactions.count()
+        if buyer not in new_buyers and buyer.total_revenue:
+            new_buyers.append(buyer)
+
+    clients = sorted(new_buyers, key=lambda x: x.total_revenue, reverse=True)
+    
+    return clients[:count]
 
 
 def get_top_contributors(user):
@@ -45,6 +76,7 @@ def get_week_days(date):
 
 
 def get_weekly_sales(company, this_week):
+    
     '''
     Get the company's weekly sales
     '''
@@ -54,15 +86,19 @@ def get_weekly_sales(company, this_week):
         date = datetime.now().date() - timedelta(days=7)    
     week_days = get_week_days(date)
     weekly_data = {}
+
     for day in week_days:
         weeks_revenue = 0
         day_trans = Transaction.objects.filter(date=day, supplier__company=company, is_complete=True)
+        
         if day_trans:
-            for tran in day_trans:
-                weeks_revenue += (float(tran.offer.quantity) * float(tran.offer.price))
+            weeks_revenue = day_trans.aggregate(
+                total=Sum('expected')
+            )['total']
         else:
-            weeks_revenue = 0
-        weekly_data[day.strftime("%a")] = int(weeks_revenue)
+            weeks_revenue = 0.0
+
+        weekly_data[day.strftime("%a")] = weeks_revenue
     return weekly_data               
 
 
@@ -78,14 +114,14 @@ def get_monthly_sales(company, year):
         months_revenue = 0
         months_trans = Transaction.objects.filter(date__year=year, date__month=counter, supplier__company=company)
         if months_trans:
-            for tran in months_trans :
-                months_revenue += (float(tran.offer.quantity) * float(tran.offer.price))
+            monthly_data[month] = months_trans.aggregate(
+                total=Sum('expected')
+            )['total']
         else:
-            months_revenue = 0
+            monthly_data[month] = 0.00
 
         counter += 1    
                      
-        monthly_data[month] = months_revenue
     return monthly_data    
 
     

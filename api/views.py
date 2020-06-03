@@ -156,10 +156,10 @@ def update_station(request):
         # fetch user data
         app_user = User.objects.get(username=username)
         # check for fuel station
-        status = SuballocationFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id).first()
+        status = SuballocationFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id, payment_type='RTGS').first()
         # station exists
         if status:
-            update = SuballocationFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id).first()
+            update = SuballocationFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id, payment_type='RTGS').first()
 
             previous_petrol = update.petrol_quantity
             previous_diesel = update.diesel_quantity
@@ -188,8 +188,8 @@ def update_station(request):
             update.save()
 
             # sord update
-            sord_update(app_user, previous_diesel - float(d_quantity), 'Fuel Update', 'Diesel')
-            sord_update(app_user, previous_petrol - float(p_quantity), 'Fuel Update', 'Petrol')
+            sord_update(app_user, previous_diesel - float(d_quantity), 'Fuel Update', 'Diesel', currency='RTGS')
+            sord_update(app_user, previous_petrol - float(p_quantity), 'Fuel Update', 'Petrol', currency='RTGS')
 
             # add audit trail
             Audit_Trail.objects.create(
@@ -225,10 +225,10 @@ def view_station_updates(request):
         # get user data
         app_user = User.objects.get(username=username)
         # check if user has update object
-        status = SuballocationFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id).first()
+        status = SuballocationFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id, payment_type='RTGS').first()
         # if update object exists
         if status:
-            updates = SuballocationFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id)
+            updates = SuballocationFuelUpdate.objects.filter(subsidiary__id=app_user.subsidiary_id, payment_type='RTGS')
             # fetching data
             for update in updates:
                 company = Subsidiaries.objects.get(id=update.subsidiary.id)
@@ -265,7 +265,7 @@ def view_updates_user(request):
         # fetch updates
         # noinspection PyBroadException
         try:
-            updates = SuballocationFuelUpdate.objects.filter(subsidiary__is_depot=False).all()
+            updates = SuballocationFuelUpdate.objects.filter(subsidiary__is_depot=False, payment_type='RTGS').all()
             for update in updates:
                 image = f'https://{request.get_host()}{update.subsidiary.logo.url}/'
                 if update.diesel_quantity == 0 and update.petrol_quantity == 0:
