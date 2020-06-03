@@ -114,14 +114,14 @@ def get_monthly_sales(company, year):
         months_revenue = 0
         months_trans = Transaction.objects.filter(date__year=year, date__month=counter, supplier__company=company)
         if months_trans:
-            for tran in months_trans :
-                months_revenue += (float(tran.offer.quantity) * float(tran.offer.price))
+            monthly_data[month] = months_trans.aggregate(
+                total=Sum('expected')
+            )['total']
         else:
-            months_revenue = 0
+            monthly_data[month] = 0.00
 
         counter += 1    
                      
-        monthly_data[month] = months_revenue
     return monthly_data    
 
     
