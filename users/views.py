@@ -1164,44 +1164,13 @@ def statistics(request):
     last_year_rev = get_monthly_sales(request.user.company, (datetime.now().year - 1))
     notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
     num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
-    # offers = Offer.objects.filter(supplier__company=request.user.company).count()
-    # bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
-    # normal_requests = FuelRequest.objects.filter(delivery_method="DELIVERY").count()  # Change these 2 items
-    # staff = ''
-    # new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
-    # try:
-    #     rating = SupplierRating.objects.filter(supplier=request.user.company).first().rating
-    # except:
-    #     rating = 0
 
-    # admin_staff = User.objects.filter(company=company).filter(user_type='SUPPLIER').count()
-    # # all_staff = User.objects.filter(company=company).count()
-    # other_staff = User.objects.filter(company=company).filter(user_type='SS_SUPPLIER').count()
-    clients = []
-    # stock = get_aggregate_stock(request.user.company)
-    # diesel = stock['diesel']
-    # petrol = stock['petrol']
+    # Get top Subsidiaries ranked by revenue
+    sorted_subs = get_top_branches(10,request.user.company)
 
     trans = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).annotate(
-        number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
+    number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
     buyers = [client.buyer for client in trans]
-
-    branches = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company)
-
-    subs = []
-
-    for sub in branches:
-        tran_amount = 0
-        sub_trans = Transaction.objects.filter(supplier__company=request.user.company, supplier__subsidiary_id=sub.id,
-                                               is_complete=True)
-        for sub_tran in sub_trans:
-            tran_amount += (float(sub_tran.offer.quantity) * float(sub_tran.offer.price))
-        sub.tran_count = sub_trans.count()
-        sub.tran_value = tran_amount
-        subs.append(sub)
-
-    # sort subsidiaries by transaction value
-    sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True)
 
     new_buyers = []
     for buyer in buyers:
