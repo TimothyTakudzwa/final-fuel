@@ -180,6 +180,7 @@ def individual_handler(request, user,message):
 
 
 def requesting_for_fuel(user, message):
+    response_message = ''
     if user.position == 1:
         cities = ['Harare', 'Bulawayo', 'Beitbridge', 'Bindura', 'Chinhoyi', 'Chirundu', 'Gweru', 'Hwange', 'Juliusdale', 'Kadoma', 'Kariba', 'Karoi', 'Kwekwe', 'Marondera', 'Masvingo', 'Mutare', 'Mutoko', 'Nyanga', 'Victoria Falls']
         response_message = "Which City are you in?\n\n"
@@ -282,6 +283,7 @@ def requesting_for_fuel(user, message):
 
 
 def station_updates(user, message):
+    response_message = ''
     if user.position == 1:
         stations = Subsidiaries.objects.filter(is_depot=False).all()
         i = 1
@@ -1113,6 +1115,7 @@ def service_station_handler(request,user,message):
 
 
 def update_petrol(user, message):
+    response_message = ''
     if user.position == 1:
         subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
         update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='RTGS').first()
@@ -1229,6 +1232,7 @@ def update_petrol(user, message):
 
 
 def update_diesel(user, message):
+    response_message = ''
     if user.position == 1:
         subsidiary = Subsidiaries.objects.filter(id=user.subsidiary_id).first()
         update = SuballocationFuelUpdate.objects.filter(subsidiary=subsidiary).filter(payment_type='RTGS').first()
@@ -1344,6 +1348,7 @@ def update_diesel(user, message):
 
 
 def view_allocations(user, message):
+    response_message = ''
     if user.position == 1:
         allocations = FuelAllocation.objects.filter(allocated_subsidiary_id=user.subsidiary_id).all()
         response_message = 'The following are quantities of the fuel you received. Please type *menu* to go back to main menu. \n\n'
