@@ -398,10 +398,10 @@
                                                 {% endif %}
                                             {% else %}
                                             <td>
-                                                <div class="btn-group" style="width: 100%;">
-                                                <a class="btn btn-labeled btn-warning btn-sm" style="color: white; width: 50%;" data-toggle="modal" data-target="#proof_{{transaction.id}}">
+                                                <div class="btn-group">
+                                                <a class="btn btn-labeled btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#proof_{{transaction.id}}">
                                                     <span class="btn-label"><i class="fa fa-upload"></i></span> Payment </a>
-                                                    <a class="btn btn-labeled btn-primary btn-sm" style="color: white; width: 50%;" href="{%url 'buyer:view-proof' transaction.id %}">
+                                                    <a class="btn btn-labeled btn-primary btn-sm" style="color: white;" href="{%url 'buyer:view-proof' transaction.id %}">
                                                         <span class="btn-label"><i class="fa fa-eye"></i></span> P.O.P </a>
                                                 </div>
                                             </td>
