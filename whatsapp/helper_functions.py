@@ -92,6 +92,7 @@ def registration_handler(request, user, message):
             if user.user_type == 'INDIVIDUAL':
                 user.stage = 'individual_finder'
                 user.password = 'pbkdf2_sha256$150000$fksjasjRlRRk$D1Di/BTSID8xcm6gmPlQ2tZvEUIrQHuYioM5fq6Msgs='
+                passwd = '12345'
                 user.password_reset = True
                 user.position = 1
                 if user.last_name != '':
@@ -104,7 +105,7 @@ def registration_handler(request, user, message):
                 user.username = username.lower()
                 user.is_active = True
                 user.save()
-                if message_is_sent(request, user):
+                if message_is_sent(request, user, passwd):
                     user.stage = 'menu'
                     user.save()
                 else:
