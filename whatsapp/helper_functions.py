@@ -52,6 +52,7 @@ function for registering new users
 
 """
 def registration_handler(request, user, message):
+    response_message = ''
 
     if user.position == 1:
         response_message = "First before we get started can i please have your *Full Name*"
@@ -113,6 +114,7 @@ def registration_handler(request, user, message):
                 return "You have finished the registration process for Fuel Finder. To now start looking for fuel, Please type *menu* or open your email to get your username and initial password if you want to use the mobile app."
             else:
                 user.position = 5
+                user.is_waiting = True
                 user.save()
                 if user.last_name != '':
                     username = initial_username = user.first_name[0] + user.last_name
@@ -140,6 +142,7 @@ functions for handling individual buyer
 
 """
 def individual_handler(request, user,message):
+    response_message = ''
     if message.lower() == 'menu' and user.stage != 'registration':
         user.position = 1
         user.stage = 'menu'
@@ -1071,6 +1074,7 @@ functions for handling service station rep
 
 """
 def service_station_handler(request,user,message):
+    response_message = ''
     if message.lower() == 'menu':
         user.stage = 'menu'
         user.position = 1
