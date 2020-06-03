@@ -1171,7 +1171,7 @@ def statistics(request):
     # Get top Clients ranked by revenue
     clients = get_top_clients(10, request.user.company)
 
-    return render(request, 'users/statistics.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trans': trans, 'clients': clients,
+    return render(request, 'users/statistics.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications,'clients': clients,
                                                      'sorted_subs': sorted_subs,
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
                                                      'last_week_rev': last_week_rev})
