@@ -37,7 +37,7 @@ def get_top_branches(count,company):
 
 def get_top_clients(count, company):
     # Get all transaction based on our most frequently occuring buyers
-    trans = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).annotate(
+    trans = Transaction.objects.filter(supplier__company=company, is_complete=True).annotate(
     number_of_trans=Count('buyer')).order_by('-number_of_trans')
 
     # extracting the buyers from above filterset
@@ -47,7 +47,7 @@ def get_top_clients(count, company):
 
     for buyer in buyers:
 
-        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, supplier__company=request.user.company,
+        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, supplier__company=company,
                                                             is_complete=True).all()
 
         buyer.total_revenue = new_buyer_transactions.aggregate( total=Sum('expected'))['total']
