@@ -846,27 +846,6 @@ def statistics(request):
     weekly_rev = get_weekly_orders(True)
     last_week_rev = get_weekly_orders(False)
 
-    fuel_orders = Order.objects.filter(payment_approved=True).annotate(
-        number_of_orders=Count('noic_depot')).order_by('-number_of_orders')
-    all_clients = [order.noic_depot for order in fuel_orders]
-
-    new_clients = []
-    for client in all_clients:
-        total_transactions = all_clients.count(client)
-        new_client_orders = Order.objects.filter(noic_depot=client, payment_approved=True).all()
-        total_value = 0
-        total_client_orders = []
-        number_of_orders = 0
-        for tran in new_client_orders:
-            total_value += (tran.amount_paid)
-            total_client_orders.append(tran)
-            number_of_orders += 1
-        client.total_revenue = total_value
-        client.total_client_orders = total_client_orders
-        client.number_of_orders = total_transactions
-        if client not in new_clients:
-            new_clients.append(client)
-
     clients = get_top_clients()
 
     return render(request, 'noic/statistics.html',
