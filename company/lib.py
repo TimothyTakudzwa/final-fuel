@@ -13,14 +13,14 @@ def get_top_branches(count,company):
     # as well as adding the attr's tran_value and tran_count representing total transaction revenue and
     # the num of transactions respectively.
     # Get all our subsidiaries.
-    branches = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company)
+    branches = Subsidiaries.objects.filter(is_depot=True).filter(company=company)
     # Define var representing the final list to hold all relevant data.
     subs = []
 
     # Loop through all subsidiaries.
     for sub in branches:
         # Get all transactions related to a Sub
-        sub_trans = Transaction.objects.filter(supplier__company=request.user.company, supplier__subsidiary_id=sub.id,
+        sub_trans = Transaction.objects.filter(supplier__company=company, supplier__subsidiary_id=sub.id,
                                                is_complete=True)
         # Get total value of entries in the expected column.                                      
         sub.tran_value = sub_trans.aggregate(total=Sum('expected'))['total']
