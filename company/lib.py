@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 
+from django.db.models import Sum
+
 from supplier.models import Subsidiaries, Transaction, UserReview
 # from company.models import Company, FuelUpdate
 from buyer.models import User
@@ -7,26 +9,29 @@ from company.models import CompanyFuelUpdate
 
 
 def get_top_branches(count,company):
-    '''
-    Get an ordered list of a companies top subsidiaries
-    according to revenue generated
-    '''
-    branches = Subsidiaries.objects.filter(is_depot=True).filter(company=company)
+    # This fn serves to get a list showing a company's to subsidiaries while ranking them by revenue
+    # as well as adding the attr's tran_value and tran_count representing total transaction revenue and
+    # the num of transactions respectively.
+    # Get all our subsidiaries.
+    branches = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company)
+    # Define var representing the final list to hold all relevant data.
     subs = []
 
+    # Loop through all subsidiaries.
     for sub in branches:
-        tran_amount = 0
-        sub_trans = Transaction.objects.filter(supplier__company=company,supplier__subsidiary_id=sub.id, is_complete=True)
-        for sub_tran in sub_trans:
-            tran_amount += (sub_tran.offer.request.amount * sub_tran.offer.price)
+        # Get all transactions related to a Sub
+        sub_trans = Transaction.objects.filter(supplier__company=request.user.company, supplier__subsidiary_id=sub.id,
+                                               is_complete=True)
+        # Get total value of entries in the expected column.                                      
+        sub.tran_value = sub_trans.aggregate(total=Sum('expected'))['total']
+        # Get transaction count.
         sub.tran_count = sub_trans.count()
-        sub.tran_value = tran_amount
+        # Append to list.
         subs.append(sub)
 
     # sort subsidiaries by transaction value
-    sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True) 
-    sorted_subs = sorted_subs[:count]
-    return sorted_subs
+    sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True)
+    return sorted_subs[:count]
 
 
 def get_top_contributors(user):
