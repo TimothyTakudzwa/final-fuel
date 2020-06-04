@@ -1212,7 +1212,9 @@ def statistics(request):
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year, 'RTGS')
     usd_monthly_rev = get_aggregate_monthly_sales(datetime.now().year, 'USD')
     weekly_rev = get_weekly_sales(True, 'RTGS')
+    usd_weekly_rev = get_weekly_sales(True, 'USD')
     last_week_rev = get_weekly_sales(False, 'RTGS')
+    usd_last_week_rev = get_weekly_sales(False, 'USD')
     city_sales_volume = get_volume_sales_by_location()
     final_desperate_cities = []
     desperate_cities = desperate()
