@@ -1450,6 +1450,7 @@ def complete_transaction(request, id):
 
                 payment.pop_approved = True
 
+
                 messages.success(request,
                                  "Proof of payment approved!, please create a delivery schedule for the buyer.")
                 return redirect('transaction')
