@@ -1395,6 +1395,7 @@ def complete_transaction(request, id):
                 #                         description=description, reference_id=transaction.id)
 
                 payment.pop_approved = True
+                payment.save()
                 messages.success(request,
                                  "Proof of payment approved!, please create a delivery schedule for the buyer or upload a release note.")
                 return redirect('transaction')
@@ -1449,6 +1450,7 @@ def complete_transaction(request, id):
                 #                         description=description, reference_id=transaction.id)
 
                 payment.pop_approved = True
+                payment.save()
 
 
                 messages.success(request,
