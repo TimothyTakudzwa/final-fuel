@@ -369,30 +369,32 @@ Fuel Requests
 @login_required()
 @user_role
 def fuel_request(request):
-    notifications, num_of_notifications = notifications_retriever(request.user)
-    sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first()
+    notifications, num_of_notifications = notifications_retriever(request.user) # notifications that need urgent attention
+    sub = Subsidiaries.objects.filter(id=request.user.subsidiary_id).first() # picking the subsidiary of the logged in user
     requests = []
     acceptable_requests = []
     complete_requests = []
     
-    if sub.praz_reg_num != None:
-        all_requests = FuelRequest.objects.filter(is_deleted=False, is_complete=False).all()
+    # checking if the subsidiary is has a praz num,,,which means it can sell fuel to gvnmnt organisations
+    if sub.praz_reg_num != None: 
+       
+        all_requests = FuelRequest.objects.filter(is_deleted=False, is_complete=False).all()  # reading all pending (incomplete) fuel requests from both gvnmnt and non-gvnmnt organisations
         for fuel_request in all_requests:
-            if not fuel_request.is_direct_deal and not fuel_request.private_mode:
+            if not fuel_request.is_direct_deal and not fuel_request.private_mode: # checking if the request is not direct to a specific depot or to a depot that the buyer has an account with (which means checking if it's a general request)
                 requests.append(fuel_request)
-            elif fuel_request.is_direct_deal and not fuel_request.private_mode:
+            elif fuel_request.is_direct_deal and not fuel_request.private_mode: # checking if the request is direct to the logged in user's depot and not requiring for an account between the buyer and the user's depot
                 if fuel_request.last_deal == request.user.subsidiary_id:
                     requests.append(fuel_request)
                 else:
                     pass
-            elif not fuel_request.is_direct_deal and fuel_request.private_mode:
+            elif not fuel_request.is_direct_deal and fuel_request.private_mode: # checking if the request is from a buyer that has an account with the logged in user's depot and not direct to a specific depot
                 account_exists = Account.objects.filter(supplier_company=request.user.company,
                                                         buyer_company=fuel_request.name.company).exists()
                 if account_exists:
                     requests.append(fuel_request)
                 else:
                     pass
-            elif fuel_request.is_direct_deal and fuel_request.private_mode:
+            elif fuel_request.is_direct_deal and fuel_request.private_mode: # checking if the request is direct to the logged in user's depot and if the buyer has an account with the user's depot
                 if fuel_request.supplier_company == request.user.company:
                     requests.append(fuel_request)
                 else:
@@ -400,26 +402,29 @@ def fuel_request(request):
             else:
                 pass
         requests.sort(key=attrgetter('date', 'time'), reverse=True)
+
+    
     else:
+        # all pending (incomplete) requests excluding requests from gvnmnt organisations since the logged in user's depot has no praz number (it can not sell to gvnmnt organisations)
         all_requests = FuelRequest.objects.filter(~Q(name__company__is_govnt_org=True)).filter(is_deleted=False,
                                                                                                wait=True,
                                                                                                is_complete=False).all()
         for fuel_request in all_requests:
-            if not fuel_request.is_direct_deal and not fuel_request.private_mode:
+            if not fuel_request.is_direct_deal and not fuel_request.private_mode: # checking if the request is not direct to a specific depot or to a depot that the buyer has an account with (which means checking if it's a general request)
                 requests.append(fuel_request)
-            elif fuel_request.is_direct_deal and not fuel_request.private_mode:
+            elif fuel_request.is_direct_deal and not fuel_request.private_mode: # checking if the request is direct to the logged in user's depot and not requiring for an account between the buyer and the user's depot
                 if fuel_request.last_deal == request.user.subsidiary_id:
                     requests.append(fuel_request)
                 else:
                     pass
-            elif not fuel_request.is_direct_deal and fuel_request.private_mode:
+            elif not fuel_request.is_direct_deal and fuel_request.private_mode: # checking if the request is from a buyer that has an account with the logged in user's depot and not direct to a specific depot
                 account_exists = Account.objects.filter(supplier_company=request.user.company,
                                                         buyer_company=fuel_request.name.company).exists()
                 if account_exists:
                     requests.append(fuel_request)
                 else:
                     pass
-            elif fuel_request.is_direct_deal and fuel_request.private_mode:
+            elif fuel_request.is_direct_deal and fuel_request.private_mode: # checking if the request is direct to the logged in user's depot and if the buyer has an account with the user's depot
                 if fuel_request.supplier_company == request.user.company:
                     requests.append(fuel_request)
                 else:
@@ -429,23 +434,27 @@ def fuel_request(request):
         requests.sort(key=attrgetter('date', 'time'), reverse=True)
 
     for buyer_request in requests:
-        if buyer_request.payment_method == 'USD':
+        if buyer_request.payment_method == 'USD': 
+            # checking to see if logged in user's depot has fuel type that is needed by the request
             fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(
                 payment_type='USD').first()
         elif buyer_request.payment_method == 'RTGS':
+            # checking to see if logged in user's depot has fuel type that is needed by the request
             fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(
                 payment_type='RTGS').first()
         elif buyer_request.payment_method == 'USD & RTGS':
+            # checking to see if logged in user's depot has fuel type that is needed by the request
             fuel = SuballocationFuelUpdate.objects.filter(subsidiary__id=request.user.subsidiary_id).filter(
                 payment_type='USD & RTGS').first()
         else:
             fuel = None
+        # checking if the request needs equipment
         if buyer_request.dipping_stick_required == buyer_request.meter_required == buyer_request.pump_required == False:
             buyer_request.no_equipment = True
         if buyer_request.cash == buyer_request.ecocash == buyer_request.swipe == buyer_request.usd == False:
             buyer_request.no_payment = True
-        # if not buyer_request.delivery_address.strip():
-        #     buyer_request.delivery_address = f'N/A'
+        
+        # checking if an offer has already been made for the request by the logged in user's depot and picking the offer amount and offer price
         if Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).exists():
             offer = Offer.objects.filter(supplier_id=request.user, request_id=buyer_request).first()
             buyer_request.my_offer = f'{offer.quantity}ltrs @ ${offer.price}'
@@ -456,6 +465,8 @@ def fuel_request(request):
         else:
             buyer_request.my_offer = 'No Offer'
             buyer_request.offer_id = 0
+        
+        # checking if logged in user's depot has fuel type to satisfy the request and picking price of the fuel
         if fuel:
             if buyer_request.fuel_type.lower() == 'petrol':
 
@@ -464,13 +475,17 @@ def fuel_request(request):
                 buyer_request.price = fuel.diesel_price
         else:
             buyer_request.price = 0.00
+
+        # reading all complete requests and checking if those requests needed equipment or not
         complete_requests = FuelRequest.objects.filter(is_complete=True).all()
         for buyer_request in complete_requests:
             if buyer_request.dipping_stick_required == buyer_request.meter_required == buyer_request.pump_required == False:
                 buyer_request.no_equipment = True
     
     for reqq in requests:
+        # checking for a request in the list of requests and to see if request exists
         if reqq is not None:
+            # checking if logged in user's depot is approved to sell USD fuel so that if its not, all USD requests will be excluded 
             if sub.is_usd_active == True:
                 acceptable_requests.append(reqq)
             else:
