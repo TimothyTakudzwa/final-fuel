@@ -1242,6 +1242,8 @@ def statistics(request):
                                                           'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
                                                           'usd_last_year_rev': usd_last_year_rev, 'usd_monthly_rev': usd_monthly_rev,
                                                           'last_week_rev': last_week_rev,
+                                                          'usd_last_week_rev': usd_last_week_rev,
+                                                          'usd_weekly_rev': usd_weekly_rev,
                                                           'city_sales_volume': city_sales_volume,
                                                           'final_desperate_cities': final_desperate_cities,
                                                           'sorted_subs': sorted_subs})
