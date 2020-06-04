@@ -1731,9 +1731,13 @@
                                      data-inner-id="sWzF7tcsBv" data-index="0">
                                     <div class="panel-heading ui-sortable-handle">
                                         <div class="panel-title" style="max-width: calc(100% - 180px);">
-                                            <h4>Weekly Sales (RTGS)
+                                            <h4 style="float: left;">Weekly Sales 
                                                 <i class="fa fa-usd" aria-hidden="true" style="margin-left: 2px;color: #009688;font-size: larger;"></i>
                                             </h4>
+
+                                            <span class="label label-pill label-default-outline m-r-15" style="margin-left: 15px;font-size: x-small;padding: 3px;color: lightslategray">
+                                                <strong> *</strong> represents last week's sales
+                                            </span>
                                         </div>
                                         <div class="dropdown">
                                             <ul class="dropdown-menu dropdown-menu-right">
@@ -3246,19 +3250,19 @@
             labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
             datasets: [
                 {
-                    label: "This Week",
-                    borderColor: "rgba(0,0,0,.09)",
+                    label: "RTGS",
+                    borderColor: "#009688",
                     borderWidth: "1",
-                    backgroundColor: "rgba(0,0,0,.07)",
+                    backgroundColor: "#009688",
                     data: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
 
                 },
                 {
-                    label: "Last Week",
-                    borderColor: "#009688",
+                    label: "RTGS*",
+                    borderColor: "#11d4c2",
                     borderWidth: "1",
-                    backgroundColor: "#009688",
-                    pointHighlightStroke: "#009688",
+                    backgroundColor: "#11d4c2",
+                    pointHighlightStroke: "#11d4c2",
                     data: [{{last_week_rev.Mon}}, {{last_week_rev.Tue}}, {{last_week_rev.Wed}}, {{last_week_rev.Thu}}, {{last_week_rev.Fri}}, {{last_week_rev.Sat}}, {{last_week_rev.Sun}}]
                 }
             ]
