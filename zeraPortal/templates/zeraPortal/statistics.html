@@ -1787,10 +1787,14 @@
                                      data-inner-id="Xm8QfpR2Ps" data-index="0">
                                     <div class="panel-heading ui-sortable-handle">
                                         <div class="panel-title" style="max-width: calc(100% - 90px);">
-                                            <h4>Monthly Sales
+                                            <h4 style="float: left">Monthly Sales
                                                 <i class="fa fa-usd" aria-hidden="true" style="margin-left: 2px;color: #009688;font-size: larger;"></i>
                                             </h4>
+                                            <span class="label label-pill label-default-outline m-r-15" style="margin-left: 15px;font-size: x-small;padding: 3px;color: lightslategray">
+                                                <strong> *</strong> represents last year's sales
+                                            </span>
                                         </div>
+                                        
                                         <div class="dropdown">
                                             <ul class="dropdown-menu dropdown-menu-right">
                                                 <li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip"
@@ -2363,9 +2367,9 @@
                             {
                                 label: year - 1 + "RTGS",
                                 data: [{{usd_monthly_rev.Jan}}, {{usd_monthly_rev.Feb}}, {{usd_monthly_rev.Mar}}, {{usd_monthly_rev.Apr}}, {{usd_monthly_rev.May}}, {{usd_monthly_rev.Jun}}, {{usd_monthly_rev.Jul}}, {{usd_monthly_rev.Aug}}, {{usd_monthly_rev.Sep}}, {{usd_monthly_rev.Oct}}, {{usd_monthly_rev.Nov}}, {{usd_monthly_rev.Dec}}],
-                                borderColor: "#db3737",
+                                borderColor: "#ffe176",
                                 borderWidth: "0",
-                                backgroundColor: "#db3737"
+                                backgroundColor: "#ffe176"
                             }
                         ]
                     },
@@ -3155,9 +3159,9 @@
                 {
                     label: "USD*",
                     data: [{{usd_last_year_rev.Jan}}, {{usd_last_year_rev.Feb}}, {{usd_last_year_rev.Mar}}, {{usd_last_year_rev.Apr}}, {{usd_last_year_rev.May}}, {{usd_last_year_rev.Jun}}, {{usd_last_year_rev.Jul}}, {{usd_last_year_rev.Aug}}, {{usd_last_year_rev.Sep}}, {{usd_last_year_rev.Oct}}, {{usd_last_year_rev.Nov}}, {{usd_last_year_rev.Dec}}],
-                    borderColor: "#ffc751",
+                    borderColor: "#ffe176",
                     borderWidth: "0",
-                    backgroundColor: "#ffc751"
+                    backgroundColor: "#ffe176"
                 }
             ]
         },
