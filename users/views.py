@@ -1164,85 +1164,14 @@ def statistics(request):
     last_year_rev = get_monthly_sales(request.user.company, (datetime.now().year - 1))
     notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
     num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
-    # offers = Offer.objects.filter(supplier__company=request.user.company).count()
-    # bulk_requests = FuelRequest.objects.filter(delivery_method="SELF COLLECTION").count()
-    # normal_requests = FuelRequest.objects.filter(delivery_method="DELIVERY").count()  # Change these 2 items
-    # staff = ''
-    # new_orders = FuelRequest.objects.filter(date__gt=yesterday).count()
-    # try:
-    #     rating = SupplierRating.objects.filter(supplier=request.user.company).first().rating
-    # except:
-    #     rating = 0
 
-    # admin_staff = User.objects.filter(company=company).filter(user_type='SUPPLIER').count()
-    # # all_staff = User.objects.filter(company=company).count()
-    # other_staff = User.objects.filter(company=company).filter(user_type='SS_SUPPLIER').count()
-    clients = []
-    # stock = get_aggregate_stock(request.user.company)
-    # diesel = stock['diesel']
-    # petrol = stock['petrol']
+    # Get top Subsidiaries ranked by revenue
+    sorted_subs = get_top_branches(10,request.user.company)
 
-    trans = Transaction.objects.filter(supplier__company=request.user.company, is_complete=True).annotate(
-        number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
-    buyers = [client.buyer for client in trans]
+    # Get top Clients ranked by revenue
+    clients = get_top_clients(10, request.user.company)
 
-    branches = Subsidiaries.objects.filter(is_depot=True).filter(company=request.user.company)
-
-    subs = []
-
-    for sub in branches:
-        tran_amount = 0
-        sub_trans = Transaction.objects.filter(supplier__company=request.user.company, supplier__subsidiary_id=sub.id,
-                                               is_complete=True)
-        for sub_tran in sub_trans:
-            tran_amount += (float(sub_tran.offer.quantity) * float(sub_tran.offer.price))
-        sub.tran_count = sub_trans.count()
-        sub.tran_value = tran_amount
-        subs.append(sub)
-
-    # sort subsidiaries by transaction value
-    sorted_subs = sorted(subs, key=lambda x: x.tran_value, reverse=True)
-
-    new_buyers = []
-    for buyer in buyers:
-        total_transactions = buyers.count(buyer)
-        buyers.remove(buyer)
-        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, supplier__company=request.user.company,
-                                                            is_complete=True).all()
-        total_value = 0
-        purchases = []
-        number_of_trans = 0
-        for tran in new_buyer_transactions:
-            total_value += (float(tran.offer.quantity) * float(tran.offer.price))
-            purchases.append(tran)
-            number_of_trans += 1
-        buyer.total_revenue = total_value
-        buyer.purchases = purchases
-        buyer.number_of_trans = total_transactions
-        if buyer not in new_buyers:
-            new_buyers.append(buyer)
-
-    clients = sorted(new_buyers, key=lambda x: x.total_revenue, reverse=True)
-
-    # for company in companies:
-    #     company.total_value = value[counter]
-    #     company.num_transactions = num_trans[counter]
-    #     counter += 1
-
-    # clients = [company for company in  companies]
-
-    # revenue = round(float(sum(value)))
-    revenue = get_total_revenue(request.user)
-    revenue = '${:,.2f}'.format(revenue)
-    # revenue = str(revenue) + '.00'
-
-    # try:
-    #     trans = Transaction.objects.filter(supplier=request.user, complete=true).count()/Transaction.objects.all().count()/100
-    # except:
-    #     trans = 0    
-    trans_complete = get_transactions_complete_percentage(request.user)
-    average_rating = get_average_rating(request.user.company)
-    return render(request, 'users/statistics.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trans': trans, 'clients': clients,
+    return render(request, 'users/statistics.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications,'clients': clients,
                                                      'sorted_subs': sorted_subs,
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
                                                      'last_week_rev': last_week_rev})

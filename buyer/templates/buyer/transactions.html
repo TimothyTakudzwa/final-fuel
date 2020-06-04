@@ -153,7 +153,7 @@
                                         <th>Statement</th>
                                         <th>Bank Details</th>
                                         <th>Payments</th>
-                                        <th>P.O.P</th>
+                                        <th style="width: 279.004px;">P.O.P</th>
                                         <th>More Info</th>
 
                                     </tr>
@@ -377,14 +377,14 @@
                                                 <td>
                                                     <div class="btn-group">
                                                         <a class="btn btn-labeled btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_history' transaction.id %}">
-                                                            <span class="btn-label"><i class="fa fa-eye"></i></span> Payments & Schedules</a>
+                                                            <span class="btn-label"><i class="fa fa-eye"></i></span> P.O.P & Schedules</a>
                                                     </div>
                                                 </td>
                                             {% else %}
                                                 <td>
                                                     <div class="btn-group">
                                                         <a class="btn btn-labeled btn-success btn-sm" data-toggle="modal" href="{%url 'buyer:payment_release_notes' transaction.id %}">
-                                                            <span class="btn-label"><i class="fa fa-eye"></i></span> Payments & Release Notes</a>
+                                                            <span class="btn-label"><i class="fa fa-eye"></i></span> P.O.P & Release Notes</a>
                                                     </div>
                                                 </td>
                                             {% endif %}
@@ -397,12 +397,14 @@
                                                     <td>Pending</td>
                                                 {% endif %}
                                             {% else %}
+                                            <td>
                                                 <div class="btn-group">
-                                                <td><a class="btn btn-labeled btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#proof_{{transaction.id}}">
+                                                <a class="btn btn-labeled btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#proof_{{transaction.id}}">
                                                     <span class="btn-label"><i class="fa fa-upload"></i></span> Payment </a>
                                                     <a class="btn btn-labeled btn-primary btn-sm" style="color: white;" href="{%url 'buyer:view-proof' transaction.id %}">
-                                                        <span class="btn-label"><i class="fa fa-eye"></i></span> P.O.P </a></td>
+                                                        <span class="btn-label"><i class="fa fa-eye"></i></span> P.O.P </a>
                                                 </div>
+                                            </td>
                                             {% endif %}
 
                                             <td>
