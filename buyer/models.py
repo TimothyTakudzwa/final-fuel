@@ -36,7 +36,7 @@ class User(AbstractUser):
         from supplier.models import Subsidiaries
         from national.models import NoicDepot
         # check if user has a subsidiary first if not, return depot
-        if user.user_type == 'SS_SUPPLIER' or 'NOIC_STAFF':
+        if self.user_type == 'SS_SUPPLIER' or 'NOIC_STAFF':
             sub = Subsidiaries.objects.filter(id=self.subsidiary_id).first()
             if not sub:
                 sub = NoicDepot.objects.filter(id=self.subsidiary_id).first()

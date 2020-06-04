@@ -1722,6 +1722,7 @@
                             </div>
                         </div>
 
+                        <!-- RTGS Graphs -->
                         <div class="row" style="margin-top: 50px;">
                             <!-- datamap -->
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6  lobipanel-parent-sortable ui-sortable"
@@ -1730,7 +1731,9 @@
                                      data-inner-id="sWzF7tcsBv" data-index="0">
                                     <div class="panel-heading ui-sortable-handle">
                                         <div class="panel-title" style="max-width: calc(100% - 180px);">
-                                            <h4>Weekly Sales</h4>
+                                            <h4>Weekly Sales (RTGS)
+                                                <i class="fa fa-usd" aria-hidden="true" style="margin-left: 2px;color: #009688;font-size: larger;"></i>
+                                            </h4>
                                         </div>
                                         <div class="dropdown">
                                             <ul class="dropdown-menu dropdown-menu-right">
@@ -1784,7 +1787,9 @@
                                      data-inner-id="Xm8QfpR2Ps" data-index="0">
                                     <div class="panel-heading ui-sortable-handle">
                                         <div class="panel-title" style="max-width: calc(100% - 90px);">
-                                            <h4>Monthly Sales</h4>
+                                            <h4>Monthly Sales (RTGS)
+                                                <i class="fa fa-usd" aria-hidden="true" style="margin-left: 2px;color: #009688;font-size: larger;"></i>
+                                            </h4>
                                         </div>
                                         <div class="dropdown">
                                             <ul class="dropdown-menu dropdown-menu-right">
@@ -1816,6 +1821,8 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- End of RTGS Graphs -->
+
 
                         <div class="row" style="margin-top: 50px;">
                             <!-- Sales Volume By City -->
@@ -2346,14 +2353,14 @@
                         labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
                         datasets: [
                             {
-                                label: year,
+                                label: year + "RTGS",
                                 data: [{{monthly_rev.Jan}}, {{monthly_rev.Feb}}, {{monthly_rev.Mar}}, {{monthly_rev.Apr}}, {{monthly_rev.May}}, {{monthly_rev.Jun}}, {{monthly_rev.Jul}}, {{monthly_rev.Aug}}, {{monthly_rev.Sep}}, {{monthly_rev.Oct}}, {{monthly_rev.Nov}}, {{monthly_rev.Dec}}],
                                 borderColor: "#009688",
                                 borderWidth: "0",
                                 backgroundColor: "#009688"
                             },
                             {
-                                label: year - 1,
+                                label: year - 1 + "RTGS",
                                 data: [{{last_year_rev.Jan}}, {{last_year_rev.Feb}}, {{last_year_rev.Mar}}, {{last_year_rev.Apr}}, {{last_year_rev.May}}, {{last_year_rev.Jun}}, {{last_year_rev.Jul}}, {{last_year_rev.Aug}}, {{last_year_rev.Sep}}, {{last_year_rev.Oct}}, {{last_year_rev.Nov}}, {{last_year_rev.Dec}}],
                                 borderColor: "#db3737",
                                 borderWidth: "0",
@@ -2371,6 +2378,7 @@
                         }
                     }
                 });
+
                 //radar chart
                 var ctx = document.getElementById("radarChart");
                 var myChart = new Chart(ctx, {

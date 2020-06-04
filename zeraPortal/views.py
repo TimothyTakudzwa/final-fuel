@@ -1209,7 +1209,8 @@ def statistics(request):
     num_of_notifications = Notification.objects.filter(action="NEW_SUBSIDIARY").filter(is_read=False).count()
 
     yesterday = date.today() - timedelta(days=1)
-    monthly_rev = get_aggregate_monthly_sales(datetime.now().year)
+    monthly_rev = get_aggregate_monthly_sales(datetime.now().year, 'RTGS')
+    usd_monthly_rev = get_aggregate_monthly_sales(datetime.now().year, 'USD')
     weekly_rev = get_weekly_sales(True)
     last_week_rev = get_weekly_sales(False)
     city_sales_volume = get_volume_sales_by_location()
@@ -1222,7 +1223,8 @@ def statistics(request):
     for city, deficit in desperate_cities.items():
         final_desperate_cities.append((city, deficit))
 
-    last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1))
+    last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1), 'RTGS')
+    usd_last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1), 'USD')
 
     staff = ''
 
@@ -1236,6 +1238,7 @@ def statistics(request):
 
     return render(request, 'zeraPortal/statistics.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trans': trans, 'clients': clients,
                                                           'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
+                                                          'usd_last_year_rev': usd_last_year_rev, 'usd_monthly_rev': usd_monthly_rev,
                                                           'last_week_rev': last_week_rev,
                                                           'city_sales_volume': city_sales_volume,
                                                           'final_desperate_cities': final_desperate_cities,
