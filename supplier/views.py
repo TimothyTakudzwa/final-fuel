@@ -1395,6 +1395,7 @@ def complete_transaction(request, id):
                 #                         description=description, reference_id=transaction.id)
 
                 payment.pop_approved = True
+                payment.value = float(request.POST['received'])
                 payment.save()
                 messages.success(request,
                                  "Proof of payment approved!, please create a delivery schedule for the buyer or upload a release note.")
@@ -1450,6 +1451,7 @@ def complete_transaction(request, id):
                 #                         description=description, reference_id=transaction.id)
 
                 payment.pop_approved = True
+                payment.value = float(request.POST['received'])
                 payment.save()
                 
 
@@ -2038,10 +2040,9 @@ def mark_completion(request, id):
 @login_required()
 def view_release_note(request, id):
     user_permission(request)
-    payment = AccountHistory.objects.filter(id=id).first()
-    payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
+    transaction = Transaction.objects.filter(id=id).first()
     context = {
-        'payment': payment
+        'transaction': transaction
     }
     return render(request, 'supplier/release_note.html', context=context)
 
@@ -2049,10 +2050,9 @@ def view_release_note(request, id):
 @login_required()
 def download_release_note(request, id):
     user_permission(request)
-    payment = AccountHistory.objects.filter(id=id).first()
-    payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
+    transaction = Transaction.objects.filter(id=id).first()
     context = {
-        'payment': payment
+        'transaction': transaction
     }
     return render(request, 'supplier/r_note.html', context=context)
 
