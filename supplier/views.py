@@ -1349,7 +1349,7 @@ def complete_transaction(request, id):
     fuel_type = transaction.offer.request.fuel_type.lower()
     if fuel_type == 'petrol':
         if request.method == 'POST':
-            payment = AccountHistory.objects.filter(id=int(request.POST['payment']))
+            payment = AccountHistory.objects.filter(id=int(request.POST['payment'])).first()
             # transaction_quantity = transaction.offer.quantity
             if transaction.offer.delivery_method == "DELIVERY":
                 fuel_charge = float(request.POST['received']) - float(request.POST['transport_charge'])
@@ -1387,7 +1387,7 @@ def complete_transaction(request, id):
 
                 user = transaction.offer.request.name
                 transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Petrol', payment_type,
-                                        transaction)
+                                        transaction, int(request.POST['payment']))
 
                 # action = "Approving Payment"
                 # description = f"You have approved payment for fuel from {transaction.buyer.company.name}"
@@ -1395,6 +1395,7 @@ def complete_transaction(request, id):
                 #                         description=description, reference_id=transaction.id)
 
                 payment.pop_approved = True
+                payment.save()
                 messages.success(request,
                                  "Proof of payment approved!, please create a delivery schedule for the buyer or upload a release note.")
                 return redirect('transaction')
@@ -1403,7 +1404,7 @@ def complete_transaction(request, id):
                 return redirect('transaction')
     elif fuel_type == 'diesel':
         if request.method == 'POST':
-            payment = AccountHistory.objects.filter(id=int(request.POST['payment']))
+            payment = AccountHistory.objects.filter(id=int(request.POST['payment'])).first()
             # transaction_quantity = transaction.offer.quantity
             if transaction.offer.delivery_method == "DELIVERY":
                 fuel_charge = float(request.POST['received']) - float(request.POST['transport_charge'])
@@ -1441,7 +1442,7 @@ def complete_transaction(request, id):
 
                 user = transaction.offer.request.name
                 transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Diesel', payment_type,
-                                        transaction)
+                                        transaction, int(request.POST['payment']))
 
                 # action = "Approving Payment"
                 # description = f"You have approved payment for fuel from {transaction.buyer.company.name}"
@@ -1449,6 +1450,8 @@ def complete_transaction(request, id):
                 #                         description=description, reference_id=transaction.id)
 
                 payment.pop_approved = True
+                payment.save()
+                
 
                 messages.success(request,
                                  "Proof of payment approved!, please create a delivery schedule for the buyer.")
@@ -1598,7 +1601,7 @@ def stock_sord_update(request, user, quantity, action, fuel_type, payment_type):
 
 
 @login_required()
-def transaction_sord_update(request, user, quantity, action, fuel_type, payment_type, transaction):
+def transaction_sord_update(request, user, quantity, action, fuel_type, payment_type, transaction, payment_id):
     user_permission(request)
     initial_sord = SordSubsidiaryAuditTrail.objects.filter(subsidiary__id=request.user.subsidiary_id,
                                                            fuel_type=fuel_type, payment_type=payment_type).all()
@@ -1663,7 +1666,7 @@ def transaction_sord_update(request, user, quantity, action, fuel_type, payment_
 
                 balance_brought_forward = 0
                 account_sord_list.append(entry.sord_no)
-    account = AccountHistory.objects.filter(transaction=transaction, sord_number=None).first()
+    account = AccountHistory.objects.filter(id=payment_id).first()
     account.sord_number = ','.join(map(str, account_sord_list))
     account.save()
 
