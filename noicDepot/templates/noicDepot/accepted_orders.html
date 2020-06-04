@@ -389,14 +389,18 @@
                                                             <a href="{% url 'noicDepot:download_proof' order.id %}" type="button" class="btn btn-labeled btn-success btn-sm">
                                                                 <span class="btn-label"><i class="fa fa-download"></i></span>P.O.P.
                                                             </a>
+                                                            <a href="{% url 'noicDepot:payment_approval' order.id %}" type="button" class="btn btn-labeled btn-warning btn-sm">
+                                                                <span class="btn-label"><i class="glyphicon glyphicon-thumbs-up"></i></span>Approve
+                                                            </a>
                                                             {% else %}
                                                             <a type="button" class="btn btn-labeled btn-success btn-sm" disabled>
                                                                 <span class="btn-label"><i class="fa fa-download"></i></span>P.O.P.
                                                             </a>
-                                                            {% endif %}
-                                                            <a href="{% url 'noicDepot:payment_approval' order.id %}" type="button" class="btn btn-labeled btn-warning btn-sm">
+                                                            <a type="button" class="btn btn-labeled btn-warning btn-sm" disabled>
                                                                 <span class="btn-label"><i class="glyphicon glyphicon-thumbs-up"></i></span>Approve
                                                             </a>
+                                                            {% endif %}
+                                                           
                                                         </div>
                                                     </td>
                                                 {% endif %}

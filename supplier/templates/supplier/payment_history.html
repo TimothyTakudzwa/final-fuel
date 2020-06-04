@@ -204,14 +204,27 @@
                             <td>{{payment.value|floatformat:2|intcomma}}</td>
                             <td>{{payment.balance|floatformat:2|intcomma}}</td>
                             {% if payment.pop_approved == False and payment.transaction.paid != payment.transaction.expected %}
-                            <td>
-                                <div class="btn-group">
-                                    <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-proof' payment.id %}" > 
-                                        <span class="btn-label"><i class="fa fa-download" aria-hidden="true"></i></span> P.O.P</a>
-                                    <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" data-target="#approve{{payment.id}}" >
-                                        <span class="btn-label"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i></span>  Approve</a>
-                                </div>
-                            </td>
+                                {% if payment.proof_of_payment %}
+                                <td>
+                                    <div class="btn-group">
+                                        <a class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;" href="{% url 'supplier:download-proof' payment.id %}" > 
+                                            <span class="btn-label"><i class="fa fa-download" aria-hidden="true"></i></span> P.O.P</a>
+                                        <a class="btn btn-labeled btn-warning btn-sm" style="color: whitesmoke;" data-toggle="modal" data-target="#approve{{payment.id}}" >
+                                            <span class="btn-label"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i></span>  Approve</a>
+                                    </div>
+                                </td>
+                                {% else %}
+                                <td>
+                                    <div class="btn-group">
+                                        <a type="button" class="btn btn-labeled btn-success btn-sm" disabled>
+                                            <span class="btn-label"><i class="fa fa-download"></i></span>P.O.P.
+                                        </a>
+                                        <a type="button" class="btn btn-labeled btn-warning btn-sm" disabled>
+                                            <span class="btn-label"><i class="glyphicon glyphicon-thumbs-up"></i></span>Approve
+                                        </a>
+                                    </div>
+                                </td>
+                                {% endif %}
                             {% else %}
                             {% if payment.delivery_schedule != None %}
                             <td>
