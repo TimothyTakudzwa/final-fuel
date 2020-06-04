@@ -30,16 +30,16 @@ class User(AbstractUser):
     is_test_data = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.username}'    
+        return f'{self.username}'
 
     def get_subsidiary(self):
         from supplier.models import Subsidiaries
         from national.models import NoicDepot
         # check if user has a subsidiary first if not, return depot
-        if self.user_type == 'SS_SUPPLIER' or 'NOIC_STAFF':
+        if user.user_type == 'SS_SUPPLIER':
             sub = Subsidiaries.objects.filter(id=self.subsidiary_id).first()
-            if not sub:
-                sub = NoicDepot.objects.filter(id=self.subsidiary_id).first()
+        if user.user_type == 'NOIC_STAFF':
+            sub = NoicDepot.objects.filter(id=self.subsidiary_id).first()
         else:
             return None        
         return sub     
