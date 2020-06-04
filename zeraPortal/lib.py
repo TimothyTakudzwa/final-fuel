@@ -101,7 +101,7 @@ def get_week_days(date):
 #         weekly_data[day.strftime("%a")] = int(weeks_revenue)
 #     return weekly_data      
 
-def get_weekly_sales(this_week):
+def get_weekly_sales(this_week, currency):
     '''
     Get the company's weekly sales
     '''
@@ -114,7 +114,8 @@ def get_weekly_sales(this_week):
     start_date = week_days[0]
     end_date = week_days[-1]
 
-    weekly_transactions = Transaction.objects.filter(date__range=[start_date,end_date], is_complete=True)
+    weekly_transactions = Transaction.objects.filter(date__range=[start_date,end_date], is_complete=True,
+     offer__request__payment_method=currency)
 
     weekly_data = {}
     for day in week_days:
