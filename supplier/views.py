@@ -1387,7 +1387,7 @@ def complete_transaction(request, id):
 
                 user = transaction.offer.request.name
                 transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Petrol', payment_type,
-                                        transaction, int(request.POST['payment'])
+                                        transaction, int(request.POST['payment']))
 
                 # action = "Approving Payment"
                 # description = f"You have approved payment for fuel from {transaction.buyer.company.name}"
@@ -1441,7 +1441,7 @@ def complete_transaction(request, id):
 
                 user = transaction.offer.request.name
                 transaction_sord_update(request, user, transaction_quantity, 'SALE', 'Diesel', payment_type,
-                                        transaction, int(request.POST['payment'])
+                                        transaction, int(request.POST['payment']))
 
                 # action = "Approving Payment"
                 # description = f"You have approved payment for fuel from {transaction.buyer.company.name}"
