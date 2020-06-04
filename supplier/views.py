@@ -1349,7 +1349,7 @@ def complete_transaction(request, id):
     fuel_type = transaction.offer.request.fuel_type.lower()
     if fuel_type == 'petrol':
         if request.method == 'POST':
-            payment = AccountHistory.objects.filter(id=int(request.POST['payment']))
+            payment = AccountHistory.objects.filter(id=int(request.POST['payment'])).first()
             # transaction_quantity = transaction.offer.quantity
             if transaction.offer.delivery_method == "DELIVERY":
                 fuel_charge = float(request.POST['received']) - float(request.POST['transport_charge'])
@@ -1404,7 +1404,7 @@ def complete_transaction(request, id):
                 return redirect('transaction')
     elif fuel_type == 'diesel':
         if request.method == 'POST':
-            payment = AccountHistory.objects.filter(id=int(request.POST['payment']))
+            payment = AccountHistory.objects.filter(id=int(request.POST['payment'])).first()
             # transaction_quantity = transaction.offer.quantity
             if transaction.offer.delivery_method == "DELIVERY":
                 fuel_charge = float(request.POST['received']) - float(request.POST['transport_charge'])
@@ -1451,7 +1451,7 @@ def complete_transaction(request, id):
 
                 payment.pop_approved = True
                 payment.save()
-
+                
 
                 messages.success(request,
                                  "Proof of payment approved!, please create a delivery schedule for the buyer.")
