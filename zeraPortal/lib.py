@@ -131,7 +131,7 @@ def get_weekly_sales(this_week):
     return weekly_data         
 
              
-def get_aggregate_monthly_sales(year):
+def get_aggregate_monthly_sales(year, currency):
     '''
     Get the companies monthly sales
     '''
@@ -141,7 +141,7 @@ def get_aggregate_monthly_sales(year):
     counter = 1
     for month in months:
         months_revenue = 0
-        months_trans = Transaction.objects.filter(date__year=year, date__month=counter)
+        months_trans = Transaction.objects.filter(date__year=year, date__month=counter, offer__request__payment_method=currency)
         if months_trans:
             for tran in months_trans :
                 # months_revenue += (float(tran.offer.request.amount) * float(tran.offer.price))
