@@ -40,9 +40,9 @@ def get_top_branches(count):
     return sorted_subs
 
 
-def get_top_clients(count):
+def get_top_clients(count, currency):
     # Sort all transactions in order of the number of times a buyer appears. 
-    trans = Transaction.objects.filter(is_complete=True).annotate(
+    trans = Transaction.objects.filter(is_complete=True, offer__request__payment_method=currency).annotate(
         number_of_trans=Count('buyer')).order_by('-number_of_trans')
     
     # Add all the buyers in a list to the variable buyers from the QS above

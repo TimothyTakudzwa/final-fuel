@@ -1236,7 +1236,8 @@ def statistics(request):
     trans = Transaction.objects.filter(is_complete=True).annotate(
         number_of_trans=Count('buyer')).order_by('-number_of_trans')[:10]
     
-    clients = get_top_clients(10)
+    clients = get_top_clients(10, 'RTGS')
+    usd_clients = get_top_clients(10, 'USD')
 
     return render(request, 'zeraPortal/statistics.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'trans': trans, 'clients': clients,
                                                           'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
@@ -1246,6 +1247,7 @@ def statistics(request):
                                                           'usd_weekly_rev': usd_weekly_rev,
                                                           'city_sales_volume': city_sales_volume,
                                                           'final_desperate_cities': final_desperate_cities,
+                                                          'usd_clients': usd_clients,
                                                           'sorted_subs': sorted_subs})
 
 
