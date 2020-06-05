@@ -516,6 +516,33 @@
                                                                     <a class="btn btn-warning btn-sm" style="color: white;" data-toggle="modal" data-target="#upload_{{transaction.id}}">
                                                                         <i class="fa fa-upload" style="font-size:20px"></i> Upload</a>  
                                                                 </td>
+                                                                <!--Upload Delivery Note-->
+                                                                <div class="modal fade modal-sucess in" id="upload_{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header" style="background-color: #009688; color: white">
+                                                                                <span class="modal-title" id="exampleModalLabel">Add Delivery Date</span>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+
+                                                                                <form method="POST" action="{% url 'buyer:delivery_note' transaction.id %}" enctype="multipart/form-data">
+                                                                                    {% csrf_token %}
+                                                                                    <div class="form-group col-md-6">
+                                                                                        <label>Delivery Date</label>
+                                                                                        <input type="date" name="delivery_date" class="form-control"  required/>
+                                                                                    </div>
+                                                                                    <br>
+                                                                                    <p style="text-align: center;"><input class="btn btn-info" type="submit" value="Upload"></p>
+
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!--End Upload Document-->
                                                             {% endif %}
                                                         {% else %}
                                                             <td style="color: brown;">Pending</td>

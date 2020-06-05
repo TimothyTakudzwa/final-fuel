@@ -189,6 +189,7 @@ class Transaction(models.Model):
     fuel_money_reserve = models.FloatField(default=0.00)
     release_note = models.FileField(upload_to='release_note', null=True, blank=True)
     release_date = models.DateField(auto_now_add=False, null=True)
+    delivery_date = models.DateField(auto_now_add=False, null=True)
 
     @property
     def get_delivery_schedule(self):

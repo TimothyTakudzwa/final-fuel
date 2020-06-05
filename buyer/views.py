@@ -1484,17 +1484,17 @@ def proof_of_payment(request, id):
 def delivery_note(request, id):
     user_permission(request)
     if request.method == 'POST':
-        payment = AccountHistory.objects.filter(id=id).first()
-        if payment is not None:
-            payment.delivery_date = request.POST['delivery_date']
-            payment.save()
+        transaction = Transaction.objects.filter(id=id).first()
+        if transaction is not None:
+            transaction.delivery_date = request.POST['delivery_date']
+            transaction.save()
 
             action = "Uploading Delivery Note"
-            description = f"You have uploaded d-note for transaction of {payment.transaction.offer.quantity}L {payment.transaction.offer.request.fuel_type}"
+            description = f"You have uploaded d-note for transaction of {transaction.offer.quantity}L {transaction.offer.request.fuel_type}"
             Activity.objects.create(company=request.user.company, user=request.user, action=action,
-                                    description=description, reference_id=payment.id)
+                                    description=description, reference_id=transaction.id)
             messages.success(request, 'Delivery note successfully uploaded.')
-            return redirect(f'/buyer/payment_release_notes/{payment.transaction.id}')
+            return redirect('buyer-transactions')
         else:
             pass
 
