@@ -1611,7 +1611,7 @@ var myChart = new Chart(ctx, {
         labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
         datasets: [
             {
-                label: "This Week",
+                label: "RTGS",
                 borderColor: "rgba(0,0,0,.09)",
                 borderWidth: "1",
                 backgroundColor: "rgba(0,0,0,.07)",
@@ -1619,11 +1619,11 @@ var myChart = new Chart(ctx, {
 
             },
             {
-                label: "Last Week",
-                borderColor: "#009688",
+                label: "RTGS*",
+                borderColor: "#FD3434",
                 borderWidth: "1",
-                backgroundColor: "#009688",
-                pointHighlightStroke: "#009688",
+                backgroundColor: "#FD3434",
+                pointHighlightStroke: "#FD3434",
                 data: [{{last_week_rev.Mon}}, {{last_week_rev.Tue}}, {{last_week_rev.Wed}}, {{last_week_rev.Thu}}, {{last_week_rev.Fri}}, {{last_week_rev.Sat}}, {{last_week_rev.Sun}}]
             }
         ]
