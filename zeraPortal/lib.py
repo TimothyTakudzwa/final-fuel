@@ -11,7 +11,7 @@ import pandas
 from django.db.models import Sum, Count
 
         
-def get_top_branches(count):
+def get_top_branches(count, currency):
     '''
     Get an ordered list of a companies top subsidiaries
     according to revenue generated
@@ -24,7 +24,8 @@ def get_top_branches(count):
 
     for sub in branches:
         # Fetch all transactions related to Subsidiaries
-        sub_trans = Transaction.objects.filter(supplier__subsidiary_id=sub.id, is_complete=True)
+        sub_trans = Transaction.objects.filter(supplier__subsidiary_id=sub.id, is_complete=True,
+         offer__request__payment_method=currency)
         # Get number of transaction objects
         sub.tran_count = sub_trans.count()
         # Get all the expected incomes from transactions qs 
