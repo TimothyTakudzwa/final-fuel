@@ -1398,10 +1398,10 @@ def complete_transaction(request, id):
                 payment.save()
                 messages.success(request,
                                  "Proof of payment approved!, please create a delivery schedule for the buyer or upload a release note.")
-                return redirect('transaction')
+                return redirect(f'/supplier/payment_history/{id}')
             else:
                 messages.warning(request, "There is not enough petrol in stock to complete the transaction.")
-                return redirect('transaction')
+                return redirect(f'/supplier/payment_history/{id}')
     elif fuel_type == 'diesel':
         if request.method == 'POST':
             payment = AccountHistory.objects.filter(id=int(request.POST['payment'])).first()
@@ -1455,10 +1455,10 @@ def complete_transaction(request, id):
 
                 messages.success(request,
                                  "Proof of payment approved!, please create a delivery schedule for the buyer.")
-                return redirect('transaction')
+                return redirect(f'/supplier/payment_history/{id}')
             else:
                 messages.warning(request, "There is not enough diesel in stock to complete the transaction.")
-                return redirect('transaction')
+                return redirect(f'/supplier/payment_history/{id}')
     return render(request, 'supplier/transactions.html')
 
 
