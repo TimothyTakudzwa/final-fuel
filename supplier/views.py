@@ -1352,7 +1352,7 @@ def complete_transaction(request, id):
             payment = AccountHistory.objects.filter(id=int(request.POST['payment'])).first()
             # transaction_quantity = transaction.offer.quantity
             if transaction.offer.delivery_method == "DELIVERY":
-                fuel_charge = float(request.POST['received']) - float(request.POST['transport_charge'])
+                fuel_charge = float(request.POST['received']) #- float(request.POST['transport_charge'])
                 transaction_quantity = fuel_charge / float(transaction.offer.price)
             else:
                 transaction_quantity = float(request.POST['received'])
@@ -1367,8 +1367,7 @@ def complete_transaction(request, id):
                 transaction.paid += Decimal(request.POST['received'])
                 transaction.paid_reserve = float(request.POST['received'])
                 if transaction.offer.delivery_method == "DELIVERY":
-                    transaction.fuel_money_reserve = float(request.POST['received']) - float(
-                        request.POST['transport_charge'])
+                    transaction.fuel_money_reserve = float(request.POST['received']) #- float(request.POST['transport_charge'])
                 else:
                     transaction.fuel_money_reserve = float(request.POST['received'])
                 transaction.save()
@@ -1395,19 +1394,20 @@ def complete_transaction(request, id):
                 #                         description=description, reference_id=transaction.id)
 
                 payment.pop_approved = True
+                payment.value = float(request.POST['received'])
                 payment.save()
                 messages.success(request,
                                  "Proof of payment approved!, please create a delivery schedule for the buyer or upload a release note.")
-                return redirect('transaction')
+                return redirect(f'/supplier/payment_history/{id}')
             else:
                 messages.warning(request, "There is not enough petrol in stock to complete the transaction.")
-                return redirect('transaction')
+                return redirect(f'/supplier/payment_history/{id}')
     elif fuel_type == 'diesel':
         if request.method == 'POST':
             payment = AccountHistory.objects.filter(id=int(request.POST['payment'])).first()
             # transaction_quantity = transaction.offer.quantity
             if transaction.offer.delivery_method == "DELIVERY":
-                fuel_charge = float(request.POST['received']) - float(request.POST['transport_charge'])
+                fuel_charge = float(request.POST['received']) #- float(request.POST['transport_charge'])
                 transaction_quantity = fuel_charge / float(transaction.offer.price)
             else:
                 transaction_quantity = float(request.POST['received'])
@@ -1422,8 +1422,7 @@ def complete_transaction(request, id):
                 transaction.paid += Decimal(request.POST['received'])
                 transaction.paid_reserve = float(request.POST['received'])
                 if transaction.offer.delivery_method == "DELIVERY":
-                    transaction.fuel_money_reserve = float(request.POST['received']) - float(
-                        request.POST['transport_charge'])
+                    transaction.fuel_money_reserve = float(request.POST['received']) #- float(request.POST['transport_charge'])
                 else:
                     transaction.fuel_money_reserve = float(request.POST['received'])
                 transaction.save()
@@ -1450,15 +1449,16 @@ def complete_transaction(request, id):
                 #                         description=description, reference_id=transaction.id)
 
                 payment.pop_approved = True
+                payment.value = float(request.POST['received'])
                 payment.save()
                 
 
                 messages.success(request,
                                  "Proof of payment approved!, please create a delivery schedule for the buyer.")
-                return redirect('transaction')
+                return redirect(f'/supplier/payment_history/{id}')
             else:
                 messages.warning(request, "There is not enough diesel in stock to complete the transaction.")
-                return redirect('transaction')
+                return redirect(f'/supplier/payment_history/{id}')
     return render(request, 'supplier/transactions.html')
 
 
@@ -2038,10 +2038,9 @@ def mark_completion(request, id):
 @login_required()
 def view_release_note(request, id):
     user_permission(request)
-    payment = AccountHistory.objects.filter(id=id).first()
-    payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
+    transaction = Transaction.objects.filter(id=id).first()
     context = {
-        'payment': payment
+        'transaction': transaction
     }
     return render(request, 'supplier/release_note.html', context=context)
 
@@ -2049,10 +2048,9 @@ def view_release_note(request, id):
 @login_required()
 def download_release_note(request, id):
     user_permission(request)
-    payment = AccountHistory.objects.filter(id=id).first()
-    payment.quantity = float(payment.value) / float(payment.transaction.offer.price)
+    transaction = Transaction.objects.filter(id=id).first()
     context = {
-        'payment': payment
+        'transaction': transaction
     }
     return render(request, 'supplier/r_note.html', context=context)
 

@@ -156,7 +156,7 @@
                                                 <th style="color: white;">Fuel </th>
                                                 <th style="color: white;">Expected</th>
                                                 <th style="color: white;">Paid</th>
-                                                <th style="color: white;">Payments History</th>
+                                                <th style="color: white;">Payments</th>
                                                 <th style="color: white; width: 220px;">Action</th>
                                                 <th style="color: white;">Contact Person</th>
                                                 <th style="color: white;">More Info</th>
@@ -185,34 +185,42 @@
                                                     <td>{{ transaction.offer.price }}</td> -->
                                                     <td>${{ transaction.expected|intcomma}}</td>
                                                     <td>${{ transaction.paid|intcomma }}</td>
-                                                    
-                                                    {% if transaction.offer.delivery_method == 'DELIVERY' %}
                                                     <td>
                                                         <a class="btn btn-labeled btn-success btn-sm"  href="{%url 'supplier:payment_history' transaction.id %}">
-                                                        <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> Payments & Schedules</a>
+                                                        <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> Proof of Payments</a>
                                                     </td>
-                                                    {% else %}
-                                                        <td>
-                                                         <a href="{%url 'supplier:payment-and-release-notes' transaction.id %}" type="button" class="btn btn-labeled btn-success m-b-5 btn-sm">
-                                                                <span class="btn-label"><i class="fa fa-eye"></i></span>Release & Notes
-                                                            </a>
-                                                            
-                                                        </td>
-                                                    {% endif %}
                                                     {% if transaction.expected == transaction.paid %}
                                                         {% if transaction.is_complete == True %}
                                                             <td><i class="fa fa-check-square-o" style="font-size:25px;margin-left: 25px; color:rgb(0, 225, 255)"></i></td>
                                                         {% else %}
                                                                 {% if transaction.offer.delivery_method == 'DELIVERY' %}
+                                                                    {% if transaction.delivery_sched %}
+                                                                    <td>
+                                                                        <div class="btn-group">
+                                                                            <button type="button" class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#schedule{{transaction.id}}">
+                                                                             <span class="btn-label"><i class="fa fa-eye"></i></span> Delivery Schedule</button>
+                                                                        </div>
+                                                                    </td>
+                                                                    {% else %}
                                                                     <td>
                                                                         <div class="btn-group">
                                                                             <button type="button" class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#create_schedule{{transaction.id}}">
                                                                              <span class="btn-label"><i class="fa fa-plus"></i></span> Create Schedule</button>
                                                                         </div>
                                                                     </td>
+                                                                    {% endif %}
                                                                 {% else %}
+                                                                    {% if transaction.release_date %}
+                                                                    <td>
+                                                                        <div class="btn-group">
+                                                                            <a class="btn btn-primary btn-sm" style="color: white;" href="{% url 'supplier:view-release-note' transaction.id %}"><i class="fa fa-eye" style="font-size:16px"></i>Release note</a>
+                                                                            <a class="btn btn-warning btn-sm" style="color: white;" href="{% url 'supplier:download-release-note' transaction.id %}"><i class="fa fa-download" style="font-size:16px"></i>Release note</a>
+                                                                        </div>
+                                                                    </td>
+                                                                    {% else %}
                                                                         <td><button type="button" class="btn btn-labeled btn-success btn-sm" data-toggle="modal" data-target="#release_note{{transaction.id}}">
                                                                             <span class="btn-label"><i class="fa fa-eye"></i></span> Release Note</button></td>
+                                                                    {% endif %}
                                                                 {% endif %}
                                                         {% endif %}
                                                     {% else %}
@@ -287,13 +295,9 @@
                                                                     <div class="modal-body">
                                                                         {% csrf_token %}
                                                                         <div class="row">
-                                                                            <div class="form-group col-md-6">
+                                                                            <div class="form-group col-md-12">
                                                                                 <label><b> Buyer:</b></label>
                                                                                 &nbsp;{{transaction.buyer.company}}
-                                                                            </div>
-                                                                            <div class="form-group col-md-6">
-                                                                                <label><b>Supplier:</b></label>
-                                                                                &nbsp;{{transaction.supplier.company}}
                                                                             </div>
                                                                         </div>
                                                                         <div class="row">
@@ -862,13 +866,9 @@
                                                                     <div class="modal-body">
                                                                         {% csrf_token %}
                                                                         <div class="row">
-                                                                            <div class="form-group col-md-6">
+                                                                            <div class="form-group col-md-12">
                                                                                 <label><b> Buyer:</b></label>
                                                                                 &nbsp;{{transaction.buyer.company}}
-                                                                            </div>
-                                                                            <div class="form-group col-md-6">
-                                                                                <label><b>Supplier:</b></label>
-                                                                                &nbsp;{{transaction.supplier.company}}
                                                                             </div>
                                                                         </div>
                                                                         <div class="row">
