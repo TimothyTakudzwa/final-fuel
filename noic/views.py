@@ -843,8 +843,8 @@ def statistics(request):
     requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
     num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
     monthly_rev = get_monthly_orders()
-    weekly_rev = get_weekly_orders(True)
-    last_week_rev = get_weekly_orders(False)
+    weekly_rev = get_weekly_orders(True, 'RTGS')
+    last_week_rev = get_weekly_orders(False, 'RTGS')
 
     clients = get_top_clients()
 
