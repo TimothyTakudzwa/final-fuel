@@ -1352,7 +1352,7 @@ def complete_transaction(request, id):
             payment = AccountHistory.objects.filter(id=int(request.POST['payment'])).first()
             # transaction_quantity = transaction.offer.quantity
             if transaction.offer.delivery_method == "DELIVERY":
-                fuel_charge = float(request.POST['received']) - float(request.POST['transport_charge'])
+                fuel_charge = float(request.POST['received']) #- float(request.POST['transport_charge'])
                 transaction_quantity = fuel_charge / float(transaction.offer.price)
             else:
                 transaction_quantity = float(request.POST['received'])
@@ -1367,8 +1367,7 @@ def complete_transaction(request, id):
                 transaction.paid += Decimal(request.POST['received'])
                 transaction.paid_reserve = float(request.POST['received'])
                 if transaction.offer.delivery_method == "DELIVERY":
-                    transaction.fuel_money_reserve = float(request.POST['received']) - float(
-                        request.POST['transport_charge'])
+                    transaction.fuel_money_reserve = float(request.POST['received']) #- float(request.POST['transport_charge'])
                 else:
                     transaction.fuel_money_reserve = float(request.POST['received'])
                 transaction.save()
@@ -1408,7 +1407,7 @@ def complete_transaction(request, id):
             payment = AccountHistory.objects.filter(id=int(request.POST['payment'])).first()
             # transaction_quantity = transaction.offer.quantity
             if transaction.offer.delivery_method == "DELIVERY":
-                fuel_charge = float(request.POST['received']) - float(request.POST['transport_charge'])
+                fuel_charge = float(request.POST['received']) #- float(request.POST['transport_charge'])
                 transaction_quantity = fuel_charge / float(transaction.offer.price)
             else:
                 transaction_quantity = float(request.POST['received'])
@@ -1423,8 +1422,7 @@ def complete_transaction(request, id):
                 transaction.paid += Decimal(request.POST['received'])
                 transaction.paid_reserve = float(request.POST['received'])
                 if transaction.offer.delivery_method == "DELIVERY":
-                    transaction.fuel_money_reserve = float(request.POST['received']) - float(
-                        request.POST['transport_charge'])
+                    transaction.fuel_money_reserve = float(request.POST['received']) #- float(request.POST['transport_charge'])
                 else:
                     transaction.fuel_money_reserve = float(request.POST['received'])
                 transaction.save()
