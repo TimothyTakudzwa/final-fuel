@@ -524,9 +524,12 @@
             <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="sWzF7tcsBv" data-index="0">
                 <div class="panel-heading ui-sortable-handle">
                     <div class="panel-title" style="max-width: calc(100% - 180px);">
-                        <h4>Weekly Sales (National)
+                        <h4 style="float: left;">Weekly Sales (National)
                             <i class="fa fa-usd" aria-hidden="true" style="margin-left: 2px;color: #009688;font-size: larger;"></i>
                         </h4>
+                        <span class="label label-default" style="margin-left: 15px;font-size: 12px;padding: 3px;color: #6d6d6d;background-color: lightgrey;">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i> <strong> *</strong> represents last week's sales
+                        </span>
                     </div>
                 <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="editTitle" data-tooltip="Edit title" data-toggle="tooltip" data-title="Edit title" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-pencil"></i><span class="control-title">Edit title</span></a></li><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="reload" data-tooltip="Reload" data-toggle="tooltip" data-title="Reload" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-reload"></i><span class="control-title">Reload</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li><li><a data-func="close" data-tooltip="Close" data-toggle="tooltip" data-title="Close" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-close"></i><span class="control-title">Close</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
                 <div class="panel-body"><iframe class="chartjs-hidden-iframe" tabindex="-1" style="display: block; overflow: hidden; border: 0px; margin: 0px; top: 0px; left: 0px; bottom: 0px; right: 0px; height: 100%; width: 100%; position: absolute; pointer-events: none; z-index: -1;"></iframe>
@@ -1611,20 +1614,36 @@ var myChart = new Chart(ctx, {
         labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
         datasets: [
             {
-                label: "This Week",
-                borderColor: "rgba(0,0,0,.09)",
+                label: "RTGS",
+                borderColor: "#009688",
                 borderWidth: "1",
-                backgroundColor: "rgba(0,0,0,.07)",
+                backgroundColor: "#009688",
                 data: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
 
             },
             {
-                label: "Last Week",
-                borderColor: "#009688",
+                label: "USD",
+                borderColor: "#f9ad0e",
                 borderWidth: "1",
-                backgroundColor: "#009688",
+                backgroundColor: "#f9ad0e",
+                data: [{{usd_weekly_rev.Mon}}, {{usd_weekly_rev.Tue}}, {{usd_weekly_rev.Wed}}, {{usd_weekly_rev.Thu}}, {{usd_weekly_rev.Fri}}, {{usd_weekly_rev.Sat}}, {{usd_weekly_rev.Sun}}]
+
+            },
+            {
+                label: "RTGS*",
+                borderColor: "#009688",
+                borderWidth: "4",
+                backgroundColor: "#11d4c2",
                 pointHighlightStroke: "#009688",
                 data: [{{last_week_rev.Mon}}, {{last_week_rev.Tue}}, {{last_week_rev.Wed}}, {{last_week_rev.Thu}}, {{last_week_rev.Fri}}, {{last_week_rev.Sat}}, {{last_week_rev.Sun}}]
+            },
+            {
+                label: "USD*",
+                borderColor: "#f9ad0e",
+                borderWidth: "4",
+                backgroundColor: "#ffe176",
+                data: [{{usd_last_week_rev.Mon}}, {{usd_last_week_rev.Tue}}, {{usd_last_week_rev.Wed}}, {{usd_last_week_rev.Thu}}, {{usd_last_week_rev.Fri}}, {{usd_last_week_rev.Sat}}, {{usd_last_week_rev.Sun}}]
+
             }
         ]
     },
