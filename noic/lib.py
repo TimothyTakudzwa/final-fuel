@@ -95,7 +95,7 @@ def total_orders():
     return Order.objects.all().count()    
 
 
-def get_monthly_orders():
+def get_monthly_orders(currency):
     '''
     Get the companies monthly orders
     '''
@@ -106,7 +106,7 @@ def get_monthly_orders():
     monthly_data = {}
     counter = 1
     for month in months:
-        months_qty = Order.objects.filter(date__year=year, date__month=counter).aggregate(
+        months_qty = Order.objects.filter(date__year=year, date__month=counter, currency=currency).aggregate(
             total=Sum('amount_paid')
         )['total']
         # months_orders = Order.objects.filter(date__year=year, date__month=counter)

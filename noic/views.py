@@ -842,7 +842,7 @@ def allocate_fuel(request, id):
 def statistics(request):
     requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
     num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
-    monthly_rev = get_monthly_orders()
+    monthly_rev = get_monthly_orders('USD')
     weekly_rev = get_weekly_orders(True, 'RTGS')
     last_week_rev = get_weekly_orders(False, 'RTGS')
     usd_weekly_rev = get_weekly_orders(True, 'USD')
