@@ -293,7 +293,7 @@ def activity(request):
 
 
 @login_required()
-@user_role
+# @user_role
 def dashboard(request):
     requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
     num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
