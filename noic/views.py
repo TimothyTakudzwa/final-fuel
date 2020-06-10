@@ -293,7 +293,7 @@ def activity(request):
 
 
 @login_required()
-# @user_role
+@user_role
 def dashboard(request):
     requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
     num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
@@ -830,7 +830,7 @@ def allocate_fuel(request, id):
                     company_update = CompanyFuelUpdate.objects.filter(company=order.company).first()
                     company_update.unallocated_petrol += float(request.POST['quantity'])
                     company_update.diesel_price = noic_capacity.diesel_price
-                    company_update.save()
+                    company_update.save() 
                     order.allocated_fuel = True
                     order.save()
                     messages.success(request, 'Fuel allocated successfully.')
@@ -840,15 +840,19 @@ def allocate_fuel(request, id):
 @login_required()
 @user_role
 def statistics(request):
+    year = datetime.datetime.now().year
     requests_notifications = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).all()
     num_of_requests = Notification.objects.filter(action="MORE_FUEL").filter(is_read=False).count()
-    monthly_rev = get_monthly_orders()
+    monthly_rev = get_monthly_orders('RTGS', year)
+    usd_monthly_rev = get_monthly_orders('USD', year)
+    last_year_rev = get_monthly_orders('RTGS', year-1)
+    usd_last_year_rev = get_monthly_orders('USD', year-1)
     weekly_rev = get_weekly_orders(True, 'RTGS')
     last_week_rev = get_weekly_orders(False, 'RTGS')
     usd_weekly_rev = get_weekly_orders(True, 'USD')
     usd_last_week_rev = get_weekly_orders(False, 'USD')
 
-    clients = get_top_clients()
+    clients = get_top_clients('RTGS')
 
     return render(request, 'noic/statistics.html',
                   {'requests_notifications': requests_notifications, 'num_of_requests': num_of_requests, 'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev, 'last_week_rev': last_week_rev,
