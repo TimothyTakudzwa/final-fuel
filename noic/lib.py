@@ -95,12 +95,10 @@ def total_orders():
     return Order.objects.all().count()    
 
 
-def get_monthly_orders(currency):
+def get_monthly_orders(currency, year):
     '''
     Get the companies monthly orders
     '''
-
-    year = datetime.datetime.today().year
 
     months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     monthly_data = {}
