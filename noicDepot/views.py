@@ -1024,9 +1024,11 @@ def statistics(request):
     orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
     num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).count()
     weekly_rev = get_weekly_sales(True, depot, 'RTGS')
+    usd_weekly_rev = get_weekly_sales(True, depot, 'USD')
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year, depot)
     last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1), depot)
     last_week_rev = get_weekly_sales(False, depot, 'RTGS')
+    usd_last_week_rev = get_weekly_sales(False, depot, 'USD')
     order_completions = str(round((Order.objects.filter(payment_approved=True,
                                                         noic_depot=depot).count() / Order.objects.filter(
         noic_depot=depot).count() * 100))) + " %"
@@ -1039,7 +1041,7 @@ def statistics(request):
     return render(request, 'noicDepot/statistics.html',
                   {'orders_notifications': orders_notifications, 'num_of_new_orders': num_of_new_orders, 'weekly_rev': weekly_rev, 'last_week_rev': last_week_rev, 'monthly_rev': monthly_rev,
                    'depot': depot, 'order_completions': order_completions, 'allocations': allocations, 'stock': stock,
-                   'revenue': revenue})
+                   'revenue': revenue,'usd_weekly_rev': usd_weekly_rev, 'usd_last_week_rev':usd_last_week_rev })
 
 
 @login_required()
