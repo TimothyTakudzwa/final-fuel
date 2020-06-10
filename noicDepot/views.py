@@ -1023,7 +1023,7 @@ def statistics(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
     num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).count()
-    weekly_rev = get_weekly_sales(True, depot)
+    weekly_rev = get_weekly_sales(True, depot, 'RTGS')
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year, depot)
     last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1), depot)
     last_week_rev = get_weekly_sales(False, depot)
