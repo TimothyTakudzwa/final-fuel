@@ -124,8 +124,8 @@ def get_monthly_orders(currency, year):
     return monthly_data    
 
 
-def get_top_clients():
-    fuel_orders = Order.objects.filter(payment_approved=True).annotate(
+def get_top_clients(currency):
+    fuel_orders = Order.objects.filter(payment_approved=True,currency=currency).annotate(
         number_of_orders=Count('noic_depot')).order_by('-number_of_orders')
     all_clients = [order.noic_depot for order in fuel_orders]
 

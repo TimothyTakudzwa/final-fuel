@@ -852,7 +852,7 @@ def statistics(request):
     usd_weekly_rev = get_weekly_orders(True, 'USD')
     usd_last_week_rev = get_weekly_orders(False, 'USD')
 
-    clients = get_top_clients()
+    clients = get_top_clients('RTGS')
 
     return render(request, 'noic/statistics.html',
                   {'requests_notifications': requests_notifications, 'num_of_requests': num_of_requests, 'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev, 'last_week_rev': last_week_rev,
