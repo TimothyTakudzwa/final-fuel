@@ -1026,7 +1026,7 @@ def statistics(request):
     weekly_rev = get_weekly_sales(True, depot, 'RTGS')
     monthly_rev = get_aggregate_monthly_sales(datetime.now().year, depot)
     last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1), depot)
-    last_week_rev = get_weekly_sales(False, depot)
+    last_week_rev = get_weekly_sales(False, depot, 'RTGS')
     order_completions = str(round((Order.objects.filter(payment_approved=True,
                                                         noic_depot=depot).count() / Order.objects.filter(
         noic_depot=depot).count() * 100))) + " %"
