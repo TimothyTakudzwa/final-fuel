@@ -131,7 +131,7 @@ def get_top_clients(currency):
 
     new_clients = []
     for client in all_clients:
-        new_client_orders = Order.objects.filter(noic_depot=client, payment_approved=True).all()
+        new_client_orders = Order.objects.filter(noic_depot=client,currency=currency, payment_approved=True).all()
         total_client_orders = []
         client.total_revenue = new_client_orders.aggregate(total=Sum('amount_paid'))['total']
         client.total_client_orders = new_client_orders.count()
