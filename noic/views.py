@@ -834,7 +834,7 @@ def allocate_fuel(request, id):
                     company_update = CompanyFuelUpdate.objects.filter(company=order.company).first()
                     company_update.unallocated_petrol += float(request.POST['quantity'])
                     company_update.diesel_price = noic_capacity.diesel_price
-                    company_update.save()
+                    company_update.save() 
                     order.allocated_fuel = True
                     order.save()
                     messages.success(request, 'Fuel allocated successfully.')
