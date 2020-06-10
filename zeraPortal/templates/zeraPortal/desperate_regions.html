@@ -228,7 +228,7 @@
         var feature = new OpenLayers.Feature.Vector(
                 new OpenLayers.Geometry.Point( lon, lat ).transform(epsg4326, projectTo),
                 {description: "marker number " + i} ,
-                {externalGraphic: 'marker.png', graphicHeight: 25, graphicWidth: 21, graphicXOffset:-12, graphicYOffset:-25  }
+                {externalGraphic: 'https://img.icons8.com/fluent/48/000000/marker-storm.png', graphicHeight: 25, graphicWidth: 21, graphicXOffset:-12, graphicYOffset:-25  }
             );             
         vectorLayer.addFeatures(feature);
     }                        
