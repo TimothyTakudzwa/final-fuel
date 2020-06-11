@@ -1218,15 +1218,14 @@ def statistics(request):
     city_sales_volume = get_volume_sales_by_location()
     final_desperate_cities = []
     desperate_cities = desperate()
-    desperate_cities = coordinates_towns
 
-    # while len(desperate_cities) > 5:
-    #     desperate_cities.popitem()
+    while len(desperate_cities) > 5:
+        desperate_cities.popitem()
 
     for city, deficit in desperate_cities.items():
         final_desperate_cities.append((city, deficit))
-    
-    final_desperate_cities = [('Harare', 40754.00),('Mutare', 40754.00),('Bulawyo', 40754.00),('Chisiptre', 40754.00),]    
+
+    desperate_cities = coordinates_towns
 
     last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1), 'RTGS')
     usd_last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1), 'USD')
