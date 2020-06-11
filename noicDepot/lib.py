@@ -41,7 +41,7 @@ def get_weekly_sales(this_week, depot, currency):
     return weekly_data     
 
 
-def get_aggregate_monthly_sales(year, depot):
+def get_aggregate_monthly_sales(year, depot, currency):
     '''
     Get the companies monthly sales
     '''
@@ -51,7 +51,7 @@ def get_aggregate_monthly_sales(year, depot):
     counter = 1
 
     for month in months:
-        months_revenue = Order.objects.filter(date__year=year, date__month=counter, payment_approved=True, noic_depot=depot).aggregate(
+        months_revenue = Order.objects.filter(date__year=year, currency=currency,date__month=counter, payment_approved=True, noic_depot=depot).aggregate(
             total = Sum('amount_paid')
         )['total']
         if months_revenue:

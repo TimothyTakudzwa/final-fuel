@@ -1023,25 +1023,38 @@ def statistics(request):
     depot = NoicDepot.objects.filter(id=request.user.subsidiary_id).first()
     orders_notifications = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).all()
     num_of_new_orders = Notification.objects.filter(depot_id=depot.id).filter(is_read=False).count()
+    # Get this week's sales revenue RTGS and USD 
     weekly_rev = get_weekly_sales(True, depot, 'RTGS')
     usd_weekly_rev = get_weekly_sales(True, depot, 'USD')
-    monthly_rev = get_aggregate_monthly_sales(datetime.now().year, depot)
-    last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1), depot)
+    # Get last week's sales revenue RTGS and USD 
     last_week_rev = get_weekly_sales(False, depot, 'RTGS')
     usd_last_week_rev = get_weekly_sales(False, depot, 'USD')
+    # Get this year's sales revenue RTGS and USD 
+    monthly_rev = get_aggregate_monthly_sales(datetime.now().year, depot, 'RTGS')
+    usd_monthly_rev = get_aggregate_monthly_sales(datetime.now().year, depot, 'USD')
+    # Get last year's sales revenue RTGS and USD 
+    last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1), depot, 'RTGS')
+    usd_last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1), depot, 'USD')
+    # Get order completion %
     order_completions = str(round((Order.objects.filter(payment_approved=True,
                                                         noic_depot=depot).count() / Order.objects.filter(
         noic_depot=depot).count() * 100))) + " %"
+    # Get allocations count    
     allocations = SordNationalAuditTrail.objects.filter(assigned_depot=depot).count()
+    # Get stock
     stock = DepotFuelUpdate.objects.filter(depot=depot).first()
-    revenue = 0
-    for order in Order.objects.filter(payment_approved=True):
-        revenue += order.amount_paid
+    # Get rtgs and usd revenue
+    revenue = Order.objects.filter(payment_approved=True, noic_depot=depot, currency='RTGS').aggregate(
+        total=Sum('amount_paid')
+    )['total']
+    usd_revenue = Order.objects.filter(payment_approved=True, noic_depot=depot, currency='USD').aggregate(
+        total=Sum('amount_paid')
+    )['total']
 
     return render(request, 'noicDepot/statistics.html',
                   {'orders_notifications': orders_notifications, 'num_of_new_orders': num_of_new_orders, 'weekly_rev': weekly_rev, 'last_week_rev': last_week_rev, 'monthly_rev': monthly_rev,
-                   'depot': depot, 'order_completions': order_completions, 'allocations': allocations, 'stock': stock,
-                   'revenue': revenue,'usd_weekly_rev': usd_weekly_rev, 'usd_last_week_rev':usd_last_week_rev })
+                   'depot': depot, 'order_completions': order_completions, 'allocations': allocations, 'stock': stock,'usd_monthly_rev':usd_monthly_rev,'usd_last_year_rev':usd_last_year_rev,
+                   'revenue': revenue,'usd_weekly_rev': usd_weekly_rev, 'usd_last_week_rev':usd_last_week_rev, 'usd_revenue':usd_revenue })
 
 
 @login_required()
