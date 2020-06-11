@@ -513,20 +513,36 @@
                         labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
                         datasets: [
                             {
-                                label: "This Week",
-                                borderColor: "rgba(0,0,0,.09)",
+                                label: "RTGS",
+                                borderColor: "#009688",
                                 borderWidth: "1",
-                                backgroundColor: "rgba(0,0,0,.07)",
+                                backgroundColor: "#009688",
                                 data: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
 
                             },
                             {
-                                label: "Last Week",
-                                borderColor: "#009688",
+                                label: "USD",
+                                borderColor: "#f9ad0e",
                                 borderWidth: "1",
-                                backgroundColor: "#009688",
-                                pointHighlightStroke: "#009688",
+                                backgroundColor: "#f9ad0e",
+                                data: [{{usd_weekly_rev.Mon}}, {{usd_weekly_rev.Tue}}, {{usd_weekly_rev.Wed}}, {{usd_weekly_rev.Thu}}, {{usd_weekly_rev.Fri}}, {{usd_weekly_rev.Sat}}, {{usd_weekly_rev.Sun}}]
+
+                            },
+                            {
+                                label: "RTGS*",
+                                borderColor: "#009688",
+                                borderWidth: "4",
+                                backgroundColor: "#3cecdc",
+                                pointHighlightStroke: "#3cecdc",
                                 data: [{{last_week_rev.Mon}}, {{last_week_rev.Tue}}, {{last_week_rev.Wed}}, {{last_week_rev.Thu}}, {{last_week_rev.Fri}}, {{last_week_rev.Sat}}, {{last_week_rev.Sun}}]
+                            },
+                            {
+                                label: "USD*",
+                                borderColor: "#f9ad0e",
+                                borderWidth: "4",
+                                backgroundColor: "#ffe176",
+                                data: [{{usd_last_week_rev.Mon}}, {{usd_last_week_rev.Tue}}, {{usd_last_week_rev.Wed}}, {{usd_last_week_rev.Thu}}, {{usd_last_week_rev.Fri}}, {{usd_last_week_rev.Sat}}, {{usd_last_week_rev.Sun}}]
+
                             }
                         ]
                     },

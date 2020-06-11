@@ -1159,8 +1159,13 @@ def statistics(request):
     company = request.user.company
     yesterday = date.today() - timedelta(days=1)
     monthly_rev = get_monthly_sales(request.user.company, datetime.now().year)
-    weekly_rev = get_weekly_sales(request.user.company, True)
-    last_week_rev = get_weekly_sales(request.user.company, False)
+    # Get USD, RTGS weekly sales
+    weekly_rev = get_weekly_sales(request.user.company, True, 'RTGS')
+    usd_weekly_rev = get_weekly_sales(request.user.company, True, 'USD')
+    # Get USD, RTGS last week's sales
+    last_week_rev = get_weekly_sales(request.user.company, False, 'RTGS')
+    usd_last_week_rev = get_weekly_sales(request.user.company, False, 'RTGS')
+
     last_year_rev = get_monthly_sales(request.user.company, (datetime.now().year - 1))
     notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
     num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
@@ -1172,9 +1177,9 @@ def statistics(request):
     clients = get_top_clients(10, request.user.company)
 
     return render(request, 'users/statistics.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications,'clients': clients,
-                                                     'sorted_subs': sorted_subs,
+                                                     'sorted_subs': sorted_subs,'usd_weekly_rev': usd_weekly_rev,
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
-                                                     'last_week_rev': last_week_rev})
+                                                     'last_week_rev': last_week_rev, 'usd_last_week_rev':usd_last_week_rev})
 
 
 @login_required()
