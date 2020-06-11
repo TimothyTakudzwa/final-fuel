@@ -103,7 +103,7 @@ def get_weekly_sales(company, this_week, currency):
     return weekly_data               
 
 
-def get_monthly_sales(company, year):
+def get_monthly_sales(company, year, currency):
     '''
     Get the companies monthly sales
     '''
@@ -113,7 +113,8 @@ def get_monthly_sales(company, year):
     counter = 1
     for month in months:
         months_revenue = 0
-        months_trans = Transaction.objects.filter(date__year=year, date__month=counter, supplier__company=company)
+        months_trans = Transaction.objects.filter(date__year=year, date__month=counter, supplier__company=company,
+        offer__request__payment_method=currency)
         if months_trans:
             monthly_data[month] = months_trans.aggregate(
                 total=Sum('expected')
