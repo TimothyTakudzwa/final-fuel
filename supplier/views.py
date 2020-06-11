@@ -2024,7 +2024,7 @@ def payment_history(request, id):
     if transaction.paid == transaction.expected:
         paid_up = True
     else:
-        paid_up = transaction.paid - transaction.expected
+        paid_up = transaction.expected - transaction.paid
 
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
     return render(request, 'supplier/payment_history.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'payment_history': payment_history,
