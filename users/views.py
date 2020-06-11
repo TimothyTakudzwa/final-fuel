@@ -1187,6 +1187,8 @@ def statistics(request):
     return render(request, 'users/statistics.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications,'clients': clients,
                                                      'sorted_subs': sorted_subs,'usd_weekly_rev': usd_weekly_rev,
                                                      'usd_monthly_rev': usd_monthly_rev, 
+                                                     'usd_sorted_subs': usd_sorted_subs,
+                                                     'usd_clients': usd_clients,
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
                                                      'last_week_rev': last_week_rev, 'usd_last_week_rev':usd_last_week_rev})
 
