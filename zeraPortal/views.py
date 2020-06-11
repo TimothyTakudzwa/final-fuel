@@ -1225,8 +1225,6 @@ def statistics(request):
     for city, deficit in desperate_cities.items():
         final_desperate_cities.append((city, deficit))
 
-    desperate_cities = coordinates_towns
-
     last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1), 'RTGS')
     usd_last_year_rev = get_aggregate_monthly_sales((datetime.now().year - 1), 'USD')
 
@@ -1388,6 +1386,8 @@ def desperate_regions(request):
     cords = [get_town_coordinates[city] for city in desperate().keys()]
     # Changing the tuples to lists so that they can work as arrays to plot markers for the map.
     cords = [list(cord) for cord in cords]
+
+    cords = coordinates_towns
     
     context = {
         'regions': desperate(),
