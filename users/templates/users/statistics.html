@@ -288,7 +288,7 @@
         
                   {% if clients %}
                   <div class="table-responsive">
-                    <table id="clients_table" class="table table-striped table-bordered" style="width:100%">
+                    <table id="top_clients_table" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr>
                               <th>
@@ -1338,7 +1338,7 @@ $(document).ready(function() {
 } );
 
 $(document).ready(function() {
-    $('#usd_clients').DataTable({
+    $('#clients_table').DataTable({
             "columnDefs": [ {
                 "targets": [ 1 ],
                 "visible": false
@@ -1346,6 +1346,28 @@ $(document).ready(function() {
             "order": false
         });
 } );
+
+$(document).ready(function() {
+    $('#top_clients_table').DataTable({
+            "columnDefs": [ {
+                "targets": [ 1 ],
+                "visible": false
+            } ],
+            "order": false
+        });
+} );
+
+$(document).ready(function() {
+    $('#usd_subs').DataTable({
+            "columnDefs": [ {
+                "targets": [ 1 ],
+                "visible": false
+            } ],
+            "order": false
+        });
+} );
+
+
 </script>    
 
 {% endblock %}
