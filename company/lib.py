@@ -8,7 +8,7 @@ from buyer.models import User
 from company.models import CompanyFuelUpdate
 
 
-def get_top_branches(count,company):
+def get_top_branches(count, company, currency):
     # This fn serves to get a list showing a company's to subsidiaries while ranking them by revenue
     # as well as adding the attr's tran_value and tran_count representing total transaction revenue and
     # the num of transactions respectively.
@@ -21,7 +21,7 @@ def get_top_branches(count,company):
     for sub in branches:
         # Get all transactions related to a Sub
         sub_trans = Transaction.objects.filter(supplier__company=company, supplier__subsidiary_id=sub.id,
-                                               is_complete=True)
+                                               is_complete=True, offer__request__payment_method=currency)
         # Get total value of entries in the expected column.                                      
         sub.tran_value = sub_trans.aggregate(total=Sum('expected'))['total']
         # Get transaction count.
@@ -35,9 +35,9 @@ def get_top_branches(count,company):
     return sorted_subs[:count]
 
 
-def get_top_clients(count, company):
+def get_top_clients(count, company, currency):
     # Get all transaction based on our most frequently occuring buyers
-    trans = Transaction.objects.filter(supplier__company=company, is_complete=True).annotate(
+    trans = Transaction.objects.filter(supplier__company=company,offer__request__payment_method=currency, is_complete=True).annotate(
     number_of_trans=Count('buyer')).order_by('-number_of_trans')
 
     # extracting the buyers from above filterset
@@ -47,7 +47,7 @@ def get_top_clients(count, company):
 
     for buyer in buyers:
 
-        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, supplier__company=company,
+        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, supplier__company=company,offer__request__payment_method=currency,
                                                             is_complete=True).all()
 
         buyer.total_revenue = new_buyer_transactions.aggregate( total=Sum('expected'))['total']

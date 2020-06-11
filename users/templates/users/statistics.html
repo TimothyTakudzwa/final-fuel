@@ -210,9 +210,14 @@
             <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="sWzF7tcsBv" data-index="0">
                 <div class="panel-heading ui-sortable-handle">
                     <div class="panel-title" style="max-width: calc(100% - 180px);">
-                        <h4 style="float: left;">Weekly Sales</h4>
+                        <h4 style="float: left;">
+                            
+                            Weekly Sales
+                            <i class="fa fa-usd" aria-hidden="true" style="margin-left: 2px;color: #009688;font-size: larger;"></i>
+                        </h4>
                         <span class="label label-default" style="margin-left: 15px;font-size: 12px;padding: 3px;color: #6d6d6d;background-color: lightgrey;">
-                            <i class="fa fa-info-circle" aria-hidden="true"></i> <strong> *</strong> represents last week's sales
+                            
+                            *</strong> represents last week's sales
                         </span>
                     </div>
 
@@ -229,7 +234,10 @@
             <div class="panel panel-bd lobidisable lobipanel lobipanel-sortable" data-inner-id="Xm8QfpR2Ps" data-index="0">
                 <div class="panel-heading ui-sortable-handle">
                     <div class="panel-title" style="max-width: calc(100% - 90px);">
-                        <h4 style="float: left;">Monthly Sales</h4>
+                        <h4 style="float: left;">Monthly Sales
+                            <i class="fa fa-usd" aria-hidden="true" style="margin-left: 2px;color: #009688;font-size: larger;"></i>
+
+                        </h4>
                         <span class="label label-default" style="margin-left: 15px;font-size: 12px;padding: 3px;color: #6d6d6d;background-color: lightgrey;">
                             <i class="fa fa-info-circle" aria-hidden="true"></i> <strong> *</strong> represents last year's sales
                         </span>
@@ -263,7 +271,9 @@
     <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
       <div class="panel-heading ui-sortable-handle">
           <div class="btn-group"> 
-              <h4>Top Clients</h4> 
+              <h4>Top Clients 
+                  <b style="color: #009688; margin-left: 2px; font-size: smaller;">(RTGS)</b>
+                </h4> 
           </div>
       <div class="dropdown">
           <ul class="dropdown-menu dropdown-menu-right">
@@ -323,7 +333,7 @@
                       
 
                                           <button type="submit" class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;">
-                                            <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View History
+                                            <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View Full History
                                           </button>
                                         </form>
                                       
@@ -345,7 +355,9 @@
         <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
           <div class="panel-heading ui-sortable-handle">
               <div class="btn-group"> 
-                  <h4>Subsidiaries - {{ request.user.company.name|title}}</h4> 
+                  <h4>Subsidiaries - {{ request.user.company.name|title}}
+                      <b style="color: #009688; margin-left: 2px; font-size: smaller;"> (RTGS) </b>
+                  </h4> 
               </div>
           <div class="dropdown">
               <ul class="dropdown-menu dropdown-menu-right">
@@ -407,7 +419,7 @@
                         
 
                                             <button type="submit" class="btn btn-labeled btn-primary btn-sm" style="color: whitesmoke;">
-                                              <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View History
+                                              <span class="btn-label"><i class="fa fa-eye" aria-hidden="true"></i></span> View Full History
                                             </button>
                                           </form> 
                                               

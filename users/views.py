@@ -1174,11 +1174,11 @@ def statistics(request):
     notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
     num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
 
-    # Get top Subsidiaries ranked by revenue
-    sorted_subs = get_top_branches(10,request.user.company)
+    # Get top Subsidiaries ranked by revenue USD and RTGS
+    sorted_subs = get_top_branches(10,request.user.company, 'RTGS')
 
-    # Get top Clients ranked by revenue
-    clients = get_top_clients(10, request.user.company)
+    # Get top Clients ranked by revenue USD and RTGS
+    clients = get_top_clients(10, request.user.company, 'RTGS')
 
     return render(request, 'users/statistics.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications,'clients': clients,
                                                      'sorted_subs': sorted_subs,'usd_weekly_rev': usd_weekly_rev,
