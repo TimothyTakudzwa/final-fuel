@@ -1220,8 +1220,8 @@ def statistics(request):
     desperate_cities = desperate()
     desperate_cities = coordinates_towns
 
-    while len(desperate_cities) > 5:
-        desperate_cities.popitem()
+    # while len(desperate_cities) > 5:
+    #     desperate_cities.popitem()
 
     for city, deficit in desperate_cities.items():
         final_desperate_cities.append((city, deficit))
