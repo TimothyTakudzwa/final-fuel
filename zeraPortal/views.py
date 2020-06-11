@@ -1386,8 +1386,6 @@ def desperate_regions(request):
     cords = [get_town_coordinates[city] for city in desperate().keys()]
     # Changing the tuples to lists so that they can work as arrays to plot markers for the map.
     cords = [list(cord) for cord in cords]
-
-    cords = [list(cord) for cord in coordinates_towns]
     
     context = {
         'regions': desperate(),
