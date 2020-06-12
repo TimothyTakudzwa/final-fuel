@@ -2021,6 +2021,8 @@ def payment_history(request, id):
     notifications, num_of_notifications = notifications_retriever(request.user)
     transaction = Transaction.objects.filter(id=id).first()
     # Check if transaction is fully paid up
+    bal = transaction.expected - transaction.paid
+
     if transaction.paid == transaction.expected:
         paid_up = True
     else:
@@ -2028,7 +2030,7 @@ def payment_history(request, id):
 
     payment_history = AccountHistory.objects.filter(transaction=transaction).all()
     return render(request, 'supplier/payment_history.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications, 'payment_history': payment_history,
-    'paid_up':paid_up})
+    'paid_up':paid_up, 'bal': bal})
 
 
 @login_required()
