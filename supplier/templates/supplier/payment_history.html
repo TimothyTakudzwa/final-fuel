@@ -337,13 +337,10 @@
 
                                 $('#warning').hide();
                                 //Script for live warnings on payments
-                                $('#received_payment').on('keyup', async function() {
+                                $('#received_payment').on('keyup', function() {
                                     // Code in here will run when the baseSize input is changed
                                 if (isNaN($('#received_payment').val())) {
                                         $('input[name="bal"]').val("Enter float, number.");
-                                        await sleep(2000);
-                                        $('input[name="bal"]').val({{bal}});
-
                                 }else{
                                     var bal = parseFloat($('input[name="expected"]').val() - $('input[name="received"]').val()).toFixed(2);
                                     
@@ -353,7 +350,7 @@
                                         $('#warning').show();
                                     }
 
-                                    $('input[name="bal"]').val(bal)
+                                    $('input[name="bal"]').val({{bal}})
 
 
                                 }    
