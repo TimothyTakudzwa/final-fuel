@@ -294,7 +294,7 @@
                                                     </div>
                                                     <div class="form-group col-md-6">
                                                         <label>Amount Received</label>
-                                                        <input type="text" name="received" id="received_payment" class="form-control" required {% if paid_up == True or paid_up < 0 %} disabled title="Expected fee has already been paid up" {% endif %}/>
+                                                        <input type="text" name="received" id="received_payment" class="form-control" required {% if paid_up == True or paid_up < 0 %} disabled title="Expected fee has already been paid up." {% endif %}/>
                                                     </div>
                                                 </div>
                                                 <!-- <div class="row">
@@ -330,12 +330,20 @@
                             <!--End approve modal-->
 
                             <script>
+
+                                function sleep(ms) {
+                                    return new Promise(resolve => setTimeout(resolve, ms));
+                                }
+
                                 $('#warning').hide();
                                 //Script for live warnings on payments
-                                $('#received_payment').on('keyup', function() {
+                                $('#received_payment').on('keyup', async function() {
                                     // Code in here will run when the baseSize input is changed
                                 if (isNaN($('#received_payment').val())) {
                                         $('input[name="bal"]').val("Enter float, number.");
+                                        await sleep(2000);
+                                        $('input[name="bal"]').val({{bal}});
+
                                 }else{
                                     var bal = parseFloat($('input[name="expected"]').val() - $('input[name="received"]').val()).toFixed(2);
                                     
