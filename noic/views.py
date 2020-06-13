@@ -856,7 +856,8 @@ def statistics(request):
     usd_clients = get_top_clients('USD')
 
     return render(request, 'noic/statistics.html',
-                  {'requests_notifications': requests_notifications, 'num_of_requests': num_of_requests, 'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev, 'last_week_rev': last_week_rev,
+                  {'requests_notifications': requests_notifications, 'num_of_requests': num_of_requests,
+                   'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev, 'last_week_rev': last_week_rev,
                    'clients': clients,'usd_clients':usd_clients,'usd_weekly_rev': usd_weekly_rev,'usd_last_week_rev':usd_last_week_rev})
 
 
