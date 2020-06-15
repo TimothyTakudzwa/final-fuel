@@ -1951,9 +1951,9 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        {% for city in final_desperate_cities %}                                               
-                                                            <td>{{ city.0 }}</td>
-                                                            <td>{{ city.1 }}</td>
+                                                        {% for city, quantity in final_desperate_cities.items() %}                                               
+                                                            <td>{{ city }}</td>
+                                                            <td>{{ quantity }}</td>
                                                         {% endfor %}
                                                     </tr>
 
