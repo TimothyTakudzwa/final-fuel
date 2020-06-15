@@ -544,7 +544,7 @@
             <div class="panel panel-bd lobidisable lobipanel lobipanel-sortable" data-inner-id="Xm8QfpR2Ps" data-index="0">
                 <div class="panel-heading ui-sortable-handle">
                     <div class="panel-title" style="max-width: calc(100% - 90px);">
-                        <h4 style="float: left;">Monthly Sales (National)
+                        <h4 style="float: left;">Monthly Sales (National) 
                             <i class="fa fa-usd" aria-hidden="true" style="margin-left: 2px;color: #009688;font-size: larger;"></i>
                         </h4>
                         <span class="label label-default" style="margin-left: 15px;font-size: 12px;padding: 3px;color: #6d6d6d;background-color: lightgrey;">
@@ -1617,28 +1617,33 @@ var myChart = new Chart(ctx, {
         datasets: [
             {
                 label: "RTGS",
-                data: [{{monthly_rev.Jan}}, {{monthly_rev.Feb}}, {{monthly_rev.Mar}}, {{monthly_rev.Apr}}, {{monthly_rev.May}}, {{monthly_rev.Jun}}, {{monthly_rev.Jul}}, {{monthly_rev.Aug}}, {{monthly_rev.Sep}}, {{monthly_rev.Oct}}, {{monthly_rev.Nov}}, {{monthly_rev.Dec}}],
+                data: [{{monthly_rev.Jan}}, {{monthly_rev.Feb}}, {{monthly_rev.Mar}}, {{monthly_rev.Apr}}, {{monthly_rev.May}}, {{monthly_rev.Jun}}, 
+                {{monthly_rev.Jul}}, {{monthly_rev.Aug}}, {{monthly_rev.Sep}}, {{monthly_rev.Oct}}, {{monthly_rev.Nov}}, {{monthly_rev.Dec}}],
                 borderColor: "#009688",
                 borderWidth: "0",
                 backgroundColor: "#009688"
             },
             {
                 label: "USD",
-                data: [{{monthly_rev.Jan}}, {{monthly_rev.Feb}}, {{monthly_rev.Mar}}, {{monthly_rev.Apr}}, {{monthly_rev.May}}, {{monthly_rev.Jun}}, {{monthly_rev.Jul}}, {{monthly_rev.Aug}}, {{monthly_rev.Sep}}, {{monthly_rev.Oct}}, {{monthly_rev.Nov}}, {{monthly_rev.Dec}}],
+                data: [{{usd_monthly_rev.Jan}}, {{usd_monthly_rev.Feb}}, {{usd_monthly_rev.Mar}}, {{usd_monthly_rev.Apr}}, {{usd_monthly_rev.May}}, 
+                {{usd_monthly_rev.Jun}}, {{usd_monthly_rev.Jul}}, {{usd_monthly_rev.Aug}}, {{usd_monthly_rev.Sep}}, {{usd_monthly_rev.Oct}}, {{usd_monthly_rev.Nov}}, {{usd_monthly_rev.Dec}}],
                 borderColor: "#f9ad0e",
                 borderWidth: "0",
                 backgroundColor: "#f9ad0e"
             },
             {
                 label: "RTGS*",
-                data: [{{last_year_rev.Jan}}, {{last_year_rev.Feb}}, {{last_year_rev.Mar}}, {{last_year_rev.Apr}}, {{last_year_rev.May}}, {{last_year_rev.Jun}}, {{last_year_rev.Jul}}, {{last_year_rev.Aug}}, {{last_year_rev.Sep}}, {{last_year_rev.Oct}}, {{last_year_rev.Nov}}, {{last_year_rev.Dec}}],
+                data: [{{last_year_rev.Jan}}, {{last_year_rev.Feb}}, {{last_year_rev.Mar}}, {{last_year_rev.Apr}}, {{last_year_rev.May}}, 
+                {{last_year_rev.Jun}}, {{last_year_rev.Jul}}, {{last_year_rev.Aug}}, {{last_year_rev.Sep}}, {{last_year_rev.Oct}}, {{last_year_rev.Nov}}, {{last_year_rev.Dec}}],
                 borderColor: "#009688",
                 borderWidth: "4",
-                backgroundColor: "#5fcac0"
+                backgroundColor: "#33fdea"
             },
             {
                 label: "USD*",
-                data: [{{usd_last_year_rev.Jan}}, {{usd_last_year_rev.Feb}}, {{usd_last_year_rev.Mar}}, {{usd_last_year_rev.Apr}}, {{usd_last_year_rev.May}}, {{usd_last_year_rev.Jun}}, {{usd_last_year_rev.Jul}}, {{usd_last_year_rev.Aug}}, {{usd_last_year_rev.Sep}}, {{usd_last_year_rev.Oct}}, {{usd_last_year_rev.Nov}}, {{usd_last_year_rev.Dec}}],
+                data: [{{usd_last_year_rev.Jan}}, {{usd_last_year_rev.Feb}}, {{usd_last_year_rev.Mar}}, {{usd_last_year_rev.Apr}}, 
+                {{usd_last_year_rev.May}}, {{usd_last_year_rev.Jun}}, {{usd_last_year_rev.Jul}}, {{usd_last_year_rev.Aug}}, {{usd_last_year_rev.Sep}}, 
+                {{usd_last_year_rev.Oct}}, {{usd_last_year_rev.Nov}}, {{usd_last_year_rev.Dec}}],
                 borderColor: "#f9ad0e",
                 borderWidth: "4",
                 backgroundColor: "#fbe183"
@@ -1745,7 +1750,7 @@ var myChart = new Chart(ctx, {
                 label: "RTGS*",
                 borderColor: "#009688",
                 borderWidth: "4",
-                backgroundColor: "#11d4c2",
+                backgroundColor: "#33fdea",
                 pointHighlightStroke: "#009688",
                 data: [{{last_week_rev.Mon}}, {{last_week_rev.Tue}}, {{last_week_rev.Wed}}, {{last_week_rev.Thu}}, {{last_week_rev.Fri}}, {{last_week_rev.Sat}}, {{last_week_rev.Sun}}]
             },
@@ -1753,7 +1758,7 @@ var myChart = new Chart(ctx, {
                 label: "USD*",
                 borderColor: "#f9ad0e",
                 borderWidth: "4",
-                backgroundColor: "#ffe176",
+                backgroundColor: "#fff190",
                 data: [{{usd_last_week_rev.Mon}}, {{usd_last_week_rev.Tue}}, {{usd_last_week_rev.Wed}}, {{usd_last_week_rev.Thu}}, {{usd_last_week_rev.Fri}}, {{usd_last_week_rev.Sat}}, {{usd_last_week_rev.Sun}}]
 
             }
