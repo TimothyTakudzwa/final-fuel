@@ -521,9 +521,12 @@
             <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="sWzF7tcsBv" data-index="0">
                 <div class="panel-heading ui-sortable-handle">
                     <div class="panel-title" style="max-width: calc(100% - 180px);">
-                        <h4>Weekly Sales 
+                        <h4 style="float: left;">Weekly Sales 
                             <i class="fa fa-usd" aria-hidden="true" style="margin-left: 2px;color: #009688;font-size: larger;"></i>
                         </h4>
+                        <span class="label label-default" style="margin-left: 15px;font-size: 12px;padding: 3px;color: #6d6d6d;background-color: lightgrey;">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i> <strong> *</strong> represents last week's sales
+                        </span>
                     </div>
                 <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="editTitle" data-tooltip="Edit title" data-toggle="tooltip" data-title="Edit title" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-pencil"></i><span class="control-title">Edit title</span></a></li><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="reload" data-tooltip="Reload" data-toggle="tooltip" data-title="Reload" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-reload"></i><span class="control-title">Reload</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li><li><a data-func="close" data-tooltip="Close" data-toggle="tooltip" data-title="Close" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-close"></i><span class="control-title">Close</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
                 <div class="panel-body"><iframe class="chartjs-hidden-iframe" tabindex="-1" style="display: block; overflow: hidden; border: 0px; margin: 0px; top: 0px; left: 0px; bottom: 0px; right: 0px; height: 100%; width: 100%; position: absolute; pointer-events: none; z-index: -1;"></iframe>
@@ -538,9 +541,12 @@
             <div class="panel panel-bd lobidisable lobipanel lobipanel-sortable" data-inner-id="Xm8QfpR2Ps" data-index="0">
                 <div class="panel-heading ui-sortable-handle">
                     <div class="panel-title" style="max-width: calc(100% - 90px);">
-                        <h4>Monthly Sales
+                        <h4 style="float: left;">Monthly Sales
                             <i class="fa fa-usd" aria-hidden="true" style="margin-left: 2px;color: #009688;font-size: larger;"></i>
                         </h4>
+                        <span class="label label-default" style="margin-left: 15px;font-size: 12px;padding: 3px;color: #6d6d6d;background-color: lightgrey;">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i> <strong> *</strong> represents last year's sales
+                        </span>
                     </div>
                 <div class="dropdown"><ul class="dropdown-menu dropdown-menu-right"><li><a data-func="unpin" data-tooltip="Unpin" data-toggle="tooltip" data-title="Unpin" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-move"></i><span class="control-title">Unpin</span></a></li><li><a data-func="minimize" data-tooltip="Minimize" data-toggle="tooltip" data-title="Minimize" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-minus"></i><span class="control-title">Minimize</span></a></li><li><a data-func="expand" data-tooltip="Fullscreen" data-toggle="tooltip" data-title="Fullscreen" data-placement="bottom" data-original-title="" title=""><i class="panel-control-icon ti-fullscreen"></i><span class="control-title">Fullscreen</span></a></li></ul><div class="dropdown-toggle" data-toggle="dropdown"><span class="panel-control-icon glyphicon glyphicon-cog"></span></div></div></div>
                 <div class="panel-body"><iframe class="chartjs-hidden-iframe" tabindex="-1" style="display: block; overflow: hidden; border: 0px; margin: 0px; top: 0px; left: 0px; bottom: 0px; right: 0px; height: 100%; width: 100%; position: absolute; pointer-events: none; z-index: -1;"></iframe>
@@ -604,7 +610,8 @@
                     <ul>
                         <li class="active facebook-color" style="background-color: #337ab7;"><h5>{{order_completions}}</h5> Order Completion</li>
                         <li class="following-color"><h5>{{allocations}}</h5> Total Allocations Received</li>
-                        <li class="active facebook-color" style="background-color: #E5343D;"><h5>${{revenue|intcomma}}</h5> Total Sales Revenue </li>
+                        <li class="active facebook-color" style="background-color: #E5343D;width:15%;"><h5>${{revenue|intcomma}}</h5> RTGS Sales Revenue </li>
+                        <li class="active facebook-color" style="background-color: #543838;width:15%;"><h5>${{usd_revenue|intcomma}}</h5> USD Sales Revenue </li>
                     </ul>
                 </div>
                 <footer class="twt-footer">
@@ -1638,18 +1645,32 @@ var myChart = new Chart(ctx, {
         labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
         datasets: [
             {
-                label: year,
+                label: "RTGS",
                 data: [{{monthly_rev.Jan}}, {{monthly_rev.Feb}}, {{monthly_rev.Mar}}, {{monthly_rev.Apr}}, {{monthly_rev.May}}, {{monthly_rev.Jun}}, {{monthly_rev.Jul}}, {{monthly_rev.Aug}}, {{monthly_rev.Sep}}, {{monthly_rev.Oct}}, {{monthly_rev.Nov}}, {{monthly_rev.Dec}}],
                 borderColor: "#009688",
                 borderWidth: "0",
                 backgroundColor: "#009688"
             },
             {
-                label: year - 1,
-                data: [{{last_year_rev.Jan}}, {{last_year_rev.Feb}}, {{last_year_rev.Mar}}, {{last_year_rev.Apr}}, {{last_year_rev.May}}, {{last_year_rev.Jun}}, {{last_year_rev.Jul}}, {{last_year_rev.Aug}}, {{last_year_rev.Sep}}, {{last_year_rev.Oct}}, {{last_year_rev.Nov}}, {{last_year_rev.Dec}}],
-                borderColor: "#db3737",
+                label: "USD",
+                data: [{{usd_monthly_rev.Jan}}, {{usd_monthly_rev.Feb}}, {{usd_monthly_rev.Mar}}, {{usd_monthly_rev.Apr}}, {{usd_monthly_rev.May}}, {{usd_monthly_rev.Jun}}, {{usd_monthly_rev.Jul}}, {{usd_monthly_rev.Aug}}, {{usd_monthly_rev.Sep}}, {{usd_monthly_rev.Oct}}, {{usd_monthly_rev.Nov}}, {{usd_monthly_rev.Dec}}],
+                borderColor: "#f9ad0e",
                 borderWidth: "0",
-                backgroundColor: "#db3737"
+                backgroundColor: "#f9ad0e"
+            },
+            {
+                label: "RTGS*",
+                data: [{{last_year_rev.Jan}}, {{last_year_rev.Feb}}, {{last_year_rev.Mar}}, {{last_year_rev.Apr}}, {{last_year_rev.May}}, {{last_year_rev.Jun}}, {{last_year_rev.Jul}}, {{last_year_rev.Aug}}, {{last_year_rev.Sep}}, {{last_year_rev.Oct}}, {{last_year_rev.Nov}}, {{last_year_rev.Dec}}],
+                borderColor: "#009688",
+                borderWidth: "4",
+                backgroundColor: "#39ffed"
+            },
+            {
+                label: "USD*",
+                data: [{{usd_last_year_rev.Jan}}, {{usd_last_year_rev.Feb}}, {{usd_last_year_rev.Mar}}, {{usd_last_year_rev.Apr}}, {{usd_last_year_rev.May}}, {{usd_last_year_rev.Jun}}, {{usd_last_year_rev.Jul}}, {{usd_last_year_rev.Aug}}, {{usd_last_year_rev.Sep}}, {{usd_last_year_rev.Oct}}, {{usd_last_year_rev.Nov}}, {{usd_last_year_rev.Dec}}],
+                borderColor: "#f9ad0e",
+                borderWidth: "4",
+                backgroundColor: "#ffe176"
             }
         ]
     },
@@ -1734,20 +1755,36 @@ var myChart = new Chart(ctx, {
         labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
         datasets: [
             {
-                label: "This Week",
-                borderColor: "rgba(0,0,0,.09)",
+                label: "RTGS",
+                borderColor: "#009688",
                 borderWidth: "1",
-                backgroundColor: "rgba(0,0,0,.07)",
+                backgroundColor: "#009688",
                 data: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
 
             },
             {
-                label: "Last Week",
-                borderColor: "#009688",
+                label: "USD",
+                borderColor: "#f9ad0e",
                 borderWidth: "1",
-                backgroundColor: "#009688",
+                backgroundColor: "#f9ad0e",
+                data: [{{usd_weekly_rev.Mon}}, {{usd_weekly_rev.Tue}}, {{usd_weekly_rev.Wed}}, {{usd_weekly_rev.Thu}}, {{usd_weekly_rev.Fri}}, {{usd_weekly_rev.Sat}}, {{usd_weekly_rev.Sun}}]
+
+            },
+            {
+                label: "RTGS*",
+                borderColor: "#009688",
+                borderWidth: "4",
+                backgroundColor: "#39ffed",
                 pointHighlightStroke: "#009688",
                 data: [{{last_week_rev.Mon}}, {{last_week_rev.Tue}}, {{last_week_rev.Wed}}, {{last_week_rev.Thu}}, {{last_week_rev.Fri}}, {{last_week_rev.Sat}}, {{last_week_rev.Sun}}]
+            },
+            {
+                label: "USD*",
+                borderColor: "#f9ad0e",
+                borderWidth: "4",
+                backgroundColor: "#ffe176",
+                data: [{{usd_last_week_rev.Mon}}, {{usd_last_week_rev.Tue}}, {{usd_last_week_rev.Wed}}, {{usd_last_week_rev.Thu}}, {{usd_last_week_rev.Fri}}, {{usd_last_week_rev.Sat}}, {{usd_last_week_rev.Sun}}]
+
             }
         ]
     },

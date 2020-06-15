@@ -415,18 +415,32 @@
                         labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
                         datasets: [
                             {
-                                label: year,
+                                label: "RTGS",
                                 data: [{{monthly_rev.Jan}}, {{monthly_rev.Feb}}, {{monthly_rev.Mar}}, {{monthly_rev.Apr}}, {{monthly_rev.May}}, {{monthly_rev.Jun}}, {{monthly_rev.Jul}}, {{monthly_rev.Aug}}, {{monthly_rev.Sep}}, {{monthly_rev.Oct}}, {{monthly_rev.Nov}}, {{monthly_rev.Dec}}],
                                 borderColor: "#009688",
                                 borderWidth: "0",
                                 backgroundColor: "#009688"
                             },
                             {
-                                label: year - 1,
-                                data: [{{last_year_rev.Jan}}, {{last_year_rev.Feb}}, {{last_year_rev.Mar}}, {{last_year_rev.Apr}}, {{last_year_rev.May}}, {{last_year_rev.Jun}}, {{last_year_rev.Jul}}, {{last_year_rev.Aug}}, {{last_year_rev.Sep}}, {{last_year_rev.Oct}}, {{last_year_rev.Nov}}, {{last_year_rev.Dec}}],
-                                borderColor: "#db3737",
+                                label: "USD",
+                                data: [{{usd_monthly_rev.Jan}}, {{usd_monthly_rev.Feb}}, {{usd_monthly_rev.Mar}}, {{usd_monthly_rev.Apr}}, {{usd_monthly_rev.May}}, {{usd_monthly_rev.Jun}}, {{usd_monthly_rev.Jul}}, {{usd_monthly_rev.Aug}}, {{usd_monthly_rev.Sep}}, {{usd_monthly_rev.Oct}}, {{usd_monthly_rev.Nov}}, {{usd_monthly_rev.Dec}}],
+                                borderColor: "#f9ad0e",
                                 borderWidth: "0",
-                                backgroundColor: "#db3737"
+                                backgroundColor: "#f9ad0e"
+                            },
+                            {
+                                label: "RTGS*",
+                                data: [{{last_year_rev.Jan}}, {{last_year_rev.Feb}}, {{last_year_rev.Mar}}, {{last_year_rev.Apr}}, {{last_year_rev.May}}, {{last_year_rev.Jun}}, {{last_year_rev.Jul}}, {{last_year_rev.Aug}}, {{last_year_rev.Sep}}, {{last_year_rev.Oct}}, {{last_year_rev.Nov}}, {{last_year_rev.Dec}}],
+                                borderColor: "#009688",
+                                borderWidth: "4",
+                                backgroundColor: "#3cecdc"
+                            },
+                            {
+                                label: "USD*",
+                                data: [{{usd_last_year_rev.Jan}}, {{usd_last_year_rev.Feb}}, {{usd_last_year_rev.Mar}}, {{usd_last_year_rev.Apr}}, {{usd_last_year_rev.May}}, {{usd_last_year_rev.Jun}}, {{usd_last_year_rev.Jul}}, {{usd_last_year_rev.Aug}}, {{usd_last_year_rev.Sep}}, {{usd_last_year_rev.Oct}}, {{usd_last_year_rev.Nov}}, {{usd_last_year_rev.Dec}}],
+                                borderColor: "#f9ad0e",
+                                borderWidth: "4",
+                                backgroundColor: "#ffe176"
                             }
                         ]
                     },
@@ -513,20 +527,36 @@
                         labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
                         datasets: [
                             {
-                                label: "This Week",
-                                borderColor: "rgba(0,0,0,.09)",
+                                label: "RTGS",
+                                borderColor: "#009688",
                                 borderWidth: "1",
-                                backgroundColor: "rgba(0,0,0,.07)",
+                                backgroundColor: "#009688",
                                 data: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
 
                             },
                             {
-                                label: "Last Week",
-                                borderColor: "#009688",
+                                label: "USD",
+                                borderColor: "#f9ad0e",
                                 borderWidth: "1",
-                                backgroundColor: "#009688",
-                                pointHighlightStroke: "#009688",
+                                backgroundColor: "#f9ad0e",
+                                data: [{{usd_weekly_rev.Mon}}, {{usd_weekly_rev.Tue}}, {{usd_weekly_rev.Wed}}, {{usd_weekly_rev.Thu}}, {{usd_weekly_rev.Fri}}, {{usd_weekly_rev.Sat}}, {{usd_weekly_rev.Sun}}]
+
+                            },
+                            {
+                                label: "RTGS*",
+                                borderColor: "#009688",
+                                borderWidth: "4",
+                                backgroundColor: "#3cecdc",
+                                pointHighlightStroke: "#3cecdc",
                                 data: [{{last_week_rev.Mon}}, {{last_week_rev.Tue}}, {{last_week_rev.Wed}}, {{last_week_rev.Thu}}, {{last_week_rev.Fri}}, {{last_week_rev.Sat}}, {{last_week_rev.Sun}}]
+                            },
+                            {
+                                label: "USD*",
+                                borderColor: "#f9ad0e",
+                                borderWidth: "4",
+                                backgroundColor: "#ffe176",
+                                data: [{{usd_last_week_rev.Mon}}, {{usd_last_week_rev.Tue}}, {{usd_last_week_rev.Wed}}, {{usd_last_week_rev.Thu}}, {{usd_last_week_rev.Fri}}, {{usd_last_week_rev.Sat}}, {{usd_last_week_rev.Sun}}]
+
                             }
                         ]
                     },

@@ -1936,26 +1936,33 @@
                                         <div class="row" style="margin-top: 2px;margin-bottom: 15px;">
                                             <div class="panel-title col-md-3" style="max-width: calc(100% - 180px);">
                                                 <a href="{% url 'zeraPortal:desperate-regions' %}"
-                                                   class="btn btn-purple btn-sm" style="color: white;">View All </a>
+                                                   class="btn btn-purple btn-sm btn-labeled " style="color: white;">
+                                                   <span class="btn-label"> 
+                                                       <i class="fa fa-eye"></i>
+                                                 </span>
+                                                    View All </a>
                                             </div>
                                         </div>
                                         <div class="table-responsive">
                                             <table id="dataTableExample2"
                                                    class="table table-bordered table-striped table-hover">
                                                 <thead>
-                                                <tr>                                                    
+                                                <tr style="background-color: lightslategray; color:white;">                                                    
                                                     <th>City</th>
                                                     <th>Deficit</th>
 
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        {% for city, quantity in final_desperate_cities.items() %}                                               
-                                                            <td>{{ city }}</td>
-                                                            <td>{{ quantity }}</td>
-                                                        {% endfor %}
-                                                    </tr>
+                                                    {% for city, deficit in final_desperate_cities.items() %}                                               
+
+                                                        <tr>
+                                                                <td>{{ city }}</td>
+                                                                <td>{{ deficit }}</td>
+                                                        </tr>
+
+                                                    {% endfor %}
+
 
                                                 </tbody>
                                             </table>

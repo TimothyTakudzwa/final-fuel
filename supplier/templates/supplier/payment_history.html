@@ -26,6 +26,31 @@
 
 </section>
 <section class="content">
+    <div class="">
+        {% if paid_up == True %}
+        <div class="alert-sm alert-success" style="padding: 20px;text-align: center;font-size: initial;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <i class="fa fa-info-circle" style="margin-right: 10px;"></i><strong>Note!</strong> This transaction has been fully paid up, 
+                no further approvals required.      
+        </div>
+        {% else %}
+        <div class="alert-sm alert-default" style="padding: 20px;text-align: center;font-size: initial;background-color: lightslategray;
+        color: white;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <i class="fa fa-info-circle" style="margin-right: 10px;"></i><strong>Note!</strong> Balance 
+            {% if paid_up > 0 %}
+            pending : $ {{paid_up}}
+
+            {% elif paid_up < 0 %}
+
+            exceeded by : $ {{paid_up}}
+
+            {% endif %}
+            
+        </div>
+        {% endif %}
+
+    </div>
     <div class="panel panel-bd lobidrag lobipanel lobipanel-sortable" data-inner-id="nMPzTfz4dU" data-index="0">
         <div class="panel-heading ui-sortable-handle">
             <div class="btn-group">
@@ -246,13 +271,30 @@
 
                                                 <div class="row">
 
+                                                    <div class="alert-sm alert-default" id="info_panel" style="padding: 10px;text-align: center;font-size: initial; margin-bottom: 30px; margin-left: 15px; margin-right: 15px;">
+                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                        <i class="fa fa-info-circle" style="margin-right: 10px;"></i>Balance :
+                                                        <!-- <input id="bal"> {{bal}} </input> -->
+                                                        <input type="text" id="bal" name="bal" value={{bal}} style="text-align: center;background-color: mintcream; margin-bottom: 30px;" disabled>
+                                                        <!-- <span> <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Warning! Fee is in Excess of what is expected</span> -->
+                                                        <div id="warning" class="row" style="color: crimson;font-size: smaller;margin-top: 15px;width: 50%;
+                                                            text-align:center;
+                                                            margin: auto;
+                                                            border-radius: 6px;
+                                                        ">
+                                                        <span> <i class="fa fa-exclamation-circle" aria-hidden="true"></i>  Warning! Amount entered is in excess the fee expected.</span>
+                                                        </div>
+                                                    </div>
+
+
+
                                                     <div class="form-group col-md-6">
                                                         <label>Expected Payment</label>
-                                                        <input type="text" name="expected" class="form-control" value="${{payment.transaction.expected}}" disabled/>
+                                                        <input type="text" id="expected" name="expected" class="form-control" value="{{payment.transaction.expected}}" disabled/>
                                                     </div>
                                                     <div class="form-group col-md-6">
                                                         <label>Amount Received</label>
-                                                        <input type="text" name="received" class="form-control"  value=" " required/>
+                                                        <input type="text" name="received" id="received_payment" class="form-control" required {% if paid_up == True or paid_up < 0 %} disabled title="Expected fee has already been paid up." {% endif %}/>
                                                     </div>
                                                 </div>
                                                 <!-- <div class="row">
@@ -286,6 +328,38 @@
                                 </div>
                             </div>
                             <!--End approve modal-->
+
+                            <script>
+
+                                function sleep(ms) {
+                                    return new Promise(resolve => setTimeout(resolve, ms));
+                                }
+
+                                $('#warning').hide();
+                                //Script for live warnings on payments
+                                $('#received_payment').on('keyup', function() {
+                                    // Code in here will run when the baseSize input is changed
+                                if (isNaN($('#received_payment').val())) {
+                                        $('input[name="bal"]').val("Enter float, number.");
+                                }else{
+                                    var bal = parseFloat($('input[name="expected"]').val() - $('input[name="received"]').val()).toFixed(2);
+                                    
+                                    if (bal >= 0 ){
+                                        $('#warning').hide();
+                                    } else{
+                                        $('#warning').show();
+                                    }
+
+                                    $('input[name="bal"]').val({{bal}})
+
+
+                                }    
+
+                               
+                                });
+
+                            </script>
+
                             <script>
                                 $('body').click(function (event) {
                                     if(!$(event.target).closest('#view{{payment.id}}').length && !$(event.target).is('#view{{payment.id}}')) {

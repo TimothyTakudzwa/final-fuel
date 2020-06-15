@@ -16,7 +16,7 @@ def get_week_days(date):
     return [date + timedelta(days=i) for i in range(0 - date.weekday(), 7 - date.weekday())]
 
           
-def get_weekly_sales(this_week, depot):
+def get_weekly_sales(this_week, depot, currency):
     '''
     Get the company's weekly sales
     '''
@@ -30,7 +30,7 @@ def get_weekly_sales(this_week, depot):
     weekly_data = {}
     
     for day in week_days:
-        weeks_revenue = Order.objects.filter(date=day, payment_approved=True, noic_depot=depot).aggregate(
+        weeks_revenue = Order.objects.filter(date=day, payment_approved=True,currency=currency, noic_depot=depot).aggregate(
             total = Sum('amount_paid')
         )['total'] 
         if weeks_revenue:
@@ -41,7 +41,7 @@ def get_weekly_sales(this_week, depot):
     return weekly_data     
 
 
-def get_aggregate_monthly_sales(year, depot):
+def get_aggregate_monthly_sales(year, depot, currency):
     '''
     Get the companies monthly sales
     '''
@@ -51,7 +51,7 @@ def get_aggregate_monthly_sales(year, depot):
     counter = 1
 
     for month in months:
-        months_revenue = Order.objects.filter(date__year=year, date__month=counter, payment_approved=True, noic_depot=depot).aggregate(
+        months_revenue = Order.objects.filter(date__year=year, currency=currency,date__month=counter, payment_approved=True, noic_depot=depot).aggregate(
             total = Sum('amount_paid')
         )['total']
         if months_revenue:

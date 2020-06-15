@@ -200,7 +200,6 @@ def allocate(request):
 
     
     subs = Subsidiaries.objects.filter(company=request.user.company, is_active=True).all()
-    print(subs)
     for sub in subs:
         allocates.append(SubsidiaryFuelUpdate.objects.filter(subsidiary=sub).first())
     allocations = FuelAllocation.objects.filter(company=request.user.company).all()
@@ -1158,23 +1157,39 @@ def delivery_schedule(request):
 def statistics(request):
     company = request.user.company
     yesterday = date.today() - timedelta(days=1)
-    monthly_rev = get_monthly_sales(request.user.company, datetime.now().year)
-    weekly_rev = get_weekly_sales(request.user.company, True)
-    last_week_rev = get_weekly_sales(request.user.company, False)
-    last_year_rev = get_monthly_sales(request.user.company, (datetime.now().year - 1))
+    # Get monthly sales USD rtgs
+    monthly_rev = get_monthly_sales(request.user.company, datetime.now().year, 'RTGS')
+    usd_monthly_rev = get_monthly_sales(request.user.company, datetime.now().year, 'USD')
+    # Get last yeats monthly sales
+    last_year_rev = get_monthly_sales(request.user.company, (datetime.now().year - 1), 'RTGS')
+    usd_last_year_rev = get_monthly_sales(request.user.company, (datetime.now().year - 1), 'USD')
+    # Get USD, RTGS weekly sales
+    weekly_rev = get_weekly_sales(request.user.company, True, 'RTGS')
+    usd_weekly_rev = get_weekly_sales(request.user.company, True, 'USD')
+    # Get USD, RTGS last week's sales
+    last_week_rev = get_weekly_sales(request.user.company, False, 'RTGS')
+    usd_last_week_rev = get_weekly_sales(request.user.company, False, 'USD')
+
     notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).all()
     num_of_notifications = Notification.objects.filter(action="FOR_FUEL").filter(is_read=False).count()
 
-    # Get top Subsidiaries ranked by revenue
-    sorted_subs = get_top_branches(10,request.user.company)
+    # Get top Subsidiaries ranked by revenue USD and RTGS
+    sorted_subs = get_top_branches(10,request.user.company, 'RTGS')
+    usd_sorted_subs = get_top_branches(10,request.user.company, 'USD')
 
-    # Get top Clients ranked by revenue
-    clients = get_top_clients(10, request.user.company)
+
+    # Get top Clients ranked by revenue USD and RTGS
+    clients = get_top_clients(10, request.user.company, 'RTGS')
+    usd_clients = get_top_clients(10, request.user.company, 'USD')
+
 
     return render(request, 'users/statistics.html', {'num_of_notifications': num_of_notifications, 'notifications': notifications,'clients': clients,
-                                                     'sorted_subs': sorted_subs,
+                                                     'sorted_subs': sorted_subs,'usd_weekly_rev': usd_weekly_rev,
+                                                     'usd_monthly_rev': usd_monthly_rev, 'usd_last_year_rev': usd_last_year_rev,
+                                                     'usd_sorted_subs': usd_sorted_subs, 'last_year_rev': last_year_rev,
+                                                     'usd_clients': usd_clients,
                                                      'monthly_rev': monthly_rev, 'weekly_rev': weekly_rev,
-                                                     'last_week_rev': last_week_rev})
+                                                     'last_week_rev': last_week_rev, 'usd_last_week_rev':usd_last_week_rev})
 
 
 @login_required()

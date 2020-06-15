@@ -187,9 +187,14 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_URL = 'login'
 
-# update these in seconds seconds
+# use these for production [update these in seconds]
 SESSION_SECURITY_WARN_AFTER = 1740
 SESSION_SECURITY_EXPIRE_AFTER = 1800
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+
+# use these for testing [update these in seconds]
+# SESSION_SECURITY_WARN_AFTER = 30
+# SESSION_SECURITY_EXPIRE_AFTER = 60
 
 CSRF_FAILURE_VIEW = 'error_pages.views.csrf_failure'

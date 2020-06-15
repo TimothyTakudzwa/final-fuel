@@ -8,7 +8,7 @@ from buyer.models import User
 from company.models import CompanyFuelUpdate
 
 
-def get_top_branches(count,company):
+def get_top_branches(count, company, currency):
     # This fn serves to get a list showing a company's to subsidiaries while ranking them by revenue
     # as well as adding the attr's tran_value and tran_count representing total transaction revenue and
     # the num of transactions respectively.
@@ -21,7 +21,7 @@ def get_top_branches(count,company):
     for sub in branches:
         # Get all transactions related to a Sub
         sub_trans = Transaction.objects.filter(supplier__company=company, supplier__subsidiary_id=sub.id,
-                                               is_complete=True)
+                                               is_complete=True, offer__request__payment_method=currency)
         # Get total value of entries in the expected column.                                      
         sub.tran_value = sub_trans.aggregate(total=Sum('expected'))['total']
         # Get transaction count.
@@ -35,9 +35,9 @@ def get_top_branches(count,company):
     return sorted_subs[:count]
 
 
-def get_top_clients(count, company):
+def get_top_clients(count, company, currency):
     # Get all transaction based on our most frequently occuring buyers
-    trans = Transaction.objects.filter(supplier__company=company, is_complete=True).annotate(
+    trans = Transaction.objects.filter(supplier__company=company,offer__request__payment_method=currency, is_complete=True).annotate(
     number_of_trans=Count('buyer')).order_by('-number_of_trans')
 
     # extracting the buyers from above filterset
@@ -47,7 +47,7 @@ def get_top_clients(count, company):
 
     for buyer in buyers:
 
-        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, supplier__company=company,
+        new_buyer_transactions = Transaction.objects.filter(buyer=buyer, supplier__company=company,offer__request__payment_method=currency,
                                                             is_complete=True).all()
 
         buyer.total_revenue = new_buyer_transactions.aggregate( total=Sum('expected'))['total']
@@ -75,7 +75,7 @@ def get_week_days(date):
     return [date + timedelta(days=i) for i in range(0 - date.weekday(), 7 - date.weekday())]
 
 
-def get_weekly_sales(company, this_week):
+def get_weekly_sales(company, this_week, currency):
     
     '''
     Get the company's weekly sales
@@ -89,7 +89,8 @@ def get_weekly_sales(company, this_week):
 
     for day in week_days:
         weeks_revenue = 0
-        day_trans = Transaction.objects.filter(date=day, supplier__company=company, is_complete=True)
+        day_trans = Transaction.objects.filter(date=day, supplier__company=company, is_complete=True,
+        offer__request__payment_method=currency)
         
         if day_trans:
             weeks_revenue = day_trans.aggregate(
@@ -102,7 +103,7 @@ def get_weekly_sales(company, this_week):
     return weekly_data               
 
 
-def get_monthly_sales(company, year):
+def get_monthly_sales(company, year, currency):
     '''
     Get the companies monthly sales
     '''
@@ -112,7 +113,8 @@ def get_monthly_sales(company, year):
     counter = 1
     for month in months:
         months_revenue = 0
-        months_trans = Transaction.objects.filter(date__year=year, date__month=counter, supplier__company=company)
+        months_trans = Transaction.objects.filter(date__year=year, date__month=counter, supplier__company=company,
+        offer__request__payment_method=currency)
         if months_trans:
             monthly_data[month] = months_trans.aggregate(
                 total=Sum('expected')
