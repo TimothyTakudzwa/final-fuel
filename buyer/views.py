@@ -6,6 +6,7 @@ import requests
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q
 from django.http import HttpResponse
@@ -49,8 +50,16 @@ def login_user(request):
     context = {
         'form': LoginForm()
     }
+    # check for the next parameter in url
+    if request.GET.get('next'):
+        cache.set('next', request.GET.get('next'))
     # check if a user's session exists
     if request.user.is_authenticated:
+        # redirecting to next url
+        next_url = cache.get('next')
+        if next_url:
+            cache.delete('next')
+            return redirect(next_url)
         current_user = User.objects.get(username=request.user.username)
         # redirecting to the set pages
         if current_user.user_type == "BUYER":
@@ -99,6 +108,11 @@ def login_user(request):
                         current_user = User.objects.get(username=username)
                         # starting session
                         login(request, current_user)
+                        # redirecting to next url if present
+                        next_url = cache.get('next')
+                        if next_url:
+                            cache.delete('next')
+                            return redirect(next_url)
                         # redirecting to the necessary pages
                         if current_user.user_type == "BUYER":
                             return redirect("buyer-dashboard")
