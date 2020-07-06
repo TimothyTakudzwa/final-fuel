@@ -8,6 +8,7 @@ from buyer.models import User
 from .helper_functions import bot_action, send_message
 
 
+
 @csrf_exempt 
 def index(request):
 
