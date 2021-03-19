@@ -15,7 +15,7 @@ django-crispy-forms==1.7.2
 django-debug-toolbar==2.1
 django-mathfilters==0.4.0
 django-rest==0.0.1
-djangorestframework==3.10.3
+djangorestframework==3.11.2
 et-xmlfile==1.0.1
 Faker==2.0.4
 fpdf==1.7.2
