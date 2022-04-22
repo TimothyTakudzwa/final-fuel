@@ -32,7 +32,7 @@ Pillow==6.2.1
 psycopg2==2.8.4
 pycparser==2.19
 pylint==2.4.4
-PyPDF2==1.26.0
+PyPDF2==1.27.5
 Pyphen==0.9.5
 python-dateutil==2.8.1
 pytz==2019.3
